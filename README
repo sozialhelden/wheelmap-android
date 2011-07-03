@@ -1,0 +1,16 @@
+2011-Jul-03 Thomas Fricke
+
+Initial version to get some running code to the start line.
+We use Gridcal JSON request http://grical.org/s/@berlin/json/
+to populate the map with some icons.
+
+It is based on Mapsforge and requires the library as a separate project
+either from the svn repository or the library in lib
+http://mapsforge.googlecode.com/svn/trunk/mapsforge
+
+The base application is the original AdvancedMapviewer application 
+from the Mapsforge project.
+
+For a full application of an Android app for Wheelmap.org the code 
+both of the Grical part and the AdvancedMapviewer should be 
+refactored.
