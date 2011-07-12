@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Wheelmap</string>
+
+    <string name="description_logo">Wheelmap</string>
+    <string name="description_home">Home</string>
+    <string name="description_search">Search</string>
+    <string name="description_map">Map</string>
+    <string name="description_refresh">Refresh</string>
+    <string name="description_share">Share</string>
+    <string name="description_export">Export</string>
+    <string name="description_star">Star</string>
+
+    <string name="title_search">Search</string>
+    <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
+
+    <string name="btn_list">Schedule</string>
+    <string name="btn_map">Map</string>
+  
+</resources>
