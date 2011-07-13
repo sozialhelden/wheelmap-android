@@ -6,24 +6,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <LinearLayout style="@style/TitleBar">
-        <View style="@style/TitleBarSpring" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageButton style="@style/TitleBarAction"
-            android:contentDescription="@string/description_search"
-            android:src="@drawable/ic_title_search"
-            android:onClick="onSearchClick" />
-    </LinearLayout>
+     
+<com.google.android.maps.MapView
+       	android:id="@+id/map"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:apiKey="02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg"
+                 android:clickable="true"
+                 />
 
    
-    <com.google.android.maps.MapView
-    	xmlns:android="http://schemas.android.com/apk/res/android"
-       	android:id="@+id/map"
-	    android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:apiKey="ABQIAAAAW1bysNI5TkIwcrwhFOsY7BSYsBVbzAZMUZ-AG-1HArBRnQTnYBQcEuTxfl1ihQeoBgvszyDtHiY8RQ"
-    	android:clickable="true" />
 </LinearLayout>
 
 
