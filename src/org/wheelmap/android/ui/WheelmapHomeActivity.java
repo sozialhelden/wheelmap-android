@@ -1,11 +1,10 @@
 package org.wheelmap.android.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import org.wheelmap.android.ui.POIsListActivity;
 
 public class WheelmapHomeActivity extends Activity {
     /** Called when the activity is first created. */
@@ -24,6 +23,12 @@ public class WheelmapHomeActivity extends Activity {
     /** Handle "map" action. */
     public void onMapClick(View v) {
         // Launch map of conference venue
-        //startActivity(new Intent(this, MapActivity.class));
+    	
+    	try {
+        	startActivity(new Intent(this, POIsMapActivity.class));
+    	} catch ( ActivityNotFoundException e) {
+    	    e.printStackTrace();
+    	}
+    	
     }
 }
