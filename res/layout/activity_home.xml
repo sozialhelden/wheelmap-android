@@ -28,7 +28,7 @@
             android:layout_weight="1">
             <Button android:id="@+id/home_btn_schedule"
                 style="@style/HomeButton"
-                android:onClick="onScheduleClick"
+                android:onClick="onListClick"
                 android:text="@string/btn_list"
                 android:drawableTop="@drawable/home_btn_list"/>
             <Button android:id="@+id/home_btn_map"

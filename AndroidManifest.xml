@@ -14,6 +14,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".POIsListActivity"
+            android:theme="@style/Theme.IOSched"
+            android:label="@string/title_pois_list" />
 
     </application>
 </manifest>

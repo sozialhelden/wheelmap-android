@@ -14,11 +14,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
-    <dimen name="colorstrip_height">6dip</dimen>
-    <dimen name="title_height">45dip</dimen>
-    <dimen name="now_playing_height">90dip</dimen>
-    <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_large">22sp</dimen>
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/ic_title_home_alt"/>
+    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/ic_title_home_alt"/>
+    <item android:state_focused="true" android:drawable="@drawable/ic_title_home_alt"/>
+    <item android:state_focused="false" android:state_pressed="false" android:drawable="@drawable/ic_title_home_default"/>
+</selector>

@@ -13,8 +13,11 @@
 
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
+    <string name="title_pois_list">List</string>
+    
+    
 
-    <string name="btn_list">Schedule</string>
+    <string name="btn_list">List</string>
     <string name="btn_map">Map</string>
   
 </resources>

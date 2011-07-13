@@ -14,9 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/ic_title_search_alt"/>
-    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/ic_title_search_alt"/>
-    <item android:state_focused="true" android:drawable="@drawable/ic_title_search_alt"/>
-    <item android:state_focused="false" android:state_pressed="false" android:drawable="@drawable/ic_title_search_default"/>
-</selector>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:maxLevel="0" android:drawable="@drawable/ic_title_home_light"/>
+    <item android:maxLevel="1" android:drawable="@drawable/ic_title_home_alt"/>
+</level-list>
