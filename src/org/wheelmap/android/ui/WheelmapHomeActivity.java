@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class WheelmapHomeActivity extends Activity {
     /** Called when the activity is first created. */
@@ -19,6 +20,10 @@ public class WheelmapHomeActivity extends Activity {
         // Launch overall conference schedule
         startActivity(new Intent(this, POIsListActivity.class));
     }
+    
+	public void onSearchClick(View v) {
+		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
+  }
 
     /** Handle "map" action. */
     public void onMapClick(View v) {
