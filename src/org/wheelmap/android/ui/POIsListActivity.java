@@ -39,6 +39,17 @@ public class POIsListActivity extends ListActivity {
 	        this.startActivity(intent);
    }
 	
+	public void onRefreshClick(View v) {
+		Toast.makeText(this, "Refreshing..", Toast.LENGTH_SHORT).show();
+  }
+	
+	public void onSearchClick(View v) {
+		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
+  }
+	
+	
+	
+	
 	 public static class EfficientAdapter extends BaseAdapter implements Filterable {
 		    private LayoutInflater mInflater;
 		    private Bitmap mIcon1;
@@ -110,8 +121,8 @@ public class POIsListActivity extends ListActivity {
 		      // Bind the data efficiently with the holder.
 		      holder.poiIcon.setImageBitmap(mIcon1);
 		      holder.poiName.setText("name " + String.valueOf(position));
-		      holder.poiCategory.setText("type " + String.valueOf(position));
-		      holder.poiDistance.setText("type " + String.valueOf(position));
+		      holder.poiCategory.setText("Cafe " + String.valueOf(position));
+		      holder.poiDistance.setText("12" + String.valueOf(position) + " m");
 		      
 		      return convertView;
 		    }

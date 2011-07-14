@@ -3,6 +3,7 @@ package org.wheelmap.android.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -45,6 +46,16 @@ public class POIsMapActivity extends MapActivity {
 	        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	        this.startActivity(intent);
     }
+	
+	
+	public void onRefreshClick(View v) {
+		Toast.makeText(this, "Refreshing..", Toast.LENGTH_SHORT).show();
+  }
+	
+	public void onSearchClick(View v) {
+		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
+  }
+	
 
 	@Override
 	protected boolean isRouteDisplayed() {
