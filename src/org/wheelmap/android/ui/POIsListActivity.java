@@ -74,8 +74,11 @@ public class POIsListActivity extends ListActivity {
 		        // views
 		        // we want to bind data to.
 		        holder = new ViewHolder();
-		        holder.textLine = (TextView) convertView.findViewById(R.id.textLine);
-		        holder.iconLine = (ImageView) convertView.findViewById(R.id.iconLine);
+		        holder.poiName = (TextView) convertView.findViewById(R.id.list_item_place_name);
+		        holder.poiCategory = (TextView) convertView.findViewById(R.id.list_item_category);
+		        holder.poiIcon = (ImageView) convertView.findViewById(R.id.place_type_icon);
+		        holder.poiDistance = (TextView) convertView.findViewById(R.id.list_item_distance);
+		        
 		        
 		        
 		        convertView.setOnClickListener(new OnClickListener() {
@@ -96,7 +99,7 @@ public class POIsListActivity extends ListActivity {
 		      }
 
 		      // Get flag name and id
-		      String filename = "flag_" + String.valueOf(position);
+		      String filename = "wheelmap_" + String.valueOf(position % 3);
 		      int id = context.getResources().getIdentifier(filename, "drawable", "org.wheelmap.android.ui");
 
 		      // Icons bound to the rows.
@@ -105,15 +108,19 @@ public class POIsListActivity extends ListActivity {
 		      }
 
 		      // Bind the data efficiently with the holder.
-		      holder.iconLine.setImageBitmap(mIcon1);
-		      holder.textLine.setText("flag " + String.valueOf(position));
-
+		      holder.poiIcon.setImageBitmap(mIcon1);
+		      holder.poiName.setText("name " + String.valueOf(position));
+		      holder.poiCategory.setText("type " + String.valueOf(position));
+		      holder.poiDistance.setText("type " + String.valueOf(position));
+		      
 		      return convertView;
 		    }
 
 		    static class ViewHolder {
-		      TextView textLine;
-		      ImageView iconLine;
+		      TextView poiCategory;
+		      TextView poiName;
+		      TextView poiDistance;
+		      ImageView poiIcon;
 		    }
 
 		    @Override
