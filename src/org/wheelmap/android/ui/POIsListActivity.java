@@ -93,11 +93,12 @@ public class POIsListActivity extends ListActivity {
 		        
 		        
 		        convertView.setOnClickListener(new OnClickListener() {
-		          private int pos = position;
 
 		          @Override
 		          public void onClick(View v) {
-		            Toast.makeText(context, "Click-" + String.valueOf(pos), Toast.LENGTH_SHORT).show();    
+		        	  
+		        	// Launch overall conference schedule
+		        	  context.startActivity(new Intent(context, POIDetailActivity.class));
 		          }
 		        });		        		        
 		        

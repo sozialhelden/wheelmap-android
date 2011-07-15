@@ -1,0 +1,43 @@
+{
+    "meta": {
+        "type": "meta",
+        "name": "Wheelmap" 
+    },
+    "name": {
+        "type": "string",
+        "id": "0",
+        "default": "",
+        "priority": "0" 
+    },
+    "type": {
+        "type": "integer",
+        "id": "1",
+        "default": "0",
+        "priority": "1",
+        "options": {
+            "0": "Shop",
+            "1": "Coffe",
+            "2": "Bank",
+            "3": "Pharmacy" 
+        } 
+    },
+
+    "wheelchair": {
+        "type": "integer",
+        "id": "2",
+        "default": "3",
+        "priority": "2",
+        "options": {
+            "0": "Fully Accesible",
+            "1": "Limited accesibility",
+            "2": "Not accesible",
+            "3": "Unknown" 
+        } 
+    },
+    "comment": {
+        "type": "string",
+        "id": "3",
+        "default": "",
+        "priority": "3" 
+    }
+}
