@@ -3,5 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/Users/tucniak/dev/projects/simple-xml-2.6/jar/simple-xml-2.6.jar"/>
+	<classpathentry kind="lib" path="/Users/tucniak/Downloads/spring-android-1.0.0.M3/bin/spring-android-core-1.0.0.M3.jar"/>
+	<classpathentry kind="lib" path="/Users/tucniak/Downloads/spring-android-1.0.0.M3/bin/spring-android-rest-template-1.0.0.M3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

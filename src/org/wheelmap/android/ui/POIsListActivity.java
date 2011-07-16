@@ -17,12 +17,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import wheelmap.org.BoundingBox;
+import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
+import wheelmap.org.WheelMapException;
+import wheelmap.org.WheelchairState;
+import wheelmap.org.domain.node.Node;
+import wheelmap.org.domain.node.Nodes;
+import wheelmap.org.request.AcceptType;
+import wheelmap.org.request.NodesRequestBuilder;
+import wheelmap.org.request.Paging;
+import wheelmap.org.request.RequestProcessor;
+import wheelmap.org.util.XmlSupport;
+
+
 public class POIsListActivity extends ListActivity {
 	
 	 private EfficientAdapter adap;
-	  private static String[] data = new String[] { "0", "1", "2", "3", "4" };
-
-	
+	  	
 	 /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +45,11 @@ public class POIsListActivity extends ListActivity {
         adap = new EfficientAdapter(this);
         //ListView lv = (ListView) findViewById(R.id.pois_list_view);
         setListAdapter(adap);
+      
+      
+    		
+    	
+
     }
     
 	public void onHomeClick(View v) {
@@ -54,12 +73,49 @@ public class POIsListActivity extends ListActivity {
 		    private LayoutInflater mInflater;
 		    private Bitmap mIcon1;
 		    private Context context;
+		    private Nodes nodes;
+		    
+		    private static final String SERVER = "staging.wheelmap.org";
+			private static final String API_KEY = "9NryQWfDWgIebZIdqWiK";
+			private static RequestProcessor requestProcessor = new RequestProcessor();
+
 
 		    public EfficientAdapter(Context context) {
 		      // Cache the LayoutInflate to avoid asking for a new one each time.
 		      mInflater = LayoutInflater.from(context);
 		      this.context = context;
+		      
+		      final NodesRequestBuilder requestBuilder = new NodesRequestBuilder(SERVER,
+	    				API_KEY,AcceptType.XML);
+	    		
+	    		
+	    		// 1. maxi nodes
+	    		String getRequest = requestBuilder.
+	    			paging(new Paging(5)).
+	    			boundingBox(new BoundingBox(new Wgs84GeoCoordinates(13.37811,52.43752),new Wgs84GeoCoordinates(13.38278,52.43957))).
+	    			wheelchairState(WheelchairState.UNKNOWN).buildRequestUri();
+	    		
+	    		System.out.println(getRequest);
+	    		this.nodes = retrieveNumberOfHIts(getRequest);
+	    		 
 		    }
+		    
+		    private static Nodes retrieveNumberOfHIts(String getRequest) {
+				String response=null;
+				try {
+					response = requestProcessor.get(new URI(getRequest),String.class);
+				} catch (URISyntaxException e) {
+					throw new WheelMapException(e);
+				}
+				System.out.println(response);
+
+				return unmarshal(response,Nodes.class);
+				//System.out.println();
+			}
+
+			public static <T> T unmarshal(final String xml, Class<T> clazz) {	
+				return XmlSupport.serialize(xml, clazz);
+			}
 
 		    /**
 		     * Make a view to hold each row.
@@ -118,12 +174,14 @@ public class POIsListActivity extends ListActivity {
 		      if (id != 0x0) {
 		        mIcon1 = BitmapFactory.decodeResource(context.getResources(), id);
 		      }
-
+		      Node node = this.nodes.getNodes().getNode().get(position);
 		      // Bind the data efficiently with the holder.
 		      holder.poiIcon.setImageBitmap(mIcon1);
-		      holder.poiName.setText("name " + String.valueOf(position));
-		      holder.poiCategory.setText("Cafe " + String.valueOf(position));
-		      holder.poiDistance.setText("12" + String.valueOf(position) + " m");
+		      
+		      holder.poiName.setText(node.getName());
+		      //holder.poiName.setText("namec " + String.valueOf(position));
+		      holder.poiCategory.setText(node.getStreet() + node.getHousenumber().toString() +"," + node.getCity());
+		      holder.poiDistance.setText("13" + String.valueOf(position) + " m");
 		      
 		      return convertView;
 		    }
@@ -150,13 +208,13 @@ public class POIsListActivity extends ListActivity {
 		    @Override
 		    public int getCount() {
 		      // TODO Auto-generated method stub
-		      return data.length;
+		      return nodes.getMeta().getItemCountTotal().intValue();
 		    }
 
 		    @Override
 		    public Object getItem(int position) {
 		      // TODO Auto-generated method stub
-		      return data[position];
+		      return nodes.getNode().get(position);
 		    }
 
 		  }
