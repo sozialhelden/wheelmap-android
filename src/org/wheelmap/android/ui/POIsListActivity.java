@@ -180,7 +180,7 @@ public class POIsListActivity extends ListActivity {
 		      
 		      holder.poiName.setText(node.getName());
 		      //holder.poiName.setText("namec " + String.valueOf(position));
-		      holder.poiCategory.setText(node.getStreet() + node.getHousenumber().toString() +"," + node.getCity());
+		      holder.poiCategory.setText("Cafe " + String.valueOf(position));
 		      holder.poiDistance.setText("13" + String.valueOf(position) + " m");
 		      
 		      return convertView;
