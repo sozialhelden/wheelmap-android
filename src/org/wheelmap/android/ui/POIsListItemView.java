@@ -3,7 +3,10 @@ package org.wheelmap.android.ui;
 import org.wheelmap.android.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ public class POIsListItemView extends RelativeLayout {
 	private TextView poiName;
 	private TextView poiDistance;
 	private ImageView poiIcon;
+	private Context mContext;
 
 	/**
 	 * constructor creates a new line item of list
@@ -21,6 +25,7 @@ public class POIsListItemView extends RelativeLayout {
 	 */
 	public POIsListItemView(Context context) {
 		super(context);
+		mContext = context;
 		// inflate rating
 		LayoutInflater inflater = (LayoutInflater) context
 		.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

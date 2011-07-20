@@ -32,10 +32,30 @@
             android:name="org.wheelmap.android.ui.POIsMapActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map" />
+        
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched"
-            android:label="@string/title_pois_detail" />
+            android:label="@string/title_pois_detail">
+            
+             <!-- This filter says that we can view or edit the data of
+                 a single note -->
+            <intent-filter android:label="@string/edit_poi">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.INSERT" />                                               
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.wheelmap.pois" />                
+            </intent-filter>
+            
+            <!-- This filter says that we can create a new note inside
+                 of a directory of notes. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.wheelmap.pois" />
+            </intent-filter>
+            </activity>
             
         <provider android:name="org.wheelmap.android.model.POIsProvider"
           android:authorities="org.wheelmap.android"/>   

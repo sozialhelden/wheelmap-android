@@ -22,6 +22,11 @@ public class Wheelmap {
 			 * <P>Type: TEXT</P>
 			 */        
 			public static final String NAME = "name";
+			
+			public static final String COORD_LAT = "lat";
+			
+			public static final String COORD_LON = "lon";
+			
 		}
 
 		public static final class POIs implements BaseColumns, POIsColumns {
@@ -53,7 +58,9 @@ public class Wheelmap {
 			 */
 			public static final String[] PROJECTION = new String[] {
 				_ID,
-				NAME
+				NAME,
+				COORD_LAT,
+				COORD_LON
 			};
 		}
 }

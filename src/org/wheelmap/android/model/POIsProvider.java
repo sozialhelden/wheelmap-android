@@ -40,7 +40,7 @@ public class POIsProvider extends ContentProvider {
 
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 1;
-	private static final String POIS_TABLE_NAME = "places";
+	private static final String POIS_TABLE_NAME = "pois";
 
 	/**
 	 * This class helps open, create, and upgrade the database file.
@@ -57,7 +57,9 @@ public class POIsProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME 
 					+ " ("
 					+ POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-					+ POIs.NAME + " TEXT);");
+					+ POIs.NAME + " TEXT," 
+					+ POIs.COORD_LAT + " VARCHAR(15),"
+					+ POIs.COORD_LON + " VARCHAR(15));");
 		}
 
 		@Override
@@ -229,5 +231,8 @@ public class POIsProvider extends ContentProvider {
 		sPOIsProjectionMap = new HashMap<String, String>();
 		sPOIsProjectionMap.put(POIs._ID, POIs._ID);
 		sPOIsProjectionMap.put(POIs.NAME, POIs.NAME);
+		sPOIsProjectionMap.put(POIs.COORD_LAT, POIs.COORD_LAT);
+		sPOIsProjectionMap.put(POIs.COORD_LON, POIs.COORD_LON);
+		
 	}
 }
