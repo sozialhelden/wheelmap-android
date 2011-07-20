@@ -1,5 +1,7 @@
 package org.wheelmap.android.ui;
 
+import org.wheelmap.android.R;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;

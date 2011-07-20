@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.wheelmap.android.ui"
+      package="org.wheelmap.android"
       android:versionCode="1"
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="4" />
@@ -14,7 +14,7 @@
         
         
         
-        <activity android:name=".WheelmapHomeActivity"
+        <activity android:name="org.wheelmap.android.ui.WheelmapHomeActivity"
                   android:theme="@style/Theme.IOSched"
                   android:label="@string/app_name">
             <intent-filter>
@@ -24,22 +24,21 @@
         </activity>
         
         <activity
-            android:name=".POIsListActivity"
+            android:name="org.wheelmap.android.ui.POIsListActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_list" />
             
         <activity
-            android:name=".POIsMapActivity"
+            android:name="org.wheelmap.android.ui.POIsMapActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map" />
         <activity
-            android:name=".POIDetailActivity"
+            android:name="org.wheelmap.android.ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_detail" />
             
-            
-            
-            
+        <provider android:name="org.wheelmap.android.model.POIsProvider"
+          android:authorities="org.wheelmap.android"/>   
 
     </application>
 </manifest>

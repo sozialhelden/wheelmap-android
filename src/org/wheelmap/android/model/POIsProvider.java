@@ -57,7 +57,7 @@ public class POIsProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME 
 					+ " ("
 					+ POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + ");");
+					+ POIs.NAME + " TEXT);");
 		}
 
 		@Override
@@ -222,8 +222,8 @@ public class POIsProvider extends ContentProvider {
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, "places", POIS);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, "places/#", POI_ID);
+		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois", POIS);
+		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois/#", POI_ID);
 		
 		//  POIs
 		sPOIsProjectionMap = new HashMap<String, String>();
