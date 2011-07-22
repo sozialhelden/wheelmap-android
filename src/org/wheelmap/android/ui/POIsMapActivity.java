@@ -2,45 +2,39 @@ package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
 public class POIsMapActivity extends MapActivity {
 	
-	private MapView map = null;
+	private MapController mapController;
+	private MapView mapView;
+	private LocationManager locationManager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_map);
+		setContentView(R.layout.activity_map);		
+		mapView=(MapView)findViewById(R.id.map);
 		
-		
-		
-		map=(MapView)findViewById(R.id.map);
-		
-		map.getController().setZoom(17);
-		
-		GeoPoint status=new GeoPoint((int)(52.524577*1000000.0),(int)(13.403320*1000000.0));
-		
-		map.getController().setCenter(status);
-		map.setBuiltInZoomControls(true);
-		
-		//Drawable marker=getResources().getDrawable(R.drawable.marker);
-		
-		//marker.setBounds(0, 0, marker.getIntrinsicWidth(),											marker.getIntrinsicHeight());
-		
-		//map
-	//		.getOverlays()
-		//	.add(new RestaurantOverlay(marker, status,
-			//														getIntent().getStringExtra(EXTRA_NAME)));
-			 
-			 
+		mapView.setBuiltInZoomControls(true);
+		mapView.setStreetView(true);
+		mapController = mapView.getController();
+		mapController.setZoom(14); // Zoon 1 is world view
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, new GeoUpdateHandler());
 	}
 	
 	public void onHomeClick(View v) {
@@ -64,5 +58,27 @@ public class POIsMapActivity extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public class GeoUpdateHandler implements LocationListener {
 
+		@Override
+		public void onLocationChanged(Location location) {
+			int lat = (int) (location.getLatitude() * 1E6);
+			int lng = (int) (location.getLongitude() * 1E6);
+			GeoPoint point = new GeoPoint(lat, lng);
+			mapController.animateTo(point); //	mapController.setCenter(point);
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+	}
 }
