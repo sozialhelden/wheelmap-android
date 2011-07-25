@@ -1,6 +1,7 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.ui.map.POIsMapActivity;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
