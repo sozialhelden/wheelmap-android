@@ -18,6 +18,11 @@
     <string name="title_pois_detail">Info</string>
     <string name="edit_poi">Edit</string>
     
+    <string name="toast_sync_error">Error by syncing with server</string>
+    
+    
+    
+    
     
     
     
@@ -26,5 +31,10 @@
 
     <string name="btn_list">List</string>
     <string name="btn_map">Map</string>
+    
+    <!-- DEBUG MH -->
+    <string name="mapskey">02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg</string>
+    
+    
   
 </resources>
