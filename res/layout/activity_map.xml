@@ -40,7 +40,7 @@
        	android:id="@+id/map"
                  android:layout_width="fill_parent"
                  android:layout_height="fill_parent"
-                 android:apiKey="02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg"
+                 android:apiKey="@string/mapskey"
                  android:clickable="true"
                  />
 
