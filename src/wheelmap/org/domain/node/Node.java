@@ -8,13 +8,14 @@ import org.simpleframework.xml.Root;
 
 
 
+
 @Root(name = "node")
 public class Node {
 
     @Element(required = true)
     protected BigDecimal lat;
-    @Element(name = "node-type-id", required = false)
-    protected BigInteger nodeTypeId;
+    @Element(name = "node-type", required = true)
+    protected NodeType nodeType;
     @Element(required = false)
     protected String street;
     @Element(required = false)
@@ -29,8 +30,8 @@ public class Node {
     protected String name;
     @Element(required = true)
     protected BigInteger id;
-    @Element(name = "category-id", required = true)
-    protected BigInteger categoryId;
+    @Element(required=true)
+    protected Category category;
     @Element(required = false)
     protected String phone;
     @Element(required = true)
@@ -65,27 +66,27 @@ public class Node {
     }
 
     /**
-     * Gets the value of the nodeTypeId property.
+     * Gets the value of the nodeType property.
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link NodeType }
      *     
      */
-    public BigInteger getNodeTypeId() {
-        return nodeTypeId;
+    public NodeType getNodeType() {
+        return nodeType;
     }
 
     /**
-     * Sets the value of the nodeTypeId property.
+     * Sets the value of the nodeType property.
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link NodeType }
      *     
      */
-    public void setNodeTypeId(BigInteger value) {
-        this.nodeTypeId = value;
+    public void setNodeType(NodeType value) {
+        this.nodeType = value;
     }
 
     /**
@@ -261,25 +262,26 @@ public class Node {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link Category }
      *     
      */
-    public BigInteger getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+    	return category;
     }
-
+    
+    
     /**
      * Sets the value of the categoryId property.
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link Category }
      *     
      */
-    public void setCategoryId(BigInteger value) {
-        this.categoryId = value;
+    public void setCategory( Category value ) {
+    	this.category = value;
     }
-
+    
     /**
      * Gets the value of the phone property.
      * 
@@ -364,12 +366,12 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node [lat=" + lat + ", nodeTypeId=" + nodeTypeId + ", street="
+		return "Node [lat=" + lat + ", nodeTypeId= {" + nodeType.toString() + "}, street="
 				+ street + ", website=" + website + ", wheelchair="
 				+ wheelchair + ", housenumber=" + housenumber
 				+ ", wheelchairDescription=" + wheelchairDescription
-				+ ", name=" + name + ", id=" + id + ", categoryId="
-				+ categoryId + ", phone=" + phone + ", lon=" + lon + ", city="
+				+ ", name=" + name + ", id=" + id + ", category= {"
+				+ category.toString() + "}, phone=" + phone + ", lon=" + lon + ", city="
 				+ city + ", postcode=" + postcode + "]";
 	}
 

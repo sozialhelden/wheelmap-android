@@ -3,7 +3,7 @@ package wheelmap.org.domain.categories;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Category {
+public enum Categories {
 	PUBLIC_TRANSFER(1),
 	FOOD(2),
 	LEISURE(3),
@@ -17,9 +17,9 @@ public enum Category {
 	GOVERNMENT(11);
 	
 	private final int id;
-	private static Map<Integer,Category> id2Category;
+	private static Map<Integer,Categories> id2Category;
 	
-	private Category(int id) {
+	private Categories(int id) {
 		this.id = id;
 		register();
 	}
@@ -28,13 +28,13 @@ public enum Category {
 		return id;
 	}
 	
-	public static Category valueOf(int id) {
+	public static Categories valueOf(int id) {
 		return id2Category.get(id);
 	}
 	
 	private void register() {
 		if (id2Category==null) {
-			id2Category= new HashMap<Integer, Category>();
+			id2Category= new HashMap<Integer, Categories>();
 		}
 		id2Category.put(id, this);		
 	}	
