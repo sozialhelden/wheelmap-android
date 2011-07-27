@@ -20,13 +20,30 @@ public class Wheelmap {
 			/**
 			 * The name of the place
 			 * <P>Type: TEXT</P>
-			 */        
-			public static final String NAME = "name";
+			 */
+			public static final String WM_ID = "wm_id";
 			
+			public static final String NAME = "name";
+						
 			public static final String COORD_LAT = "lat";
 			
 			public static final String COORD_LON = "lon";
 			
+			public static final String STREET = "street";
+			
+			public static final String HOUSE_NUM = "house_num";
+			
+			public static final String POSTCODE = "postcode";
+			
+			public static final String CITY = "city";
+			
+			public static final String PHONE = "phone";
+			
+			public static final String WEBSITE = "website";
+			
+			public static final String WHEELCHAIR = "wheelchair";
+			
+			public static final String WHEELCHAIR_DESC = "wheelchair_desc";
 		}
 
 		public static final class POIs implements BaseColumns, POIsColumns {
@@ -58,9 +75,18 @@ public class Wheelmap {
 			 */
 			public static final String[] PROJECTION = new String[] {
 				_ID,
+				WM_ID,
 				NAME,
 				COORD_LAT,
-				COORD_LON
+				COORD_LON,
+				STREET,
+				HOUSE_NUM,
+				POSTCODE,
+				CITY,
+				PHONE,
+				WEBSITE,
+				WHEELCHAIR,
+				WHEELCHAIR_DESC
 			};
 		}
 }

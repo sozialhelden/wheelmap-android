@@ -23,7 +23,7 @@ public class Node {
     @Element(required = false)
     protected String wheelchair;
     @Element(required = false)
-    protected BigInteger housenumber;
+    protected String housenumber;
     @Element(name = "wheelchair-description", required = false)
     protected String wheelchairDescription;
     @Element(required = false)
@@ -166,10 +166,10 @@ public class Node {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getHousenumber() {
+    public String getHousenumber() {
         return housenumber;
     }
 
@@ -178,10 +178,10 @@ public class Node {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setHousenumber(BigInteger value) {
+    public void setHousenumber(String value) {
         this.housenumber = value;
     }
 

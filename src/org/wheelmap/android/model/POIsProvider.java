@@ -39,7 +39,7 @@ public class POIsProvider extends ContentProvider {
 	private static final String TAG = "POIsProvider";
 
 	private static final String DATABASE_NAME = "wheelmap.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 5;
 	private static final String POIS_TABLE_NAME = "pois";
 
 	/**
@@ -57,9 +57,19 @@ public class POIsProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME 
 					+ " ("
 					+ POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+					+ POIs.WM_ID + " INTEGER, "
 					+ POIs.NAME + " TEXT," 
 					+ POIs.COORD_LAT + " VARCHAR(15),"
-					+ POIs.COORD_LON + " VARCHAR(15));");
+					+ POIs.COORD_LON + " VARCHAR(15)," 
+					+ POIs.STREET + " TEXT," 
+					+ POIs.HOUSE_NUM + " TEXT,"
+					+ POIs.POSTCODE + " TEXT,"
+					+ POIs.CITY + " TEXT,"
+					+ POIs.PHONE + " TEXT, "
+					+ POIs.WEBSITE + " TEXT, "
+					+ POIs.WHEELCHAIR + " TEXT, "
+					+ POIs.WHEELCHAIR_DESC + " TEXT )");
+					
 		}
 
 		@Override
@@ -230,9 +240,18 @@ public class POIsProvider extends ContentProvider {
 		//  POIs
 		sPOIsProjectionMap = new HashMap<String, String>();
 		sPOIsProjectionMap.put(POIs._ID, POIs._ID);
+		sPOIsProjectionMap.put(POIs.WM_ID, POIs.WM_ID );
 		sPOIsProjectionMap.put(POIs.NAME, POIs.NAME);
 		sPOIsProjectionMap.put(POIs.COORD_LAT, POIs.COORD_LAT);
 		sPOIsProjectionMap.put(POIs.COORD_LON, POIs.COORD_LON);
+		sPOIsProjectionMap.put(POIs.STREET, POIs.STREET );
+		sPOIsProjectionMap.put(POIs.HOUSE_NUM, POIs.HOUSE_NUM);
+		sPOIsProjectionMap.put(POIs.POSTCODE, POIs.POSTCODE);
+		sPOIsProjectionMap.put(POIs.CITY, POIs.CITY);
+		sPOIsProjectionMap.put(POIs.PHONE, POIs.PHONE );
+		sPOIsProjectionMap.put(POIs.WEBSITE, POIs.WEBSITE );
+		sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR );
+		sPOIsProjectionMap.put(POIs.WHEELCHAIR_DESC, POIs.WHEELCHAIR_DESC );
 		
 	}
 }

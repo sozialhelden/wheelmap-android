@@ -54,15 +54,28 @@ public class RESTExecutor {
 		
 		// and replace with new items, server is the master
 		ContentValues values = new ContentValues();
-		for (int i = 0; i < nodes.getMeta().getItemCountTotal().intValue(); i++) {
+		for (int i = 0; i < nodes.getMeta().getItemCount().intValue(); i++) {
 			Node node = nodes.getNodes().getNode().get(i);
-			values.clear();
-			// insert data into DB
-			values.put(Wheelmap.POIs.NAME, node.getName());
-			values.put(Wheelmap.POIs.COORD_LAT, node.getLat().toString());
-			values.put(Wheelmap.POIs.COORD_LON, node.getLon().toString());
+			copyNodeToValues( node, values );
 			mResolver.insert(Wheelmap.POIs.CONTENT_URI, values);
 		}
+	}
+	
+	private void copyNodeToValues( Node node, ContentValues values ) {
+		values.clear();
+		// insert data into DB
+		values.put(Wheelmap.POIs.WM_ID, node.getId().intValue());
+		values.put(Wheelmap.POIs.NAME, node.getName());
+		values.put(Wheelmap.POIs.COORD_LAT, node.getLat().toString());
+		values.put(Wheelmap.POIs.COORD_LON, node.getLon().toString());
+		values.put(Wheelmap.POIs.STREET, node.getStreet());
+		values.put(Wheelmap.POIs.HOUSE_NUM, node.getHousenumber());
+		values.put(Wheelmap.POIs.POSTCODE, node.getPostcode());
+		values.put(Wheelmap.POIs.CITY, node.getCity());
+		values.put(Wheelmap.POIs.PHONE, node.getPhone());
+		values.put(Wheelmap.POIs.WEBSITE, node.getWebsite());
+		values.put(Wheelmap.POIs.WHEELCHAIR, node.getWheelchair());
+		values.put(Wheelmap.POIs.WHEELCHAIR_DESC, node.getWheelchairDescription());
 	}
 
 	private static Nodes retrieveNumberOfHIts(String getRequest) {
