@@ -47,7 +47,7 @@ public class RESTExecutor {
 		Nodes nodes = retrieveNumberOfHIts(getRequest);
 		
 		// sync ContentProvider
-		// if ddat locally changed and not commited to the server, etc.
+		// if data locally changed and not commited to the server, etc.
 		
 		// here just delete whole table 
 		mResolver.delete(Wheelmap.POIs.CONTENT_URI, null, null);
@@ -66,8 +66,8 @@ public class RESTExecutor {
 		// insert data into DB
 		values.put(Wheelmap.POIs.WM_ID, node.getId().intValue());
 		values.put(Wheelmap.POIs.NAME, node.getName());
-		values.put(Wheelmap.POIs.COORD_LAT, node.getLat().toString());
-		values.put(Wheelmap.POIs.COORD_LON, node.getLon().toString());
+		values.put(Wheelmap.POIs.COORD_LAT, Math.ceil(node.getLat().floatValue() * 1E6));
+		values.put(Wheelmap.POIs.COORD_LON,  Math.ceil(node.getLon().floatValue() * 1E6));
 		values.put(Wheelmap.POIs.STREET, node.getStreet());
 		values.put(Wheelmap.POIs.HOUSE_NUM, node.getHousenumber());
 		values.put(Wheelmap.POIs.POSTCODE, node.getPostcode());

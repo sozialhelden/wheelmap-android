@@ -1,6 +1,7 @@
 package org.wheelmap.android.service;
 
 import org.wheelmap.android.RESTExecutor;
+import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import wheelmap.org.BoundingBox;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
@@ -23,6 +24,10 @@ public class SyncService extends IntentService {
 
     public static final String EXTRA_STATUS_RECEIVER =
             "com.google.android.iosched.extra.STATUS_RECEIVER";
+    
+    public static final String EXTRA_STATUS_RECEIVER_BOUNCING_BOX =
+        "com.google.android.iosched.extra.STATUS_RECEIVER_BOUNCING_BOX";
+  
 
     public static final int STATUS_RUNNING = 0x1;
     public static final int STATUS_ERROR = 0x2;
@@ -57,11 +62,18 @@ public class SyncService extends IntentService {
                 Context.MODE_PRIVATE);
         final int localVersion = prefs.getInt(Prefs.LOCAL_VERSION, VERSION_NONE);
         */
+        
+        final Bundle bundle=intent.getExtras();        
+        ParceableBoundingBox boundingBox = (ParceableBoundingBox)bundle.getSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX);
+       
+        //Log.d(RF.TAG,"currentSLoc received, currentSLoc==null ? "+(currentSLoc==null));
 
         try {
             final long startRemote = System.currentTimeMillis();
             // dummy coordinates
-            mRemoteExecutor.execute(new BoundingBox(new Wgs84GeoCoordinates(13.37811,52.43752),new Wgs84GeoCoordinates(13.38278,52.43957)));
+            mRemoteExecutor.execute(new BoundingBox(
+            		new Wgs84GeoCoordinates(boundingBox.getLonWest(), boundingBox.getLatSouth()),
+            		new Wgs84GeoCoordinates(boundingBox.getLonEast(), boundingBox.getLatNorth())));
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {
@@ -69,9 +81,9 @@ public class SyncService extends IntentService {
 
             if (receiver != null) {
                 // Pass back error to surface listener
-                final Bundle bundle = new Bundle();
-                bundle.putString(Intent.EXTRA_TEXT, e.toString());
-                receiver.send(STATUS_ERROR, bundle);
+                final Bundle responsebundle = new Bundle();
+                responsebundle.putString(Intent.EXTRA_TEXT, e.toString());
+                receiver.send(STATUS_ERROR, responsebundle);
             }
         }
 
