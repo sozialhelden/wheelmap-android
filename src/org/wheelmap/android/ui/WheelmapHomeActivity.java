@@ -32,7 +32,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
         if (previousState) {
             // Start listening for SyncService updates again
             mState.mReceiver.setReceiver(this);
-            //updateRefreshStatus();
+            updateRefreshStatus();
 
         } else {
             mState = new State();
@@ -115,8 +115,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
     private static class State {
         public DetachableResultReceiver mReceiver;
         public boolean mSyncing = false;
-        public boolean mNoResults = false;
-
+        
         private State() {
             mReceiver = new DetachableResultReceiver(new Handler());
         }

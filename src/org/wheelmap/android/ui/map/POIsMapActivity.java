@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.wheelmap.android.R;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.ui.WheelmapHomeActivity;
+import org.wheelmap.android.service.SyncService;
 
-import android.content.ContentValues;
+import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.ParceableBoundingBox;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,9 +19,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,7 +31,10 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public class POIsMapActivity extends MapActivity {
+public class POIsMapActivity extends MapActivity  implements DetachableResultReceiver.Receiver {
+
+	/** State held between configuration changes. */
+	private State mState;
 
 	private Cursor mCursor;
 
@@ -66,8 +70,51 @@ public class POIsMapActivity extends MapActivity {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
 				0, new GeoUpdateHandler());
 
+		mState = (State) getLastNonConfigurationInstance();
+		final boolean previousState = mState != null;
+
+		if (previousState) {
+			// Start listening for SyncService updates again
+			mState.mReceiver.setReceiver(this);
+			updateRefreshStatus();
+
+		} else {
+			mState = new State();
+			mState.mReceiver.setReceiver(this);
+			onRefreshClick(null);
+		}
+
 		FillPOIsOverlay();
 	}
+
+
+
+	/** {@inheritDoc} */
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		switch (resultCode) {
+		case SyncService.STATUS_RUNNING: {
+			mState.mSyncing = true;
+			updateRefreshStatus();
+			break;
+		}
+		case SyncService.STATUS_FINISHED: {
+			mState.mSyncing = false;
+			updateRefreshStatus();
+			FillPOIsOverlay();
+			break;
+		}
+		case SyncService.STATUS_ERROR: {
+			// Error happened down in SyncService, show as toast.
+			mState.mSyncing = false;
+			updateRefreshStatus();
+			final String errorText = getString(R.string.toast_sync_error, resultData
+					.getString(Intent.EXTRA_TEXT));
+			Toast.makeText(POIsMapActivity.this, errorText, Toast.LENGTH_LONG).show();
+			break;
+		}
+		}
+	}
+
 
 	private void FillPOIsOverlay() {
 		// Run query
@@ -98,41 +145,12 @@ public class POIsMapActivity extends MapActivity {
 				lon = mCursor.getInt(lonColumn);
 
 				point = new GeoPoint(lat, lon); 
-				
+
 				poisItemizedOverlay.addOverlay(new OverlayItem(point, name, ""));
 			} while (mCursor.moveToNext());
 
 		}
 	}  
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-			new MenuInflater(this).inflate(R.menu.menu, menu);
-
-			return(super.onCreateOptionsMenu(menu));
-		
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// insert new POI in Sobrance to test
-		
-
-		ContentValues values = new ContentValues();
-
-		
-		values.put(Wheelmap.POIs.NAME, "Lidl");
-		values.put(Wheelmap.POIs.COORD_LAT, 48745111);
-		values.put(Wheelmap.POIs.COORD_LON, 22182770);
-
-
-		getContentResolver().insert(Wheelmap.POIs.CONTENT_URI, values);
-
-		return true;
-	}
-
-
 
 	@Override
 	protected void onPause() {
@@ -146,19 +164,58 @@ public class POIsMapActivity extends MapActivity {
 	protected void onResume() {
 		mCurrLocationOverlay.enableMyLocation();
 		super.onResume();
+	}            
+
+	private void updateRefreshStatus() {
+		findViewById(R.id.btn_title_refresh).setVisibility(
+				mState.mSyncing ? View.GONE : View.VISIBLE);
+		findViewById(R.id.title_refresh_progress).setVisibility(
+				mState.mSyncing ? View.VISIBLE : View.GONE);
 	}
+
 
 
 
 	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
+		final Intent intent = new Intent(this, POIsMapActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		this.startActivity(intent);
 	}
 
+	private void fillExtrasWithBoundingRect(Bundle bundle) {
+		int latSpan = mapView.getLatitudeSpan();
+		int lonSpan = mapView.getLongitudeSpan();
+		GeoPoint center = mapView.getMapCenter();
+		ParceableBoundingBox bouncingBox =  new ParceableBoundingBox(
+				center.getLatitudeE6() + (latSpan / 2), 
+				center.getLongitudeE6() + (lonSpan / 2),
+				center.getLatitudeE6() - (latSpan / 2),
+				center.getLongitudeE6() - (lonSpan / 2));
+		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, bouncingBox);
+
+	}
+
 
 	public void onRefreshClick(View v) {
-		Toast.makeText(this, "Refreshing..", Toast.LENGTH_SHORT).show();
+
+		// get bounding box from current view
+		Bundle extras = new Bundle();
+		// 
+		fillExtrasWithBoundingRect(extras);
+
+
+
+		// trigger off background sync
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
+		intent.putExtras(extras);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+
+
+
+
+		// insert here bounding rectangle as data
+
+		startService(intent);
 	}
 
 	public void onSearchClick(View v) {
@@ -170,6 +227,21 @@ public class POIsMapActivity extends MapActivity {
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/**
+	 * State specific to {@link HomeActivity} that is held between configuration
+	 * changes. Any strong {@link Activity} references <strong>must</strong> be
+	 * cleared before {@link #onRetainNonConfigurationInstance()}, and this
+	 * class should remain {@code static class}.
+	 */
+	private static class State {
+		public DetachableResultReceiver mReceiver;
+		public boolean mSyncing = false;
+
+		private State() {
+			mReceiver = new DetachableResultReceiver(new Handler());
+		}
 	}
 
 	private class GeoUpdateHandler implements LocationListener {
