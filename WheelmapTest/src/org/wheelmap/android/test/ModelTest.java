@@ -1,0 +1,99 @@
+package org.wheelmap.android.test;
+
+import junit.framework.Assert;
+
+import org.wheelmap.android.RESTExecutor;
+import org.wheelmap.android.model.Wheelmap;
+
+import wheelmap.org.BoundingBox;
+import wheelmap.org.WheelchairState;
+import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.test.AndroidTestCase;
+import android.util.Log;
+
+public class ModelTest extends AndroidTestCase {
+
+	private final static String TAG = "wheelmaptest";
+
+	public void testNodes() {
+
+		BoundingBox bb = new BoundingBox(
+				new Wgs84GeoCoordinates(13.341, 52.505),
+				new Wgs84GeoCoordinates(13.434, 52.523));
+
+		ContentResolver cr = getContext().getContentResolver();
+
+		RESTExecutor re = new RESTExecutor(cr);
+		re.retrieveSinglePage( bb );
+
+		Cursor c = cr.query(Wheelmap.POIs.CONTENT_URI, null, null, null, null);
+		Assert.assertEquals(5, c.getCount());
+
+		int nameIndex = c.getColumnIndex(Wheelmap.POIs.NAME);
+		int wmIdIndex = c.getColumnIndex(Wheelmap.POIs.WM_ID);
+		int latIndex = c.getColumnIndex(Wheelmap.POIs.COORD_LAT);
+		int lonIndex = c.getColumnIndex(Wheelmap.POIs.COORD_LON);
+		int streetIndex = c.getColumnIndex(Wheelmap.POIs.STREET);
+		int housenumIndex = c.getColumnIndex(Wheelmap.POIs.HOUSE_NUM);
+		int postcodeIndex = c.getColumnIndex(Wheelmap.POIs.POSTCODE);
+		int cityIndex = c.getColumnIndex(Wheelmap.POIs.CITY);
+		int phoneIndex = c.getColumnIndex(Wheelmap.POIs.PHONE);
+		int websiteIndex = c.getColumnIndex(Wheelmap.POIs.WEBSITE);
+		int wheelchairIndex = c.getColumnIndex(Wheelmap.POIs.WHEELCHAIR);
+		int wheelchairDescIndex = c
+				.getColumnIndex(Wheelmap.POIs.WHEELCHAIR_DESC);
+
+		String name;
+		Integer wmId;
+		String latitude;
+		String longitude;
+		String street;
+		String houseNum;
+		String postCode;
+		String city;
+		String phone;
+		String website;
+		String wheelchair;
+		String wheelchairDesc;
+
+		c.moveToFirst();
+		while (!c.isAfterLast()) {
+			name = c.getString(nameIndex);
+			wmId = c.getInt(wmIdIndex);
+			latitude = c.getString(latIndex);
+			longitude = c.getString(lonIndex);
+			street = c.getString(streetIndex);
+			houseNum = c.getString(housenumIndex);
+			postCode = c.getString(postcodeIndex);
+			city = c.getString(cityIndex);
+			phone = c.getString(phoneIndex);
+			website = c.getString(websiteIndex);
+			wheelchair = c.getString(wheelchairIndex);
+			wheelchairDesc = c.getString(wheelchairDescIndex);
+			Log.d(TAG, "wmId = " + wmId + " Name = " + name + " lat = "
+					+ latitude + " lon = " + longitude + " street = " + street
+					+ " housenum = " + houseNum + " postcode = " + postCode
+					+ " city = " + city + " phone = " + phone + " website = "
+					+ website + " wheelchar = " + wheelchair
+					+ " wheelchairDesc = " + wheelchairDesc);
+			c.moveToNext();
+		}
+	}
+	
+	public void testNodesTwo() {
+		BoundingBox bb = new BoundingBox(
+				new Wgs84GeoCoordinates(13.341, 52.505),
+				new Wgs84GeoCoordinates(13.434, 52.523));
+
+		ContentResolver cr = getContext().getContentResolver();
+
+		RESTExecutor re = new RESTExecutor(cr);
+		re.retrieveAllPages(bb,  WheelchairState.UNKNOWN);
+
+		Cursor c = cr.query(Wheelmap.POIs.CONTENT_URI, null, null, null, null);
+		Log.d( TAG, "Query count = " + c.getCount());
+		//		Assert.assertEquals(5, c.getCount());
+	}
+}
