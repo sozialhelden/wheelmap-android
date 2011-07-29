@@ -75,8 +75,9 @@ public class SyncService extends IntentService {
 
         try {
             final long startRemote = System.currentTimeMillis();
-            // dummy coordinates
-            mRemoteExecutor.retrieveAllPages( parcBoundingBox.toBoundingBox(), wheelState );
+            // Retrieve all Pages is terribly slow. Anybody knows why?
+//            mRemoteExecutor.retrieveAllPages( parcBoundingBox.toBoundingBox(), wheelState );
+            mRemoteExecutor.retrieveSinglePage( parcBoundingBox.toBoundingBox(), wheelState);
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {

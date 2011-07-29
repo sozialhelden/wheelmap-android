@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.wheelmap.android.RESTExecutor;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.utils.GeocoordinatesMath;
 
 import wheelmap.org.BoundingBox;
 import wheelmap.org.WheelchairState;
@@ -19,17 +20,16 @@ public class ModelTest extends AndroidTestCase {
 
 	public void testNodes() {
 
-		BoundingBox bb = new BoundingBox(
-				new Wgs84GeoCoordinates(13.341, 52.505),
-				new Wgs84GeoCoordinates(13.434, 52.523));
+		BoundingBox bb = GeocoordinatesMath.calculateBoundingBox( 
+				new Wgs84GeoCoordinates(13.3988888, 52.50055), 2 );
 
 		ContentResolver cr = getContext().getContentResolver();
 
 		RESTExecutor re = new RESTExecutor(cr);
-		re.retrieveSinglePage( bb );
+		re.retrieveSinglePage( bb, WheelchairState.UNKNOWN );
 
 		Cursor c = cr.query(Wheelmap.POIs.CONTENT_URI, null, null, null, null);
-		Assert.assertEquals(5, c.getCount());
+		Assert.assertEquals(RESTExecutor.DEFAULT_TEST_PAGE_SIZE, c.getCount());
 
 		int nameIndex = c.getColumnIndex(Wheelmap.POIs.NAME);
 		int wmIdIndex = c.getColumnIndex(Wheelmap.POIs.WM_ID);
@@ -81,19 +81,18 @@ public class ModelTest extends AndroidTestCase {
 			c.moveToNext();
 		}
 	}
-	
+
 	public void testNodesTwo() {
-		BoundingBox bb = new BoundingBox(
-				new Wgs84GeoCoordinates(13.341, 52.505),
-				new Wgs84GeoCoordinates(13.434, 52.523));
+		BoundingBox bb = GeocoordinatesMath.calculateBoundingBox( 
+				new Wgs84GeoCoordinates(13.3988888, 52.50055), 2 );
 
 		ContentResolver cr = getContext().getContentResolver();
 
 		RESTExecutor re = new RESTExecutor(cr);
-		re.retrieveAllPages(bb,  WheelchairState.UNKNOWN);
+		re.retrieveAllPages(bb, WheelchairState.UNKNOWN);
 
 		Cursor c = cr.query(Wheelmap.POIs.CONTENT_URI, null, null, null, null);
-		Log.d( TAG, "Query count = " + c.getCount());
-		//		Assert.assertEquals(5, c.getCount());
+		Log.d(TAG, "Query count = " + c.getCount());
+		// Assert.assertEquals(5, c.getCount());
 	}
 }

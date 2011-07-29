@@ -26,7 +26,7 @@ public class RESTExecutor {
 	private ContentResolver mResolver;
 	private static final String SERVER = "staging.wheelmap.org";
 	private static final String API_KEY = "9NryQWfDWgIebZIdqWiK";
-	private static final int DEFAULT_TEST_PAGE_SIZE = 5;
+	public static final int DEFAULT_TEST_PAGE_SIZE = 5;
 
 	private static RequestProcessor mRequestProcessor = new RequestProcessor();
 
@@ -35,7 +35,7 @@ public class RESTExecutor {
 
 	}
 
-	public void retrieveSinglePage(BoundingBox boundingBox ) {
+	public void retrieveSinglePage(BoundingBox boundingBox, WheelchairState wheelchairState ) {
 		// get stuff from server
 		final NodesRequestBuilder requestBuilder = new NodesRequestBuilder(
 				SERVER, API_KEY, AcceptType.XML);
@@ -43,7 +43,7 @@ public class RESTExecutor {
 		// 1. maxi nodes
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))
 				.boundingBox(boundingBox)
-				.wheelchairState(WheelchairState.UNKNOWN);
+				.wheelchairState(wheelchairState);
 
 		// here just delete whole table
 		mResolver.delete(Wheelmap.POIs.CONTENT_URI, null, null);
@@ -68,7 +68,7 @@ public class RESTExecutor {
 		int numOfPages = m.getNumPages().intValue();
 
 		int crrPage;
-		for (crrPage = 2; crrPage < numOfPages; crrPage++) {
+		for (crrPage = 2; crrPage <= numOfPages; crrPage++) {
 			page.setPage( crrPage );
 			executeSingleRequest(requestBuilder );
 		}
@@ -117,7 +117,7 @@ public class RESTExecutor {
 		} catch (URISyntaxException e) {
 			throw new WheelMapException(e);
 		}
-		Log.d(TAG, "response " + response);
+//		Log.d(TAG, "response " + response);
 
 		Nodes nodes = unmarshal(response, Nodes.class);
 		Log.d(TAG, "totalItemsCount " + nodes.getMeta().getItemCountTotal());
