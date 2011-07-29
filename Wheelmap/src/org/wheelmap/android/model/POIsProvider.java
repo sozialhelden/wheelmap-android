@@ -1,13 +1,17 @@
 package org.wheelmap.android.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.wheelmap.android.model.Wheelmap.POIs;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -23,17 +27,18 @@ public class POIsProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sPOIsProjectionMap;
-	
-	/** this is suitable for use by insert/update/delete/query and may be passed
-	 * as a method call parameter. Only insert/update/delete/query should call .clear() on it */
+
+	/**
+	 * this is suitable for use by insert/update/delete/query and may be passed
+	 * as a method call parameter. Only insert/update/delete/query should call
+	 * .clear() on it
+	 */
 	private final ContentValues mValues = new ContentValues();
 
-
 	private static final int POIS = 1;
-	private static final int POI_ID = 2;	
-	
+	private static final int POI_ID = 2;
 
-	public static final String ID    = BaseColumns._ID;
+	public static final String ID = BaseColumns._ID;
 	public static final String VALUE = "value";
 
 	private static final String TAG = "POIsProvider";
@@ -53,23 +58,17 @@ public class POIsProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			// places 
-			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME 
-					+ " ("
-					+ POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-					+ POIs.WM_ID + " INTEGER, "
-					+ POIs.NAME + " TEXT," 
-					+ POIs.COORD_LAT + " VARCHAR(15),"
-					+ POIs.COORD_LON + " VARCHAR(15)," 
-					+ POIs.STREET + " TEXT," 
-					+ POIs.HOUSE_NUM + " TEXT,"
-					+ POIs.POSTCODE + " TEXT,"
-					+ POIs.CITY + " TEXT,"
-					+ POIs.PHONE + " TEXT, "
-					+ POIs.WEBSITE + " TEXT, "
-					+ POIs.WHEELCHAIR + " TEXT, "
-					+ POIs.WHEELCHAIR_DESC + " TEXT )");
-					
+			// places
+			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME + " (" + POIs._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + POIs.WM_ID
+					+ " INTEGER, " + POIs.NAME + " TEXT," + POIs.COORD_LAT
+					+ " VARCHAR(15)," + POIs.COORD_LON + " VARCHAR(15),"
+					+ POIs.STREET + " TEXT," + POIs.HOUSE_NUM + " TEXT,"
+					+ POIs.POSTCODE + " TEXT," + POIs.CITY + " TEXT,"
+					+ POIs.PHONE + " TEXT, " + POIs.WEBSITE + " TEXT, "
+					+ POIs.WHEELCHAIR + " TEXT, " + POIs.WHEELCHAIR_DESC
+					+ " TEXT )");
+
 		}
 
 		@Override
@@ -96,12 +95,15 @@ public class POIsProvider extends ContentProvider {
 
 		case POI_ID:
 			// delete hours assigned to places
-			
+
 			String placeId = uri.getPathSegments().get(1);
-			
-			
-			count = db.delete(POIS_TABLE_NAME, POIs._ID + "=" + placeId
-					+ (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+
+			count = db.delete(POIS_TABLE_NAME,
+					POIs._ID
+							+ "="
+							+ placeId
+							+ (!TextUtils.isEmpty(where) ? " AND (" + where
+									+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -117,14 +119,15 @@ public class POIsProvider extends ContentProvider {
 		case POIS:
 			return POIs.CONTENT_TYPE;
 		case POI_ID:
-			return POIs.CONTENT_ITEM_TYPE;		
+			return POIs.CONTENT_ITEM_TYPE;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 	}
 
 	@Override
-	public int update(Uri uri, ContentValues values, String where, String[] whereArgs) {
+	public int update(Uri uri, ContentValues values, String where,
+			String[] whereArgs) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		int count;
 		switch (sUriMatcher.match(uri)) {
@@ -134,10 +137,14 @@ public class POIsProvider extends ContentProvider {
 
 		case POI_ID:
 			String placeId = uri.getPathSegments().get(1);
-			count = db.update(POIS_TABLE_NAME, values, POIs._ID + "=" + placeId
-					+ (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+			count = db.update(POIS_TABLE_NAME, values,
+					POIs._ID
+							+ "="
+							+ placeId
+							+ (!TextUtils.isEmpty(where) ? " AND (" + where
+									+ ')' : ""), whereArgs);
 			break;
-				default:
+		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
@@ -145,26 +152,27 @@ public class POIsProvider extends ContentProvider {
 		return count;
 	}
 
-
 	@Override
 	public Uri insert(Uri uri, ContentValues initialValues) {
 		int match = sUriMatcher.match(uri);
 
-//		Log.v(TAG, "PlacessProvider.query: url=" + uri + ", match is " + match);
+		// Log.v(TAG, "PlacessProvider.query: url=" + uri + ", match is " +
+		// match);
 
 		switch (match) {
 		case POIS:
 			mValues.clear();
-			if (initialValues == null)  {
+			if (initialValues == null) {
 				initialValues = new ContentValues();
 				// dummy POI
-				initialValues.put(POIs.NAME, "New POI"); 
-			}				
-			mValues.putAll( initialValues);
+				initialValues.put(POIs.NAME, "New POI");
+			}
+			mValues.putAll(initialValues);
 			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 			long rowId = db.insert(POIS_TABLE_NAME, POIs.NAME, mValues);
 			if (rowId > 0) {
-				Uri placeUri = ContentUris.withAppendedId(Wheelmap.POIs.CONTENT_URI, rowId);
+				Uri placeUri = ContentUris.withAppendedId(
+						Wheelmap.POIs.CONTENT_URI, rowId);
 				getContext().getContentResolver().notifyChange(placeUri, null);
 				return placeUri;
 			}
@@ -183,8 +191,8 @@ public class POIsProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-			String sortOrder) {
+	public Cursor query(Uri uri, String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
 
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
@@ -217,41 +225,68 @@ public class POIsProvider extends ContentProvider {
 			} else {
 				orderBy = sortOrder;
 			}
-			break;		
+			break;
 		default:
-			throw new IllegalArgumentException("Unknown URI " + uri + "by inserting");
+			throw new IllegalArgumentException("Unknown URI " + uri
+					+ "by inserting");
 		}
-
 
 		// Get the database and run the query
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-		Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
+		Cursor c = qb.query(db, projection, selection, selectionArgs, null,
+				null, orderBy);
 
-		// Tell the cursor what uri to watch, so it knows when its source data changes
+		// Tell the cursor what uri to watch, so it knows when its source data
+		// changes
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
+	}
+
+	@Override
+	public ContentProviderResult[] applyBatch(
+			ArrayList<ContentProviderOperation> operations)
+			throws OperationApplicationException {
+		ContentProviderResult[] results = new ContentProviderResult[operations
+				.size()];
+
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		db.beginTransaction();
+
+		try {
+			int i;
+			for (i = 0; i < operations.size(); i++) {
+				ContentProviderOperation operation = operations.get(i);
+				operation.apply(this, results, 2);
+			}
+			db.setTransactionSuccessful();
+		} catch (SQLException e) {
+		} finally {
+			db.endTransaction();
+		}
+
+		return results;
 	}
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois", POIS);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois/#", POI_ID);
-		
-		//  POIs
+
+		// POIs
 		sPOIsProjectionMap = new HashMap<String, String>();
 		sPOIsProjectionMap.put(POIs._ID, POIs._ID);
-		sPOIsProjectionMap.put(POIs.WM_ID, POIs.WM_ID );
+		sPOIsProjectionMap.put(POIs.WM_ID, POIs.WM_ID);
 		sPOIsProjectionMap.put(POIs.NAME, POIs.NAME);
 		sPOIsProjectionMap.put(POIs.COORD_LAT, POIs.COORD_LAT);
 		sPOIsProjectionMap.put(POIs.COORD_LON, POIs.COORD_LON);
-		sPOIsProjectionMap.put(POIs.STREET, POIs.STREET );
+		sPOIsProjectionMap.put(POIs.STREET, POIs.STREET);
 		sPOIsProjectionMap.put(POIs.HOUSE_NUM, POIs.HOUSE_NUM);
 		sPOIsProjectionMap.put(POIs.POSTCODE, POIs.POSTCODE);
 		sPOIsProjectionMap.put(POIs.CITY, POIs.CITY);
-		sPOIsProjectionMap.put(POIs.PHONE, POIs.PHONE );
-		sPOIsProjectionMap.put(POIs.WEBSITE, POIs.WEBSITE );
-		sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR );
-		sPOIsProjectionMap.put(POIs.WHEELCHAIR_DESC, POIs.WHEELCHAIR_DESC );
-		
+		sPOIsProjectionMap.put(POIs.PHONE, POIs.PHONE);
+		sPOIsProjectionMap.put(POIs.WEBSITE, POIs.WEBSITE);
+		sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR);
+		sPOIsProjectionMap.put(POIs.WHEELCHAIR_DESC, POIs.WHEELCHAIR_DESC);
+
 	}
 }
