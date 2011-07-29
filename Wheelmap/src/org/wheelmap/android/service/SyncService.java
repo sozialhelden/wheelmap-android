@@ -3,9 +3,7 @@ package org.wheelmap.android.service;
 import org.wheelmap.android.RESTExecutor;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
-import wheelmap.org.BoundingBox;
 import wheelmap.org.WheelchairState;
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.IntentService;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -71,8 +69,10 @@ public class SyncService extends IntentService {
         ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox)bundle.getSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX);
         WheelchairState wheelState = WheelchairState.valueOf( bundle.getInt( SyncService.EXTRA_STATUS_RECEIVER_WHEELMAP_STATUS ));
         
-        //Log.d(RF.TAG,"currentSLoc received, currentSLoc==null ? "+(currentSLoc==null));
-
+        Log.d(TAG,"parcBoundingBox received, parcBoundingBox==null ? "+(parcBoundingBox==null));
+        if (parcBoundingBox != null)
+          Log.d(TAG,"parcBoundingBox value " + parcBoundingBox.toString());
+        
         try {
             final long startRemote = System.currentTimeMillis();
             // Retrieve all Pages is terribly slow. Anybody knows why?

@@ -10,6 +10,8 @@
     <string name="description_share">Share</string>
     <string name="description_export">Export</string>
     <string name="description_star">Star</string>
+    <string name="description_gps">Current location</string>
+    
 
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
@@ -21,7 +23,7 @@
     <string name="toast_sync_error">Error by syncing with server</string>
     
     
-    
+  
     
     
     

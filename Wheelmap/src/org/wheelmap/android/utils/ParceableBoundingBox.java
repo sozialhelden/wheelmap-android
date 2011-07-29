@@ -13,6 +13,7 @@ import com.google.android.maps.GeoPoint;
 
 public class ParceableBoundingBox implements Parcelable, Serializable {
 	
+	// TODO better UID ???
 	static final long serialVersionUID = 2L;
 	
 	protected final int mLatNorthE6;
@@ -132,7 +133,7 @@ public class ParceableBoundingBox implements Parcelable, Serializable {
 	
 	public BoundingBox toBoundingBox() {
 		return new BoundingBox(
-        		new Wgs84GeoCoordinates(mLonWestE6, mLatSouthE6), 
-        		new Wgs84GeoCoordinates(mLonEastE6, mLatNorthE6));
+        		new Wgs84GeoCoordinates(mLonWestE6 / 1E6, mLatSouthE6 / 1E6), 
+        		new Wgs84GeoCoordinates(mLonEastE6 / 1E6, mLatNorthE6 / 1E6));
 	}
 }

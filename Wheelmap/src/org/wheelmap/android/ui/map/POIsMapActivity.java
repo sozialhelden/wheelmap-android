@@ -6,6 +6,7 @@ import org.wheelmap.android.R;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 
+import org.wheelmap.android.ui.WheelmapHomeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
@@ -47,6 +48,8 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 	private  MyLocationOverlay mCurrLocationOverlay;
 	List<Overlay> mapOverlays;
 
+	private GeoPoint mLastGeoPointE6;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,6 +88,9 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 			mState.mReceiver.setReceiver(this);
 			onRefreshClick(null);
 		}
+		
+		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
+
 
 		FillPOIsOverlay();
 	}
@@ -173,14 +179,18 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 				mState.mSyncing ? View.VISIBLE : View.GONE);
 	}
 
-
-
+	public void  onCenterOnCurrentLocationClick(View v) {
+		if (mLastGeoPointE6 != null) {
+			mapController.animateTo(mLastGeoPointE6); 
+			mapController.setCenter(mLastGeoPointE6);
+		}
+	}	
 
 	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, POIsMapActivity.class);
+		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		this.startActivity(intent);
-	}
+	}	
 
 	private void fillExtrasWithBoundingRect(Bundle bundle) {
 		int latSpan = mapView.getLatitudeSpan();
@@ -194,7 +204,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, boundingBox);
 
 	}
-	
+
 	private void fillExtrasWithOtherParameters( Bundle bundle ) {
 		bundle.putInt( SyncService.EXTRA_STATUS_RECEIVER_WHEELMAP_STATUS, WheelchairState.UNKNOWN.getId() );
 	}
@@ -249,8 +259,15 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		public void onLocationChanged(Location location) {
 			int lat = (int) (location.getLatitude() * 1E6);
 			int lng = (int) (location.getLongitude() * 1E6);
-			GeoPoint point = new GeoPoint(lat, lng);
-			mapController.animateTo(point); //	mapController.setCenter(point);			
+			// we got the first time current position so center map on it
+			if (mLastGeoPointE6 == null) {
+				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
+				mLastGeoPointE6 = new GeoPoint(lat, lng);
+				mapController.animateTo(mLastGeoPointE6); 
+				mapController.setCenter(mLastGeoPointE6);
+			}
+			else 
+				mLastGeoPointE6 = new GeoPoint(lat, lng);			
 		}
 
 		@Override

@@ -17,6 +17,12 @@
 
         <ImageView style="@style/TitleBarSeparator" />
         <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_gps"
+              android:id="@+id/btn_title_gps"
+            android:src="@drawable/ic_title_gps"
+            android:onClick="onCenterOnCurrentLocationClick" />
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
             android:id="@+id/btn_title_refresh"
             android:contentDescription="@string/description_refresh"
             android:src="@drawable/ic_title_refresh"

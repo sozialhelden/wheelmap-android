@@ -15,6 +15,12 @@
 
         <ImageView style="@style/TitleBarSeparator" />
         <TextView style="@style/TitleBarText" />
+        
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_map"
+            android:src="@drawable/ic_title_map"
+            android:onClick="onMapClick" />
 
         <ImageView style="@style/TitleBarSeparator" />
         <ImageButton style="@style/TitleBarAction"
