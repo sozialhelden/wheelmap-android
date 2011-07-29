@@ -10,7 +10,9 @@ import wheelmap.org.BoundingBox;
 import wheelmap.org.WheelchairState;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.content.ContentResolver;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
+import android.os.RemoteException;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
@@ -18,7 +20,7 @@ public class ModelTest extends AndroidTestCase {
 
 	private final static String TAG = "wheelmaptest";
 
-	public void testNodes() {
+	public void testNodes() throws RemoteException, OperationApplicationException {
 
 		BoundingBox bb = GeocoordinatesMath.calculateBoundingBox( 
 				new Wgs84GeoCoordinates(13.3988888, 52.50055), 2 );
@@ -82,7 +84,7 @@ public class ModelTest extends AndroidTestCase {
 		}
 	}
 
-	public void testNodesTwo() {
+	public void testNodesTwo() throws RemoteException, OperationApplicationException {
 		BoundingBox bb = GeocoordinatesMath.calculateBoundingBox( 
 				new Wgs84GeoCoordinates(13.3988888, 52.50055), 2 );
 
