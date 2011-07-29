@@ -4,6 +4,7 @@ import org.wheelmap.android.RESTExecutor;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import wheelmap.org.BoundingBox;
+import wheelmap.org.WheelchairState;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.IntentService;
 import android.app.Service;
@@ -27,6 +28,9 @@ public class SyncService extends IntentService {
     
     public static final String EXTRA_STATUS_RECEIVER_BOUNCING_BOX =
         "com.google.android.iosched.extra.STATUS_RECEIVER_BOUNCING_BOX";
+    
+    public static final String EXTRA_STATUS_RECEIVER_WHEELMAP_STATUS =
+    		"com.google.android.iosched.extra.STATUS_RECEIVER_WHEELMAP_STATUS";
   
 
     public static final int STATUS_RUNNING = 0x1;
@@ -64,16 +68,16 @@ public class SyncService extends IntentService {
         */
         
         final Bundle bundle=intent.getExtras();        
-        ParceableBoundingBox boundingBox = (ParceableBoundingBox)bundle.getSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX);
-       
+        ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox)bundle.getSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX);
+        WheelchairState wheelState = WheelchairState.valueOf( bundle.getInt( SyncService.EXTRA_STATUS_RECEIVER_WHEELMAP_STATUS ));
+        
         //Log.d(RF.TAG,"currentSLoc received, currentSLoc==null ? "+(currentSLoc==null));
 
         try {
             final long startRemote = System.currentTimeMillis();
-            // dummy coordinates
-            mRemoteExecutor.execute(new BoundingBox(
-            		new Wgs84GeoCoordinates(boundingBox.getLonWest(), boundingBox.getLatSouth()),
-            		new Wgs84GeoCoordinates(boundingBox.getLonEast(), boundingBox.getLatNorth())));
+            // Retrieve all Pages is terribly slow. Anybody knows why?
+//            mRemoteExecutor.retrieveAllPages( parcBoundingBox.toBoundingBox(), wheelState );
+            mRemoteExecutor.retrieveSinglePage( parcBoundingBox.toBoundingBox(), wheelState);
             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {

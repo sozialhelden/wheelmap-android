@@ -1,4 +1,1 @@
-default.properties
-bin
-gen
-.DS_Store
+*/.svn/

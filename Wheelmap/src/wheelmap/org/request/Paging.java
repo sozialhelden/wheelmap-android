@@ -5,7 +5,7 @@ public class Paging {
 	public static final int MAX_NUMBER_OF_ITEMS_PER_PAGE=500;
 
 	public final int numberOfItemsPerPage;
-	public final int pageNumber;
+	public int pageNumber;
 
 	public Paging(int numberOfItemsPerPage) {
 		this(numberOfItemsPerPage,1);
@@ -17,6 +17,12 @@ public class Paging {
 		}
 		this.numberOfItemsPerPage=numberOfItemsPerPage;
 		this.pageNumber=pageNumber;
+	}
+	
+	public void setPage( int pageNumber ) {
+		if ( pageNumber < 1 )
+			throw new IllegalArgumentException( "pageNumber must be greater than zero" );
+		this.pageNumber = pageNumber;
 	}
 	
 	@Override

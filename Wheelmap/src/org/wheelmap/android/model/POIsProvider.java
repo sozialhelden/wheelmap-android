@@ -150,7 +150,7 @@ public class POIsProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues initialValues) {
 		int match = sUriMatcher.match(uri);
 
-		Log.v(TAG, "PlacessProvider.query: url=" + uri + ", match is " + match);
+//		Log.v(TAG, "PlacessProvider.query: url=" + uri + ", match is " + match);
 
 		switch (match) {
 		case POIS:

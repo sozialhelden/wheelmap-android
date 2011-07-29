@@ -4,6 +4,7 @@ package org.wheelmap.android.utils;
 import java.io.Serializable;
 
 import wheelmap.org.BoundingBox;
+import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -127,5 +128,11 @@ public class ParceableBoundingBox implements Parcelable, Serializable {
 		final int latSouthE6 = in.readInt();
 		final int lonWestE6 = in.readInt();
 		return new ParceableBoundingBox(latNorthE6, lonEastE6, latSouthE6, lonWestE6);
+	}
+	
+	public BoundingBox toBoundingBox() {
+		return new BoundingBox(
+        		new Wgs84GeoCoordinates(mLonWestE6, mLatSouthE6), 
+        		new Wgs84GeoCoordinates(mLonEastE6, mLatNorthE6));
 	}
 }

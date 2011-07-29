@@ -9,6 +9,8 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
+import wheelmap.org.WheelchairState;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -158,8 +160,6 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		super.onPause();
 	}
 
-
-
 	@Override
 	protected void onResume() {
 		mCurrLocationOverlay.enableMyLocation();
@@ -194,6 +194,10 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, boundingBox);
 
 	}
+	
+	private void fillExtrasWithOtherParameters( Bundle bundle ) {
+		bundle.putInt( SyncService.EXTRA_STATUS_RECEIVER_WHEELMAP_STATUS, WheelchairState.UNKNOWN.getId() );
+	}
 
 
 	public void onRefreshClick(View v) {
@@ -202,6 +206,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		Bundle extras = new Bundle();
 		// 
 		fillExtrasWithBoundingRect(extras);
+		fillExtrasWithOtherParameters(extras);
 
 
 
