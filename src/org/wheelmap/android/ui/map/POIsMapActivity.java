@@ -186,12 +186,12 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		int latSpan = mapView.getLatitudeSpan();
 		int lonSpan = mapView.getLongitudeSpan();
 		GeoPoint center = mapView.getMapCenter();
-		ParceableBoundingBox bouncingBox =  new ParceableBoundingBox(
+		ParceableBoundingBox boundingBox =  new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), 
 				center.getLongitudeE6() + (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2),
 				center.getLongitudeE6() - (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, bouncingBox);
+		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, boundingBox);
 
 	}
 
@@ -209,12 +209,6 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
 		intent.putExtras(extras);
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-
-
-
-
-		// insert here bounding rectangle as data
-
 		startService(intent);
 	}
 

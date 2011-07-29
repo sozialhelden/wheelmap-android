@@ -13,6 +13,16 @@ public class BoundingBox {
 		this.eastNorth = eastNorth;
 	}
 	
+	public  Wgs84GeoCoordinates getWestSouth()
+	{
+		return westSouth;
+	}
+	
+	public  Wgs84GeoCoordinates getEastNorth()
+	{
+		return eastNorth;
+	}
+	
 	public String asRequestParameter() {
 		return westSouth.asRequestParameter() + "," + eastNorth.asRequestParameter();
 	}	

@@ -3,6 +3,8 @@ package org.wheelmap.android.utils;
 
 import java.io.Serializable;
 
+import wheelmap.org.BoundingBox;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -23,8 +25,15 @@ public class ParceableBoundingBox implements Parcelable, Serializable {
 		this.mLatSouthE6 = southE6;
 		this.mLonWestE6 = westE6;
 	}
-
-
+	
+	public ParceableBoundingBox(final BoundingBox bb) {		
+		this.mLatNorthE6 = (int)(bb.getEastNorth().latitude * 1E6);
+		this.mLonEastE6 = (int)(bb.getEastNorth().longitude * 1E6);
+		this.mLatSouthE6 = (int)(bb.getWestSouth().latitude * 1E6);
+		this.mLonWestE6 = (int)(bb.getWestSouth().latitude * 1E6);
+	}
+	
+	
 	/**
 	 * @return GeoPoint center of this BoundingBox
 	 */
