@@ -6,20 +6,13 @@ import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
-import org.wheelmap.android.utils.CurrentLocation;
-import org.wheelmap.android.utils.CurrentLocation.LocationResult;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.GeocoordinatesMath;
-import org.wheelmap.android.utils.ParceableBoundingBox;
 
-import wheelmap.org.BoundingBox;
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,7 +24,6 @@ import android.widget.Toast;
 public class POIsListActivity extends ListActivity implements DetachableResultReceiver.Receiver {
 
 	private Cursor mCursor;
-	private CurrentLocation mCurrentLocation;
 	private State mState;
 
 
@@ -40,9 +32,6 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-
-		// current location
-		mCurrentLocation = new CurrentLocation();
 
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
@@ -62,12 +51,18 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 			// Start listening for SyncService updates again
 			mState.mReceiver.setReceiver(this);
 			updateRefreshStatus();
-
 		} else {
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
-			onRefreshClick(null);
 		}
+	}
+
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		// Clear any strong references to this Activity, we'll reattach to
+		// handle events on the other side.
+		mState.mReceiver.clearReceiver();
+		return mState;
 	}
 
 	public void onHomeClick(View v) {
@@ -79,8 +74,6 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 	public void onMapClick(View v) {
 		startActivity(new Intent(this, POIsMapActivity.class));
 	}
-
-
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -147,28 +140,12 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
-
-	public LocationResult locationResult = new LocationResult(){
-		@Override
-		public void gotLocation(final Location location){
-			// calculate bounding box from current location around 2 km
-			BoundingBox bb = GeocoordinatesMath.calculateBoundingBox(new Wgs84GeoCoordinates(location.getLongitude(), location.getLatitude()), 200);
-
-			ParceableBoundingBox boundingBox = new ParceableBoundingBox(bb);
-
-			// get bounding box from current view
-			Bundle extras = new Bundle();
-			// trigger off background sync
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, POIsListActivity.this, SyncService.class);
-			extras.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, boundingBox);
-			intent.putExtras(extras);
-			intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, POIsListActivity.this.mState.mReceiver);
-			startService(intent);
-		}
-	};
-
+	
 	public void onRefreshClick(View v) {
-		mCurrentLocation.getLocation(this, locationResult);
+		// start service for sync
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, POIsListActivity.this, SyncService.class);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, POIsListActivity.this.mState.mReceiver);
+		startService(intent);
 	}
 
 	public void onSearchClick(View v) {

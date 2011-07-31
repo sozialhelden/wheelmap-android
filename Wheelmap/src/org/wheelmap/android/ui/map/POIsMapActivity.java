@@ -10,8 +10,6 @@ import org.wheelmap.android.ui.WheelmapHomeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
-import wheelmap.org.WheelchairState;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -205,20 +203,12 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 
 	}
 
-	private void fillExtrasWithOtherParameters( Bundle bundle ) {
-		bundle.putInt( SyncService.EXTRA_STATUS_RECEIVER_WHEELMAP_STATUS, WheelchairState.UNKNOWN.getId() );
-	}
-
-
 	public void onRefreshClick(View v) {
 
 		// get bounding box from current view
 		Bundle extras = new Bundle();
 		// 
 		fillExtrasWithBoundingRect(extras);
-		fillExtrasWithOtherParameters(extras);
-
-
 
 		// trigger off background sync
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);

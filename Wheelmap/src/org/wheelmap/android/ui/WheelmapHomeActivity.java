@@ -5,7 +5,6 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 
 	/** State held between configuration changes. */
 	private State mState;
-
 
 	/** Called when the activity is first created. */
 	@Override
@@ -50,15 +48,12 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
 	}
 
-	/** Handle "refresh" title-bar action. */
 	public void onRefreshClick(View v) {
 		// trigger off background sync
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, WheelmapHomeActivity.this, SyncService.class);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, WheelmapHomeActivity.this.mState.mReceiver);
 		startService(intent);
-
 	}
-
 
 	/** Handle "map" action. */
 	public void onMapClick(View v) {
