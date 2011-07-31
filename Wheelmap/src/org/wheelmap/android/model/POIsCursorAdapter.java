@@ -37,7 +37,7 @@ public class POIsCursorAdapter extends CursorAdapter {
 
 		pliv.setName(name);
 		pliv.setDistance("cafe");
-		pliv.setIcon(R.drawable.wheelmap_1);
+		pliv.setIcon(R.drawable.marker_limited);
 	}
 
 	@Override
