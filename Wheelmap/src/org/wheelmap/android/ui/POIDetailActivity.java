@@ -1,9 +1,8 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
-
-import wheelmap.org.WheelchairState;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -53,17 +52,16 @@ public class POIDetailActivity extends Activity {
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
+		
+		POIHelper poi_helper = new POIHelper();
 
 
 		if (cur.moveToFirst()) {		
-			name.setText(cur.getString(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME)));
-			// TODO make helper getting address from Street .... City
-			address.setText(cur.getString(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.CITY)));
+			name.setText(poi_helper.getName(cur));
+			address.setText(poi_helper.getAddress(cur));
 			notes.setText(cur.getString(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.WEBSITE)));
 
-			WheelchairState state = WheelchairState.valueOf(cur.getInt(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.WHEELCHAIR)));
-
-			switch (state) {
+			switch (poi_helper.getWheelchair(cur)) {
 			case UNKNOWN: {
 				types.check(R.id.unknown);
 				break;
