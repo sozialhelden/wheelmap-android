@@ -64,7 +64,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 
 		// overlays
 		mapOverlays = mapView.getOverlays(); 
-		poisItemizedOverlay = new POIsPaintedOverlay(mCursor);
+		poisItemizedOverlay = new POIsPaintedOverlay(this, mCursor);
 		mapOverlays.add(poisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay(this, mapView);

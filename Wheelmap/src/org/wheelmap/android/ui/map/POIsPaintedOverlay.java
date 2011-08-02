@@ -2,15 +2,18 @@ package org.wheelmap.android.ui.map;
 
 import java.util.ArrayList;
 
+import org.wheelmap.android.R;
 import org.wheelmap.android.model.Wheelmap;
 
 import wheelmap.org.WheelchairState;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.RectF;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -18,16 +21,25 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
 public class POIsPaintedOverlay extends Overlay {
-	//private ArrayList<BitmapDrawable> mBitmaps = new ArrayList<BitmapDrawable>();
 	private ArrayList<POIMapItem> mPoisLocations;
 	private Cursor mPois;
-	private int rad = 5;
+	private Context mContext;
+	private Bitmap bUnknown;
+	private Bitmap bYes;
+	private Bitmap bNo;
+	private Bitmap bLimited;
 
 
 
-	public POIsPaintedOverlay(Cursor cursor) {
+	public POIsPaintedOverlay(Context context, Cursor cursor) {
 		super();
+		mContext = context;
 		mPois = cursor;
+
+		bUnknown = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.marker_unknown);
+		bYes = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.marker_yes);
+		bNo = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.marker_no);
+		bLimited = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.marker_limited);
 
 		mPoisLocations = new ArrayList<POIMapItem>();
 		refreshLocations();
@@ -73,31 +85,26 @@ public class POIsPaintedOverlay extends Overlay {
 				Point myPoint = new Point();
 				projection.toPixels(poi.getPoint(), myPoint);
 
-				RectF oval = new RectF(myPoint.x-rad, myPoint.y-rad, 
-						myPoint.x+rad, myPoint.y+rad);
-
 				// color depending on Wheelchairstate
 				// TODO combine Wheelchair state and category into one image
 				switch (poi.getWheelchairState()) {
 				case UNKNOWN: {
-					paint.setColor(0xcdc9c9);// Snow 3
-					paint.setAlpha(250);
+					canvas.drawBitmap(bUnknown, myPoint.x - bUnknown.getWidth(), myPoint.y - bUnknown.getHeight(), paint);
 					break;
 				}
 				case YES:
-					paint.setARGB(250, 0, 255, 0);
+					canvas.drawBitmap(bYes, myPoint.x - bYes.getWidth(), myPoint.y - bYes.getHeight(), paint);
 					break;
 				case LIMITED:
-					paint.setARGB(250, 255, 255, 0);
+					canvas.drawBitmap(bLimited, myPoint.x - bLimited.getWidth(), myPoint.y - bLimited.getHeight(), paint);
 					break;
 				case NO:
-					paint.setARGB(250, 255, 0, 0);
+					canvas.drawBitmap(bNo, myPoint.x - bNo.getWidth(), myPoint.y - bNo.getHeight(), paint);
 					break;
 				default:
-					paint.setARGB(250, 255, 0, 0);
+					canvas.drawBitmap(bUnknown, myPoint.x - bUnknown.getWidth(), myPoint.y - bUnknown.getHeight(), paint);
 					break;
 				}
-				canvas.drawOval(oval, paint);
 			}
 		}
 	}
