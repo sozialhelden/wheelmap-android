@@ -69,6 +69,12 @@ public class Wheelmap {
 			 * The default sort order for this table - categories
 			 */
 			public static final String DEFAULT_SORT_ORDER = NAME + " DESC";
+			
+			/**
+			 * The default sort order for this table - categories
+			 */
+			public static final String EXTRAS_POI_ID = NAME + "_ID";
+			
 
 			/**
 			 * The columns we are interested in from the database

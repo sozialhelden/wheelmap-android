@@ -3,14 +3,12 @@ package org.wheelmap.android.ui;
 import org.wheelmap.android.R;
 import org.wheelmap.android.model.POIsCursorAdapter;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,7 +17,6 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-
 
 public class POIsListActivity extends ListActivity implements DetachableResultReceiver.Receiver {
 
@@ -79,17 +76,10 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI, id);
+		Intent i=new Intent(POIsListActivity.this, POIDetailActivity.class);
 
-		String action = getIntent().getAction();
-		if (Intent.ACTION_PICK.equals(action) || Intent.ACTION_GET_CONTENT.equals(action)) {
-			// The caller is waiting for us to return a note selected by
-			// the user.  The have clicked on one, so return it now.
-			setResult(RESULT_OK, new Intent().setData(uri));
-		} else {
-			// Launch activity to view/edit the currently selected item
-			startActivity(new Intent(Intent.ACTION_EDIT, uri));
-		}
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, String.valueOf(id));
+		startActivity(i);
 	}
 
 	private void updateRefreshStatus() {

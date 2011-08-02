@@ -33,6 +33,13 @@
             android:name=".ui.map.POIsMapActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map" />
+         
+        <activity
+            android:name=".ui.POIDetailActivity"
+            android:theme="@style/Theme.IOSched"
+            android:label="@string/title_pois_map" />
+                
+            
         
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"

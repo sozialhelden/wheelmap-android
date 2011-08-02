@@ -6,7 +6,6 @@ import org.wheelmap.android.ui.POIsListItemView;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.location.Location;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class POIsCursorAdapter extends CursorAdapter {
 	      // Calculate the distance from your current location.
 	    //int distance = (int)currentLocation.distanceTo(location);
 
-		pliv.setDistance("cafe");
+		pliv.setDistance("123 m");
 		pliv.setIcon(R.drawable.marker_limited);
 	}
 
