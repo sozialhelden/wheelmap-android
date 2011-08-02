@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,7 +29,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
 public class POIsMapActivity extends MapActivity  implements DetachableResultReceiver.Receiver {
 
@@ -42,7 +40,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
-	private POIsItemizedOverlay poisItemizedOverlay;
+	private POIsPaintedOverlay poisItemizedOverlay;
 	private  MyLocationOverlay mCurrLocationOverlay;
 	List<Overlay> mapOverlays;
 
@@ -58,11 +56,16 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		mapView.setStreetView(true);
 		mapController = mapView.getController();
 		mapController.setZoom(14); // Zoon 1 is world view
+		
+		// Run query
+		Uri uri = Wheelmap.POIs.CONTENT_URI;
+
+		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION, null, null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
 		// overlays
 		mapOverlays = mapView.getOverlays(); 
-		Drawable drawable = this.getResources().getDrawable(R.drawable.marker_limited);
-		poisItemizedOverlay = new POIsItemizedOverlay(drawable);
+		poisItemizedOverlay = new POIsPaintedOverlay(mCursor);
+		mapOverlays.add(poisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay(this, mapView);
 		mCurrLocationOverlay.enableMyLocation();
@@ -84,16 +87,10 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		} else {
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
-			onRefreshClick(null);
 		}
 		
 		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
-
-
-		FillPOIsOverlay();
 	}
-
-
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -106,7 +103,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		case SyncService.STATUS_FINISHED: {
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			FillPOIsOverlay();
+			mapView.invalidate();
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
@@ -120,52 +117,17 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		}
 		}
 	}
-
-
-	private void FillPOIsOverlay() {
-		// Run query
-		Uri uri = Wheelmap.POIs.CONTENT_URI;
-
-		mCursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
-		startManagingCursor(mCursor);
-
-		if (mCursor.moveToFirst()) {
-			// insert overlay into the map with the first data
-			mapOverlays.add(poisItemizedOverlay);
-
-
-			// current location overlay
-			GeoPoint point;
-			String name; 
-			int lat;
-			int lon; 
-
-			int nameColumn = mCursor.getColumnIndex(Wheelmap.POIs.NAME); 
-			int latColumn = mCursor.getColumnIndex(Wheelmap.POIs.COORD_LAT);
-			int lonColumn = mCursor.getColumnIndex(Wheelmap.POIs.COORD_LON);
-
-			do {
-				// Get the field values
-				name = mCursor.getString(nameColumn);
-				lat = mCursor.getInt(latColumn);
-				lon = mCursor.getInt(lonColumn);
-
-				point = new GeoPoint(lat, lon); 
-
-				poisItemizedOverlay.addOverlay(new OverlayItem(point, name, ""));
-			} while (mCursor.moveToNext());
-
-		}
-	}  
-
+	
 	@Override
 	protected void onPause() {
 		mCurrLocationOverlay.disableMyLocation();
+		mCursor.deactivate();
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
+		mCursor.requery();
 		mCurrLocationOverlay.enableMyLocation();
 		super.onResume();
 	}            

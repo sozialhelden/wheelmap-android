@@ -34,7 +34,6 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 		} else {
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
-			onRefreshClick(null);
 		}
 	}
 

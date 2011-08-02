@@ -1,11 +1,12 @@
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.R;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.ui.POIsListItemView;
-import org.wheelmap.android.R;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Location;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,11 @@ public class POIsCursorAdapter extends CursorAdapter {
 		}
 
 		pliv.setName(name);
+		// calculate distance form current location
+		//Location location = friendLocations.get(name);
+	      // Calculate the distance from your current location.
+	    //int distance = (int)currentLocation.distanceTo(location);
+
 		pliv.setDistance("cafe");
 		pliv.setIcon(R.drawable.marker_limited);
 	}
