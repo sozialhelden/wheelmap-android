@@ -37,11 +37,18 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 		}
 	}
 
-	/** Handle "schedule" action. */
 	public void onListClick(View v) {
 		// Launch overall conference schedule
 		startActivity(new Intent(this, POIsListActivity.class));
 	}
+	
+	public void onSettingsClick(View v) {
+		// Launch overall conference schedule
+		startActivity(new Intent(this, SettingsActivity.class));
+	}
+
+	
+	
 
 	public void onSearchClick(View v) {
 		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();

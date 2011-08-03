@@ -17,10 +17,18 @@
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
     <string name="title_pois_list">List</string>
     <string name="title_pois_map">Map</string>
+    <string name="title_pois_settings">Settings</string>
     <string name="title_pois_detail">Info</string>
     <string name="edit_poi">Edit</string>
     
     <string name="toast_sync_error">Error by syncing with server</string>
+    
+    <string name="settings_full_accesible">Full wheelchair accesibility</string>
+    <string name="settings_no_accesible">No wheelchair accesibility</string>
+    <string name="settings_limited_accesible">Limited wheelchair accesibility</string>
+    <string name="settings_unknown_accesible">Unknown wheelchair accesibility</string>
+    
+    
     
     
   
@@ -33,6 +41,8 @@
 
     <string name="btn_list">List</string>
     <string name="btn_map">Map</string>
+    <string name="btn_settings">Settings</string>
+    
     
     <!-- DEBUG MH -->
     <string name="mapskey">02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg</string>

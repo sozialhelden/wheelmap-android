@@ -47,7 +47,19 @@
                 style="@style/HomeButton"
                 android:onClick="onMapClick"
                 android:text="@string/btn_map"
-                android:drawableTop="@drawable/home_btn_map"/>
+                android:drawableTop="@drawable/home_btn_map"/>            
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            
+            <Button android:id="@+id/home_btn_settings"
+                style="@style/HomeButton"
+                android:onClick="onSettingsClick"
+                android:text="@string/btn_settings"
+                android:drawableTop="@drawable/home_btn_settings"/>    
         </LinearLayout>
     </LinearLayout>
    <!--  place for Adds??
