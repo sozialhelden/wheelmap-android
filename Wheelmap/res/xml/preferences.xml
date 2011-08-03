@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android" android:title="Settings">
+    <PreferenceCategory android:title="DisplayWheelchair accesibility">
+        <CheckBoxPreference 
+          android:key="showFull"
+          android:title="@string/settings_full_accesible">
+        </CheckBoxPreference>
+        
+        <CheckBoxPreference 
+          android:key="showNo"
+          android:title="@string/settings_no_accesible">
+        </CheckBoxPreference>
+        
+        <CheckBoxPreference 
+          android:key="showLimited"
+          android:title="@string/settings_limited_accesible">
+          
+        </CheckBoxPreference>
+        
+        <CheckBoxPreference 
+          android:key="showUnknown"
+          android:title="@string/settings_unknown_accesible">
+        </CheckBoxPreference>
+    </PreferenceCategory>
+    
+</PreferenceScreen>

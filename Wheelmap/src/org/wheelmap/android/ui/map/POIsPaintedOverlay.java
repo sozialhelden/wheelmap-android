@@ -3,7 +3,9 @@ package org.wheelmap.android.ui.map;
 import java.util.ArrayList;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.utils.MapUtils;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;
@@ -14,6 +16,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.net.Uri;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
@@ -55,14 +59,16 @@ public class POIsPaintedOverlay extends Overlay {
 		int stateColumn = mPois.getColumnIndex(Wheelmap.POIs.WHEELCHAIR); 
 		int latColumn = mPois.getColumnIndex(Wheelmap.POIs.COORD_LAT);
 		int lonColumn = mPois.getColumnIndex(Wheelmap.POIs.COORD_LON);
+		int idColumn = mPois.getColumnIndex(Wheelmap.POIs._ID);
 
 		if (mPois.moveToFirst())
 			do { 
 				Double lat = mPois.getDouble(latColumn);
 				Double lng = mPois.getDouble(lonColumn);
 				WheelchairState state = WheelchairState.valueOf(mPois.getInt(stateColumn));
+				int poiId = mPois.getInt(idColumn); 
 
-				POIMapItem geoPoint = new POIMapItem(new GeoPoint(lat.intValue(), lng.intValue()), state);
+				POIMapItem geoPoint = new POIMapItem(new GeoPoint(lat.intValue(), lng.intValue()), state, poiId);
 				mPoisLocations.add(geoPoint);
 			} while(mPois.moveToNext());
 	}
@@ -108,5 +114,34 @@ public class POIsPaintedOverlay extends Overlay {
 			}
 		}
 	}
+
+	@Override
+	public boolean onTap(GeoPoint p, MapView mapView) {
+		for (POIMapItem poi : mPoisLocations) {
+			GeoPoint poiLocation = poi.getPoint(); 
+			if (MapUtils.NearPonits(poiLocation, p)) {
+				// Use the ContentUris method to produce the base URI for the contact with _ID == 23.
+				Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, Integer.toString(poi.getId()));
+
+				// Then query for this specific record:
+				Cursor cur = mContext.getContentResolver().query(poiUri, null, null, null, null);
+				
+				
+				POIHelper poi_helper = new POIHelper();
+
+
+				if (cur.moveToFirst()) {		
+					Toast.makeText(mContext,
+							poi_helper.getName(cur) + ' ' + poi_helper.getAddress(cur),
+							Toast.LENGTH_SHORT).show();
+				}
+				cur.close();
+				
+			}
+		}
+		return super.onTap(p, mapView);
+	}
+	
+	
 
 }

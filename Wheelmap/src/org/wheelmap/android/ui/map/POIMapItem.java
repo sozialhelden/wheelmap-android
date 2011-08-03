@@ -15,6 +15,12 @@ public class POIMapItem {
      * Stores the wheelchair state
      */
     private final WheelchairState mState;
+    
+    /**
+     * Stores the wheelchair state
+     */
+    private final int id;
+    
 	
 	/**
      * Constructs a new GeoPoint with the given latitude and longitude, measured in degrees.
@@ -24,9 +30,10 @@ public class POIMapItem {
      * @param state
      *            wheelchair state.
      */
-    public POIMapItem(GeoPoint point, WheelchairState state) {
+    public POIMapItem(GeoPoint point, WheelchairState state, int id) {
         this.mPoint = point;
         this.mState = state;
+        this.id = id;
     }
     
     /**
@@ -45,5 +52,14 @@ public class POIMapItem {
      */
     public WheelchairState getWheelchairState() {
         return this.mState;
+    }
+    
+    /**
+     * Returns id
+     * 
+     * @return id of the POI
+     */
+    public int getId() {
+        return this.id;
     }
 }
