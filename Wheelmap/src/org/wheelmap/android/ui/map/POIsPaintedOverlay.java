@@ -17,6 +17,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -119,8 +120,13 @@ public class POIsPaintedOverlay extends Overlay {
 	public boolean onTap(GeoPoint p, MapView mapView) {
 		for (POIMapItem poi : mPoisLocations) {
 			GeoPoint poiLocation = poi.getPoint(); 
-			if (MapUtils.NearPonits(poiLocation, p)) {
-				// Use the ContentUris method to produce the base URI for the contact with _ID == 23.
+			if (MapUtils.NearPonits(poiLocation, p, mapView.getLongitudeSpan(), mapView.getLatitudeSpan())) {
+				
+				
+			
+
+			
+				
 				Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, Integer.toString(poi.getId()));
 
 				// Then query for this specific record:
@@ -131,11 +137,14 @@ public class POIsPaintedOverlay extends Overlay {
 
 
 				if (cur.moveToFirst()) {		
+					Log.d("POI id",Integer.toBinaryString(poi.getId()) + poi_helper.getName(cur) + ' ' + poi_helper.getAddress(cur));
+
 					Toast.makeText(mContext,
 							poi_helper.getName(cur) + ' ' + poi_helper.getAddress(cur),
 							Toast.LENGTH_SHORT).show();
 				}
 				cur.close();
+				return true;
 				
 			}
 		}
