@@ -97,7 +97,12 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 		}
 		}
 	}
-
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		mState.mReceiver.clearReceiver();
+		return mState;
+	}
 
 	/**
 	 * State specific to {@link HomeActivity} that is held between configuration
