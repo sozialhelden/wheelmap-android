@@ -10,9 +10,9 @@ import org.wheelmap.android.model.Wheelmap;
 import wheelmap.org.BoundingBox;
 import wheelmap.org.WheelMapException;
 import wheelmap.org.WheelchairState;
-import wheelmap.org.domain.node.Meta;
-import wheelmap.org.domain.node.Node;
-import wheelmap.org.domain.node.Nodes;
+import wheelmap.org.domain.node.json.Meta;
+import wheelmap.org.domain.node.json.Node;
+import wheelmap.org.domain.node.json.Nodes;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
@@ -43,7 +43,7 @@ public class RESTExecutor {
 			WheelchairState wheelchairState) throws RemoteException, OperationApplicationException {
 		// get stuff from server
 		final NodesRequestBuilder requestBuilder = new NodesRequestBuilder(
-				SERVER, API_KEY, AcceptType.XML);
+				SERVER, API_KEY, AcceptType.JSON);
 
 		// 1. maxi nodes
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))
@@ -62,7 +62,7 @@ public class RESTExecutor {
 		mResolver.delete(Wheelmap.POIs.CONTENT_URI, null, null);
 
 		final NodesRequestBuilder requestBuilder = new NodesRequestBuilder(
-				SERVER, API_KEY, AcceptType.XML);
+				SERVER, API_KEY, AcceptType.JSON);
 
 		// Server seems to count from 1...
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
@@ -107,7 +107,7 @@ public class RESTExecutor {
 
 		for (int i = 0; i < nodes.getMeta().getItemCount().intValue(); i++) {
 			ContentValues values = new ContentValues();
-			copyNodeToValues(nodes.getNodes().getNode().get(i), values);
+			copyNodeToValues(nodes.getNodes().get(i), values);
 			ContentProviderOperation operation = ContentProviderOperation
 					.newInsert(Wheelmap.POIs.CONTENT_URI).withValues(values).build();
 			operations.add( operation );
@@ -137,10 +137,11 @@ public class RESTExecutor {
 	}
 
 	private static Nodes retrieveNumberOfHits(String getRequest) {
-		String response = null;
+//		String response = null;
+		Nodes nodes;
 		long requestTime = new Date().getTime();
 		try {
-			response = mRequestProcessor.get(new URI(getRequest), String.class);
+			nodes = mRequestProcessor.get(new URI(getRequest), Nodes.class);
 		} catch (URISyntaxException e) {
 			throw new WheelMapException(e);
 		}
@@ -148,10 +149,10 @@ public class RESTExecutor {
 		long requestEndTime = new Date().getTime();
 		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
 
-		Nodes nodes = unmarshal(response, Nodes.class);
-		long unmarshalTime = new Date().getTime();
-		Log.d(TAG, "unmarshalTime = " + (unmarshalTime - requestEndTime)
-				/ 1000f);
+//		Nodes nodes = unmarshal(response, Nodes.class);
+//		long unmarshalTime = new Date().getTime();
+//		Log.d(TAG, "unmarshalTime = " + (unmarshalTime - requestEndTime)
+//				/ 1000f);
 
 		return nodes;
 	}
