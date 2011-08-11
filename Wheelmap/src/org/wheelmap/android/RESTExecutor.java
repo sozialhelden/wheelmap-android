@@ -138,7 +138,6 @@ public class RESTExecutor {
 	}
 
 	private static Nodes retrieveNumberOfHits(String getRequest) {
-//		String response = null;
 		Nodes nodes;
 		long requestTime = new Date().getTime();
 		try {
@@ -149,11 +148,6 @@ public class RESTExecutor {
 		// Log.d(TAG, "response " + response);
 		long requestEndTime = new Date().getTime();
 		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
-
-//		Nodes nodes = unmarshal(response, Nodes.class);
-//		long unmarshalTime = new Date().getTime();
-//		Log.d(TAG, "unmarshalTime = " + (unmarshalTime - requestEndTime)
-//				/ 1000f);
 
 		return nodes;
 	}
