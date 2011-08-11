@@ -93,6 +93,7 @@ public class RESTExecutor {
 		Log.d(TAG, "retrieveTime = " + (retrieveTime - startTime) / 1000f);
 		
 		// TODO make Content provider sortable
+		//nodes.
 		// quick and dirty sorting nodes 
 		
 		batchInsert( nodes );

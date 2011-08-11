@@ -5,8 +5,6 @@ import java.math.BigInteger;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 @JsonAutoDetect
 public class Node {

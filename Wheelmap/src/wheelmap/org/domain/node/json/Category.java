@@ -3,8 +3,6 @@ package wheelmap.org.domain.node.json;
 import java.math.BigInteger;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 @JsonAutoDetect
 public class Category {
