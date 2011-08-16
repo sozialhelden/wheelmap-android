@@ -44,6 +44,13 @@ public class Wheelmap {
 			public static final String WHEELCHAIR = "wheelchair";
 			
 			public static final String WHEELCHAIR_DESC = "wheelchair_desc";
+			
+			// auxiliry pre calculated sin and cos values of lat/lon (in radians)
+			public static final String SIN_LAT_RAD = "sin_lat_rad";
+			public static final String COS_LAT_RAD = "cos_lat_rad";
+			public static final String SIN_LON_RAD = "sin_lon_rad";
+			public static final String COS_LON_RAD = "cos_lon_rad";
+			
 		}
 
 		public static final class POIs implements BaseColumns, POIsColumns {

@@ -46,6 +46,33 @@ public class POIsProvider extends ContentProvider {
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 5;
 	private static final String POIS_TABLE_NAME = "pois";
+	
+	private static class DistanceQueryBuilder {
+		public String buildRawQuery(double longitude,double latitude) {
+			 double  sin_lat_rad =  Math.sin(latitude*Math.PI/180);
+			 double   sin_lon_rad =  Math.sin(longitude*Math.PI/180);
+			 double   cos_lat_rad =  Math.cos(latitude*Math.PI/180);
+			 double   cos_lon_rad =  Math.cos(longitude*Math.PI/180);
+			 StringBuilder a = new StringBuilder("SELECT *,(");
+			 a.append(sin_lat_rad);
+			 a.append("*\"sin_lat_rad\"+");
+			 a.append(cos_lat_rad);
+			 a.append("*\"cos_lat_rad\"*(");
+			 a.append(cos_lon_rad);
+			 a.append("*\"cos_lon_rad\"+");
+			 a.append(sin_lon_rad);
+			 a.append("*\"sin_lon_rad\")) AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC LIMIT 30");
+			 
+				 
+            // TODO maybe is a Formatter better
+		    //return 'SELECT *, (%(sin_lat_rad)f * "sin_lat_rad" + %(cos_lat_rad)f * "cos_lat_rad" * (%(cos_lon_rad)f * "cos_lon_rad" + %(sin_lon_rad)f * "sin_lon_rad")) AS "distance_acos" FROM "pois" GROUP BY "id" HAVING "distance_acos" < 1.25 ORDER BY "distance_acos" DESC' % {'sin_lat_rad': sin_lat_rad, "cos_lat_rad": cos_lat_rad, 'sin_lon_rad': sin_lon_rad, "cos_lon_rad": cos_lon_rad}
+			 
+			Log.d(TAG, "query select argument for distance " +  a.toString());
+
+			return a.toString();
+		}
+		
+	}
 
 	/**
 	 * This class helps open, create, and upgrade the database file.
@@ -63,6 +90,10 @@ public class POIsProvider extends ContentProvider {
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + POIs.WM_ID
 					+ " INTEGER, " + POIs.NAME + " TEXT," + POIs.COORD_LAT
 					+ " VARCHAR(15)," + POIs.COORD_LON + " VARCHAR(15),"
+					+ POIs.COS_LAT_RAD + " NUMERIC,"
+					+ POIs.SIN_LAT_RAD + " NUMERIC,"
+					+ POIs.COS_LON_RAD + " NUMERIC,"
+					+ POIs.SIN_LON_RAD + " NUMERIC,"
 					+ POIs.STREET + " TEXT," + POIs.HOUSE_NUM + " TEXT,"
 					+ POIs.POSTCODE + " TEXT," + POIs.CITY + " TEXT,"
 					+ POIs.PHONE + " TEXT, " + POIs.WEBSITE + " TEXT, "
@@ -81,6 +112,7 @@ public class POIsProvider extends ContentProvider {
 	}
 
 	private DatabaseHelper mOpenHelper;
+	private DistanceQueryBuilder mQueryBuilder;
 
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
@@ -100,10 +132,10 @@ public class POIsProvider extends ContentProvider {
 
 			count = db.delete(POIS_TABLE_NAME,
 					POIs._ID
-							+ "="
-							+ placeId
-							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+					+ "="
+					+ placeId
+					+ (!TextUtils.isEmpty(where) ? " AND (" + where
+							+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -137,12 +169,13 @@ public class POIsProvider extends ContentProvider {
 
 		case POI_ID:
 			String placeId = uri.getPathSegments().get(1);
+			// TODO recalculate sin, cos values 
 			count = db.update(POIS_TABLE_NAME, values,
 					POIs._ID
-							+ "="
-							+ placeId
-							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+					+ "="
+					+ placeId
+					+ (!TextUtils.isEmpty(where) ? " AND (" + where
+							+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -168,6 +201,33 @@ public class POIsProvider extends ContentProvider {
 				initialValues.put(POIs.NAME, "New POI");
 			}
 			mValues.putAll(initialValues);
+
+			// pre calcutes sin and cos values of lat/lon
+			// see wikipage https://github.com/sozialhelden/wheelmap-android/wiki/Sqlite,-Distance-calculations
+			if (mValues.containsKey(POIs.COORD_LAT)) {
+				double lat  = mValues.getAsFloat(POIs.COORD_LAT) / (double)1E6;
+				double sin_lat_rad = Math.sin(Math.toRadians(lat));
+				double cos_lat_rad = Math.cos(Math.toRadians(lat));
+				mValues.put(POIs.COS_LAT_RAD, cos_lat_rad);
+				mValues.put(POIs.SIN_LAT_RAD, sin_lat_rad);
+			}
+			else {
+				mValues.put(POIs.COS_LAT_RAD, 0);
+				mValues.put(POIs.SIN_LAT_RAD, 0);	
+			}
+
+			if (mValues.containsKey(POIs.COORD_LON)) {
+				double lon  = mValues.getAsFloat(POIs.COORD_LON)/ (double)1E6;
+				double sin_lon_rad = Math.sin(Math.toRadians(lon));
+				double cos_lon_rad = Math.cos(Math.toRadians(lon));
+				mValues.put(POIs.COS_LON_RAD, cos_lon_rad);
+				mValues.put(POIs.SIN_LON_RAD, sin_lon_rad);
+			}
+			else {
+				mValues.put(POIs.COS_LON_RAD, 0);
+				mValues.put(POIs.SIN_LON_RAD, 0);	
+			}
+
 			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 			long rowId = db.insert(POIS_TABLE_NAME, POIs.NAME, mValues);
 			if (rowId > 0) {
@@ -187,6 +247,7 @@ public class POIsProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		mOpenHelper = new DatabaseHelper(getContext());
+		mQueryBuilder = new DistanceQueryBuilder();
 		return true;
 	}
 
@@ -233,8 +294,12 @@ public class POIsProvider extends ContentProvider {
 
 		// Get the database and run the query
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-		Cursor c = qb.query(db, projection, selection, selectionArgs, null,
-				null, orderBy);
+		
+		// add acos_distance_calculation to selection arguments
+		
+		Cursor c = db.rawQuery(mQueryBuilder.buildRawQuery(8.645,49.868), null);
+		
+		//Cursor c = qb.query(db, projection, selection, selectionArgs, null,				null, orderBy, null);
 
 		// Tell the cursor what uri to watch, so it knows when its source data
 		// changes
@@ -245,9 +310,9 @@ public class POIsProvider extends ContentProvider {
 	@Override
 	public ContentProviderResult[] applyBatch(
 			ArrayList<ContentProviderOperation> operations)
-			throws OperationApplicationException {
+	throws OperationApplicationException {
 		ContentProviderResult[] results = new ContentProviderResult[operations
-				.size()];
+		                                                            .size()];
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		db.beginTransaction();
