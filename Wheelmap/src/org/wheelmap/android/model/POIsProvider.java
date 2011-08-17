@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.utils.CurrentLocation;
+import org.wheelmap.android.utils.CurrentLocation.LocationResult;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -18,6 +20,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
@@ -27,6 +30,11 @@ public class POIsProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sPOIsProjectionMap;
+	
+	// TODO quick hack, the Content provider has its own current location instance
+	// there should be only one in the whole project ???
+	private CurrentLocation mCurrentLocation;
+
 
 	/**
 	 * this is suitable for use by insert/update/delete/query and may be passed
@@ -46,6 +54,8 @@ public class POIsProvider extends ContentProvider {
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 5;
 	private static final String POIS_TABLE_NAME = "pois";
+	
+	private Location mLastLocation;
 	
 	private static class DistanceQueryBuilder {
 		public String buildRawQuery(double longitude,double latitude) {
@@ -73,6 +83,8 @@ public class POIsProvider extends ContentProvider {
 		}
 		
 	}
+	
+	
 
 	/**
 	 * This class helps open, create, and upgrade the database file.
@@ -243,13 +255,36 @@ public class POIsProvider extends ContentProvider {
 		}
 
 	}
+	
+	final class MyLocationResult extends LocationResult {
+    	@Override
+		public void gotLocation(final Location location){
+    		mLastLocation = location;
+    		Log.v(TAG, "new current location" +mLastLocation.toString());
+
+		}
+    }
 
 	@Override
 	public boolean onCreate() {
 		mOpenHelper = new DatabaseHelper(getContext());
 		mQueryBuilder = new DistanceQueryBuilder();
+		// current location
+		mCurrentLocation = new CurrentLocation();
+		
+		MyLocationResult locationResult = new MyLocationResult();
+		
+		mLastLocation = new Location("");
+		// Berlin
+		mLastLocation.setLatitude(52.519842);
+		mLastLocation.setLongitude(13.439484);
+	    
+		mCurrentLocation.getLocation(getContext(), locationResult);
+		
 		return true;
 	}
+	
+     
 
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
@@ -261,18 +296,13 @@ public class POIsProvider extends ContentProvider {
 
 		Log.v(TAG, "ContactsProvider.query: url=" + uri + ", match is " + match);
 
-		String orderBy;
 
 		// If no sort order is specified use the default
 		switch (match) {
 		case POIS:
 			qb.setTables(POIS_TABLE_NAME);
 			qb.setProjectionMap(sPOIsProjectionMap);
-			if (TextUtils.isEmpty(sortOrder)) {
-				orderBy = Wheelmap.POIs.DEFAULT_SORT_ORDER;
-			} else {
-				orderBy = sortOrder;
-			}
+			
 
 			break;
 
@@ -281,11 +311,7 @@ public class POIsProvider extends ContentProvider {
 			qb.setProjectionMap(sPOIsProjectionMap);
 			qb.appendWhere(POIs._ID + "=" + uri.getPathSegments().get(1));
 
-			if (TextUtils.isEmpty(sortOrder)) {
-				orderBy = POIs.DEFAULT_SORT_ORDER;
-			} else {
-				orderBy = sortOrder;
-			}
+			
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri
@@ -295,12 +321,8 @@ public class POIsProvider extends ContentProvider {
 		// Get the database and run the query
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 		
-		// add acos_distance_calculation to selection arguments
-		
-		Cursor c = db.rawQuery(mQueryBuilder.buildRawQuery(8.645,49.868), null);
-		
-		//Cursor c = qb.query(db, projection, selection, selectionArgs, null,				null, orderBy, null);
-
+		// get asynchronously current location from location manager and execute request
+     	Cursor c = db.rawQuery(mQueryBuilder.buildRawQuery(mLastLocation.getLongitude(), mLastLocation.getLatitude()), null);
 		// Tell the cursor what uri to watch, so it knows when its source data
 		// changes
 		c.setNotificationUri(getContext().getContentResolver(), uri);

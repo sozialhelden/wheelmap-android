@@ -22,6 +22,7 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 
 	private Cursor mCursor;
 	private State mState;
+	
 
 
 	/** Called when the activity is first created. */
