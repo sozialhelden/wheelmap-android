@@ -1,7 +1,7 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
-import org.wheelmap.android.model.POIsCursorAdapter;
+import org.wheelmap.android.model.POIsListAdapter;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
@@ -37,7 +37,7 @@ public class POIsListActivity extends ListActivity implements DetachableResultRe
 		mCursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
 		startManagingCursor(mCursor);
 
-		POIsCursorAdapter adapter = new POIsCursorAdapter(this, mCursor);
+		POIsListAdapter adapter = new POIsListAdapter(this, mCursor);
 		setListAdapter(adapter);
 
 		getListView().setTextFilterEnabled(true);
