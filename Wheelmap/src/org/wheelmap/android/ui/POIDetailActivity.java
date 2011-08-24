@@ -10,11 +10,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 public class POIDetailActivity extends Activity {
 
-	private EditText name=null;
-	private EditText address=null;
+	private TextView name=null;
+	private TextView address=null;
 	private EditText notes=null;
 	private RadioGroup types=null;
 	private String poiID=null;
@@ -26,8 +27,8 @@ public class POIDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);   
 
-		name=(EditText)findViewById(R.id.name);
-		address=(EditText)findViewById(R.id.addr);
+		name=(TextView)findViewById(R.id.name);
+		address=(TextView)findViewById(R.id.addr);
 		notes=(EditText)findViewById(R.id.notes);
 		types=(RadioGroup)findViewById(R.id.wheel_chair_type);
 
