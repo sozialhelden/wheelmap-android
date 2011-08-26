@@ -23,5 +23,18 @@
           android:title="@string/settings_unknown_accesible">
         </CheckBoxPreference>
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_category_mapfile">
+    	<Preference
+                android:title="@string/settings_mapfile_manager"
+                android:summary="@string/description_mapfile_manager"
+                android:key="mapfileManager">
+        
+        </Preference>
+        <Preference
+        		android:title="@string/settings_mapfile_select"
+        		android:summary="@string/description_mapfile_select"
+        		android:key="mapfileSelect">
+        </Preference>
+    </PreferenceCategory>
     
 </PreferenceScreen>

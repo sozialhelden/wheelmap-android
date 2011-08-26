@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TextView android:id="@+id/list_item_file_name"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_marginTop="6dip" android:layout_marginLeft="5dip"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:singleLine="true" />
+	<TextView android:id="@+id/list_item_file_type"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_below="@+id/list_item_file_name"
+		android:layout_marginLeft="5dip" android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="@string/download_file_type" />
+	<TextView android:id="@+id/list_item_file_progress"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_below="@+id/list_item_file_name"
+		android:layout_toLeftOf="@+id/list_item_file_size"
+		android:layout_marginRight="12dip" />
+	<TextView android:id="@+id/list_item_file_size"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentRight="true" android:layout_below="@+id/list_item_file_name"
+		android:layout_marginRight="5dip" android:textAppearance="?android:attr/textAppearanceSmall" />
+	<RelativeLayout android:id="@+id/list_item_local_available_layout"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_below="@+id/list_item_file_type">
+		<TextView android:id="@+id/list_item_file_local_available"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_centerVertical="true" android:layout_marginLeft="5dip"
+			android:textAppearance="?android:attr/textAppearanceSmall" />
+		<Button android:id="@+id/list_item_file_btn_download"
+			android:layout_width="wrap_content" android:layout_height="@dimen/checkbox_small"
+			android:layout_centerVertical="true" android:layout_toLeftOf="@+id/list_item_file_btn_delete"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="@string/btn_download" />
+		<Button android:id="@+id/list_item_file_btn_delete"
+			android:layout_width="wrap_content" android:layout_height="@dimen/checkbox_small"
+			android:layout_centerVertical="true" android:layout_alignParentRight="true"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="@string/btn_delete" />
+	</RelativeLayout>
+
+</RelativeLayout>

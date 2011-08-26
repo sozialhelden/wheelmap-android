@@ -5,7 +5,10 @@
 	<classpathentry kind="lib" path="libs/spring-android-core-1.0.0.M3.jar"/>
 	<classpathentry kind="lib" path="libs/spring-android-rest-template-1.0.0.M3.jar"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="libs/jackson-all-1.8.5.jar"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-net-3.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-core-asl-1.8.5.jar"/>
+	<classpathentry kind="lib" path="libs/jackson-mapper-asl-1.8.5.jar"/>
+	<classpathentry kind="lib" path="libs/mapsforge-map-0.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Wheelmap</string>
-
     <string name="description_logo">Wheelmap</string>
     <string name="description_home">Home</string>
     <string name="description_search">Search</string>
@@ -11,8 +10,6 @@
     <string name="description_export">Export</string>
     <string name="description_star">Star</string>
     <string name="description_gps">Current location</string>
-    
-
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
     <string name="title_pois_list">List</string>
@@ -20,37 +17,35 @@
     <string name="title_pois_settings">Settings</string>
     <string name="title_pois_detail">Info</string>
     <string name="edit_poi">Edit</string>
-    
     <string name="toast_sync_error">Error by syncing with server</string>
-    
     <string name="settings_full_accesible">Full wheelchair accesibility</string>
     <string name="settings_no_accesible">No wheelchair accesibility</string>
     <string name="settings_limited_accesible">Limited wheelchair accesibility</string>
     <string name="settings_unknown_accesible">Unknown wheelchair accesibility</string>
-    
-    
-    
-    
-  
-    
-    
-    
-    
-    
-    
-
     <string name="btn_list">List</string>
     <string name="btn_map">Map</string>
     <string name="btn_settings">Settings</string>
-    
-    
     <!-- DEBUG MH 
     <string name="mapskey">02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg</string>
     -->
     <!-- deploy -->
     <string name="mapskey">02BU05u7kh4oKs1RpT2WHfyuQdb6C0MZnixRF2Q</string>
-    
-    
-    
-  
+    <string name="btn_mapfile">Offline Maps</string>
+    <string name="download_dir_type">Map Directory</string>
+    <string name="download_file_type">Map File</string>
+    <string name="download_file_local_available">Local Available</string>
+    <string name="download_file_local_incomplete">Local Incomplete</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_download">Download</string>
+    <string name="pending">Pending</string>
+    <string name="download_update_available">Update Available</string>
+    <string name="settings_mapfile_manager">Offline Map Manager</string>
+    <string name="description_mapfile_manager">Download Offline Maps</string>
+    <string name="settings_mapfile_select">Select Offline Map</string>
+    <string name="description_mapfile_select">Choose between the local available maps</string>
+    <string name="title_mapfile_select">Select between maps</string>
+    <string name="title_mapfile_download">Offline Maps Download</string>
+    <string name="settings_category_mapfile">Offline Maps</string>
+    <string name="select_map_location">Location:</string>
+    <string name="btn_mapsforge">Mapsforge</string>
 </resources>

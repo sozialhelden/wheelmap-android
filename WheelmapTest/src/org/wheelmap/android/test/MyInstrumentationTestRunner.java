@@ -8,8 +8,12 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 	public TestSuite getAllTests() {
 		TestSuite suite = new TestSuite(MyInstrumentationTestRunner.class.getName());
 		// $JUnit-BEGIN$
-		suite.addTestSuite( ModelTest.class );
 //		suite.addTestSuite( GeocoordinatesMathTest.class );
+//		suite.addTestSuite( ModelTest.class );
+//		suite.addTestSuite( MapFileInfoProviderTest.class );
+//		suite.addTestSuite( MapFileServiceTest.class );
+		suite.addTestSuite( MapFileManagerTest.class );
+
 		// $JUnit-END$
 		return suite;
 	}

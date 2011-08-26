@@ -5,6 +5,7 @@
       android:versionName="1.1">
     <uses-sdk android:minSdkVersion="7" />
     
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -33,6 +34,11 @@
             android:name=".ui.map.POIsMapActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map" />
+            
+      	<activity
+      		android:name=".ui.mapsforge.POIsMapsforgeActivity"
+      		android:theme="@style/Theme.IOSched"
+      		android:label="@string/title_pois_map" />
          
         <activity
             android:name=".ui.POIDetailActivity"
@@ -44,9 +50,15 @@
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_settings" />
             
-            
-                
-            
+        <activity
+        	android:name=".ui.MapFileDownloadActivity"
+        	android:theme="@style/Theme.IOSched"
+        	android:label="@string/title_mapfile_download" />
+        <activity 
+        	android:name=".ui.MapFileSelectActivity"
+        	android:theme="@style/Theme.IOSched"
+        	android:label="@string/title_mapfile_select"
+        />
         
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"
@@ -76,6 +88,9 @@
             
         <provider android:name="org.wheelmap.android.model.POIsProvider"
           android:authorities="org.wheelmap.android"/>   
+
+		<provider android:name=".model.MapFileInfoProvider"
+		  android:authorities="org.wheelmap.android.mapfile"/>
 
     </application>
 </manifest>

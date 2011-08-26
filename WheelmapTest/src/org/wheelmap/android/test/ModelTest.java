@@ -2,8 +2,8 @@ package org.wheelmap.android.test;
 
 import junit.framework.Assert;
 
-import org.wheelmap.android.RESTExecutor;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.net.RESTExecutor;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 
 import wheelmap.org.BoundingBox;

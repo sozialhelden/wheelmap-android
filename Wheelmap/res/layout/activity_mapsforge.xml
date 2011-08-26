@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <LinearLayout style="@style/TitleBar">
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_home"
+            android:src="@drawable/ic_title_home"
+            android:onClick="onHomeClick" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <TextView style="@style/TitleBarText" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_gps"
+              android:id="@+id/btn_title_gps"
+            android:src="@drawable/ic_title_gps"
+            android:onClick="onCenterOnCurrentLocationClick" />
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:id="@+id/btn_title_refresh"
+            android:contentDescription="@string/description_refresh"
+            android:src="@drawable/ic_title_refresh"
+            android:onClick="onRefreshClick" />
+        <ProgressBar style="@style/TitleBarProgressIndicator"
+            android:visibility="gone"
+            android:layout_alignLeft="@id/btn_title_refresh"
+            android:layout_alignTop="@id/btn_title_refresh"
+            android:id="@+id/title_refresh_progress" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="@string/description_search"
+            android:src="@drawable/ic_title_search"
+            android:onClick="onSearchClick" />
+    </LinearLayout>
+    
+
+     
+<org.mapsforge.android.maps.MapView
+       	android:id="@+id/map"
+                 android:layout_width="fill_parent"
+                 android:layout_height="fill_parent"
+                 android:clickable="true"
+                 />   
+</LinearLayout>
+
+

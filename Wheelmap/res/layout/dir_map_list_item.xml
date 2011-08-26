@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<TextView android:id="@+id/list_item_dir_name"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_marginTop="6dip" android:layout_marginLeft="5dip"
+		android:textAppearance="?android:attr/textAppearanceLarge"
+		android:singleLine="true" />
+	<TextView android:id="@+id/list_item_dir_type"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_below="@+id/list_item_dir_name"
+		android:layout_marginLeft="5dip"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="@string/download_dir_type" />
+</RelativeLayout>

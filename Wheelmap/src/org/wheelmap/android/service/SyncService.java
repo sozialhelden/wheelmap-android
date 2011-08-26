@@ -1,6 +1,6 @@
 package org.wheelmap.android.service;
 
-import org.wheelmap.android.RESTExecutor;
+import org.wheelmap.android.net.RESTExecutor;
 import org.wheelmap.android.utils.CurrentLocation;
 import org.wheelmap.android.utils.CurrentLocation.LocationResult;
 import org.wheelmap.android.utils.GeocoordinatesMath;

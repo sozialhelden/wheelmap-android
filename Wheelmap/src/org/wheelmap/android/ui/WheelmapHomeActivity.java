@@ -3,6 +3,7 @@ package org.wheelmap.android.ui;
 import org.wheelmap.android.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
+import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.app.Activity;
@@ -47,9 +48,6 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
-	
-	
-
 	public void onSearchClick(View v) {
 		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
 	}
@@ -64,6 +62,10 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 	/** Handle "map" action. */
 	public void onMapClick(View v) {
 		startActivity(new Intent(this, POIsMapActivity.class));
+	}
+	
+	public void onMapsforgeClick(View v) {
+		startActivity(new Intent(this, POIsMapsforgeActivity.class));
 	}
 
 	private void updateRefreshStatus() {

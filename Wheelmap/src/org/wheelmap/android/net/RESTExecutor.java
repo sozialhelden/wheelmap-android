@@ -1,4 +1,4 @@
-package org.wheelmap.android;
+package org.wheelmap.android.net;
 
 import java.net.URI;
 import java.net.URISyntaxException;

@@ -59,7 +59,12 @@
                 style="@style/HomeButton"
                 android:onClick="onSettingsClick"
                 android:text="@string/btn_settings"
-                android:drawableTop="@drawable/home_btn_settings"/>    
+                android:drawableTop="@drawable/home_btn_settings"/>
+            <Button android:id="@+id/home_btn_mapsforge"
+                style="@style/HomeButton"
+                android:onClick="onMapsforgeClick"
+                android:text="@string/btn_mapsforge"
+                android:drawableTop="@drawable/home_btn_map"/>
         </LinearLayout>
     </LinearLayout>
    <!--  place for Adds??

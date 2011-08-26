@@ -21,4 +21,5 @@
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
+    <dimen name="checkbox_small">36dp</dimen>
 </resources>
