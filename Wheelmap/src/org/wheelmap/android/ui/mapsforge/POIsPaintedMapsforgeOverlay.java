@@ -10,6 +10,7 @@ import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
@@ -81,6 +82,9 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 					marker = dUnknown;
 				}
 
+				// 
+				marker.setBounds(-6, -6, 6, 6);
+				marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight()); 
 				POIMapItem geoPoint = new POIMapItem(new GeoPoint(
 						lat.intValue(), lng.intValue()), state, poiId, marker);
 				Log.d( "poiadding", "Adding new geopoint to overlay" );
