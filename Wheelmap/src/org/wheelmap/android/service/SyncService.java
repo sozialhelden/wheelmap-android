@@ -13,7 +13,6 @@ import android.app.IntentService;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
@@ -21,8 +20,7 @@ import android.util.Log;
 
 /**
  * Background {@link Service} that synchronizes data living in
- * {@link ScheduleProvider}. Reads data from both local {@link Resources} and
- * from remote sources, such as a spreadsheet.
+ * {@link POIsProvider}. Reads data from remote source
  */
 public class SyncService extends IntentService {
     private static final String TAG = "SyncService";

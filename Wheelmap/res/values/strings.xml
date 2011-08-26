@@ -25,11 +25,12 @@
     <string name="btn_list">List</string>
     <string name="btn_map">Map</string>
     <string name="btn_settings">Settings</string>
-    <!-- DEBUG MH 
+    <!-- DEBUG MH     -->
+     
     <string name="mapskey">02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg</string>
-    -->
-    <!-- deploy -->
+    <!-- deploy 
     <string name="mapskey">02BU05u7kh4oKs1RpT2WHfyuQdb6C0MZnixRF2Q</string>
+    -->
     <string name="btn_mapfile">Offline Maps</string>
     <string name="download_dir_type">Map Directory</string>
     <string name="download_file_type">Map File</string>

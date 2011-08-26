@@ -9,6 +9,14 @@ public class POIHelper {
 		return(c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME)));
 	}
 	
+	public double getLatitude(Cursor c) {
+		return(c.getDouble(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.COORD_LAT)) / 1E6);
+	}
+	
+	public double getLongitude(Cursor c) {
+		return(c.getDouble(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.COORD_LON)) / 1E6);
+	}
+	
 	public String getAddress(Cursor c) {
 		StringBuilder address = new StringBuilder();
 		// street
