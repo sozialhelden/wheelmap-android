@@ -47,7 +47,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 			mState.mManager = MapFileManager.get(getApplicationContext());
-			mState.mManager.setResultReceiver(mState.mReceiver);
+			mState.mManager.registerResultReceiver( mState.mReceiver );
 		}
 
 		String parentDir = null;
@@ -76,9 +76,12 @@ public class MapFileDownloadActivity extends ListActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-
-		// if (isFinishing() && getIntent().getExtras() == null)
-		// mState.mManager.stop();
+		
+		if ( isFinishing()) {
+			mState.mManager.unregisterResultReceiver( mState.mReceiver );
+			if ( getIntent().getExtras() == null)
+				mState.mManager.stop();
+		}
 	}
 
 	public void onHomeClick(View v) {

@@ -18,15 +18,14 @@
     <string name="title_pois_detail">Info</string>
     <string name="edit_poi">Edit</string>
     <string name="toast_sync_error">Error by syncing with server</string>
-    <string name="settings_full_accesible">Full wheelchair accesibility</string>
-    <string name="settings_no_accesible">No wheelchair accesibility</string>
-    <string name="settings_limited_accesible">Limited wheelchair accesibility</string>
-    <string name="settings_unknown_accesible">Unknown wheelchair accesibility</string>
+    <string name="settings_full_accesible">Full accesibility</string>
+    <string name="settings_no_accesible">No accesibility</string>
+    <string name="settings_limited_accesible">Limited accesibility</string>
+    <string name="settings_unknown_accesible">Unknown accesibility</string>
     <string name="btn_list">List</string>
     <string name="btn_map">Map</string>
     <string name="btn_settings">Settings</string>
     <!-- DEBUG MH     -->
-     
     <string name="mapskey">02BU05u7kh4qs55AA7UfYiWPISGr_bi8sV4_Pgg</string>
     <!-- deploy 
     <string name="mapskey">02BU05u7kh4oKs1RpT2WHfyuQdb6C0MZnixRF2Q</string>
@@ -49,4 +48,7 @@
     <string name="settings_category_mapfile">Offline Maps</string>
     <string name="select_map_location">Location:</string>
     <string name="btn_mapsforge">Mapsforge</string>
+    <string name="settings_wheelchair_state">Wheelchair State</string>
+    <string name="settings_wheelchair_state_summary">Set the desired wheelchair state filter</string>
+    <string name="settings_category_accesibility">DisplayWheelchair accesibility</string>
 </resources>

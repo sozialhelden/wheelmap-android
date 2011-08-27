@@ -43,15 +43,21 @@ public class MapFileManager {
 		INSTANCE.mMapFileService.start();
 		return INSTANCE;
 	}
-
-	public void setResultReceiver(ResultReceiver receiver) {
-		if (mMapFileService != null)
-			mMapFileService.setResultReceiver(receiver);
+	
+	public void registerResultReceiver( ResultReceiver receiver ) {
+		if ( mMapFileService != null )
+			mMapFileService.registerResultReceiver( receiver );
+	}
+	
+	public void unregisterResultReceiver( ResultReceiver receiver ) {
+		if ( mMapFileService != null )
+			mMapFileService.unregisterResultReceiver(receiver);
 	}
 
 	public void stop() {
 		mInterrupted = true;
-		// mMapFileService.stop();
+		mMapFileService.stop();
+		mMapFileService = null;
 	}
 
 	public void updateDatabaseWithRemote() {

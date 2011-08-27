@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="wheelchair_state">
+		<item>@string/settings_unknown_accesible</item>
+		<item>@string/settings_full_accesible</item>
+		<item>@string/settings_limited_accesible</item>
+		<item>@string/settings_no_accesible</item>
+	</string-array>
+	<string-array name="wheelchair_state_values">
+		<item>0</item>
+		<item>1</item>
+		<item>2</item>
+		<item>3</item>
+	</string-array>
+</resources>

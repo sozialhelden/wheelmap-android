@@ -8,11 +8,13 @@ import org.wheelmap.android.model.Wheelmap;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,12 +41,7 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 				R.drawable.marker_limited);
 
 		refreshLocations();
-		mPois.registerDataSetObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				refreshLocations();
-			}
-		});
+		mPois.registerContentObserver( new ChangeObserver() );
 	}
 
 	private void refreshLocations() {
@@ -101,18 +98,33 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 		// Then query for this specific record:
 		Cursor cur = mContext.getContentResolver().query(poiUri, null, null,
 				null, null);
-		POIHelper poi_helper = new POIHelper();
 		if (cur.moveToFirst()) {
 			Log.d("POI id",
 					Integer.toBinaryString(mapItem.getId())
-							+ poi_helper.getName(cur) + ' '
-							+ poi_helper.getAddress(cur));
+							+ POIHelper.getName(cur) + ' '
+							+ POIHelper.getAddress(cur));
 
 			Toast.makeText(mContext,
-					poi_helper.getName(cur) + ' ' + poi_helper.getAddress(cur),
+					POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur),
 					Toast.LENGTH_SHORT).show();
 		}
 		cur.close();
 		return true;
 	}
+	
+	private class ChangeObserver extends ContentObserver {
+        public ChangeObserver() {
+            super(new Handler());
+        }
+
+        @Override
+        public boolean deliverSelfNotifications() {
+            return true;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+			refreshLocations();
+        }
+    }
 }

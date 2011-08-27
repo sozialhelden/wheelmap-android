@@ -27,7 +27,7 @@ public class MapFileServiceTest extends AndroidTestCase implements DetachableRes
 		mState = new State();
 		mState.mReceiver.setReceiver( this );
 		mDs = new MapFileService();
-		mDs.setResultReceiver( mState.mReceiver );
+		mDs.registerResultReceiver( mState.mReceiver );
 		
 		DownloadListener listenerOne = new DownloadListener() {
 

@@ -95,8 +95,12 @@ public class CurrentLocation {
              locationResult.gotLocation(null);
         }
     }
-
-    public static abstract class LocationResult{
-        public abstract void gotLocation(Location location);
+    
+    public interface LocationResult {
+    	public void gotLocation(Location location );
     }
+
+//    public static abstract class LocationResult{
+//        public abstract void gotLocation(Location location);
+//    }
 }

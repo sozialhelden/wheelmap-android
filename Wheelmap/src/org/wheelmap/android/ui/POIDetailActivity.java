@@ -53,16 +53,13 @@ public class POIDetailActivity extends Activity {
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
-		
-		POIHelper poi_helper = new POIHelper();
-
 
 		if (cur.moveToFirst()) {		
-			name.setText(poi_helper.getName(cur));
-			address.setText(poi_helper.getAddress(cur));
+			name.setText(POIHelper.getName(cur));
+			address.setText(POIHelper.getAddress(cur));
 			notes.setText(cur.getString(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.WEBSITE)));
 
-			switch (poi_helper.getWheelchair(cur)) {
+			switch (POIHelper.getWheelchair(cur)) {
 			case UNKNOWN: {
 				types.check(R.id.unknown);
 				break;

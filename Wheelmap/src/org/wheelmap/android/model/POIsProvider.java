@@ -256,7 +256,7 @@ public class POIsProvider extends ContentProvider {
 
 	}
 	
-	final class MyLocationResult extends LocationResult {
+	final class MyLocationResult implements LocationResult {
     	@Override
 		public void gotLocation(final Location location){
     		mLastLocation = location;

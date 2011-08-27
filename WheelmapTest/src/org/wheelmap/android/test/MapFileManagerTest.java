@@ -32,7 +32,7 @@ public class MapFileManagerTest extends AndroidTestCase implements
 		mState = new State();
 		mState.mReceiver.setReceiver(this);
 		MapFileManager dm = MapFileManager.get(getContext());
-		dm.setResultReceiver( mState.mReceiver);
+		dm.registerResultReceiver( mState.mReceiver);
 
 		dm.updateDatabaseWithRemote();
 		Thread.sleep(15000);

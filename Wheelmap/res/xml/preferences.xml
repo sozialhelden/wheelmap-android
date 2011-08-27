@@ -1,40 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android" android:title="Settings">
-    <PreferenceCategory android:title="DisplayWheelchair accesibility">
-        <CheckBoxPreference 
-          android:key="showFull"
-          android:title="@string/settings_full_accesible">
-        </CheckBoxPreference>
-        
-        <CheckBoxPreference 
-          android:key="showNo"
-          android:title="@string/settings_no_accesible">
-        </CheckBoxPreference>
-        
-        <CheckBoxPreference 
-          android:key="showLimited"
-          android:title="@string/settings_limited_accesible">
-          
-        </CheckBoxPreference>
-        
-        <CheckBoxPreference 
-          android:key="showUnknown"
-          android:title="@string/settings_unknown_accesible">
-        </CheckBoxPreference>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/settings_category_mapfile">
-    	<Preference
-                android:title="@string/settings_mapfile_manager"
-                android:summary="@string/description_mapfile_manager"
-                android:key="mapfileManager">
-        
-        </Preference>
-        <Preference
-        		android:title="@string/settings_mapfile_select"
-        		android:summary="@string/description_mapfile_select"
-        		android:key="mapfileSelect">
-        </Preference>
-    </PreferenceCategory>
-    
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="Settings">
+	<PreferenceCategory android:title="@string/settings_category_accesibility">
+		<ListPreference android:title="@string/settings_wheelchair_state"
+			android:summary="@string/settings_wheelchair_state_summary"
+			android:key="wheelchairState" android:defaultValue="0"
+			android:entries="@array/wheelchair_state" android:entryValues="@array/wheelchair_state_values" />
+
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/settings_category_mapfile">
+		<Preference android:title="@string/settings_mapfile_manager"
+			android:summary="@string/description_mapfile_manager" android:key="mapfileManager">
+
+		</Preference>
+		<Preference android:title="@string/settings_mapfile_select"
+			android:summary="@string/description_mapfile_select" android:key="mapfileSelect">
+		</Preference>
+	</PreferenceCategory>
+
 </PreferenceScreen>

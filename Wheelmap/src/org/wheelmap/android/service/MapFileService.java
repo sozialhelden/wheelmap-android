@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.wheelmap.android.net.MapsforgeFTP;
+import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.MultiResultReceiver;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,7 +48,7 @@ public class MapFileService {
 	public static final int STATUS_FINISHED = 0x3;
 	public static final String STATUS_ERROR_MSG = "org.wheelmap.android.net.MapFileService.STATUS_ERROR_MSG";
 
-	private ResultReceiver mReceiver;
+	private MultiResultReceiver mReceiver;
 	private MyHandler mHandler;
 	private HandlerThread mHandlerThread;
 
@@ -80,11 +82,16 @@ public class MapFileService {
 
 	public MapFileService() {
 		queue = new LinkedList<Task>();
+		mReceiver = new MultiResultReceiver(new Handler());
 		start();
 	}
 
-	public void setResultReceiver(ResultReceiver receiver) {
-		mReceiver = receiver;
+	public void registerResultReceiver(ResultReceiver receiver) {
+		mReceiver.addReceiver(receiver, true);
+	}
+
+	public void unregisterResultReceiver(ResultReceiver receiver) {
+		mReceiver.removeReceiver(receiver);
 	}
 
 	public void addTaskAtEnd(Task task) {
@@ -108,9 +115,9 @@ public class MapFileService {
 	public void start() {
 		if (mHandlerThread == null) {
 			mHandlerThread = new HandlerThread("MapFileService");
-			
+
 		}
-		
+
 		if (!mHandlerThread.isAlive()) {
 			mHandlerThread.start();
 			mHandler = new MyHandler(mHandlerThread.getLooper());
@@ -200,7 +207,7 @@ public class MapFileService {
 		Bundle b = new Bundle();
 		b.putString(EXTRA_LOCAL_DIR, localDir);
 		msg.setData(b);
-		addTaskAtFront( new Task( Task.TYPE_READ_DIR, localDir, "", listener ));
+		addTaskAtFront(new Task(Task.TYPE_READ_DIR, localDir, "", listener));
 		mHandler.sendMessageAtFrontOfQueue(msg);
 	}
 
@@ -213,7 +220,8 @@ public class MapFileService {
 		b.putString(EXTRA_LOCAL_DIR, localDir);
 		b.putString(EXTRA_LOCAL_FILE, localFile);
 		msg.setData(b);
-		addTaskAtFront( new Task( Task.TYPE_DELETE_FILE, localDir, localFile, listener ));
+		addTaskAtFront(new Task(Task.TYPE_DELETE_FILE, localDir, localFile,
+				listener));
 		mHandler.sendMessageAtFrontOfQueue(msg);
 	}
 
@@ -226,7 +234,8 @@ public class MapFileService {
 		b.putString(EXTRA_LOCAL_DIR, localDir);
 		b.putString(EXTRA_LOCAL_FILE, localFile);
 		msg.setData(b);
-		addTaskAtEnd( new Task( Task.TYPE_CALC_MD5SUM, localDir, localFile, listener ));
+		addTaskAtEnd(new Task(Task.TYPE_CALC_MD5SUM, localDir, localFile,
+				listener));
 		mHandler.sendMessage(msg);
 	}
 

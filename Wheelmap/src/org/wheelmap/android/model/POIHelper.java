@@ -5,19 +5,19 @@ import android.database.Cursor;
 
 public class POIHelper {
 		
-	public String getName(Cursor c) {
+	public static String getName(Cursor c) {
 		return(c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME)));
 	}
 	
-	public double getLatitude(Cursor c) {
+	public static double getLatitude(Cursor c) {
 		return(c.getDouble(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.COORD_LAT)) / 1E6);
 	}
 	
-	public double getLongitude(Cursor c) {
+	public static double getLongitude(Cursor c) {
 		return(c.getDouble(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.COORD_LON)) / 1E6);
 	}
 	
-	public String getAddress(Cursor c) {
+	public static String getAddress(Cursor c) {
 		StringBuilder address = new StringBuilder();
 		// street
 		String street = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.STREET));
@@ -27,26 +27,26 @@ public class POIHelper {
 		}
 		// house number
 		String nr = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.HOUSE_NUM));
-		if (street != null){
+		if (nr != null){
 			address.append(nr);
 			address.append(',');
 		}
 		// post code 
 		String postcode = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.POSTCODE));
-		if (street != null){
+		if (postcode != null){
 			address.append(postcode);
 			address.append(' ');
 		}
 		// city 
 		String city = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.CITY));
-		if (street != null){
+		if (city != null){
 			address.append(city);
 			
 		}
 		return address.toString();
 	}
 	
-	public WheelchairState getWheelchair(Cursor c) { 
+	public static WheelchairState getWheelchair(Cursor c) { 
 		return WheelchairState.valueOf(c.getInt(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.WHEELCHAIR)));
 	}
 }
