@@ -9,14 +9,15 @@ import org.wheelmap.android.utils.MapUtils;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,9 +34,7 @@ public class POIsPaintedOverlay extends Overlay {
 	private Bitmap bYes;
 	private Bitmap bNo;
 	private Bitmap bLimited;
-
-
-
+	
 	public POIsPaintedOverlay(Context context, Cursor cursor) {
 		super();
 		mContext = context;
@@ -48,12 +47,7 @@ public class POIsPaintedOverlay extends Overlay {
 
 		mPoisLocations = new ArrayList<POIMapItem>();
 		refreshLocations();
-		mPois.registerDataSetObserver(new DataSetObserver() {
-			@Override
-			public void onChanged() {
-				refreshLocations();
-			}
-		});
+		mPois.registerContentObserver( new ChangeObserver());
 	}
 
 	private void refreshLocations() {
@@ -122,25 +116,16 @@ public class POIsPaintedOverlay extends Overlay {
 			GeoPoint poiLocation = poi.getPoint(); 
 			if (MapUtils.NearPonits(poiLocation, p, mapView.getLongitudeSpan(), mapView.getLatitudeSpan())) {
 				
-				
-			
-
-			
-				
 				Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, Integer.toString(poi.getId()));
 
 				// Then query for this specific record:
 				Cursor cur = mContext.getContentResolver().query(poiUri, null, null, null, null);
-				
-				
-				POIHelper poi_helper = new POIHelper();
-
 
 				if (cur.moveToFirst()) {		
-					Log.d("POI id",Integer.toBinaryString(poi.getId()) + poi_helper.getName(cur) + ' ' + poi_helper.getAddress(cur));
+					Log.d("POI id",Integer.toBinaryString(poi.getId()) + POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur));
 
 					Toast.makeText(mContext,
-							poi_helper.getName(cur) + ' ' + poi_helper.getAddress(cur),
+							POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur),
 							Toast.LENGTH_SHORT).show();
 				}
 				cur.close();
@@ -151,6 +136,20 @@ public class POIsPaintedOverlay extends Overlay {
 		return super.onTap(p, mapView);
 	}
 	
-	
+	private class ChangeObserver extends ContentObserver {
+        public ChangeObserver() {
+            super(new Handler());
+        }
 
+        @Override
+        public boolean deliverSelfNotifications() {
+            return true;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+			refreshLocations();
+        }
+    }
+	
 }

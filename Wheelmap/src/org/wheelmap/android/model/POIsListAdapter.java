@@ -9,9 +9,11 @@ import org.wheelmap.android.utils.GeocoordinatesMath;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import wheelmap.org.WheelchairState;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,6 +21,7 @@ import android.widget.BaseAdapter;
 public class POIsListAdapter extends BaseAdapter {
 	Context mContext;	
 	Cursor mCursor;
+	ArrayList<POI> pois;
 
 	private class POI {
 		public POI() {
@@ -29,52 +32,50 @@ public class POIsListAdapter extends BaseAdapter {
 	    public WheelchairState state;
 	    public double distance;
 	}
-
-	// copy data from ContentProvider into Array and sort it
-	private ArrayList<POI> getPois() {
-		POIHelper mPOIHelper = new POIHelper();
-		
-		Location loc = ((LocationManager)mContext.getSystemService(mContext.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (loc == null)
-            loc = ((LocationManager)mContext.getSystemService(mContext.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if (loc == null) { // fallback berlin 
-            loc = new Location(LocationManager.GPS_PROVIDER);
-            loc.setLatitude(52.5);
-            loc.setLongitude(13.4);
-        }
-        Wgs84GeoCoordinates cur_loc = new Wgs84GeoCoordinates(loc.getLongitude(), loc.getLatitude()) ;
-        
-		
-		ArrayList<POI> pois = new ArrayList<POI>();
-		if (mCursor.getCount() > 0) {
-			mCursor.moveToFirst();
-			do {		
-				POI poi = new POI();
-				poi.name = mPOIHelper.getName(mCursor);
-				poi.category = mPOIHelper.getAddress(mCursor);
-				poi.state = mPOIHelper.getWheelchair(mCursor);
-				// calcutate distance
-				poi.distance = GeocoordinatesMath.calculateDistance(cur_loc, 
-						new Wgs84GeoCoordinates(
-								mPOIHelper.getLongitude(mCursor),
-								mPOIHelper.getLatitude(mCursor)));
-						
-				pois.add(poi);
-			} while (mCursor.moveToNext());                   
-		}
-		return pois;
-	}
-
-	ArrayList<POI> pois;
 	
 	public POIsListAdapter(Context context, Cursor c) {
 		super();		
 
 		mContext = context;   
 		mCursor = c;
-		pois = getPois();
-		
+		pois = createPois();
+				
+		mCursor.registerContentObserver( new ChangeObserver());
 	}
+	
+	private ArrayList<POI> createPois() {
+	// copy data from ContentProvider into Array and sort it
+			
+			Location loc = ((LocationManager)mContext.getSystemService(mContext.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER);
+	        if (loc == null)
+	            loc = ((LocationManager)mContext.getSystemService(mContext.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+	        if (loc == null) { // fallback berlin 
+	            loc = new Location(LocationManager.GPS_PROVIDER);
+	            loc.setLatitude(52.5);
+	            loc.setLongitude(13.4);
+	        }
+	        Wgs84GeoCoordinates cur_loc = new Wgs84GeoCoordinates(loc.getLongitude(), loc.getLatitude()) ;
+	        
+			
+			ArrayList<POI> pois = new ArrayList<POI>();
+			if (mCursor.getCount() > 0) {
+				mCursor.moveToFirst();
+				do {		
+					POI poi = new POI();
+					poi.name = POIHelper.getName(mCursor);
+					poi.category = POIHelper.getAddress(mCursor);
+					poi.state = POIHelper.getWheelchair(mCursor);
+					// calcutate distance
+					poi.distance = GeocoordinatesMath.calculateDistance(cur_loc, 
+							new Wgs84GeoCoordinates(
+									POIHelper.getLongitude(mCursor),
+									POIHelper.getLatitude(mCursor)));
+							
+					pois.add(poi);
+				} while (mCursor.moveToNext());                   
+			}
+			return pois;
+		}
 
 
 
@@ -132,4 +133,22 @@ public class POIsListAdapter extends BaseAdapter {
 		else
 			return null;
 	}
+	
+	private class ChangeObserver extends ContentObserver {
+        public ChangeObserver() {
+            super(new Handler());
+        }
+
+        @Override
+        public boolean deliverSelfNotifications() {
+            return true;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+        	pois = createPois();
+        	notifyDataSetChanged();
+        }
+    }
+
 }

@@ -47,14 +47,14 @@ public class MapFileDownloadActivity extends ListActivity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 			mState.mManager = MapFileManager.get(getApplicationContext());
-			mState.mManager.setResultReceiver(mState.mReceiver);
+			mState.mManager.registerResultReceiver( mState.mReceiver );
 		}
 
 		String parentDir = null;
 		Bundle b = getIntent().getExtras();
 		if (b == null) {
 			mState.mManager.updateDatabaseWithRemote();
-			mState.mManager.updateDatabaseWithLocal(false);
+			mState.mManager.updateDatabaseWithLocal();
 			parentDir = mState.mManager.getRootDirectory();
 			Log.d(TAG, "parentDir = *" + parentDir + "*");
 		} else
@@ -76,9 +76,12 @@ public class MapFileDownloadActivity extends ListActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-
-		// if (isFinishing() && getIntent().getExtras() == null)
-		// mState.mManager.stop();
+		
+		if ( isFinishing()) {
+			mState.mManager.unregisterResultReceiver( mState.mReceiver );
+			if ( getIntent().getExtras() == null)
+				mState.mManager.stop();
+		}
 	}
 
 	public void onHomeClick(View v) {
@@ -89,7 +92,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 
 	public void onRefreshClick(View v) {
 		mState.mManager.updateDatabaseWithRemote();
-		mState.mManager.updateDatabaseWithLocal(false);
+		mState.mManager.updateDatabaseWithLocal();
 	}
 
 	@Override

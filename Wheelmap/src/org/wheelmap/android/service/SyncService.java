@@ -1,6 +1,7 @@
 package org.wheelmap.android.service;
 
 import org.wheelmap.android.net.RESTExecutor;
+import org.wheelmap.android.ui.MapFileSelectActivity;
 import org.wheelmap.android.utils.CurrentLocation;
 import org.wheelmap.android.utils.CurrentLocation.LocationResult;
 import org.wheelmap.android.utils.GeocoordinatesMath;
@@ -13,9 +14,11 @@ import android.app.IntentService;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -29,6 +32,8 @@ public class SyncService extends IntentService {
             "org.wheelmap.android.STATUS_RECEIVER";
     public static final String EXTRA_STATUS_RECEIVER_BOUNCING_BOX =
         "org.wheelmap.android.EXTRA_STATUS_RECEIVER_BOUNCING_BOX";
+    
+    public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
     
     public static final int STATUS_RUNNING = 0x1;
     public static final int STATUS_ERROR = 0x2;
@@ -76,7 +81,7 @@ public class SyncService extends IntentService {
     }
 
     
-    final class MyLocationResult extends LocationResult {
+    final class MyLocationResult implements LocationResult {
     	
     	private ResultReceiver mReceiver;
     	private WheelchairState mWheelState;
@@ -100,20 +105,11 @@ public class SyncService extends IntentService {
 
         final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
         if (receiver != null) receiver.send(STATUS_RUNNING, Bundle.EMPTY);
-
-       // final Context context = this;
-        /*
-        final SharedPreferences prefs = getSharedPreferences(Prefs.IOSCHED_SYNC,
-                Context.MODE_PRIVATE);
-        final int localVersion = prefs.getInt(Prefs.LOCAL_VERSION, VERSION_NONE);
-        */
         
         final Bundle bundle=intent.getExtras();        
-        ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox)bundle.getSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX);
-        // TODO get wheelchair filter from shared settings
-        WheelchairState wheelState = WheelchairState.UNKNOWN;
-        
-        
+        ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox)bundle.getSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX);        
+        WheelchairState wheelState = getWheelchairStateFromPreferences();
+     
         Log.d(TAG,"parcBoundingBox received, parcBoundingBox==null ? "+(parcBoundingBox==null));
         // execute request directly for given bounding box
         if (parcBoundingBox != null) {
@@ -131,5 +127,12 @@ public class SyncService extends IntentService {
         // Announce success to any surface listener
         Log.d(TAG, "sync finished");
         if (receiver != null) receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+    }
+    
+    public WheelchairState getWheelchairStateFromPreferences() {
+    	SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+        int prefWheelchairState = Integer.valueOf(prefs.getString( PREF_KEY_WHEELCHAIR_STATE, "0" ));
+        return WheelchairState.valueOf( prefWheelchairState );
     }
 }

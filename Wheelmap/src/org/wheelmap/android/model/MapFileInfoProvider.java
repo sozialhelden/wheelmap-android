@@ -45,7 +45,7 @@ public class MapFileInfoProvider extends ContentProvider {
 	public static final String VALUE = "value";
 
 	private static final String DATABASE_NAME = "mapfileinfo.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	private static final String ENTITIES_TABLE_NAME = "files";
 
 	/**
@@ -71,7 +71,7 @@ public class MapFileInfoProvider extends ContentProvider {
 					+ MapFileInfos.REMOTE_MD5_SUM + " TEXT, "
 					+ MapFileInfos.VERSION + " TEXT, "
 					+ MapFileInfos.LOCAL_TIMESTAMP + " STRING, "
-					+ MapFileInfos.LOCAL_AVAILABLE + " NUMBER ) ");
+					+ MapFileInfos.LOCAL_AVAILABLE + " NUMBER DEFAULT \'" + MapFileInfo.FILE_NOT_LOCAL + "\' ) ");
 		}
 
 		@Override

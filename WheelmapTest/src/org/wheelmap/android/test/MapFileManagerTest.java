@@ -32,11 +32,11 @@ public class MapFileManagerTest extends AndroidTestCase implements
 		mState = new State();
 		mState.mReceiver.setReceiver(this);
 		MapFileManager dm = MapFileManager.get(getContext());
-		dm.setResultReceiver( mState.mReceiver);
+		dm.registerResultReceiver( mState.mReceiver);
 
 		dm.updateDatabaseWithRemote();
 		Thread.sleep(15000);
-		dm.updateDatabaseWithLocal( true );
+		dm.updateDatabaseWithLocal();
 		Thread.sleep(10000);
 		
 		dm.retrieveFile( "europe", "luxembourg-0.2.4.map", null );
