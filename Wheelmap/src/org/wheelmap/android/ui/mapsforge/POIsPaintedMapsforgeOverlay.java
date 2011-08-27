@@ -80,8 +80,6 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 					marker = dUnknown;
 				}
 
-				//
-				marker.setBounds(-6, -6, 6, 6);
 				marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 						marker.getIntrinsicHeight());
 				POIMapItem geoPoint = new POIMapItem(new GeoPoint(
