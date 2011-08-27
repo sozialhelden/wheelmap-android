@@ -3,6 +3,7 @@ package org.wheelmap.android.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.utils.CurrentLocation;
 import org.wheelmap.android.utils.CurrentLocation.LocationResult;
@@ -45,6 +46,7 @@ public class POIsProvider extends ContentProvider {
 
 	private static final int POIS = 1;
 	private static final int POI_ID = 2;
+	private static final int POIS_SORTED = 3;
 
 	public static final String ID = BaseColumns._ID;
 	public static final String VALUE = "value";
@@ -71,7 +73,12 @@ public class POIsProvider extends ContentProvider {
 			 a.append(cos_lon_rad);
 			 a.append("*\"cos_lon_rad\"+");
 			 a.append(sin_lon_rad);
-			 a.append("*\"sin_lon_rad\")) AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC LIMIT 30");
+			 a.append("*\"sin_lon_rad\")) " +
+			 
+			 		"" +
+			 		"" +
+			 		"" +
+			 		"AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC LIMIT 30");
 			 
 				 
             // TODO maybe is a Formatter better
@@ -154,6 +161,7 @@ public class POIsProvider extends ContentProvider {
 		}
 
 		getContext().getContentResolver().notifyChange(uri, null);
+		getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
 		return count;
 	}
 
@@ -194,6 +202,7 @@ public class POIsProvider extends ContentProvider {
 		}
 
 		getContext().getContentResolver().notifyChange(uri, null);
+		getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
 		return count;
 	}
 
@@ -246,6 +255,7 @@ public class POIsProvider extends ContentProvider {
 				Uri placeUri = ContentUris.withAppendedId(
 						Wheelmap.POIs.CONTENT_URI, rowId);
 				getContext().getContentResolver().notifyChange(placeUri, null);
+				getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
 				return placeUri;
 			}
 
@@ -284,8 +294,6 @@ public class POIsProvider extends ContentProvider {
 		return true;
 	}
 	
-     
-
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
@@ -294,35 +302,32 @@ public class POIsProvider extends ContentProvider {
 
 		int match = sUriMatcher.match(uri);
 
-		Log.v(TAG, "ContactsProvider.query: url=" + uri + ", match is " + match);
-
-
+		Log.v(TAG, "POISProvider.query: url=" + uri + ", match is " + match);
+		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		Cursor c;
 		// If no sort order is specified use the default
 		switch (match) {
 		case POIS:
 			qb.setTables(POIS_TABLE_NAME);
 			qb.setProjectionMap(sPOIsProjectionMap);
-			
-
+			c = qb.query(db, projection, selection, selectionArgs, null,
+					null, sortOrder);
 			break;
-
 		case POI_ID:
 			qb.setTables(POIS_TABLE_NAME);
 			qb.setProjectionMap(sPOIsProjectionMap);
-			qb.appendWhere(POIs._ID + "=" + uri.getPathSegments().get(1));
-
-			
+			qb.appendWhere(" (" + POIs._ID + " = " + uri.getPathSegments().get(1) + ") ");
+			c = qb.query(db, projection, selection, selectionArgs, null,
+					null, sortOrder);
+			break;
+		case POIS_SORTED:
+			// get asynchronously current location from location manager and execute request
+			c = db.rawQuery(mQueryBuilder.buildRawQuery(mLastLocation.getLongitude(), mLastLocation.getLatitude()), null);
 			break;
 		default:
-			throw new IllegalArgumentException("Unknown URI " + uri
-					+ "by inserting");
+			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
-		// Get the database and run the query
-		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-		
-		// get asynchronously current location from location manager and execute request
-     	Cursor c = db.rawQuery(mQueryBuilder.buildRawQuery(mLastLocation.getLongitude(), mLastLocation.getLatitude()), null);
 		// Tell the cursor what uri to watch, so it knows when its source data
 		// changes
 		c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -358,6 +363,7 @@ public class POIsProvider extends ContentProvider {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois", POIS);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois/#", POI_ID);
+		sUriMatcher.addURI(Wheelmap.AUTHORITY, "poissorted", POIS_SORTED);
 
 		// POIs
 		sPOIsProjectionMap = new HashMap<String, String>();

@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-  
-  
-    <LinearLayout style="@style/TitleBar">
-        <ImageButton style="@style/TitleBarAction"
-            android:contentDescription="@string/description_home"
-            android:src="@drawable/ic_title_home"
-            android:onClick="onHomeClick" />
 
-        <ImageView style="@style/TitleBarSeparator" />
-        <TextView style="@style/TitleBarText" />
-        
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageButton style="@style/TitleBarAction"
-            android:contentDescription="@string/description_map"
-            android:src="@drawable/ic_title_map"
-            android:onClick="onMapClick" />
 
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageButton style="@style/TitleBarAction"
-            android:id="@+id/btn_title_refresh"
-            android:contentDescription="@string/description_refresh"
-            android:src="@drawable/ic_title_refresh"
-            android:onClick="onRefreshClick" />
-        <ProgressBar style="@style/TitleBarProgressIndicator"
-            android:visibility="gone"
-            android:layout_alignLeft="@id/btn_title_refresh"
-            android:layout_alignTop="@id/btn_title_refresh"
-            android:id="@+id/title_refresh_progress" />
+	<LinearLayout style="@style/TitleBar">
+		<ImageButton style="@style/TitleBarAction"
+			android:contentDescription="@string/description_home" android:src="@drawable/ic_title_home"
+			android:onClick="onHomeClick" />
 
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageButton style="@style/TitleBarAction"
-            android:contentDescription="@string/description_search"
-            android:src="@drawable/ic_title_search"
-            android:onClick="onSearchClick" />
-    </LinearLayout>
-    
-    <ListView android:id="@+id/android:list" android:layout_width="fill_parent"
+		<ImageView style="@style/TitleBarSeparator" />
+		<TextView style="@style/TitleBarText" />
+
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction"
+			android:contentDescription="@string/description_map" android:src="@drawable/ic_title_map"
+			android:onClick="onMapClick" />
+
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
+			android:contentDescription="@string/description_refresh" android:src="@drawable/ic_title_refresh"
+			android:onClick="onRefreshClick" />
+		<ProgressBar style="@style/TitleBarProgressIndicator"
+			android:visibility="gone" android:layout_alignLeft="@id/btn_title_refresh"
+			android:layout_alignTop="@id/btn_title_refresh" android:id="@+id/title_refresh_progress" />
+
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction"
+			android:contentDescription="@string/description_search" android:src="@drawable/ic_title_search"
+			android:onClick="onSearchClick" />
+	</LinearLayout>
+
+	<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<TextView android:id="@+id/spinner_description_text"
+				  android:layout_width="wrap_content" android:layout_height="wrap_content"
+				  android:textAppearance="?android:attr/textAppearanceLarge"
+				  android:layout_marginLeft="5dip" android:layout_gravity="center_vertical" />
+		<Spinner android:id="@+id/spinner_distance"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_marginRight="5dip"/>
+	</LinearLayout>
+	
+
+	<ListView android:id="@+id/android:list" android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:layout_marginTop="10dip" />
 
-    
+
 </LinearLayout>
