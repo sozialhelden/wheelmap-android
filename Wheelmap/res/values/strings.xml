@@ -51,4 +51,6 @@
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <string name="settings_wheelchair_state_summary">Set the desired wheelchair state filter</string>
     <string name="settings_category_accesibility">DisplayWheelchair accesibility</string>
+    <string name="spinner_description_distance_km">Distance in km</string>
+    <string name="spinner_description_distance_miles">Distance in miles</string>
 </resources>

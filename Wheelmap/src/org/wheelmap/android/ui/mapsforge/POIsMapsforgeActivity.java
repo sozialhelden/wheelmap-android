@@ -181,7 +181,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 						+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
 						- (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX,
+		bundle.putSerializable(SyncService.EXTRA_STATUS_BOUNDING_BOX,
 				boundingBox);
 
 	}

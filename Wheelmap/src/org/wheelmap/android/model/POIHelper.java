@@ -6,7 +6,11 @@ import android.database.Cursor;
 public class POIHelper {
 		
 	public static String getName(Cursor c) {
-		return(c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME)));
+		String name = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME));
+		if ( name == null)
+			name = "";
+		
+		return name;
 	}
 	
 	public static double getLatitude(Cursor c) {
@@ -29,16 +33,17 @@ public class POIHelper {
 		String nr = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.HOUSE_NUM));
 		if (nr != null){
 			address.append(nr);
-			address.append(',');
 		}
-		// post code 
+		// post code  & city
 		String postcode = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.POSTCODE));
+		String city = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.CITY));
+		if ( postcode != null || city != null )
+			address.append(',');
+		
 		if (postcode != null){
 			address.append(postcode);
 			address.append(' ');
 		}
-		// city 
-		String city = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.CITY));
 		if (city != null){
 			address.append(city);
 			

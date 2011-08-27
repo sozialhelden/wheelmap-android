@@ -10,8 +10,6 @@ import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.DataSetObserver;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -19,6 +17,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
+
+	private final static String TAG = "mapsforge";
 
 	private Context mContext;
 	private Cursor mPois;
@@ -41,11 +41,12 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 				R.drawable.marker_limited);
 
 		refreshLocations();
-		mPois.registerContentObserver( new ChangeObserver() );
+		mPois.registerContentObserver(new ChangeObserver());
 	}
 
 	private void refreshLocations() {
-		Log.d( "poiadding", "refreshLocations" );
+		mPois.requery();
+		Log.d(TAG, "refreshLocations cursorcount = " + mPois.getCount());
 
 		int stateColumn = mPois.getColumnIndex(Wheelmap.POIs.WHEELCHAIR);
 		int latColumn = mPois.getColumnIndex(Wheelmap.POIs.COORD_LAT);
@@ -79,11 +80,10 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 					marker = dUnknown;
 				}
 
-				// 
-				marker.setBounds(0, 0, marker.getIntrinsicWidth(), marker.getIntrinsicHeight()); 
+				marker.setBounds(0, 0, marker.getIntrinsicWidth(),
+						marker.getIntrinsicHeight());
 				POIMapItem geoPoint = new POIMapItem(new GeoPoint(
 						lat.intValue(), lng.intValue()), state, poiId, marker);
-				Log.d( "poiadding", "Adding new geopoint to overlay" );
 				addItem(geoPoint);
 			} while (mPois.moveToNext());
 	}
@@ -91,17 +91,17 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 	@Override
 	public boolean onTap(int index) {
 		POIMapItem mapItem = (POIMapItem) createItem(index);
+		Log.d(TAG, "onTap: index = " + index + " id = " + mapItem.getId());
+
 		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI,
-				Integer.toString(mapItem.getId()));
+				String.valueOf( mapItem.getId()));
 
 		// Then query for this specific record:
 		Cursor cur = mContext.getContentResolver().query(poiUri, null, null,
 				null, null);
 		if (cur.moveToFirst()) {
-			Log.d("POI id",
-					Integer.toBinaryString(mapItem.getId())
-							+ POIHelper.getName(cur) + ' '
-							+ POIHelper.getAddress(cur));
+			Log.d(TAG, Integer.toBinaryString(mapItem.getId()) + " "
+					+ POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur));
 
 			Toast.makeText(mContext,
 					POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur),
@@ -110,20 +110,20 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 		cur.close();
 		return true;
 	}
-	
+
 	private class ChangeObserver extends ContentObserver {
-        public ChangeObserver() {
-            super(new Handler());
-        }
+		public ChangeObserver() {
+			super(new Handler());
+		}
 
-        @Override
-        public boolean deliverSelfNotifications() {
-            return true;
-        }
+		@Override
+		public boolean deliverSelfNotifications() {
+			return true;
+		}
 
-        @Override
-        public void onChange(boolean selfChange) {
+		@Override
+		public void onChange(boolean selfChange) {
 			refreshLocations();
-        }
-    }
+		}
+	}
 }

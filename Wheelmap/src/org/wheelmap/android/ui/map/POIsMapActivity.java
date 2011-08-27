@@ -161,7 +161,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 				center.getLongitudeE6() + (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2),
 				center.getLongitudeE6() - (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_STATUS_RECEIVER_BOUNCING_BOX, boundingBox);
+		bundle.putSerializable(SyncService.EXTRA_STATUS_BOUNDING_BOX, boundingBox);
 
 	}
 
