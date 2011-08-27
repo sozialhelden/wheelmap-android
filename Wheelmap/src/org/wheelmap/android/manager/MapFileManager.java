@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.wheelmap.android.model.MapFileInfo;
+import org.wheelmap.android.model.MapFileInfoProvider;
 import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
 import org.wheelmap.android.service.BaseListener;
 import org.wheelmap.android.service.DownloadListener;
@@ -143,11 +144,11 @@ public class MapFileManager {
 		mMapFileService.getRemoteMapsDirectory(dir, listener);
 	}
 
-	public void updateDatabaseWithLocal( boolean updateFileState ) {
-		updateDatabaseWithLocalRecursive("", true);
+	public void updateDatabaseWithLocal() {
+		updateDatabaseWithLocalRecursive("");
 	}
 
-	private void updateDatabaseWithLocalRecursive(String dir, final boolean updateFileState) {
+	private void updateDatabaseWithLocalRecursive(String dir) {
 
 		FileListener listener = new FileListener() {
 			private FileListener listener;
@@ -172,6 +173,9 @@ public class MapFileManager {
 			@Override
 			public void onDirectoryContent(String parentDir, List<File> files) {
 				for (File file : files) {
+					if (mInterrupted)
+						return;
+
 					String whereClause = "( " + MapFileInfos.REMOTE_NAME
 							+ " = ? )";
 					String[] whereValues = new String[] { file.getName() };
@@ -179,6 +183,8 @@ public class MapFileManager {
 					Uri contentUri;
 					String[] projection;
 					long remoteFileSize = -1;
+					String lastModifiedRemoteTimestamp = null;
+					int localAvailable = 0;
 					if (file.isDirectory()) {
 						contentUri = MapFileInfos.CONTENT_URI_DIRS;
 						projection = MapFileInfos.dirPROJECTION;
@@ -192,19 +198,28 @@ public class MapFileManager {
 						if (cursor.getCount() == 1) {
 							cursor.moveToFirst();
 							remoteFileSize = MapFileInfo.getRemoteSize(cursor);
+							lastModifiedRemoteTimestamp = MapFileInfo
+									.getRemoteTimestamp(cursor);
+							localAvailable = MapFileInfo
+									.getLocalAvailable(cursor);
 						}
 					}
 
 					ContentValues values = new ContentValues();
 					values.put(MapFileInfos.NAME, file.getName());
 					values.put(MapFileInfos.PARENT_NAME, parentDir);
-					Date lastModified = new Date();
-					lastModified.setTime(file.lastModified());
-					values.put(MapFileInfos.LOCAL_TIMESTAMP,
-							MapFileInfo.formatDate(lastModified));
 
-					if (updateFileState) {
-						if (file.isFile() && remoteFileSize != -1) {
+					if (file.isFile()) {
+						Date lastModified = new Date();
+						lastModified.setTime(file.lastModified());
+						String lastModifiedLocalTimestamp = MapFileInfo
+								.formatDate(lastModified);
+						values.put(MapFileInfos.LOCAL_TIMESTAMP,
+								lastModifiedLocalTimestamp);
+
+						if (lastModifiedLocalTimestamp
+								.compareTo(lastModifiedRemoteTimestamp) > 0
+								|| localAvailable == MapFileInfo.FILE_NOT_LOCAL) {
 							if (file.length() == remoteFileSize)
 								values.put(MapFileInfos.LOCAL_AVAILABLE,
 										MapFileInfo.FILE_COMPLETE);
@@ -253,7 +268,7 @@ public class MapFileManager {
 
 			@Override
 			public void onFinished() {
-				updateDatabaseWithLocal( true );
+				updateDatabaseWithLocal();
 				if (listener != null)
 					listener.onFinished();
 			}
