@@ -62,8 +62,8 @@ public class SyncService extends IntentService {
 		try {
 			final long startRemote = System.currentTimeMillis();
 			// Retrieve all Pages is terribly slow. Anybody knows why?
-			mRemoteExecutor.retrieveAllPages(bb, wheelState);
-			// mRemoteExecutor.retrieveSinglePage(bb, wheelState);
+//			mRemoteExecutor.retrieveAllPages(bb, wheelState);
+			 mRemoteExecutor.retrieveSinglePage(bb, wheelState);
 			Log.d(TAG, "remote sync took "
 					+ (System.currentTimeMillis() - startRemote) + "ms");
 
@@ -94,9 +94,8 @@ public class SyncService extends IntentService {
 
 		@Override
 		public void gotLocation(final Location location) {
-			// calculate bounding box from current location around 20 km
 			Log.d(TAG,
-					"MyLocationResult:gotLocation: location retrieved - retrieving data.");
+					"MyLocationResult:gotLocation: location retrieved - retrieving data with distance = " + mDistance + ".");
 			BoundingBox bb = GeocoordinatesMath.calculateBoundingBox(
 					new Wgs84GeoCoordinates(location.getLongitude(), location
 							.getLatitude()), mDistance);

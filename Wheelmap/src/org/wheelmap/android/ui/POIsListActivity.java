@@ -52,10 +52,10 @@ public class POIsListActivity extends ListActivity implements
 
 		mCursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
-		startManagingCursor(mCursor);
-		
-//		POIsListAdapter adapter = new POIsListAdapter(this, mCursor);
 		Cursor wrappingCursor = createCursorWrapper( mCursor );
+		startManagingCursor(wrappingCursor);
+
+//		POIsListAdapter adapter = new POIsListAdapter(this, mCursor);
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter( this, wrappingCursor );
 		setListAdapter(adapter);
 
