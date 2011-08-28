@@ -3,7 +3,6 @@ package org.wheelmap.android.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.utils.CurrentLocation;
 import org.wheelmap.android.utils.CurrentLocation.LocationResult;
@@ -78,7 +77,7 @@ public class POIsProvider extends ContentProvider {
 			 		"" +
 			 		"" +
 			 		"" +
-			 		"AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC LIMIT 30");
+			 		"AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC");
 			 
 				 
             // TODO maybe is a Formatter better
@@ -105,19 +104,24 @@ public class POIsProvider extends ContentProvider {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// places
-			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME + " (" + POIs._ID
-					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + POIs.WM_ID
-					+ " INTEGER, " + POIs.NAME + " TEXT," + POIs.COORD_LAT
-					+ " VARCHAR(15)," + POIs.COORD_LON + " VARCHAR(15),"
+			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME + " (" 
+			        + POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
+					+ POIs.WM_ID + " INTEGER, " 
+					+ POIs.NAME + " TEXT," 
+					+ POIs.COORD_LAT + " VARCHAR(15)," 
+					+ POIs.COORD_LON + " VARCHAR(15),"
 					+ POIs.COS_LAT_RAD + " NUMERIC,"
 					+ POIs.SIN_LAT_RAD + " NUMERIC,"
 					+ POIs.COS_LON_RAD + " NUMERIC,"
 					+ POIs.SIN_LON_RAD + " NUMERIC,"
-					+ POIs.STREET + " TEXT," + POIs.HOUSE_NUM + " TEXT,"
-					+ POIs.POSTCODE + " TEXT," + POIs.CITY + " TEXT,"
-					+ POIs.PHONE + " TEXT, " + POIs.WEBSITE + " TEXT, "
-					+ POIs.WHEELCHAIR + " TEXT, " + POIs.WHEELCHAIR_DESC
-					+ " TEXT )");
+					+ POIs.STREET + " TEXT," 
+					+ POIs.HOUSE_NUM + " TEXT,"
+					+ POIs.POSTCODE + " TEXT," 
+					+ POIs.CITY + " TEXT,"
+					+ POIs.PHONE + " TEXT, " 
+					+ POIs.WEBSITE + " TEXT, "
+					+ POIs.WHEELCHAIR + " TEXT, " 
+					+ POIs.WHEELCHAIR_DESC + " TEXT )");
 
 		}
 
@@ -172,6 +176,8 @@ public class POIsProvider extends ContentProvider {
 			return POIs.CONTENT_TYPE;
 		case POI_ID:
 			return POIs.CONTENT_ITEM_TYPE;
+		case POIS_SORTED:
+			return POIs.CONTENT_TYPE_SORTED;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}

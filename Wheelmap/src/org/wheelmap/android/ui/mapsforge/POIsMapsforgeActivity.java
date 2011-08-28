@@ -57,7 +57,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
-
+		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String prefName = prefs.getString(

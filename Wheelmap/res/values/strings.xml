@@ -73,4 +73,6 @@
     <string name="ws_disabled_l1">Eigang:maximal eine Stuffe, nich höher als 7cm (etwa Handbreit)</string>
     <string name="ws_disabled_l2">Wichtigste räume: stufenlos erreichbar</string>
     
+    <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
+    <string name="settings_list_distance">Distance in the List</string>
 </resources>
