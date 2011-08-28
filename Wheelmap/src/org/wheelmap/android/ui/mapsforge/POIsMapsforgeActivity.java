@@ -1,13 +1,13 @@
 package org.wheelmap.android.ui.mapsforge;
 
 import java.io.File;
-import java.util.List;
 
+import org.mapsforge.android.maps.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.Overlay;
+import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.MapFileService;
@@ -23,6 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -45,7 +47,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MapView mapView;
 	private LocationManager locationManager;
 	private POIsPaintedMapsforgeOverlay poisItemizedOverlay;
-	// private MyLocationOverlay mCurrLocationOverlay;
+	private MyLocationOverlay mCurrLocationOverlay;
 
 	private GeoPoint mLastGeoPointE6;
 
@@ -57,18 +59,18 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
-		
+
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String prefName = prefs.getString(
 				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME, "");
 		String prefDir = prefs.getString(
 				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR, "");
-		if ( prefName.equals("") || prefDir.equals("")) {
+		if (prefName.equals("") || prefDir.equals("")) {
 			// TODO: show a dialog. A map needs to be selected.
 			return;
 		}
-		
+
 		String mapFile = MapFileService.LOCAL_BASE_PATH_DIR + File.separator
 				+ prefDir + File.separator + prefName;
 		mapView.setMapFile(mapFile);
@@ -83,18 +85,16 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		// overlays
 		poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
-		mapView.getOverlays().add( poisItemizedOverlay );
+		mapView.getOverlays().add(poisItemizedOverlay);
 
-		// TODO: replace currLocation with a mapsforge circle overlay
-		//
-		// mCurrLocationOverlay = new MyLocationOverlay(this, mapView);
-		// mCurrLocationOverlay.enableMyLocation();
-		// mapOverlays.add(mCurrLocationOverlay);
+		mCurrLocationOverlay = new MyLocationOverlay();
+		mapView.getOverlays().add(mCurrLocationOverlay);
 
 		// location manager
+		GeoUpdateHandler guh = new GeoUpdateHandler();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0, new GeoUpdateHandler());
+				0, guh);
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -141,7 +141,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	@Override
 	protected void onPause() {
-		// mCurrLocationOverlay.disableMyLocation();
 		mCursor.deactivate();
 		super.onPause();
 	}
@@ -149,7 +148,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	@Override
 	protected void onResume() {
 		mCursor.requery();
-		// mCurrLocationOverlay.enableMyLocation();
 		super.onResume();
 	}
 
@@ -233,6 +231,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 				mapController.setCenter(mLastGeoPointE6);
 			} else
 				mLastGeoPointE6 = new GeoPoint(lat, lng);
+
+			mCurrLocationOverlay.setLocation(mLastGeoPointE6,
+					location.getAccuracy());
 		}
 
 		@Override
@@ -247,4 +248,53 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
 	}
+
+	private static class MyLocationOverlay extends CircleOverlay<OverlayCircle> {
+		OverlayCircle mCircleLarge, mCircleSmall;
+		private final static float RADIUS_SMALL_CIRCLE = 2.0f;
+		private final static int NUMBER_OF_CIRCLES = 2;
+
+		public MyLocationOverlay() {
+			super(null, null);
+
+			Paint fillPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
+			fillPaintDark.setARGB(60, 127, 159, 239);
+
+			Paint outlinePaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
+			outlinePaintDark.setARGB(255, 79, 92, 140);
+			outlinePaintDark.setStrokeWidth(4);
+			outlinePaintDark.setStyle(Style.STROKE);
+
+			Paint fillPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
+			fillPaintLight.setARGB(255, 47, 111, 223);
+
+			Paint outlinePaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
+			outlinePaintLight.setARGB(255, 132, 132, 132);
+			outlinePaintLight.setStrokeWidth(10);
+			outlinePaintLight.setStyle(Style.STROKE);
+
+			mCircleLarge = new OverlayCircle(fillPaintDark, outlinePaintDark);
+			mCircleSmall = new OverlayCircle(fillPaintLight, outlinePaintLight);
+		}
+
+		public void setLocation(GeoPoint center, float radius) {
+			mCircleLarge.setCircleData(center, radius);
+			mCircleSmall.setCircleData(center, RADIUS_SMALL_CIRCLE);
+			populate();
+		}
+
+		@Override
+		public int size() {
+			return NUMBER_OF_CIRCLES;
+		}
+
+		@Override
+		protected OverlayCircle createCircle(int i) {
+			if (i == 1)
+				return mCircleLarge;
+			else
+				return mCircleSmall;
+		}
+	}
+
 }

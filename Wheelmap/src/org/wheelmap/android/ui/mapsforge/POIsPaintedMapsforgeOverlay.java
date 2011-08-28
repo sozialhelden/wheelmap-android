@@ -41,7 +41,6 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 				R.drawable.marker_limited);
 
 		refreshLocations();
-		mPois.registerContentObserver(new ChangeObserver());
 	}
 
 	private void refreshLocations() {

@@ -12,9 +12,8 @@ import android.os.Parcelable;
 import com.google.android.maps.GeoPoint;
 
 public class ParceableBoundingBox implements Parcelable, Serializable {
-	
-	// TODO better UID ???
-	static final long serialVersionUID = 2L;
+
+	private static final long serialVersionUID = 1566826330658318160L;
 	
 	protected final int mLatNorthE6;
 	protected final int mLatSouthE6;
