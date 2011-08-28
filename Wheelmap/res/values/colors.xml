@@ -8,5 +8,11 @@
     <color name="background1">#ffffffff</color>
     <color name="background2">#ffd5ddeb</color>
     <color name="background3">#ffe3e8f1</color>
-    <color name="title_separator">#40ffffff</color>    
+    <color name="title_separator">#40ffffff</color> 
+   
+    <color name="wheel_enabled">#ff78b13e</color> 
+    <color name="wheel_limited">#fff29436</color> 
+    <color name="wheel_disabled">#ffE30127</color> 
+    
+       
 </resources>

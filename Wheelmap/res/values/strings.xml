@@ -16,6 +16,10 @@
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Settings</string>
     <string name="title_pois_detail">Info</string>
+    <string name="title_wheelchair_state">title_wheelchair_state</string>
+    
+    
+    
     <string name="edit_poi">Edit</string>
     <string name="toast_sync_error">Error by syncing with server</string>
     <string name="settings_full_accesible">Full accesibility</string>
@@ -53,4 +57,20 @@
     <string name="settings_category_accesibility">DisplayWheelchair accesibility</string>
     <string name="spinner_description_distance_km">Distance in km</string>
     <string name="spinner_description_distance_miles">Distance in miles</string>
+    
+    <!-- wheelchair texts  -->
+    <string name="ws_enabled_title">Voll rollstuhlgerecht</string>
+    <string name="ws_enabled_l1">Eigang:stufenlos ereichbar</string>
+    <string name="ws_enabled_l2">Räume: Alle stufenlos erreichbar</string>
+    <string name="ws_enabled_l3">Räume: Alle stufenlos erreichbar</string>
+    
+    <string name="ws_limited_title">Eingenschränkt rollstuhlgerecht</string>
+    <string name="ws_limited_l1">Eigang:maximal eine Stuffe, nich höher als 7cm (etwa Handbreit)</string>
+    <string name="ws_limited_l2">Wichtigste räume: stufenlos erreichbar</string>
+    <string name="ws_limited_l3">Toiletten:egal</string>
+    
+    <string name="ws_disabled_title">Eingenschränkt rollstuhlgerecht</string>
+    <string name="ws_disabled_l1">Eigang:maximal eine Stuffe, nich höher als 7cm (etwa Handbreit)</string>
+    <string name="ws_disabled_l2">Wichtigste räume: stufenlos erreichbar</string>
+    
 </resources>

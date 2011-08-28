@@ -59,6 +59,12 @@
         	android:theme="@style/Theme.IOSched"
         	android:label="@string/title_mapfile_select"
         />
+        <activity 
+        	android:name=".ui.WheelchairStateActivity"
+        	android:theme="@style/Theme.IOSched"
+        	android:label="@string/title_wheelchair_state"
+        />
+        
         
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"

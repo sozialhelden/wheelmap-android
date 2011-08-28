@@ -9,7 +9,15 @@
 
 	</LinearLayout>	
 
-		
+	<ScrollView
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="5px"
+        >
+           <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
+     	
 		
 	
 	
@@ -177,6 +185,8 @@
           android:layout_height="wrap_content"
           android:layout_weight=".15" />
 	</LinearLayout>
+	</LinearLayout>
+	</ScrollView>
 	
 	
 </LinearLayout>

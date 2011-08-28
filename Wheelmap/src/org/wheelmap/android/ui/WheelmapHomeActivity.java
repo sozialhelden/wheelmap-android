@@ -49,7 +49,8 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 	}
 
 	public void onSearchClick(View v) {
-		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
+		
+		startActivity(new Intent(this, WheelchairStateActivity.class));;
 	}
 
 	public void onRefreshClick(View v) {

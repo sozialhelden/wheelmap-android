@@ -44,7 +44,7 @@
         android:textStyle="bold"
         android:textColor="?android:attr/textColorPrimary"
         android:singleLine="true"
-    />    
+    />
     
 </RelativeLayout>
 
