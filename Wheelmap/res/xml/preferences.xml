@@ -6,6 +6,10 @@
 			android:summary="@string/settings_wheelchair_state_summary"
 			android:key="wheelchairState" android:defaultValue="0"
 			android:entries="@array/wheelchair_state" android:entryValues="@array/wheelchair_state_values" />
+		<ListPreference android:title="@string/settings_list_distance"
+			android:summary="@string/settings_list_distance_summary"
+			android:key="listDistance" android:defaultValue="1"
+			android:entries="@array/distance_array" android:entryValues="@array/distance_array_values" />
 
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_mapfile">

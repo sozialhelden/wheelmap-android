@@ -53,4 +53,6 @@
     <string name="settings_category_accesibility">DisplayWheelchair accesibility</string>
     <string name="spinner_description_distance_km">Distance in km</string>
     <string name="spinner_description_distance_miles">Distance in miles</string>
+    <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
+    <string name="settings_list_distance">Distance in the List</string>
 </resources>

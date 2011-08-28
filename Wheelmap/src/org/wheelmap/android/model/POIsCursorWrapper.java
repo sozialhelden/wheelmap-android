@@ -5,24 +5,29 @@ import org.wheelmap.android.utils.GeocoordinatesMath;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 public class POIsCursorWrapper extends CursorWrapper {
+	public static final String TAG = "poislist";
 
 	public final static String LOCATION_COLUMN_NAME = "location_column";
-	public final static int LOCATION_COLUMN_INDEX = 20;
+	public int LOCATION_COLUMN_INDEX;
 
 	private Wgs84GeoCoordinates mLocation;
-	private Cursor mCursor;
 
 	public POIsCursorWrapper(Cursor cursor, Wgs84GeoCoordinates location) {
 		super(cursor);
-		mCursor = cursor;
 		mLocation = location;
+		LOCATION_COLUMN_INDEX = cursor.getColumnCount();
+	}
+	
+	public int getColumnCount() {
+		return super.getColumnCount() + 1;
 	}
 	
 	public void setLocation( Wgs84GeoCoordinates location ) {
 		mLocation = location;
-		mCursor.requery();
+		super.requery();
 	}
 
 	@Override
@@ -37,8 +42,8 @@ public class POIsCursorWrapper extends CursorWrapper {
 	public double getDouble(int columnIndex) {
 		if (columnIndex == LOCATION_COLUMN_INDEX) {
 			return GeocoordinatesMath.calculateDistance(mLocation,
-					new Wgs84GeoCoordinates(POIHelper.getLongitude(mCursor),
-							POIHelper.getLatitude(mCursor)));
+					new Wgs84GeoCoordinates(POIHelper.getLongitude(this),
+							POIHelper.getLatitude(this)));
 		}
 		else
 			return super.getDouble(columnIndex);

@@ -37,7 +37,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		int index = cursor.getColumnIndex( POIsCursorWrapper.LOCATION_COLUMN_NAME );
 		double distance = cursor.getDouble( index );
 		
-		// TODO nice formater for distance (123m, 1.5km ....)
+		// TODO nice formatter for distance (123m, 1.5km ....)
 		pliv.setDistance(String.format("%.3f", distance));
 
 		switch (state) {

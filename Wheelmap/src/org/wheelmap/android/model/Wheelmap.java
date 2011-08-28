@@ -67,7 +67,7 @@ public class Wheelmap {
 			 * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
 			 */
 			public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.pois";
-
+			public static final String CONTENT_TYPE_SORTED = "vnd.android.cursor.dir/vnd.wheelmap.poissorted";
 			/**
 			 * The MIME type of a {@link #CONTENT_URI} sub-directory of a single note.
 			 */

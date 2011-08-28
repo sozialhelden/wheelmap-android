@@ -15,12 +15,16 @@ import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,10 +39,9 @@ public class POIsListActivity extends ListActivity implements
 		DetachableResultReceiver.Receiver, OnItemSelectedListener {
 
 	private final static String TAG = "poislist";
+	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 
-	private Cursor mCursor;
 	private State mState;
-
 	private float mDistance;
 
 	/** Called when the activity is first created. */
@@ -50,12 +53,11 @@ public class POIsListActivity extends ListActivity implements
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
-		mCursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null,
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
-		Cursor wrappingCursor = createCursorWrapper( mCursor );
+		Cursor wrappingCursor = createCursorWrapper( cursor );
 		startManagingCursor(wrappingCursor);
 
-//		POIsListAdapter adapter = new POIsListAdapter(this, mCursor);
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter( this, wrappingCursor );
 		setListAdapter(adapter);
 
@@ -80,15 +82,15 @@ public class POIsListActivity extends ListActivity implements
 
 		Spinner spinner = (Spinner) findViewById(R.id.spinner_distance);
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter
-				.createFromResource(this, R.array.distance_array,
+				.createFromResource(this, R.array.distance_array_values,
 						android.R.layout.simple_spinner_item);
 		spinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(spinnerAdapter);
 		spinner.setOnItemSelectedListener(this);
 		spinner.setPromptId( textRes );
-		spinner.setSelection( 2 );
-		mDistance = 5;
+		spinner.setSelection( getSelectionFromPreferences() );
+		
 	}
 	
 	public Cursor createCursorWrapper( Cursor cursor ) {
@@ -105,6 +107,22 @@ public class POIsListActivity extends ListActivity implements
 		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(loc.getLongitude(), loc.getLatitude());
 		
 		return new POIsCursorWrapper(cursor, location);
+	}
+	
+	public int getSelectionFromPreferences() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		
+		String prefDist = prefs.getString( PREF_KEY_LIST_DISTANCE, "1");
+		mDistance = Float.valueOf( prefDist );
+		
+		String[] values = getResources().getStringArray( R.array.distance_array_values );
+		int i;
+		for( i = 0; i < values.length; i++ ) {
+			if ( Float.valueOf( values[i] ) == mDistance )
+				return i;
+		}
+		return 0;	
 	}
 
 	@Override
@@ -200,7 +218,7 @@ public class POIsListActivity extends ListActivity implements
 	public void onItemSelected(AdapterView<?> adapterView, View view,
 			int position, long id) {
 		String distance = (String) adapterView.getItemAtPosition(position);
-		mDistance = Integer.valueOf( distance );
+		mDistance = Float.valueOf( distance );
 		onRefreshClick( view );
 	}
 
