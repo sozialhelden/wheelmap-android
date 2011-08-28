@@ -68,7 +68,7 @@
 				android:text="@string/ws_enabled_l2"></TextView>
 		</TableRow>
 	</TableLayout>
-	<RadioButton android:id="@+id/radio_blue"
+	<RadioButton android:id="@+id/radio_enabled"
           android:layout_width="0px"
           android:layout_weight=".15"
           android:layout_height="wrap_content" />
@@ -180,11 +180,59 @@
 		</TableRow>
 		
 	</TableLayout>
-	<RadioButton android:id="@+id/radio_limited"
+	<RadioButton android:id="@+id/radio_disabled"
           android:layout_width="0px"
           android:layout_height="wrap_content"
           android:layout_weight=".15" />
 	</LinearLayout>
+	
+		<!-- icon + big text -->	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<ImageView 
+			android:src="@drawable/wheelchair_state_unknown"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+
+
+		<TextView android:layout_height="wrap_content"
+		style="@style/WheelStateTitleUnknown"
+		android:layout_marginTop="10dip"
+			android:layout_width="wrap_content" android:text="@string/ws_unknown_title"></TextView>
+	</LinearLayout>
+	<!-- explanation -->
+
+<LinearLayout 
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:weightSum="1.0">
+
+
+
+	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="20dip"
+		
+		android:layout_width="0px" 
+		android:layout_height="wrap_content"
+		android:layout_weight=".85" >
+		
+		
+	</TableLayout>
+	<RadioButton android:id="@+id/radio_unknown"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight=".15" />
+	</LinearLayout>
+	
+	
+	
 	</LinearLayout>
 	</ScrollView>
 	
