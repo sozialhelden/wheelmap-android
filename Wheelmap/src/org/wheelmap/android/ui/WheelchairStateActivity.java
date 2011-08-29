@@ -11,56 +11,26 @@ import android.widget.RadioButton;
 
 public class WheelchairStateActivity extends Activity {
 
-	private RadioButton mEnabled;
-	private RadioButton mLimited;
-	private RadioButton mDisabled;
-	private RadioButton mUnknown;
+        private HashMap<WheelchairState, RadioButton> mRadioButtonsMap = new HashMap<WheelchairState, RadioButton>();
 
 
 	private void DeselectAllRadioButtons() {
-		mEnabled.setChecked(false);
-		mLimited.setChecked(false);
-		mDisabled.setChecked(false);
-		mUnknown.setChecked(false);
+		for( WheelchairState state: mRadioButtonsMap.keySet() ) {
+                	mRadioButtonsMap.get(state).setChecked(false);
+		}	
 	}
 
 	private void setWheeChairState(WheelchairState newState) {
 		DeselectAllRadioButtons();
-		switch (newState) {
-		case UNKNOWN: 
-			mUnknown.setChecked(true);
-			break;
-		case YES:
-			mEnabled.setChecked(true);
-			break;
-		case LIMITED:
-			mLimited.setChecked(true);
-			break;
-		case NO:
-			mDisabled.setChecked(true);
-			break;
-		default:
-			mUnknown.setChecked(true);
-			break;
-		}
-
+		mRadioButtonsMap.get(newState).setChecked(true);
 	}
 
 	private WheelchairState getWheeChairState() {
-		if (mEnabled.isChecked())
-			return WheelchairState.YES;
-
-		if (mLimited.isChecked())
-			return WheelchairState.LIMITED;
-
-		if (mDisabled.isChecked())
-			return WheelchairState.NO;
-
-		if (mUnknown.isChecked())
-			return WheelchairState.UNKNOWN;
-		else
-			return WheelchairState.UNKNOWN;
-
+		for( WheelchairState state: mRadioButtonsMap.keySet() ) {
+                	if (mRadioButtonsMap.get(state).isChecked())
+                		return state;
+		}	
+		return WheelchairState.UNKNOWN;
 	}
 
 
@@ -69,43 +39,21 @@ public class WheelchairStateActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wheelchair_state);
 
-		mEnabled = (RadioButton) findViewById( R.id.radio_enabled );
-		mLimited = (RadioButton) findViewById( R.id.radio_limited );
-		mDisabled = (RadioButton) findViewById( R.id.radio_disabled );
-		mUnknown = (RadioButton) findViewById( R.id.radio_unknown );
-
-		mEnabled.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				DeselectAllRadioButtons();
-				final RadioButton a = (RadioButton)v;
-				a.setChecked(true);
-			}
-		});
-
-		mLimited.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				DeselectAllRadioButtons();
-				final RadioButton a = (RadioButton)v;
-				a.setChecked(true);
-			}
-		});
-
-		mDisabled.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				DeselectAllRadioButtons();
-				final RadioButton a = (RadioButton)v;
-				a.setChecked(true);
-			}
-		});
-
-		mUnknown.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				DeselectAllRadioButtons();
-				final RadioButton a = (RadioButton)v;
-				a.setChecked(true);
-			}
-		});
+                // fill hashmap with radio buttons
+		mRadioButtonsMap.put(WheelchairState.YES, (RadioButton) findViewById( R.id.radio_enabled ));
+		mRadioButtonsMap.put(WheelchairState.LIMITED, (RadioButton) findViewById( R.id.radio_limited ));
+		mRadioButtonsMap.put(WheelchairState.NO, (RadioButton) findViewById( R.id.radio_disabled ));
+		mRadioButtonsMap.put(WheelchairState.UNKNOWN, (RadioButton) findViewById( R.id.radio_unknown ));
+		
+		// set onCLick listener
+		for( WheelchairState state: mRadioButtonsMap.keySet() ) {
+                	mRadioButtonsMap.get(state).setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					DeselectAllRadioButtons();
+					final RadioButton a = (RadioButton)v;
+					a.setChecked(true);
+				}
+			});
+		}	
 	}
-
-
 }
