@@ -10,6 +10,7 @@ import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -41,6 +42,7 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 				R.drawable.marker_limited);
 
 		refreshLocations();
+		mPois.registerContentObserver(new ChangeObserver());
 	}
 
 	private void refreshLocations() {
@@ -117,11 +119,12 @@ public class POIsPaintedMapsforgeOverlay extends ArrayItemizedOverlay {
 
 		@Override
 		public boolean deliverSelfNotifications() {
-			return true;
+			return false;
 		}
 
 		@Override
 		public void onChange(boolean selfChange) {
+			Log.d( TAG, "ChangeObserver:onChange selfChange = " + selfChange );
 			refreshLocations();
 		}
 	}

@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
 
 public class POIsMapsforgeActivity extends MapActivity implements
@@ -46,7 +47,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
-	private POIsPaintedMapsforgeOverlay poisItemizedOverlay;
+	// private POIsPaintedMapsforgeOverlay poisItemizedOverlay;
+	private POIsCursorMapsforgeOverlay poisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 
 	private GeoPoint mLastGeoPointE6;
@@ -75,21 +77,30 @@ public class POIsMapsforgeActivity extends MapActivity implements
 				+ prefDir + File.separator + prefName;
 		mapView.setMapFile(mapFile);
 		mapController = mapView.getController();
-		mapController.setZoom(14); // Zoon 1 is world view
-
+		mapController.setZoom(16); // Zoon 1 is world view
+		
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
-
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
 				null, null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
 		// overlays
-		poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
+		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
+		poisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, mCursor);
 		mapView.getOverlays().add(poisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mapView.getOverlays().add(mCurrLocationOverlay);
-
+		
+		mapView.getViewTreeObserver().addOnGlobalLayoutListener( new OnGlobalLayoutListener() {
+			
+			@Override
+			public void onGlobalLayout() {
+				requestUpdate();
+				mapView.getViewTreeObserver().removeGlobalOnLayoutListener( this );
+			}
+		});
+		
 		// location manager
 		GeoUpdateHandler guh = new GeoUpdateHandler();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -161,6 +172,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	public void onCenterOnCurrentLocationClick(View v) {
 		if (mLastGeoPointE6 != null) {
 			mapController.setCenter(mLastGeoPointE6);
+			requestUpdate();
 		}
 	}
 
@@ -181,11 +193,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 						- (lonSpan / 2));
 		bundle.putSerializable(SyncService.EXTRA_STATUS_BOUNDING_BOX,
 				boundingBox);
-
 	}
-
-	public void onRefreshClick(View v) {
-
+	
+	private void requestUpdate() {
 		// get bounding box from current view
 		Bundle extras = new Bundle();
 		//
@@ -197,6 +207,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		intent.putExtras(extras);
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
+	}
+
+	public void onRefreshClick(View v) {
+		requestUpdate();
 	}
 
 	public void onSearchClick(View v) {
