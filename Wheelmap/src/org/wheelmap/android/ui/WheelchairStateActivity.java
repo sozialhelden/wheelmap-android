@@ -52,6 +52,10 @@ public class WheelchairStateActivity extends Activity {
 					DeselectAllRadioButtons();
 					final RadioButton a = (RadioButton)v;
 					a.setChecked(true);
+					// newly selected state ends up the activity
+ 				        //setResult(getWheeChairState.getId());
+ 				        // finish();
+
 				}
 			});
 		}	
