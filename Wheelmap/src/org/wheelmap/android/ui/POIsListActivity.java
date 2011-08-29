@@ -148,10 +148,9 @@ public class POIsListActivity extends ListActivity implements
 		
 		Cursor cursor = (Cursor)l.getAdapter().getItem( position );
 		
-		long itemId = POIHelper.getId( cursor );
+		long poiId = POIHelper.getId( cursor );
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
-
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, itemId);
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
 		startActivity(i);
 	}
 
