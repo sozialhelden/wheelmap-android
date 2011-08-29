@@ -24,6 +24,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 public class MapFileService {
 	private final static String TAG = "mapfileservice";
@@ -386,6 +387,8 @@ public class MapFileService {
 					// nothing here
 				}
 			} catch (Exception e) {
+				Log.e(TAG, "Problem while downloading/file access", e);
+				
 				Bundle bStatus = new Bundle();
 				bStatus.putString(STATUS_ERROR_MSG, e.getMessage());
 				if (mReceiver != null)

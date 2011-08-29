@@ -53,7 +53,7 @@ public class POIsProvider extends ContentProvider {
 	private static final String TAG = "POIsProvider";
 
 	private static final String DATABASE_NAME = "wheelmap.db";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	private static final String POIS_TABLE_NAME = "pois";
 	
 	private Location mLastLocation;
@@ -120,7 +120,7 @@ public class POIsProvider extends ContentProvider {
 					+ POIs.CITY + " TEXT,"
 					+ POIs.PHONE + " TEXT, " 
 					+ POIs.WEBSITE + " TEXT, "
-					+ POIs.WHEELCHAIR + " TEXT, " 
+					+ POIs.WHEELCHAIR + " NUMERIC, " 
 					+ POIs.WHEELCHAIR_DESC + " TEXT )");
 
 		}

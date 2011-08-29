@@ -54,4 +54,8 @@ public class POIHelper {
 	public static WheelchairState getWheelchair(Cursor c) { 
 		return WheelchairState.valueOf(c.getInt(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.WHEELCHAIR)));
 	}
+
+	public static int getId(Cursor c) {
+		return c.getInt( c.getColumnIndexOrThrow( Wheelmap.POIs._ID));
+	}
 }

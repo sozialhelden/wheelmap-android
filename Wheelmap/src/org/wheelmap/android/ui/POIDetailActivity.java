@@ -18,7 +18,7 @@ public class POIDetailActivity extends Activity {
 	private TextView address=null;
 	private EditText notes=null;
 	private RadioGroup types=null;
-	private String poiID=null;
+	private Long poiID;
 
 
 	@Override
@@ -32,9 +32,9 @@ public class POIDetailActivity extends Activity {
 		notes=(EditText)findViewById(R.id.notes);
 		types=(RadioGroup)findViewById(R.id.wheel_chair_type);
 
-		poiID=getIntent().getStringExtra(Wheelmap.POIs.EXTRAS_POI_ID);
+		poiID=getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
-		if (poiID != null) {
+		if (poiID != -1) {
 			load();
 		}
 	}
@@ -49,7 +49,7 @@ public class POIDetailActivity extends Activity {
 	private void load() {
 
 		// Use the ContentUris method to produce the base URI for the contact with _ID == 23.
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, poiID);
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);

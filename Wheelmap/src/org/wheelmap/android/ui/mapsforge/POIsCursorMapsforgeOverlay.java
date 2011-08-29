@@ -7,7 +7,6 @@ import org.wheelmap.android.R;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.ui.POIDetailActivity;
-import org.wheelmap.android.ui.POIsListActivity;
 
 import wheelmap.org.WheelchairState;
 
@@ -74,6 +73,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			WheelchairState state = WheelchairState.valueOf(mCursor
 					.getInt(stateColumn));
 
+			Log.d( TAG, "Wheelchair state = " + state.toString());
 			Drawable marker;
 			switch (state) {
 			case UNKNOWN:

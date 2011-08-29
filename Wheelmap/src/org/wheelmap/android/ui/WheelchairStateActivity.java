@@ -1,5 +1,7 @@
 package org.wheelmap.android.ui;
 
+import java.util.HashMap;
+
 import org.wheelmap.android.R;
 
 import wheelmap.org.WheelchairState;

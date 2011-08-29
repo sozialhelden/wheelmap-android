@@ -1,6 +1,7 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.Wheelmap;
@@ -23,6 +24,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -143,10 +145,13 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-
+		
+		Cursor cursor = (Cursor)l.getAdapter().getItem( position );
+		
+		long itemId = POIHelper.getId( cursor );
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, String.valueOf(id));
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, itemId);
 		startActivity(i);
 	}
 

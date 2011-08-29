@@ -134,7 +134,7 @@ public class RESTExecutor {
 		values.put(Wheelmap.POIs.CITY, node.getCity());
 		values.put(Wheelmap.POIs.PHONE, node.getPhone());
 		values.put(Wheelmap.POIs.WEBSITE, node.getWebsite());
-		values.put(Wheelmap.POIs.WHEELCHAIR, node.getWheelchair());
+		values.put(Wheelmap.POIs.WHEELCHAIR, WheelchairState.myValueOf( node.getWheelchair()).getId());
 		values.put(Wheelmap.POIs.WHEELCHAIR_DESC,
 				node.getWheelchairDescription());
 	}
