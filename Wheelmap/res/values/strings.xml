@@ -50,16 +50,17 @@
     <string name="spinner_description_distance_miles">Distance in miles</string>
     <!-- wheelchair texts  -->
     <string name="ws_enabled_title">Voll rollstuhlgerecht</string>
-    <string name="ws_enabled_l1">Eigang:stufenlos ereichbar</string>
+    <string name="ws_enabled_l1">Eigang: stufenlos ereichbar</string>
     <string name="ws_enabled_l2">Räume: Alle stufenlos erreichbar</string>
     <string name="ws_enabled_l3">Räume: Alle stufenlos erreichbar</string>
     <string name="ws_limited_title">Eingenschränkt rollstuhlgerecht</string>
     <string name="ws_limited_l1">Eigang:maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
-    <string name="ws_limited_l2">Wichtigste räume: stufenlos erreichbar</string>
-    <string name="ws_limited_l3">Toiletten:egal</string>
+    <string name="ws_limited_l2">Wichtigste Räume: stufenlos erreichbar</string>
+    <string name="ws_limited_l3">Toiletten: egal</string>
     <string name="ws_disabled_title">Eingenschränkt rollstuhlgerecht</string>
-    <string name="ws_disabled_l1">Eigang:maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
+    <string name="ws_disabled_l1">Eigang: maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
     <string name="ws_disabled_l2">Wichtigste Räume: stufenlos erreichbar</string>
+    <string name="ws_unknown_title">Nicht bekannt</string>
     <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
     <string name="settings_list_distance">Distance in the List</string>
     <string name="error_no_mapfilefound">No offline map found or selected. Using online map.</string>

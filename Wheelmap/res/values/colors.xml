@@ -12,7 +12,9 @@
    
     <color name="wheel_enabled">#ff78b13e</color> 
     <color name="wheel_limited">#fff29436</color> 
-    <color name="wheel_disabled">#ffE30127</color> 
+    <color name="wheel_disabled">#ffE30127</color>
+    <color name="wheel_unknown">#ff656565</color> 
+   
     
        
 </resources>
