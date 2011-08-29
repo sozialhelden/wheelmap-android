@@ -53,8 +53,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 		String parentDir = null;
 		Bundle b = getIntent().getExtras();
 		if (b == null) {
-			mState.mManager.updateDatabaseWithRemote();
-			mState.mManager.updateDatabaseWithLocal();
+			mState.mManager.update();
 			parentDir = mState.mManager.getRootDirectory();
 			Log.d(TAG, "parentDir = *" + parentDir + "*");
 		} else
@@ -70,6 +69,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 		MapFileDownloadCursorAdapter adapter = new MapFileDownloadCursorAdapter(
 				this, cursor);
 		setListAdapter(adapter);
+		
 
 	}
 
@@ -91,8 +91,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 	}
 
 	public void onRefreshClick(View v) {
-		mState.mManager.updateDatabaseWithRemote();
-		mState.mManager.updateDatabaseWithLocal();
+		mState.mManager.update();
 	}
 
 	@Override

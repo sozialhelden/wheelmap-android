@@ -10,7 +10,6 @@ import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;

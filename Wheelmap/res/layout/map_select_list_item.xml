@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
-
+	<ImageView android:id="@+id/list_item_file_icon"
+		android:layout_width="24dip" android:layout_height="24dip"
+		android:layout_marginTop="10dip" android:layout_marginLeft="5dip"
+		android:layout_alignParentLeft="true" android:src="@drawable/ic_places_map" />
 	<TextView android:id="@+id/list_item_select_name"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_marginTop="6dip" android:layout_marginLeft="5dip"
+		android:layout_toRightOf="@+id/list_item_file_icon"
+		android:layout_toLeftOf="@+id/list_item_select_checkbox"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:singleLine="true" />
 	<LinearLayout android:orientation="horizontal"

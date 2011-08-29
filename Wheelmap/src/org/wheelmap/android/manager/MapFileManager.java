@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.wheelmap.android.model.MapFileInfo;
-import org.wheelmap.android.model.MapFileInfoProvider;
 import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
 import org.wheelmap.android.service.BaseListener;
 import org.wheelmap.android.service.DownloadListener;
@@ -20,6 +19,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ResultReceiver;
+import android.util.Log;
 
 public class MapFileManager {
 	private final static String TAG = "mapfilemanager";
@@ -39,19 +39,16 @@ public class MapFileManager {
 		if (INSTANCE == null)
 			INSTANCE = new MapFileManager(appCtx);
 
-		INSTANCE.mInterrupted = false;
-		INSTANCE.mMapFileService.start();
+		INSTANCE.init();
 		return INSTANCE;
 	}
-	
-	public void registerResultReceiver( ResultReceiver receiver ) {
-		if ( mMapFileService != null )
-			mMapFileService.registerResultReceiver( receiver );
-	}
-	
-	public void unregisterResultReceiver( ResultReceiver receiver ) {
-		if ( mMapFileService != null )
-			mMapFileService.unregisterResultReceiver(receiver);
+
+	private void init() {
+		if (mMapFileService == null) {
+			mMapFileService = new MapFileService();
+			mMapFileService.start();
+		}
+		mInterrupted = false;
 	}
 
 	public void stop() {
@@ -60,11 +57,24 @@ public class MapFileManager {
 		mMapFileService = null;
 	}
 
-	public void updateDatabaseWithRemote() {
-		updateDatabaseWithRemoteRecursive("");
+	public void registerResultReceiver(ResultReceiver receiver) {
+		if (mMapFileService != null)
+			mMapFileService.registerResultReceiver(receiver);
 	}
 
-	private void updateDatabaseWithRemoteRecursive(String dir) {
+	public void unregisterResultReceiver(ResultReceiver receiver) {
+		if (mMapFileService != null)
+			mMapFileService.unregisterResultReceiver(receiver);
+	}
+
+	public void update() {
+		insertUpdateTag();
+		updateDatabaseWithLocal();
+		updateDatabaseWithRemote();
+		purgeWithoutUpdateTag();
+	}
+
+	private void updateDatabaseWithRemote() {
 
 		DownloadListener listener = new DownloadListener() {
 			private DownloadListener listener;
@@ -91,6 +101,12 @@ public class MapFileManager {
 			@Override
 			public void onDirectoryContent(String dir, List<FTPFile> files) {
 				for (FTPFile file : files) {
+					if (file.getType() == FTPFile.DIRECTORY_TYPE
+							&& !mInterrupted) {
+						mMapFileService.getRemoteMapsDirectory(dir
+								+ File.separator + file.getName(), this);
+					}
+					
 					Uri contentUri;
 					String[] projection;
 					if (file.getType() == FTPFile.DIRECTORY_TYPE) {
@@ -104,8 +120,8 @@ public class MapFileManager {
 						contentUri = MapFileInfos.CONTENT_URI_FILES;
 						projection = MapFileInfos.filePROJECTION;
 					}
-					String whereClause = "( " + MapFileInfos.REMOTE_NAME
-							+ " = ? ) AND ( " + MapFileInfos.REMOTE_PARENT_NAME
+					String whereClause = "( " + MapFileInfos.NAME
+							+ " = ? ) AND ( " + MapFileInfos.PARENT_NAME
 							+ " = ? )";
 					String[] whereValues = new String[] { file.getName(), dir };
 
@@ -120,15 +136,11 @@ public class MapFileManager {
 					values.put(MapFileInfos.REMOTE_MD5_SUM, "");
 					values.put(MapFileInfos.VERSION,
 							MapFileInfo.extractVersion(file.getName()));
+					values.put(MapFileInfos.UPDATE_TAG,
+							MapFileInfo.ENTRY_UPDATED);
 
 					insertContentValues(contentUri, projection, whereClause,
-							whereValues, values);
-
-					if (file.getType() == FTPFile.DIRECTORY_TYPE
-							&& !mInterrupted) {
-						mMapFileService.getRemoteMapsDirectory(dir
-								+ File.separator + file.getName(), this);
-					}
+							whereValues, values);					
 				}
 			}
 
@@ -143,18 +155,15 @@ public class MapFileManager {
 
 			@Override
 			public int getProgress() {
-
 				return 0;
 			}
 		};
-		mMapFileService.getRemoteMapsDirectory(dir, listener);
+
+		mMapFileService.getRemoteMapsDirectory("", listener);
+
 	}
 
-	public void updateDatabaseWithLocal() {
-		updateDatabaseWithLocalRecursive("");
-	}
-
-	private void updateDatabaseWithLocalRecursive(String dir) {
+	private void updateDatabaseWithLocal() {
 
 		FileListener listener = new FileListener() {
 			private FileListener listener;
@@ -212,8 +221,12 @@ public class MapFileManager {
 					}
 
 					ContentValues values = new ContentValues();
+					values.put(MapFileInfos.SCREEN_NAME,
+							MapFileInfo.extractScreenName(file.getName()));
 					values.put(MapFileInfos.NAME, file.getName());
 					values.put(MapFileInfos.PARENT_NAME, parentDir);
+					values.put(MapFileInfos.UPDATE_TAG,
+							MapFileInfo.ENTRY_UPDATED);
 
 					if (file.isFile()) {
 						Date lastModified = new Date();
@@ -222,10 +235,14 @@ public class MapFileManager {
 								.formatDate(lastModified);
 						values.put(MapFileInfos.LOCAL_TIMESTAMP,
 								lastModifiedLocalTimestamp);
-
-						if (lastModifiedLocalTimestamp
-								.compareTo(lastModifiedRemoteTimestamp) > 0
-								|| localAvailable == MapFileInfo.FILE_NOT_LOCAL) {
+						Log.d(TAG, "file = " + file.getName()
+								+ " localAvailable = " + localAvailable);
+						if (localAvailable == MapFileInfo.FILE_NOT_LOCAL
+								|| lastModifiedRemoteTimestamp == null) {
+							values.put(MapFileInfos.LOCAL_AVAILABLE,
+									MapFileInfo.FILE_COMPLETE);
+						} else if (lastModifiedLocalTimestamp
+								.compareTo(lastModifiedRemoteTimestamp) > 0) {
 							if (file.length() == remoteFileSize)
 								values.put(MapFileInfos.LOCAL_AVAILABLE,
 										MapFileInfo.FILE_COMPLETE);
@@ -409,7 +426,34 @@ public class MapFileManager {
 		mMapFileService.getMD5Sum(dir, fileName, listener);
 	}
 
-	public void insertContentValues(Uri contentUri, String[] projection,
+	private void insertUpdateTag() {
+		mMapFileService.post( new Runnable() {
+
+			@Override
+			public void run() {
+				ContentValues values = new ContentValues();
+				values.put(MapFileInfos.UPDATE_TAG, MapFileInfo.ENTRY_NOT_UPDATED);
+				mResolver.update(MapFileInfos.CONTENT_URI_DIRSNFILES, values, null,
+						null);				
+			}
+			
+		});	
+	}
+
+	private void purgeWithoutUpdateTag() {
+		mMapFileService.post( new Runnable() {
+			
+			public void run() {
+				String whereClause = "( " + MapFileInfos.UPDATE_TAG + " = ? )";
+				String[] whereValues = { String.valueOf(MapFileInfo.ENTRY_NOT_UPDATED) };
+
+				mResolver.delete(MapFileInfos.CONTENT_URI_DIRSNFILES, whereClause,
+						whereValues);
+			}
+		});
+	}
+
+	private void insertContentValues(Uri contentUri, String[] projection,
 			String whereClause, String[] whereValues, ContentValues values) {
 		Cursor c = mResolver.query(contentUri, projection, whereClause,
 				whereValues, null);

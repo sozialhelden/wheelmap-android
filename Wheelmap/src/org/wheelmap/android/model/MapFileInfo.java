@@ -23,6 +23,9 @@ public class MapFileInfo {
 		public static final int FILE_COMPLETE = 1;
 		public static final int FILE_INCOMPLETE = 2;
 		
+		public static final int ENTRY_NOT_UPDATED = 0;
+		public static final int ENTRY_UPDATED = 1;
+		
 		// This class cannot be instantiated
 		private MapFileInfo() {} 
 
@@ -54,6 +57,8 @@ public class MapFileInfo {
 			public static final String LOCAL_TIMESTAMP = "local_timestamp";
 			
 			public static final String LOCAL_AVAILABLE = "local_available";
+			
+			public static final String UPDATE_TAG = "update_tag";
 			
 		}
 		
@@ -171,6 +176,7 @@ public class MapFileInfo {
 				VERSION,
 				LOCAL_TIMESTAMP,
 				LOCAL_AVAILABLE,
+				UPDATE_TAG
 				
 			};
 			
@@ -182,7 +188,8 @@ public class MapFileInfo {
 				TYPE,
 				REMOTE_NAME,
 				REMOTE_PARENT_NAME,
-				REMOTE_TIMESTAMP
+				REMOTE_TIMESTAMP,
+				UPDATE_TAG
 			};
 			
 		}

@@ -94,6 +94,30 @@ public class MapFileService {
 		mReceiver.removeReceiver(receiver);
 	}
 
+	public void post(Runnable runnable) {
+		mHandler.post(new MapFileRunnable(runnable));
+	}
+
+	public class MapFileRunnable implements Runnable {
+		Runnable r;
+
+		MapFileRunnable(Runnable r) {
+			this.r = r;
+		}
+
+		@Override
+		public void run() {
+			if (mReceiver != null)
+				mReceiver.send(STATUS_RUNNING, Bundle.EMPTY);
+
+			r.run();
+
+			if (mReceiver != null)
+				mReceiver.send(STATUS_FINISHED, Bundle.EMPTY);
+		}
+
+	}
+
 	public void addTaskAtEnd(Task task) {
 		synchronized (queue) {
 			queue.add(task);
@@ -163,7 +187,9 @@ public class MapFileService {
 		Bundle b = new Bundle();
 		b.putString(EXTRA_REMOTE_DIR, remoteDir);
 		msg.setData(b);
-		addTaskAtEnd(new Task(Task.TYPE_RETRIEVE_DIR, remoteDir, "", listener));
+		Task task = new Task(Task.TYPE_RETRIEVE_DIR, remoteDir, "", listener);
+
+		addTaskAtEnd(task);
 		mHandler.sendMessage(msg);
 	}
 
@@ -207,7 +233,7 @@ public class MapFileService {
 		Bundle b = new Bundle();
 		b.putString(EXTRA_LOCAL_DIR, localDir);
 		msg.setData(b);
-		addTaskAtFront(new Task(Task.TYPE_READ_DIR, localDir, "", listener));
+		addTaskAtEnd(new Task(Task.TYPE_READ_DIR, localDir, "", listener));
 		mHandler.sendMessageAtFrontOfQueue(msg);
 	}
 

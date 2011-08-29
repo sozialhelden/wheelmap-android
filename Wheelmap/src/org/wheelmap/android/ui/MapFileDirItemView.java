@@ -15,7 +15,7 @@ public class MapFileDirItemView extends FrameLayout {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		inflater.inflate(R.layout.dir_map_list_item, this, true);
+		inflater.inflate(R.layout.map_list_item_dir, this, true);
 		
 		mDirectoryName = (TextView) findViewById( R.id.list_item_dir_name );
 	}

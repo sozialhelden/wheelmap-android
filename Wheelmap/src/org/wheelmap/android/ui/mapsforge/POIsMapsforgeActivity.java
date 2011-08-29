@@ -7,9 +7,12 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
+import org.mapsforge.android.maps.MapViewMode;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
+import org.wheelmap.android.model.MapFileInfo;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
 import org.wheelmap.android.service.MapFileService;
 import org.wheelmap.android.service.SyncService;
 
@@ -62,23 +65,11 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
 
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String prefName = prefs.getString(
-				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME, "");
-		String prefDir = prefs.getString(
-				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR, "");
-		if (prefName.equals("") || prefDir.equals("")) {
-			// TODO: show a dialog. A map needs to be selected.
-			return;
-		}
+		pickAppropriateMap();
 
-		String mapFile = MapFileService.LOCAL_BASE_PATH_DIR + File.separator
-				+ prefDir + File.separator + prefName;
-		mapView.setMapFile(mapFile);
 		mapController = mapView.getController();
 		mapController.setZoom(16); // Zoon 1 is world view
-		
+
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
@@ -91,21 +82,26 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mapView.getOverlays().add(mCurrLocationOverlay);
-		
-		mapView.getViewTreeObserver().addOnGlobalLayoutListener( new OnGlobalLayoutListener() {
-			
-			@Override
-			public void onGlobalLayout() {
-				requestUpdate();
-				mapView.getViewTreeObserver().removeGlobalOnLayoutListener( this );
-			}
-		});
-		
+
+		mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+				new OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						requestUpdate();
+						mapView.getViewTreeObserver()
+								.removeGlobalOnLayoutListener(this);
+					}
+				});
+
 		// location manager
 		GeoUpdateHandler guh = new GeoUpdateHandler();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
 				0, guh);
+		
+		Location location = locationManager.getLastKnownLocation( LocationManager.NETWORK_PROVIDER);
+		mapController.setCenter( calcGeoPoint( location));
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -121,6 +117,54 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		}
 
 		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
+	}
+
+	private void pickAppropriateMap() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String mapName = prefs.getString(
+				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME, "");
+		String mapDir = prefs.getString(
+				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR, "");
+
+		if (mapName.equals("") || mapDir.equals("")) {
+			Uri uri = MapFileInfos.CONTENT_URI_FILES;
+			String whereClause = "( " + MapFileInfos.LOCAL_AVAILABLE + " = ? )";
+			String[] whereValues = new String[] { String
+					.valueOf(MapFileInfo.FILE_COMPLETE) };
+
+			Cursor cursor = getContentResolver()
+					.query(uri, MapFileInfos.filePROJECTION, whereClause,
+							whereValues, null);
+			if (cursor.getCount() == 1) {
+				mapName = MapFileInfo.getName(cursor);
+				mapDir = MapFileInfo.getParentName(cursor);
+				prefs.edit().putString(
+						MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME,
+						mapName);
+				prefs.edit()
+						.putString(
+								MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR,
+								mapDir);
+			}
+
+		}
+
+		String mapFile = MapFileService.LOCAL_BASE_PATH_DIR + File.separator
+				+ mapDir + File.separator + mapName;
+		mapView.setMapFile(mapFile);
+
+		if (!mapView.hasValidMapFile()) {
+			prefs.edit().putString(
+					MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME, "");
+			prefs.edit().putString(
+					MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR, "");
+
+			mapView.setMapViewMode(MapViewMode.OSMARENDER_TILE_DOWNLOAD);
+			final String errorText = getString(R.string.error_no_mapfilefound);
+			Toast.makeText(this, errorText, Toast.LENGTH_LONG).show();
+		} else
+			mapView.setMapViewMode(MapViewMode.CANVAS_RENDERER);
 	}
 
 	/** {@inheritDoc} */
@@ -194,7 +238,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		bundle.putSerializable(SyncService.EXTRA_STATUS_BOUNDING_BOX,
 				boundingBox);
 	}
-	
+
 	private void requestUpdate() {
 		// get bounding box from current view
 		Bundle extras = new Bundle();
@@ -236,16 +280,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		@Override
 		public void onLocationChanged(Location location) {
-			int lat = (int) (location.getLatitude() * 1E6);
-			int lng = (int) (location.getLongitude() * 1E6);
+			GeoPoint geoPoint = calcGeoPoint( location );
 			// we got the first time current position so center map on it
 			if (mLastGeoPointE6 == null) {
 				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
-				mLastGeoPointE6 = new GeoPoint(lat, lng);
-				mapController.setCenter(mLastGeoPointE6);
-			} else
-				mLastGeoPointE6 = new GeoPoint(lat, lng);
-
+				mapController.setCenter( geoPoint );
+			}
+			mLastGeoPointE6 = geoPoint;
 			mCurrLocationOverlay.setLocation(mLastGeoPointE6,
 					location.getAccuracy());
 		}
@@ -261,6 +302,12 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
+	}
+	
+	private GeoPoint calcGeoPoint( Location location ) {
+		int lat = (int) (location.getLatitude() * 1E6);
+		int lng = (int) (location.getLongitude() * 1E6);
+		return new GeoPoint(lat, lng);
 	}
 
 	private static class MyLocationOverlay extends CircleOverlay<OverlayCircle> {

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="wheelchair_state">
-		<item>@string/settings_full_accesible</item>
-		<item>@string/settings_limited_accesible</item>
-		<item>@string/settings_no_accesible</item>
-		<item>@string/settings_unknown_accesible</item>
+		<item>@string/settings_wheelchair_nopreference</item>
+		<item>@string/settings_wheelchair_full_accesible</item>
+		<item>@string/settings_wheelchair_limited_accesible</item>
+		<item>@string/settings_wheelchair_no_accesible</item>
+		<item>@string/settings_wheelchair_unknown_accesible</item>
 	</string-array>
 	<string-array name="wheelchair_state_values">
+		<item>5</item>
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>

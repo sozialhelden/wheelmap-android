@@ -45,8 +45,10 @@ public class MapFileInfoProvider extends ContentProvider {
 	public static final String VALUE = "value";
 
 	private static final String DATABASE_NAME = "mapfileinfo.db";
-	private static final int DATABASE_VERSION = 3;
+	private static final int DATABASE_VERSION = 4;
 	private static final String ENTITIES_TABLE_NAME = "files";
+
+	private DatabaseHelper mOpenHelper;
 
 	/**
 	 * This class helps open, create, and upgrade the database file.
@@ -71,7 +73,9 @@ public class MapFileInfoProvider extends ContentProvider {
 					+ MapFileInfos.REMOTE_MD5_SUM + " TEXT, "
 					+ MapFileInfos.VERSION + " TEXT, "
 					+ MapFileInfos.LOCAL_TIMESTAMP + " STRING, "
-					+ MapFileInfos.LOCAL_AVAILABLE + " NUMBER DEFAULT \'" + MapFileInfo.FILE_NOT_LOCAL + "\' ) ");
+					+ MapFileInfos.LOCAL_AVAILABLE + " NUMBER DEFAULT \'"
+					+ MapFileInfo.FILE_NOT_LOCAL + "\',"
+					+ MapFileInfos.UPDATE_TAG + " NUMBER )");
 		}
 
 		@Override
@@ -83,8 +87,20 @@ public class MapFileInfoProvider extends ContentProvider {
 		}
 	}
 
-	private DatabaseHelper mOpenHelper;
-
+	@Override
+	public String getType(Uri uri) {
+		switch (sUriMatcher.match(uri)) {
+		case DIRS:
+			return MapFileInfos.DIR_TYPE;
+		case FILES:
+			return MapFileInfos.FILE_TYPE;
+		case DIRSNFILES:
+			return MapFileInfos.DIRNFILE_TYPE;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+	}
+	
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
 
@@ -110,6 +126,11 @@ public class MapFileInfoProvider extends ContentProvider {
 							+ (!TextUtils.isEmpty(where) ? " AND (" + where
 									+ ')' : ""), whereArgs);
 			break;
+		case DIRSNFILES:
+			count = db.delete(ENTITIES_TABLE_NAME,
+					(!TextUtils.isEmpty(where) ? '(' + where + ')' : ""),
+					whereArgs);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -117,20 +138,6 @@ public class MapFileInfoProvider extends ContentProvider {
 		getContext().getContentResolver().notifyChange(
 				MapFileInfos.CONTENT_URI_DIRSNFILES, null);
 		return count;
-	}
-
-	@Override
-	public String getType(Uri uri) {
-		switch (sUriMatcher.match(uri)) {
-		case DIRS:
-			return MapFileInfos.DIR_TYPE;
-		case FILES:
-			return MapFileInfos.FILE_TYPE;
-		case DIRSNFILES:
-			return MapFileInfos.DIRNFILE_TYPE;
-		default:
-			throw new IllegalArgumentException("Unknown URI " + uri);
-		}
 	}
 
 	@Override
@@ -156,6 +163,11 @@ public class MapFileInfoProvider extends ContentProvider {
 							+ FILES
 							+ (!TextUtils.isEmpty(where) ? " AND (" + where
 									+ ')' : ""), whereArgs);
+			break;
+		case DIRSNFILES:
+			count = db.update(ENTITIES_TABLE_NAME, values,
+					(!TextUtils.isEmpty(where) ? '(' + where + ')' : ""),
+					whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -310,6 +322,7 @@ public class MapFileInfoProvider extends ContentProvider {
 				MapFileInfos.REMOTE_PARENT_NAME);
 		dirsProjectionMap.put(MapFileInfos.REMOTE_TIMESTAMP,
 				MapFileInfos.REMOTE_TIMESTAMP);
+		dirsProjectionMap.put(MapFileInfos.UPDATE_TAG, MapFileInfos.UPDATE_TAG);
 
 		filesProjectionMap = new HashMap<String, String>();
 		filesProjectionMap.put(MapFileInfos._ID, MapFileInfos._ID);
@@ -334,7 +347,9 @@ public class MapFileInfoProvider extends ContentProvider {
 				MapFileInfos.LOCAL_TIMESTAMP);
 		filesProjectionMap.put(MapFileInfos.LOCAL_AVAILABLE,
 				MapFileInfos.LOCAL_AVAILABLE);
-		
+		filesProjectionMap
+				.put(MapFileInfos.UPDATE_TAG, MapFileInfos.UPDATE_TAG);
+
 	}
 
 }

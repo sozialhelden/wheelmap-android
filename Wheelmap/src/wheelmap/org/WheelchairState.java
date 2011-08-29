@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum WheelchairState {
-  UNKNOWN(0), YES(1), LIMITED(2), NO(3);
+  UNKNOWN(0), YES(1), LIMITED(2), NO(3), NO_PREFERENCE(4);
   
-private final int id;
+  	public static final WheelchairState DEFAULT;
+  
+  	private final int id;
 	private static Map<Integer,WheelchairState> id2State;
+	
 	
 	private WheelchairState(int id) {
 		this.id = id;
@@ -31,5 +34,9 @@ private final int id;
   
 	public String asRequestParameter() {
 		return this.name().toLowerCase();
+	}
+	
+	static {
+		DEFAULT = YES;
 	}
 }
