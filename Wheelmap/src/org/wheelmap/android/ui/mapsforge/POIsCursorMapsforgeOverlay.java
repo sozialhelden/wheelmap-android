@@ -154,7 +154,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onLongPress(int index) {
 		mCursor.moveToPosition(index);
-		int poiId = POIHelper.getId( mCursor );
+		long poiId = POIHelper.getId( mCursor );
 		
 		Intent i = new Intent(mContext, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);

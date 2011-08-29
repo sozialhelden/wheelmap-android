@@ -101,12 +101,14 @@ public class MapFileManager {
 			@Override
 			public void onDirectoryContent(String dir, List<FTPFile> files) {
 				for (FTPFile file : files) {
-					if (file.getType() == FTPFile.DIRECTORY_TYPE
-							&& !mInterrupted) {
+					if ( mInterrupted)
+						return;
+					
+					if (file.getType() == FTPFile.DIRECTORY_TYPE) {
 						mMapFileService.getRemoteMapsDirectory(dir
 								+ File.separator + file.getName(), this);
 					}
-					
+
 					Uri contentUri;
 					String[] projection;
 					if (file.getType() == FTPFile.DIRECTORY_TYPE) {
@@ -140,7 +142,7 @@ public class MapFileManager {
 							MapFileInfo.ENTRY_UPDATED);
 
 					insertContentValues(contentUri, projection, whereClause,
-							whereValues, values);					
+							whereValues, values);
 				}
 			}
 
@@ -159,7 +161,8 @@ public class MapFileManager {
 			}
 		};
 
-		mMapFileService.getRemoteMapsDirectory("", listener);
+		if (!mInterrupted)
+			mMapFileService.getRemoteMapsDirectory("", listener);
 
 	}
 
@@ -190,7 +193,12 @@ public class MapFileManager {
 				for (File file : files) {
 					if (mInterrupted)
 						return;
-
+					
+					if (file.isDirectory()) {
+						mMapFileService.getLocalMapsDirectory(parentDir
+								+ File.separator + file.getName(), this);
+					}
+					
 					String whereClause = "( " + MapFileInfos.REMOTE_NAME
 							+ " = ? )";
 					String[] whereValues = new String[] { file.getName() };
@@ -254,11 +262,6 @@ public class MapFileManager {
 
 					insertContentValues(contentUri, projection, whereClause,
 							whereValues, values);
-
-					if (file.isDirectory() && !mInterrupted) {
-						mMapFileService.getLocalMapsDirectory(parentDir
-								+ File.separator + file.getName(), this);
-					}
 				}
 			}
 
@@ -268,7 +271,8 @@ public class MapFileManager {
 			}
 		};
 
-		mMapFileService.getLocalMapsDirectory("", listener);
+		if (!mInterrupted)
+			mMapFileService.getLocalMapsDirectory("", listener);
 	}
 
 	public void retrieveFile(final String dir, final String fileName,
@@ -291,6 +295,9 @@ public class MapFileManager {
 
 			@Override
 			public void onFinished() {
+				if ( mInterrupted)
+					return;
+				
 				updateDatabaseWithLocal();
 				if (listener != null)
 					listener.onFinished();
@@ -427,28 +434,30 @@ public class MapFileManager {
 	}
 
 	private void insertUpdateTag() {
-		mMapFileService.post( new Runnable() {
+		mMapFileService.post(new Runnable() {
 
 			@Override
 			public void run() {
 				ContentValues values = new ContentValues();
-				values.put(MapFileInfos.UPDATE_TAG, MapFileInfo.ENTRY_NOT_UPDATED);
-				mResolver.update(MapFileInfos.CONTENT_URI_DIRSNFILES, values, null,
-						null);				
+				values.put(MapFileInfos.UPDATE_TAG,
+						MapFileInfo.ENTRY_NOT_UPDATED);
+				mResolver.update(MapFileInfos.CONTENT_URI_DIRSNFILES, values,
+						null, null);
 			}
-			
-		});	
+
+		});
 	}
 
 	private void purgeWithoutUpdateTag() {
-		mMapFileService.post( new Runnable() {
-			
+		mMapFileService.post(new Runnable() {
+
 			public void run() {
 				String whereClause = "( " + MapFileInfos.UPDATE_TAG + " = ? )";
-				String[] whereValues = { String.valueOf(MapFileInfo.ENTRY_NOT_UPDATED) };
+				String[] whereValues = { String
+						.valueOf(MapFileInfo.ENTRY_NOT_UPDATED) };
 
-				mResolver.delete(MapFileInfos.CONTENT_URI_DIRSNFILES, whereClause,
-						whereValues);
+				mResolver.delete(MapFileInfos.CONTENT_URI_DIRSNFILES,
+						whereClause, whereValues);
 			}
 		});
 	}

@@ -235,7 +235,7 @@ public class MapFileService {
 		b.putString(EXTRA_LOCAL_DIR, localDir);
 		msg.setData(b);
 		addTaskAtEnd(new Task(Task.TYPE_READ_DIR, localDir, "", listener));
-		mHandler.sendMessageAtFrontOfQueue(msg);
+		mHandler.sendMessage(msg);
 	}
 
 	public void deleteLocalFile(String localDir, String localFile,
