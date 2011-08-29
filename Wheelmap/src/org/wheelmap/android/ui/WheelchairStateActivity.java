@@ -6,6 +6,7 @@ import org.wheelmap.android.R;
 
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,7 +42,7 @@ public class WheelchairStateActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wheelchair_state);
 
-                // fill hashmap with radio buttons
+        // fill hashmap with radio buttons
 		mRadioButtonsMap.put(WheelchairState.YES, (RadioButton) findViewById( R.id.radio_enabled ));
 		mRadioButtonsMap.put(WheelchairState.LIMITED, (RadioButton) findViewById( R.id.radio_limited ));
 		mRadioButtonsMap.put(WheelchairState.NO, (RadioButton) findViewById( R.id.radio_disabled ));
@@ -54,9 +55,10 @@ public class WheelchairStateActivity extends Activity {
 					DeselectAllRadioButtons();
 					final RadioButton a = (RadioButton)v;
 					a.setChecked(true);
-					// newly selected state ends up the activity
- 				        //setResult(getWheeChairState.getId());
- 				        // finish();
+					 // To send a result, simply call setResult() before your
+		            // activity is finished.
+		            setResult(RESULT_OK, (new Intent()).setAction(Integer.toString(getWheeChairState().getId())));
+ 				    finish();
 
 				}
 			});

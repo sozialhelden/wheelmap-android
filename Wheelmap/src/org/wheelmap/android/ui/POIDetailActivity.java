@@ -4,7 +4,10 @@ import org.wheelmap.android.R;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 
+import wheelmap.org.WheelchairState;
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -81,4 +84,40 @@ public class POIDetailActivity extends Activity {
 			cur.close();
 		}
 	}
+	
+	/**
+     * This method is called when the sending activity has finished, with the
+     * result it supplied.
+     * 
+     * @param requestCode The original request code as given to
+     *                    startActivity().
+     * @param resultCode From sending activity as per setResult().
+     * @param data From sending activity as per setResult().
+     */
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode,
+		Intent data) {
+        // You can use the requestCode to select between multiple child
+        // activities you may have started.  Here there is only one thing
+        // we launch.
+        if (requestCode == SELECT_WHEELCHAIRSTATE) {
+            // This is a standard resultCode that is sent back if the
+            // activity doesn't supply an explicit result.  It will also
+            // be returned if the activity failed to launch.
+            if (resultCode == RESULT_OK) {
+            	// newly selected wheelchair state as action data
+                if (data != null) {
+                	WheelchairState newState = WheelchairState.valueOf(data.getAction());
+                	Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
+                	ContentValues values = new ContentValues();
+                	values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
+                	this.getContentResolver().update(poiUri, values, "", null);
+                }
+            }
+        }
+    }
+    
+    // Definition of the one requestCode we use for receiving resuls.
+    static final private int SELECT_WHEELCHAIRSTATE = 0;
+
 }	
