@@ -52,8 +52,7 @@ public class POIsListActivity extends ListActivity implements
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
-		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null,
-				Wheelmap.POIs.DEFAULT_SORT_ORDER);
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null, "");
 		Cursor wrappingCursor = createCursorWrapper( cursor );
 		startManagingCursor(wrappingCursor);
 

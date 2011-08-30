@@ -11,16 +11,21 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 public class POIDetailActivity extends Activity {
 
 	private TextView name=null;
+
+	private TextView comment=null;
 	private TextView address=null;
-	private EditText notes=null;
-	private RadioGroup types=null;
+	private TextView website=null;
+	private TextView phone=null;
+	private TextView wheelchairstate=null;
+
+	
 	private Long poiID;
 
 
@@ -31,9 +36,21 @@ public class POIDetailActivity extends Activity {
 		setContentView(R.layout.activity_detail);   
 
 		name=(TextView)findViewById(R.id.name);
+
+		phone=(TextView)findViewById(R.id.phone);
 		address=(TextView)findViewById(R.id.addr);
-		notes=(EditText)findViewById(R.id.notes);
-		types=(RadioGroup)findViewById(R.id.wheel_chair_type);
+		comment=(TextView)findViewById(R.id.comment);
+		website=(TextView)findViewById(R.id.website);
+		wheelchairstate = (TextView)findViewById(R.id.wheelchair_state_text);
+		
+		wheelchairstate.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// Start the activity whose result we want to retrieve.  The
+	            // result will come back with request code GET_CODE.
+	            Intent intent = new Intent(POIDetailActivity.this, WheelchairStateActivity.class);
+	            startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
+			}
+		});
 
 		poiID=getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
@@ -57,30 +74,14 @@ public class POIDetailActivity extends Activity {
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
 
-		if (cur.moveToFirst()) {		
+		if (cur.moveToFirst()) {	
+			
+			
 			name.setText(POIHelper.getName(cur));
+			comment.setText(POIHelper.getComment(cur));
 			address.setText(POIHelper.getAddress(cur));
-			notes.setText(cur.getString(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.WEBSITE)));
-
-			switch (POIHelper.getWheelchair(cur)) {
-			case UNKNOWN: {
-				types.check(R.id.unknown);
-				break;
-			}
-			case YES:
-				types.check(R.id.yes);
-				break;
-			case LIMITED:
-				types.check(R.id.limited);
-				break;
-			case NO:
-				types.check(R.id.no);
-				break;
-			default:
-				types.check(R.id.unknown);
-				break;
-			}
-
+			website.setText(POIHelper.getWebsite(cur));
+			phone.setText(POIHelper.getPhone(cur));
 			cur.close();
 		}
 	}
@@ -107,7 +108,7 @@ public class POIDetailActivity extends Activity {
             if (resultCode == RESULT_OK) {
             	// newly selected wheelchair state as action data
                 if (data != null) {
-                	WheelchairState newState = WheelchairState.valueOf(data.getAction());
+                	WheelchairState newState = WheelchairState.valueOf(Integer.parseInt(data.getAction()) );
                 	Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
                 	ContentValues values = new ContentValues();
                 	values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());

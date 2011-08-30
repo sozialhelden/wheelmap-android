@@ -5,7 +5,8 @@
 	
 	<LinearLayout style="@style/TitleBar">
 		
-		<TextView style="@style/TitleBarText" />
+		<TextView android:id="@+id/wheelchair_state_poi_name" style="@style/TitleBarText" />
+		
 
 	</LinearLayout>	
 

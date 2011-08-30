@@ -1,56 +1,53 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
-	<TableLayout
-     	android:layout_width="fill_parent"
- 		android:layout_height="wrap_content"
-		android:stretchColumns="1"
-		android:shrinkColumns="1"
-		>
-		<TableRow>
-			<TextView android:text="Name:" />
-			<TextView android:id="@+id/name"
-			  style="@style/DetailFont"
-			  android:background="@drawable/detail_border"
-			/>
-		</TableRow>
-		<TableRow>
-			<TextView android:text="Address:" />
-			<TextView android:id="@+id/addr" 
-			  style="@style/DetailFont"
-			  android:background="@drawable/detail_border"/>
-		</TableRow>
-		<TableRow>
-			<TextView android:text="Wheelchair:" />
-			<RadioGroup android:id="@+id/wheel_chair_type">
-				<RadioButton android:id="@+id/unknown"
-					android:text="Unknown"
-					android:checked="true"
-				/>
-				<RadioButton android:id="@+id/yes"
-					android:text="Yes"
-				/>
-				<RadioButton android:id="@+id/no"
-					android:text="No"
-				/>
-				<RadioButton android:id="@+id/limited"
-					android:text="Limited"
-				/>
-			</RadioGroup>
-		</TableRow>
-		<EditText android:id="@+id/notes"
-			android:inputType="textMultiLine"
-			android:gravity="top"
-			android:lines="2"
-			android:scrollHorizontally="false"
-			android:maxLines="2"
-			android:layout_span="2"
-			android:hint="Comment"
-			android:layout_marginTop="4dip"
-		/>
-		<EditText android:id="@+id/phone"
-			android:layout_span="2"
-			android:hint="Phone"
-		/>
-	</TableLayout>
-</ScrollView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<LinearLayout style="@style/TitleBar">
+
+<TextView android:id="@+id/name" style="@style/TitleBarText" />
+
+	</LinearLayout>
+	<ScrollView android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_weight="1" android:padding="5px">
+
+
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical">
+
+			<LinearLayout android:orientation="horizontal"
+				android:layout_marginTop="4dip" android:layout_marginLeft="4dip"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<ImageView android:id="@+id/wheelchair_state_icon"
+					android:src="@drawable/wheelchair_state_enabled"
+					android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+				<TextView android:id="@+id/wheelchair_state_text"
+					android:layout_height="wrap_content" style="@style/WheelStateTitleEnabled"
+					android:layout_marginTop="10dip" android:layout_width="wrap_content"
+					android:text="@string/ws_enabled_title"></TextView>
+			</LinearLayout>
+
+			<TableLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:stretchColumns="1"
+				android:shrinkColumns="1">
+
+				<TableRow>
+					<TextView android:text="@string/comment" />
+					<TextView android:id="@+id/comment" style="@style/DetailFont" />
+				</TableRow>
+				<TableRow>
+					<TextView android:text="@string/address" />
+					<TextView android:id="@+id/addr" style="@style/DetailFont" />
+				</TableRow>
+				<TableRow>
+					<TextView android:text="@string/phone" />
+					<TextView android:id="@+id/phone" style="@style/DetailFont" />
+				</TableRow>
+				<TableRow>
+					<TextView android:text="@string/website" />
+					<TextView android:id="@+id/website" style="@style/DetailFont" />
+				</TableRow>
+			</TableLayout>
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

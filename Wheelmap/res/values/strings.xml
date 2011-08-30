@@ -61,6 +61,12 @@
     <string name="ws_disabled_l1">Eigang: maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
     <string name="ws_disabled_l2">Wichtigste Räume: stufenlos erreichbar</string>
     <string name="ws_unknown_title">Nicht bekannt</string>
+    
+      <string name="comment">comment</string>
+      <string name="address">address</string>
+      <string name="phone">phone</string>
+      <string name="website">website</string>
+    
     <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
     <string name="settings_list_distance">Distance in the List</string>
     <string name="error_no_mapfilefound">No offline map found or selected. Using online map.</string>
@@ -69,4 +75,6 @@
     <string name="settings_wheelchair_limited_accesible">Limited accesibility</string>
     <string name="settings_wheelchair_nopreference">No preference</string>
     <string name="settings_wheelchair_unknown_accesible">Unknown accesibility</string>
+    
+    
 </resources>
