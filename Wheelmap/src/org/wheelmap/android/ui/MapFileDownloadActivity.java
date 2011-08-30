@@ -79,8 +79,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 		
 		if ( isFinishing()) {
 			mState.mManager.unregisterResultReceiver( mState.mReceiver );
-			if ( getIntent().getExtras() == null)
-				mState.mManager.stop();
+			mState.mManager.release();
 		}
 	}
 

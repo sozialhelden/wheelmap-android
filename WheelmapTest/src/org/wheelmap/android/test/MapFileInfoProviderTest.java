@@ -42,7 +42,6 @@ public class MapFileInfoProviderTest extends AndroidTestCase {
 		cvThree.put( MapFileInfos.REMOTE_PARENT_NAME, "/maps" );
 		cvThree.put( MapFileInfos.VERSION, "0.2.4" );
 		cvThree.put( MapFileInfos.LOCAL_AVAILABLE, 1 );
-		cvThree.put( MapFileInfos.REMOTE_MD5_SUM, "0a0b0c0d0e0f0g" );
 		
 		mResolver.insert( MapFileInfos.CONTENT_URI_FILES, cvThree );
 		

@@ -1,16 +1,18 @@
 package org.wheelmap.android.manager;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.wheelmap.android.model.MapFileInfo;
 import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
-import org.wheelmap.android.service.BaseListener;
-import org.wheelmap.android.service.DownloadListener;
-import org.wheelmap.android.service.FileListener;
 import org.wheelmap.android.service.MapFileService;
+import org.wheelmap.android.service.MapFileService.BaseListener;
+import org.wheelmap.android.service.MapFileService.FTPFileWithParent;
+import org.wheelmap.android.service.MapFileService.FileWithParent;
+import org.wheelmap.android.service.MapFileService.ReadDirectoryListener;
+import org.wheelmap.android.service.MapFileService.RetrieveDirectoryListener;
+import org.wheelmap.android.service.MapFileService.RetrieveFileListener;
 import org.wheelmap.android.service.MapFileService.Task;
 
 import android.content.ContentResolver;
@@ -28,6 +30,8 @@ public class MapFileManager {
 	private ContentResolver mResolver;
 	private MapFileService mMapFileService;
 	private boolean mInterrupted;
+
+	private static int sClients = 0;
 
 	private MapFileManager(Context appCtx) {
 		mResolver = appCtx.getContentResolver();
@@ -48,13 +52,17 @@ public class MapFileManager {
 			mMapFileService = new MapFileService();
 			mMapFileService.start();
 		}
+		sClients++;
 		mInterrupted = false;
 	}
 
-	public void stop() {
-		mInterrupted = true;
-		mMapFileService.stop();
-		mMapFileService = null;
+	public void release() {
+		sClients--;
+		if (sClients == 0) {
+			mInterrupted = true;
+			mMapFileService.stop();
+			mMapFileService = null;
+		}
 	}
 
 	public void registerResultReceiver(ResultReceiver receiver) {
@@ -76,12 +84,13 @@ public class MapFileManager {
 
 	private void updateDatabaseWithRemote() {
 
-		DownloadListener listener = new DownloadListener() {
-			private DownloadListener listener;
+		RetrieveDirectoryListener listener = new RetrieveDirectoryListener() {
+			RetrieveDirectoryListener listener;
 
 			@Override
-			public void setListener(BaseListener listener) {
-				this.listener = (DownloadListener) listener;
+			public void setListener(
+					org.wheelmap.android.service.MapFileService.BaseListener listener) {
+				this.listener = (RetrieveDirectoryListener) listener;
 			}
 
 			@Override
@@ -99,65 +108,49 @@ public class MapFileManager {
 			}
 
 			@Override
-			public void onDirectoryContent(String dir, List<FTPFile> files) {
-				for (FTPFile file : files) {
-					if ( mInterrupted)
-						return;
-					
-					if (file.getType() == FTPFile.DIRECTORY_TYPE) {
-						mMapFileService.getRemoteMapsDirectory(dir
-								+ File.separator + file.getName(), this);
-					}
-
+			public void onDirectoryContent(List<FTPFileWithParent> files) {
+				for (FTPFileWithParent fileWithParent : files) {
 					Uri contentUri;
 					String[] projection;
-					if (file.getType() == FTPFile.DIRECTORY_TYPE) {
+					if (fileWithParent.file.getType() == FTPFile.DIRECTORY_TYPE) {
 						contentUri = MapFileInfos.CONTENT_URI_DIRS;
 						projection = MapFileInfos.dirPROJECTION;
 					} else {
-						if (file.getName().endsWith(".md5")) {
+						if (fileWithParent.file.getName().endsWith(".md5")) {
 							continue;
 						}
 
 						contentUri = MapFileInfos.CONTENT_URI_FILES;
 						projection = MapFileInfos.filePROJECTION;
 					}
+
 					String whereClause = "( " + MapFileInfos.NAME
 							+ " = ? ) AND ( " + MapFileInfos.PARENT_NAME
 							+ " = ? )";
-					String[] whereValues = new String[] { file.getName(), dir };
+					String[] whereValues = new String[] {
+							fileWithParent.file.getName(),
+							fileWithParent.parentDir };
 
 					ContentValues values = new ContentValues();
-					values.put(MapFileInfos.SCREEN_NAME,
-							MapFileInfo.extractScreenName(file.getName()));
-					values.put(MapFileInfos.REMOTE_NAME, file.getName());
-					values.put(MapFileInfos.REMOTE_PARENT_NAME, dir);
+					values.put(MapFileInfos.SCREEN_NAME, MapFileInfo
+							.extractScreenName(fileWithParent.file.getName()));
+					values.put(MapFileInfos.REMOTE_NAME,
+							fileWithParent.file.getName());
+					values.put(MapFileInfos.REMOTE_PARENT_NAME,
+							fileWithParent.parentDir);
 					values.put(MapFileInfos.REMOTE_TIMESTAMP, MapFileInfo
-							.formatDate(file.getTimestamp().getTime()));
-					values.put(MapFileInfos.REMOTE_SIZE, file.getSize());
-					values.put(MapFileInfos.REMOTE_MD5_SUM, "");
-					values.put(MapFileInfos.VERSION,
-							MapFileInfo.extractVersion(file.getName()));
+							.formatDate(fileWithParent.file.getTimestamp()
+									.getTime()));
+					values.put(MapFileInfos.REMOTE_SIZE,
+							fileWithParent.file.getSize());
+					values.put(MapFileInfos.VERSION, MapFileInfo
+							.extractVersion(fileWithParent.file.getName()));
 					values.put(MapFileInfos.UPDATE_TAG,
 							MapFileInfo.ENTRY_UPDATED);
 
 					insertContentValues(contentUri, projection, whereClause,
 							whereValues, values);
 				}
-			}
-
-			@Override
-			public void onProgress(int percentageProgress) {
-			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-
-			}
-
-			@Override
-			public int getProgress() {
-				return 0;
 			}
 		};
 
@@ -167,48 +160,40 @@ public class MapFileManager {
 	}
 
 	private void updateDatabaseWithLocal() {
-
-		FileListener listener = new FileListener() {
-			private FileListener listener;
-
+		
+		ReadDirectoryListener listener = new ReadDirectoryListener() {
+			private ReadDirectoryListener listener;
+			
 			@Override
 			public void setListener(BaseListener listener) {
-				this.listener = (FileListener) listener;
+				this.listener = (ReadDirectoryListener) listener;
 			}
-
+			
 			@Override
 			public void onRunning() {
 				if (listener != null)
-					listener.onRunning();
+					listener.onRunning();				
 			}
-
+			
 			@Override
 			public void onFinished() {
 				if (listener != null)
-					listener.onFinished();
+					listener.onFinished();				
 			}
-
+			
 			@Override
-			public void onDirectoryContent(String parentDir, List<File> files) {
-				for (File file : files) {
-					if (mInterrupted)
-						return;
-					
-					if (file.isDirectory()) {
-						mMapFileService.getLocalMapsDirectory(parentDir
-								+ File.separator + file.getName(), this);
-					}
-					
+			public void onDirectoryContent(List<FileWithParent> files) {
+				for( FileWithParent fileWithParent: files ) {
 					String whereClause = "( " + MapFileInfos.REMOTE_NAME
 							+ " = ? )";
-					String[] whereValues = new String[] { file.getName() };
+					String[] whereValues = new String[] { fileWithParent.file.getName() };
 
 					Uri contentUri;
 					String[] projection;
 					long remoteFileSize = -1;
 					String lastModifiedRemoteTimestamp = null;
 					int localAvailable = 0;
-					if (file.isDirectory()) {
+					if (fileWithParent.file.isDirectory()) {
 						contentUri = MapFileInfos.CONTENT_URI_DIRS;
 						projection = MapFileInfos.dirPROJECTION;
 					} else {
@@ -230,20 +215,20 @@ public class MapFileManager {
 
 					ContentValues values = new ContentValues();
 					values.put(MapFileInfos.SCREEN_NAME,
-							MapFileInfo.extractScreenName(file.getName()));
-					values.put(MapFileInfos.NAME, file.getName());
-					values.put(MapFileInfos.PARENT_NAME, parentDir);
+							MapFileInfo.extractScreenName(fileWithParent.file.getName()));
+					values.put(MapFileInfos.NAME, fileWithParent.file.getName());
+					values.put(MapFileInfos.PARENT_NAME, fileWithParent.parentDir);
 					values.put(MapFileInfos.UPDATE_TAG,
 							MapFileInfo.ENTRY_UPDATED);
 
-					if (file.isFile()) {
+					if (fileWithParent.file.isFile()) {
 						Date lastModified = new Date();
-						lastModified.setTime(file.lastModified());
+						lastModified.setTime(fileWithParent.file.lastModified());
 						String lastModifiedLocalTimestamp = MapFileInfo
 								.formatDate(lastModified);
 						values.put(MapFileInfos.LOCAL_TIMESTAMP,
 								lastModifiedLocalTimestamp);
-						Log.d(TAG, "file = " + file.getName()
+						Log.d(TAG, "file = " + fileWithParent.file.getName()
 								+ " localAvailable = " + localAvailable);
 						if (localAvailable == MapFileInfo.FILE_NOT_LOCAL
 								|| lastModifiedRemoteTimestamp == null) {
@@ -251,7 +236,7 @@ public class MapFileManager {
 									MapFileInfo.FILE_COMPLETE);
 						} else if (lastModifiedLocalTimestamp
 								.compareTo(lastModifiedRemoteTimestamp) > 0) {
-							if (file.length() == remoteFileSize)
+							if (fileWithParent.file.length() == remoteFileSize)
 								values.put(MapFileInfos.LOCAL_AVAILABLE,
 										MapFileInfo.FILE_COMPLETE);
 							else
@@ -262,82 +247,71 @@ public class MapFileManager {
 
 					insertContentValues(contentUri, projection, whereClause,
 							whereValues, values);
+					
 				}
+				
 			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-
-			}
-		};
-
+		};		
+		
 		if (!mInterrupted)
 			mMapFileService.getLocalMapsDirectory("", listener);
 	}
 
 	public void retrieveFile(final String dir, final String fileName,
-			final DownloadListener listener) {
-
-		DownloadListener localListener = new DownloadListener() {
-			private DownloadListener listener;
+			final RetrieveFileListener listener ) {
+		
+		RetrieveFileListener localListener = new RetrieveFileListener() {
 			private int progress;
+			RetrieveFileListener listener;
 
 			@Override
 			public void setListener(BaseListener listener) {
-				this.listener = (DownloadListener) listener;
+				this.listener = (RetrieveFileListener) listener;
 			}
 
 			@Override
 			public void onRunning() {
 				if (listener != null)
-					listener.onRunning();
+					listener.onRunning();				
 			}
 
 			@Override
 			public void onFinished() {
-				if ( mInterrupted)
+				if (mInterrupted)
 					return;
-				
+
 				updateDatabaseWithLocal();
 				if (listener != null)
-					listener.onFinished();
-			}
-
-			@Override
-			public void onDirectoryContent(String parentDir, List<FTPFile> files) {
-
+					listener.onFinished();				
 			}
 
 			@Override
 			public void onProgress(int percentageProgress) {
 				progress = percentageProgress;
 				if (listener != null)
-					listener.onProgress(percentageProgress);
-			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-
+					listener.onProgress(percentageProgress);				
 			}
 
 			@Override
 			public int getProgress() {
 				return progress;
 			}
+			
 		};
-
+		
 		localListener.setListener(listener);
 		mMapFileService.getRemoteFile(dir, fileName, dir, fileName, false,
 				localListener);
+		
 	}
 
 	public void deleteFile(final String dir, final String fileName) {
-		FileListener listener = new FileListener() {
-			private FileListener listener;
+		BaseListener listener = new BaseListener() {
+			private BaseListener listener;
 
 			@Override
 			public void setListener(BaseListener listener) {
-				this.listener = (FileListener) listener;
+				this.listener = (BaseListener) listener;
 			}
 
 			@Override
@@ -365,72 +339,9 @@ public class MapFileManager {
 				}
 
 			}
-
-			@Override
-			public void onDirectoryContent(String parentDir, List<File> files) {
-
-			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-
-			}
 		};
 
 		mMapFileService.deleteLocalFile(dir, fileName, listener);
-	}
-
-	public void getRemoteMD5Sum(String dir, String fileName) {
-		DownloadListener listener = new DownloadListener() {
-			private DownloadListener listener;
-
-			@Override
-			public void setListener(BaseListener listener) {
-				this.listener = (DownloadListener) listener;
-			}
-
-			@Override
-			public void onRunning() {
-				if (listener != null)
-					listener.onRunning();
-			}
-
-			@Override
-			public void onFinished() {
-				if (listener != null)
-					listener.onFinished();
-			}
-
-			@Override
-			public void onDirectoryContent(String parentDir, List<FTPFile> files) {
-			}
-
-			@Override
-			public void onProgress(int percentageProgress) {
-			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-				ContentValues values = new ContentValues();
-				values.put(MapFileInfos.REMOTE_MD5_SUM, md5sum);
-				String whereClause = "( " + MapFileInfos.REMOTE_NAME
-						+ " = ? ) AND ( " + MapFileInfos.REMOTE_PARENT_NAME
-						+ " = ? )";
-				String[] whereValues = new String[] { file, parentDir };
-
-				insertContentValues(MapFileInfos.CONTENT_URI_FILES,
-						MapFileInfos.filePROJECTION, whereClause, whereValues,
-						values);
-			}
-
-			@Override
-			public int getProgress() {
-				return 0;
-			}
-
-		};
-
-		mMapFileService.getMD5Sum(dir, fileName, listener);
 	}
 
 	private void insertUpdateTag() {

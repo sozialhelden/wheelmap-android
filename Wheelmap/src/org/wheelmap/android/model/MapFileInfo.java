@@ -47,9 +47,7 @@ public class MapFileInfo {
 			public static final String REMOTE_PARENT_NAME = "remote_parent_name";
 			
 			public static final String REMOTE_TIMESTAMP = "remote_timestamp";
-			
-			public static final String REMOTE_MD5_SUM = "remote_md5_sum";
-			
+						
 			public static final String REMOTE_SIZE = "remote_size";
 			
 			public static final String VERSION = "version";
@@ -92,10 +90,6 @@ public class MapFileInfo {
 		
 		public static long getRemoteSize( Cursor c ) {
 			return c.getLong(c.getColumnIndexOrThrow( MapFileInfoColumns.REMOTE_SIZE ));
-		}
-		
-		public static String getRemoteMD5Sum( Cursor c ) {
-			return c.getString(c.getColumnIndexOrThrow( MapFileInfoColumns.REMOTE_MD5_SUM ));
 		}
 		
 		public static String getVersion( Cursor c ) {
@@ -172,7 +166,6 @@ public class MapFileInfo {
 				REMOTE_PARENT_NAME,
 				REMOTE_TIMESTAMP,
 				REMOTE_SIZE,
-				REMOTE_MD5_SUM,
 				VERSION,
 				LOCAL_TIMESTAMP,
 				LOCAL_AVAILABLE,

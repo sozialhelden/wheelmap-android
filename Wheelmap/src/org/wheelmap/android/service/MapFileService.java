@@ -8,14 +8,13 @@ import java.math.BigInteger;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.wheelmap.android.net.MapsforgeFTP;
-import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.MultiResultReceiver;
 
 import android.os.Bundle;
@@ -39,10 +38,8 @@ public class MapFileService {
 	private static final String EXTRA_DOWNLOAD_FORCE = "org.wheelmap.android.net.MapFileService.FORCE_DOWNLOAD";
 	private static final int WHAT_RETRIEVE_DIRECTORY = 0x1;
 	private static final int WHAT_RETRIEVE_FILE = 0x2;
-	private static final int WHAT_RETRIEVE_MD5SUM = 0x3;
-	private static final int WHAT_READ_DIRECTORY = 0x4;
-	private static final int WHAT_DELETE_FILE = 0x5;
-	private static final int WHAT_CALC_MD5SUM = 0x6;
+	private static final int WHAT_READ_DIRECTORY = 0x3;
+	private static final int WHAT_DELETE_FILE = 0x4;
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
@@ -61,10 +58,8 @@ public class MapFileService {
 		public static final int TYPE_UNKNOWN = 0x0;
 		public static final int TYPE_RETRIEVE_DIR = 0x1;
 		public static final int TYPE_RETRIEVE_FILE = 0x2;
-		public static final int TYPE_RETRIEVE_MD5SUM = 0x3;
-		public static final int TYPE_CALC_MD5SUM = 0x4;
-		public static final int TYPE_DELETE_FILE = 0x5;
-		public static final int TYPE_READ_DIR = 0x6;
+		public static final int TYPE_DELETE_FILE = 0x3;
+		public static final int TYPE_READ_DIR = 0x4;
 
 		public int type;
 		public String name;
@@ -76,6 +71,24 @@ public class MapFileService {
 			this.name = name;
 			this.parentName = parentName;
 			this.listener = listener;
+		}
+	}
+	
+	public static class FTPFileWithParent {
+		public String parentDir;
+		public FTPFile file;
+		public FTPFileWithParent( String parentDir, FTPFile file ) {
+			this.parentDir = parentDir;
+			this.file = file;
+		}
+	}
+	
+	public static class FileWithParent {
+		public String parentDir;
+		public File file;
+		public FileWithParent( String parentDir, File file ) {
+			this.parentDir = parentDir;
+			this.file = file;
 		}
 	}
 
@@ -145,7 +158,8 @@ public class MapFileService {
 
 		if (!mHandlerThread.isAlive()) {
 			mHandlerThread.start();
-			mHandler = new MyHandler(mHandlerThread.getLooper());
+			Looper looper = mHandlerThread.getLooper();
+			mHandler = new MyHandler(looper);
 			mHandler.connect();
 		}
 	}
@@ -181,7 +195,7 @@ public class MapFileService {
 	}
 
 	public void getRemoteMapsDirectory(String remoteDir,
-			DownloadListener listener) {
+			RetrieveDirectoryListener listener) {
 		Message msg = mHandler.obtainMessage();
 		msg.what = WHAT_RETRIEVE_DIRECTORY;
 		msg.obj = listener;
@@ -196,7 +210,7 @@ public class MapFileService {
 
 	public void getRemoteFile(String localDir, String localFile,
 			String remoteDir, String remoteFile, boolean force,
-			DownloadListener listener) {
+			RetrieveFileListener listener) {
 		Message msg = mHandler.obtainMessage();
 		msg.what = WHAT_RETRIEVE_FILE;
 		msg.obj = listener;
@@ -213,21 +227,7 @@ public class MapFileService {
 		mHandler.sendMessage(msg);
 	}
 
-	public void getMD5Sum(String remoteDir, String remoteFile,
-			DownloadListener listener) {
-		Message msg = mHandler.obtainMessage();
-		msg.what = WHAT_RETRIEVE_MD5SUM;
-		msg.obj = listener;
-		Bundle b = new Bundle();
-		b.putString(EXTRA_REMOTE_DIR, remoteDir);
-		b.putString(EXTRA_REMOTE_FILE, remoteFile);
-		msg.setData(b);
-		addTaskAtEnd(new Task(Task.TYPE_RETRIEVE_FILE, remoteDir, remoteFile,
-				listener));
-		mHandler.sendMessage(msg);
-	}
-
-	public void getLocalMapsDirectory(String localDir, FileListener listener) {
+	public void getLocalMapsDirectory(String localDir, ReadDirectoryListener listener) {
 		Message msg = mHandler.obtainMessage();
 		msg.what = WHAT_READ_DIRECTORY;
 		msg.obj = listener;
@@ -239,7 +239,7 @@ public class MapFileService {
 	}
 
 	public void deleteLocalFile(String localDir, String localFile,
-			FileListener listener) {
+			BaseListener listener) {
 		Message msg = mHandler.obtainMessage();
 		msg.what = WHAT_DELETE_FILE;
 		msg.obj = listener;
@@ -250,20 +250,6 @@ public class MapFileService {
 		addTaskAtFront(new Task(Task.TYPE_DELETE_FILE, localDir, localFile,
 				listener));
 		mHandler.sendMessageAtFrontOfQueue(msg);
-	}
-
-	public void calcMD5Sum(String localDir, String localFile,
-			FileListener listener) {
-		Message msg = mHandler.obtainMessage();
-		msg.what = WHAT_CALC_MD5SUM;
-		msg.obj = listener;
-		Bundle b = new Bundle();
-		b.putString(EXTRA_LOCAL_DIR, localDir);
-		b.putString(EXTRA_LOCAL_FILE, localFile);
-		msg.setData(b);
-		addTaskAtEnd(new Task(Task.TYPE_CALC_MD5SUM, localDir, localFile,
-				listener));
-		mHandler.sendMessage(msg);
 	}
 
 	private class MyHandler extends Handler {
@@ -317,15 +303,11 @@ public class MapFileService {
 				switch (msg.what) {
 				case WHAT_RETRIEVE_DIRECTORY: {
 					String remoteDirPath = b.getString(EXTRA_REMOTE_DIR);
-					FTPFile[] ftpFiles = null;
-					ftpFiles = mFTPClient.getDir(adjustDir(remoteDirPath,
-							REMOTE_BASE_PATH_DIR));
-					if (ftpFiles != null) {
-						List<FTPFile> ftpFilesList = Arrays.asList(ftpFiles);
-						if (listener != null)
-							((DownloadListener) listener).onDirectoryContent(
-									remoteDirPath, ftpFilesList);
-					}
+					List<FTPFileWithParent> files = new ArrayList<FTPFileWithParent>();
+					retrieveDirectoryContent( remoteDirPath, files );
+					if ( listener != null)
+						((RetrieveDirectoryListener)listener).onDirectoryContent( files );
+					
 					break;
 				}
 				case WHAT_RETRIEVE_FILE: {
@@ -334,34 +316,16 @@ public class MapFileService {
 					String localDir = b.getString(EXTRA_LOCAL_DIR);
 					String localFile = b.getString(EXTRA_LOCAL_FILE);
 					boolean forceDownload = b.getBoolean(EXTRA_DOWNLOAD_FORCE);
-
-					mFTPClient.getFile(
-							adjustDir(localDir, LOCAL_BASE_PATH_DIR),
-							localFile,
-							adjustDir(remoteDir, REMOTE_BASE_PATH_DIR),
-							remoteFile, forceDownload,
-							(DownloadListener) listener);
-					break;
-				}
-				case WHAT_RETRIEVE_MD5SUM: {
-					String remoteDir = b.getString(EXTRA_REMOTE_DIR);
-					String remoteFile = b.getString(EXTRA_REMOTE_FILE);
-					mFTPClient.getRemoteMD5Sum(
-							adjustDir(remoteDir, REMOTE_BASE_PATH_DIR),
-							remoteFile + ".md5", (DownloadListener) listener);
+					retrieveFile( remoteDir, remoteFile, localDir, localFile, forceDownload, listener );
 					break;
 				}
 				case WHAT_READ_DIRECTORY: {
 					String localDir = b.getString(EXTRA_LOCAL_DIR);
-					File localDirFile = new File(adjustDir(localDir,
-							LOCAL_BASE_PATH_DIR));
-					File[] files = localDirFile.listFiles();
-					if (files != null) {
-						List<File> filesList = Arrays.asList(files);
-						if (listener != null)
-							((FileListener) listener).onDirectoryContent(
-									localDir, filesList);
-					}
+					List<FileWithParent> files = new ArrayList<FileWithParent>();
+					readDirectoryContent( localDir, files );
+					if ( listener != null )
+						((ReadDirectoryListener)listener).onDirectoryContent( files );
+					
 					break;
 				}
 				case WHAT_DELETE_FILE: {
@@ -370,17 +334,6 @@ public class MapFileService {
 					File file = new File(adjustDir(localDir,
 							LOCAL_BASE_PATH_DIR) + File.separator + localFile);
 					file.delete();
-					break;
-				}
-				case WHAT_CALC_MD5SUM: {
-					String localDir = b.getString(EXTRA_LOCAL_DIR);
-					String localFile = b.getString(EXTRA_LOCAL_FILE);
-					String md5Sum = null;
-					md5Sum = calcMD5Sum(
-							adjustDir(localDir, LOCAL_BASE_PATH_DIR), localFile);
-					if (listener != null)
-						((DownloadListener) listener).onMD5Sum(localDir,
-								localFile, md5Sum);
 					break;
 				}
 				default:
@@ -402,6 +355,55 @@ public class MapFileService {
 				mReceiver.send(STATUS_FINISHED, Bundle.EMPTY);
 		}
 
+		public void retrieveDirectoryContent( String parentDir, List<FTPFileWithParent>  files ) throws IOException {
+			FTPFile[] ftpFiles = null;
+			ftpFiles = mFTPClient.getDir(adjustDir(parentDir,
+					REMOTE_BASE_PATH_DIR));
+			for( FTPFile file: ftpFiles ) {
+				files.add( new FTPFileWithParent( parentDir, file ));
+				if ( file.isDirectory()) {
+					retrieveDirectoryContent( parentDir + File.separator + file.getName(), files );
+				}
+			}
+		}
+		
+		private void retrieveFile(String remoteDir, String remoteFile,
+				String localDir, String localFile, boolean forceDownload, BaseListener listener) throws IOException, NoSuchAlgorithmException {
+			int result = mFTPClient.getFile(
+					adjustDir(localDir, LOCAL_BASE_PATH_DIR),
+					localFile,
+					adjustDir(remoteDir, REMOTE_BASE_PATH_DIR),
+					remoteFile, forceDownload,
+					(RetrieveFileListener) listener );
+			if ( result == MapsforgeFTP.RESULT_INTERRUPTED)
+				return;
+			
+			String md5sumRemote = mFTPClient.getRemoteMD5Sum( adjustDir(remoteDir, REMOTE_BASE_PATH_DIR), remoteFile + ".md5" );
+			String md5sumLocal = calcMD5Sum( adjustDir( localDir, LOCAL_BASE_PATH_DIR ), localFile );
+			Log.d( TAG, "md5sumRemote = " + md5sumRemote );
+			Log.d( TAG, "md5sumLocal = " + md5sumLocal );
+			
+			if ( !md5sumRemote.equals( md5sumLocal )) {
+				File file = new File(adjustDir(localDir,
+						LOCAL_BASE_PATH_DIR) + File.separator + localFile);
+				file.delete();
+				throw new IOException( "Transmitted file is not correct. MD5Sum error. Deleted.");
+			}
+		}
+		
+		private void readDirectoryContent(String localDir,
+				List<FileWithParent> fileList) {
+			
+			File localDirFile = new File(adjustDir(localDir,
+					LOCAL_BASE_PATH_DIR));
+			File[] files = localDirFile.listFiles();
+			for( File file: files ) {
+				fileList.add( new FileWithParent( localDir, file));
+				if ( file.isDirectory())
+					readDirectoryContent( localDir + File.separator + file.getName(), fileList );
+			}
+		}
+
 		public String calcMD5Sum(String localDir, String localFile)
 				throws NoSuchAlgorithmException, IOException {
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -420,7 +422,35 @@ public class MapFileService {
 			BigInteger bigInt = new BigInteger(1, mdBytes);
 			String hexCalcString = bigInt.toString(16);
 
+			StringBuilder missingZeros = new StringBuilder();
+			int missingChars = 32 - hexCalcString.length();
+			int i;
+			for( i = 0; i < missingChars; i++ ) {
+				missingZeros.append( "0" );
+			}
+			
+			hexCalcString = missingZeros.toString() + hexCalcString;
 			return hexCalcString;
 		}
 	}
+	
+	public interface BaseListener {
+		public void setListener( BaseListener listener );
+		public void onRunning();
+		public void onFinished();
+	}
+	
+	public interface RetrieveDirectoryListener extends BaseListener {
+		public void onDirectoryContent( List<FTPFileWithParent> files );
+	}
+	
+	public interface ReadDirectoryListener extends BaseListener {
+		public void onDirectoryContent( List<FileWithParent> files );
+	}
+	
+	public interface RetrieveFileListener extends BaseListener {
+		public void onProgress( int percentageProgress );
+		public int getProgress();
+	}
+
 }

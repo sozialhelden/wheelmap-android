@@ -1,14 +1,9 @@
 package org.wheelmap.android.model;
 
-import java.io.File;
-import java.util.List;
-
-import org.apache.commons.net.ftp.FTPFile;
 import org.wheelmap.android.R;
 import org.wheelmap.android.manager.MapFileManager;
-import org.wheelmap.android.service.BaseListener;
-import org.wheelmap.android.service.DownloadListener;
-import org.wheelmap.android.service.FileListener;
+import org.wheelmap.android.service.MapFileService.BaseListener;
+import org.wheelmap.android.service.MapFileService.RetrieveFileListener;
 import org.wheelmap.android.service.MapFileService.Task;
 import org.wheelmap.android.ui.MapFileDirItemView;
 import org.wheelmap.android.ui.MapFileFileItemView;
@@ -85,7 +80,7 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 				availableText = "";
 			mffiv.setLocalAvailable(availableText);
 
-			DownloadListener dListener = createDownloadListener(mffiv);
+			RetrieveFileListener dListener = createDownloadListener(mffiv);
 			Task task = MapFileManager.get(context.getApplicationContext())
 					.findTask(remoteName, remoteParentName,
 							Task.TYPE_RETRIEVE_FILE);
@@ -95,7 +90,7 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 			if (task != null) {
 				task.listener.setListener(dListener);
 				mffiv.setProgressVisibility(View.VISIBLE);
-				int progress = ((DownloadListener) task.listener).getProgress();
+				int progress = ((RetrieveFileListener) task.listener).getProgress();
 				if (progress == 0)
 					mffiv.setProgress(context.getResources().getString(
 							R.string.pending));
@@ -105,7 +100,7 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 			} else if (unknownTask != null
 					&& unknownTask.type != Task.TYPE_RETRIEVE_FILE) {
 				if (unknownTask.type == Task.TYPE_DELETE_FILE)
-					unknownTask.listener.setListener(defaultFileListener);
+					unknownTask.listener.setListener(defaultBaseListener);
 				mffiv.setProgressVisibility(View.VISIBLE);
 				mffiv.setProgress(context.getResources().getString(
 						R.string.pending));
@@ -135,15 +130,15 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 			return new MapFileFileItemView(ctx);
 	}
 
-	public DownloadListener createDownloadListener(
+	public RetrieveFileListener createDownloadListener(
 			final MapFileFileItemView fileItemView) {
-
-		return new DownloadListener() {
-
+		
+		return new RetrieveFileListener() {
+			
 			@Override
-			public void setListener(BaseListener listener) {
+			public void setListener(BaseListener listener) {				
 			}
-
+			
 			@Override
 			public void onRunning() {
 				mHandler.post(new Runnable() {
@@ -153,9 +148,9 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 						fileItemView.setProgressVisibility(View.VISIBLE);
 						notifyDataSetChanged();
 					}
-				});
+				});				
 			}
-
+			
 			@Override
 			public void onFinished() {
 				mHandler.post(new Runnable() {
@@ -165,13 +160,9 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 						fileItemView.setProgressVisibility(View.INVISIBLE);
 						notifyDataSetChanged();
 					}
-				});
+				});				
 			}
-
-			@Override
-			public void onDirectoryContent(String parentDir, List<FTPFile> files) {
-			}
-
+			
 			@Override
 			public void onProgress(final int percentageProgress) {
 				mHandler.post(new Runnable() {
@@ -182,24 +173,19 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 								.valueOf(percentageProgress) + "%");
 						notifyDataSetChanged();
 					}
-				});
+				});				
 			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-			}
-
+			
 			@Override
 			public int getProgress() {
 				return 0;
 			}
-
 		};
 	}
 
 	public OnClickListener createClickListener(final String name,
 			final String parentName, final String remoteName,
-			final String remoteParentName, final DownloadListener listener) {
+			final String remoteParentName, final RetrieveFileListener listener) {
 		return new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -223,7 +209,7 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 		};
 	}
 
-	private FileListener defaultFileListener = new FileListener() {
+	private BaseListener defaultBaseListener = new BaseListener() {
 		@Override
 		public void setListener(BaseListener listener) {
 		}
@@ -239,14 +225,6 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 					notifyDataSetChanged();
 				}
 			});
-		}
-
-		@Override
-		public void onDirectoryContent(String parentDir, List<File> files) {
-		}
-
-		@Override
-		public void onMD5Sum(String parentDir, String file, String md5sum) {
 		}
 	};
 
