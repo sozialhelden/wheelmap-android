@@ -45,7 +45,7 @@ public class MapFileInfoProvider extends ContentProvider {
 	public static final String VALUE = "value";
 
 	private static final String DATABASE_NAME = "mapfileinfo.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	private static final String ENTITIES_TABLE_NAME = "files";
 
 	private DatabaseHelper mOpenHelper;
@@ -70,7 +70,6 @@ public class MapFileInfoProvider extends ContentProvider {
 					+ MapFileInfos.REMOTE_PARENT_NAME + " TEXT, "
 					+ MapFileInfos.REMOTE_TIMESTAMP + " STRING, "
 					+ MapFileInfos.REMOTE_SIZE + " NUMBER, "
-					+ MapFileInfos.REMOTE_MD5_SUM + " TEXT, "
 					+ MapFileInfos.VERSION + " TEXT, "
 					+ MapFileInfos.LOCAL_TIMESTAMP + " STRING, "
 					+ MapFileInfos.LOCAL_AVAILABLE + " NUMBER DEFAULT \'"
@@ -340,8 +339,6 @@ public class MapFileInfoProvider extends ContentProvider {
 				MapFileInfos.REMOTE_TIMESTAMP);
 		filesProjectionMap.put(MapFileInfos.REMOTE_SIZE,
 				MapFileInfos.REMOTE_SIZE);
-		filesProjectionMap.put(MapFileInfos.REMOTE_MD5_SUM,
-				MapFileInfos.REMOTE_MD5_SUM);
 		filesProjectionMap.put(MapFileInfos.VERSION, MapFileInfos.VERSION);
 		filesProjectionMap.put(MapFileInfos.LOCAL_TIMESTAMP,
 				MapFileInfos.LOCAL_TIMESTAMP);

@@ -9,13 +9,14 @@ import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import org.wheelmap.android.service.DownloadListener;
+import org.wheelmap.android.service.MapFileService.RetrieveFileListener;
 
 import android.util.Log;
 
@@ -25,20 +26,23 @@ public class MapsforgeFTP {
 	private final static String HOST = "ftp.mapsforge.org";
 	private final static String USERNAME = "anonymous";
 	private final static String PASSWORD = "android-app@wheelmap.org";
+	
+	public final static int RESULT_OK = 0;
+	public final static int RESULT_INTERRUPTED = 1;
 
 	private FTPClient mFTPClient;
-	private boolean mInterrupted;
+	private AtomicBoolean mInterrupted = new AtomicBoolean();
 
 	public MapsforgeFTP() {
 		mFTPClient = new FTPClient();
 		FTPClientConfig conf = new FTPClientConfig(FTPClientConfig.SYST_UNIX);
 		mFTPClient.configure(conf);
 
-		mInterrupted = false;
+		mInterrupted.set( false );
 	}
 
 	public void interrupt() {
-		mInterrupted = true;
+		mInterrupted.set( true );
 	}
 
 	public void connect() throws SocketException, IOException {
@@ -65,11 +69,11 @@ public class MapsforgeFTP {
 		return files;
 	}
 
-	public void getFile(String localDir, String localFilename,
+	public int getFile(String localDir, String localFilename,
 			String remoteDir, String remoteFilename, boolean force,
-			DownloadListener listener) throws IOException {
-		mInterrupted = false;
-
+			RetrieveFileListener listener) throws IOException {
+		mInterrupted.set( false );
+		
 		File dir = new File(localDir);
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -121,7 +125,7 @@ public class MapsforgeFTP {
 		long byteCountProgress = restartAtOffset;
 
 		int progressPercent;
-		while (((byteCount = in.read(buffer)) != -1) && !mInterrupted) {
+		while (((byteCount = in.read(buffer)) != -1) && !mInterrupted.get()) {
 			byteCountProgress += byteCount;
 			out.write(buffer, 0, byteCount);
 			progressPercent = (int) (byteCountProgress * 100 / (remoteFile
@@ -133,10 +137,14 @@ public class MapsforgeFTP {
 		in.close();
 		mFTPClient.completePendingCommand();
 		out.close();
+		
+		if ( mInterrupted.get())
+			return RESULT_INTERRUPTED;
+		else
+			return RESULT_OK;
 	}
 
-	public void getRemoteMD5Sum(String remoteDir, String remoteMD5File,
-			DownloadListener listener) throws IOException {
+	public String getRemoteMD5Sum(String remoteDir, String remoteMD5File ) throws IOException {
 		Log.d(TAG, "getRemoteMD5Sum: remoteDir = " + remoteDir
 				+ " remoteMD5File = " + remoteMD5File);
 		InputStream in;
@@ -153,10 +161,9 @@ public class MapsforgeFTP {
 		Log.d(TAG, "getRemoteMD5Sum: remoteDir = " + remoteDir + " file = "
 				+ content[1] + " md5sum = " + content[0]);
 		if (content[0] == null || content[1] == null)
-			return;
-		if (listener == null)
-			return;
-		listener.onMD5Sum(remoteDir, content[1].trim(), content[0].trim());
+			return null;
+		
+		return content[0];
 
 	}
 

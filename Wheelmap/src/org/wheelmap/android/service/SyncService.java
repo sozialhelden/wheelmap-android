@@ -28,7 +28,7 @@ public class SyncService extends IntentService {
 	private static final String TAG = "SyncService";
 
 	public static final String EXTRA_STATUS_RECEIVER = "org.wheelmap.android.STATUS_RECEIVER";
-	public static final String EXTRA_STATUS_BOUNDING_BOX = "org.wheelmap.android.EXTRA_STATUS_BOUNCING_BOX";
+	public static final String EXTRA_STATUS_BOUNDING_BOX = "org.wheelmap.android.EXTRA_STATUS_BOUNDING_BOX";
 	public static final String EXTRA_STATUS_DISTANCE_LIMIT = "org.wheelmap.android.EXTRA_STATUS_DISTANCE_LIMIT";
 
 	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";

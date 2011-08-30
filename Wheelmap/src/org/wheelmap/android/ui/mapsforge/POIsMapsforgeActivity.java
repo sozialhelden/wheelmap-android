@@ -42,6 +42,8 @@ import android.widget.Toast;
 public class POIsMapsforgeActivity extends MapActivity implements
 		DetachableResultReceiver.Receiver {
 
+	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.MAPSFORGE";
+
 	/** State held between configuration changes. */
 	private State mState;
 
@@ -83,25 +85,29 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mapView.getOverlays().add(mCurrLocationOverlay);
 
-		mapView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
+		
+		if (getIntent() != null && !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, true)) {
+			mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+					new OnGlobalLayoutListener() {
 
-					@Override
-					public void onGlobalLayout() {
-						requestUpdate();
-						mapView.getViewTreeObserver()
-								.removeGlobalOnLayoutListener(this);
-					}
-				});
+						@Override
+						public void onGlobalLayout() {
+							requestUpdate();
+							mapView.getViewTreeObserver()
+									.removeGlobalOnLayoutListener(this);
+						}
+					});
+		}
 
 		// location manager
 		GeoUpdateHandler guh = new GeoUpdateHandler();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
 				0, guh);
-		
-		Location location = locationManager.getLastKnownLocation( LocationManager.NETWORK_PROVIDER);
-		mapController.setCenter( calcGeoPoint( location));
+
+		Location location = locationManager
+				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		mapController.setCenter(calcGeoPoint(location));
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -280,11 +286,11 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		@Override
 		public void onLocationChanged(Location location) {
-			GeoPoint geoPoint = calcGeoPoint( location );
+			GeoPoint geoPoint = calcGeoPoint(location);
 			// we got the first time current position so center map on it
 			if (mLastGeoPointE6 == null) {
 				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
-				mapController.setCenter( geoPoint );
+				mapController.setCenter(geoPoint);
 			}
 			mLastGeoPointE6 = geoPoint;
 			mCurrLocationOverlay.setLocation(mLastGeoPointE6,
@@ -303,8 +309,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
 	}
-	
-	private GeoPoint calcGeoPoint( Location location ) {
+
+	private GeoPoint calcGeoPoint(Location location) {
 		int lat = (int) (location.getLatitude() * 1E6);
 		int lng = (int) (location.getLongitude() * 1E6);
 		return new GeoPoint(lat, lng);

@@ -1,15 +1,15 @@
 package org.wheelmap.android.test;
 
-import java.io.File;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.commons.net.ftp.FTPFile;
-import org.wheelmap.android.service.BaseListener;
-import org.wheelmap.android.service.DownloadListener;
-import org.wheelmap.android.service.FileListener;
 import org.wheelmap.android.service.MapFileService;
+import org.wheelmap.android.service.MapFileService.FTPFileWithParent;
+import org.wheelmap.android.service.MapFileService.FileWithParent;
+import org.wheelmap.android.service.MapFileService.ReadDirectoryListener;
+import org.wheelmap.android.service.MapFileService.RetrieveDirectoryListener;
+import org.wheelmap.android.service.MapFileService.RetrieveFileListener;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.os.Bundle;
@@ -29,46 +29,28 @@ public class MapFileServiceTest extends AndroidTestCase implements DetachableRes
 		mDs = new MapFileService();
 		mDs.registerResultReceiver( mState.mReceiver );
 		
-		DownloadListener listenerOne = new DownloadListener() {
-
+		RetrieveDirectoryListener listenerOne = new RetrieveDirectoryListener() {
+			
+			@Override
+			public void setListener(
+					org.wheelmap.android.service.MapFileService.BaseListener listener) {				
+			}
+			
 			@Override
 			public void onRunning() {
-				Log.d( TAG, "sendRunning" );
+				Log.d( TAG, "sendRunning" );				
 			}
-
+			
 			@Override
 			public void onFinished() {
 				Log.d( TAG, "sendFinished" );
 			}
-
+			
 			@Override
-			public void onDirectoryContent(String dir, List<FTPFile> files) {
-				Log.d( TAG, "dir = " + dir + " Number of files = " + files.size());
-				for( FTPFile file: files ) {
-					Log.d( TAG, "File: " + file.getName() );
-					if ( file.getType() == FTPFile.DIRECTORY_TYPE)
-						mDs.getRemoteMapsDirectory( dir + File.separator + file.getName(), this);
+			public void onDirectoryContent(List<FTPFileWithParent> files) {
+				for( FTPFileWithParent file: files ) {
+					Log.d( TAG, "Parent = " + file.parentDir + " Name = " + file.file.getName());
 				}
-			}
-
-			@Override
-			public void onProgress(int percentageProgress) {
-				
-			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-				
-			}
-
-			@Override
-			public void setListener(BaseListener listener) {
-				
-			}
-
-			@Override
-			public int getProgress() {
-				return 0;
 			}
 		};
 		
@@ -76,87 +58,67 @@ public class MapFileServiceTest extends AndroidTestCase implements DetachableRes
 		
 		Thread.sleep( 20000 );
 		
-		DownloadListener listenerTwo = new DownloadListener() {
-
+		RetrieveFileListener listenerTwo = new RetrieveFileListener() {
+			
+			@Override
+			public void setListener(
+					org.wheelmap.android.service.MapFileService.BaseListener listener) {
+				
+			}
+			
 			@Override
 			public void onRunning() {
 				Log.d( TAG, "sendRunning" );				
 			}
-
+			
 			@Override
 			public void onFinished() {
-				Log.d( TAG, "sendFinished" );
+				Log.d( TAG, "sendFinished" );				
 			}
-
-			@Override
-			public void onDirectoryContent(String dir, List<FTPFile> files) {
-				
-			}
-
+			
 			@Override
 			public void onProgress(int percentageProgress) {
 				Log.d( TAG, "percentageProgress = " + percentageProgress  );
 			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-				Log.d( TAG, "md5Sum: parentDir = " + parentDir + " file = " + file + " MD5 = " + md5sum );
-			}
-
-			@Override
-			public void setListener(BaseListener listener) {
-				
-			}
-
+			
 			@Override
 			public int getProgress() {
+				// TODO Auto-generated method stub
 				return 0;
 			}
-
-			
 		};
 		
+		
 		mDs.getRemoteFile( "europe/germany", "bremen-0.2.4.map", "europe/germany", "bremen-0.2.4.map", true, listenerTwo );
-		mDs.getMD5Sum( "europe/germany", "bremen-0.2.4.map.md5", listenerTwo );
 		
-		
-		FileListener listenerThree = new FileListener() {
-
+		ReadDirectoryListener listenerThree = new ReadDirectoryListener() {
+			
+			@Override
+			public void setListener(
+					org.wheelmap.android.service.MapFileService.BaseListener listener) {				
+			}
+			
 			@Override
 			public void onRunning() {
 				
 			}
-
+			
 			@Override
 			public void onFinished() {
 				
 			}
-
+			
 			@Override
-			public void onDirectoryContent(String parentDir, List<File> files) {
-				for( File file: files ) {
-					Log.d( TAG, "parentDir = " + parentDir + " fileName = " + file.getName() );
-					if ( file.isDirectory()) {
-						mDs.getLocalMapsDirectory( parentDir + File.separator + file.getName(), this );
-					}
+			public void onDirectoryContent(List<FileWithParent> files) {
+				for( FileWithParent file: files ) {
+					Log.d( TAG, "parentDir = " + file.parentDir + " fileName = " + file.file.getName() );
 				}
-				
-				
 			}
-
-			@Override
-			public void onMD5Sum(String parentDir, String file, String md5sum) {
-				
-			}
-
-			@Override
-			public void setListener(BaseListener listener) {
-				
-			}	
 		};
 		
+
 		mDs.getLocalMapsDirectory( "", listenerThree );
-		Thread.sleep( 20000 );
+		Thread.sleep( 30000 );
 
 	}
 

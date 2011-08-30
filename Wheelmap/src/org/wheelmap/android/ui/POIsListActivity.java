@@ -7,6 +7,7 @@ import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
+import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
@@ -138,7 +139,9 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void onMapClick(View v) {
-		startActivity(new Intent(this, POIsMapActivity.class));
+		Intent intent = new Intent( this, POIsMapsforgeActivity.class);
+		intent.putExtra( POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		startActivity( intent );
 	}
 
 	@Override
