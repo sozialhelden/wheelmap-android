@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	
+	<LinearLayout style="@style/TitleBar">
+		
+		<TextView android:id="@+id/wheelchair_state_poi_name" style="@style/TitleBarText" />
+		
+
+	</LinearLayout>	
+
+	<ScrollView
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="5px"
+        >
+           <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
+     	
+		
+	
+	
+    <!-- icon + big text -->	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<ImageView 
+			android:src="@drawable/wheelchair_state_enabled"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+
+
+		<TextView android:layout_height="wrap_content"
+		style="@style/WheelStateTitleEnabled"
+		android:layout_marginTop="10dip"
+			android:layout_width="wrap_content" android:text="@string/ws_enabled_title"></TextView>
+	</LinearLayout>
+	<!-- explanation -->
+
+<LinearLayout 
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:weightSum="1.0">
+
+
+
+	
+	<RadioButton android:id="@+id/radio_enabled"
+          android:layout_width="0px"
+          android:layout_weight=".15"
+          android:layout_height="wrap_content" />
+	</LinearLayout>
+	
+	<!-- icon + big text -->	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<ImageView 
+			android:src="@drawable/wheelchair_state_limited"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+
+
+		<TextView android:layout_height="wrap_content"
+		style="@style/WheelStateTitleLimited"
+		android:layout_marginTop="10dip"
+			android:layout_width="wrap_content" android:text="@string/ws_limited_title"></TextView>
+	</LinearLayout>
+	<!-- explanation -->
+
+<LinearLayout 
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:weightSum="1.0">
+
+
+
+	
+	<RadioButton android:id="@+id/radio_limited"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight=".15" />
+	</LinearLayout>
+	
+		<!-- icon + big text -->	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<ImageView 
+			android:src="@drawable/wheelchair_state_disabled"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+
+
+		<TextView android:layout_height="wrap_content"
+		style="@style/WheelStateTitleDisabled"
+		android:layout_marginTop="10dip"
+			android:layout_width="wrap_content" android:text="@string/ws_disabled_title"></TextView>
+	</LinearLayout>
+	<!-- explanation -->
+
+<LinearLayout 
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:weightSum="1.0">
+
+
+
+	
+	<RadioButton android:id="@+id/radio_disabled"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight=".15" />
+	</LinearLayout>
+	
+		<!-- icon + big text -->	
+	<LinearLayout 
+	    android:orientation="horizontal"
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+		<ImageView 
+			android:src="@drawable/wheelchair_state_unknown"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
+
+
+		<TextView android:layout_height="wrap_content"
+		style="@style/WheelStateTitleUnknown"
+		android:layout_marginTop="10dip"
+			android:layout_width="wrap_content" android:text="@string/ws_unknown_title"></TextView>
+	</LinearLayout>
+	<!-- explanation -->
+
+<LinearLayout 
+	    android:layout_marginTop="4dip"
+		android:layout_marginLeft="4dip"
+		android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:weightSum="1.0">
+
+
+
+	
+	<RadioButton android:id="@+id/radio_unknown"
+          android:layout_width="0px"
+          android:layout_height="wrap_content"
+          android:layout_weight=".15" />
+	</LinearLayout>
+	
+	
+	
+	</LinearLayout>
+	</ScrollView>
+	
+	
+</LinearLayout>
