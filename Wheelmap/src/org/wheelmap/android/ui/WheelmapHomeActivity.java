@@ -52,7 +52,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 		
 		startActivity(new Intent(this, WheelchairStateActivity.class));;
 	}
-
+	
 	public void onRefreshClick(View v) {
 		// trigger off background sync
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, WheelmapHomeActivity.this, SyncService.class);

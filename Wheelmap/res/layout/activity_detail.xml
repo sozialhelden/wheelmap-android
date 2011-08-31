@@ -2,11 +2,13 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
+    <!-- ActionBar -->
 	<LinearLayout style="@style/TitleBar">
 
-<TextView android:id="@+id/name" style="@style/TitleBarText" />
+       <TextView android:id="@+id/name" style="@style/TitleBarText" />
 
 	</LinearLayout>
+	
 	<ScrollView android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1" android:padding="5px">
@@ -25,6 +27,12 @@
 					android:layout_height="wrap_content" style="@style/WheelStateTitleEnabled"
 					android:layout_marginTop="10dip" android:layout_width="wrap_content"
 					android:text="@string/ws_enabled_title"></TextView>
+				<ImageView  
+				    android:src="@drawable/expander_ic_minimized"
+					android:layout_height="wrap_content" 
+					android:layout_width="wrap_content"
+					android:onClick="onEditWheelchairState"
+					android:gravity="right"></ImageView>
 			</LinearLayout>
 
 			<TableLayout android:layout_width="fill_parent"
