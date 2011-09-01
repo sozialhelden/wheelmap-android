@@ -53,7 +53,7 @@ public class NodesRequestBuilder extends RequestBuilder {
 	    	requestAsStringBuffer.append(boundingBox.asRequestParameter());
 	    }
 	    
-	    if (wheelchairState!=null) {
+	    if (wheelchairState!=null && wheelchairState != WheelchairState.NO_PREFERENCE) {
 	    	requestAsStringBuffer.append("&wheelchair=");
 	    	requestAsStringBuffer.append(wheelchairState.asRequestParameter());
 	    }	    

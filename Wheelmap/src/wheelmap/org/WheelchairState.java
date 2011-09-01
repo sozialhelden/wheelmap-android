@@ -44,6 +44,9 @@ public enum WheelchairState {
 	}	
   
 	public String asRequestParameter() {
+		if ( this == NO_PREFERENCE )
+			return "";
+		
 		return this.name().toLowerCase();
 	}
 	

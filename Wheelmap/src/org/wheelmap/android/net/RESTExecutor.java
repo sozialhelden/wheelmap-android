@@ -48,8 +48,7 @@ public class RESTExecutor {
 		// 1. maxi nodes
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))
 				.boundingBox(boundingBox);
-		if ( wheelchairState != null )
-			requestBuilder.wheelchairState(wheelchairState);
+		requestBuilder.wheelchairState(wheelchairState);
 
 		// here just delete whole table
 		mResolver.delete(Wheelmap.POIs.CONTENT_URI, null, null);
