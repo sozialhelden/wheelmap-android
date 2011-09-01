@@ -6,7 +6,6 @@ import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.ui.map.POIsMapActivity;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeocoordinatesMath;
@@ -25,7 +24,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -38,7 +36,7 @@ import android.widget.Toast;
 public class POIsListActivity extends ListActivity implements
 		DetachableResultReceiver.Receiver, OnItemSelectedListener {
 
-	private final static String TAG = "poislist";
+	//private final static String TAG = "poislist";
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 
 	private State mState;
@@ -53,8 +51,7 @@ public class POIsListActivity extends ListActivity implements
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
-		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null,
-				Wheelmap.POIs.DEFAULT_SORT_ORDER);
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null, "");
 		Cursor wrappingCursor = createCursorWrapper( cursor );
 		startManagingCursor(wrappingCursor);
 

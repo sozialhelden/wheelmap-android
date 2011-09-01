@@ -3,6 +3,7 @@ package org.wheelmap.android.ui;
 import java.util.HashMap;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.model.Wheelmap;
 
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
@@ -62,6 +63,10 @@ public class WheelchairStateActivity extends Activity {
 
 				}
 			});
-		}	
+		}
+		// set current state
+		int newStateInt = (int)getIntent().getLongExtra(Wheelmap.POIs.WHEELCHAIR, -1);
+		WheelchairState newState = WheelchairState.valueOf(newStateInt);
+		setWheeChairState(newState);
 	}
 }

@@ -30,7 +30,7 @@ public class POIsProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sPOIsProjectionMap;
-	
+
 	// TODO quick hack, the Content provider has its own current location instance
 	// there should be only one in the whole project ???
 	private CurrentLocation mCurrentLocation;
@@ -55,42 +55,42 @@ public class POIsProvider extends ContentProvider {
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 6;
 	private static final String POIS_TABLE_NAME = "pois";
-	
+
 	private Location mLastLocation;
-	
+
 	private static class DistanceQueryBuilder {
 		public String buildRawQuery(double longitude,double latitude) {
-			 double  sin_lat_rad =  Math.sin(latitude*Math.PI/180);
-			 double   sin_lon_rad =  Math.sin(longitude*Math.PI/180);
-			 double   cos_lat_rad =  Math.cos(latitude*Math.PI/180);
-			 double   cos_lon_rad =  Math.cos(longitude*Math.PI/180);
-			 StringBuilder a = new StringBuilder("SELECT *,(");
-			 a.append(sin_lat_rad);
-			 a.append("*\"sin_lat_rad\"+");
-			 a.append(cos_lat_rad);
-			 a.append("*\"cos_lat_rad\"*(");
-			 a.append(cos_lon_rad);
-			 a.append("*\"cos_lon_rad\"+");
-			 a.append(sin_lon_rad);
-			 a.append("*\"sin_lon_rad\")) " +
-			 
-			 		"" +
-			 		"" +
-			 		"" +
-			 		"AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC");
-			 
-				 
-            // TODO maybe is a Formatter better
-		    //return 'SELECT *, (%(sin_lat_rad)f * "sin_lat_rad" + %(cos_lat_rad)f * "cos_lat_rad" * (%(cos_lon_rad)f * "cos_lon_rad" + %(sin_lon_rad)f * "sin_lon_rad")) AS "distance_acos" FROM "pois" GROUP BY "id" HAVING "distance_acos" < 1.25 ORDER BY "distance_acos" DESC' % {'sin_lat_rad': sin_lat_rad, "cos_lat_rad": cos_lat_rad, 'sin_lon_rad': sin_lon_rad, "cos_lon_rad": cos_lon_rad}
-			 
+			double  sin_lat_rad =  Math.sin(latitude*Math.PI/180);
+			double   sin_lon_rad =  Math.sin(longitude*Math.PI/180);
+			double   cos_lat_rad =  Math.cos(latitude*Math.PI/180);
+			double   cos_lon_rad =  Math.cos(longitude*Math.PI/180);
+			StringBuilder a = new StringBuilder("SELECT *,(");
+			a.append(sin_lat_rad);
+			a.append("*\"sin_lat_rad\"+");
+			a.append(cos_lat_rad);
+			a.append("*\"cos_lat_rad\"*(");
+			a.append(cos_lon_rad);
+			a.append("*\"cos_lon_rad\"+");
+			a.append(sin_lon_rad);
+			a.append("*\"sin_lon_rad\")) " +
+
+					"" +
+					"" +
+					"" +
+			"AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC");
+
+
+			// TODO maybe is a Formatter better
+			//return 'SELECT *, (%(sin_lat_rad)f * "sin_lat_rad" + %(cos_lat_rad)f * "cos_lat_rad" * (%(cos_lon_rad)f * "cos_lon_rad" + %(sin_lon_rad)f * "sin_lon_rad")) AS "distance_acos" FROM "pois" GROUP BY "id" HAVING "distance_acos" < 1.25 ORDER BY "distance_acos" DESC' % {'sin_lat_rad': sin_lat_rad, "cos_lat_rad": cos_lat_rad, 'sin_lon_rad': sin_lon_rad, "cos_lon_rad": cos_lon_rad}
+
 			Log.d(TAG, "query select argument for distance " +  a.toString());
 
 			return a.toString();
 		}
-		
+
 	}
-	
-	
+
+
 
 	/**
 	 * This class helps open, create, and upgrade the database file.
@@ -105,7 +105,7 @@ public class POIsProvider extends ContentProvider {
 		public void onCreate(SQLiteDatabase db) {
 			// places
 			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME + " (" 
-			        + POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
+					+ POIs._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
 					+ POIs.WM_ID + " INTEGER, " 
 					+ POIs.NAME + " TEXT," 
 					+ POIs.COORD_LAT + " VARCHAR(15)," 
@@ -271,15 +271,17 @@ public class POIsProvider extends ContentProvider {
 		}
 
 	}
-	
+
 	final class MyLocationResult implements LocationResult {
-    	@Override
+		@Override
 		public void gotLocation(final Location location){
-    		mLastLocation = location;
-    		Log.v(TAG, "new current location" +mLastLocation.toString());
+			if (location != null) {
+				mLastLocation = location;
+				Log.v(TAG, "new current location" +mLastLocation.toString());
+			}
 
 		}
-    }
+	}
 
 	@Override
 	public boolean onCreate() {
@@ -287,19 +289,19 @@ public class POIsProvider extends ContentProvider {
 		mQueryBuilder = new DistanceQueryBuilder();
 		// current location
 		mCurrentLocation = new CurrentLocation();
-		
+
 		MyLocationResult locationResult = new MyLocationResult();
-		
+
 		mLastLocation = new Location("");
 		// Berlin
 		mLastLocation.setLatitude(52.519842);
 		mLastLocation.setLongitude(13.439484);
-	    
+
 		mCurrentLocation.getLocation(getContext(), locationResult);
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
@@ -327,7 +329,6 @@ public class POIsProvider extends ContentProvider {
 					null, sortOrder);
 			break;
 		case POIS_SORTED:
-			// get asynchronously current location from location manager and execute request
 			c = db.rawQuery(mQueryBuilder.buildRawQuery(mLastLocation.getLongitude(), mLastLocation.getLatitude()), null);
 			break;
 		default:

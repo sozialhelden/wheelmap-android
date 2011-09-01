@@ -54,6 +54,28 @@ public class POIHelper {
 	public static WheelchairState getWheelchair(Cursor c) { 
 		return WheelchairState.valueOf(c.getInt(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.WHEELCHAIR)));
 	}
+	
+	// TODO comment into DB
+	public static String getComment(Cursor c) { 
+		return "";
+	}
+	
+	public static String getWebsite(Cursor c) { 
+		String website = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.WEBSITE));
+		if ( website == null)
+			website = "";
+		
+		return website;
+	}
+	
+	public static String getPhone(Cursor c) { 
+		String phone = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.PHONE));
+		if ( phone == null)
+			phone = "";
+		
+		return phone;
+	}
+
 
 	public static long getId(Cursor c) {
 		return c.getLong( c.getColumnIndexOrThrow( Wheelmap.POIs._ID));

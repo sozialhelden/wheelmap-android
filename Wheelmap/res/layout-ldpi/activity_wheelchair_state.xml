@@ -51,24 +51,7 @@
 
 
 
-	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_marginTop="4dip"
-		android:layout_marginLeft="20dip"
-		
-		android:layout_width="0px" 
-		android:layout_weight=".85"
-		android:layout_height="wrap_content">
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_enabled_l1"></TextView>
-		</TableRow>
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_enabled_l2"></TextView>
-		</TableRow>
-	</TableLayout>
+	
 	<RadioButton android:id="@+id/radio_enabled"
           android:layout_width="0px"
           android:layout_weight=".15"
@@ -104,29 +87,7 @@
 
 
 
-	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_marginTop="4dip"
-		android:layout_marginLeft="20dip"
-		
-		android:layout_width="0px" 
-		android:layout_height="wrap_content"
-		android:layout_weight=".85" >
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_limited_l1"></TextView>
-		</TableRow>
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_limited_l2"></TextView>
-		</TableRow>
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_limited_l3"></TextView>
-		</TableRow>
-	</TableLayout>
+	
 	<RadioButton android:id="@+id/radio_limited"
           android:layout_width="0px"
           android:layout_height="wrap_content"
@@ -162,25 +123,7 @@
 
 
 
-	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_marginTop="4dip"
-		android:layout_marginLeft="20dip"
-		
-		android:layout_width="0px" 
-		android:layout_height="wrap_content"
-		android:layout_weight=".85" >
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_disabled_l1"></TextView>
-		</TableRow>
-		<TableRow>
-			<TextView android:layout_column="1" android:text="•"></TextView>
-			<TextView android:layout_column="2" android:layout_width="wrap_content"
-				android:text="@string/ws_disabled_l2"></TextView>
-		</TableRow>
-		
-	</TableLayout>
+	
 	<RadioButton android:id="@+id/radio_disabled"
           android:layout_width="0px"
           android:layout_height="wrap_content"
@@ -216,16 +159,7 @@
 
 
 
-	<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_marginTop="4dip"
-		android:layout_marginLeft="20dip"
-		
-		android:layout_width="0px" 
-		android:layout_height="wrap_content"
-		android:layout_weight=".85" >
-		
-		
-	</TableLayout>
+	
 	<RadioButton android:id="@+id/radio_unknown"
           android:layout_width="0px"
           android:layout_height="wrap_content"

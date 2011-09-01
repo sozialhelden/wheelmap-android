@@ -146,10 +146,11 @@ public class SyncService extends IntentService {
 				.getDefaultSharedPreferences(this);
 		String prefWheelchairState = prefs.getString(
 				PREF_KEY_WHEELCHAIR_STATE, WheelchairState.DEFAULT.toString());
-		WheelchairState ws = WheelchairState.valueOf( Integer.valueOf( prefWheelchairState ));
-		if ( ws == WheelchairState.NO_PREFERENCE)
-			return null;
-		else
-			return ws;
+		//WheelchairState ws = WheelchairState.valueOf( Integer.valueOf( prefWheelchairState ));
+		//if ( ws == WheelchairState.NO_PREFERENCE)
+		//	return null;
+		// else
+		//	return ws;
+		return WheelchairState.UNKNOWN;
 	}
 }
