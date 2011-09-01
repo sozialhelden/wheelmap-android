@@ -42,7 +42,7 @@ import android.widget.Toast;
 public class POIsMapsforgeActivity extends MapActivity implements
 		DetachableResultReceiver.Receiver {
 
-	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.MAPSFORGE";
+	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
 	/** State held between configuration changes. */
 	private State mState;
@@ -86,7 +86,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mapView.getOverlays().add(mCurrLocationOverlay);
 
 		
-		if (getIntent() != null && !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, true)) {
+		if (getIntent() != null && !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
 			mapView.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
 
