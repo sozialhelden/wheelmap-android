@@ -53,11 +53,11 @@
     <string name="ws_enabled_l1">Eigang: stufenlos ereichbar</string>
     <string name="ws_enabled_l2">Räume: Alle stufenlos erreichbar</string>
     <string name="ws_enabled_l3">Räume: Alle stufenlos erreichbar</string>
-    <string name="ws_limited_title">Eingenschränkt rollstuhlgerecht</string>
+    <string name="ws_limited_title">Eingeschränkt rollstuhlgerecht</string>
     <string name="ws_limited_l1">Eigang:maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
     <string name="ws_limited_l2">Wichtigste Räume: stufenlos erreichbar</string>
     <string name="ws_limited_l3">Toiletten: egal</string>
-    <string name="ws_disabled_title">Eingenschränkt rollstuhlgerecht</string>
+    <string name="ws_disabled_title">Eingeschränkt rollstuhlgerecht</string>
     <string name="ws_disabled_l1">Eigang: maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
     <string name="ws_disabled_l2">Wichtigste Räume: stufenlos erreichbar</string>
     <string name="ws_unknown_title">Nicht bekannt</string>
