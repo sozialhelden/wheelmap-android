@@ -12,11 +12,13 @@ import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,14 +29,11 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class POIsListActivity extends ListActivity implements
-		DetachableResultReceiver.Receiver, OnItemSelectedListener {
+DetachableResultReceiver.Receiver, OnItemSelectedListener {
 
 	//private final static String TAG = "poislist";
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
@@ -47,7 +46,7 @@ public class POIsListActivity extends ListActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		
+
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
@@ -71,25 +70,9 @@ public class POIsListActivity extends ListActivity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
-		
-		TextView spinnerDesc = (TextView) findViewById(R.id.spinner_description_text);
-		int textRes = GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES ? R.string.spinner_description_distance_km
-				: R.string.spinner_description_distance_miles;
-		spinnerDesc.setText(textRes);
 
-		Spinner spinner = (Spinner) findViewById(R.id.spinner_distance);
-		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter
-				.createFromResource(this, R.array.distance_array_values,
-						android.R.layout.simple_spinner_item);
-		spinnerAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(spinnerAdapter);
-		spinner.setOnItemSelectedListener(this);
-		spinner.setPromptId( textRes );
-		spinner.setSelection( getSelectionFromPreferences() );
-		
 	}
-	
+
 	public Cursor createCursorWrapper( Cursor cursor ) {
 		LocationManager lm = (LocationManager)getApplicationContext().getSystemService( LOCATION_SERVICE );
 		Location loc = lm.getLastKnownLocation( LocationManager.GPS_PROVIDER );
@@ -97,22 +80,22 @@ public class POIsListActivity extends ListActivity implements
 			loc = lm.getLastKnownLocation( LocationManager.NETWORK_PROVIDER );
 		if ( loc == null ) {
 			loc = new Location(LocationManager.GPS_PROVIDER);
-            loc.setLatitude(52.5);
-            loc.setLongitude(13.4);
+			loc.setLatitude(52.5);
+			loc.setLongitude(13.4);
 		}
-		
+
 		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(loc.getLongitude(), loc.getLatitude());
-		
+
 		return new POIsCursorWrapper(cursor, location);
 	}
-	
+
 	public int getSelectionFromPreferences() {
 		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		
+		.getDefaultSharedPreferences(this);
+
 		String prefDist = prefs.getString( PREF_KEY_LIST_DISTANCE, "1");
 		mDistance = Float.valueOf( prefDist );
-		
+
 		String[] values = getResources().getStringArray( R.array.distance_array_values );
 		int i;
 		for( i = 0; i < values.length; i++ ) {
@@ -136,6 +119,28 @@ public class POIsListActivity extends ListActivity implements
 		this.startActivity(intent);
 	}
 
+	public void onFilterClick(View v) {
+
+		 
+		Resources res = getResources();
+		final CharSequence[] items = res.getStringArray(R.array.distance_array_values);
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		int textRes = GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES ? R.string.spinner_description_distance_km
+				: R.string.spinner_description_distance_miles;
+		builder.setTitle(textRes);
+		
+		builder.setSingleChoiceItems(items, getSelectionFromPreferences(), new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				mDistance = Float.valueOf( items[item].toString() );
+				onRefreshClick( null );
+				dialog.dismiss();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
 	public void onMapClick(View v) {
 		Intent intent = new Intent( this, POIsMapsforgeActivity.class);
 		intent.putExtra( POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
@@ -145,9 +150,9 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		
+
 		Cursor cursor = (Cursor)l.getAdapter().getItem( position );
-		
+
 		long poiId = POIHelper.getId( cursor );
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
@@ -181,7 +186,7 @@ public class POIsListActivity extends ListActivity implements
 			final String errorText = getString(R.string.toast_sync_error,
 					resultData.getString(Intent.EXTRA_TEXT));
 			Toast.makeText(POIsListActivity.this, errorText, Toast.LENGTH_LONG)
-					.show();
+			.show();
 			break;
 		}
 		}

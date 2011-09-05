@@ -18,6 +18,11 @@
 		<ImageButton style="@style/TitleBarAction"
 			android:contentDescription="@string/description_map" android:src="@drawable/ic_title_map"
 			android:onClick="onMapClick" />
+			
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction"
+			android:contentDescription="@string/description_filter" android:src="@drawable/ic_title_filter"
+			android:onClick="onFilterClick" />	
 
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
@@ -33,15 +38,6 @@
 			android:onClick="onSearchClick" />
 	</LinearLayout>
 
-	<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<TextView android:id="@+id/spinner_description_text"
-				  android:layout_width="wrap_content" android:layout_height="wrap_content"
-				  android:textAppearance="?android:attr/textAppearanceLarge"
-				  android:layout_marginLeft="5dip" android:layout_gravity="center_vertical" />
-		<Spinner android:id="@+id/spinner_distance"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_marginRight="5dip"/>
-	</LinearLayout>
 	
 
 	<ListView android:id="@+id/android:list" android:layout_width="fill_parent"
