@@ -46,6 +46,14 @@
             android:label="@string/title_pois_map" />
             
         <activity
+            android:name=".ui.POIDetailActivityEditable"
+            android:theme="@style/Theme.IOSched"
+            android:label="@string/title_pois_map" />
+                    
+            
+            
+            
+        <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_settings" />

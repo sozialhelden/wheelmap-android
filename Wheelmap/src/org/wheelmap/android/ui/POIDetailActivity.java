@@ -88,6 +88,16 @@ public class POIDetailActivity extends Activity {
 
 		super.onPause();
 	}
+	
+	public void onItemEdit(View v) {
+		// Launch overall conference schedule
+		Intent i = new Intent(POIDetailActivity.this, POIDetailActivityEditable.class);
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiID);
+		startActivity(i);
+	}
+
+	
+	
 
 	public void onEditWheelchairState(View v) {
 		// Start the activity whose result we want to retrieve.  The

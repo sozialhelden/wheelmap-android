@@ -6,6 +6,11 @@
 	<LinearLayout style="@style/TitleBar">
 
        <TextView android:id="@+id/name" style="@style/TitleBarText" />
+       
+       <ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction"
+			android:contentDescription="@string/description_edit" android:src="@drawable/ic_title_edit"
+			android:onClick="onItemEdit" />
 
 	</LinearLayout>
 	

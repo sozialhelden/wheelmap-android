@@ -1,0 +1,56 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+	<TableLayout
+     	android:layout_width="fill_parent"
+ 		android:layout_height="wrap_content"
+		android:stretchColumns="1"
+		android:shrinkColumns="1"
+		>
+		<TableRow>
+			<TextView android:text="Name:" />
+			<EditText android:id="@+id/name"
+			  style="@style/DetailFont"
+			  android:background="@drawable/detail_border"
+			/>
+		</TableRow>
+		<TableRow>
+			<TextView android:text="Address:" />
+			<EditText android:id="@+id/addr" 
+			  style="@style/DetailFont"
+			  android:background="@drawable/detail_border"/>
+		</TableRow>
+		<TableRow>
+			<TextView android:text="Wheelchair:" />
+			<RadioGroup android:id="@+id/wheel_chair_type">
+				<RadioButton android:id="@+id/unknown"
+					android:text="Unknown"
+					android:checked="true"
+				/>
+				<RadioButton android:id="@+id/yes"
+					android:text="Yes"
+				/>
+				<RadioButton android:id="@+id/no"
+					android:text="No"
+				/>
+				<RadioButton android:id="@+id/limited"
+					android:text="Limited"
+				/>
+			</RadioGroup>
+		</TableRow>
+		<EditText android:id="@+id/notes"
+			android:inputType="textMultiLine"
+			android:gravity="top"
+			android:lines="2"
+			android:scrollHorizontally="false"
+			android:maxLines="2"
+			android:layout_span="2"
+			android:hint="Comment"
+			android:layout_marginTop="4dip"
+		/>
+		<EditText android:id="@+id/phone"
+			android:layout_span="2"
+			android:hint="Phone"
+		/>
+	</TableLayout>
+</ScrollView>
