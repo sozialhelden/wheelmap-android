@@ -1,22 +1,16 @@
 package org.wheelmap.android.ui.mapsforge;
 
-import java.io.File;
 
 import org.mapsforge.android.maps.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.MapViewMode;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
-import org.wheelmap.android.model.MapFileInfo;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
-import org.wheelmap.android.service.MapFileService;
 import org.wheelmap.android.service.SyncService;
 
-import org.wheelmap.android.ui.MapFileSelectActivity;
 import org.wheelmap.android.ui.WheelmapHomeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -24,7 +18,6 @@ import org.wheelmap.android.utils.ParceableBoundingBox;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -34,7 +27,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
@@ -67,7 +59,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
 
-		pickAppropriateMap();
+		ConfigureMapView.pickAppropriateMap( this, mapView );
 
 		mapController = mapView.getController();
 		mapController.setZoom(16); // Zoon 1 is world view
@@ -125,53 +117,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
 	}
 
-	private void pickAppropriateMap() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String mapName = prefs.getString(
-				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME, "");
-		String mapDir = prefs.getString(
-				MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR, "");
 
-		if (mapName.equals("") || mapDir.equals("")) {
-			Uri uri = MapFileInfos.CONTENT_URI_FILES;
-			String whereClause = "( " + MapFileInfos.LOCAL_AVAILABLE + " = ? )";
-			String[] whereValues = new String[] { String
-					.valueOf(MapFileInfo.FILE_COMPLETE) };
-
-			Cursor cursor = getContentResolver()
-					.query(uri, MapFileInfos.filePROJECTION, whereClause,
-							whereValues, null);
-			if (cursor.getCount() == 1) {
-				mapName = MapFileInfo.getName(cursor);
-				mapDir = MapFileInfo.getParentName(cursor);
-				prefs.edit().putString(
-						MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME,
-						mapName);
-				prefs.edit()
-						.putString(
-								MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR,
-								mapDir);
-			}
-
-		}
-
-		String mapFile = MapFileService.LOCAL_BASE_PATH_DIR + File.separator
-				+ mapDir + File.separator + mapName;
-		mapView.setMapFile(mapFile);
-
-		if (!mapView.hasValidMapFile()) {
-			prefs.edit().putString(
-					MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME, "");
-			prefs.edit().putString(
-					MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR, "");
-
-			mapView.setMapViewMode(MapViewMode.OSMARENDER_TILE_DOWNLOAD);
-			final String errorText = getString(R.string.error_no_mapfilefound);
-			Toast.makeText(this, errorText, Toast.LENGTH_LONG).show();
-		} else
-			mapView.setMapViewMode(MapViewMode.CANVAS_RENDERER);
-	}
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {

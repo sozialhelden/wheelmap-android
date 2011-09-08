@@ -2,15 +2,22 @@ package org.wheelmap.android.ui;
 
 import java.util.HashMap;
 
+import org.mapsforge.android.maps.GeoPoint;
+import org.mapsforge.android.maps.ItemizedOverlay;
+import org.mapsforge.android.maps.MapActivity;
+import org.mapsforge.android.maps.MapController;
+import org.mapsforge.android.maps.MapView;
+import org.mapsforge.android.maps.OverlayItem;
 import org.wheelmap.android.R;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 
 import wheelmap.org.WheelchairState;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -18,20 +25,21 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class POIDetailActivity extends Activity {
+public class POIDetailActivity extends MapActivity {
 
-	private TextView name=null;
-
-	private TextView comment=null;
-	private TextView address=null;
-	private TextView website=null;
-	private TextView phone=null;
+	private TextView nameText=null;
+	private TextView commentText=null;
+	private TextView addressText=null;
+	private TextView websiteText=null;
+	private TextView phoneText=null;
 	private ImageView mStateIcon = null;
 	private TextView mWheelchairStateText=null;
 	private HashMap<WheelchairState, Integer> mWheelchairStateDrawablesMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
 
+	private MapController mapController;
+	private MapView mapView;
 
 	private WheelchairState mWheelChairState;
 
@@ -45,12 +53,12 @@ public class POIDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);   
 
-		name=(TextView)findViewById(R.id.name);
+		nameText=(TextView)findViewById(R.id.name);
 
-		phone=(TextView)findViewById(R.id.phone);
-		address=(TextView)findViewById(R.id.addr);
-		comment=(TextView)findViewById(R.id.comment);
-		website=(TextView)findViewById(R.id.website);
+		phoneText=(TextView)findViewById(R.id.phone);
+		addressText=(TextView)findViewById(R.id.addr);
+		commentText=(TextView)findViewById(R.id.comment);
+		websiteText=(TextView)findViewById(R.id.website);
 		mStateIcon = (ImageView)findViewById(R.id.wheelchair_state_icon);
 		mWheelchairStateText=(TextView)findViewById(R.id.wheelchair_state_text);
 
@@ -74,6 +82,14 @@ public class POIDetailActivity extends Activity {
 				onEditWheelchairState(v);
 			}
 		});
+		
+		mapView = (MapView) findViewById(R.id.map);
+
+		mapView.setClickable(false);
+		mapView.setBuiltInZoomControls(true);
+		ConfigureMapView.pickAppropriateMap( this, mapView );
+		mapController = mapView.getController();
+		mapController.setZoom(18);
 
 		poiID=getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
@@ -89,6 +105,7 @@ public class POIDetailActivity extends Activity {
 		super.onPause();
 	}
 	
+	
 	public void onItemEdit(View v) {
 		// Launch overall conference schedule
 		Intent i = new Intent(POIDetailActivity.this, POIDetailActivityEditable.class);
@@ -97,8 +114,6 @@ public class POIDetailActivity extends Activity {
 	}
 
 	
-	
-
 	public void onEditWheelchairState(View v) {
 		// Start the activity whose result we want to retrieve.  The
 		// result will come back with request code GET_CODE.
@@ -121,17 +136,31 @@ public class POIDetailActivity extends Activity {
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
-
-		if (cur.moveToFirst()) {	
-
-			setWheelchairState(POIHelper.getWheelchair(cur));
-			name.setText(POIHelper.getName(cur));
-			comment.setText(POIHelper.getComment(cur));
-			address.setText(POIHelper.getAddress(cur));
-			website.setText(POIHelper.getWebsite(cur));
-			phone.setText(POIHelper.getPhone(cur));
+		
+		if ( cur.getCount() < 1 ) {
 			cur.close();
+			return;
 		}
+
+		cur.moveToFirst();
+		WheelchairState state = POIHelper.getWheelchair(cur);
+		String name = POIHelper.getName( cur );
+		String comment = POIHelper.getComment( cur );
+		int lat = (int)(POIHelper.getLatitude( cur ) * 1E6);
+		int lon = (int)(POIHelper.getLongitude( cur ) * 1E6);
+			
+		setWheelchairState( state );
+		nameText.setText( name );
+		commentText.setText( comment );
+		addressText.setText(POIHelper.getAddress(cur));
+		websiteText.setText(POIHelper.getWebsite(cur));
+		phoneText.setText(POIHelper.getPhone(cur));
+		
+		POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
+		overlay.setItem( name, comment,  state, lat, lon );
+		mapView.getOverlays().add( overlay );
+		mapController.setCenter( new GeoPoint( lat, lon));
+		cur.close();
 	}
 
 	/**
@@ -170,4 +199,72 @@ public class POIDetailActivity extends Activity {
 	// Definition of the one requestCode we use for receiving resuls.
 	static final private int SELECT_WHEELCHAIRSTATE = 0;
 
+	private class POIMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
+		
+		private Drawable dUnknown;
+		private Drawable dYes;
+		private Drawable dNo;
+		private Drawable dLimited;
+		private OverlayItem item;
+		
+		private int items;
+		
+		public POIMapsforgeOverlay() {
+			super(null);
+			
+			dUnknown = POIDetailActivity.this.getResources().getDrawable(
+					R.drawable.marker_unknown);
+			dYes = POIDetailActivity.this.getResources().getDrawable(R.drawable.marker_yes);
+			dNo = POIDetailActivity.this.getResources().getDrawable(R.drawable.marker_no);
+			dLimited = POIDetailActivity.this.getResources().getDrawable(
+					R.drawable.marker_limited);
+			items = 0;
+		}
+		
+		public void setItem( String title, String snippet, WheelchairState state, int latitude, int longitude ) {
+			
+			Drawable marker;
+			switch (state) {
+			case UNKNOWN:
+				marker = dUnknown;
+				break;
+			case YES:
+				marker = dYes;
+				break;
+			case LIMITED:
+				marker = dLimited;
+				break;
+			case NO:
+				marker = dNo;
+				break;
+			default:
+				marker = dUnknown;
+			}
+			marker.setBounds(0, 0, marker.getIntrinsicWidth(),
+					marker.getIntrinsicHeight());
+			item = new OverlayItem();
+			item.setTitle( title );
+			item.setSnippet( snippet);
+			item.setMarker( marker );
+			item.setPoint( new GeoPoint( latitude, longitude));
+			items = 1;
+			
+			populate();
+		}
+	
+
+		@Override
+		public int size() {
+			return items;
+		}
+
+		@Override
+		protected OverlayItem createItem(int index) {
+			if ( index > 0 )
+				return null;
+			return item;
+		}	
+	}
+
+	
 }	

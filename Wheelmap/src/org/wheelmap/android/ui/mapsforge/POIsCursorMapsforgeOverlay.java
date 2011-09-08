@@ -68,10 +68,11 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			int latColumn = mCursor.getColumnIndex(Wheelmap.POIs.COORD_LAT);
 			int lonColumn = mCursor.getColumnIndex(Wheelmap.POIs.COORD_LON);
 
-			Double lat = mCursor.getDouble(latColumn);
-			Double lng = mCursor.getDouble(lonColumn);
+			int lat = mCursor.getInt(latColumn);
+			int lng = mCursor.getInt(lonColumn);
 			WheelchairState state = WheelchairState.valueOf(mCursor
 					.getInt(stateColumn));
+			String name = POIHelper.getName(mCursor);
 
 			Log.d( TAG, "Wheelchair state = " + state.toString());
 			Drawable marker;
@@ -95,7 +96,9 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			marker.setBounds(0, 0, marker.getIntrinsicWidth(),
 					marker.getIntrinsicHeight());
 			OverlayItem item = new OverlayItem();
-			item.setPoint( new GeoPoint(lat.intValue(), lng.intValue()));
+			item.setTitle( name );
+			item.setSnippet( name );
+			item.setPoint( new GeoPoint(lat, lng));
 			item.setMarker( marker );
 			return item;
 		}

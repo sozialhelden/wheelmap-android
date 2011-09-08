@@ -43,12 +43,6 @@ public class MapFileSelectActivity extends ListActivity {
 
 	}
 
-	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivity(intent);
-	}
-
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);

@@ -83,12 +83,6 @@ public class MapFileDownloadActivity extends ListActivity implements
 		}
 	}
 
-	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivity(intent);
-	}
-
 	public void onRefreshClick(View v) {
 		mState.mManager.update();
 	}

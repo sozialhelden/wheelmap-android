@@ -61,6 +61,13 @@
 					<TextView android:id="@+id/website" style="@style/DetailFont" />
 				</TableRow>
 			</TableLayout>
+			
+			<org.mapsforge.android.maps.MapView
+       			android:id="@+id/map"
+                android:layout_width="fill_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="10dip"
+                 /> 
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>
