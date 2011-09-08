@@ -1,41 +1,41 @@
 package org.wheelmap.android.ui;
 
-import org.wheelmap.android.R;
+import makemachine.android.formgenerator.FormActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
-public class POIDetailActivityEditable extends Activity {
+public class POIDetailActivityEditable extends FormActivity {
+	
+	public static final int OPTION_SAVE = 0;
+	public static final int OPTION_CANCEL = 1;
 
-	private TextView name=null;
-	private EditText address=null;
-	private EditText notes=null;
-	private RadioGroup types=null;
-	private String poiID=null;
+	private Long poiID;
 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail_editable);   
+		generateForm( FormActivity.parseFileToString( this, "schema_poi.json" ) );
 
-		name=(TextView)findViewById(R.id.name);
-		address=(EditText)findViewById(R.id.addr);
-		notes=(EditText)findViewById(R.id.notes);
-		types=(RadioGroup)findViewById(R.id.wheel_chair_type);
+		poiID=getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
-		poiID=getIntent().getStringExtra(Wheelmap.POIs.EXTRAS_POI_ID);
-
-		if (poiID != null) {
-			load();
+		if (poiID != -1) {
+			try {
+				load();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -45,41 +45,65 @@ public class POIDetailActivityEditable extends Activity {
 
 		super.onPause();
 	}
+	
+	 @Override
+		public boolean onCreateOptionsMenu( Menu menu ) 
+		{
+			menu.add( 0, OPTION_SAVE, 0, "Save" );
+			menu.add( 0, OPTION_CANCEL, 0, "Cancel" );
+			return true;
+		}
+		
+		@Override
+		public boolean onMenuItemSelected( int id, MenuItem item )
+		{
+			
+			switch( item.getItemId() )
+			{
+				case OPTION_SAVE:
+					saveChanges();
+					break;
+				case OPTION_CANCEL:
+					finish();					
+					break;
+			}
+			
+			return super.onMenuItemSelected( id, item );
+		}
+		
+		private void saveChanges() {
+			JSONObject jo;
+			jo = save();
+			// TODO JSON object to values
+			
+			// TODO update DB
+			
+			
+			
+		}
 
-	private void load() {
 
+	private void load() throws JSONException {
+		
+		JSONObject jo = new JSONObject();
+		
 		// Use the ContentUris method to produce the base URI for the contact with _ID == 23.
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, poiID);
-
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, Long.toString(poiID));
+	   
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
 		
 
 		if (cur.moveToFirst()) {		
-			name.setText(POIHelper.getName(cur));
-			address.setText(POIHelper.getAddress(cur));
-			notes.setText(cur.getString(cur.getColumnIndexOrThrow(Wheelmap.POIsColumns.WEBSITE)));
-
-			switch (POIHelper.getWheelchair(cur)) {
-			case UNKNOWN: {
-				types.check(R.id.unknown);
-				break;
-			}
-			case YES:
-				types.check(R.id.yes);
-				break;
-			case LIMITED:
-				types.check(R.id.limited);
-				break;
-			case NO:
-				types.check(R.id.no);
-				break;
-			default:
-				types.check(R.id.unknown);
-				break;
-			}
-
+			jo.put("name",POIHelper.getName(cur));
+			jo.put("address",POIHelper.getAddress(cur));
+			jo.put("website",POIHelper.getWebsite(cur));
+			jo.put("wheelchair",POIHelper.getWheelchair(cur).getId());
+			jo.put("phone",POIHelper.getPhone(cur));
 			cur.close();
+			
 		}
+		populate(jo.toString());
+		
 	}
 }	
