@@ -105,6 +105,14 @@ public class POIDetailActivity extends MapActivity {
 		super.onPause();
 	}
 	
+	@Override
+	public void onResume() {
+		if (poiID != -1) {
+			load();
+		}
+		super.onResume();
+	}
+	
 	
 	public void onItemEdit(View v) {
 		// Launch overall conference schedule

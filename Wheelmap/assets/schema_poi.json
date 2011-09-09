@@ -7,13 +7,13 @@
         "type": "string",
         "id": "0",
         "default": "",
-        "priority": "0" 
+        "priority": "1" 
     },    
     "wheelchair": {
         "type": "integer",
         "id": "2",
         "default": "3",
-        "priority": "0",
+        "priority": "2",
         "options": {
             "0": "Unknown",
             "1": "Fully accessible",
@@ -25,24 +25,36 @@
         "type": "string",
         "id": "3",
         "default": "",
-        "priority": "0" 
+        "priority": "3" 
     },
-    "address": {
+    "street": {
         "type": "string",
         "id": "4",
         "default": "",
-        "priority": "0" 
+        "priority": "4" 
     },
-    "website": {
+    "postcode": {
         "type": "string",
         "id": "5",
         "default": "",
-        "priority": "0" 
+        "priority": "5" 
     },
-    "phone": {
+    "city": {
         "type": "string",
         "id": "6",
         "default": "",
-        "priority": "0" 
+        "priority": "6" 
+    },
+    "website": {
+        "type": "string",
+        "id": "7",
+        "default": "",
+        "priority": "7" 
+    },
+    "phone": {
+        "type": "string",
+        "id": "8",
+        "default": "",
+        "priority": "8" 
     }
 }

@@ -15,7 +15,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.location.Location;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
@@ -45,8 +44,6 @@ public class POIsProvider extends ContentProvider {
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 6;
 	private static final String POIS_TABLE_NAME = "pois";
-
-	private Location mLastLocation;
 
 	private static class DistanceQueryBuilder {
 		public String buildRawQuery(double longitude, double latitude) {
