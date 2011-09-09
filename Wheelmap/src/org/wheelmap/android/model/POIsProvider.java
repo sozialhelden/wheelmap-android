@@ -1,24 +1,16 @@
 package org.wheelmap.android.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.utils.CurrentLocation;
-import org.wheelmap.android.utils.CurrentLocation.LocationResult;
 
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 
 import android.content.ContentProvider;
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -209,6 +201,34 @@ public class POIsProvider extends ContentProvider {
 		getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
 		return count;
 	}
+	
+	private void preCalculateLatLon( ContentValues values ) {
+		// pre calcutes sin and cos values of lat/lon
+		// see wikipage https://github.com/sozialhelden/wheelmap-android/wiki/Sqlite,-Distance-calculations
+		if (values.containsKey(POIs.COORD_LAT)) {
+			double lat  = values.getAsFloat(POIs.COORD_LAT) / (double)1E6;
+			double sin_lat_rad = Math.sin(Math.toRadians(lat));
+			double cos_lat_rad = Math.cos(Math.toRadians(lat));
+			values.put(POIs.COS_LAT_RAD, cos_lat_rad);
+			values.put(POIs.SIN_LAT_RAD, sin_lat_rad);
+		}
+		else {
+			values.put(POIs.COS_LAT_RAD, 0);
+			values.put(POIs.SIN_LAT_RAD, 0);	
+		}
+
+		if (values.containsKey(POIs.COORD_LON)) {
+			double lon  = values.getAsFloat(POIs.COORD_LON)/ (double)1E6;
+			double sin_lon_rad = Math.sin(Math.toRadians(lon));
+			double cos_lon_rad = Math.cos(Math.toRadians(lon));
+			values.put(POIs.COS_LON_RAD, cos_lon_rad);
+			values.put(POIs.SIN_LON_RAD, sin_lon_rad);
+		}
+		else {
+			values.put(POIs.COS_LON_RAD, 0);
+			values.put(POIs.SIN_LON_RAD, 0);	
+		}
+	}
 
 	@Override
 	public Uri insert(Uri uri, ContentValues initialValues) {
@@ -226,33 +246,8 @@ public class POIsProvider extends ContentProvider {
 				initialValues.put(POIs.NAME, "New POI");
 			}
 			mValues.putAll(initialValues);
-
-			// pre calcutes sin and cos values of lat/lon
-			// see wikipage https://github.com/sozialhelden/wheelmap-android/wiki/Sqlite,-Distance-calculations
-			if (mValues.containsKey(POIs.COORD_LAT)) {
-				double lat  = mValues.getAsFloat(POIs.COORD_LAT) / (double)1E6;
-				double sin_lat_rad = Math.sin(Math.toRadians(lat));
-				double cos_lat_rad = Math.cos(Math.toRadians(lat));
-				mValues.put(POIs.COS_LAT_RAD, cos_lat_rad);
-				mValues.put(POIs.SIN_LAT_RAD, sin_lat_rad);
-			}
-			else {
-				mValues.put(POIs.COS_LAT_RAD, 0);
-				mValues.put(POIs.SIN_LAT_RAD, 0);	
-			}
-
-			if (mValues.containsKey(POIs.COORD_LON)) {
-				double lon  = mValues.getAsFloat(POIs.COORD_LON)/ (double)1E6;
-				double sin_lon_rad = Math.sin(Math.toRadians(lon));
-				double cos_lon_rad = Math.cos(Math.toRadians(lon));
-				mValues.put(POIs.COS_LON_RAD, cos_lon_rad);
-				mValues.put(POIs.SIN_LON_RAD, sin_lon_rad);
-			}
-			else {
-				mValues.put(POIs.COS_LON_RAD, 0);
-				mValues.put(POIs.SIN_LON_RAD, 0);	
-			}
-
+			preCalculateLatLon( mValues );
+		
 			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 			long rowId = db.insert(POIS_TABLE_NAME, POIs.NAME, mValues);
 			if (rowId > 0) {
@@ -317,32 +312,38 @@ public class POIsProvider extends ContentProvider {
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}
+	
+	
 
 	@Override
-	public ContentProviderResult[] applyBatch(
-			ArrayList<ContentProviderOperation> operations)
-	throws OperationApplicationException {
-		ContentProviderResult[] results = new ContentProviderResult[operations
-		                                                            .size()];
-
+	public int bulkInsert(Uri uri, ContentValues[] valuesArray) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-		db.beginTransaction();
-
-		try {
-			int i;
-			for (i = 0; i < operations.size(); i++) {
-				ContentProviderOperation operation = operations.get(i);
-				operation.apply(this, results, 2);
+		int match = sUriMatcher.match(uri);
+		switch (match) {
+		case POIS:{
+			int count = 0;
+			for( ContentValues values: valuesArray ) {
+				preCalculateLatLon(values);
+				long rowId = db.insert(POIS_TABLE_NAME, POIs.NAME, values);
+				if (rowId > 0) {
+					Uri placeUri = ContentUris.withAppendedId(
+							Wheelmap.POIs.CONTENT_URI, rowId);
+					getContext().getContentResolver().notifyChange(placeUri, null);
+				}
+				count++;
 			}
-			db.setTransactionSuccessful();
-		} catch (SQLException e) {
-		} finally {
-			db.endTransaction();
+			getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
+			getContext().getContentResolver().notifyChange( POIs.CONTENT_URI, null );
+			return count;
+			
 		}
-
-		return results;
+		default:{
+			throw new IllegalArgumentException( "Unknown URI - POIS supported. " + uri );
+		}
+		
+		}
 	}
-
+	
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois", POIS);

@@ -97,26 +97,24 @@ public class RESTExecutor {
 		//nodes.
 		// quick and dirty sorting nodes 
 		
-		batchInsert( nodes );
+		bulkInsert( nodes );
 		long insertTime = new Date().getTime();
 		Log.d(TAG, "insertTime = " + (insertTime - retrieveTime) / 1000f);
 
 		return nodes.getMeta();
 	}
 
-	private void batchInsert(Nodes nodes) throws RemoteException, OperationApplicationException {
-		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-
-		for (int i = 0; i < nodes.getMeta().getItemCount().intValue(); i++) {
+	private void bulkInsert(Nodes nodes) {
+		int size = nodes.getMeta().getItemCount().intValue();
+		ContentValues[] contentValuesArray = new ContentValues[size];
+		for (int i = 0; i < size; i++) {
 			ContentValues values = new ContentValues();
 			copyNodeToValues(nodes.getNodes().get(i), values);
-			ContentProviderOperation operation = ContentProviderOperation
-					.newInsert(Wheelmap.POIs.CONTENT_URI).withValues(values).build();
-			operations.add( operation );
+			
+			contentValuesArray[i] = values;
 		}
-		
-		mResolver.applyBatch( Wheelmap.AUTHORITY, operations );
-		
+		int count = mResolver.bulkInsert( Wheelmap.POIs.CONTENT_URI, contentValuesArray );
+		Log.d( TAG, "Inserted records count = " + count );
 	}
 
 	private void copyNodeToValues(Node node, ContentValues values) {
