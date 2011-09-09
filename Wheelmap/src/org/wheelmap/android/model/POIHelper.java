@@ -13,6 +13,30 @@ public class POIHelper {
 		return name;
 	}
 	
+	public static String getStreet(Cursor c) {
+		String street = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.STREET));
+		if ( street == null)
+			street = "";
+		
+		return street;
+	}
+	
+	public static String getPostcode(Cursor c) {
+		String postcode = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.POSTCODE));
+		if ( postcode == null)
+			postcode = "";
+		
+		return postcode;
+	}
+	
+	public static String getCity(Cursor c) {
+		String city = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.CITY));
+		if ( city == null)
+			city = "";
+		
+		return city;
+	}
+	
 	public static double getLatitude(Cursor c) {
 		return(c.getDouble(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.COORD_LAT)) / 1E6);
 	}
@@ -55,9 +79,13 @@ public class POIHelper {
 		return WheelchairState.valueOf(c.getInt(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.WHEELCHAIR)));
 	}
 	
-	// TODO comment into DB
+	//  comment into DB
 	public static String getComment(Cursor c) { 
-		return "";
+		String comment = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.WHEELCHAIR_DESC));
+		if ( comment == null)
+			comment = "";
+		
+		return comment;
 	}
 	
 	public static String getWebsite(Cursor c) { 
