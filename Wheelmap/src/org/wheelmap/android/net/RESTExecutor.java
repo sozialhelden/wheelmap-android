@@ -2,8 +2,6 @@ package org.wheelmap.android.net;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Date;
 
 import org.wheelmap.android.model.Wheelmap;
 
@@ -18,7 +16,6 @@ import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import wheelmap.org.request.RequestProcessor;
 import wheelmap.org.util.XmlSupport;
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
@@ -86,25 +83,21 @@ public class RESTExecutor {
 	public Meta executeSingleRequest(NodesRequestBuilder requestBuilder) throws RemoteException, OperationApplicationException {
 		String getRequest = requestBuilder.buildRequestUri();
 		Log.d(TAG, "getRequest " + getRequest);
-		long startTime = new Date().getTime();
+		long startTime = System.currentTimeMillis();
 
 		Nodes nodes = retrieveNumberOfHits(getRequest);
 
-		long retrieveTime = new Date().getTime();
+		long retrieveTime = System.currentTimeMillis();
 		Log.d(TAG, "retrieveTime = " + (retrieveTime - startTime) / 1000f);
-		
-		// TODO make Content provider sortable
-		//nodes.
-		// quick and dirty sorting nodes 
-		
 		bulkInsert( nodes );
-		long insertTime = new Date().getTime();
+		long insertTime = System.currentTimeMillis();
 		Log.d(TAG, "insertTime = " + (insertTime - retrieveTime) / 1000f);
 
 		return nodes.getMeta();
 	}
 
 	private void bulkInsert(Nodes nodes) {
+		long makeupTime = System.currentTimeMillis();
 		int size = nodes.getMeta().getItemCount().intValue();
 		ContentValues[] contentValuesArray = new ContentValues[size];
 		for (int i = 0; i < size; i++) {
@@ -113,7 +106,11 @@ public class RESTExecutor {
 			
 			contentValuesArray[i] = values;
 		}
+		long bulkInsertTime = System.currentTimeMillis();
+		Log.d( TAG, "makeupTime = " + (bulkInsertTime - makeupTime ) / 1000f);
 		int count = mResolver.bulkInsert( Wheelmap.POIs.CONTENT_URI, contentValuesArray );
+		long bulkInsertDoneTime = System.currentTimeMillis();
+		Log.d( TAG, "bulkInsertTime = " + (bulkInsertDoneTime - bulkInsertTime ) / 1000f );
 		Log.d( TAG, "Inserted records count = " + count );
 	}
 
@@ -138,14 +135,14 @@ public class RESTExecutor {
 
 	private static Nodes retrieveNumberOfHits(String getRequest) {
 		Nodes nodes;
-		long requestTime = new Date().getTime();
+		long requestTime = System.currentTimeMillis();
 		try {
 			nodes = mRequestProcessor.get(new URI(getRequest), Nodes.class);
 		} catch (URISyntaxException e) {
 			throw new WheelMapException(e);
 		}
 		// Log.d(TAG, "response " + response);
-		long requestEndTime = new Date().getTime();
+		long requestEndTime = System.currentTimeMillis();
 		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
 
 		return nodes;
