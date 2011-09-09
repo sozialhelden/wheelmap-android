@@ -1,6 +1,7 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
@@ -19,13 +20,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -33,9 +36,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class POIsListActivity extends ListActivity implements
-DetachableResultReceiver.Receiver, OnItemSelectedListener {
+		DetachableResultReceiver.Receiver {
 
-	//private final static String TAG = "poislist";
+	private final static String TAG = "poislist";
+	private MyLocationManager mLocationManager;
+	private Location mLocation;
+
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 
 	private State mState;
@@ -46,19 +52,7 @@ DetachableResultReceiver.Receiver, OnItemSelectedListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-
-		// Run query
-		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
-
-		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null, null, "");
-		Cursor wrappingCursor = createCursorWrapper( cursor );
-		startManagingCursor(wrappingCursor);
-
-		POIsListCursorAdapter adapter = new POIsListCursorAdapter( this, wrappingCursor );
-		setListAdapter(adapter);
-
-		getListView().setTextFilterEnabled(true);
-
+		
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
 
@@ -71,38 +65,81 @@ DetachableResultReceiver.Receiver, OnItemSelectedListener {
 			mState.mReceiver.setReceiver(this);
 		}
 
+		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
+		mLocation = mLocationManager.getLastLocation();
+		mDistance = getDistanceFromPreferences();
+		
+		// Run query
+		runQuery();
+		getListView().setTextFilterEnabled(true);
+		
+
 	}
 
-	public Cursor createCursorWrapper( Cursor cursor ) {
-		LocationManager lm = (LocationManager)getApplicationContext().getSystemService( LOCATION_SERVICE );
-		Location loc = lm.getLastKnownLocation( LocationManager.GPS_PROVIDER );
-		if ( loc == null )
-			loc = lm.getLastKnownLocation( LocationManager.NETWORK_PROVIDER );
-		if ( loc == null ) {
-			loc = new Location(LocationManager.GPS_PROVIDER);
-			loc.setLatitude(52.5);
-			loc.setLongitude(13.4);
-		}
+	@Override
+	public void onPause() {
+		super.onPause();
+		mLocationManager.release(mState.mReceiver);
+	}
 
-		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(loc.getLongitude(), loc.getLatitude());
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mLocationManager.register(mState.mReceiver, true);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();		
+	}
 
-		return new POIsCursorWrapper(cursor, location);
+	public void runQuery() {
+		long startTime = System.currentTimeMillis();		
+		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
+
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null,
+				createWhereValues(), "");
+		Cursor wrappingCursor = createCursorWrapper(cursor);
+		startManagingCursor(wrappingCursor);
+
+		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
+				wrappingCursor);
+		setListAdapter(adapter);
+		
+		long duration = System.currentTimeMillis() - startTime;
+		Log.d ( TAG, "runQuery duration = " + duration + "ms" );
+	}
+
+	public String[] createWhereValues() {
+		String[] lonlat = new String[] {
+				String.valueOf(mLocation.getLongitude()),
+				String.valueOf(mLocation.getLatitude()) };
+		return lonlat;
+	}
+
+	public Cursor createCursorWrapper(Cursor cursor) {
+		Wgs84GeoCoordinates wgsLocation = new Wgs84GeoCoordinates(
+				mLocation.getLongitude(), mLocation.getLatitude());
+		return new POIsCursorWrapper(cursor, wgsLocation);
+	}
+
+	public float getDistanceFromPreferences() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE, "0.5");
+		return Float.valueOf(prefDist);
 	}
 
 	public int getSelectionFromPreferences() {
-		SharedPreferences prefs = PreferenceManager
-		.getDefaultSharedPreferences(this);
-
-		String prefDist = prefs.getString( PREF_KEY_LIST_DISTANCE, "1");
-		mDistance = Float.valueOf( prefDist );
-
-		String[] values = getResources().getStringArray( R.array.distance_array_values );
+		String[] values = getResources().getStringArray(
+				R.array.distance_array_values);
 		int i;
-		for( i = 0; i < values.length; i++ ) {
-			if ( Float.valueOf( values[i] ) == mDistance )
+		for (i = 0; i < values.length; i++) {
+			if (Float.valueOf(values[i]) == mDistance)
 				return i;
 		}
-		return 0;	
+		return 0;
 	}
 
 	@Override
@@ -120,40 +157,40 @@ DetachableResultReceiver.Receiver, OnItemSelectedListener {
 	}
 
 	public void onFilterClick(View v) {
-
-		 
 		Resources res = getResources();
-		final CharSequence[] items = res.getStringArray(R.array.distance_array_values);
-		
+		final CharSequence[] items = res
+				.getStringArray(R.array.distance_array_values);
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		int textRes = GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES ? R.string.spinner_description_distance_km
 				: R.string.spinner_description_distance_miles;
 		builder.setTitle(textRes);
-		
-		builder.setSingleChoiceItems(items, getSelectionFromPreferences(), new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				mDistance = Float.valueOf( items[item].toString() );
-				onRefreshClick( null );
-				dialog.dismiss();
-			}
-		});
+
+		builder.setSingleChoiceItems(items, getSelectionFromPreferences(),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						mDistance = Float.valueOf(items[item].toString());
+						onRefreshClick(null);
+						dialog.dismiss();
+					}
+				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 
 	public void onMapClick(View v) {
-		Intent intent = new Intent( this, POIsMapsforgeActivity.class);
-		intent.putExtra( POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
-		startActivity( intent );
+		Intent intent = new Intent(this, POIsMapsforgeActivity.class);
+		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		startActivity(intent);
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		Cursor cursor = (Cursor)l.getAdapter().getItem( position );
+		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
 
-		long poiId = POIHelper.getId( cursor );
+		long poiId = POIHelper.getId(cursor);
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
 		startActivity(i);
@@ -186,7 +223,12 @@ DetachableResultReceiver.Receiver, OnItemSelectedListener {
 			final String errorText = getString(R.string.toast_sync_error,
 					resultData.getString(Intent.EXTRA_TEXT));
 			Toast.makeText(POIsListActivity.this, errorText, Toast.LENGTH_LONG)
-			.show();
+					.show();
+			break;
+		}
+		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
+			mLocation = (Location) resultData
+					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			break;
 		}
 		}
@@ -212,25 +254,13 @@ DetachableResultReceiver.Receiver, OnItemSelectedListener {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				POIsListActivity.this, SyncService.class);
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-		intent.putExtra(SyncService.EXTRA_STATUS_DISTANCE_LIMIT, mDistance);
+		intent.putExtra(SyncService.EXTRA_STATUS_LOCATION, mLocation);
+		intent.putExtra(SyncService.EXTRA_STATUS_DISTANCE_LIMIT, mDistance);	
 		startService(intent);
 	}
 
 	public void onSearchClick(View v) {
 		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> adapterView, View view,
-			int position, long id) {
-		String distance = (String) adapterView.getItemAtPosition(position);
-		mDistance = Float.valueOf( distance );
-		onRefreshClick( view );
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-
 	}
 
 }

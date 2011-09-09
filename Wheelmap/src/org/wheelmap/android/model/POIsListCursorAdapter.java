@@ -1,8 +1,12 @@
 package org.wheelmap.android.model;
 
 
+import java.util.Formatter;
+
 import org.wheelmap.android.R;
 import org.wheelmap.android.ui.POIsListItemView;
+import org.wheelmap.android.utils.GeocoordinatesMath;
+import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;
@@ -13,7 +17,7 @@ import android.widget.CursorAdapter;
 
 public class POIsListCursorAdapter extends CursorAdapter {
 	private final static String TAG = "poislist";
-	
+		
 	public POIsListCursorAdapter(Context context, Cursor cursor) {
 		super( context, cursor );
 	}
@@ -36,10 +40,8 @@ public class POIsListCursorAdapter extends CursorAdapter {
 
 		int index = cursor.getColumnIndex( POIsCursorWrapper.LOCATION_COLUMN_NAME );
 		double distance = cursor.getDouble( index );
+		pliv.setDistance( formatDistance( distance ) );
 		
-		// TODO nice formatter for distance (123m, 1.5km ....)
-		pliv.setDistance(String.format("%.3f", distance));
-
 		switch (state) {
 		case UNKNOWN: 
 			pliv.setIcon(R.drawable.marker_unknown);
@@ -59,6 +61,20 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		}
 
 	}
+	
+	private String formatDistance( double distance ) {
+		if ( GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES )
+			if ( distance < 1.0 )
+				return String.format( "%2.0f0m", distance * 100 );
+			else
+				return String.format( "%.1fkm", distance );
+		else
+			if ( distance < 1.0 )
+				return String.format( "%0.2fmi", distance );
+			else
+				return String.format( "%.1fmi", distance );
+	}
+	
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {

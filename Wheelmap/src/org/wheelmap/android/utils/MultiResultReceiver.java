@@ -1,6 +1,7 @@
 package org.wheelmap.android.utils;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,28 +15,38 @@ import android.util.Log;
  */
 public class MultiResultReceiver extends ResultReceiver {
 	private static final String TAG = "ResultReceiver";
-	private ArrayList<ResultReceiver> mReceivers;
+	private Set<ResultReceiver> mReceivers;
 	
 	private int mResultCode;
 	private Bundle mResultData;
 
 	public MultiResultReceiver(Handler handler) {
 		super(handler);
-		mReceivers = new ArrayList<ResultReceiver>();
+		mReceivers = new HashSet<ResultReceiver>();
 	}
 
 	public void clearReceiver() {
 		mReceivers.clear();
 	}
+	
+	public int getReceiverCount() {
+		return mReceivers.size();
+	}
 
-	public void addReceiver(ResultReceiver receiver, boolean resentLast) {
+	public boolean addReceiver(ResultReceiver receiver, boolean resentLast) {
+		boolean isAdded = false;
+		
 		if ( receiver == null )
-			return;
-		if (!mReceivers.contains(receiver))
+			return false;
+		if (!mReceivers.contains(receiver)) {
 			mReceivers.add(receiver);
+			isAdded = true;
+		}
 		
 		if ( resentLast )
 			receiver.send( mResultCode, mResultData );
+		
+		return isAdded;
 	}
 
 	public void removeReceiver(ResultReceiver receiver) {

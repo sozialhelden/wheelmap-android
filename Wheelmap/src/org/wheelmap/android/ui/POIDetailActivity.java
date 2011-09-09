@@ -158,6 +158,7 @@ public class POIDetailActivity extends MapActivity {
 		
 		POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
 		overlay.setItem( name, comment,  state, lat, lon );
+		mapView.getOverlays().clear();
 		mapView.getOverlays().add( overlay );
 		mapController.setCenter( new GeoPoint( lat, lon));
 		cur.close();
@@ -186,11 +187,11 @@ public class POIDetailActivity extends MapActivity {
 				// newly selected wheelchair state as action data
 				if (data != null) {
 					WheelchairState newState = WheelchairState.valueOf(Integer.parseInt(data.getAction()) );
-					setWheelchairState(newState);
 					Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
 					ContentValues values = new ContentValues();
 					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
 					this.getContentResolver().update(poiUri, values, "", null);
+					load();
 				}
 			}
 		}

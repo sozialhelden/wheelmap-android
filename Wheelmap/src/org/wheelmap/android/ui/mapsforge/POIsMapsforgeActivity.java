@@ -8,6 +8,7 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 
@@ -16,14 +17,11 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,28 +39,29 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	private Cursor mCursor;
 
-	private MapController mapController;
-	private MapView mapView;
-	private LocationManager locationManager;
+	private MapController mMapController;
+	private MapView mMapView;
 	// private POIsPaintedMapsforgeOverlay poisItemizedOverlay;
-	private POIsCursorMapsforgeOverlay poisItemizedOverlay;
+	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 
+	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
+	private boolean isCentered;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mapsforge);
-		mapView = (MapView) findViewById(R.id.map);
+		mMapView = (MapView) findViewById(R.id.map);
 
-		mapView.setClickable(true);
-		mapView.setBuiltInZoomControls(true);
+		mMapView.setClickable(true);
+		mMapView.setBuiltInZoomControls(true);
 
-		ConfigureMapView.pickAppropriateMap( this, mapView );
+		ConfigureMapView.pickAppropriateMap( this, mMapView );
 
-		mapController = mapView.getController();
-		mapController.setZoom(16); // Zoon 1 is world view
+		mMapController = mMapView.getController();
+		mMapController.setZoom(16); // Zoon 1 is world view
 
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
@@ -71,35 +70,25 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		// overlays
 		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
-		poisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, mCursor);
-		mapView.getOverlays().add(poisItemizedOverlay);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, mCursor);
+		mMapView.getOverlays().add(mPoisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay();
-		mapView.getOverlays().add(mCurrLocationOverlay);
-
-		
+		mMapView.getOverlays().add(mCurrLocationOverlay);
+		isCentered = false;
+				
 		if (getIntent() != null && !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
-			mapView.getViewTreeObserver().addOnGlobalLayoutListener(
+			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
 
 						@Override
 						public void onGlobalLayout() {
 							requestUpdate();
-							mapView.getViewTreeObserver()
+							mMapView.getViewTreeObserver()
 									.removeGlobalOnLayoutListener(this);
 						}
 					});
 		}
-
-		// location manager
-		GeoUpdateHandler guh = new GeoUpdateHandler();
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0, guh);
-
-		Location location = locationManager
-				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		mapController.setCenter(calcGeoPoint(location));
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -113,11 +102,25 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
-
+		
+		mLocationManager = MyLocationManager.get( mState.mReceiver, true );
 		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		mCursor.deactivate();
+		mLocationManager.release( mState.mReceiver );
 	}
 
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mCursor.requery();
+		mLocationManager.register( mState.mReceiver, true );
+	}
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -130,7 +133,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		case SyncService.STATUS_FINISHED: {
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			mapView.invalidate();
+			mMapView.invalidate();
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
@@ -143,19 +146,26 @@ public class POIsMapsforgeActivity extends MapActivity implements
 					Toast.LENGTH_LONG).show();
 			break;
 		}
+		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
+			Location location = (Location)resultData.getParcelable( MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION );
+			GeoPoint geoPoint = calcGeoPoint(location);
+			if ( !isCentered ) {
+				mMapController.setCenter(geoPoint);
+				isCentered = true;
+			}
+			
+			// we got the first time current position so center map on it
+			if (mLastGeoPointE6 == null) {
+				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
+				mMapController.setCenter(geoPoint);
+			}
+			mLastGeoPointE6 = geoPoint;
+			mCurrLocationOverlay.setLocation(mLastGeoPointE6,
+					location.getAccuracy());
+			break;
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		mCursor.deactivate();
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		mCursor.requery();
-		super.onResume();
+		
+		}
 	}
 
 	private void updateRefreshStatus() {
@@ -167,7 +177,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	public void onCenterOnCurrentLocationClick(View v) {
 		if (mLastGeoPointE6 != null) {
-			mapController.setCenter(mLastGeoPointE6);
+			mMapController.setCenter(mLastGeoPointE6);
 			requestUpdate();
 		}
 	}
@@ -179,9 +189,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void fillExtrasWithBoundingRect(Bundle bundle) {
-		int latSpan = mapView.getLatitudeSpan();
-		int lonSpan = mapView.getLongitudeSpan();
-		GeoPoint center = mapView.getMapCenter();
+		int latSpan = mMapView.getLatitudeSpan();
+		int lonSpan = mMapView.getLongitudeSpan();
+		GeoPoint center = mMapView.getMapCenter();
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
 						+ (lonSpan / 2),
@@ -225,34 +235,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		private State() {
 			mReceiver = new DetachableResultReceiver(new Handler());
-		}
-	}
-
-	private class GeoUpdateHandler implements LocationListener {
-
-		@Override
-		public void onLocationChanged(Location location) {
-			GeoPoint geoPoint = calcGeoPoint(location);
-			// we got the first time current position so center map on it
-			if (mLastGeoPointE6 == null) {
-				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
-				mapController.setCenter(geoPoint);
-			}
-			mLastGeoPointE6 = geoPoint;
-			mCurrLocationOverlay.setLocation(mLastGeoPointE6,
-					location.getAccuracy());
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
 	}
 

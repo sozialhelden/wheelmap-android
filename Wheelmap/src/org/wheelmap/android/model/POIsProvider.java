@@ -7,6 +7,8 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.utils.CurrentLocation;
 import org.wheelmap.android.utils.CurrentLocation.LocationResult;
 
+import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
+
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -16,6 +18,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -27,14 +30,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class POIsProvider extends ContentProvider {
-
+	
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sPOIsProjectionMap;
-
-	// TODO quick hack, the Content provider has its own current location instance
-	// there should be only one in the whole project ???
-	private CurrentLocation mCurrentLocation;
-
 
 	/**
 	 * this is suitable for use by insert/update/delete/query and may be passed
@@ -272,33 +270,10 @@ public class POIsProvider extends ContentProvider {
 
 	}
 
-	final class MyLocationResult implements LocationResult {
-		@Override
-		public void gotLocation(final Location location){
-			if (location != null) {
-				mLastLocation = location;
-				Log.v(TAG, "new current location" +mLastLocation.toString());
-			}
-
-		}
-	}
-
 	@Override
 	public boolean onCreate() {
 		mOpenHelper = new DatabaseHelper(getContext());
 		mQueryBuilder = new DistanceQueryBuilder();
-		// current location
-		mCurrentLocation = new CurrentLocation();
-
-		MyLocationResult locationResult = new MyLocationResult();
-
-		mLastLocation = new Location("");
-		// Berlin
-		mLastLocation.setLatitude(52.519842);
-		mLastLocation.setLongitude(13.439484);
-
-		mCurrentLocation.getLocation(getContext(), locationResult);
-
 		return true;
 	}
 
@@ -329,7 +304,9 @@ public class POIsProvider extends ContentProvider {
 					null, sortOrder);
 			break;
 		case POIS_SORTED:
-			c = db.rawQuery(mQueryBuilder.buildRawQuery(mLastLocation.getLongitude(), mLastLocation.getLatitude()), null);
+			double longitude = Double.valueOf( selectionArgs[0] );
+			double latitude = Double.valueOf( selectionArgs[1] );
+			c = db.rawQuery(mQueryBuilder.buildRawQuery(longitude, latitude), null);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
