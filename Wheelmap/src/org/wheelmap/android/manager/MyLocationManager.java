@@ -32,6 +32,7 @@ public class MyLocationManager {
 	private static final long TIME_DISTANCE_LIMIT = 1000 * 60 * 5; // 5 Minutes
 	private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
 	private static final float TIME_GPS_UPDATE_DISTANCE = 20f;
+	private static final long TIME_NETWORK_SUPERSEED_TIME = 1000 * 11;
 
 	private MyLocationManager(Context context) {
 
@@ -171,7 +172,12 @@ public class MyLocationManager {
 			Log.d(TAG,
 					"MyNetworkLocationListener: location received. Accuracy = "
 							+ location.getAccuracy());
-			if (mBestLastKnownLocation.getProvider() == LocationManager.NETWORK_PROVIDER) {
+			long now = System.currentTimeMillis();
+			if ((mBestLastKnownLocation.getProvider() == LocationManager.GPS_PROVIDER) &&
+					(now - mBestLastKnownLocation.getTime()  > TIME_NETWORK_SUPERSEED_TIME) ) {
+				mBestLastKnownLocation = location;
+				notifyReceiver();
+			} else if (mBestLastKnownLocation.getProvider() == LocationManager.NETWORK_PROVIDER) {
 				mBestLastKnownLocation = location;
 				notifyReceiver();
 			}
