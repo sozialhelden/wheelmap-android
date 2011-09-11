@@ -16,22 +16,20 @@ import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -155,6 +153,10 @@ public class POIsListActivity extends ListActivity implements
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		this.startActivity(intent);
 	}
+	
+	
+	
+		
 
 	public void onFilterClick(View v) {
 		Resources res = getResources();
@@ -183,6 +185,25 @@ public class POIsListActivity extends ListActivity implements
 		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		startActivity(intent);
 	}
+	
+    public void onNewPOIClick(View v) {
+    	
+    	// create new POI and start editing
+        ContentValues cv = new ContentValues();
+        cv.put(Wheelmap.POIs.NAME,  getString(R.string.new_default_name));
+        cv.put(Wheelmap.POIs.COORD_LAT,  mLocation.getLatitude());
+        cv.put(Wheelmap.POIs.COORD_LON,  mLocation.getLongitude());
+        Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI, cv);
+        // edit activity
+        Log.i(TAG, new_pois.toString());
+        long poiId = Long.parseLong(new_pois.getLastPathSegment());
+    	Intent i = new Intent(POIsListActivity.this, POIDetailActivityEditable.class);
+    	i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+    	startActivity(i);
+        
+		
+	}
+	
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {

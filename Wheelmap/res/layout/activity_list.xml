@@ -19,6 +19,12 @@
 			android:contentDescription="@string/description_map" android:src="@drawable/ic_title_map"
 			android:onClick="onMapClick" />
 			
+	    <ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction"
+			android:contentDescription="@string/description_new" android:src="@drawable/ic_title_new"
+			android:onClick="onNewPOIClick" />	
+			
+			
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageButton style="@style/TitleBarAction"
 			android:contentDescription="@string/description_filter" android:src="@drawable/ic_title_filter"
