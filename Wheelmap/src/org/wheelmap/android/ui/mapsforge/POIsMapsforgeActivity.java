@@ -197,7 +197,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 						+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
 						- (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_STATUS_BOUNDING_BOX,
+		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX,
 				boundingBox);
 	}
 
@@ -211,6 +211,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
 		intent.putExtras(extras);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES );
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 	}

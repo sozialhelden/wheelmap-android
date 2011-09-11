@@ -4,6 +4,10 @@ import wheelmap.org.WheelchairState;
 import android.database.Cursor;
 
 public class POIHelper {
+	
+	public static long getWMId( Cursor c ) {
+		return c.getLong( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.WM_ID));
+	}
 		
 	public static String getName(Cursor c) {
 		String name = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME));
@@ -103,9 +107,16 @@ public class POIHelper {
 		
 		return phone;
 	}
-
-
+	
 	public static long getId(Cursor c) {
 		return c.getLong( c.getColumnIndexOrThrow( Wheelmap.POIs._ID));
+	}
+	
+	public static int getUpdateTag( Cursor c ) {
+		return c.getInt( c.getColumnIndexOrThrow( Wheelmap.POIs.UPDATE_TAG));
+	}
+	
+	public static String getHouseNumber( Cursor c ) {
+		return c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.HOUSE_NUM));
 	}
 }

@@ -11,6 +11,7 @@ import org.mapsforge.android.maps.OverlayItem;
 import org.wheelmap.android.R;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 
 import wheelmap.org.WheelchairState;
@@ -198,7 +199,14 @@ public class POIDetailActivity extends MapActivity {
 					Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
 					ContentValues values = new ContentValues();
 					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
+					values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_WHEELCHAIR_STATE);
 					this.getContentResolver().update(poiUri, values, "", null);
+					
+					final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+							POIDetailActivity.this, SyncService.class);
+					intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_WHEELCHAIR_STATE );
+					startService(intent);
+					
 					load();
 				}
 			}

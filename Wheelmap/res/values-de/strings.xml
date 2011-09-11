@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="ws_enabled_title">Voll rollstuhlgerecht</string>
+    <string name="ws_enabled_l1">Eingang: stufenlos ereichbar</string>
+    <string name="ws_enabled_l2">Räume: Alle stufenlos erreichbar</string>
+    <string name="ws_enabled_l3">Toiletten: Auch Rollstuhltoilette vorhanden (deutlich breiter als eine normale WC-Kabine)</string>
+    <string name="ws_limited_title">Eingeschränkt rollstuhlgerecht</string>
+    <string name="ws_limited_l1">Eingang: maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreite)</string>
+    <string name="ws_limited_l2">Räume: die wichtigsten sind stufenlos erreichbar</string>
+    <string name="ws_limited_l3">Toiletten: egal</string>
+    <string name="ws_disabled_title">Nicht rollstuhlgerecht</string>
+    <string name="ws_disabled_l1">Eingang: höher als 7cm (etwa eine Handbreite)</string>
+    <string name="ws_disabled_l2">Räume: die wichtigsten sind nicht stufenlos erreichbar</string>
+    <string name="ws_unknown_title">Unbekannter Status</string>
+    <string name="ws_unknown_l1">Der Status ist unbekannt und muss noch vergeben werden</string>
+    <string name="value_onehalf_distance_unit">0,5</string>
+</resources>

@@ -12,10 +12,6 @@
     <string name="description_star">Star</string>
     <string name="description_gps">Current location</string>
     <string name="description_edit">Edit</string>
-    
-    
-    
-    
     <string name="title_search">Search</string>
     <string name="title_search_query">Search for \'<xliff:g id="query">%1$s</xliff:g>\'</string>
     <string name="title_pois_list">List</string>
@@ -51,28 +47,27 @@
     <string name="btn_mapsforge">Mapsforge</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <string name="settings_wheelchair_state_summary">Set the desired wheelchair state filter</string>
-    <string name="settings_category_accesibility">DisplayWheelchair accesibility</string>
+    <string name="settings_category_accesibility">Display Wheelchair Accesibility</string>
     <string name="spinner_description_distance_km">Distance in km</string>
     <string name="spinner_description_distance_miles">Distance in miles</string>
-    <!-- wheelchair texts  -->
-    <string name="ws_enabled_title">Voll rollstuhlgerecht</string>
-    <string name="ws_enabled_l1">Eigang: stufenlos ereichbar</string>
-    <string name="ws_enabled_l2">Räume: Alle stufenlos erreichbar</string>
-    <string name="ws_enabled_l3">Räume: Alle stufenlos erreichbar</string>
-    <string name="ws_limited_title">Eingeschränkt rollstuhlgerecht</string>
-    <string name="ws_limited_l1">Eigang:maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
-    <string name="ws_limited_l2">Wichtigste Räume: stufenlos erreichbar</string>
-    <string name="ws_limited_l3">Toiletten: egal</string>
-    <string name="ws_disabled_title">Eingeschränkt rollstuhlgerecht</string>
-    <string name="ws_disabled_l1">Eigang: maximal eine Stufe, nicht höher als 7cm (etwa eine Handbreit)</string>
-    <string name="ws_disabled_l2">Wichtigste Räume: stufenlos erreichbar</string>
-    <string name="ws_unknown_title">Nicht bekannt</string>
-    
-      <string name="comment">comment</string>
-      <string name="address">address</string>
-      <string name="phone">phone</string>
-      <string name="website">website</string>
-    
+    <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
+    <string name="ws_enabled_title">Wheelchair accessible</string>
+    <string name="ws_enabled_l1">Entrance: the entrance step is not higher than 7 cm</string>
+    <string name="ws_enabled_l2">Localities: all localities accessible for wheelchair users (without exception)</string>
+    <string name="ws_enabled_l3">Toilet: disabled toilet available</string>
+    <string name="ws_limited_title">Partly wheelchair accessible</string>
+    <string name="ws_limited_l1">Entrance: the entrance step is not higher than 7 cm</string>
+    <string name="ws_limited_l2">Localities: most important localitites accessible for wheelchair users</string>
+    <string name="ws_limited_l3">Toilet: don\'t care</string>
+    <string name="ws_disabled_title">Not wheelchair accessible</string>
+    <string name="ws_disabled_l1">Entrance: the entrance step is higher than 7 cm; or a stair at the entrance</string>
+    <string name="ws_disabled_l2">Localities: most important localities are not accessible for wheelchair users</string>
+    <string name="ws_unknown_title">Unknown Status</string>
+    <string name="ws_unknown_l1">The wheelchair status is unknown.</string>
+    <string name="poi_property_comment">Comment</string>
+    <string name="poi_property_address">Address</string>
+    <string name="poi_property_phone">Phone</string>
+    <string name="poi_property_website">Website</string>
     <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
     <string name="settings_list_distance">Distance in the List</string>
     <string name="error_no_mapfilefound">No offline map found or selected. Using online map.</string>
@@ -81,6 +76,5 @@
     <string name="settings_wheelchair_limited_accesible">Limited accesibility</string>
     <string name="settings_wheelchair_nopreference">No preference</string>
     <string name="settings_wheelchair_unknown_accesible">Unknown accesibility</string>
-    
-    
+    <string name="value_onehalf_distance_unit">0.5</string>
 </resources>

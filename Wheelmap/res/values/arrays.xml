@@ -15,7 +15,7 @@
 		<item>0</item>
 	</string-array>
 	<string-array name="distance_array">
-		<item>0.5</item>
+		<item>@string/value_onehalf_distance_unit</item>
         <item>1</item>
         <item>2</item>
         <item>5</item>

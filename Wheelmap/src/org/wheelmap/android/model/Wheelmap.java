@@ -10,6 +10,11 @@ public class Wheelmap {
 		
 		// This class cannot be instantiated
 		private Wheelmap() {} 
+		
+		public static final int UPDATE_NO = 0x0;
+		public static final int UPDATE_WHEELCHAIR_STATE = 0x1;
+		public static final int UPDATE_ALL = 0x2;
+		public static final int UPDATE_ALL_NEW = 0x3;
 
 		
 		/**
@@ -50,6 +55,8 @@ public class Wheelmap {
 			public static final String COS_LAT_RAD = "cos_lat_rad";
 			public static final String SIN_LON_RAD = "sin_lon_rad";
 			public static final String COS_LON_RAD = "cos_lon_rad";
+			
+			public static final String UPDATE_TAG = "update_tag";
 			
 		}
 
@@ -100,7 +107,8 @@ public class Wheelmap {
 				PHONE,
 				WEBSITE,
 				WHEELCHAIR,
-				WHEELCHAIR_DESC
+				WHEELCHAIR_DESC,
+				UPDATE_TAG
 			};
 		}
 }

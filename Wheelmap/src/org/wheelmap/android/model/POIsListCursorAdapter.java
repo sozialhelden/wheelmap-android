@@ -1,8 +1,5 @@
 package org.wheelmap.android.model;
 
-
-import java.util.Formatter;
-
 import org.wheelmap.android.R;
 import org.wheelmap.android.ui.POIsListItemView;
 import org.wheelmap.android.utils.GeocoordinatesMath;
@@ -17,9 +14,15 @@ import android.widget.CursorAdapter;
 
 public class POIsListCursorAdapter extends CursorAdapter {
 	private final static String TAG = "poislist";
+	private DistanceFormatter mDistanceFormatter;
 		
 	public POIsListCursorAdapter(Context context, Cursor cursor) {
 		super( context, cursor );
+		
+		if ( GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES )
+			mDistanceFormatter = new DistanceFormatterMetric();
+		else
+			mDistanceFormatter = new DistanceFormatterAnglo();
 	}
 
 	@Override
@@ -40,7 +43,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 
 		int index = cursor.getColumnIndex( POIsCursorWrapper.LOCATION_COLUMN_NAME );
 		double distance = cursor.getDouble( index );
-		pliv.setDistance( formatDistance( distance ) );
+		pliv.setDistance( mDistanceFormatter.format( distance ));
 		
 		switch (state) {
 		case UNKNOWN: 
@@ -61,24 +64,34 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		}
 
 	}
-	
-	private String formatDistance( double distance ) {
-		if ( GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES )
-			if ( distance < 1.0 )
-				return String.format( "%2.0f0m", distance * 100 );
-			else
-				return String.format( "%.1fkm", distance );
-		else
-			if ( distance < 1.0 )
-				return String.format( "%0.2fmi", distance );
-			else
-				return String.format( "%.1fmi", distance );
-	}
-	
 
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		return new POIsListItemView(context);
 	}
-
+	
+	private interface DistanceFormatter {
+		String format( double distance );
+	}
+	
+	private class DistanceFormatterMetric implements DistanceFormatter {
+		@Override
+		public String format(double distance) {
+			if ( distance < 1.0 )
+				return String.format( "%2.0f0m", distance * 100.0 );
+			else
+				return String.format( "%.1fkm", distance );
+		}
+	}
+	
+	private class DistanceFormatterAnglo implements DistanceFormatter {
+		@Override
+		public String format(double distance) {
+			if ( distance < 1.0 )
+				return String.format( "%0.2fmi", distance );
+			else
+				return String.format( "%.1fmi", distance );
+		}	
+	}
+	
 }

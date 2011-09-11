@@ -7,9 +7,9 @@ package wheelmap.org.request;
 public class NodeRequestBuilder extends RequestBuilder {
 
 	private static final String RESOURCE = "nodes";
-	private int id;
+	private long id;
 
-	public NodeRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, int id) {
+	public NodeRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, long id) {
 		super(server, apiKey, acceptType);
 		this.id=id;
 	}	

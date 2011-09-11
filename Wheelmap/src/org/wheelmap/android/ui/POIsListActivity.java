@@ -20,18 +20,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -105,6 +101,7 @@ public class POIsListActivity extends ListActivity implements
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);
 		setListAdapter(adapter);
+		getListView().setSelection( mState.mListPosition);
 		
 		long duration = System.currentTimeMillis() - startTime;
 		Log.d ( TAG, "runQuery duration = " + duration + "ms" );
@@ -157,9 +154,9 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void onFilterClick(View v) {
-		Resources res = getResources();
+		final Resources res = getResources();
 		final CharSequence[] items = res
-				.getStringArray(R.array.distance_array_values);
+				.getStringArray(R.array.distance_array);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		int textRes = GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES ? R.string.spinner_description_distance_km
@@ -169,7 +166,7 @@ public class POIsListActivity extends ListActivity implements
 		builder.setSingleChoiceItems(items, getSelectionFromPreferences(),
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int item) {
-						mDistance = Float.valueOf(items[item].toString());
+						mDistance = Float.valueOf( res.getStringArray( R.array.distance_array_values)[item]);
 						onRefreshClick(null);
 						dialog.dismiss();
 					}
@@ -179,6 +176,7 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void onMapClick(View v) {
+		mState.mListPosition = getListView().getSelectedItemPosition();
 		Intent intent = new Intent(this, POIsMapsforgeActivity.class);
 		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		startActivity(intent);
@@ -187,6 +185,7 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+		mState.mListPosition = l.getSelectedItemPosition();
 
 		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
 
@@ -243,6 +242,7 @@ public class POIsListActivity extends ListActivity implements
 	private static class State {
 		public DetachableResultReceiver mReceiver;
 		public boolean mSyncing = false;
+		public int mListPosition = 0;
 
 		private State() {
 			mReceiver = new DetachableResultReceiver(new Handler());
@@ -253,9 +253,10 @@ public class POIsListActivity extends ListActivity implements
 		// start service for sync
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				POIsListActivity.this, SyncService.class);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES );
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-		intent.putExtra(SyncService.EXTRA_STATUS_LOCATION, mLocation);
-		intent.putExtra(SyncService.EXTRA_STATUS_DISTANCE_LIMIT, mDistance);	
+		intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
+		intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);	
 		startService(intent);
 	}
 

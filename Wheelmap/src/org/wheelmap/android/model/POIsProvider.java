@@ -42,7 +42,7 @@ public class POIsProvider extends ContentProvider {
 	private static final String TAG = "POIsProvider";
 
 	private static final String DATABASE_NAME = "wheelmap.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	private static final String POIS_TABLE_NAME = "pois";
 
 	private static class DistanceQueryBuilder {
@@ -105,7 +105,8 @@ public class POIsProvider extends ContentProvider {
 					+ POIs.HOUSE_NUM + " TEXT," + POIs.POSTCODE + " TEXT,"
 					+ POIs.CITY + " TEXT," + POIs.PHONE + " TEXT, "
 					+ POIs.WEBSITE + " TEXT, " + POIs.WHEELCHAIR + " NUMERIC, "
-					+ POIs.WHEELCHAIR_DESC + " TEXT )");
+					+ POIs.WHEELCHAIR_DESC + " TEXT,"
+					+ POIs.UPDATE_TAG + " NUMERIC )");
 
 		}
 
@@ -334,6 +335,7 @@ public class POIsProvider extends ContentProvider {
 		final int cosLatColumn = inserter.getColumnIndex(Wheelmap.POIs.COS_LAT_RAD);
 		final int sinLonColumn = inserter.getColumnIndex(Wheelmap.POIs.SIN_LON_RAD);
 		final int cosLonColumn = inserter.getColumnIndex(Wheelmap.POIs.COS_LON_RAD);
+		final int updateColumn = inserter.getColumnIndex(Wheelmap.POIs.UPDATE_TAG );
 		
 		switch (match) {
 		case POIS:{
@@ -377,6 +379,8 @@ public class POIsProvider extends ContentProvider {
 					inserter.bind( sinLonColumn, sinLon );
 					double cosLon = valuesArray[i].getAsDouble( Wheelmap.POIs.COS_LON_RAD );
 					inserter.bind( cosLonColumn, cosLon );
+					int update = valuesArray[i].getAsInteger( Wheelmap.POIs.UPDATE_TAG );
+					inserter.bind( updateColumn, update );
 				
 					long rowId = inserter.execute();
 				
@@ -426,6 +430,7 @@ public class POIsProvider extends ContentProvider {
 		sPOIsProjectionMap.put(POIs.WEBSITE, POIs.WEBSITE);
 		sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR);
 		sPOIsProjectionMap.put(POIs.WHEELCHAIR_DESC, POIs.WHEELCHAIR_DESC);
+		sPOIsProjectionMap.put(POIs.UPDATE_TAG, POIs.UPDATE_TAG );
 
 	}
 }

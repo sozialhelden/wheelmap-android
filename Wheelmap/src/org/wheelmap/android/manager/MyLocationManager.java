@@ -28,11 +28,12 @@ public class MyLocationManager {
 
 	private boolean requestOnce;
 	private boolean doesRequestUpdates;
+	private boolean wasLastKnownLocation;
 
 	private static final long TIME_DISTANCE_LIMIT = 1000 * 60 * 5; // 5 Minutes
 	private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
 	private static final float TIME_GPS_UPDATE_DISTANCE = 20f;
-	private static final long TIME_NETWORK_SUPERSEED_TIME = 1000 * 11;
+	private static final long TIME_NETWORK_SUPERSEED_TIME = 1000 * 15;
 
 	private MyLocationManager(Context context) {
 
@@ -44,8 +45,8 @@ public class MyLocationManager {
 		mReceiver = new MultiResultReceiver(new Handler());
 
 		mBestLastKnownLocation = calcBestLastKnownLocation();
-		mReceiver.send(WHAT_LOCATION_MANAGER_UPDATE,
-				createBundleFromBestLocation());
+		wasLastKnownLocation = true;
+		notifyReceiver();
 
 		requestOnce = true;
 		requestLocationUpdates();
@@ -68,17 +69,17 @@ public class MyLocationManager {
 
 	public static MyLocationManager get(ResultReceiver receiver,
 			boolean resendLast) {
-		
-		INSTANCE.register( receiver, resendLast );
+
+		INSTANCE.register(receiver, resendLast);
 		return INSTANCE;
 	}
-	
+
 	public Location getLastLocation() {
 		return mBestLastKnownLocation;
 	}
-	
-	public void register(ResultReceiver receiver, boolean resendLast ) {
-		if ( mReceiver.getReceiverCount() == 0) {
+
+	public void register(ResultReceiver receiver, boolean resendLast) {
+		if (mReceiver.getReceiverCount() == 0) {
 			requestLocationUpdates();
 		}
 		if (receiver != null)
@@ -87,18 +88,21 @@ public class MyLocationManager {
 
 	public void release(ResultReceiver receiver) {
 		mReceiver.removeReceiver(receiver);
-		if ( mReceiver.getReceiverCount() == 0)
+		if (mReceiver.getReceiverCount() == 0)
 			releaseLocationUpdates();
 	}
 
 	private void requestLocationUpdates() {
-		Log.d(TAG, "requestLocationUpdates");
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				TIME_GPS_UPDATE_INTERVAL, TIME_GPS_UPDATE_DISTANCE, mGPSLocationListener);
-		mLocationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 0, 0,
-				mNetworkLocationListener);
-		doesRequestUpdates = true;
+		if (!doesRequestUpdates) {
+			Log.d(TAG, "requestLocationUpdates");
+			mLocationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, TIME_GPS_UPDATE_INTERVAL,
+					TIME_GPS_UPDATE_DISTANCE, mGPSLocationListener);
+			mLocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0,
+					mNetworkLocationListener);
+			doesRequestUpdates = true;
+		}
 	}
 
 	private void releaseLocationUpdates() {
@@ -126,15 +130,9 @@ public class MyLocationManager {
 	}
 
 	private void notifyReceiver() {
-		mReceiver.send(WHAT_LOCATION_MANAGER_UPDATE,
-				createBundleFromBestLocation());
-	}
-
-	private Bundle createBundleFromBestLocation() {
 		Bundle b = new Bundle();
-		b.putParcelable( EXTRA_LOCATION_MANAGER_LOCATION, mBestLastKnownLocation);
-		
-		return b;
+		b.putParcelable(EXTRA_LOCATION_MANAGER_LOCATION, mBestLastKnownLocation);
+		mReceiver.send(WHAT_LOCATION_MANAGER_UPDATE, b );
 	}
 
 	private class MyGPSLocationListener implements LocationListener {
@@ -143,14 +141,15 @@ public class MyLocationManager {
 		public void onLocationChanged(Location location) {
 			Log.d(TAG, "MyGPSLocationListener: location received. Accuracy = "
 					+ location.getAccuracy());
+			requestOnce = false;
+			wasLastKnownLocation = false;
+
 			mBestLastKnownLocation = location;
 			notifyReceiver();
 
 			if (requestOnce && mReceiver.getReceiverCount() == 0) {
 				releaseLocationUpdates();
 			}
-			
-			requestOnce = false;
 		}
 
 		@Override
@@ -173,11 +172,18 @@ public class MyLocationManager {
 					"MyNetworkLocationListener: location received. Accuracy = "
 							+ location.getAccuracy());
 			long now = System.currentTimeMillis();
-			if ((mBestLastKnownLocation.getProvider() == LocationManager.GPS_PROVIDER) &&
-					(now - mBestLastKnownLocation.getTime()  > TIME_NETWORK_SUPERSEED_TIME) ) {
+			if (wasLastKnownLocation) {
+				Log.d( TAG, "network location superseeds lastKnownLocation" );
+				mBestLastKnownLocation = location;
+				wasLastKnownLocation = false;
+				notifyReceiver();
+			} else if ((mBestLastKnownLocation.getProvider().equals(LocationManager.GPS_PROVIDER))
+					&& (now - mBestLastKnownLocation.getTime() > TIME_NETWORK_SUPERSEED_TIME)) {
+				Log.d( TAG, "network location superseeds old gps location" );
 				mBestLastKnownLocation = location;
 				notifyReceiver();
-			} else if (mBestLastKnownLocation.getProvider() == LocationManager.NETWORK_PROVIDER) {
+			} else if (mBestLastKnownLocation.getProvider().equals( LocationManager.NETWORK_PROVIDER )) {
+				Log.d(TAG,  "network location superseeds old network location"  );
 				mBestLastKnownLocation = location;
 				notifyReceiver();
 			}

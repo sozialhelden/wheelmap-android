@@ -68,6 +68,11 @@
 			<TextView android:layout_column="2" android:layout_width="wrap_content"
 				android:text="@string/ws_enabled_l2"></TextView>
 		</TableRow>
+		<TableRow>
+			<TextView android:layout_column="1" android:text="•"></TextView>
+			<TextView android:layout_column="2" android:layout_width="wrap_content"
+				android:text="@string/ws_enabled_l3"></TextView>
+		</TableRow>
 	</TableLayout>
 	<RadioButton android:id="@+id/radio_enabled"
           android:layout_width="0px"
@@ -200,9 +205,8 @@
 			android:layout_height="wrap_content" android:layout_width="wrap_content"></ImageView>
 
 
-		<TextView android:layout_height="wrap_content"
-		style="@style/WheelStateTitleUnknown"
-		android:layout_marginTop="10dip"
+		<TextView android:layout_height="wrap_content" style="@style/WheelStateTitleUnknown"
+			android:layout_marginTop="10dip"
 			android:layout_width="wrap_content" android:text="@string/ws_unknown_title"></TextView>
 	</LinearLayout>
 	<!-- explanation -->
@@ -223,7 +227,11 @@
 		android:layout_width="0px" 
 		android:layout_height="wrap_content"
 		android:layout_weight=".85" >
-		
+		<TableRow>
+			<TextView android:layout_column="1" android:text="•"></TextView>
+			<TextView android:layout_column="2" android:layout_width="wrap_content"
+				android:text="@string/ws_unknown_l1"></TextView>
+		</TableRow>
 		
 	</TableLayout>
 	<RadioButton android:id="@+id/radio_unknown"

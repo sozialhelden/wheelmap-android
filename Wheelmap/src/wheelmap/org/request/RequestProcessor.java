@@ -26,4 +26,8 @@ public class RequestProcessor {
 	public <T> String post (final URI uri, final T postObject) {
 		return restTemplate.postForObject(uri, postObject, String.class);
 	}
+	
+	public <T> void put( final URI uri, final T putObject) {
+		restTemplate.put( uri, putObject );
+	}
 }

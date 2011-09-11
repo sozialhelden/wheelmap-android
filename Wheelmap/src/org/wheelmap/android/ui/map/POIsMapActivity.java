@@ -161,7 +161,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 				center.getLongitudeE6() + (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2),
 				center.getLongitudeE6() - (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_STATUS_BOUNDING_BOX, boundingBox);
+		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX, boundingBox);
 
 	}
 
@@ -175,6 +175,7 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		// trigger off background sync
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
 		intent.putExtras(extras);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES );
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 	}
