@@ -27,7 +27,7 @@ public class SyncService extends IntentService {
 
 	public static final String EXTRA_WHAT = "org.wheelmap.android.EXTRA_WHAT";
 	public static final int WHAT_RETRIEVE_NODES = 0x1;
-	public static final int WHAT_UPDATE_WHEELCHAIR_STATE = 0x2;
+	public static final int WHAT_UPDATE_SERVER = 0x2;
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
@@ -60,7 +60,7 @@ public class SyncService extends IntentService {
 		IExecutor executor = null;
 		if (what == WHAT_RETRIEVE_NODES) {
 			executor = new NodesExecutor(this, mResolver, bundle);
-		} else if ( what == WHAT_UPDATE_WHEELCHAIR_STATE ) {
+		} else if ( what == WHAT_UPDATE_SERVER ) {
 			executor = new NodeUpdateOrNewExecutor( mResolver );
 		}
 		

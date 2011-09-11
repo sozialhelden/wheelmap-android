@@ -204,7 +204,7 @@ public class POIDetailActivity extends MapActivity {
 					
 					final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 							POIDetailActivity.this, SyncService.class);
-					intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_WHEELCHAIR_STATE );
+					intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_SERVER );
 					startService(intent);
 					
 					load();

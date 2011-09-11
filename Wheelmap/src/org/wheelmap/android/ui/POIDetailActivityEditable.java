@@ -6,8 +6,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.service.SyncService;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -86,6 +88,7 @@ public class POIDetailActivityEditable extends FormActivity {
 			values.put(Wheelmap.POIs.PHONE, jo.get("phone").toString());
 			values.put(Wheelmap.POIs.WHEELCHAIR, jo.get("wheelchair").toString());
 			values.put(Wheelmap.POIs.WHEELCHAIR_DESC, jo.get("comment").toString());
+			values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL );
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -94,6 +97,10 @@ public class POIDetailActivityEditable extends FormActivity {
 
 		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
 		this.getContentResolver().update(poiUri, values, "", null);
+		
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_SERVER );
+		startService(intent);
 	}
 
 
