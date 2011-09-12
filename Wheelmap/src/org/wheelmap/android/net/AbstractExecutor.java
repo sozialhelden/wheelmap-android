@@ -4,7 +4,7 @@ import wheelmap.org.request.RequestProcessor;
 import android.content.ContentResolver;
 import android.os.Bundle;
 
-public abstract class AbstractExecutor implements IExecutor{
+public abstract class AbstractExecutor implements IExecutor {
 	protected static final String TAG = "executor";
 	
 	protected ContentResolver mResolver;

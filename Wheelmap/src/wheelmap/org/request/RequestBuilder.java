@@ -6,6 +6,10 @@ package wheelmap.org.request;
  * @author p.lipp@web.de
  */
 public abstract class RequestBuilder {
+	
+	public final static int REQUEST_GET = 0x1;
+	public final static int REQUEST_POST = 0x2;
+	public final static int REQUEST_PUT = 0x3;
 
 	protected final String server;
 	protected final String apiKey;
@@ -18,7 +22,8 @@ public abstract class RequestBuilder {
 	}
 
 	public abstract String buildRequestUri() ;
-	protected abstract String resourcePath();	
+	protected abstract String resourcePath();
+	public abstract int getRequestType();
 	
 	protected String baseUrl() {
 		return String.format("http://%s/api/%s.%s?api_key=%s",server,

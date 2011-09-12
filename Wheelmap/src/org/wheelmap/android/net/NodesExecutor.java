@@ -196,9 +196,9 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 		values.put(Wheelmap.POIs.WM_ID, node.getId().intValue());
 		values.put(Wheelmap.POIs.NAME, node.getName());
 		values.put(Wheelmap.POIs.COORD_LAT,
-				Math.ceil(node.getLat().floatValue() * 1E6));
+				Math.ceil(node.getLat().doubleValue() * 1E6));
 		values.put(Wheelmap.POIs.COORD_LON,
-				Math.ceil(node.getLon().floatValue() * 1E6));
+				Math.ceil(node.getLon().doubleValue() * 1E6));
 		values.put(Wheelmap.POIs.STREET, node.getStreet());
 		values.put(Wheelmap.POIs.HOUSE_NUM, node.getHousenumber());
 		values.put(Wheelmap.POIs.POSTCODE, node.getPostcode());

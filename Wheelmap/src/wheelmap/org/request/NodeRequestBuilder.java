@@ -26,4 +26,9 @@ public class NodeRequestBuilder extends RequestBuilder {
 	protected  String resourcePath() {
 		return RESOURCE+"/"+id;
 	}
+	
+	@Override
+	public int getRequestType() {
+		return RequestBuilder.REQUEST_GET;
+	}
 }

@@ -1,8 +1,9 @@
 package org.wheelmap.android.net;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
+import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 
@@ -26,10 +27,10 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 
 	private static final String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG
 			+ " != ? ) ";
+	private static final String[] whereValue = new String[] { String
+			.valueOf(Wheelmap.UPDATE_NO) };
 
 	public void prepareContent() {
-		String[] whereValue = new String[] { String.valueOf(Wheelmap.UPDATE_NO) };
-
 		mCursor = mResolver.query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClause, whereValue, null);
 		mCursor.moveToFirst();
@@ -44,25 +45,29 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 			case Wheelmap.UPDATE_WHEELCHAIR_STATE:
 				requestBuilder = wheelchairUpdateRequestBuilder();
 				break;
-			case Wheelmap.UPDATE_ALL:
-				requestBuilder = updateOrNewRequestBuilder(true);
-				break;
 			case Wheelmap.UPDATE_ALL_NEW:
-				requestBuilder = updateOrNewRequestBuilder(false);
+				requestBuilder = updateOrNewRequestBuilder();
 				break;
 			default:
 				throw new ExecutorException(
 						"Cant find matching RequestBuilder for update request");
 			}
 
-			String request = requestBuilder.buildRequestUri();
-			Log.d(TAG, "postRequest = *" + request + "*");
+			String request;
 			try {
-				if (updateWay == Wheelmap.UPDATE_ALL_NEW)
+				request = UriUtils.encodeQuery( requestBuilder.buildRequestUri(), "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new ExecutorException( e );
+			}
+			try {
+				if ( requestBuilder.getRequestType() == RequestBuilder.REQUEST_POST ) {
+					Log.d(TAG, "postRequest = *" + request + "*");
 					mRequestProcessor.post(new URI(request), null);
-				else
+				} else {
+					Log.d(TAG, "putRequest = *" + request + "*");
 					mRequestProcessor.put(new URI(request), null);
-			} catch (URISyntaxException e) {
+				}
+			} catch ( Exception e ) {
 				throw new ExecutorException(e);
 			}
 
@@ -72,12 +77,10 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareDatabase() {
-		String[] whereValues = new String[] { String
-				.valueOf(Wheelmap.UPDATE_WHEELCHAIR_STATE) };
 		ContentValues values = new ContentValues();
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
 		mResolver.update(Wheelmap.POIs.CONTENT_URI, values, whereClause,
-				whereValues);
+				whereValue);
 	}
 
 	private RequestBuilder wheelchairUpdateRequestBuilder() {
@@ -88,16 +91,16 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				AcceptType.JSON, (int) id, state);
 	}
 
-	private RequestBuilder updateOrNewRequestBuilder(boolean update) {
-		long id;
-		if (update)
-			id = POIHelper.getWMId(mCursor);
-		else
-			id = -1;
+	private RequestBuilder updateOrNewRequestBuilder() {
+		long id = POIHelper.getWMId(mCursor);
+		
+		boolean update = false;
+		if ( id != 0 )
+			update = true;
 
 		String name = POIHelper.getName(mCursor);
 		// TODO: node type;
-		String type = null;
+		String type = "butcher";
 		double latitude = POIHelper.getLatitude(mCursor);
 		double longitude = POIHelper.getLongitude(mCursor);
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
@@ -109,9 +112,10 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String website = POIHelper.getWebsite(mCursor);
 		String phone = POIHelper.getPhone(mCursor);
 
-		return new NodeUpdateOrNewAllRequestBuilder(SERVER, API_KEY, AcceptType.JSON,
-				id, name, type, latitude, longitude, state, comment, street,
-				housenumber, city, postcode, website, phone, update);
+		return new NodeUpdateOrNewAllRequestBuilder(SERVER, API_KEY,
+				AcceptType.JSON, id, name, type, latitude, longitude, state,
+				comment, street, housenumber, city, postcode, website, phone,
+				update);
 
 	}
 }

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,7 +23,6 @@ public class POIDetailActivityEditable extends FormActivity {
 	public static final int OPTION_CANCEL = 1;
 
 	private Long poiID;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -87,8 +87,9 @@ public class POIDetailActivityEditable extends FormActivity {
 			values.put(Wheelmap.POIs.WEBSITE, jo.get("website").toString());
 			values.put(Wheelmap.POIs.PHONE, jo.get("phone").toString());
 			values.put(Wheelmap.POIs.WHEELCHAIR, jo.get("wheelchair").toString());
+			Log.d( "executor", "WheelchairState = " + jo.get("wheelchair").toString());
 			values.put(Wheelmap.POIs.WHEELCHAIR_DESC, jo.get("comment").toString());
-			values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL );
+			values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_NEW );
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -124,8 +125,6 @@ public class POIDetailActivityEditable extends FormActivity {
 			jo.put("wheelchair",POIHelper.getWheelchair(cur).getId());
 			jo.put("phone",POIHelper.getPhone(cur));
 			jo.put("comment",POIHelper.getComment(cur));
-
-
 
 			cur.close();
 

@@ -155,10 +155,6 @@ public class POIsListActivity extends ListActivity implements
 		this.startActivity(intent);
 	}
 	
-	
-	
-		
-
 	public void onFilterClick(View v) {
 		final Resources res = getResources();
 		final CharSequence[] items = res
@@ -193,8 +189,8 @@ public class POIsListActivity extends ListActivity implements
     	// create new POI and start editing
         ContentValues cv = new ContentValues();
         cv.put(Wheelmap.POIs.NAME,  getString(R.string.new_default_name));
-        cv.put(Wheelmap.POIs.COORD_LAT,  mLocation.getLatitude());
-        cv.put(Wheelmap.POIs.COORD_LON,  mLocation.getLongitude());
+        cv.put(Wheelmap.POIs.COORD_LAT,  Math.ceil(mLocation.getLatitude() * 1E6));
+        cv.put(Wheelmap.POIs.COORD_LON,  Math.ceil(mLocation.getLongitude() * 1E6));
         Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI, cv);
         // edit activity
         Log.i(TAG, new_pois.toString());

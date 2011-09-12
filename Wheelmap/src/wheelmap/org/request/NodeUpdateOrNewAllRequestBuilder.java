@@ -53,15 +53,10 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 	public String buildRequestUri() {
 		final StringBuilder requestAsStringBuffer = new StringBuilder(1024);
 		requestAsStringBuffer.append(String.format(baseUrl()));
-		if (name != null && !(name.length() == 0)) {
-			requestAsStringBuffer.append("&name=");
-			requestAsStringBuffer.append(name);
-		}
-		if (type != null && !(type.length() == 0)) {
-			requestAsStringBuffer.append("&type=");
-			requestAsStringBuffer.append(type);
-		}
-
+		requestAsStringBuffer.append("&name=");
+		requestAsStringBuffer.append(name);		
+		requestAsStringBuffer.append("&type=");
+		requestAsStringBuffer.append(type);
 		requestAsStringBuffer.append("&lat=");
 		requestAsStringBuffer.append(latitude);
 		requestAsStringBuffer.append("&lon=");
@@ -70,8 +65,9 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 		requestAsStringBuffer.append(state.asRequestParameter());
 
 		if (wheelchair_desc != null && !(wheelchair_desc.length() == 0)) {
+			String tmpString = wheelchair_desc.length() > 255 ? wheelchair_desc.substring(0, 254) : wheelchair_desc;
 			requestAsStringBuffer.append("&wheelchair_description=");
-			requestAsStringBuffer.append(wheelchair_desc);
+			requestAsStringBuffer.append(tmpString);
 		}
 
 		if (street != null && !(street.length() == 0)) {
@@ -89,7 +85,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 			requestAsStringBuffer.append(city);
 		}
 
-		if (postcode != null) {
+		if (postcode != null && !(postcode.length() == 0)) {
 			requestAsStringBuffer.append("&postcode=");
 			requestAsStringBuffer.append(postcode);
 		}
@@ -113,5 +109,13 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 			return RESOURCE + "/" + id;
 		else
 			return RESOURCE;
+	}
+	
+	@Override
+	public int getRequestType() {
+		if ( update )
+			return RequestBuilder.REQUEST_PUT;
+		else
+			return RequestBuilder.REQUEST_POST;
 	}
 }

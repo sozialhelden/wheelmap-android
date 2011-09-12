@@ -34,4 +34,9 @@ public class WheelchairUpdateRequestBuilder extends RequestBuilder {
 	protected String resourcePath() {
 		return RESOURCE + "/" + id + "/update_wheelchair";
 	}
+	
+	@Override
+	public int getRequestType() {
+		return RequestBuilder.REQUEST_PUT;
+	}
 }
