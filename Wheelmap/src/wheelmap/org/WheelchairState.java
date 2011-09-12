@@ -51,6 +51,6 @@ public enum WheelchairState {
 	}
 	
 	static {
-		DEFAULT = YES;
+		DEFAULT = NO_PREFERENCE;
 	}
 }

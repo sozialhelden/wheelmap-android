@@ -123,7 +123,7 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		String prefWheelchairState = prefs.getString(PREF_KEY_WHEELCHAIR_STATE,
-				WheelchairState.DEFAULT.toString());
+				String.valueOf( WheelchairState.DEFAULT.getId()));
 		WheelchairState ws = WheelchairState.valueOf(Integer
 				.valueOf(prefWheelchairState));
 		return ws;

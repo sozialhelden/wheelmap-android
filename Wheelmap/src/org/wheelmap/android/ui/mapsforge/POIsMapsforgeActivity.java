@@ -61,7 +61,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		ConfigureMapView.pickAppropriateMap( this, mMapView );
 
 		mMapController = mMapView.getController();
-		mMapController.setZoom(16); // Zoon 1 is world view
+		mMapController.setZoom(18); // Zoon 1 is world view
 
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;

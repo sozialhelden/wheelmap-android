@@ -43,11 +43,18 @@
                 android:onClick="onListClick"
                 android:text="@string/btn_list"
                 android:drawableTop="@drawable/home_btn_list"/>
-            <Button android:id="@+id/home_btn_map"
+            <Button android:id="@+id/home_btn_mapsforge"
                 style="@style/HomeButton"
-                android:onClick="onMapClick"
+                android:onClick="onMapsforgeClick"
                 android:text="@string/btn_map"
-                android:drawableTop="@drawable/home_btn_map"/>            
+                android:drawableTop="@drawable/home_btn_map"/>    
+               
+<!--             <Button android:id="@+id/home_btn_map" -->
+<!--                 style="@style/HomeButton" -->
+<!--                 android:onClick="onMapClick" -->
+<!--                 android:text="@string/btn_map" -->
+<!--                 android:drawableTop="@drawable/home_btn_map"/>  -->
+                           
         </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
@@ -60,11 +67,6 @@
                 android:onClick="onSettingsClick"
                 android:text="@string/btn_settings"
                 android:drawableTop="@drawable/home_btn_settings"/>
-            <Button android:id="@+id/home_btn_mapsforge"
-                style="@style/HomeButton"
-                android:onClick="onMapsforgeClick"
-                android:text="@string/btn_mapsforge"
-                android:drawableTop="@drawable/home_btn_map"/>
         </LinearLayout>
     </LinearLayout>
    <!--  place for Adds??

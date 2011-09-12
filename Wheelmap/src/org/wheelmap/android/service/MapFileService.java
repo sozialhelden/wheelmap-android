@@ -18,6 +18,7 @@ import org.wheelmap.android.net.MapsforgeFTP;
 import org.wheelmap.android.utils.MultiResultReceiver;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -51,8 +52,7 @@ public class MapFileService {
 	private HandlerThread mHandlerThread;
 
 	private static final String REMOTE_BASE_PATH_DIR = File.separator + "maps";
-	public static String LOCAL_BASE_PATH_DIR = File.separator + "sdcard"
-			+ File.separator + "wheelmap" + File.separator + "maps";
+	public static String LOCAL_BASE_PATH_DIR;
 
 	public static class Task {
 		public static final int TYPE_UNKNOWN = 0x0;
@@ -73,20 +73,22 @@ public class MapFileService {
 			this.listener = listener;
 		}
 	}
-	
+
 	public static class FTPFileWithParent {
 		public String parentDir;
 		public FTPFile file;
-		public FTPFileWithParent( String parentDir, FTPFile file ) {
+
+		public FTPFileWithParent(String parentDir, FTPFile file) {
 			this.parentDir = parentDir;
 			this.file = file;
 		}
 	}
-	
+
 	public static class FileWithParent {
 		public String parentDir;
 		public File file;
-		public FileWithParent( String parentDir, File file ) {
+
+		public FileWithParent(String parentDir, File file) {
 			this.parentDir = parentDir;
 			this.file = file;
 		}
@@ -227,7 +229,8 @@ public class MapFileService {
 		mHandler.sendMessage(msg);
 	}
 
-	public void getLocalMapsDirectory(String localDir, ReadDirectoryListener listener) {
+	public void getLocalMapsDirectory(String localDir,
+			ReadDirectoryListener listener) {
 		Message msg = mHandler.obtainMessage();
 		msg.what = WHAT_READ_DIRECTORY;
 		msg.obj = listener;
@@ -304,10 +307,11 @@ public class MapFileService {
 				case WHAT_RETRIEVE_DIRECTORY: {
 					String remoteDirPath = b.getString(EXTRA_REMOTE_DIR);
 					List<FTPFileWithParent> files = new ArrayList<FTPFileWithParent>();
-					retrieveDirectoryContent( remoteDirPath, files );
-					if ( listener != null)
-						((RetrieveDirectoryListener)listener).onDirectoryContent( files );
-					
+					retrieveDirectoryContent(remoteDirPath, files);
+					if (listener != null)
+						((RetrieveDirectoryListener) listener)
+								.onDirectoryContent(files);
+
 					break;
 				}
 				case WHAT_RETRIEVE_FILE: {
@@ -316,16 +320,18 @@ public class MapFileService {
 					String localDir = b.getString(EXTRA_LOCAL_DIR);
 					String localFile = b.getString(EXTRA_LOCAL_FILE);
 					boolean forceDownload = b.getBoolean(EXTRA_DOWNLOAD_FORCE);
-					retrieveFile( remoteDir, remoteFile, localDir, localFile, forceDownload, listener );
+					retrieveFile(remoteDir, remoteFile, localDir, localFile,
+							forceDownload, listener);
 					break;
 				}
 				case WHAT_READ_DIRECTORY: {
 					String localDir = b.getString(EXTRA_LOCAL_DIR);
 					List<FileWithParent> files = new ArrayList<FileWithParent>();
-					readDirectoryContent( localDir, files );
-					if ( listener != null )
-						((ReadDirectoryListener)listener).onDirectoryContent( files );
-					
+					readDirectoryContent(localDir, files);
+					if (listener != null)
+						((ReadDirectoryListener) listener)
+								.onDirectoryContent(files);
+
 					break;
 				}
 				case WHAT_DELETE_FILE: {
@@ -341,7 +347,7 @@ public class MapFileService {
 				}
 			} catch (Exception e) {
 				Log.e(TAG, "Problem while downloading/file access", e);
-				
+
 				Bundle bStatus = new Bundle();
 				bStatus.putString(STATUS_ERROR_MSG, e.getMessage());
 				if (mReceiver != null)
@@ -355,52 +361,63 @@ public class MapFileService {
 				mReceiver.send(STATUS_FINISHED, Bundle.EMPTY);
 		}
 
-		public void retrieveDirectoryContent( String parentDir, List<FTPFileWithParent>  files ) throws IOException {
+		public void retrieveDirectoryContent(String parentDir,
+				List<FTPFileWithParent> files) throws IOException {
 			FTPFile[] ftpFiles = null;
 			ftpFiles = mFTPClient.getDir(adjustDir(parentDir,
 					REMOTE_BASE_PATH_DIR));
-			for( FTPFile file: ftpFiles ) {
-				files.add( new FTPFileWithParent( parentDir, file ));
-				if ( file.isDirectory()) {
-					retrieveDirectoryContent( parentDir + File.separator + file.getName(), files );
+			for (FTPFile file : ftpFiles) {
+				files.add(new FTPFileWithParent(parentDir, file));
+				if (file.isDirectory()) {
+					retrieveDirectoryContent(
+							parentDir + File.separator + file.getName(), files);
 				}
 			}
 		}
-		
+
 		private void retrieveFile(String remoteDir, String remoteFile,
-				String localDir, String localFile, boolean forceDownload, BaseListener listener) throws IOException, NoSuchAlgorithmException {
+				String localDir, String localFile, boolean forceDownload,
+				BaseListener listener) throws IOException,
+				NoSuchAlgorithmException {
 			int result = mFTPClient.getFile(
-					adjustDir(localDir, LOCAL_BASE_PATH_DIR),
-					localFile,
-					adjustDir(remoteDir, REMOTE_BASE_PATH_DIR),
-					remoteFile, forceDownload,
-					(RetrieveFileListener) listener );
-			if ( result == MapsforgeFTP.RESULT_INTERRUPTED)
+					adjustDir(localDir, LOCAL_BASE_PATH_DIR), localFile,
+					adjustDir(remoteDir, REMOTE_BASE_PATH_DIR), remoteFile,
+					forceDownload, (RetrieveFileListener) listener);
+			if (result == MapsforgeFTP.RESULT_INTERRUPTED)
 				return;
-			
-			String md5sumRemote = mFTPClient.getRemoteMD5Sum( adjustDir(remoteDir, REMOTE_BASE_PATH_DIR), remoteFile + ".md5" );
-			String md5sumLocal = calcMD5Sum( adjustDir( localDir, LOCAL_BASE_PATH_DIR ), localFile );
-			Log.d( TAG, "md5sumRemote = " + md5sumRemote );
-			Log.d( TAG, "md5sumLocal = " + md5sumLocal );
-			
-			if ( !md5sumRemote.equals( md5sumLocal )) {
-				File file = new File(adjustDir(localDir,
-						LOCAL_BASE_PATH_DIR) + File.separator + localFile);
+
+			String md5sumRemote = mFTPClient.getRemoteMD5Sum(
+					adjustDir(remoteDir, REMOTE_BASE_PATH_DIR), remoteFile
+							+ ".md5");
+			String md5sumLocal = calcMD5Sum(
+					adjustDir(localDir, LOCAL_BASE_PATH_DIR), localFile);
+			Log.d(TAG, "md5sumRemote = " + md5sumRemote);
+			Log.d(TAG, "md5sumLocal = " + md5sumLocal);
+
+			if (!md5sumRemote.equals(md5sumLocal)) {
+				File file = new File(adjustDir(localDir, LOCAL_BASE_PATH_DIR)
+						+ File.separator + localFile);
 				file.delete();
-				throw new IOException( "Transmitted file is not correct. MD5Sum error. Deleted.");
+				throw new IOException(
+						"Transmitted file is not correct. MD5Sum error. Deleted.");
 			}
 		}
-		
+
 		private void readDirectoryContent(String localDir,
 				List<FileWithParent> fileList) {
-			
+
 			File localDirFile = new File(adjustDir(localDir,
 					LOCAL_BASE_PATH_DIR));
+			if (!localDirFile.exists())
+				return;
+
 			File[] files = localDirFile.listFiles();
-			for( File file: files ) {
-				fileList.add( new FileWithParent( localDir, file));
-				if ( file.isDirectory())
-					readDirectoryContent( localDir + File.separator + file.getName(), fileList );
+			for (File file : files) {
+				fileList.add(new FileWithParent(localDir, file));
+				if (file.isDirectory())
+					readDirectoryContent(
+							localDir + File.separator + file.getName(),
+							fileList);
 			}
 		}
 
@@ -425,32 +442,43 @@ public class MapFileService {
 			StringBuilder missingZeros = new StringBuilder();
 			int missingChars = 32 - hexCalcString.length();
 			int i;
-			for( i = 0; i < missingChars; i++ ) {
-				missingZeros.append( "0" );
+			for (i = 0; i < missingChars; i++) {
+				missingZeros.append("0");
 			}
-			
+
 			hexCalcString = missingZeros.toString() + hexCalcString;
 			return hexCalcString;
 		}
 	}
-	
+
 	public interface BaseListener {
-		public void setListener( BaseListener listener );
+		public void setListener(BaseListener listener);
+
 		public void onRunning();
+
 		public void onFinished();
 	}
-	
+
 	public interface RetrieveDirectoryListener extends BaseListener {
-		public void onDirectoryContent( List<FTPFileWithParent> files );
+		public void onDirectoryContent(List<FTPFileWithParent> files);
 	}
-	
+
 	public interface ReadDirectoryListener extends BaseListener {
-		public void onDirectoryContent( List<FileWithParent> files );
+		public void onDirectoryContent(List<FileWithParent> files);
 	}
-	
+
 	public interface RetrieveFileListener extends BaseListener {
-		public void onProgress( int percentageProgress );
+		public void onProgress(int percentageProgress);
+
 		public int getProgress();
+	}
+
+	static {
+		LOCAL_BASE_PATH_DIR = Environment.getExternalStorageDirectory()
+				.getAbsolutePath()
+				+ File.separator
+				+ "wheelmap"
+				+ File.separator + "maps";
 	}
 
 }

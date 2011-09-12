@@ -99,6 +99,10 @@ public class POIsListActivity extends ListActivity implements
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
+		
+		if ( wrappingCursor.getCount() == 0 ) {
+			onRefreshClick(null);
+		}
 
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);

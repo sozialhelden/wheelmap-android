@@ -36,15 +36,16 @@ public class ConfigureMapView {
 					.query(uri, MapFileInfos.filePROJECTION, whereClause,
 							whereValues, null);
 			if (cursor.getCount() == 1) {
+				cursor.moveToFirst();
 				mapName = MapFileInfo.getName(cursor);
 				mapDir = MapFileInfo.getParentName(cursor);
 				prefs.edit().putString(
 						MapFileSelectActivity.PREF_KEY_MAP_SELECTED_NAME,
-						mapName);
+						mapName).commit();
 				prefs.edit()
 						.putString(
 								MapFileSelectActivity.PREF_KEY_MAP_SELECTED_DIR,
-								mapDir);
+								mapDir).commit();
 			}
 
 		}

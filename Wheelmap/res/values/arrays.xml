@@ -8,7 +8,7 @@
 		<item>@string/settings_wheelchair_unknown_accesible</item>
 	</string-array>
 	<string-array name="wheelchair_state_values">
-		<item>5</item>
+		<item>4</item>
 		<item>1</item>
 		<item>2</item>
 		<item>3</item>

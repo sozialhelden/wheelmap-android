@@ -81,6 +81,10 @@ public class MapFileManager {
 		updateDatabaseWithRemote();
 		purgeWithoutUpdateTag();
 	}
+	
+	public void updateLocal() {
+		updateDatabaseWithLocal();
+	}
 
 	private void updateDatabaseWithRemote() {
 
@@ -394,7 +398,7 @@ public class MapFileManager {
 
 		String rootDirName = null;
 		while (!cursor.isAfterLast()) {
-			String crrParentName = MapFileInfo.getRemoteParentName(cursor);
+			String crrParentName = MapFileInfo.getRemoteParentName( cursor );
 			if (rootDirName == null)
 				rootDirName = crrParentName;
 			else if (crrParentName.length() < rootDirName.length())
