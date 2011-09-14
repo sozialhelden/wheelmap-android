@@ -1,0 +1,268 @@
+package org.wheelmap.android.model;
+
+import java.util.HashMap;
+
+import org.wheelmap.android.model.Support.CategoriesContent;
+import org.wheelmap.android.model.Support.LocalesContent;
+import org.wheelmap.android.model.Support.NodeTypesContent;
+
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.net.Uri;
+import android.util.Log;
+
+public class SupportProvider extends ContentProvider {
+	
+	public static final String TAG = "support";
+
+	private static final UriMatcher sUriMatcher;
+	private static HashMap<String, String> sLocalesProjectionMap;
+	private static HashMap<String, String> sCategoriesProjectionMap;
+	private static HashMap<String, String> sNodeTypesProjectionMap;
+
+	private static final int LOCALES = 1;
+	private static final int CATEGORIES = 2;
+	private static final int NODETYPES = 3;
+
+	private static final String DATABASE_NAME = "support.db";
+	private static final int DATABASE_VERSION = 1;
+	private static final String LOCALES_TABLE_NAME = "locales";
+	private static final String CATEGORIES_TABLE_NAME = "categories";
+	private static final String NODETYPES_TABLE_NAME = "nodetypes";
+
+	private static class DatabaseHelper extends SQLiteOpenHelper {
+
+		DatabaseHelper(Context context) {
+			super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		}
+
+		@Override
+		public void onCreate(SQLiteDatabase db) {
+			// places
+			db.execSQL("CREATE TABLE " 
+					+ LOCALES_TABLE_NAME + " ("
+						+ LocalesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+						+ LocalesContent.LOCALE_ID + " TEXT, "
+						+ LocalesContent.LOCALIZED_NAME + " TEXT)");
+			
+			db.execSQL("CREATE TABLE "
+					+ CATEGORIES_TABLE_NAME + " ("
+						+ CategoriesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+						+ CategoriesContent.CATEGORY_ID + " INTEGER, "
+						+ CategoriesContent.LOCALIZED_NAME + " TEXT, "
+						+ CategoriesContent.IDENTIFIER + " TEXT )" );
+			
+			db.execSQL("CREATE TABLE "
+					+ NODETYPES_TABLE_NAME + " ("
+						+ NodeTypesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+						+ NodeTypesContent.NODETYPE_ID + " INTEGER, "
+						+ NodeTypesContent.IDENTIFIER + " TEXT, "
+						+ NodeTypesContent.ICON_URL + " TEXT, "
+						+ NodeTypesContent.ICON_DATA + " BLOB, "
+						+ NodeTypesContent.LOCALIZED_NAME + " TEXT, "
+						+ NodeTypesContent.CATEGORY_ID + " INTEGER, "
+						+ NodeTypesContent.CATEGORY_IDENTIFIER + " TEXT)");
+
+		}
+
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+					+ newVersion + ", which will destroy all old data");
+			db.execSQL("DROP TABLE IF EXISTS " + LOCALES_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + NODETYPES_TABLE_NAME );
+			onCreate(db);
+		}
+	}
+	
+	private DatabaseHelper mOpenHelper;
+
+	@Override
+	public boolean onCreate() {
+		mOpenHelper = new DatabaseHelper(getContext());
+		return true;
+	}
+	
+	@Override
+	public Cursor query(Uri uri, String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
+
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+
+		int match = sUriMatcher.match(uri);
+
+		Log.v(TAG, "SupportProvder.query: url=" + uri + ", match is " + match);
+		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		Cursor c;
+		// If no sort order is specified use the default
+		switch (match) {
+		case LOCALES:
+			qb.setTables(LOCALES_TABLE_NAME);
+			qb.setProjectionMap(sLocalesProjectionMap);
+			c = qb.query(db, projection, selection, selectionArgs, null, null,
+					sortOrder);
+			break;
+		case CATEGORIES:
+			qb.setTables(CATEGORIES_TABLE_NAME);
+			qb.setProjectionMap(sCategoriesProjectionMap);
+			
+			break;
+		case NODETYPES:
+			qb.setTables(NODETYPES_TABLE_NAME);
+			qb.setProjectionMap(sNodeTypesProjectionMap);
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+
+		c = qb.query(db, projection, selection, selectionArgs, null, null,
+				sortOrder);
+		c.setNotificationUri(getContext().getContentResolver(), uri);
+		return c;
+	}
+
+	@Override
+	public String getType(Uri uri) {
+		switch (sUriMatcher.match(uri)) {
+		case LOCALES:
+			return LocalesContent.CONTENT_TYPE;
+		case CATEGORIES:
+			return CategoriesContent.CONTENT_TYPE;
+		case NODETYPES:
+			return NodeTypesContent.CONTENT_TYPE;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+	}
+
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		Log.v(TAG, "SupportProvider.insert: url=" + uri );
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		String tableName;
+		String nullColumnHack;
+
+		int match = sUriMatcher.match(uri);
+		switch (match) {
+		case LOCALES:
+			tableName = LOCALES_TABLE_NAME;
+			nullColumnHack = LocalesContent.LOCALIZED_NAME;
+			break;
+		case CATEGORIES:
+			tableName = CATEGORIES_TABLE_NAME;
+			nullColumnHack = CategoriesContent.IDENTIFIER;
+			break;
+		case NODETYPES:
+			tableName = NODETYPES_TABLE_NAME;
+			nullColumnHack = NodeTypesContent.NODETYPE_ID;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		long rowId = db.insert( tableName, nullColumnHack, values);
+		if ( rowId < 0 )
+			throw new SQLException("Failed to insert row into " + uri);
+		
+		getContext().getContentResolver().notifyChange( uri, null );
+
+		Uri placeUri = ContentUris.withAppendedId( uri, rowId);
+		return placeUri;
+	}
+	
+	@Override
+	public int delete(Uri uri, String where, String[] whereArgs) {
+		Log.v(TAG, "SupportProvider.delete: url=" + uri);
+
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		String tableName;
+		switch (sUriMatcher.match(uri)) {
+		case LOCALES:
+			tableName = LOCALES_TABLE_NAME;
+			break;
+		case CATEGORIES:
+			tableName = CATEGORIES_TABLE_NAME;
+			break;
+		case NODETYPES:
+			tableName = NODETYPES_TABLE_NAME;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		
+		int count = db.delete( tableName, where, whereArgs);
+		getContext().getContentResolver().notifyChange(uri, null);
+		return count;
+	}
+
+	@Override
+	public int update(Uri uri, ContentValues values, String where,
+			String[] whereArgs) {
+		Log.v(TAG, "SupportProvider.update: url=" + uri);
+
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		String tableName;
+		switch (sUriMatcher.match(uri)) {
+		case LOCALES:
+			tableName = LOCALES_TABLE_NAME;
+			break;
+		case CATEGORIES:
+			tableName = CATEGORIES_TABLE_NAME;
+			break;
+		case NODETYPES:
+			tableName = NODETYPES_TABLE_NAME;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		
+		int count = db.update( tableName, values, where, whereArgs);
+		getContext().getContentResolver().notifyChange(uri, null);
+		return count;
+	}
+
+	static {
+		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+		sUriMatcher.addURI(Support.AUTHORITY, "locales", LOCALES);
+		sUriMatcher.addURI(Support.AUTHORITY, "categories", CATEGORIES);
+		sUriMatcher.addURI(Support.AUTHORITY, "nodetypes", NODETYPES);
+
+		sLocalesProjectionMap = new HashMap<String, String>();
+		sLocalesProjectionMap.put(LocalesContent._ID, LocalesContent._ID);
+		sLocalesProjectionMap.put(LocalesContent.LOCALE_ID, LocalesContent.LOCALE_ID);
+		sLocalesProjectionMap.put(LocalesContent.LOCALIZED_NAME,
+				LocalesContent.LOCALIZED_NAME);
+
+		sCategoriesProjectionMap = new HashMap<String, String>();
+		sCategoriesProjectionMap.put(CategoriesContent._ID, CategoriesContent._ID);
+		sCategoriesProjectionMap.put(CategoriesContent.CATEGORY_ID,
+				CategoriesContent.CATEGORY_ID);
+		sCategoriesProjectionMap.put(CategoriesContent.LOCALIZED_NAME,
+				CategoriesContent.LOCALIZED_NAME);
+		sCategoriesProjectionMap.put(CategoriesContent.IDENTIFIER,
+				CategoriesContent.IDENTIFIER);
+
+		sNodeTypesProjectionMap = new HashMap<String, String>();
+		sNodeTypesProjectionMap.put(NodeTypesContent._ID, NodeTypesContent._ID);
+		sNodeTypesProjectionMap.put(NodeTypesContent.NODETYPE_ID,
+				NodeTypesContent.NODETYPE_ID);
+		sNodeTypesProjectionMap.put(NodeTypesContent.IDENTIFIER, NodeTypesContent.IDENTIFIER);
+		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_URL, NodeTypesContent.ICON_URL);
+		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_DATA, NodeTypesContent.ICON_DATA);
+		sNodeTypesProjectionMap.put(NodeTypesContent.LOCALIZED_NAME,
+				NodeTypesContent.LOCALIZED_NAME);
+		sNodeTypesProjectionMap.put(NodeTypesContent.CATEGORY_ID,
+				NodeTypesContent.CATEGORY_ID);
+		sNodeTypesProjectionMap.put(NodeTypesContent.CATEGORY_IDENTIFIER,
+				NodeTypesContent.CATEGORY_IDENTIFIER);
+	}
+
+}

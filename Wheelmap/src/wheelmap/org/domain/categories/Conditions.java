@@ -1,4 +1,4 @@
-package wheelmap.org.domain.node.json;
+package wheelmap.org.domain.categories;
 
 import java.math.BigInteger;
 
@@ -13,7 +13,7 @@ public class Conditions {
     @JsonProperty( value="per_page")
     protected BigInteger perPage;
     protected BigInteger page;
-    protected String bbox;
+    protected String locale;
 
     /**
      * Gets the value of the format property.
@@ -88,27 +88,27 @@ public class Conditions {
     }
 
     /**
-     * Gets the value of the bbox property.
+     * Gets the value of the locale property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getBbox() {
-        return bbox;
+    public String getLocale() {
+        return locale;
     }
 
     /**
-     * Sets the value of the bbox property.
+     * Sets the value of the locale property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setBbox(String value) {
-        this.bbox = value;
+    public void setLocale(String value) {
+        this.locale = value;
     }
 
 }

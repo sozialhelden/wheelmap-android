@@ -49,6 +49,14 @@ public class Wheelmap {
 			
 			public static final String WHEELCHAIR_DESC = "wheelchair_desc";
 			
+			public static final String CATEGORY_ID = "category_id";
+			
+			public static final String CATEGORY_IDENTIFIER = "category_identifier";
+			
+			public static final String NODETYPE_ID = "nodetype_id";
+			
+			public static final String NODETYPE_IDENTIFIER = "nodetype_identifier";
+			
 			// auxiliry pre calculated sin and cos values of lat/lon (in radians)
 			public static final String SIN_LAT_RAD = "sin_lat_rad";
 			public static final String COS_LAT_RAD = "cos_lat_rad";
@@ -107,6 +115,10 @@ public class Wheelmap {
 				WEBSITE,
 				WHEELCHAIR,
 				WHEELCHAIR_DESC,
+				CATEGORY_ID,
+				CATEGORY_IDENTIFIER,
+				NODETYPE_ID,
+				NODETYPE_IDENTIFIER,
 				UPDATE_TAG
 			};
 		}

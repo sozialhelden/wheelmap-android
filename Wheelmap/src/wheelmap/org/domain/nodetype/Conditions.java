@@ -1,4 +1,4 @@
-package wheelmap.org.domain.node.json;
+package wheelmap.org.domain.nodetype;
 
 import java.math.BigInteger;
 
@@ -7,62 +7,60 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 
 @JsonAutoDetect
-public class Meta {
+public class Conditions {
 
-	@JsonProperty( value = "num_pages" )
-    protected BigInteger numPages;
-	@JsonProperty( value = "item_count_total" )
-    protected BigInteger itemCountTotal;
+    protected String format;
+    @JsonProperty( value="per_page")
+    protected BigInteger perPage;
     protected BigInteger page;
-    @JsonProperty( value = "item_count" )
-    protected BigInteger itemCount;
+    protected String locale;
 
     /**
-     * Gets the value of the numPages property.
+     * Gets the value of the format property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    /**
+     * Sets the value of the format property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFormat(String value) {
+        this.format = value;
+    }
+
+    /**
+     * Gets the value of the perPage property.
      * 
      * @return
      *     possible object is
      *     {@link BigInteger }
      *     
      */
-    public BigInteger getNumPages() {
-        return numPages;
+    public BigInteger getPerPage() {
+        return perPage;
     }
 
     /**
-     * Sets the value of the numPages property.
+     * Sets the value of the perPage property.
      * 
      * @param value
      *     allowed object is
      *     {@link BigInteger }
      *     
      */
-    public void setNumPages(BigInteger value) {
-        this.numPages = value;
-    }
-
-    /**
-     * Gets the value of the itemCountTotal property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
-    public BigInteger getItemCountTotal() {
-        return itemCountTotal;
-    }
-
-    /**
-     * Sets the value of the itemCountTotal property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
-    public void setItemCountTotal(BigInteger value) {
-        this.itemCountTotal = value;
+    public void setPerPage(BigInteger value) {
+        this.perPage = value;
     }
 
     /**
@@ -90,27 +88,27 @@ public class Meta {
     }
 
     /**
-     * Gets the value of the itemCount property.
+     * Gets the value of the locale property.
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getItemCount() {
-        return itemCount;
+    public String getLocale() {
+        return locale;
     }
 
     /**
-     * Sets the value of the itemCount property.
+     * Sets the value of the locale property.
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setItemCount(BigInteger value) {
-        this.itemCount = value;
+    public void setLocale(String value) {
+        this.locale = value;
     }
 
 }

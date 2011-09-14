@@ -7,8 +7,8 @@ import android.os.Bundle;
 public abstract class AbstractExecutor implements IExecutor {
 	protected static final String TAG = "executor";
 	
-	protected ContentResolver mResolver;
-	protected Bundle mBundle;
+	private final ContentResolver mResolver;
+	private final Bundle mBundle;
 
 	protected static final String SERVER = "staging.wheelmap.org";
 	protected static final String API_KEY = "9NryQWfDWgIebZIdqWiK";
@@ -17,6 +17,14 @@ public abstract class AbstractExecutor implements IExecutor {
 	public AbstractExecutor( ContentResolver resolver, Bundle bundle ) {
 		mResolver = resolver;
 		mBundle = bundle;
+	}
+	
+	protected ContentResolver getResolver() {
+		return mResolver;
+	}
+	
+	protected Bundle getBundle() {
+		return mBundle;
 	}
 	
 	public abstract void prepareContent();

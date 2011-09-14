@@ -6,13 +6,11 @@ import org.wheelmap.android.model.MapFileInfo.MapFileInfos;
 import org.wheelmap.android.model.MapFileSelectCursorAdapter;
 
 import android.app.ListActivity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 

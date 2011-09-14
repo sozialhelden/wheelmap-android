@@ -5,7 +5,6 @@ import org.wheelmap.android.utils.GeocoordinatesMath;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.util.Log;
 
 public class POIsCursorWrapper extends CursorWrapper {
 	public static final String TAG = "poislist";

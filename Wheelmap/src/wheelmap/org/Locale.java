@@ -1,9 +1,15 @@
 package wheelmap.org;
 
-public enum Locale {
-	DE, EN;
+public class Locale {
+	public final static Locale DEFAULT_LOCALE = new Locale("de");
+	
+	private String value;
+	
+	public Locale( String value ) {
+		this.value = value;
+	}
 
 	public String asRequestParameter() {
-		return this.name().toLowerCase();
+		return value;
 	}
 }

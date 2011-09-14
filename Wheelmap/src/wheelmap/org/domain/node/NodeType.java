@@ -2,15 +2,12 @@ package wheelmap.org.domain.node;
 
 import java.math.BigInteger;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
 
-@Root(name = "node-type")
+@JsonAutoDetect
 public class NodeType {
 
-	@Element(required = true)
     protected BigInteger id;
-	@Element(required = false)
     protected String identifier;
 	
 	/**

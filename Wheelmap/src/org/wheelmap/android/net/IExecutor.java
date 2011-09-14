@@ -5,5 +5,5 @@ public interface IExecutor {
 
 	public void execute() throws ExecutorException;
 
-	public void prepareDatabase();
+	public void prepareDatabase() throws ExecutorException;
 }

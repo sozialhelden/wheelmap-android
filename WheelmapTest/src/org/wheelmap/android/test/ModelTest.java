@@ -17,7 +17,7 @@ import android.util.Log;
 
 public class ModelTest extends AndroidTestCase {
 
-	private final static String TAG = "wheelmaptest";
+	private final static String TAG = "executor";
 
 	public void testNodes() throws RemoteException, OperationApplicationException {
 

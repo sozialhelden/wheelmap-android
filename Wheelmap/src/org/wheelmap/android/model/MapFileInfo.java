@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 public class MapFileInfo {
 

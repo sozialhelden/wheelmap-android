@@ -31,7 +31,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 			.valueOf(Wheelmap.UPDATE_NO) };
 
 	public void prepareContent() {
-		mCursor = mResolver.query(Wheelmap.POIs.CONTENT_URI,
+		mCursor = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClause, whereValue, null);
 		mCursor.moveToFirst();
 	}
@@ -79,7 +79,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	public void prepareDatabase() {
 		ContentValues values = new ContentValues();
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
-		mResolver.update(Wheelmap.POIs.CONTENT_URI, values, whereClause,
+		getResolver().update(Wheelmap.POIs.CONTENT_URI, values, whereClause,
 				whereValue);
 	}
 

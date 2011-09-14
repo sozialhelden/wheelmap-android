@@ -113,10 +113,26 @@ public class POIHelper {
 	}
 	
 	public static int getUpdateTag( Cursor c ) {
-		return c.getInt( c.getColumnIndexOrThrow( Wheelmap.POIs.UPDATE_TAG));
+		return c.getInt( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.UPDATE_TAG));
 	}
 	
 	public static String getHouseNumber( Cursor c ) {
 		return c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.HOUSE_NUM));
+	}
+	
+	public static int getCategoryId( Cursor c ) {
+		return c.getInt( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.CATEGORY_ID));
+	}
+	
+	public static String getCategoryIdentifier( Cursor c ) {
+		return c.getString( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.CATEGORY_IDENTIFIER));
+	}
+	
+	public static int getNodeTypeId( Cursor c ) {
+		return c.getInt( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.NODETYPE_ID));
+	}
+	
+	public static String getNodeTypeIdentifier( Cursor c ) {
+		return c.getString( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.NODETYPE_IDENTIFIER));
 	}
 }

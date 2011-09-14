@@ -1,13 +1,16 @@
-package wheelmap.org.domain.node.json;
+package wheelmap.org.domain.categories;
 
 import java.math.BigInteger;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonAutoDetect
 public class Category {
 
     protected BigInteger id;
+    @JsonProperty( value="localized_name" )
+    protected String localizedName;
     protected String identifier;
 	
 	/**
@@ -32,6 +35,31 @@ public class Category {
      */
     public void setId(BigInteger value) {
         this.id = value;
+    }
+    
+	/**
+     * Gets the value of the localized_name property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLocalizedName() {
+    	return localizedName;
+    }
+    
+    /**
+     * Sets the value of the localized_name property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    
+    public void setLocalizedName( String localized_name) {
+    	this.localizedName = localized_name;
     }
     
     /**

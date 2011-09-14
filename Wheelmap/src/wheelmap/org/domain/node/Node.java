@@ -3,42 +3,27 @@ package wheelmap.org.domain.node;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-
-
-
-@Root(name = "node")
+@JsonAutoDetect
 public class Node {
 
-    @Element(required = true)
     protected BigDecimal lat;
-    @Element(name = "node-type", required = true)
+    @JsonProperty( value = "node_type" )
     protected NodeType nodeType;
-    @Element(required = false)
     protected String street;
-    @Element(required = false)
     protected String website;
-    @Element(required = false)
     protected String wheelchair;
-    @Element(required = false)
     protected String housenumber;
-    @Element(name = "wheelchair-description", required = false)
+    @JsonProperty( value = "wheelchair_description" )
     protected String wheelchairDescription;
-    @Element(required = false)
     protected String name;
-    @Element(required = true)
     protected BigInteger id;
-    @Element(required=true)
     protected Category category;
-    @Element(required = false)
     protected String phone;
-    @Element(required = true)
     protected BigDecimal lon;
-    @Element(required = false)
     protected String city;
-    @Element(required = false)
     protected String postcode;
 
     /**

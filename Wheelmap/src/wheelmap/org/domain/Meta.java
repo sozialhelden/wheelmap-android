@@ -1,21 +1,19 @@
-package wheelmap.org.domain.node;
+package wheelmap.org.domain;
 
 import java.math.BigInteger;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-
-@Root(name = "meta")
+@JsonAutoDetect
 public class Meta {
 
-    @Element(name = "num-pages")
+	@JsonProperty( value = "num_pages" )
     protected BigInteger numPages;
-    @Element(name = "item-count-total")
+	@JsonProperty( value = "item_count_total" )
     protected BigInteger itemCountTotal;
-    @Element
     protected BigInteger page;
-    @Element(name = "item-count")
+    @JsonProperty( value = "item_count" )
     protected BigInteger itemCount;
 
     /**

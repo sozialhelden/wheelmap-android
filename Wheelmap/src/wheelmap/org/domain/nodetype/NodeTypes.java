@@ -1,16 +1,19 @@
-package wheelmap.org.domain.categories;
+package wheelmap.org.domain.nodetype;
 
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import wheelmap.org.domain.BaseDomain;
+import wheelmap.org.domain.categories.Category;
+import wheelmap.org.domain.categories.Conditions;
 
 @JsonAutoDetect
-public class Categories extends BaseDomain {
-
+public class NodeTypes extends BaseDomain {
 	protected Conditions conditions;
-	protected List<Category> categories;
+	@JsonProperty( value="node_types" )
+	protected List<NodeType> node_types;
 
 	/**
 	 * Gets the value of the conditions property.
@@ -39,8 +42,8 @@ public class Categories extends BaseDomain {
 	 * @return possible object is list of {@link Category }
 	 * 
 	 */
-	public List<Category> getCategories() {
-		return categories;
+	public List<NodeType> getNodeTypes() {
+		return node_types;
 	}
 
 	/**
@@ -50,8 +53,8 @@ public class Categories extends BaseDomain {
 	 *            allowed object is list of {@link Category }
 	 * 
 	 */
-	public void setCategories(List<Category> value) {
-		this.categories = value;
+	public void setNodeTypes(List<NodeType> value) {
+		this.node_types = value;
 	}
 
 }

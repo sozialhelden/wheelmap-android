@@ -1,63 +1,52 @@
 package org.wheelmap.android.net;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import wheelmap.org.BoundingBox;
-import wheelmap.org.WheelMapException;
 import wheelmap.org.WheelchairState;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
-import wheelmap.org.domain.node.json.Meta;
-import wheelmap.org.domain.node.json.Node;
-import wheelmap.org.domain.node.json.Nodes;
+import wheelmap.org.domain.node.Node;
+import wheelmap.org.domain.node.Nodes;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class NodesExecutor extends AbstractExecutor implements IExecutor {
+public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecutor {
 	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
-	private static final int DEFAULT_TEST_PAGE_SIZE = 500;
 	
 	private BoundingBox mBoundingBox;
 	private WheelchairState mWheelchairState;
 	private Context mContext;
 	
-	private List<Nodes> mNodesList = new ArrayList<Nodes>();
 
 	public NodesExecutor(Context context, ContentResolver resolver, Bundle bundle) {
-		super(resolver, bundle);
+		super(resolver, bundle, Nodes.class);
 		mContext = context;
 	}
 
 	@Override
 	public void prepareContent() {
-		if (mBundle.containsKey( SyncService.EXTRA_BOUNDING_BOX)) {
-			ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) mBundle
+		if (getBundle().containsKey( SyncService.EXTRA_BOUNDING_BOX)) {
+			ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) getBundle()
 					.getSerializable(SyncService.EXTRA_BOUNDING_BOX);
 			mBoundingBox = parcBoundingBox.toBoundingBox();
 			Log.d(TAG,
 					"retrieving with bounding box: "
 							+ parcBoundingBox.toString());
-		} else if ( mBundle.containsKey( SyncService.EXTRA_LOCATION)) {
-			float distance = mBundle.getFloat( SyncService.EXTRA_DISTANCE_LIMIT);
-			Location location = (Location) mBundle
+		} else if ( getBundle().containsKey( SyncService.EXTRA_LOCATION)) {
+			float distance = getBundle().getFloat( SyncService.EXTRA_DISTANCE_LIMIT);
+			Location location = (Location) getBundle()
 					.getParcelable( SyncService.EXTRA_LOCATION);
 			mBoundingBox = GeocoordinatesMath.calculateBoundingBox(
 					new Wgs84GeoCoordinates(location.getLongitude(),
@@ -84,8 +73,8 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))
 				.boundingBox(mBoundingBox);
 		requestBuilder.wheelchairState(mWheelchairState);
-		
-		mNodesList.clear();
+
+		clearTempStore();
 		try {
 			// retrieveAllPages( requestBuilder );
 			retrieveSinglePage(requestBuilder);
@@ -99,24 +88,18 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 	@Override
 	public void prepareDatabase() {
 		long insertStart = System.currentTimeMillis();
-		for( Nodes nodes: mNodesList ) {
+		for( Nodes nodes: getTempStore() ) {
 			bulkInsert(nodes);
 		}
 		long insertEnd = System.currentTimeMillis();
 		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
-		mNodesList.clear();
+		clearTempStore();
 	}
 	
 	private void deleteRetrievedData() {
 		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
 		String[] whereValues = new String[]{ String.valueOf(Wheelmap.UPDATE_NO) };
-		mResolver.delete(Wheelmap.POIs.CONTENT_URI, whereClause, whereValues);
-	}
-	
-	
-	private void retrieveSinglePage( NodesRequestBuilder requestBuilder ) throws RemoteException, OperationApplicationException {
-		Meta m = executeSingleRequest(requestBuilder);
-		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
+		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause, whereValues);
 	}
 	
 	private WheelchairState getWheelchairStateFromPreferences() {
@@ -127,50 +110,6 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 		WheelchairState ws = WheelchairState.valueOf(Integer
 				.valueOf(prefWheelchairState));
 		return ws;
-	}
-	
-	private void retrieveAllPages( NodesRequestBuilder requestBuilder) throws RemoteException, OperationApplicationException {
-		// Server seems to count from 1...
-		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
-
-		Meta m = executeSingleRequest(requestBuilder);
-		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
-
-		int numOfPages = m.getNumPages().intValue();
-
-		int crrPage;
-		for (crrPage = 2; crrPage <= numOfPages; crrPage++) {
-			page.setPage(crrPage);
-			executeSingleRequest(requestBuilder);
-		}
-	}
-	
-	private Meta executeSingleRequest(NodesRequestBuilder requestBuilder) throws RemoteException, OperationApplicationException {
-		String getRequest = requestBuilder.buildRequestUri();
-		Log.d(TAG, "getRequest " + getRequest);
-		long retrieveStart = System.currentTimeMillis();
-
-		Nodes nodes = retrieveNumberOfHits(getRequest);
-		mNodesList.add( nodes );
-		
-		long retrieveEnd = System.currentTimeMillis();
-		Log.d(TAG, "retrieveTime = " + (retrieveEnd - retrieveStart) / 1000f);
-		return nodes.getMeta();
-	}
-	
-	private static Nodes retrieveNumberOfHits(String getRequest) {
-		Nodes nodes;
-		long requestTime = System.currentTimeMillis();
-		try {
-			nodes = mRequestProcessor.get(new URI(getRequest), Nodes.class);
-		} catch (URISyntaxException e) {
-			throw new WheelMapException(e);
-		}
-		// Log.d(TAG, "response " + response);
-		long requestEndTime = System.currentTimeMillis();
-		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
-
-		return nodes;
 	}
 	
 	private void bulkInsert(Nodes nodes) {
@@ -185,7 +124,7 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 		}
 		long bulkInsertTime = System.currentTimeMillis();
 		Log.d( TAG, "makeupTime = " + (bulkInsertTime - makeupTime ) / 1000f);
-		int count = mResolver.bulkInsert( Wheelmap.POIs.CONTENT_URI, contentValuesArray );
+		int count = getResolver().bulkInsert( Wheelmap.POIs.CONTENT_URI, contentValuesArray );
 		long bulkInsertDoneTime = System.currentTimeMillis();
 		Log.d( TAG, "bulkInsertTime = " + (bulkInsertDoneTime - bulkInsertTime ) / 1000f );
 		Log.d( TAG, "Inserted records count = " + count );
@@ -208,7 +147,10 @@ public class NodesExecutor extends AbstractExecutor implements IExecutor {
 		values.put(Wheelmap.POIs.WHEELCHAIR, WheelchairState.myValueOf( node.getWheelchair()).getId());
 		values.put(Wheelmap.POIs.WHEELCHAIR_DESC,
 				node.getWheelchairDescription());
+		values.put(Wheelmap.POIs.CATEGORY_ID, node.getCategory().getId().intValue());
+		values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, node.getCategory().getIdentifier());
+		values.put(Wheelmap.POIs.NODETYPE_ID, node.getNodeType().getId().intValue());
+		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, node.getNodeType().getIdentifier());		
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
 	}
-
 }

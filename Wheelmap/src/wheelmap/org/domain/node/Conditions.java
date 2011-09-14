@@ -2,20 +2,17 @@ package wheelmap.org.domain.node;
 
 import java.math.BigInteger;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 
-@Root(name = "conditions")
+@JsonAutoDetect
 public class Conditions {
 
-    @Element(required = false)
     protected String format;
-    @Element(name = "per-page")
+    @JsonProperty( value="per_page")
     protected BigInteger perPage;
-	@Element(required = false)
     protected BigInteger page;
-	@Element(required = false)
     protected String bbox;
 
     /**

@@ -102,6 +102,9 @@
             
         <provider android:name="org.wheelmap.android.model.POIsProvider"
           android:authorities="org.wheelmap.android"/>   
+        
+        <provider android:name="org.wheelmap.android.model.SupportProvider"
+          android:authorities="org.wheelmap.android.support"/>
 
 		<provider android:name=".model.MapFileInfoProvider"
 		  android:authorities="org.wheelmap.android.mapfile"/>
