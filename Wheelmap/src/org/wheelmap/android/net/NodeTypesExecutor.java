@@ -117,7 +117,10 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes> implement
 		  if (is != null) { is.close(); }
 		}
 		
-		return bais.toByteArray();
+		if ( bais.size() == 0 )
+			return null;
+		else
+			return bais.toByteArray();
 	}
 
 	private void copyCategoryToValues(NodeType nodeType, ContentValues values) {

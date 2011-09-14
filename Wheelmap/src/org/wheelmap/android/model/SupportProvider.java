@@ -100,7 +100,7 @@ public class SupportProvider extends ContentProvider {
 
 		int match = sUriMatcher.match(uri);
 
-		Log.v(TAG, "SupportProvder.query: url=" + uri + ", match is " + match);
+//		Log.v(TAG, "SupportProvder.query: url=" + uri + ", match is " + match);
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 		Cursor c;
 		// If no sort order is specified use the default
@@ -108,13 +108,10 @@ public class SupportProvider extends ContentProvider {
 		case LOCALES:
 			qb.setTables(LOCALES_TABLE_NAME);
 			qb.setProjectionMap(sLocalesProjectionMap);
-			c = qb.query(db, projection, selection, selectionArgs, null, null,
-					sortOrder);
 			break;
 		case CATEGORIES:
 			qb.setTables(CATEGORIES_TABLE_NAME);
 			qb.setProjectionMap(sCategoriesProjectionMap);
-			
 			break;
 		case NODETYPES:
 			qb.setTables(NODETYPES_TABLE_NAME);
@@ -146,7 +143,7 @@ public class SupportProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-		Log.v(TAG, "SupportProvider.insert: url=" + uri );
+//		Log.v(TAG, "SupportProvider.insert: url=" + uri );
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
 		String nullColumnHack;
@@ -180,7 +177,7 @@ public class SupportProvider extends ContentProvider {
 	
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
-		Log.v(TAG, "SupportProvider.delete: url=" + uri);
+//		Log.v(TAG, "SupportProvider.delete: url=" + uri);
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
@@ -206,7 +203,7 @@ public class SupportProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String where,
 			String[] whereArgs) {
-		Log.v(TAG, "SupportProvider.update: url=" + uri);
+//		Log.v(TAG, "SupportProvider.update: url=" + uri);
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;

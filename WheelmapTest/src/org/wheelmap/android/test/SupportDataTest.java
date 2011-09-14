@@ -41,7 +41,7 @@ public class SupportDataTest extends AndroidTestCase {
 		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODETYPES );
 		mContext.startService(intent);
 		
-		Thread.sleep( 20000 );
+		Thread.sleep( 25000 );
 		
 		cursor = cr.query( NodeTypesContent.CONTENT_URI, NodeTypesContent.PROJECTION, null, null, null);
 		Log.d( TAG, "nodetypes cursor count = " + cursor.getCount());

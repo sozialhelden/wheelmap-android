@@ -54,7 +54,7 @@ public class SyncService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d(TAG, "onHandleIntent(intent=" + intent.toString() + ")");
+		Log.d(TAG, "onHandleIntent(intent=" + intent.getIntExtra( EXTRA_WHAT, -1 ) + ")");
 
 		final ResultReceiver receiver = intent
 				.getParcelableExtra(EXTRA_STATUS_RECEIVER);
@@ -95,14 +95,19 @@ public class SyncService extends IntentService {
 				// Pass back error to surface listener
 				final Bundle responsebundle = new Bundle();
 				responsebundle.putString(Intent.EXTRA_TEXT, e.toString());
+				responsebundle.putInt( EXTRA_WHAT, what );
 				receiver.send(STATUS_ERROR, responsebundle);
 				return;
 			}
 		}
 		
 		Log.d(TAG, "sync finished");
-		if (receiver != null)
-			receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+		if (receiver != null) {
+			Log.d( TAG, "sending STATUS_FINISHED" );
+			final Bundle responsebundle = new Bundle();
+			responsebundle.putInt( EXTRA_WHAT, what );
+			receiver.send(STATUS_FINISHED, responsebundle);
+		}
 	}
 
 }
