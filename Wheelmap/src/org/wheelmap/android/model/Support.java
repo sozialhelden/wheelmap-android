@@ -12,6 +12,10 @@ public class Support {
 	// This class cannot be instantiated
 	private Support() {}
 	
+	public static interface LastUpdateColumns {
+		public static final String DATE = "date";
+	}
+	
 	public static interface LocaleColumns {
 		public static final String LOCALE_ID = "locale_id";
 		public static final String LOCALIZED_NAME = "localized_name";
@@ -31,6 +35,24 @@ public class Support {
 		public static final String LOCALIZED_NAME = "localized_name";
 		public static final String CATEGORY_ID = "category_id";
 		public static final String CATEGORY_IDENTIFIER = "category_identifier";
+	}
+	
+	public static final class LastUpdateContent implements BaseColumns, LastUpdateColumns {
+		private LastUpdateContent() {};
+		private static final String ISO_8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
+		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/lastupdate" );
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.lastupdate";
+		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.lastupdate";
+		
+		public static final String[] PROJECTION = new String[] {
+			_ID,
+			DATE
+		};
+		
+		public static String getDate( Cursor c ) {
+			return c.getString( c.getColumnIndexOrThrow( DATE ));
+		}
 	}
 	
 	public static final class LocalesContent implements BaseColumns, LocaleColumns {

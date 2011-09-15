@@ -31,8 +31,6 @@ public class MapFileManager {
 	private MapFileService mMapFileService;
 	private boolean mInterrupted;
 
-	private static int sClients = 0;
-
 	private MapFileManager(Context appCtx) {
 		mResolver = appCtx.getContentResolver();
 		mMapFileService = new MapFileService();
@@ -52,13 +50,11 @@ public class MapFileManager {
 			mMapFileService = new MapFileService();
 			mMapFileService.start();
 		}
-		sClients++;
 		mInterrupted = false;
 	}
 
 	public void release() {
-		sClients--;
-		if (sClients == 0) {
+		if ( mMapFileService.resultReceiverClients() == 0) {
 			mInterrupted = true;
 			mMapFileService.stop();
 			mMapFileService = null;

@@ -3,6 +3,7 @@ package org.wheelmap.android.model;
 import java.util.HashMap;
 
 import org.wheelmap.android.model.Support.CategoriesContent;
+import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
 
@@ -21,22 +22,25 @@ import android.util.Log;
 
 public class SupportProvider extends ContentProvider {
 	
-	public static final String TAG = "support";
-
+	private static final String TAG = "support";
+	private static final String DATABASE_NAME = "support.db";
+	private static final int DATABASE_VERSION = 2;
+	
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sLocalesProjectionMap;
 	private static HashMap<String, String> sCategoriesProjectionMap;
 	private static HashMap<String, String> sNodeTypesProjectionMap;
+	private static HashMap<String, String> sLastUpdateProjectionMap;
 
 	private static final int LOCALES = 1;
 	private static final int CATEGORIES = 2;
 	private static final int NODETYPES = 3;
+	private static final int LASTUPDATE = 4;
 
-	private static final String DATABASE_NAME = "support.db";
-	private static final int DATABASE_VERSION = 1;
 	private static final String LOCALES_TABLE_NAME = "locales";
 	private static final String CATEGORIES_TABLE_NAME = "categories";
 	private static final String NODETYPES_TABLE_NAME = "nodetypes";
+	private static final String LASTUPDATE_TABLE_NAME = "lastupdate";
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -46,7 +50,11 @@ public class SupportProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			// places
+			db.execSQL("CREATE TABLE "
+					+ LASTUPDATE_TABLE_NAME + " ("
+						+ LastUpdateContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+						+ LastUpdateContent.DATE + " TEST)");
+			
 			db.execSQL("CREATE TABLE " 
 					+ LOCALES_TABLE_NAME + " ("
 						+ LocalesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -105,6 +113,10 @@ public class SupportProvider extends ContentProvider {
 		Cursor c;
 		// If no sort order is specified use the default
 		switch (match) {
+		case LASTUPDATE:
+			qb.setTables(LASTUPDATE_TABLE_NAME);
+			qb.setProjectionMap(sLastUpdateProjectionMap);
+			break;
 		case LOCALES:
 			qb.setTables(LOCALES_TABLE_NAME);
 			qb.setProjectionMap(sLocalesProjectionMap);
@@ -130,6 +142,8 @@ public class SupportProvider extends ContentProvider {
 	@Override
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
+		case LASTUPDATE:
+			return LastUpdateContent.CONTENT_TYPE;
 		case LOCALES:
 			return LocalesContent.CONTENT_TYPE;
 		case CATEGORIES:
@@ -150,6 +164,10 @@ public class SupportProvider extends ContentProvider {
 
 		int match = sUriMatcher.match(uri);
 		switch (match) {
+		case LASTUPDATE:
+			tableName = LASTUPDATE_TABLE_NAME;
+			nullColumnHack = LastUpdateContent.DATE;
+			break;
 		case LOCALES:
 			tableName = LOCALES_TABLE_NAME;
 			nullColumnHack = LocalesContent.LOCALIZED_NAME;
@@ -182,6 +200,9 @@ public class SupportProvider extends ContentProvider {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
 		switch (sUriMatcher.match(uri)) {
+		case LASTUPDATE:
+			tableName = LASTUPDATE_TABLE_NAME;
+			break;
 		case LOCALES:
 			tableName = LOCALES_TABLE_NAME;
 			break;
@@ -208,6 +229,9 @@ public class SupportProvider extends ContentProvider {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
 		switch (sUriMatcher.match(uri)) {
+		case LASTUPDATE:
+			tableName = LASTUPDATE_TABLE_NAME;
+			break;
 		case LOCALES:
 			tableName = LOCALES_TABLE_NAME;
 			break;
@@ -228,9 +252,14 @@ public class SupportProvider extends ContentProvider {
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+		sUriMatcher.addURI(Support.AUTHORITY, "lastupdate", LASTUPDATE );
 		sUriMatcher.addURI(Support.AUTHORITY, "locales", LOCALES);
 		sUriMatcher.addURI(Support.AUTHORITY, "categories", CATEGORIES);
 		sUriMatcher.addURI(Support.AUTHORITY, "nodetypes", NODETYPES);
+		
+		sLastUpdateProjectionMap = new HashMap<String, String>();
+		sLastUpdateProjectionMap.put( LastUpdateContent._ID, LastUpdateContent._ID );
+		sLastUpdateProjectionMap.put( LastUpdateContent.DATE, LastUpdateContent.DATE );
 
 		sLocalesProjectionMap = new HashMap<String, String>();
 		sLocalesProjectionMap.put(LocalesContent._ID, LocalesContent._ID);

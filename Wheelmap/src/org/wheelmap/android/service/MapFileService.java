@@ -109,6 +109,10 @@ public class MapFileService {
 	public void unregisterResultReceiver(ResultReceiver receiver) {
 		mReceiver.removeReceiver(receiver);
 	}
+	
+	public int resultReceiverClients() {
+		return mReceiver.getReceiverCount();
+	}
 
 	public void post(Runnable runnable) {
 		mHandler.post(new MapFileRunnable(runnable));
