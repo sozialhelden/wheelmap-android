@@ -5,10 +5,13 @@
     <!-- ActionBar -->
 	<LinearLayout style="@style/TitleBar">
 
+	   <ImageView android:id="@+id/icon" style="@style/TitleBarTypeIcon" 
+	   		android:layout_marginLeft="6dip" 
+	   		android:layout_gravity="center_vertical" />
        <TextView android:id="@+id/name" style="@style/TitleBarText" />
        
        <ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction"
+	   <ImageButton style="@style/TitleBarAction"
 			android:contentDescription="@string/description_edit" android:src="@drawable/ic_title_edit"
 			android:onClick="onItemEdit" />
 
@@ -46,7 +49,15 @@
 			<TableLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:stretchColumns="1"
 				android:shrinkColumns="1">
-
+				
+				<TableRow>
+					<TextView android:text="@string/poi_property_category" />
+					<TextView android:id="@+id/category" style="@style/DetailFont" />
+				</TableRow>
+				<TableRow>
+					<TextView android:text="@string/poi_property_nodetype" />
+					<TextView android:id="@+id/nodetype" style="@style/DetailFont" />
+				</TableRow>
 				<TableRow>
 					<TextView android:text="@string/poi_property_comment" />
 					<TextView android:id="@+id/comment" style="@style/DetailFont" />
@@ -68,7 +79,7 @@
 			<org.mapsforge.android.maps.MapView
        			android:id="@+id/map"
                 android:layout_width="fill_parent"
-                android:layout_height="250dp"
+                android:layout_height="235dp"
                 android:layout_marginTop="10dip"
                  /> 
 		</LinearLayout>

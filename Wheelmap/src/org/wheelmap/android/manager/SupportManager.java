@@ -12,6 +12,7 @@ import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
 import wheelmap.org.WheelchairState;
 
@@ -25,11 +26,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 
 public class SupportManager implements DetachableResultReceiver.Receiver {
 	private static final String TAG = "support";
@@ -40,9 +44,18 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	private Map<Integer, Category> mCategoryLookup;
 
 	private DetachableResultReceiver mReceiver;
+	private DetachableResultReceiver mStatusSender;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	private final static long DATE_DURATION_FOR_UPDATE = 1;
+
+	private final static int INSET_LEFT = 3;
+	private final static int INSET_TOP = 7;
+	private final static int INSET_RIGHT = 22;
+	private final static int INSET_BOTTOM = 11;
+	
+	public final static int CREATION_RUNNING = 0x20;
+	public final static int CREATION_FINISHED = 0x21;
 
 	private Drawable[] stateDrawables;
 
@@ -53,7 +66,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			this.categoryId = categoryId;
 		}
 
-		public Map<WheelchairState, Drawable> mDrawables;
+		public Drawable iconDrawable;
+		public Map<WheelchairState, Drawable> stateDrawables;
 		public int id;
 		public String identifier;
 		public String localizedName;
@@ -80,21 +94,21 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		Drawable dNo;
 		Drawable dLimited;
 		Resources res = mContext.getResources();
-		dUnknown = res.getDrawable(
-				R.drawable.marker_unknown);
+		dUnknown = res.getDrawable(R.drawable.marker_unknown);
 		dYes = res.getDrawable(R.drawable.marker_yes);
 		dNo = res.getDrawable(R.drawable.marker_no);
-		dLimited = res.getDrawable(
-				R.drawable.marker_limited);
+		dLimited = res.getDrawable(R.drawable.marker_limited);
+
+		stateDrawables = new Drawable[] { dUnknown, dYes, dLimited, dNo, null };
 		
-		stateDrawables = new Drawable[]{ dUnknown, dYes, dLimited, dNo, null }; 
+		mStatusSender = new DetachableResultReceiver(new Handler());
 	}
 
 	public static SupportManager get() {
 		return INSTANCE;
 	}
 
-	public static SupportManager initOnce(Context ctx) {
+	public static SupportManager initOnce(Context ctx ) {
 		if (INSTANCE == null) {
 			INSTANCE = new SupportManager(ctx);
 			INSTANCE.init();
@@ -104,11 +118,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	public void init() {
 		Log.d(TAG, "SupportManager:init");
-
+		
 		if (!checkIfUpdateDurationPassed()) {
 			initLookup();
 			return;
 		}
+		
+		mStatusSender.send( CREATION_RUNNING, Bundle.EMPTY );
 
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
@@ -128,6 +144,10 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		mContext.startService(nodeTypesIntent);
 
 		createCurrentTimeTag();
+	}
+	
+	public void registerReceiver( Receiver receiver ) {
+		mStatusSender.setReceiver( receiver, true );
 	}
 
 	private boolean checkIfUpdateDurationPassed() {
@@ -182,6 +202,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				break;
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
 				initNodeTypes();
+				mStatusSender.send( CREATION_FINISHED, Bundle.EMPTY );
 				break;
 			default:
 				// nothing to do
@@ -233,10 +254,22 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 			NodeType nodeType = new NodeType(identifier, localizedName,
 					categoryId);
-			nodeType.mDrawables = createDrawableLookup(iconData);
+			nodeType.iconDrawable = createIconDrawable(iconData);
+			nodeType.stateDrawables = createDrawableLookup(iconData);
 			mNodeTypeLookup.put(id, nodeType);
 			cursor.moveToNext();
 		}
+	}
+
+	private Drawable createIconDrawable(byte[] iconData) {
+		Drawable iconDrawable = null;
+		if (iconData != null) {
+			Bitmap bitmap = BitmapFactory.decodeByteArray(iconData, 0,
+					iconData.length);
+			Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, 48, 48,  true );
+			iconDrawable = new BitmapDrawable(scaledBitmap);
+		}
+		return iconDrawable;
 	}
 
 	private Map<WheelchairState, Drawable> createDrawableLookup(byte[] iconData) {
@@ -246,16 +279,28 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 					iconData.length);
 			iconDrawable = new BitmapDrawable(bitmap);
 		}
-		
+
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
-		
+
 		int idx;
-		for( idx = 0; idx < stateDrawables.length - 1; idx++ ) {
-			Drawable[] drawableArray = new Drawable[] { stateDrawables[idx], iconDrawable };
-			LayerDrawable layerDrawable = new LayerDrawable( drawableArray );
-			lookupMap.put( WheelchairState.valueOf(idx), layerDrawable );
+		for (idx = 0; idx < stateDrawables.length - 1; idx++) {
+			Drawable resultDrawable;
+			if (iconDrawable != null) {
+				Drawable innerDrawable = new InsetDrawable(iconDrawable,
+						INSET_LEFT, INSET_TOP, INSET_RIGHT, INSET_BOTTOM);
+
+				Drawable[] drawableArray = new Drawable[] {
+						stateDrawables[idx], innerDrawable };
+				resultDrawable = new LayerDrawable(drawableArray);
+			} else {
+				resultDrawable = stateDrawables[idx];
+			}
+			resultDrawable.setBounds(0, 0, resultDrawable.getIntrinsicWidth(),
+					resultDrawable.getIntrinsicHeight());
+
+			lookupMap.put(WheelchairState.valueOf(idx), resultDrawable);
 		}
-		
+
 		return lookupMap;
 	}
 

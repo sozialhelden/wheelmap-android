@@ -9,6 +9,8 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayItem;
 import org.wheelmap.android.R;
+import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
@@ -28,7 +30,10 @@ import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity {
 
+	private ImageView iconImage=null;
 	private TextView nameText=null;
+	private TextView categoryText=null;
+	private TextView nodetypeText=null;
 	private TextView commentText=null;
 	private TextView addressText=null;
 	private TextView websiteText=null;
@@ -54,7 +59,10 @@ public class POIDetailActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);   
 
+		iconImage=(ImageView)findViewById(R.id.icon);
 		nameText=(TextView)findViewById(R.id.name);
+		categoryText=(TextView)findViewById( R.id.category );
+		nodetypeText=(TextView)findViewById( R.id.nodetype );
 
 		phoneText=(TextView)findViewById(R.id.phone);
 		addressText=(TextView)findViewById(R.id.addr);
@@ -157,16 +165,24 @@ public class POIDetailActivity extends MapActivity {
 		String comment = POIHelper.getComment( cur );
 		int lat = (int)(POIHelper.getLatitude( cur ) * 1E6);
 		int lon = (int)(POIHelper.getLongitude( cur ) * 1E6);
+		int nodeTypeId = POIHelper.getNodeTypeId( cur );
+		int categoryId = POIHelper.getCategoryId( cur );
+		
+		NodeType nodeType = SupportManager.get().lookupNodeType(nodeTypeId);
+		iconImage.setImageDrawable( nodeType.iconDrawable );
 			
 		setWheelchairState( state );
 		nameText.setText( name );
+		String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
+		categoryText.setText( category );
+		nodetypeText.setText( nodeType.localizedName );
 		commentText.setText( comment );
 		addressText.setText(POIHelper.getAddress(cur));
 		websiteText.setText(POIHelper.getWebsite(cur));
 		phoneText.setText(POIHelper.getPhone(cur));
 		
 		POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
-		overlay.setItem( name, comment,  state, lat, lon );
+		overlay.setItem( name, comment, nodeType, state, lat, lon );
 		mapView.getOverlays().clear();
 		mapView.getOverlays().add( overlay );
 		mapController.setCenter( new GeoPoint( lat, lon));
@@ -217,51 +233,21 @@ public class POIDetailActivity extends MapActivity {
 	static final private int SELECT_WHEELCHAIRSTATE = 0;
 
 	private class POIMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
-		
-		private Drawable dUnknown;
-		private Drawable dYes;
-		private Drawable dNo;
-		private Drawable dLimited;
 		private OverlayItem item;
 		
 		private int items;
 		
 		public POIMapsforgeOverlay() {
 			super(null);
-			
-			dUnknown = POIDetailActivity.this.getResources().getDrawable(
-					R.drawable.marker_unknown);
-			dYes = POIDetailActivity.this.getResources().getDrawable(R.drawable.marker_yes);
-			dNo = POIDetailActivity.this.getResources().getDrawable(R.drawable.marker_no);
-			dLimited = POIDetailActivity.this.getResources().getDrawable(
-					R.drawable.marker_limited);
 			items = 0;
 		}
 		
-		public void setItem( String title, String snippet, WheelchairState state, int latitude, int longitude ) {
+		public void setItem( String title, String snippet, NodeType nodeType, WheelchairState state, int latitude, int longitude ) {
 			
-			Drawable marker;
-			switch (state) {
-			case UNKNOWN:
-				marker = dUnknown;
-				break;
-			case YES:
-				marker = dYes;
-				break;
-			case LIMITED:
-				marker = dLimited;
-				break;
-			case NO:
-				marker = dNo;
-				break;
-			default:
-				marker = dUnknown;
-			}
-			marker.setBounds(0, 0, marker.getIntrinsicWidth(),
-					marker.getIntrinsicHeight());
+			Drawable marker = nodeType.stateDrawables.get( state );
 			item = new OverlayItem();
 			item.setTitle( title );
-			item.setSnippet( snippet);
+			item.setSnippet( snippet );
 			item.setMarker( marker );
 			item.setPoint( new GeoPoint( latitude, longitude));
 			items = 1;

@@ -1,12 +1,14 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.map.POIsMapActivity;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 
 	/** State held between configuration changes. */
 	private State mState;
+	private ProgressDialog mCreationDialog; 
 
 	/** Called when the activity is first created. */
 	@Override
@@ -36,6 +39,9 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
+		
+		SupportManager.get().registerReceiver( this );
+
 	}
 
 	public void onListClick(View v) {
@@ -79,6 +85,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		switch (resultCode) {
+		
 		case SyncService.STATUS_RUNNING: {
 			mState.mSyncing = true;
 			updateRefreshStatus();
@@ -96,6 +103,15 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 			final String errorText = getString(R.string.toast_sync_error, resultData
 					.getString(Intent.EXTRA_TEXT));
 			Toast.makeText(WheelmapHomeActivity.this, errorText, Toast.LENGTH_LONG).show();
+			break;
+		}
+		case SupportManager.CREATION_RUNNING: {
+			mCreationDialog = ProgressDialog.show(this, this.getText( R.string.title_please_wait ),
+					this.getText( R.string.description_loading_please_wait ), true );
+			break;
+		}
+		case SupportManager.CREATION_FINISHED: {
+			mCreationDialog.dismiss();
 			break;
 		}
 		}

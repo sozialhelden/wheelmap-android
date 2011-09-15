@@ -3,6 +3,7 @@ package org.wheelmap.android.ui;
 import org.wheelmap.android.R;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -48,7 +49,7 @@ public class POIsListItemView extends RelativeLayout {
 		poiDistance.setText(name);
 	}
 
-	public void setIcon(int id) {
-		poiIcon.setImageDrawable(getResources().getDrawable(id));		
+	public void setIcon(Drawable drawable) {
+		poiIcon.setImageDrawable( drawable );
 	}
 }

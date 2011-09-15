@@ -14,6 +14,8 @@ public class DetachableResultReceiver extends ResultReceiver {
 	private static final String TAG = "DetachableResultReceiver";
 
 	private Receiver mReceiver;
+	private int resultCode;
+	private Bundle resultData;
 
 	public DetachableResultReceiver(Handler handler) {
 		super(handler);
@@ -26,6 +28,12 @@ public class DetachableResultReceiver extends ResultReceiver {
 	public void setReceiver(Receiver receiver) {
 		mReceiver = receiver;
 	}
+	
+	public void setReceiver(Receiver receiver, boolean resendLast ) {
+		mReceiver = receiver;
+		if ( resendLast )
+			mReceiver.onReceiveResult( resultCode, resultData);
+	}
 
 	public interface Receiver {
 		public void onReceiveResult(int resultCode, Bundle resultData);
@@ -33,6 +41,9 @@ public class DetachableResultReceiver extends ResultReceiver {
 
 	@Override
 	protected void onReceiveResult(int resultCode, Bundle resultData) {
+		this.resultCode = resultCode;
+		this.resultData = resultData;
+		
 		if (mReceiver != null) {
 			mReceiver.onReceiveResult(resultCode, resultData);
 		} else {

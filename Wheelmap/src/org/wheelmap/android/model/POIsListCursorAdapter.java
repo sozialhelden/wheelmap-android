@@ -1,6 +1,6 @@
 package org.wheelmap.android.model;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.ui.POIsListItemView;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
@@ -8,6 +8,7 @@ import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
 import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -44,25 +45,9 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		int index = cursor.getColumnIndex( POIsCursorWrapper.LOCATION_COLUMN_NAME );
 		double distance = cursor.getDouble( index );
 		pliv.setDistance( mDistanceFormatter.format( distance ));
-		
-		switch (state) {
-		case UNKNOWN: 
-			pliv.setIcon(R.drawable.marker_unknown);
-			break;
-		case YES:
-			pliv.setIcon(R.drawable.marker_yes);
-			break;
-		case LIMITED:
-			pliv.setIcon(R.drawable.marker_limited);
-			break;
-		case NO:
-			pliv.setIcon(R.drawable.marker_no);
-			break;
-		default:
-			pliv.setIcon(R.drawable.marker_unknown);
-			break;
-		}
-
+		int nodeType = POIHelper.getNodeTypeId( cursor );
+		Drawable marker = SupportManager.get().lookupNodeType(nodeType).stateDrawables.get(state);
+		pliv.setIcon( marker );
 	}
 
 	@Override

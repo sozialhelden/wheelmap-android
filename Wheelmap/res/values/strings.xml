@@ -79,4 +79,8 @@
     <string name="settings_wheelchair_nopreference">No preference</string>
     <string name="settings_wheelchair_unknown_accesible">Unknown accesibility</string>
     <string name="value_onehalf_distance_unit">0.5</string>
+    <string name="poi_property_nodetype">Type</string>
+    <string name="poi_property_category">Category</string>
+    <string name="title_please_wait">Please wait</string>
+    <string name="description_loading_please_wait">Loading icons from the net.</string>
 </resources>
