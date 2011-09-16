@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ToggleButton;
 
 public class POIDetailActivityEditable extends FormActivity {
 	private final static String TAG = "poidetail";
@@ -98,16 +97,15 @@ public class POIDetailActivityEditable extends FormActivity {
 		ContentValues values = new ContentValues();
 		try {				
 			values.put(Wheelmap.POIs.NAME, jo.get("name").toString());
-
-
+			
+			int categoryId = jo.getInt( "category" );			
+			String categoryIdentifier = SupportManager.get().lookupCategory(categoryId).identifier;
+			values.put(Wheelmap.POIs.CATEGORY_ID, categoryId );
+			values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, categoryIdentifier );
+			
 			int nodeTypeId = jo.getInt( "type");
 			NodeType nodeType = SupportManager.get().lookupNodeType( nodeTypeId );
 			String nodeTypeIdentifier = nodeType.identifier;
-			int categoryId = nodeType.categoryId;			
-			String categoryIdentifier = SupportManager.get().lookupCategory(categoryId).identifier;
-			
-			values.put(Wheelmap.POIs.CATEGORY_ID, categoryId );
-			values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, categoryIdentifier );
 			values.put(Wheelmap.POIs.NODETYPE_ID, nodeTypeId );
 			values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, nodeTypeIdentifier);
 			
