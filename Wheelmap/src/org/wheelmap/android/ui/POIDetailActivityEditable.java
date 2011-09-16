@@ -6,10 +6,12 @@ import java.util.List;
 
 import makemachine.android.formgenerator.FormActivity;
 import makemachine.android.formgenerator.FormSpinner;
+import makemachine.android.formgenerator.FormWidget;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.Category;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -23,6 +25,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ToggleButton;
 
 public class POIDetailActivityEditable extends FormActivity {
 	private final static String TAG = "poidetail";
@@ -31,14 +34,18 @@ public class POIDetailActivityEditable extends FormActivity {
 	public static final int OPTION_CANCEL = 1;
 
 	private Long poiID;
-
+	private FormSpinner nodeTypeSpinner;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		generateForm( FormActivity.parseFileToString( this, "schema_poi.json" ) );
-		FormSpinner spinner = (FormSpinner) lookupWidget( "type" );
-		addNodeTypeSelection(spinner);	
+		FormSpinner catSpinner = (FormSpinner) lookupWidget( "category" );
+		catSpinner.setToggleHandler( new MyToggleHandler());
+		addCategoryTypeSelection( catSpinner );
+
+		nodeTypeSpinner = (FormSpinner) lookupWidget( "type" );
 		
 		poiID=getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
@@ -91,7 +98,6 @@ public class POIDetailActivityEditable extends FormActivity {
 		ContentValues values = new ContentValues();
 		try {				
 			values.put(Wheelmap.POIs.NAME, jo.get("name").toString());
-			// TODO: add nodetype support to gui
 
 
 			int nodeTypeId = jo.getInt( "type");
@@ -148,6 +154,7 @@ public class POIDetailActivityEditable extends FormActivity {
 			jo.put("phone",POIHelper.getPhone(cur));
 			jo.put("comment",POIHelper.getComment(cur));
 			jo.put( "type", POIHelper.getNodeTypeId( cur ));
+			jo.put( "category", POIHelper.getCategoryId( cur ));
 			cur.close();
 
 		}
@@ -163,10 +170,22 @@ public class POIDetailActivityEditable extends FormActivity {
 		
 	}
 	
-	private void addNodeTypeSelection( FormSpinner spinner ) {
+	private void addCategoryTypeSelection( FormSpinner spinner ) {
 		JSONObject options = new JSONObject();
-		List<NodeType> nodeTypes = SupportManager.get().getNodeTypeList();
-		// TODO: Sorting doesnt help help to display the options content sorted.
+		List<Category> categories = SupportManager.get().getCategoryList();
+		for( Category cat: categories ) {
+			try {
+				options.put( Integer.toString( cat.id ), cat.localizedName);
+			} catch (JSONException e) {
+				Log.v(TAG, e.getMessage());
+			}
+		}
+		spinner.fillAdapter( options );
+	}
+	
+	private void addNodeTypeSelection( FormSpinner spinner, int categoryId ) {
+		JSONObject options = new JSONObject();
+		List<NodeType> nodeTypes = SupportManager.get().getNodeTypeListByCategory( categoryId );
 		Collections.sort( nodeTypes, new NodeTypeComparator());
 		for( NodeType type: nodeTypes ) {
 			try {
@@ -176,5 +195,14 @@ public class POIDetailActivityEditable extends FormActivity {
 			}
 		}
 		spinner.fillAdapter( options );
+	}
+	
+	private class MyToggleHandler extends FormWidgetToggleHandler {
+		public void toggle( FormWidget widget ) {
+			super.toggle( widget );
+			int categoryId = Integer.valueOf( widget.getValue());
+			Log.d( TAG, "MyToggleHandler: widget.getValue = " + widget.getValue());
+			addNodeTypeSelection( nodeTypeSpinner, categoryId );
+		}
 	}
 }	

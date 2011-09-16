@@ -10,7 +10,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
-abstract class FormWidget 
+public abstract class FormWidget 
 {
 	protected View 			_view;
 	protected String 		_property;

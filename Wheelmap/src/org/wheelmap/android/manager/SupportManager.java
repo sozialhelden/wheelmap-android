@@ -340,6 +340,19 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		
 		return list;
 	}
+	
+	public List<NodeType> getNodeTypeListByCategory( int categoryId ) {
+		Set<Integer> keys = mNodeTypeLookup.keySet();
+		List<NodeType> list = new ArrayList<NodeType>();
+		for( Integer key: keys ) {
+			NodeType nodeType = mNodeTypeLookup.get(key);
+			
+			if ( nodeType.categoryId == categoryId ) {
+				list.add( nodeType );
+			}
+		}
+		return list;
+	}
 
 	private void insertContentValues(Uri contentUri, String[] projection,
 			String whereClause, String[] whereValues, ContentValues values) {

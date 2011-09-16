@@ -302,7 +302,7 @@ public abstract class FormActivity extends Activity
 	/**
 	 * simple callbacks for widgets to use when their values have changed
 	 */
-	class FormWidgetToggleHandler
+	public class FormWidgetToggleHandler
 	{
 		public void toggle( FormWidget widget ) {
 			updateToggles( widget );

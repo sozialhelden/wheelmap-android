@@ -21,11 +21,20 @@
             "3": "Not accessible" 
         } 
     },
+    "category": {
+    	"type": "integer",
+    	"id": "10",
+    	"default": "0",
+    	"priority": "3",
+    	"options": {
+    		"0": "Dummy"
+    	}
+    },
     "type": {
     	"type": "integer",
     	"id": "9",
     	"default": "0",
-    	"priority": "3",
+    	"priority": "4",
     	"options": {
     		"0": "Dummy"
     	}
@@ -34,36 +43,36 @@
         "type": "string",
         "id": "3",
         "default": "",
-        "priority": "4" 
+        "priority": "5" 
     },
     "street": {
         "type": "string",
         "id": "4",
         "default": "",
-        "priority": "5" 
+        "priority": "6" 
     },
     "postcode": {
         "type": "string",
         "id": "5",
         "default": "",
-        "priority": "6" 
+        "priority": "7" 
     },
     "city": {
         "type": "string",
         "id": "6",
         "default": "",
-        "priority": "7" 
+        "priority": "8" 
     },
     "website": {
         "type": "string",
         "id": "7",
         "default": "",
-        "priority": "8" 
+        "priority": "9" 
     },
     "phone": {
         "type": "string",
         "id": "8",
         "default": "",
-        "priority": "9" 
+        "priority": "10" 
     }
 }
