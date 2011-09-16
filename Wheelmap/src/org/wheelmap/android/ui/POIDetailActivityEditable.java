@@ -182,7 +182,7 @@ public class POIDetailActivityEditable extends FormActivity {
 		}
 		spinner.fillAdapter( options );
 	}
-	
+		
 	private void addNodeTypeSelection( FormSpinner spinner, int categoryId ) {
 		JSONObject options = new JSONObject();
 		List<NodeType> nodeTypes = SupportManager.get().getNodeTypeListByCategory( categoryId );
@@ -203,6 +203,7 @@ public class POIDetailActivityEditable extends FormActivity {
 			int categoryId = Integer.valueOf( widget.getValue());
 			Log.d( TAG, "MyToggleHandler: widget.getValue = " + widget.getValue());
 			addNodeTypeSelection( nodeTypeSpinner, categoryId );
+			nodeTypeSpinner.setValue( Integer.toString( 0 ));
 		}
 	}
 }	
