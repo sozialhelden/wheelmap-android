@@ -1,9 +1,12 @@
 package org.wheelmap.android.manager;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.wheelmap.android.R;
 import org.wheelmap.android.model.MapFileInfo;
@@ -47,7 +50,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	private DetachableResultReceiver mStatusSender;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
-	private final static long DATE_DURATION_FOR_UPDATE = 1;
+	// TODO: put in a proper update INTERVAL
+	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 1;
 
 	private final static int INSET_LEFT = 3;
 	private final static int INSET_TOP = 7;
@@ -56,11 +60,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	
 	public final static int CREATION_RUNNING = 0x20;
 	public final static int CREATION_FINISHED = 0x21;
+	public final static int CREATION_ERROR = 0x22;
 
 	private Drawable[] stateDrawables;
 
 	public static class NodeType {
-		public NodeType(String identifier, String localizedName, int categoryId) {
+		public NodeType(int id, String identifier, String localizedName, int categoryId) {
+			this.id = id;
 			this.identifier = identifier;
 			this.localizedName = localizedName;
 			this.categoryId = categoryId;
@@ -75,11 +81,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	}
 
 	public static class Category {
-		public Category(String identifier, String localizedName) {
+		public Category(int id, String identifier, String localizedName) {
+			this.id = id;
 			this.identifier = identifier;
 			this.localizedName = localizedName;
 		}
 
+		public int id;
 		public String identifier;
 		public String localizedName;
 	}
@@ -168,7 +176,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			long days = (now - date.getTime()) / MILLISECS_PER_DAY;
 			Log.d(TAG, "checkIfUpdateDurationPassed: days = " + days);
 
-			if (days >= DATE_DURATION_FOR_UPDATE)
+			if (days >= DATE_INTERVAL_FOR_UPDATE_IN_DAYS)
 				return true;
 
 			return false;
@@ -207,6 +215,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			default:
 				// nothing to do
 			}
+		} else if ( resultCode == SyncService.STATUS_ERROR ) {
+			mStatusSender.send( CREATION_ERROR, resultData );
 		}
 	}
 
@@ -231,7 +241,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			int id = CategoriesContent.getCategoryId(cursor);
 			String identifier = CategoriesContent.getIdentifier(cursor);
 			String localizedName = CategoriesContent.getLocalizedName(cursor);
-			mCategoryLookup.put(id, new Category(identifier, localizedName));
+			mCategoryLookup.put(id, new Category(id, identifier, localizedName));
 
 			cursor.moveToNext();
 		}
@@ -252,7 +262,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			int categoryId = NodeTypesContent.getCategoryId(cursor);
 			byte[] iconData = NodeTypesContent.getIconData(cursor);
 
-			NodeType nodeType = new NodeType(identifier, localizedName,
+			NodeType nodeType = new NodeType(id, identifier, localizedName,
 					categoryId);
 			nodeType.iconDrawable = createIconDrawable(iconData);
 			nodeType.stateDrawables = createDrawableLookup(iconData);
@@ -310,6 +320,25 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	public NodeType lookupNodeType(int id) {
 		return mNodeTypeLookup.get(id);
+	}
+	
+	public List<Category> getCategoryList() {
+		Set<Integer> keys = mCategoryLookup.keySet();
+		List<Category> list = new ArrayList<Category>();
+		for( Integer key: keys ) {
+			list.add( mCategoryLookup.get( key ));
+		}
+		return list;
+	}
+	
+	public List<NodeType> getNodeTypeList() {
+		Set<Integer> keys = mNodeTypeLookup.keySet();
+		List<NodeType> list = new ArrayList<NodeType>();
+		for( Integer key: keys ) {
+			list.add( mNodeTypeLookup.get( key ));
+		}
+		
+		return list;
 	}
 
 	private void insertContentValues(Uri contentUri, String[] projection,

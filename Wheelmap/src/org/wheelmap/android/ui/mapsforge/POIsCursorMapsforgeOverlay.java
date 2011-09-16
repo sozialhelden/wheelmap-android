@@ -59,7 +59,10 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			int lat = POIHelper.getLatitudeAsInt( mCursor );
 			int lng = POIHelper.getLongitudeAsInt( mCursor );
 			int nodeTypeId = POIHelper.getNodeTypeId( mCursor );
-			Drawable marker = SupportManager.get().lookupNodeType( nodeTypeId ).stateDrawables.get( state );
+			Drawable marker = null;
+			if ( nodeTypeId != 0 )
+				marker = SupportManager.get().lookupNodeType( nodeTypeId ).stateDrawables.get( state );
+
 			OverlayItem item = new OverlayItem();
 			item.setTitle( name );
 			item.setSnippet( name );

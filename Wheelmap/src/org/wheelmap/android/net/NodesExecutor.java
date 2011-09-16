@@ -11,6 +11,9 @@ import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import wheelmap.org.domain.node.Node;
 import wheelmap.org.domain.node.Nodes;
 import wheelmap.org.request.AcceptType;
+import wheelmap.org.request.BaseNodesRequestBuilder;
+import wheelmap.org.request.CategoryNodesRequestBuilder;
+import wheelmap.org.request.NodeTypeNodesRequestBuilder;
 import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import android.content.ContentResolver;
@@ -28,6 +31,8 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 	private BoundingBox mBoundingBox;
 	private WheelchairState mWheelchairState;
 	private Context mContext;
+	private int mCategory = -1;
+	private int mNodeType = -1;
 	
 
 	public NodesExecutor(Context context, ContentResolver resolver, Bundle bundle) {
@@ -58,6 +63,12 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 							+ distance);
 		}
 		
+		if ( getBundle().containsKey( SyncService.EXTRA_CATEGORY )) {
+			mCategory = getBundle().getInt( SyncService.EXTRA_CATEGORY );
+		} else if ( getBundle().containsKey( SyncService.EXTRA_NODETYPE )) {
+			mNodeType = getBundle().getInt( SyncService.EXTRA_NODETYPE );
+		}
+		
 		mWheelchairState = getWheelchairStateFromPreferences();
 		
 		deleteRetrievedData();
@@ -66,10 +77,15 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 	@Override
 	public void execute() throws ExecutorException {
 		final long startRemote = System.currentTimeMillis();
-		// Retrieve all Pages is terribly slow. Anybody knows why?
-		// mRemoteExecutor.retrieveAllPages(bb, wheelState);
-		final NodesRequestBuilder requestBuilder = new NodesRequestBuilder( SERVER, API_KEY, AcceptType.JSON );
-		// 1. maxi nodes
+		BaseNodesRequestBuilder requestBuilder;
+		if ( mCategory != -1 ) {
+			requestBuilder = new CategoryNodesRequestBuilder(SERVER, API_KEY, AcceptType.JSON, mCategory );
+		} else if ( mNodeType != -1 ) {
+			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER, API_KEY, AcceptType.JSON, mNodeType );
+		} else {
+			requestBuilder = new NodesRequestBuilder( SERVER, API_KEY, AcceptType.JSON );
+		}
+		
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))
 				.boundingBox(mBoundingBox);
 		requestBuilder.wheelchairState(mWheelchairState);

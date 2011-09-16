@@ -384,6 +384,10 @@ public abstract class FormActivity extends Activity
 		}
 		return null;
 	}
+	
+	public FormWidget lookupWidget( String name ) {
+		return _map.get( name );
+	}
 }
 
 

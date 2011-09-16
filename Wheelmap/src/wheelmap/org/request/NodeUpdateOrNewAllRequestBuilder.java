@@ -11,6 +11,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 	private static final String RESOURCE = "nodes";
 	private long id;
 	private String name;
+	private String category;
 	private String type;
 	private double latitude;
 	private double longitude;
@@ -27,13 +28,14 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 
 	public NodeUpdateOrNewAllRequestBuilder(final String server,
 			final String apiKey, final AcceptType acceptType, long id,
-			String name, String type, double latitude, double longitude,
+			String name, String category, String type, double latitude, double longitude,
 			WheelchairState state, String wheelchair_desc, String street,
 			String housenumber, String city, String postcode, String website,
 			String phone, boolean update) {
 		super(server, apiKey, acceptType);
 		this.id = id;
 		this.name = name;
+		this.category = category;
 		this.type = type;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -64,6 +66,11 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 		requestAsStringBuffer.append("&wheelchair=");
 		requestAsStringBuffer.append(state.asRequestParameter());
 
+		if (category != null && !(category.length() == 0)) {
+			requestAsStringBuffer.append("&category=");
+			requestAsStringBuffer.append(category);
+		}
+		
 		if (wheelchair_desc != null && !(wheelchair_desc.length() == 0)) {
 			String tmpString = wheelchair_desc.length() > 255 ? wheelchair_desc.substring(0, 254) : wheelchair_desc;
 			requestAsStringBuffer.append("&wheelchair_description=");

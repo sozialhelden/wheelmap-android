@@ -114,6 +114,13 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 			mCreationDialog.dismiss();
 			break;
 		}
+		case SupportManager.CREATION_ERROR: {
+			mCreationDialog.dismiss();
+			final String errorText = getString(R.string.toast_sync_error, resultData
+					.getString(Intent.EXTRA_TEXT));
+			Toast.makeText(WheelmapHomeActivity.this, errorText, Toast.LENGTH_LONG).show();
+			break;
+		}
 		}
 	}
 	

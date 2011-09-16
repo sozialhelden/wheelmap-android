@@ -46,8 +46,10 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		double distance = cursor.getDouble( index );
 		pliv.setDistance( mDistanceFormatter.format( distance ));
 		int nodeType = POIHelper.getNodeTypeId( cursor );
-		Drawable marker = SupportManager.get().lookupNodeType(nodeType).stateDrawables.get(state);
-		pliv.setIcon( marker );
+		if ( nodeType != 0 ) {
+			Drawable marker = SupportManager.get().lookupNodeType(nodeType).stateDrawables.get(state);
+			pliv.setIcon( marker );
+		}
 	}
 
 	@Override

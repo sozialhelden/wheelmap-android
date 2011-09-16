@@ -99,8 +99,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 			update = true;
 
 		String name = POIHelper.getName(mCursor);
-		// TODO: node type;
-		String type = "butcher";
+		String category = POIHelper.getCategoryIdentifier( mCursor );
+		String type = POIHelper.getNodeTypeIdentifier(mCursor);
 		double latitude = POIHelper.getLatitude(mCursor);
 		double longitude = POIHelper.getLongitude(mCursor);
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
@@ -113,7 +113,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String phone = POIHelper.getPhone(mCursor);
 
 		return new NodeUpdateOrNewAllRequestBuilder(SERVER, API_KEY,
-				AcceptType.JSON, id, name, type, latitude, longitude, state,
+				AcceptType.JSON, id, name, category, type, latitude, longitude, state,
 				comment, street, housenumber, city, postcode, website, phone,
 				update);
 

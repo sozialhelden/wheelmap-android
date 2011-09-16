@@ -27,7 +27,9 @@ public class SyncService extends IntentService {
 	public static final String EXTRA_BOUNDING_BOX = "org.wheelmap.android.EXTRA_BOUNDING_BOX";
 	public static final String EXTRA_LOCATION = "org.wheelmap.android.EXTRA_LOCATION";
 	public static final String EXTRA_DISTANCE_LIMIT = "org.wheelmap.android.EXTRA_DISTANCE_LIMIT";
-	public static final String EXTRA_LOCALE = "org.wheelmap.android.EXTRA_LOCAL";
+	public static final String EXTRA_LOCALE = "org.wheelmap.android.EXTRA_LOCALE";
+	public static final String EXTRA_CATEGORY = "org.wheelmap.android.EXTRA_CATEGORY";
+	public static final String EXTRA_NODETYPE = "org.wheelmap.android.EXTRA_NODETYPE";
 
 	public static final String EXTRA_WHAT = "org.wheelmap.android.EXTRA_WHAT";
 	public static final int WHAT_RETRIEVE_NODES = 0x1;

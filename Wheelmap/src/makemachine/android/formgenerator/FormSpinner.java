@@ -35,10 +35,6 @@ public class FormSpinner extends FormWidget
 		
 		_spinner = new Spinner( context );
 		_spinner.setLayoutParams( FormActivity.defaultLayoutParams );
-
-		String p;
-		String name;
-		JSONArray propertyNames = options.names();
 		
 		_propmap = new HashMap<String, String>();
 		_adapter = new ArrayAdapter<String>( context, android.R.layout.simple_spinner_item );
@@ -46,6 +42,18 @@ public class FormSpinner extends FormWidget
 		_spinner.setAdapter( _adapter );
 		_spinner.setSelection( 0 );
 		
+		fillAdapter( options );
+		
+		_layout.addView( _label );
+		_layout.addView( _spinner );
+	}
+	
+	public void fillAdapter( JSONObject options ) {
+		String p;
+		String name;
+		JSONArray propertyNames = options.names();
+		
+		_adapter.clear();
 		try{
 			for( int i = 0; i < options.length(); i++ ) 
 			{
@@ -58,9 +66,7 @@ public class FormSpinner extends FormWidget
 		} catch( JSONException e){
 			
 		}
-		
-		_layout.addView( _label );
-		_layout.addView( _spinner );
+		_options = options;
 	}
 	
 	@Override
