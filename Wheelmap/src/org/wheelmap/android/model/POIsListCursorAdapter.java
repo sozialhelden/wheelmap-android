@@ -1,6 +1,7 @@
 package org.wheelmap.android.model;
 
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.ui.POIsListItemView;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
@@ -36,20 +37,26 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		POIsListItemView  pliv = (POIsListItemView ) view;
 		
 		String name = POIHelper.getName(cursor);
-		String category = POIHelper.getAddress(cursor);
 		WheelchairState state = POIHelper.getWheelchair(cursor);
-
-		pliv.setName(name);
-		pliv.setCategory(category);		
-
 		int index = cursor.getColumnIndex( POIsCursorWrapper.LOCATION_COLUMN_NAME );
 		double distance = cursor.getDouble( index );
-		pliv.setDistance( mDistanceFormatter.format( distance ));
-		int nodeType = POIHelper.getNodeTypeId( cursor );
-		if ( nodeType != 0 ) {
-			Drawable marker = SupportManager.get().lookupNodeType(nodeType).stateDrawables.get(state);
-			pliv.setIcon( marker );
+		int categoryId = POIHelper.getCategoryId( cursor );
+		int nodeTypeId = POIHelper.getNodeTypeId( cursor );
+		NodeType nodeType = SupportManager.get().lookupNodeType(nodeTypeId);
+
+		if ( name.length() > 0 )
+			pliv.setName( name );
+		else {
+			String nodeTypeName = nodeType.localizedName;
+			pliv.setName( nodeTypeName );
 		}
+		String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
+		pliv.setCategory( category + " - " + nodeType.localizedName );
+		
+		pliv.setDistance( mDistanceFormatter.format( distance ));
+		
+		Drawable marker = nodeType.stateDrawables.get(state);
+		pliv.setIcon( marker );
 	}
 
 	@Override

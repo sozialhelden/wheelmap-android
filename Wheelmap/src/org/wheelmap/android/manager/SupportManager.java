@@ -315,11 +315,18 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	}
 
 	public Category lookupCategory(int id) {
-		return mCategoryLookup.get(id);
+		if ( mCategoryLookup.containsKey( id ))
+			return mCategoryLookup.get(id);
+		else
+			return null;
+		
 	}
 
 	public NodeType lookupNodeType(int id) {
-		return mNodeTypeLookup.get(id);
+		if ( mNodeTypeLookup.containsKey( id ))
+			return mNodeTypeLookup.get(id);
+		else
+			return null;
 	}
 	
 	public List<Category> getCategoryList() {

@@ -166,14 +166,12 @@ public class MapFileService {
 			mHandlerThread.start();
 			Looper looper = mHandlerThread.getLooper();
 			mHandler = new MyHandler(looper);
-			mHandler.connect();
 		}
 	}
 
 	public void stop() {
 		if (mHandlerThread != null) {
 			mHandler.interrupt();
-			mHandler.disconnect();
 		}
 	}
 
@@ -297,10 +295,6 @@ public class MapFileService {
 		public void handleMessage(Message msg) {
 			if (mReceiver != null)
 				mReceiver.send(STATUS_RUNNING, Bundle.EMPTY);
-			if (!mFTPClient.isConnected()) {
-				disconnect();
-				connect();
-			}
 			BaseListener listener = (BaseListener) msg.obj;
 			if (listener != null)
 				listener.onRunning();
@@ -310,8 +304,12 @@ public class MapFileService {
 				switch (msg.what) {
 				case WHAT_RETRIEVE_DIRECTORY: {
 					String remoteDirPath = b.getString(EXTRA_REMOTE_DIR);
+					if (!mFTPClient.isConnected()) {
+						connect();
+					}
 					List<FTPFileWithParent> files = new ArrayList<FTPFileWithParent>();
 					retrieveDirectoryContent(remoteDirPath, files);
+					disconnect();
 					if (listener != null)
 						((RetrieveDirectoryListener) listener)
 								.onDirectoryContent(files);
@@ -324,8 +322,12 @@ public class MapFileService {
 					String localDir = b.getString(EXTRA_LOCAL_DIR);
 					String localFile = b.getString(EXTRA_LOCAL_FILE);
 					boolean forceDownload = b.getBoolean(EXTRA_DOWNLOAD_FORCE);
+					if (!mFTPClient.isConnected()) {
+						connect();
+					}
 					retrieveFile(remoteDir, remoteFile, localDir, localFile,
 							forceDownload, listener);
+					disconnect();
 					break;
 				}
 				case WHAT_READ_DIRECTORY: {

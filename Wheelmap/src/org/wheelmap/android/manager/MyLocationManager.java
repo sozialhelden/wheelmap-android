@@ -119,11 +119,15 @@ public class MyLocationManager {
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		long now = System.currentTimeMillis();
-		if (gpsLocation == null)
+		if ( gpsLocation == null && networkLocation == null )
+			return null;
+		else if (gpsLocation == null)
 			return networkLocation;
-		if (now - gpsLocation.getTime() < TIME_DISTANCE_LIMIT) {
+		else if ( networkLocation == null)
 			return gpsLocation;
-		} else if (gpsLocation.getTime() < networkLocation.getTime())
+		else if (now - gpsLocation.getTime() < TIME_DISTANCE_LIMIT)
+			return gpsLocation;
+		else if (gpsLocation.getTime() < networkLocation.getTime())
 			return gpsLocation;
 		else
 			return networkLocation;

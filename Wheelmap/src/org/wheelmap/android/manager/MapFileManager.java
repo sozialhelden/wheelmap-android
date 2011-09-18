@@ -30,27 +30,30 @@ public class MapFileManager {
 	private ContentResolver mResolver;
 	private MapFileService mMapFileService;
 	private boolean mInterrupted;
-
+	
 	private MapFileManager(Context appCtx) {
 		mResolver = appCtx.getContentResolver();
 		mMapFileService = new MapFileService();
-
 	}
 
-	public static MapFileManager get(Context appCtx) {
-		if (INSTANCE == null)
-			INSTANCE = new MapFileManager(appCtx);
-
+	public static MapFileManager get() {
 		INSTANCE.init();
 		return INSTANCE;
 	}
 
+	public static void initOnce( Context context ) {
+		if ( INSTANCE == null )
+			INSTANCE = new MapFileManager( context );
+		INSTANCE.init();
+		INSTANCE.updateLocal();
+	}
+	
 	private void init() {
 		if (mMapFileService == null) {
 			mMapFileService = new MapFileService();
 			mMapFileService.start();
 		}
-		mInterrupted = false;
+		mInterrupted = false;		
 	}
 
 	public void release() {
@@ -123,17 +126,20 @@ public class MapFileManager {
 						contentUri = MapFileInfos.CONTENT_URI_FILES;
 						projection = MapFileInfos.filePROJECTION;
 					}
+					
+					String screenName = MapFileInfo
+							.extractScreenName(fileWithParent.file.getName());
+					String version = null;
+					if ( fileWithParent.file.getType() == FTPFile.DIRECTORY_TYPE ) {
+						version = MapFileInfo
+						.extractVersion(fileWithParent.file.getName());
+					}
 
-					String whereClause = "( " + MapFileInfos.NAME
-							+ " = ? ) AND ( " + MapFileInfos.PARENT_NAME
-							+ " = ? )";
-					String[] whereValues = new String[] {
-							fileWithParent.file.getName(),
-							fileWithParent.parentDir };
+					String whereClause = "( " + MapFileInfos.SCREEN_NAME + " = ? )";
+					String[] whereValues = new String[] { screenName };
 
 					ContentValues values = new ContentValues();
-					values.put(MapFileInfos.SCREEN_NAME, MapFileInfo
-							.extractScreenName(fileWithParent.file.getName()));
+					values.put(MapFileInfos.SCREEN_NAME, screenName);
 					values.put(MapFileInfos.REMOTE_NAME,
 							fileWithParent.file.getName());
 					values.put(MapFileInfos.REMOTE_PARENT_NAME,
@@ -143,8 +149,7 @@ public class MapFileManager {
 									.getTime()));
 					values.put(MapFileInfos.REMOTE_SIZE,
 							fileWithParent.file.getSize());
-					values.put(MapFileInfos.VERSION, MapFileInfo
-							.extractVersion(fileWithParent.file.getName()));
+					values.put(MapFileInfos.VERSION, version );
 					values.put(MapFileInfos.UPDATE_TAG,
 							MapFileInfo.ENTRY_UPDATED);
 
@@ -184,10 +189,11 @@ public class MapFileManager {
 			@Override
 			public void onDirectoryContent(List<FileWithParent> files) {
 				for( FileWithParent fileWithParent: files ) {
-					String whereClause = "( " + MapFileInfos.REMOTE_NAME
-							+ " = ? )";
-					String[] whereValues = new String[] { fileWithParent.file.getName() };
-
+					
+					String screenName = MapFileInfo.extractScreenName(fileWithParent.file.getName());
+					String whereClause = "( " + MapFileInfos.SCREEN_NAME + " = ?)";
+					String[] whereValues = new String[] { screenName };
+					
 					Uri contentUri;
 					String[] projection;
 					long remoteFileSize = -1;
@@ -214,8 +220,7 @@ public class MapFileManager {
 					}
 
 					ContentValues values = new ContentValues();
-					values.put(MapFileInfos.SCREEN_NAME,
-							MapFileInfo.extractScreenName(fileWithParent.file.getName()));
+					values.put(MapFileInfos.SCREEN_NAME, screenName );
 					values.put(MapFileInfos.NAME, fileWithParent.file.getName());
 					values.put(MapFileInfos.PARENT_NAME, fileWithParent.parentDir);
 					values.put(MapFileInfos.UPDATE_TAG,

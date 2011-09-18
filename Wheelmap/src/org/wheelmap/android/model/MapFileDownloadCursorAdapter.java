@@ -18,14 +18,12 @@ import android.widget.CursorAdapter;
 
 public class MapFileDownloadCursorAdapter extends CursorAdapter {
 	private final static String TAG = "mapfilecursoradpater";
-	private Context context;
 	private final Handler mHandler = new Handler();
 
 	private int VIEW_TYPE_COUNT = 2;
 
-	public MapFileDownloadCursorAdapter(Context context, Cursor c) {
+	public MapFileDownloadCursorAdapter( Context context, Cursor c) {
 		super(context, c);
-		this.context = context;
 	}
 
 	@Override
@@ -81,16 +79,15 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 			mffiv.setLocalAvailable(availableText);
 
 			RetrieveFileListener dListener = createDownloadListener(mffiv);
-			Task task = MapFileManager.get(context.getApplicationContext())
-					.findTask(remoteName, remoteParentName,
-							Task.TYPE_RETRIEVE_FILE);
-			Task unknownTask = MapFileManager.get(
-					context.getApplicationContext()).findTask(remoteName,
+			Task task = MapFileManager.get().findTask(remoteName,
+					remoteParentName, Task.TYPE_RETRIEVE_FILE);
+			Task unknownTask = MapFileManager.get().findTask(remoteName,
 					remoteParentName, Task.TYPE_UNKNOWN);
 			if (task != null) {
 				task.listener.setListener(dListener);
 				mffiv.setProgressVisibility(View.VISIBLE);
-				int progress = ((RetrieveFileListener) task.listener).getProgress();
+				int progress = ((RetrieveFileListener) task.listener)
+						.getProgress();
 				if (progress == 0)
 					mffiv.setProgress(context.getResources().getString(
 							R.string.pending));
@@ -132,13 +129,13 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 
 	public RetrieveFileListener createDownloadListener(
 			final MapFileFileItemView fileItemView) {
-		
+
 		return new RetrieveFileListener() {
-			
+
 			@Override
-			public void setListener(BaseListener listener) {				
+			public void setListener(BaseListener listener) {
 			}
-			
+
 			@Override
 			public void onRunning() {
 				mHandler.post(new Runnable() {
@@ -148,9 +145,9 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 						fileItemView.setProgressVisibility(View.VISIBLE);
 						notifyDataSetChanged();
 					}
-				});				
+				});
 			}
-			
+
 			@Override
 			public void onFinished() {
 				mHandler.post(new Runnable() {
@@ -160,9 +157,9 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 						fileItemView.setProgressVisibility(View.INVISIBLE);
 						notifyDataSetChanged();
 					}
-				});				
+				});
 			}
-			
+
 			@Override
 			public void onProgress(final int percentageProgress) {
 				mHandler.post(new Runnable() {
@@ -173,9 +170,9 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 								.valueOf(percentageProgress) + "%");
 						notifyDataSetChanged();
 					}
-				});				
+				});
 			}
-			
+
 			@Override
 			public int getProgress() {
 				return 0;
@@ -192,13 +189,11 @@ public class MapFileDownloadCursorAdapter extends CursorAdapter {
 				int id = v.getId();
 				switch (id) {
 				case R.id.list_item_file_btn_download:
-					MapFileManager.get(context.getApplicationContext())
-							.retrieveFile(remoteParentName, remoteName,
-									listener);
+					MapFileManager.get().retrieveFile(remoteParentName,
+							remoteName, listener);
 					break;
 				case R.id.list_item_file_btn_delete:
-					MapFileManager.get(context.getApplicationContext())
-							.deleteFile(parentName, name);
+					MapFileManager.get().deleteFile(parentName, name);
 					break;
 				default:
 					// noop

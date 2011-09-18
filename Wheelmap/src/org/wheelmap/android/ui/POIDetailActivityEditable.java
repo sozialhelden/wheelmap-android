@@ -165,7 +165,6 @@ public class POIDetailActivityEditable extends FormActivity {
 		public int compare(NodeType nt1, NodeType nt2) {
 			return nt1.localizedName.compareTo( nt2.localizedName );
 		}
-		
 	}
 	
 	private void addCategoryTypeSelection( FormSpinner spinner ) {

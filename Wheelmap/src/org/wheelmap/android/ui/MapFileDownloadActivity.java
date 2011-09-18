@@ -46,7 +46,7 @@ public class MapFileDownloadActivity extends ListActivity implements
 		} else {
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
-			mState.mManager = MapFileManager.get(getApplicationContext());
+			mState.mManager = MapFileManager.get();
 			mState.mManager.registerResultReceiver( mState.mReceiver );
 		}
 

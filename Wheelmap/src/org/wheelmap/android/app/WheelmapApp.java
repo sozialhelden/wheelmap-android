@@ -14,7 +14,7 @@ public class WheelmapApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		mLocationManager = MyLocationManager.initOnce( this );
-		// MapFileManager.get( this ).updateLocal();
+		MapFileManager.initOnce( this );
 		mSupportManager = SupportManager.initOnce( this );
 	}
 
