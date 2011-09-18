@@ -85,7 +85,7 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes> implement
 		ContentValues values = new ContentValues();
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 		for( NodeType nodeType: nodeTypes.getNodeTypes()) {
-			nodeType.setIconData( retrieveIconData( nodeType.getIconUrl() ));			
+			// nodeType.setIconData( retrieveIconData( nodeType.getIconUrl() ));			
 			copyCategoryToValues( nodeType, values );
 			ContentProviderOperation operation = ContentProviderOperation
 					.newInsert(NodeTypesContent.CONTENT_URI).withValues(values).build();
