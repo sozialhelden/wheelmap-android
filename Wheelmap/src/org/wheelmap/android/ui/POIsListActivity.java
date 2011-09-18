@@ -195,7 +195,11 @@ public class POIsListActivity extends ListActivity implements
         cv.put(Wheelmap.POIs.NAME,  getString(R.string.new_default_name));
         cv.put(Wheelmap.POIs.COORD_LAT,  Math.ceil(mLocation.getLatitude() * 1E6));
         cv.put(Wheelmap.POIs.COORD_LON,  Math.ceil(mLocation.getLongitude() * 1E6));
+        cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
+        cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
+        
         Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI, cv);
+        
         // edit activity
         Log.i(TAG, new_pois.toString());
         long poiId = Long.parseLong(new_pois.getLastPathSegment());

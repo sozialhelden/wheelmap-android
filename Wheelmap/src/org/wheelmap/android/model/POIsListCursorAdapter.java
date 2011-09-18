@@ -50,13 +50,13 @@ public class POIsListCursorAdapter extends CursorAdapter {
 			String nodeTypeName = nodeType.localizedName;
 			pliv.setName( nodeTypeName );
 		}
-		String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
-		pliv.setCategory( category + " - " + nodeType.localizedName );
+		//String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
+		//pliv.setCategory( category + " - " + nodeType.localizedName );
 		
 		pliv.setDistance( mDistanceFormatter.format( distance ));
 		
-		Drawable marker = nodeType.stateDrawables.get(state);
-		pliv.setIcon( marker );
+		//Drawable marker = nodeType.stateDrawables.get(state);
+		//pliv.setIcon( marker );
 	}
 
 	@Override
