@@ -19,12 +19,6 @@
         <ProgressBar style="@style/TitleBarProgressIndicator"
             android:id="@+id/title_refresh_progress"
             android:visibility="gone" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageButton style="@style/TitleBarAction"
-            android:contentDescription="@string/description_search"
-            android:src="@drawable/ic_title_search"
-            android:onClick="onSearchClick" />
     </LinearLayout>
 
     <LinearLayout

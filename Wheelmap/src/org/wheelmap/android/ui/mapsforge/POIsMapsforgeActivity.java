@@ -220,10 +220,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		requestUpdate();
 	}
 
-	public void onSearchClick(View v) {
-		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
-	}
-
 	/**
 	 * State specific to {@link HomeActivity} that is held between configuration
 	 * changes. Any strong {@link Activity} references <strong>must</strong> be

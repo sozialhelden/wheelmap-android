@@ -288,9 +288,4 @@ public class POIsListActivity extends ListActivity implements
 		intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);	
 		startService(intent);
 	}
-
-	public void onSearchClick(View v) {
-		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
-	}
-
 }

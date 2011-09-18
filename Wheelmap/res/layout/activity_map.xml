@@ -32,12 +32,6 @@
             android:layout_alignLeft="@id/btn_title_refresh"
             android:layout_alignTop="@id/btn_title_refresh"
             android:id="@+id/title_refresh_progress" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageButton style="@style/TitleBarAction"
-            android:contentDescription="@string/description_search"
-            android:src="@drawable/ic_title_search"
-            android:onClick="onSearchClick" />
     </LinearLayout>
     
 
