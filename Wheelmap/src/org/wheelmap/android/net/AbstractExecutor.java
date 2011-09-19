@@ -11,12 +11,15 @@ public abstract class AbstractExecutor implements IExecutor {
 	private final Bundle mBundle;
 
 	protected static final String SERVER = "staging.wheelmap.org";
-	protected static final String API_KEY = "9NryQWfDWgIebZIdqWiK";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
 	
 	public AbstractExecutor( ContentResolver resolver, Bundle bundle ) {
 		mResolver = resolver;
 		mBundle = bundle;
+	}
+	
+	public String getApiKey() {
+		return "jWeAsb34CJq4yVAryjtc";
 	}
 	
 	protected ContentResolver getResolver() {

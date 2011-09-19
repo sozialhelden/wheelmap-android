@@ -11,7 +11,6 @@ import wheelmap.org.domain.categories.Categories;
 import wheelmap.org.domain.categories.Category;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.CategoriesRequestBuilder;
-import wheelmap.org.request.Paging;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -41,7 +40,7 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 	@Override
 	public void execute() throws ExecutorException {
 		final long startRemote = System.currentTimeMillis();
-		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder( SERVER, API_KEY, AcceptType.JSON );
+		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder( SERVER, getApiKey(), AcceptType.JSON );
 //		requestBuilder.paging( new Paging( DEFAULT_TEST_PAGE_SIZE ));
 		if ( mLocale != null ) 
 			requestBuilder.locale( mLocale );

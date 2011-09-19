@@ -129,6 +129,6 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	private String getEditApiKey() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
-		return prefs.getString( SyncService.PREFS_API_KEY, API_KEY );
+		return prefs.getString( SyncService.PREFS_API_KEY, getApiKey() );
 	}
 }

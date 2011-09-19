@@ -46,7 +46,7 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes> implement
 	@Override
 	public void execute() throws ExecutorException {
 		final long startRemote = System.currentTimeMillis();
-		NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder( SERVER, API_KEY, AcceptType.JSON );
+		NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder( SERVER, getApiKey(), AcceptType.JSON );
 		requestBuilder.paging( new Paging( DEFAULT_TEST_PAGE_SIZE ));
 		if ( mLocale != null )
 			requestBuilder.locale( mLocale );

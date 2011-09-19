@@ -26,7 +26,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 public class POIDetailActivityEditable extends FormActivity {
 	private final static String TAG = "poidetail";
