@@ -85,11 +85,11 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 		final long startRemote = System.currentTimeMillis();
 		BaseNodesRequestBuilder requestBuilder;
 		if ( mCategory != -1 ) {
-			requestBuilder = new CategoryNodesRequestBuilder(SERVER, API_KEY, AcceptType.JSON, mCategory );
+			requestBuilder = new CategoryNodesRequestBuilder(SERVER, getApiKey(), AcceptType.JSON, mCategory );
 		} else if ( mNodeType != -1 ) {
-			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER, API_KEY, AcceptType.JSON, mNodeType );
+			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER, getApiKey(), AcceptType.JSON, mNodeType );
 		} else {
-			requestBuilder = new NodesRequestBuilder( SERVER, API_KEY, AcceptType.JSON );
+			requestBuilder = new NodesRequestBuilder( SERVER, getApiKey(), AcceptType.JSON );
 		}
 		
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))

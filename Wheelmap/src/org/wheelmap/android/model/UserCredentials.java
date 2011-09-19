@@ -11,6 +11,7 @@ public class UserCredentials {
 
 	private String mLogin;
 	private String mPassword;
+	private String mApiKey;
 	private boolean mIsLoggenIn;
 	private Context mContext;
 
@@ -23,9 +24,14 @@ public class UserCredentials {
 		mLogin = login;
 		mPassword = password;
 		mIsLoggenIn = true;
-		// to do check if password valid
+		// TODO make request to server to get the API_key for login/password
+		mApiKey = getApiKey();
 		save();
 	}
+	
+	private String getApiKey() {
+		return "jWeAsb34CJq4yVAryjtc";
+	};
 	
 	public void logout() {
 		mIsLoggenIn = false;
@@ -50,6 +56,7 @@ public class UserCredentials {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("login", mLogin);
 		editor.putString("password", mPassword);
+		editor.putString("apikey", mApiKey);
 		editor.putBoolean("loggedin", mIsLoggenIn);
 		// Commit the edits!
 		editor.commit();
@@ -58,8 +65,9 @@ public class UserCredentials {
 	private void load(){
 		// Restore preferences
 		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
-		mLogin = settings.getString("login", "");
+		mLogin = settings.getString("login", "android_app@wheelmap.org");
 		mPassword = settings.getString("password", "");
+		mApiKey = settings.getString("apikey", "jWeAsb34CJq4yVAryjtc");
 		mIsLoggenIn = settings.getBoolean("loggedin", false);
 	}
 

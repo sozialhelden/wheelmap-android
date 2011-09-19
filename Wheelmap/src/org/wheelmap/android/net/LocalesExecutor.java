@@ -3,7 +3,6 @@ package org.wheelmap.android.net;
 import java.util.ArrayList;
 
 import org.wheelmap.android.model.Support;
-import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 
 import wheelmap.org.domain.locale.Locale;
@@ -34,7 +33,7 @@ public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements IE
 	@Override
 	public void execute() throws ExecutorException {
 		final long startRemote = System.currentTimeMillis();
-		final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder( SERVER, API_KEY, AcceptType.JSON);
+		final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder( SERVER, getApiKey(), AcceptType.JSON);
 
 		clearTempStore();
 		try {

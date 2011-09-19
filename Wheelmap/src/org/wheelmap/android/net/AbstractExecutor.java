@@ -19,6 +19,10 @@ public abstract class AbstractExecutor implements IExecutor {
 		mBundle = bundle;
 	}
 	
+	public String getApiKey() {
+		return "jWeAsb34CJq4yVAryjtc";
+	}
+	
 	protected ContentResolver getResolver() {
 		return mResolver;
 	}

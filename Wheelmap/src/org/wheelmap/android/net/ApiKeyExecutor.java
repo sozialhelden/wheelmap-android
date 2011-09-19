@@ -1,7 +1,6 @@
 package org.wheelmap.android.net;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.service.SyncService;
@@ -55,7 +54,7 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		}
 
 		// mApiKey = apiKey.getApiKey();
-		mApiKey = API_KEY;
+		mApiKey = "jWeAsb34CJq4yVAryjtc";
 	}
 
 	@Override
