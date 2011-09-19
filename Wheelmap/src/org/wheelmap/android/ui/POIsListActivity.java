@@ -28,7 +28,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.CheckBoxPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -124,35 +123,46 @@ DetachableResultReceiver.Receiver {
 
 		StringBuilder categories = new StringBuilder("");
 
+		int selectedCount = 0;
 		if (cursor.moveToFirst()) {
 			do { 
 				int id = CategoriesContent.getCategoryId(cursor);				
 				if (CategoriesContent.getSelected(cursor)) {
+					selectedCount++;
 					if (categories.length() > 0)
 						categories.append(" OR category_id=");
 					else
 						categories.append(" category_id=");
-					
+					categories.append(new Integer(id).toString());
+
 				}
-				else {
+
+
+			} while(cursor.moveToNext());
+		}
+		if (selectedCount == 0) {
+			if (cursor.moveToFirst()) {
+				do { 
+					int id = CategoriesContent.getCategoryId(cursor);				
 					if (categories.length() > 0)
 						categories.append(" AND NOT category_id=");
 					else
 						categories.append(" NOT category_id=");
-					
-				}
-				categories.append(new Integer(id).toString());
 
-			} while(cursor.moveToNext());
+					categories.append(new Integer(id).toString());
+
+				} while(cursor.moveToNext());
+			}
+
 		}
-		
+
 		// wheelchair state filter
 
-        // Get a reference to the checkbox preference
+		// Get a reference to the checkbox preference
 		//CheckBoxPreference mCheckBoxPreference = (CheckBoxPreference)getPreferenceActivity().findPreference(                KEY_ADVANCED_CHECKBOX_PREFERENCE);
-		
-		
-		
+
+
+
 		Log.d(TAG, categories.toString());
 
 		// 
