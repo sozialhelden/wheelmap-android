@@ -280,7 +280,10 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			Log.e(TAG, "Error in initNodes:createIconDrawable:" + e);
 			return null;
 		}
-		Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, 100, 100, true);
+		Bitmap croppedBitmap = Bitmap.createBitmap( bitmap, 0, 15, bitmap.getWidth(), bitmap.getHeight() - 15 );
+		Bitmap scaledBitmap = Bitmap.createScaledBitmap( croppedBitmap, 80, 65, true);
+		bitmap.recycle();
+		croppedBitmap.recycle();
 		return new BitmapDrawable( scaledBitmap );
 		
 	}

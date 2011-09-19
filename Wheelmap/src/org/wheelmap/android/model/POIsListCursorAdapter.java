@@ -1,5 +1,6 @@
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.R;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.ui.POIsListItemView;
@@ -17,6 +18,8 @@ import android.widget.CursorAdapter;
 public class POIsListCursorAdapter extends CursorAdapter {
 	private final static String TAG = "poislist";
 	private DistanceFormatter mDistanceFormatter;
+	
+	private Drawable[] wheelDrawables;
 		
 	public POIsListCursorAdapter(Context context, Cursor cursor) {
 		super( context, cursor );
@@ -25,6 +28,14 @@ public class POIsListCursorAdapter extends CursorAdapter {
 			mDistanceFormatter = new DistanceFormatterMetric();
 		else
 			mDistanceFormatter = new DistanceFormatterAnglo();
+		
+		Drawable wheelYes = context.getResources().getDrawable( R.drawable.wheelchair_state_enabled );
+		Drawable wheelLimited = context.getResources().getDrawable( R.drawable.wheelchair_state_limited );
+		Drawable wheelNo = context.getResources().getDrawable( R.drawable.wheelchair_state_disabled );
+		Drawable wheelUnknown = context.getResources().getDrawable( R.drawable.wheelchair_state_unknown );
+		
+		wheelDrawables = new Drawable[] { wheelUnknown, wheelYes, wheelLimited, wheelNo, null };
+		
 	}
 
 	@Override
@@ -50,13 +61,13 @@ public class POIsListCursorAdapter extends CursorAdapter {
 			String nodeTypeName = nodeType.localizedName;
 			pliv.setName( nodeTypeName );
 		}
-		//String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
-		//pliv.setCategory( category + " - " + nodeType.localizedName );
+		String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
+		pliv.setCategory( category + " - " + nodeType.localizedName );
 		
 		pliv.setDistance( mDistanceFormatter.format( distance ));
 		
-		//Drawable marker = nodeType.stateDrawables.get(state);
-		//pliv.setIcon( marker );
+		Drawable marker = wheelDrawables[state.getId()];
+		pliv.setIcon( marker );
 	}
 
 	@Override
