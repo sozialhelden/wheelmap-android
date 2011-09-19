@@ -1,5 +1,6 @@
 package org.wheelmap.android.service;
 
+import org.wheelmap.android.net.ApiKeyExecutor;
 import org.wheelmap.android.net.CategoriesExecutor;
 import org.wheelmap.android.net.ExecutorException;
 import org.wheelmap.android.net.IExecutor;
@@ -30,17 +31,22 @@ public class SyncService extends IntentService {
 	public static final String EXTRA_LOCALE = "org.wheelmap.android.EXTRA_LOCALE";
 	public static final String EXTRA_CATEGORY = "org.wheelmap.android.EXTRA_CATEGORY";
 	public static final String EXTRA_NODETYPE = "org.wheelmap.android.EXTRA_NODETYPE";
-
+	public static final String EXTRA_USERNAME = "org.wheelmap.android.EXTRA_USERNAME";
+	public static final String EXTRA_PASSWORD = "org.wheelmap.android.EXTRA_PASSWORD";
+	
 	public static final String EXTRA_WHAT = "org.wheelmap.android.EXTRA_WHAT";
 	public static final int WHAT_RETRIEVE_NODES = 0x1;
 	public static final int WHAT_RETRIEVE_LOCALES = 0x2;
 	public static final int WHAT_RETRIEVE_CATEGORIES = 0x3;
 	public static final int WHAT_RETRIEVE_NODETYPES = 0x4;
 	public static final int WHAT_UPDATE_SERVER = 0x5;
+	public static final int WHAT_RETRIEVE_APIKEY = 0x6;
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
 	public static final int STATUS_FINISHED = 0x3;
+	
+	public static final String PREFS_API_KEY = "prefs_apikey";
 
 	private ContentResolver mResolver;
 	
@@ -81,7 +87,10 @@ public class SyncService extends IntentService {
 			executor = new NodeTypesExecutor( mResolver, bundle );
 			break;
 		case WHAT_UPDATE_SERVER:
-			executor = new NodeUpdateOrNewExecutor( mResolver );
+			executor = new NodeUpdateOrNewExecutor( this, mResolver );
+			break;
+		case WHAT_RETRIEVE_APIKEY:
+			executor = new ApiKeyExecutor(this, mResolver, bundle);
 			break;
 		default:
 			return; // noop no instruction, no operation;

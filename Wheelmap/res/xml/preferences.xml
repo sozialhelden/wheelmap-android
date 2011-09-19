@@ -2,14 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:title="Settings">
 	<PreferenceCategory android:title="@string/settings_category_accesibility">
-		<ListPreference android:title="@string/settings_wheelchair_state"
-			android:summary="@string/settings_wheelchair_state_summary"
-			android:key="wheelchairState" android:defaultValue="4"
-			android:entries="@array/wheelchair_state" android:entryValues="@array/wheelchair_state_values" />
+		<Preference android:title="@string/settings_wheelchair_state"
+			android:summary="@string/settings_wheelchair_state_summary">
+			<intent android:targetPackage="org.wheelmap.android"
+				android:targetClass="org.wheelmap.android.ui.WheelchairSettingsActivity" />
+		</Preference>
 		<ListPreference android:title="@string/settings_list_distance"
-			android:summary="@string/settings_list_distance_summary"
-			android:key="listDistance" android:defaultValue="0.5"
-			android:entries="@array/distance_array" android:entryValues="@array/distance_array_values" />
+			android:summary="@string/settings_list_distance_summary" android:key="listDistance"
+			android:defaultValue="0.5" android:entries="@array/distance_array"
+			android:entryValues="@array/distance_array_values" />
 
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_mapfile">

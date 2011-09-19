@@ -1,5 +1,8 @@
 package org.wheelmap.android.net;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.GeocoordinatesMath;
@@ -26,10 +29,13 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecutor {
-	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
+	public static final String PREF_KEY_WHEELCHAIR_STATE_FULL = "showFull";
+	public static final String PREF_KEY_WHEELCHAIR_STATE_LIMITED = "showLimited";
+	public static final String PREF_KEY_WHEELCHAIR_STATE_NO = "showNo";
+	public static final String PREF_KEY_WHEELCHAIR_STATE_UNKNOWN = "showUnknown";
 	
 	private BoundingBox mBoundingBox;
-	private WheelchairState mWheelchairState;
+	private List<WheelchairState> mWheelchairStates;
 	private Context mContext;
 	private int mCategory = -1;
 	private int mNodeType = -1;
@@ -69,7 +75,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 			mNodeType = getBundle().getInt( SyncService.EXTRA_NODETYPE );
 		}
 		
-		mWheelchairState = getWheelchairStateFromPreferences();
+		mWheelchairStates = getWheelchairStateFromPreferences();
 		
 		deleteRetrievedData();
 	}
@@ -88,12 +94,14 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 		
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE))
 				.boundingBox(mBoundingBox);
-		requestBuilder.wheelchairState(mWheelchairState);
-
+		
 		clearTempStore();
 		try {
+			for( WheelchairState state: mWheelchairStates) {
+				requestBuilder.wheelchairState( state );
+				retrieveSinglePage(requestBuilder);
+			}
 			// retrieveAllPages( requestBuilder );
-			retrieveSinglePage(requestBuilder);
 		} catch ( Exception e ) {
 			throw new ExecutorException( e );
 		}
@@ -118,14 +126,26 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause, whereValues);
 	}
 	
-	private WheelchairState getWheelchairStateFromPreferences() {
+	private List<WheelchairState> getWheelchairStateFromPreferences() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
-		String prefWheelchairState = prefs.getString(PREF_KEY_WHEELCHAIR_STATE,
-				String.valueOf( WheelchairState.DEFAULT.getId()));
-		WheelchairState ws = WheelchairState.valueOf(Integer
-				.valueOf(prefWheelchairState));
-		return ws;
+		
+		boolean prefStateFull = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_FULL, true);	
+		boolean prefStateLimited = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_LIMITED, true );
+		boolean prefStateNo = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_NO, true );
+		boolean prefStateUnknown = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_UNKNOWN, true );
+		
+		ArrayList<WheelchairState> list = new ArrayList<WheelchairState>();
+		if ( prefStateFull )
+			list.add( WheelchairState.YES);
+		if ( prefStateLimited )
+			list.add( WheelchairState.LIMITED);
+		if ( prefStateNo )
+			list.add( WheelchairState.NO);
+		if ( prefStateUnknown )
+			list.add( WheelchairState.UNKNOWN);
+		
+		return list;
 	}
 	
 	private void bulkInsert(Nodes nodes) {

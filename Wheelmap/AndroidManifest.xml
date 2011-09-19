@@ -58,6 +58,10 @@
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_settings" />
             
+       <activity
+        	android:name=".ui.WheelchairSettingsActivity"
+        	android:theme="@style/Theme.IOSched"
+            android:label="@string/title_wheelchair_state" />    
         <activity
         	android:name=".ui.MapFileDownloadActivity"
         	android:theme="@style/Theme.IOSched"

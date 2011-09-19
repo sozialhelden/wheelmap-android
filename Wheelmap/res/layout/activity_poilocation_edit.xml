@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<LinearLayout android:id="@+id/btn_edit_actions"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_alignParentLeft="true"
+		android:layout_alignParentRight="true" android:layout_alignParentTop="true">
+		<Button android:id="@+id/btn_save" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/btn_save" />
+		<Button android:id="@+id/btn_cancel" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/btn_cancel" />
+	</LinearLayout>
+
+	<org.mapsforge.android.maps.MapView
+		android:id="@+id/map" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_marginTop="10dip"
+		android:layout_below="@+id/btn_edit_actions"
+		android:layout_alignParentLeft="true" android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true" />
+</RelativeLayout>

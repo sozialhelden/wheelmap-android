@@ -53,7 +53,7 @@ public class SupportProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE "
 					+ LASTUPDATE_TABLE_NAME + " ("
 						+ LastUpdateContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-						+ LastUpdateContent.DATE + " TEST)");
+						+ LastUpdateContent.DATE + " TEXT)");
 			
 			db.execSQL("CREATE TABLE " 
 					+ LOCALES_TABLE_NAME + " ("

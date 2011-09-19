@@ -20,7 +20,7 @@
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Settings</string>
     <string name="title_pois_detail">Info</string>
-    <string name="title_wheelchair_state">title_wheelchair_state</string>
+    <string name="title_wheelchair_state">Wheelchair Settings</string>
     <string name="edit_poi">Edit</string>
     <string name="toast_sync_error">Error by syncing with server</string>
     <string name="btn_list">List</string>
@@ -83,4 +83,8 @@
     <string name="poi_property_category">Category</string>
     <string name="title_please_wait">Please wait</string>
     <string name="description_loading_please_wait">Loading icons from the net.</string>
+    <string name="category_unknown">Category Unknown</string>
+    <string name="nodetype_unknown">Type Unknown</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_save">Save</string>
 </resources>

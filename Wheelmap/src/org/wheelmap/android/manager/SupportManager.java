@@ -49,6 +49,9 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	private DetachableResultReceiver mReceiver;
 	private DetachableResultReceiver mStatusSender;
 
+	private NodeType mDefaultNodeType;
+	private Category mDefaultCategory;
+
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	// TODO: put in a proper update INTERVAL
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 1;
@@ -57,7 +60,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	private final static int INSET_TOP = 7;
 	private final static int INSET_RIGHT = 22;
 	private final static int INSET_BOTTOM = 11;
-	
+
 	public final static int CREATION_RUNNING = 0x20;
 	public final static int CREATION_FINISHED = 0x21;
 	public final static int CREATION_ERROR = 0x22;
@@ -65,7 +68,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	private Drawable[] stateDrawables;
 
 	public static class NodeType {
-		public NodeType(int id, String identifier, String localizedName, int categoryId) {
+		public NodeType(int id, String identifier, String localizedName,
+				int categoryId) {
 			this.id = id;
 			this.identifier = identifier;
 			this.localizedName = localizedName;
@@ -108,15 +112,21 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		dLimited = res.getDrawable(R.drawable.marker_limited);
 
 		stateDrawables = new Drawable[] { dUnknown, dYes, dLimited, dNo, null };
-		
+
 		mStatusSender = new DetachableResultReceiver(new Handler());
+
+		mDefaultCategory = new Category(0, "unknown",
+				mContext.getString(R.string.category_unknown));
+		mDefaultNodeType = new NodeType(0, "unknown",
+				mContext.getString(R.string.nodetype_unknown), 0);
+		mDefaultNodeType.stateDrawables = createDrawableLookup(null); 
 	}
 
 	public static SupportManager get() {
 		return INSTANCE;
 	}
 
-	public static SupportManager initOnce(Context ctx ) {
+	public static SupportManager initOnce(Context ctx) {
 		if (INSTANCE == null) {
 			INSTANCE = new SupportManager(ctx);
 			INSTANCE.init();
@@ -126,13 +136,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	public void init() {
 		Log.d(TAG, "SupportManager:init");
-		
+
 		if (!checkIfUpdateDurationPassed()) {
 			initLookup();
 			return;
 		}
-		
-		mStatusSender.send( CREATION_RUNNING, Bundle.EMPTY );
+
+		mStatusSender.send(CREATION_RUNNING, Bundle.EMPTY);
 
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
@@ -153,9 +163,9 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 		createCurrentTimeTag();
 	}
-	
-	public void registerReceiver( Receiver receiver ) {
-		mStatusSender.setReceiver( receiver, true );
+
+	public void registerReceiver(Receiver receiver) {
+		mStatusSender.setReceiver(receiver, true);
 	}
 
 	private boolean checkIfUpdateDurationPassed() {
@@ -210,13 +220,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				break;
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
 				initNodeTypes();
-				mStatusSender.send( CREATION_FINISHED, Bundle.EMPTY );
+				mStatusSender.send(CREATION_FINISHED, Bundle.EMPTY);
 				break;
 			default:
 				// nothing to do
 			}
-		} else if ( resultCode == SyncService.STATUS_ERROR ) {
-			mStatusSender.send( CREATION_ERROR, resultData );
+		} else if (resultCode == SyncService.STATUS_ERROR) {
+			mStatusSender.send(CREATION_ERROR, resultData);
 		}
 	}
 
@@ -241,7 +251,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			int id = CategoriesContent.getCategoryId(cursor);
 			String identifier = CategoriesContent.getIdentifier(cursor);
 			String localizedName = CategoriesContent.getLocalizedName(cursor);
-			mCategoryLookup.put(id, new Category(id, identifier, localizedName));
+			mCategoryLookup
+					.put(id, new Category(id, identifier, localizedName));
 
 			cursor.moveToNext();
 		}
@@ -276,7 +287,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		if (iconData != null) {
 			Bitmap bitmap = BitmapFactory.decodeByteArray(iconData, 0,
 					iconData.length);
-			Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, 48, 48,  true );
+			Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 48, 48,
+					true);
 			iconDrawable = new BitmapDrawable(scaledBitmap);
 		}
 		return iconDrawable;
@@ -315,47 +327,47 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	}
 
 	public Category lookupCategory(int id) {
-		if ( mCategoryLookup.containsKey( id ))
+		if (mCategoryLookup.containsKey(id))
 			return mCategoryLookup.get(id);
 		else
-			return null;
-		
+			return mDefaultCategory;
+
 	}
 
 	public NodeType lookupNodeType(int id) {
-		if ( mNodeTypeLookup.containsKey( id ))
+		if (mNodeTypeLookup.containsKey(id))
 			return mNodeTypeLookup.get(id);
 		else
-			return null;
+			return mDefaultNodeType;
 	}
-	
+
 	public List<Category> getCategoryList() {
 		Set<Integer> keys = mCategoryLookup.keySet();
 		List<Category> list = new ArrayList<Category>();
-		for( Integer key: keys ) {
-			list.add( mCategoryLookup.get( key ));
+		for (Integer key : keys) {
+			list.add(mCategoryLookup.get(key));
 		}
 		return list;
 	}
-	
+
 	public List<NodeType> getNodeTypeList() {
 		Set<Integer> keys = mNodeTypeLookup.keySet();
 		List<NodeType> list = new ArrayList<NodeType>();
-		for( Integer key: keys ) {
-			list.add( mNodeTypeLookup.get( key ));
+		for (Integer key : keys) {
+			list.add(mNodeTypeLookup.get(key));
 		}
-		
+
 		return list;
 	}
-	
-	public List<NodeType> getNodeTypeListByCategory( int categoryId ) {
+
+	public List<NodeType> getNodeTypeListByCategory(int categoryId) {
 		Set<Integer> keys = mNodeTypeLookup.keySet();
 		List<NodeType> list = new ArrayList<NodeType>();
-		for( Integer key: keys ) {
+		for (Integer key : keys) {
 			NodeType nodeType = mNodeTypeLookup.get(key);
-			
-			if ( nodeType.categoryId == categoryId ) {
-				list.add( nodeType );
+
+			if (nodeType.categoryId == categoryId) {
+				list.add(nodeType);
 			}
 		}
 		return list;

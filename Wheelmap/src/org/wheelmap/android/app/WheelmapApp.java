@@ -5,8 +5,10 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 
 import android.app.Application;
+import android.content.Context;
 
 public class WheelmapApp extends Application {
+	
 	private MyLocationManager mLocationManager;
 	private SupportManager mSupportManager;
 	
@@ -23,4 +25,5 @@ public class WheelmapApp extends Application {
 		super.onTerminate();
 		mLocationManager.clear();
 	}
+	
 }

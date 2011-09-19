@@ -13,7 +13,7 @@ public abstract class RequestBuilder {
 
 	protected final String server;
 	protected final String apiKey;
-	private final AcceptType acceptType;
+	protected final AcceptType acceptType;
 
 	public RequestBuilder(final String server, final String apiKey, final AcceptType acceptType) {
 		this.server = server;

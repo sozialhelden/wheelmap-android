@@ -6,6 +6,7 @@ import java.net.URI;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.service.SyncService;
 
 import wheelmap.org.WheelchairState;
 import wheelmap.org.request.AcceptType;
@@ -15,20 +16,25 @@ import wheelmap.org.request.WheelchairUpdateRequestBuilder;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class NodeUpdateOrNewExecutor extends AbstractExecutor {
-	public NodeUpdateOrNewExecutor(ContentResolver resolver) {
-		super(resolver, null);
-	}
-
+	private Context mContext;
 	private Cursor mCursor;
-
 	private static final String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG
 			+ " != ? ) ";
 	private static final String[] whereValue = new String[] { String
 			.valueOf(Wheelmap.UPDATE_NO) };
+	
+	
+	public NodeUpdateOrNewExecutor(Context context, ContentResolver resolver) {
+		super(resolver, null);
+		mContext = context;
+	}
 
 	public void prepareContent() {
 		mCursor = getResolver().query(Wheelmap.POIs.CONTENT_URI,
@@ -39,14 +45,17 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	public void execute() throws ExecutorException {
 		while (!mCursor.isAfterLast()) {
 			int updateWay = POIHelper.getUpdateTag(mCursor);
+			String editApiKey = getEditApiKey();
+			if ( editApiKey.length() == 0)
+				throw new ExecutorException( "No apikey to edit available" );
 
 			RequestBuilder requestBuilder = null;
 			switch (updateWay) {
 			case Wheelmap.UPDATE_WHEELCHAIR_STATE:
-				requestBuilder = wheelchairUpdateRequestBuilder();
+				requestBuilder = wheelchairUpdateRequestBuilder( editApiKey );
 				break;
 			case Wheelmap.UPDATE_ALL_NEW:
-				requestBuilder = updateOrNewRequestBuilder();
+				requestBuilder = updateOrNewRequestBuilder( editApiKey );
 				break;
 			default:
 				throw new ExecutorException(
@@ -83,15 +92,14 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				whereValue);
 	}
 
-	private RequestBuilder wheelchairUpdateRequestBuilder() {
+	private RequestBuilder wheelchairUpdateRequestBuilder( String apiKey ) {
 		long id = POIHelper.getWMId(mCursor);
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
-
-		return new WheelchairUpdateRequestBuilder(SERVER, API_KEY,
+		return new WheelchairUpdateRequestBuilder(SERVER, apiKey,
 				AcceptType.JSON, (int) id, state);
 	}
 
-	private RequestBuilder updateOrNewRequestBuilder() {
+	private RequestBuilder updateOrNewRequestBuilder( String apiKey ) {
 		long id = POIHelper.getWMId(mCursor);
 		
 		boolean update = false;
@@ -112,10 +120,15 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String website = POIHelper.getWebsite(mCursor);
 		String phone = POIHelper.getPhone(mCursor);
 
-		return new NodeUpdateOrNewAllRequestBuilder(SERVER, API_KEY,
+		return new NodeUpdateOrNewAllRequestBuilder(SERVER, apiKey,
 				AcceptType.JSON, id, name, category, type, latitude, longitude, state,
 				comment, street, housenumber, city, postcode, website, phone,
 				update);
-
+	}
+	
+	private String getEditApiKey() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		return prefs.getString( SyncService.PREFS_API_KEY, API_KEY );
 	}
 }
