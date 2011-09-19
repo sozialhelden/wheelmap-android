@@ -15,11 +15,12 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
-public class WheelmapHomeActivity extends Activity implements DetachableResultReceiver.Receiver {
+public class WheelmapHomeActivity extends Activity implements
+		DetachableResultReceiver.Receiver {
 
 	/** State held between configuration changes. */
 	private State mState;
-	private ProgressDialog mCreationDialog; 
+	private ProgressDialog mCreationDialog;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,24 +40,25 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
-		
-		SupportManager.get().registerReceiver( this );
+
+		SupportManager.get().registerReceiver(this);
 
 	}
 
 	public void onListClick(View v) {
 		startActivity(new Intent(this, POIsListActivity.class));
 	}
-	
+
 	public void onSettingsClick(View v) {
 		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
-	
 	public void onRefreshClick(View v) {
 		// trigger off background sync
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null, WheelmapHomeActivity.this, SyncService.class);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, WheelmapHomeActivity.this.mState.mReceiver);
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				WheelmapHomeActivity.this, SyncService.class);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
+				WheelmapHomeActivity.this.mState.mReceiver);
 		startService(intent);
 	}
 
@@ -64,7 +66,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 	public void onMapClick(View v) {
 		startActivity(new Intent(this, POIsMapActivity.class));
 	}
-	
+
 	public void onMapsforgeClick(View v) {
 		startActivity(new Intent(this, POIsMapsforgeActivity.class));
 	}
@@ -79,7 +81,7 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 		switch (resultCode) {
-		
+
 		case SyncService.STATUS_RUNNING: {
 			mState.mSyncing = true;
 			updateRefreshStatus();
@@ -94,30 +96,38 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 			// Error happened down in SyncService, show as toast.
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			final String errorText = getString(R.string.toast_sync_error, resultData
-					.getString(Intent.EXTRA_TEXT));
-			Toast.makeText(WheelmapHomeActivity.this, errorText, Toast.LENGTH_LONG).show();
+			final String errorText = getString(R.string.toast_sync_error,
+					resultData.getString(Intent.EXTRA_TEXT));
+			Toast.makeText(WheelmapHomeActivity.this, errorText,
+					Toast.LENGTH_LONG).show();
 			break;
 		}
 		case SupportManager.CREATION_RUNNING: {
-			mCreationDialog = ProgressDialog.show(this, this.getText( R.string.title_please_wait ),
-					this.getText( R.string.description_loading_please_wait ), true );
+			mCreationDialog = ProgressDialog.show(this,
+					this.getText(R.string.title_please_wait),
+					this.getText(R.string.description_loading_please_wait),
+					true);
 			break;
 		}
 		case SupportManager.CREATION_FINISHED: {
-			mCreationDialog.dismiss();
+			if (mCreationDialog != null) {
+				mCreationDialog.dismiss();
+			}
 			break;
 		}
 		case SupportManager.CREATION_ERROR: {
-			mCreationDialog.dismiss();
-			final String errorText = getString(R.string.toast_sync_error, resultData
-					.getString(Intent.EXTRA_TEXT));
-			Toast.makeText(WheelmapHomeActivity.this, errorText, Toast.LENGTH_LONG).show();
+			if (mCreationDialog != null) {
+				mCreationDialog.dismiss();
+			}
+			final String errorText = getString(R.string.toast_sync_error,
+					resultData.getString(Intent.EXTRA_TEXT));
+			Toast.makeText(WheelmapHomeActivity.this, errorText,
+					Toast.LENGTH_LONG).show();
 			break;
 		}
 		}
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		mState.mReceiver.clearReceiver();

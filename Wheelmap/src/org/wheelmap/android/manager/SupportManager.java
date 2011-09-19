@@ -1,5 +1,6 @@
 package org.wheelmap.android.manager;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.wheelmap.android.R;
-import org.wheelmap.android.model.MapFileInfo;
+import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
@@ -23,14 +24,12 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,16 +55,9 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	// TODO: put in a proper update INTERVAL
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 1;
 
-	private final static int INSET_LEFT = 3;
-	private final static int INSET_TOP = 7;
-	private final static int INSET_RIGHT = 22;
-	private final static int INSET_BOTTOM = 11;
-
 	public final static int CREATION_RUNNING = 0x20;
 	public final static int CREATION_FINISHED = 0x21;
 	public final static int CREATION_ERROR = 0x22;
-
-	private Drawable[] stateDrawables;
 
 	public static class NodeType {
 		public NodeType(int id, String identifier, String localizedName,
@@ -100,26 +92,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		mContext = ctx;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
-
-		Drawable dUnknown;
-		Drawable dYes;
-		Drawable dNo;
-		Drawable dLimited;
-		Resources res = mContext.getResources();
-		dUnknown = res.getDrawable(R.drawable.marker_unknown);
-		dYes = res.getDrawable(R.drawable.marker_yes);
-		dNo = res.getDrawable(R.drawable.marker_no);
-		dLimited = res.getDrawable(R.drawable.marker_limited);
-
-		stateDrawables = new Drawable[] { dUnknown, dYes, dLimited, dNo, null };
-
 		mStatusSender = new DetachableResultReceiver(new Handler());
 
 		mDefaultCategory = new Category(0, "unknown",
 				mContext.getString(R.string.category_unknown));
 		mDefaultNodeType = new NodeType(0, "unknown",
 				mContext.getString(R.string.nodetype_unknown), 0);
-		mDefaultNodeType.stateDrawables = createDrawableLookup(null); 
+		mDefaultNodeType.stateDrawables = createDefaultDrawables(); 
 	}
 
 	public static SupportManager get() {
@@ -176,7 +155,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		if (cursor.getCount() == 1) {
 			Date date;
 			try {
-				date = MapFileInfo.parseDate(LastUpdateContent.getDate(cursor));
+				date = Support.LastUpdateContent.parseDate(LastUpdateContent.getDate(cursor));
 			} catch (ParseException e) {
 				return true;
 			}
@@ -197,7 +176,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	private void createCurrentTimeTag() {
 		ContentValues values = new ContentValues();
-		String date = MapFileInfo.formatDate(new Date());
+		String date = Support.LastUpdateContent.formatDate(new Date());
 		values.put(LastUpdateContent.DATE, date);
 		String whereClause = "( " + LastUpdateContent._ID + " = ? )";
 		String[] whereValues = new String[] { String.valueOf(1) };
@@ -219,7 +198,11 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				initCategories();
 				break;
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
-				initNodeTypes();
+				try {
+					initNodeTypes();
+				} catch (IOException e) {
+					Log.v( TAG, "InitNodeTypes Error: " + e.getLocalizedMessage());
+				}
 				mStatusSender.send(CREATION_FINISHED, Bundle.EMPTY);
 				break;
 			default:
@@ -232,7 +215,11 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	private void initLookup() {
 		initCategories();
-		initNodeTypes();
+		try {
+			initNodeTypes();
+		} catch (IOException e) {
+			Log.v( TAG, "InitNodeTypes Error: " + e.getLocalizedMessage());
+		}
 	}
 
 	private void initLocales() {
@@ -258,7 +245,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		}
 	}
 
-	private void initNodeTypes() {
+	private void initNodeTypes() throws IOException {
 		Log.d(TAG, "SupportManager:initNodeTypes");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
@@ -269,58 +256,70 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		while (!cursor.isAfterLast()) {
 			int id = NodeTypesContent.getNodeTypeId(cursor);
 			String identifier = NodeTypesContent.getIdentifier(cursor);
+			Log.d(TAG,  "Loading nodetype: identifier = " + identifier);
 			String localizedName = CategoriesContent.getLocalizedName(cursor);
 			int categoryId = NodeTypesContent.getCategoryId(cursor);
-			byte[] iconData = NodeTypesContent.getIconData(cursor);
+			String iconPath = NodeTypesContent.getIconURL( cursor );
 
 			NodeType nodeType = new NodeType(id, identifier, localizedName,
 					categoryId);
-			nodeType.iconDrawable = createIconDrawable(iconData);
-			nodeType.stateDrawables = createDrawableLookup(iconData);
+			nodeType.iconDrawable = createIconDrawable(iconPath);
+			nodeType.stateDrawables = createDrawableLookup(iconPath);
 			mNodeTypeLookup.put(id, nodeType);
 			cursor.moveToNext();
 		}
 	}
 
-	private Drawable createIconDrawable(byte[] iconData) {
-		Drawable iconDrawable = null;
-		if (iconData != null) {
-			Bitmap bitmap = BitmapFactory.decodeByteArray(iconData, 0,
-					iconData.length);
-			Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 48, 48,
-					true);
-			iconDrawable = new BitmapDrawable(scaledBitmap);
+	private Drawable createIconDrawable( String assetPath ) {
+		Bitmap bitmap;
+		Log.d( TAG, "SupportManager:createIconDrawable loading " + assetPath );
+		try {
+			bitmap = BitmapFactory.decodeStream( mContext.getAssets().open( "icons/" + assetPath));
+			
+		} catch (IOException e) {
+			Log.e(TAG, "Error in initNodes:createIconDrawable:" + e);
+			return null;
 		}
-		return iconDrawable;
+		Bitmap scaledBitmap = Bitmap.createScaledBitmap( bitmap, 100, 100, true);
+		return new BitmapDrawable( scaledBitmap );
+		
+	}
+	
+	private Map<WheelchairState, Drawable> createDefaultDrawables() {
+		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
+		
+		int idx;		
+		for (idx = 0; idx < WheelchairState.values().length - 1; idx++) {
+			String path = String.format( "marker/%s.png", WheelchairState.valueOf(idx).toString().toLowerCase());
+			Drawable drawable = null;
+			try {
+				drawable = Drawable.createFromStream(mContext.getAssets().open( path ), null);
+			} catch (IOException e) {
+				Log.e(TAG,  "Error in createDefaultDrawables." + e);
+			}
+			drawable.setBounds( 0, 0, 64, 64 );
+			lookupMap.put(WheelchairState.valueOf(idx), drawable);
+		}
+		
+		return lookupMap;
 	}
 
-	private Map<WheelchairState, Drawable> createDrawableLookup(byte[] iconData) {
-		Drawable iconDrawable = null;
-		if (iconData != null) {
-			Bitmap bitmap = BitmapFactory.decodeByteArray(iconData, 0,
-					iconData.length);
-			iconDrawable = new BitmapDrawable(bitmap);
-		}
-
+	private Map<WheelchairState, Drawable> createDrawableLookup( String assetPath ) {
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
+		Log.d( TAG, "SupportManager:createDrawableLookup loading " + assetPath );
 
-		int idx;
-		for (idx = 0; idx < stateDrawables.length - 1; idx++) {
-			Drawable resultDrawable;
-			if (iconDrawable != null) {
-				Drawable innerDrawable = new InsetDrawable(iconDrawable,
-						INSET_LEFT, INSET_TOP, INSET_RIGHT, INSET_BOTTOM);
-
-				Drawable[] drawableArray = new Drawable[] {
-						stateDrawables[idx], innerDrawable };
-				resultDrawable = new LayerDrawable(drawableArray);
-			} else {
-				resultDrawable = stateDrawables[idx];
+		int idx;		
+		for (idx = 0; idx < WheelchairState.values().length - 1; idx++) {
+			String path = String.format( "marker/%s/%s", WheelchairState.valueOf(idx).toString().toLowerCase(), assetPath );
+			Drawable drawable = null;
+			try {
+				drawable = Drawable.createFromStream(mContext.getAssets().open( path ), null);
+			} catch (IOException e) {
+				Log.e(TAG, "Error in initNodes:createDrawableLookup Loading fallback:" + e);
+				drawable = mDefaultNodeType.stateDrawables.get( WheelchairState.valueOf(idx));
 			}
-			resultDrawable.setBounds(0, 0, resultDrawable.getIntrinsicWidth(),
-					resultDrawable.getIntrinsicHeight());
-
-			lookupMap.put(WheelchairState.valueOf(idx), resultDrawable);
+			drawable.setBounds( 0, 0, 64, 64 );
+			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
 		return lookupMap;

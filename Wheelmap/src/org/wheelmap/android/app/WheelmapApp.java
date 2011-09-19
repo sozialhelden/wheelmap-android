@@ -1,6 +1,5 @@
 package org.wheelmap.android.app;
 
-import org.wheelmap.android.manager.MapFileManager;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 
@@ -16,7 +15,6 @@ public class WheelmapApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		mLocationManager = MyLocationManager.initOnce( this );
-		MapFileManager.initOnce( this );
 		mSupportManager = SupportManager.initOnce( this );
 	}
 

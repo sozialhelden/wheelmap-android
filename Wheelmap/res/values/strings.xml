@@ -82,7 +82,7 @@
     <string name="poi_property_nodetype">Type</string>
     <string name="poi_property_category">Category</string>
     <string name="title_please_wait">Please wait</string>
-    <string name="description_loading_please_wait">Loading icons from the net.</string>
+    <string name="description_loading_please_wait">Loading data from the net.</string>
     <string name="category_unknown">Category Unknown</string>
     <string name="nodetype_unknown">Type Unknown</string>
     <string name="btn_cancel">Cancel</string>

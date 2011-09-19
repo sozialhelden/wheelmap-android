@@ -18,17 +18,4 @@
 			android:entryValues="@array/distance_array_values" />
 
 	</PreferenceCategory>
-	<PreferenceCategory android:title="@string/settings_category_mapfile">
-		<Preference android:title="@string/settings_mapfile_manager"
-			android:summary="@string/description_mapfile_manager">
-			<intent android:targetPackage="org.wheelmap.android"
-				android:targetClass="org.wheelmap.android.ui.MapFileDownloadActivity" />
-		</Preference>
-		<Preference android:title="@string/settings_mapfile_select"
-			android:summary="@string/description_mapfile_select">
-			<intent android:targetPackage="org.wheelmap.android"
-				android:targetClass="org.wheelmap.android.ui.MapFileSelectActivity" />
-		</Preference>
-	</PreferenceCategory>
-
 </PreferenceScreen>
