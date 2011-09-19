@@ -2,13 +2,12 @@ package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager.Category;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.Support;
-import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Support.CategoriesContent;
+import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -29,6 +28,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.CheckBoxPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -124,20 +124,38 @@ DetachableResultReceiver.Receiver {
 
 		StringBuilder categories = new StringBuilder("");
 
-		if (cursor.moveToFirst())
+		if (cursor.moveToFirst()) {
 			do { 
+				int id = CategoriesContent.getCategoryId(cursor);				
 				if (CategoriesContent.getSelected(cursor)) {
-					int id = CategoriesContent.getCategoryId(cursor);
 					if (categories.length() > 0)
 						categories.append(" OR category_id=");
 					else
 						categories.append(" category_id=");
-					categories.append(new Integer(id).toString());
+					
 				}
+				else {
+					if (categories.length() > 0)
+						categories.append(" AND NOT category_id=");
+					else
+						categories.append(" NOT category_id=");
+					
+				}
+				categories.append(new Integer(id).toString());
 
 			} while(cursor.moveToNext());
+		}
+		
+		// wheelchair state filter
+
+        // Get a reference to the checkbox preference
+		//CheckBoxPreference mCheckBoxPreference = (CheckBoxPreference)getPreferenceActivity().findPreference(                KEY_ADVANCED_CHECKBOX_PREFERENCE);
+		
+		
 		
 		Log.d(TAG, categories.toString());
+
+		// 
 
 		return categories.toString();
 

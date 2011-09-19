@@ -61,11 +61,13 @@ public class POIsProvider extends ContentProvider {
 			a.append(sin_lon_rad);
 			a.append("*\"sin_lon_rad\")) AS \"distance_acos\" FROM \"pois\"");
 			if (whereParams != null) {
-			   a.append(" WHERE ");
-			   a.append(whereParams);
+				if (whereParams.trim().length() > 0) {
+					a.append(" WHERE ");
+					a.append(whereParams);
+				}
 			}
 			a.append(" ORDER BY \"distance_acos\" DESC");
-		
+
 			//	SELECT *,(0.7934863768539137*"sin_lat_rad"+0.608588013147851*"cos_lat_rad"*(0.9726493751927453*"cos_lon_rad"+0.23227826617478065*"sin_lon_rad")) AS "distance_acos" FROM "pois" where category_id=8 OR category_id=10 ORDER BY "distance_acos" DESC
 			// TODO maybe is a Formatter better
 			// return 'SELECT *, (%(sin_lat_rad)f * "sin_lat_rad" +
@@ -144,10 +146,10 @@ public class POIsProvider extends ContentProvider {
 
 			count = db.delete(POIS_TABLE_NAME,
 					POIs._ID
-							+ "="
-							+ placeId
-							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+					+ "="
+					+ placeId
+					+ (!TextUtils.isEmpty(where) ? " AND (" + where
+							+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -188,10 +190,10 @@ public class POIsProvider extends ContentProvider {
 			// TODO recalculate sin, cos values
 			count = db.update(POIS_TABLE_NAME, values,
 					POIs._ID
-							+ "="
-							+ placeId
-							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+					+ "="
+					+ placeId
+					+ (!TextUtils.isEmpty(where) ? " AND (" + where
+							+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -320,9 +322,9 @@ public class POIsProvider extends ContentProvider {
 	public int bulkInsert(Uri uri, ContentValues[] valuesArray) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		int match = sUriMatcher.match(uri);
-		
+
 		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper( db, POIS_TABLE_NAME);
-		
+
 		final int wmIdColumn = inserter.getColumnIndex( Wheelmap.POIs.WM_ID);
 		final int nameColumn = inserter.getColumnIndex(Wheelmap.POIs.NAME);
 		final int latColumn = inserter.getColumnIndex(Wheelmap.POIs.COORD_LAT);
@@ -339,13 +341,13 @@ public class POIsProvider extends ContentProvider {
 		final int categoryIdentifierColumn = inserter.getColumnIndex( Wheelmap.POIs.CATEGORY_IDENTIFIER);
 		final int nodetypeIdColumn = inserter.getColumnIndex( Wheelmap.POIs.NODETYPE_ID);
 		final int nodetypeIdentifierColumn = inserter.getColumnIndex( Wheelmap.POIs.NODETYPE_IDENTIFIER);
-		
+
 		final int sinLatColumn = inserter.getColumnIndex(Wheelmap.POIs.SIN_LAT_RAD);
 		final int cosLatColumn = inserter.getColumnIndex(Wheelmap.POIs.COS_LAT_RAD);
 		final int sinLonColumn = inserter.getColumnIndex(Wheelmap.POIs.SIN_LON_RAD);
 		final int cosLonColumn = inserter.getColumnIndex(Wheelmap.POIs.COS_LON_RAD);
 		final int updateColumn = inserter.getColumnIndex(Wheelmap.POIs.UPDATE_TAG );
-		
+
 		switch (match) {
 		case POIS:{
 			int count = 0;
@@ -355,7 +357,7 @@ public class POIsProvider extends ContentProvider {
 				for( i = 0; i < valuesArray.length; i++ ) {
 					inserter.prepareForInsert();
 					preCalculateLatLon(valuesArray[i]);
-				
+
 					long wmId = valuesArray[i].getAsLong( Wheelmap.POIs.WM_ID );
 					inserter.bind( wmIdColumn, wmId );
 					String name = valuesArray[i].getAsString( Wheelmap.POIs.NAME );
@@ -398,9 +400,9 @@ public class POIsProvider extends ContentProvider {
 					inserter.bind( cosLonColumn, cosLon );
 					int update = valuesArray[i].getAsInteger( Wheelmap.POIs.UPDATE_TAG );
 					inserter.bind( updateColumn, update );
-				
+
 					long rowId = inserter.execute();
-				
+
 					if (rowId > 0) {
 						Uri placeUri = ContentUris.withAppendedId(
 								Wheelmap.POIs.CONTENT_URI, rowId);
@@ -411,18 +413,18 @@ public class POIsProvider extends ContentProvider {
 				db.setTransactionSuccessful();
 			}
 			finally {
-		        db.endTransaction();
-		        inserter.close();
+				db.endTransaction();
+				inserter.close();
 			}
 			getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
 			getContext().getContentResolver().notifyChange( POIs.CONTENT_URI, null );
 			return count;
-			
+
 		}
 		default:{
 			throw new IllegalArgumentException( "Unknown URI - POIS supported. " + uri );
 		}
-		
+
 		}
 	}
 
