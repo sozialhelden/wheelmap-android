@@ -45,6 +45,12 @@ public class MyLocationManager {
 		mReceiver = new MultiResultReceiver(new Handler());
 
 		mBestLastKnownLocation = calcBestLastKnownLocation();
+		if (mBestLastKnownLocation == null) {
+			// Berlin, Andreasstra§e 10
+			mBestLastKnownLocation = new Location("");
+			mBestLastKnownLocation.setLongitude(13.431240);
+			mBestLastKnownLocation.setLatitude(52.512523);
+		}
 		wasLastKnownLocation = true;
 		notifyReceiver();
 

@@ -1,0 +1,19 @@
+{
+    "meta": {
+        "type": "meta",
+        "name": "Login" 
+    },
+    "login": {
+        "type": "string",
+        "id": "0",
+        "default": "",
+        "priority": "1" 
+    },    
+    "password": {
+        "type": "integer",
+        "id": "2",
+        "default": "",
+        "priority": "2",
+       
+    }
+}

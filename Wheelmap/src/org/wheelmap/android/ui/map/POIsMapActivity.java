@@ -180,10 +180,6 @@ public class POIsMapActivity extends MapActivity  implements DetachableResultRec
 		startService(intent);
 	}
 
-	public void onSearchClick(View v) {
-		Toast.makeText(this, "Searching..", Toast.LENGTH_SHORT).show();
-	}
-
 
 	@Override
 	protected boolean isRouteDisplayed() {

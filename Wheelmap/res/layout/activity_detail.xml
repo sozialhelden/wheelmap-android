@@ -68,11 +68,11 @@
 				</TableRow>
 				<TableRow>
 					<TextView android:text="@string/poi_property_phone" />
-					<TextView android:id="@+id/phone" style="@style/DetailFont" />
+					<TextView android:id="@+id/phone" style="@style/DetailFont" android:autoLink="phone"/>
 				</TableRow>
 				<TableRow>
 					<TextView android:text="@string/poi_property_website" />
-					<TextView android:id="@+id/website" style="@style/DetailFont" />
+					<TextView android:id="@+id/website" style="@style/DetailFont" android:autoLink="web" />
 				</TableRow>
 			</TableLayout>
 			
