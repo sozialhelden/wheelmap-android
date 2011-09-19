@@ -46,7 +46,7 @@ public class POIsProvider extends ContentProvider {
 	private static final String POIS_TABLE_NAME = "pois";
 
 	private static class DistanceQueryBuilder {
-		public String buildRawQuery(double longitude, double latitude) {
+		public String buildRawQuery(double longitude, double latitude, String whereParams) {
 			double sin_lat_rad = Math.sin(latitude * Math.PI / 180);
 			double sin_lon_rad = Math.sin(longitude * Math.PI / 180);
 			double cos_lat_rad = Math.cos(latitude * Math.PI / 180);
@@ -59,14 +59,14 @@ public class POIsProvider extends ContentProvider {
 			a.append(cos_lon_rad);
 			a.append("*\"cos_lon_rad\"+");
 			a.append(sin_lon_rad);
-			a.append("*\"sin_lon_rad\")) "
-					+
-
-					""
-					+ ""
-					+ ""
-					+ "AS \"distance_acos\" FROM \"pois\" ORDER BY \"distance_acos\" DESC");
-
+			a.append("*\"sin_lon_rad\")) AS \"distance_acos\" FROM \"pois\"");
+			if (whereParams != null) {
+			   a.append(" WHERE ");
+			   a.append(whereParams);
+			}
+			a.append(" ORDER BY \"distance_acos\" DESC");
+		
+			//	SELECT *,(0.7934863768539137*"sin_lat_rad"+0.608588013147851*"cos_lat_rad"*(0.9726493751927453*"cos_lon_rad"+0.23227826617478065*"sin_lon_rad")) AS "distance_acos" FROM "pois" where category_id=8 OR category_id=10 ORDER BY "distance_acos" DESC
 			// TODO maybe is a Formatter better
 			// return 'SELECT *, (%(sin_lat_rad)f * "sin_lat_rad" +
 			// %(cos_lat_rad)f * "cos_lat_rad" * (%(cos_lon_rad)f *
@@ -303,7 +303,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS_SORTED:
 			double longitude = Double.valueOf(selectionArgs[0]);
 			double latitude = Double.valueOf(selectionArgs[1]);
-			c = db.rawQuery(mQueryBuilder.buildRawQuery(longitude, latitude),
+			c = db.rawQuery(mQueryBuilder.buildRawQuery(longitude, latitude, selection),
 					null);
 			break;
 		default:
