@@ -33,10 +33,10 @@ public class MapFileManagerTest extends AndroidTestCase implements
 
 		mState = new State();
 		mState.mReceiver.setReceiver(this);
-		MapFileManager dm = MapFileManager.get(getContext());
-		dm.registerResultReceiver( mState.mReceiver);
+		//MapFileManager dm = MapFileManager.get(getContext());
+		//dm.registerResultReceiver( mState.mReceiver);
 
-		dm.update();
+		//dm.update();
 		Thread.sleep(20000);
 		
 		RetrieveFileListener listenerTwo = new RetrieveFileListener() {
@@ -67,10 +67,10 @@ public class MapFileManagerTest extends AndroidTestCase implements
 			}
 		};
 		
-		dm.retrieveFile( "europe", "luxembourg-0.2.4.map", listenerTwo );
+		//dm.retrieveFile( "europe", "luxembourg-0.2.4.map", listenerTwo );
 		Thread.sleep( 70000 );
 		
-		dm.deleteFile( "europe", "luxembourg-0.2.4.map" );
+		//dm.deleteFile( "europe", "luxembourg-0.2.4.map" );
 		Thread.sleep( 2000 );
 
 		

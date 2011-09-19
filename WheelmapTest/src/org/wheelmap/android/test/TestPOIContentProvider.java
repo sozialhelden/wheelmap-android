@@ -1,0 +1,78 @@
+package org.wheelmap.android.test;
+
+
+import org.wheelmap.android.model.POIsProvider;
+import org.wheelmap.android.model.Wheelmap;
+
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.location.Location;
+import android.net.Uri;
+import android.test.ProviderTestCase2;
+
+public class TestPOIContentProvider extends  ProviderTestCase2<POIsProvider> {
+
+	private Location mLocation;
+
+	public TestPOIContentProvider() {
+		super(POIsProvider.class, Wheelmap.AUTHORITY);
+	}
+
+
+	protected void setUp() throws Exception {
+		super.setUp();
+		// Berlin, Andreasstra§e 10
+		mLocation = new Location("");
+		mLocation.setLongitude(13.431240);
+		mLocation.setLatitude(52.512523);
+	}
+
+	public String[] createWhereValues() {
+		String[] lonlat = new String[] {
+				String.valueOf(mLocation.getLongitude()),
+				String.valueOf(mLocation.getLatitude()) };
+		return lonlat;
+	}
+
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+	
+	private void insertDummyPOI() {
+		
+		final ContentResolver resolver = getMockContentResolver();
+
+		// create new POI and start editing
+		ContentValues cv = new ContentValues();
+
+		cv.put(Wheelmap.POIs.NAME, "default");
+		cv.put(Wheelmap.POIs.COORD_LAT,  Math.ceil(mLocation.getLatitude() * 1E6));
+		cv.put(Wheelmap.POIs.COORD_LON,  Math.ceil(mLocation.getLongitude() * 1E6));
+		cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
+		cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
+		resolver.insert(Wheelmap.POIs.CONTENT_URI, cv);
+	}
+
+	public void testLocalHandler() throws Exception {
+		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
+
+
+		final ContentResolver resolver = getMockContentResolver();
+		Cursor cursor = resolver.query(uri, Wheelmap.POIs.PROJECTION, null,
+				createWhereValues(), "");
+			assertEquals(0, cursor.getCount());
+		insertDummyPOI();
+
+		uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
+		
+		cursor = resolver.query(uri, Wheelmap.POIs.PROJECTION, null,
+				createWhereValues(), "");
+		assertEquals(1, cursor.getCount());
+		
+		cursor = resolver.query(uri, Wheelmap.POIs.PROJECTION, null,
+				createWhereValues(), "");
+		assertEquals(2, cursor.getCount());
+	}     
+
+}
