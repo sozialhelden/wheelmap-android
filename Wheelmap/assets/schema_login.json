@@ -16,4 +16,10 @@
         "priority": "2",
        
     }
+    "logged": {
+       "type": "boolean",
+        "id": "3",
+        "default": "",
+        "priority": "3",
+    }
 }

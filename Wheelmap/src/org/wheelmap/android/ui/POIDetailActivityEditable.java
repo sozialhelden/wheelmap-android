@@ -14,6 +14,7 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.Category;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 
@@ -25,16 +26,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class POIDetailActivityEditable extends FormActivity {
 	private final static String TAG = "poidetail";
-	
+
 	public static final int OPTION_SAVE = 0;
 	public static final int OPTION_CANCEL = 1;
 
 	private Long poiID;
 	private FormSpinner nodeTypeSpinner;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -45,7 +47,7 @@ public class POIDetailActivityEditable extends FormActivity {
 		addCategoryTypeSelection( catSpinner );
 
 		nodeTypeSpinner = (FormSpinner) lookupWidget( "type" );
-		
+
 		poiID=getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
 		if (poiID != -1) {
@@ -64,7 +66,7 @@ public class POIDetailActivityEditable extends FormActivity {
 
 		super.onPause();
 	}
-	
+
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu ) 
@@ -92,42 +94,53 @@ public class POIDetailActivityEditable extends FormActivity {
 	}
 
 	private void saveChanges() {
-		JSONObject jo;
-		jo = save();
-		ContentValues values = new ContentValues();
-		try {				
-			values.put(Wheelmap.POIs.NAME, jo.get("name").toString());
-			
-			int categoryId = jo.getInt( "category" );			
-			String categoryIdentifier = SupportManager.get().lookupCategory(categoryId).identifier;
-			values.put(Wheelmap.POIs.CATEGORY_ID, categoryId );
-			values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, categoryIdentifier );
-			
-			int nodeTypeId = jo.getInt( "type");
-			NodeType nodeType = SupportManager.get().lookupNodeType( nodeTypeId );
-			String nodeTypeIdentifier = nodeType.identifier;
-			values.put(Wheelmap.POIs.NODETYPE_ID, nodeTypeId );
-			values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, nodeTypeIdentifier);
-			
-			values.put(Wheelmap.POIs.STREET, jo.get("street").toString());
-			values.put(Wheelmap.POIs.POSTCODE, jo.get("postcode").toString());
-			values.put(Wheelmap.POIs.CITY, jo.get("city").toString());
-			values.put(Wheelmap.POIs.WEBSITE, jo.get("website").toString());
-			values.put(Wheelmap.POIs.PHONE, jo.get("phone").toString());
-			values.put(Wheelmap.POIs.WHEELCHAIR, jo.get("wheelchair").toString());
-			values.put(Wheelmap.POIs.WHEELCHAIR_DESC, jo.get("comment").toString());
-			values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_NEW );
-			
-		} catch (JSONException e) {
-			Log.v( TAG, "Error with makemachine" + e.getMessage());
-		}
 
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
-		this.getContentResolver().update(poiUri, values, "", null);
-		
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_SERVER );
-		startService(intent);
+		// check if logged in
+		UserCredentials userCredentials = new UserCredentials(this);
+
+		if (userCredentials.isLoggedIn()) {
+
+			JSONObject jo;
+			jo = save();
+			ContentValues values = new ContentValues();
+			try {				
+				values.put(Wheelmap.POIs.NAME, jo.get("name").toString());
+
+				int categoryId = jo.getInt( "category" );			
+				String categoryIdentifier = SupportManager.get().lookupCategory(categoryId).identifier;
+				values.put(Wheelmap.POIs.CATEGORY_ID, categoryId );
+				values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, categoryIdentifier );
+
+				int nodeTypeId = jo.getInt( "type");
+				NodeType nodeType = SupportManager.get().lookupNodeType( nodeTypeId );
+				String nodeTypeIdentifier = nodeType.identifier;
+				values.put(Wheelmap.POIs.NODETYPE_ID, nodeTypeId );
+				values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, nodeTypeIdentifier);
+
+				values.put(Wheelmap.POIs.STREET, jo.get("street").toString());
+				values.put(Wheelmap.POIs.POSTCODE, jo.get("postcode").toString());
+				values.put(Wheelmap.POIs.CITY, jo.get("city").toString());
+				values.put(Wheelmap.POIs.WEBSITE, jo.get("website").toString());
+				values.put(Wheelmap.POIs.PHONE, jo.get("phone").toString());
+				values.put(Wheelmap.POIs.WHEELCHAIR, jo.get("wheelchair").toString());
+				values.put(Wheelmap.POIs.WHEELCHAIR_DESC, jo.get("comment").toString());
+				values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_NEW );
+
+			} catch (JSONException e) {
+				Log.v( TAG, "Error with makemachine" + e.getMessage());
+			}
+
+			Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI, String.valueOf( poiID));
+			this.getContentResolver().update(poiUri, values, "", null);
+
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
+			intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_SERVER );
+			startService(intent);
+		} else
+		{
+			// start login activity
+			startActivity(new Intent(this, LoginActivity.class));		
+		}
 	}
 
 
@@ -158,7 +171,7 @@ public class POIDetailActivityEditable extends FormActivity {
 		}
 		populate(jo.toString());
 	}
-	
+
 	private static class NodeTypeComparator implements Comparator<NodeType> {
 
 		@Override
@@ -166,7 +179,7 @@ public class POIDetailActivityEditable extends FormActivity {
 			return nt1.localizedName.compareTo( nt2.localizedName );
 		}
 	}
-	
+
 	private void addCategoryTypeSelection( FormSpinner spinner ) {
 		JSONObject options = new JSONObject();
 		List<Category> categories = SupportManager.get().getCategoryList();
@@ -179,7 +192,7 @@ public class POIDetailActivityEditable extends FormActivity {
 		}
 		spinner.fillAdapter( options );
 	}
-		
+
 	private void addNodeTypeSelection( FormSpinner spinner, int categoryId ) {
 		JSONObject options = new JSONObject();
 		List<NodeType> nodeTypes = SupportManager.get().getNodeTypeListByCategory( categoryId );
@@ -193,7 +206,7 @@ public class POIDetailActivityEditable extends FormActivity {
 		}
 		spinner.fillAdapter( options );
 	}
-	
+
 	private class MyToggleHandler extends FormWidgetToggleHandler {
 		public void toggle( FormWidget widget ) {
 			super.toggle( widget );

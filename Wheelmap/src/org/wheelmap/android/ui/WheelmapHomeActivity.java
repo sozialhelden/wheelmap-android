@@ -45,19 +45,13 @@ public class WheelmapHomeActivity extends Activity implements DetachableResultRe
 	}
 
 	public void onListClick(View v) {
-		// Launch overall conference schedule
 		startActivity(new Intent(this, POIsListActivity.class));
 	}
 	
 	public void onSettingsClick(View v) {
-		// Launch overall conference schedule
 		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
-	public void onSearchClick(View v) {
-		
-		startActivity(new Intent(this, WheelchairStateActivity.class));;
-	}
 	
 	public void onRefreshClick(View v) {
 		// trigger off background sync
