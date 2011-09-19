@@ -92,5 +92,6 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 		values.put( CategoriesContent.CATEGORY_ID, category.getId().intValue());
 		values.put( CategoriesContent.LOCALIZED_NAME, category.getLocalizedName());
 		values.put( CategoriesContent.IDENTIFIER, category.getIdentifier());
+		values.put( CategoriesContent.SELECTED, CategoriesContent.SELECTED_YES );
 	}
 }

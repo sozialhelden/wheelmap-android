@@ -87,4 +87,7 @@
     <string name="nodetype_unknown">Type Unknown</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_save">Save</string>
+    <string name="title_category_select">Select Categories to display</string>
+    <string name="settings_category_filter">Category Filter</string>
+    <string name="settings_category_filter_summary">Filter locations by categories</string>
 </resources>

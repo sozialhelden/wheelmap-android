@@ -7,6 +7,11 @@
 			<intent android:targetPackage="org.wheelmap.android"
 				android:targetClass="org.wheelmap.android.ui.WheelchairSettingsActivity" />
 		</Preference>
+		<Preference android:title="@string/settings_category_filter"
+			android:summary="@string/settings_category_filter_summary">
+			<intent android:targetPackage="org.wheelmap.android"
+				android:targetClass="org.wheelmap.android.ui.CategorySelectActivity" />
+		</Preference>
 		<ListPreference android:title="@string/settings_list_distance"
 			android:summary="@string/settings_list_distance_summary" android:key="listDistance"
 			android:defaultValue="0.5" android:entries="@array/distance_array"
@@ -15,11 +20,14 @@
 	</PreferenceCategory>
 	<PreferenceCategory android:title="@string/settings_category_mapfile">
 		<Preference android:title="@string/settings_mapfile_manager"
-			android:summary="@string/description_mapfile_manager" android:key="mapfileManager">
-
+			android:summary="@string/description_mapfile_manager">
+			<intent android:targetPackage="org.wheelmap.android"
+				android:targetClass="org.wheelmap.android.ui.MapFileDownloadActivity" />
 		</Preference>
 		<Preference android:title="@string/settings_mapfile_select"
-			android:summary="@string/description_mapfile_select" android:key="mapfileSelect">
+			android:summary="@string/description_mapfile_select">
+			<intent android:targetPackage="org.wheelmap.android"
+				android:targetClass="org.wheelmap.android.ui.MapFileSelectActivity" />
 		</Preference>
 	</PreferenceCategory>
 

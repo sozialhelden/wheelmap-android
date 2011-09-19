@@ -99,6 +99,17 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public boolean onTap(int index) {
 		mCursor.moveToPosition(index);
+		long poiId = POIHelper.getId( mCursor );
+		
+		Intent i = new Intent(mContext, POIDetailActivity.class);
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		mContext.startActivity( i );
+		return true;
+	}
+
+	@Override
+	protected boolean onLongPress(int index) {
+		mCursor.moveToPosition(index);
 		int idColumn = mCursor.getColumnIndex(Wheelmap.POIs._ID);
 		int poiId = mCursor.getInt(idColumn);
 		
@@ -119,17 +130,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 					Toast.LENGTH_SHORT).show();
 		}
 		cur.close();
-		return true;
-	}
-
-	@Override
-	protected boolean onLongPress(int index) {
-		mCursor.moveToPosition(index);
-		long poiId = POIHelper.getId( mCursor );
-		
-		Intent i = new Intent(mContext, POIDetailActivity.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
-		mContext.startActivity( i );
 		return true;
 	}
 

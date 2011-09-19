@@ -77,6 +77,11 @@
         	android:label="@string/title_wheelchair_state"
         />
         
+        <activity
+        	android:name=".ui.CategorySelectActivity"
+        	android:theme="@style/Theme.IOSched"
+        	android:label="@string/title_category_select"
+        />
         
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"

@@ -21,11 +21,11 @@ import android.net.Uri;
 import android.util.Log;
 
 public class SupportProvider extends ContentProvider {
-	
+
 	private static final String TAG = "support";
 	private static final String DATABASE_NAME = "support.db";
-	private static final int DATABASE_VERSION = 2;
-	
+	private static final int DATABASE_VERSION = 4;
+
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sLocalesProjectionMap;
 	private static HashMap<String, String> sCategoriesProjectionMap;
@@ -50,34 +50,35 @@ public class SupportProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE "
-					+ LASTUPDATE_TABLE_NAME + " ("
-						+ LastUpdateContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-						+ LastUpdateContent.DATE + " TEXT)");
-			
-			db.execSQL("CREATE TABLE " 
-					+ LOCALES_TABLE_NAME + " ("
-						+ LocalesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-						+ LocalesContent.LOCALE_ID + " TEXT, "
-						+ LocalesContent.LOCALIZED_NAME + " TEXT)");
-			
-			db.execSQL("CREATE TABLE "
-					+ CATEGORIES_TABLE_NAME + " ("
-						+ CategoriesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-						+ CategoriesContent.CATEGORY_ID + " INTEGER, "
-						+ CategoriesContent.LOCALIZED_NAME + " TEXT, "
-						+ CategoriesContent.IDENTIFIER + " TEXT )" );
-			
-			db.execSQL("CREATE TABLE "
-					+ NODETYPES_TABLE_NAME + " ("
-						+ NodeTypesContent._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-						+ NodeTypesContent.NODETYPE_ID + " INTEGER, "
-						+ NodeTypesContent.IDENTIFIER + " TEXT, "
-						+ NodeTypesContent.ICON_URL + " TEXT, "
-						+ NodeTypesContent.ICON_DATA + " BLOB, "
-						+ NodeTypesContent.LOCALIZED_NAME + " TEXT, "
-						+ NodeTypesContent.CATEGORY_ID + " INTEGER, "
-						+ NodeTypesContent.CATEGORY_IDENTIFIER + " TEXT)");
+			db.execSQL("CREATE TABLE " + LASTUPDATE_TABLE_NAME + " ("
+					+ LastUpdateContent._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ LastUpdateContent.DATE + " TEXT)");
+
+			db.execSQL("CREATE TABLE " + LOCALES_TABLE_NAME + " ("
+					+ LocalesContent._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ LocalesContent.LOCALE_ID + " TEXT, "
+					+ LocalesContent.LOCALIZED_NAME + " TEXT)");
+
+			db.execSQL("CREATE TABLE " + CATEGORIES_TABLE_NAME + " ("
+					+ CategoriesContent._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ CategoriesContent.CATEGORY_ID + " INTEGER, "
+					+ CategoriesContent.LOCALIZED_NAME + " TEXT, "
+					+ CategoriesContent.IDENTIFIER + " TEXT,"
+					+ CategoriesContent.SELECTED + " INTEGER )");
+
+			db.execSQL("CREATE TABLE " + NODETYPES_TABLE_NAME + " ("
+					+ NodeTypesContent._ID
+					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+					+ NodeTypesContent.NODETYPE_ID + " INTEGER, "
+					+ NodeTypesContent.IDENTIFIER + " TEXT, "
+					+ NodeTypesContent.ICON_URL + " TEXT, "
+					+ NodeTypesContent.ICON_DATA + " BLOB, "
+					+ NodeTypesContent.LOCALIZED_NAME + " TEXT, "
+					+ NodeTypesContent.CATEGORY_ID + " INTEGER, "
+					+ NodeTypesContent.CATEGORY_IDENTIFIER + " TEXT)");
 
 		}
 
@@ -87,11 +88,11 @@ public class SupportProvider extends ContentProvider {
 					+ newVersion + ", which will destroy all old data");
 			db.execSQL("DROP TABLE IF EXISTS " + LOCALES_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + NODETYPES_TABLE_NAME );
+			db.execSQL("DROP TABLE IF EXISTS " + NODETYPES_TABLE_NAME);
 			onCreate(db);
 		}
 	}
-	
+
 	private DatabaseHelper mOpenHelper;
 
 	@Override
@@ -99,7 +100,7 @@ public class SupportProvider extends ContentProvider {
 		mOpenHelper = new DatabaseHelper(getContext());
 		return true;
 	}
-	
+
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
@@ -108,7 +109,8 @@ public class SupportProvider extends ContentProvider {
 
 		int match = sUriMatcher.match(uri);
 
-//		Log.v(TAG, "SupportProvder.query: url=" + uri + ", match is " + match);
+		// Log.v(TAG, "SupportProvder.query: url=" + uri + ", match is " +
+		// match);
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 		Cursor c;
 		// If no sort order is specified use the default
@@ -157,7 +159,7 @@ public class SupportProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
-//		Log.v(TAG, "SupportProvider.insert: url=" + uri );
+		// Log.v(TAG, "SupportProvider.insert: url=" + uri );
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
 		String nullColumnHack;
@@ -183,19 +185,19 @@ public class SupportProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-		long rowId = db.insert( tableName, nullColumnHack, values);
-		if ( rowId < 0 )
+		long rowId = db.insert(tableName, nullColumnHack, values);
+		if (rowId < 0)
 			throw new SQLException("Failed to insert row into " + uri);
-		
-		getContext().getContentResolver().notifyChange( uri, null );
 
-		Uri placeUri = ContentUris.withAppendedId( uri, rowId);
+		getContext().getContentResolver().notifyChange(uri, null);
+
+		Uri placeUri = ContentUris.withAppendedId(uri, rowId);
 		return placeUri;
 	}
-	
+
 	@Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
-//		Log.v(TAG, "SupportProvider.delete: url=" + uri);
+		// Log.v(TAG, "SupportProvider.delete: url=" + uri);
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
@@ -215,8 +217,8 @@ public class SupportProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-		
-		int count = db.delete( tableName, where, whereArgs);
+
+		int count = db.delete(tableName, where, whereArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
@@ -224,7 +226,7 @@ public class SupportProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String where,
 			String[] whereArgs) {
-//		Log.v(TAG, "SupportProvider.update: url=" + uri);
+		// Log.v(TAG, "SupportProvider.update: url=" + uri);
 
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		String tableName;
@@ -244,45 +246,54 @@ public class SupportProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-		
-		int count = db.update( tableName, values, where, whereArgs);
+
+		int count = db.update(tableName, values, where, whereArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(Support.AUTHORITY, "lastupdate", LASTUPDATE );
+		sUriMatcher.addURI(Support.AUTHORITY, "lastupdate", LASTUPDATE);
 		sUriMatcher.addURI(Support.AUTHORITY, "locales", LOCALES);
 		sUriMatcher.addURI(Support.AUTHORITY, "categories", CATEGORIES);
 		sUriMatcher.addURI(Support.AUTHORITY, "nodetypes", NODETYPES);
-		
+
 		sLastUpdateProjectionMap = new HashMap<String, String>();
-		sLastUpdateProjectionMap.put( LastUpdateContent._ID, LastUpdateContent._ID );
-		sLastUpdateProjectionMap.put( LastUpdateContent.DATE, LastUpdateContent.DATE );
+		sLastUpdateProjectionMap.put(LastUpdateContent._ID,
+				LastUpdateContent._ID);
+		sLastUpdateProjectionMap.put(LastUpdateContent.DATE,
+				LastUpdateContent.DATE);
 
 		sLocalesProjectionMap = new HashMap<String, String>();
 		sLocalesProjectionMap.put(LocalesContent._ID, LocalesContent._ID);
-		sLocalesProjectionMap.put(LocalesContent.LOCALE_ID, LocalesContent.LOCALE_ID);
+		sLocalesProjectionMap.put(LocalesContent.LOCALE_ID,
+				LocalesContent.LOCALE_ID);
 		sLocalesProjectionMap.put(LocalesContent.LOCALIZED_NAME,
 				LocalesContent.LOCALIZED_NAME);
 
 		sCategoriesProjectionMap = new HashMap<String, String>();
-		sCategoriesProjectionMap.put(CategoriesContent._ID, CategoriesContent._ID);
+		sCategoriesProjectionMap.put(CategoriesContent._ID,
+				CategoriesContent._ID);
 		sCategoriesProjectionMap.put(CategoriesContent.CATEGORY_ID,
 				CategoriesContent.CATEGORY_ID);
 		sCategoriesProjectionMap.put(CategoriesContent.LOCALIZED_NAME,
 				CategoriesContent.LOCALIZED_NAME);
 		sCategoriesProjectionMap.put(CategoriesContent.IDENTIFIER,
 				CategoriesContent.IDENTIFIER);
+		sCategoriesProjectionMap.put(CategoriesContent.SELECTED,
+				CategoriesContent.SELECTED);
 
 		sNodeTypesProjectionMap = new HashMap<String, String>();
 		sNodeTypesProjectionMap.put(NodeTypesContent._ID, NodeTypesContent._ID);
 		sNodeTypesProjectionMap.put(NodeTypesContent.NODETYPE_ID,
 				NodeTypesContent.NODETYPE_ID);
-		sNodeTypesProjectionMap.put(NodeTypesContent.IDENTIFIER, NodeTypesContent.IDENTIFIER);
-		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_URL, NodeTypesContent.ICON_URL);
-		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_DATA, NodeTypesContent.ICON_DATA);
+		sNodeTypesProjectionMap.put(NodeTypesContent.IDENTIFIER,
+				NodeTypesContent.IDENTIFIER);
+		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_URL,
+				NodeTypesContent.ICON_URL);
+		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_DATA,
+				NodeTypesContent.ICON_DATA);
 		sNodeTypesProjectionMap.put(NodeTypesContent.LOCALIZED_NAME,
 				NodeTypesContent.LOCALIZED_NAME);
 		sNodeTypesProjectionMap.put(NodeTypesContent.CATEGORY_ID,

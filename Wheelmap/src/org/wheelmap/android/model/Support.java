@@ -25,6 +25,7 @@ public class Support {
 		public static final String CATEGORY_ID = "category_id";
 		public static final String LOCALIZED_NAME = "localized_name";
 		public static final String IDENTIFIER = "identifier";
+		public static final String SELECTED = "selected";
 	}
 	
 	public static interface NodeTypeColumns {
@@ -83,13 +84,18 @@ public class Support {
 		public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/categories");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.categories";
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.categories";
+		public static final String DEFAULT_SORT_ORDER = LOCALIZED_NAME + " ASC";
 
 		public static final String[] PROJECTION = new String[] {
 			_ID,
 			CATEGORY_ID,
 			LOCALIZED_NAME,
-			IDENTIFIER
+			IDENTIFIER,
+			SELECTED
 		};
+		
+		public static final int SELECTED_NO = 0;
+		public static final int SELECTED_YES = 1;
 		
 		public static int getCategoryId( Cursor c ) {
 			return c.getInt( c.getColumnIndexOrThrow( CATEGORY_ID ));
@@ -101,6 +107,14 @@ public class Support {
 		
 		public static String getIdentifier( Cursor c ) {
 			return c.getString( c.getColumnIndexOrThrow( IDENTIFIER ));
+		}
+		
+		public static Boolean getSelected( Cursor c ) {
+			int value = c.getInt( c.getColumnIndexOrThrow( SELECTED ));
+			if ( value == SELECTED_YES )
+				return true;
+			else
+				return false;
 		}
 	}
 	
