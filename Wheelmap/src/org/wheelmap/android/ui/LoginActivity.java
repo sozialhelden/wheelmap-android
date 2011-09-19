@@ -5,9 +5,6 @@ import makemachine.android.formgenerator.FormActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wheelmap.android.model.UserCredentials;
-import org.wheelmap.android.model.Wheelmap;
-
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
