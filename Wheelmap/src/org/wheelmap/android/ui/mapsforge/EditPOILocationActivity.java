@@ -86,7 +86,7 @@ public class EditPOILocationActivity extends MapActivity implements OnClickListe
 		public POILocationEditableOverlay () {
 			super(null);
 			items = 0;
-			marker = EditPOILocationActivity.this.getResources().getDrawable( R.drawable.marker_unknown );
+			marker = EditPOILocationActivity.this.getResources().getDrawable( R.drawable.wheelchair_state_unknown );
 		}
 	
 		@Override
