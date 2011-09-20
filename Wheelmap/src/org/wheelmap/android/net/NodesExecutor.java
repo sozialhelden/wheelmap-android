@@ -95,6 +95,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 				requestBuilder.wheelchairState( state );
 				retrieveSinglePage(requestBuilder);
 			}
+//			retrieveSinglePage( requestBuilder );
 			// retrieveAllPages( requestBuilder );
 		} catch ( Exception e ) {
 			throw new ExecutorException( e );

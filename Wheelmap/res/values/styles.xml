@@ -40,7 +40,7 @@
     <style name="TitleBarAction">
         <item name="android:layout_width">@dimen/title_height</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:background">@drawable/title_button</item>
+        <item name="android:background">@drawable/bar_gradient_light_grey</item>
     </style>
 
     <style name="TitleBarProgressIndicator" parent="@android:style/Widget.ProgressBar.Small">
