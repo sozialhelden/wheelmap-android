@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<LinearLayout style="@style/ActionBarCompat">
-	 <ImageView style="@style/TitleBarLogo"
-            android:src="@drawable/title_logo" 
-            android:padding="3dip"/>
+		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
+			android:padding="3dip" />
 	</LinearLayout>
 	<LinearLayout style="@style/ActionBarSwitcher">
 		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"
@@ -15,7 +14,6 @@
 			android:layout_width="0dip" android:layout_height="fill_parent"
 			android:gravity="center_vertical|center_horizontal"
 			android:textStyle="bold" android:textColor="#FFFFFFFF"
-			android:layout_weight="1"
-			android:background="@drawable/bar_gradient_light_grey"/>
+			android:layout_weight="1" android:background="@drawable/bar_gradient_light_grey" />
 	</LinearLayout>
 </merge>
