@@ -12,8 +12,7 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
-
-import org.wheelmap.android.ui.WheelmapHomeActivity;
+import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
@@ -31,7 +30,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Toast;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver {
+DetachableResultReceiver.Receiver {
 
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
@@ -66,7 +65,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.categoriesFilter(this), null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
+				QueriesBuilderHelper.userSettingsFilter(this), null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
 		// overlays
 		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
@@ -76,7 +75,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		isCentered = false;
-				
+
 		if (getIntent() != null && !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
 			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
@@ -86,7 +85,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 							mMapController.setZoom(18); // Zoon 1 is world view
 							requestUpdate();
 							mMapView.getViewTreeObserver()
-									.removeGlobalOnLayoutListener(this);
+							.removeGlobalOnLayoutListener(this);
 						}
 					});
 		}
@@ -103,11 +102,11 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
-		
+
 		mLocationManager = MyLocationManager.get( mState.mReceiver, true );
 		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -154,7 +153,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 				mMapController.setCenter(geoPoint);
 				isCentered = true;
 			}
-			
+
 			// we got the first time current position so center map on it
 			if (mLastGeoPointE6 == null) {
 				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
@@ -165,7 +164,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 					location.getAccuracy());
 			break;
 		}
-		
+
 		}
 	}
 
@@ -175,6 +174,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		findViewById(R.id.title_refresh_progress).setVisibility(
 				mState.mSyncing ? View.VISIBLE : View.GONE);
 	}
+	
+	public void onListClick(View v) {
+		Intent intent = new Intent(this, POIsListActivity.class);
+		//intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		startActivity(intent);
+	}
+
 
 	public void onCenterOnCurrentLocationClick(View v) {
 		if (mLastGeoPointE6 != null) {
@@ -183,21 +189,15 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		}
 	}
 
-	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivity(intent);
-	}
-
 	private void fillExtrasWithBoundingRect(Bundle bundle) {
 		int latSpan = mMapView.getLatitudeSpan();
 		int lonSpan = mMapView.getLongitudeSpan();
 		GeoPoint center = mMapView.getMapCenter();
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
-						+ (lonSpan / 2),
+				+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
-						- (lonSpan / 2));
+				- (lonSpan / 2));
 		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX,
 				boundingBox);
 	}

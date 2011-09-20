@@ -29,6 +29,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -36,6 +38,8 @@ import android.widget.Toast;
 public class POIsListActivity extends ListActivity implements
 DetachableResultReceiver.Receiver {
 
+	public static final int OPTION_SETTINGS = 0;
+	
 	private final static String TAG = "poislist";
 	private MyLocationManager mLocationManager;
 	private Location mLocation;
@@ -95,7 +99,7 @@ DetachableResultReceiver.Receiver {
 		long startTime = System.currentTimeMillis();		
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
-		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, QueriesBuilderHelper.categoriesFilter(this),
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, QueriesBuilderHelper.userSettingsFilter(this),
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
@@ -156,12 +160,6 @@ DetachableResultReceiver.Receiver {
 		return mState;
 	}
 
-	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivity(intent);
-	}
-
 	public void onFilterClick(View v) {
 		final Resources res = getResources();
 		final CharSequence[] items = res
@@ -211,6 +209,28 @@ DetachableResultReceiver.Receiver {
 		startActivity(i);
 
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu ) 
+	{
+		menu.add( 0, OPTION_SETTINGS, 0, "Settings" );
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemSelected( int id, MenuItem item )
+	{
+
+		switch( item.getItemId() )
+		{
+		case OPTION_SETTINGS:
+			startActivity(new Intent(this, SettingsActivity.class));
+			runQuery();
+			break;
+		}
+
+		return super.onMenuItemSelected( id, item );
 	}
 
 

@@ -4,7 +4,6 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 
 import android.app.Application;
-import android.content.Context;
 
 public class WheelmapApp extends Application {
 	

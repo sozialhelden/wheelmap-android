@@ -18,7 +18,6 @@ import android.widget.CursorAdapter;
 public class POIsListCursorAdapter extends CursorAdapter {
 	private final static String TAG = "poislist";
 	private DistanceFormatter mDistanceFormatter;
-	
 	private Drawable[] wheelDrawables;
 		
 	public POIsListCursorAdapter(Context context, Cursor cursor) {
@@ -33,9 +32,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		Drawable wheelLimited = context.getResources().getDrawable( R.drawable.wheelchair_state_limited );
 		Drawable wheelNo = context.getResources().getDrawable( R.drawable.wheelchair_state_disabled );
 		Drawable wheelUnknown = context.getResources().getDrawable( R.drawable.wheelchair_state_unknown );
-		
 		wheelDrawables = new Drawable[] { wheelUnknown, wheelYes, wheelLimited, wheelNo, null };
-		
 	}
 
 	@Override
@@ -63,9 +60,8 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		}
 		String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
 		pliv.setCategory( category + " - " + nodeType.localizedName );
-		
+
 		pliv.setDistance( mDistanceFormatter.format( distance ));
-		
 		Drawable marker = wheelDrawables[state.getId()];
 		pliv.setIcon( marker );
 	}
