@@ -29,13 +29,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.InsetDrawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 
 public class SupportManager implements DetachableResultReceiver.Receiver {
 	private static final String TAG = "support";
@@ -98,7 +95,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				mContext.getString(R.string.category_unknown));
 		mDefaultNodeType = new NodeType(0, "unknown",
 				mContext.getString(R.string.nodetype_unknown), 0);
-		mDefaultNodeType.stateDrawables = createDefaultDrawables(); 
+		mDefaultNodeType.stateDrawables = createDefaultDrawables();
 	}
 
 	public static SupportManager get() {
@@ -155,7 +152,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		if (cursor.getCount() == 1) {
 			Date date;
 			try {
-				date = Support.LastUpdateContent.parseDate(LastUpdateContent.getDate(cursor));
+				date = Support.LastUpdateContent.parseDate(LastUpdateContent
+						.getDate(cursor));
 			} catch (ParseException e) {
 				return true;
 			}
@@ -198,11 +196,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				initCategories();
 				break;
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
-				try {
-					initNodeTypes();
-				} catch (IOException e) {
-					Log.v( TAG, "InitNodeTypes Error: " + e.getLocalizedMessage());
-				}
+				initNodeTypes();
 				mStatusSender.send(CREATION_FINISHED, Bundle.EMPTY);
 				break;
 			default:
@@ -215,11 +209,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	private void initLookup() {
 		initCategories();
-		try {
-			initNodeTypes();
-		} catch (IOException e) {
-			Log.v( TAG, "InitNodeTypes Error: " + e.getLocalizedMessage());
-		}
+		initNodeTypes();
 	}
 
 	private void initLocales() {
@@ -245,7 +235,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		}
 	}
 
-	private void initNodeTypes() throws IOException {
+	private void initNodeTypes() {
 		Log.d(TAG, "SupportManager:initNodeTypes");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
@@ -256,10 +246,10 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		while (!cursor.isAfterLast()) {
 			int id = NodeTypesContent.getNodeTypeId(cursor);
 			String identifier = NodeTypesContent.getIdentifier(cursor);
-			Log.d(TAG,  "Loading nodetype: identifier = " + identifier);
+//			Log.d(TAG, "Loading nodetype: identifier = " + identifier);
 			String localizedName = CategoriesContent.getLocalizedName(cursor);
 			int categoryId = NodeTypesContent.getCategoryId(cursor);
-			String iconPath = NodeTypesContent.getIconURL( cursor );
+			String iconPath = NodeTypesContent.getIconURL(cursor);
 
 			NodeType nodeType = new NodeType(id, identifier, localizedName,
 					categoryId);
@@ -270,58 +260,67 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		}
 	}
 
-	private Drawable createIconDrawable( String assetPath ) {
+	private Drawable createIconDrawable(String assetPath) {
 		Bitmap bitmap;
-		Log.d( TAG, "SupportManager:createIconDrawable loading " + assetPath );
+//		Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
 		try {
-			bitmap = BitmapFactory.decodeStream( mContext.getAssets().open( "icons/" + assetPath));
-			
+			bitmap = BitmapFactory.decodeStream(mContext.getAssets().open(
+					"icons/" + assetPath));
+
 		} catch (IOException e) {
-			Log.e(TAG, "Error in initNodes:createIconDrawable:" + e);
+			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage() );
 			return null;
 		}
-		Bitmap croppedBitmap = Bitmap.createBitmap( bitmap, 0, 15, bitmap.getWidth(), bitmap.getHeight() - 15 );
-		Bitmap scaledBitmap = Bitmap.createScaledBitmap( croppedBitmap, 80, 65, true);
+		Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 15,
+				bitmap.getWidth(), bitmap.getHeight() - 15);
+		Bitmap scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, 80, 65,
+				true);
 		bitmap.recycle();
 		croppedBitmap.recycle();
-		return new BitmapDrawable( scaledBitmap );
-		
+		return new BitmapDrawable(scaledBitmap);
+
 	}
-	
+
 	private Map<WheelchairState, Drawable> createDefaultDrawables() {
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
-		
-		int idx;		
+
+		int idx;
 		for (idx = 0; idx < WheelchairState.values().length - 1; idx++) {
-			String path = String.format( "marker/%s.png", WheelchairState.valueOf(idx).toString().toLowerCase());
+			String path = String.format("marker/%s.png", WheelchairState
+					.valueOf(idx).toString().toLowerCase());
 			Drawable drawable = null;
 			try {
-				drawable = Drawable.createFromStream(mContext.getAssets().open( path ), null);
+				drawable = Drawable.createFromStream(
+						mContext.getAssets().open(path), null);
 			} catch (IOException e) {
-				Log.e(TAG,  "Error in createDefaultDrawables." + e);
+				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage() );
 			}
-			drawable.setBounds( 0, 0, 64, 64 );
+			drawable.setBounds(0, 0, 64, 64);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
-		
+
 		return lookupMap;
 	}
 
-	private Map<WheelchairState, Drawable> createDrawableLookup( String assetPath ) {
+	private Map<WheelchairState, Drawable> createDrawableLookup(String assetPath) {
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
-		Log.d( TAG, "SupportManager:createDrawableLookup loading " + assetPath );
+		Log.d(TAG, "SupportManager:createDrawableLookup loading " + assetPath);
 
-		int idx;		
+		int idx;
 		for (idx = 0; idx < WheelchairState.values().length - 1; idx++) {
-			String path = String.format( "marker/%s/%s", WheelchairState.valueOf(idx).toString().toLowerCase(), assetPath );
+			String path = String.format("marker/%s/%s", WheelchairState
+					.valueOf(idx).toString().toLowerCase(), assetPath);
 			Drawable drawable = null;
 			try {
-				drawable = Drawable.createFromStream(mContext.getAssets().open( path ), null);
+				drawable = Drawable.createFromStream(
+						mContext.getAssets().open(path), null);
 			} catch (IOException e) {
-				Log.e(TAG, "Error in initNodes:createDrawableLookup Loading fallback:" + e);
-				drawable = mDefaultNodeType.stateDrawables.get( WheelchairState.valueOf(idx));
+				Log.w(TAG,
+						"Error in createDrawableLookup. Assigning fallback. " + e.getMessage());
+				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
+						.valueOf(idx));
 			}
-			drawable.setBounds( 0, 0, 64, 64 );
+			drawable.setBounds(0, 0, 64, 64);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 

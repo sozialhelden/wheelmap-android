@@ -20,7 +20,7 @@ public class CategorySelectItemView extends FrameLayout {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		inflater.inflate(R.layout.category_select_list_item, this, true);
+		inflater.inflate(R.layout.settings_category_select_list_item, this, true);
 		
 		mCategoryIcon = (ImageView) findViewById( R.id.list_item_category_icon );
 		mCategoryText = (TextView) findViewById( R.id.list_item_category_text );

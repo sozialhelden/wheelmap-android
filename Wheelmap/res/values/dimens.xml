@@ -15,6 +15,7 @@
     limitations under the License.
 -->
 <resources>
+	<dimen name="list_separator_height">36dip</dimen>
     <dimen name="actionbar_compat_height">45dp</dimen>
     <dimen name="title_height">45dip</dimen>
     <dimen name="now_playing_height">90dip</dimen>
