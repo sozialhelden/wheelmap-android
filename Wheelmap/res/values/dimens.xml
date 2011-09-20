@@ -15,7 +15,7 @@
     limitations under the License.
 -->
 <resources>
-    <dimen name="colorstrip_height">6dip</dimen>
+    <dimen name="actionbar_compat_height">45dp</dimen>
     <dimen name="title_height">45dip</dimen>
     <dimen name="now_playing_height">90dip</dimen>
     <dimen name="text_size_small">14sp</dimen>

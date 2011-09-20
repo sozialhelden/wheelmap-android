@@ -1,45 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+    android:id="@+id/home_root"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <include layout="@layout/actionbar" />
 
-
-
-	<LinearLayout style="@style/TitleBar">
-		<TextView style="@style/TitleBarText" />
-
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction"
-			android:contentDescription="@string/description_map" android:src="@drawable/ic_title_map"
-			android:onClick="onMapClick" />
-			
-	    <ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction"
-			android:contentDescription="@string/description_new" android:src="@drawable/ic_title_new"
-			android:onClick="onNewPOIClick" />	
-			
-			
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction"
-			android:contentDescription="@string/description_filter" android:src="@drawable/ic_title_filter"
-			android:onClick="onFilterClick" />	
-
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
-			android:contentDescription="@string/description_refresh" android:src="@drawable/ic_title_refresh"
-			android:onClick="onRefreshClick" />
-		<ProgressBar style="@style/TitleBarProgressIndicator"
-			android:visibility="gone" android:layout_alignLeft="@id/btn_title_refresh"
-			android:layout_alignTop="@id/btn_title_refresh" android:id="@+id/title_refresh_progress" />
-
-	
-	</LinearLayout>
-
-	
-
-	<ListView android:id="@+id/android:list" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:layout_marginTop="10dip" />
-
-
+    <ProgressBar android:id="@android:id/empty"
+        android:indeterminate="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+    <ListView android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:drawSelectorOnTop="false" />
 </LinearLayout>
+
+
