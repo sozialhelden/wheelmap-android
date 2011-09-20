@@ -48,7 +48,7 @@ DetachableResultReceiver.Receiver {
 	
 	private State mState;
 	private float mDistance;
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ DetachableResultReceiver.Receiver {
 		// Attach event handlers
 		mapView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-            	mState.mListPosition = getListView().getSelectedItemPosition();
         		Intent intent = new Intent(POIsListActivity.this, POIsMapsforgeActivity.class);
         		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
         		startActivity(intent);
@@ -127,7 +126,6 @@ DetachableResultReceiver.Receiver {
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);
 		setListAdapter(adapter);
-		getListView().setSelection( mState.mListPosition);
 
 		long duration = System.currentTimeMillis() - startTime;
 		Log.d ( TAG, "runQuery duration = " + duration + "ms" );
@@ -197,7 +195,6 @@ DetachableResultReceiver.Receiver {
 	}
 
 	public void onMapClick(View v) {
-		mState.mListPosition = getListView().getSelectedItemPosition();
 		Intent intent = new Intent(this, POIsMapsforgeActivity.class);
 		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		startActivity(intent);
@@ -235,10 +232,7 @@ DetachableResultReceiver.Receiver {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		mState.mListPosition = l.getSelectedItemPosition();
-
 		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
-
 		long poiId = POIHelper.getId(cursor);
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
@@ -288,7 +282,6 @@ DetachableResultReceiver.Receiver {
 	private static class State {
 		public DetachableResultReceiver mReceiver;
 		public boolean mSyncing = false;
-		public int mListPosition = 0;
 
 		private State() {
 			mReceiver = new DetachableResultReceiver(new Handler());
