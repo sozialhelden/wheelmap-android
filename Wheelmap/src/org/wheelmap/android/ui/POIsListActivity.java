@@ -46,9 +46,11 @@ public class POIsListActivity extends ListActivity implements
 
 	private final static double QUERY_DISTANCE_MIN = 0.1;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
+	private final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
 
 	private State mState;
 	private float mDistance;
+	private boolean mIsRecreated;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -87,7 +89,14 @@ public class POIsListActivity extends ListActivity implements
 		mDistance = getDistanceFromPreferences();
 
 		getListView().setTextFilterEnabled(true);
-
+		
+		
+	}
+	
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		mIsRecreated = false;
 	}
 
 	@Override
@@ -100,7 +109,7 @@ public class POIsListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		mLocationManager.register(mState.mReceiver, true);
-		runQuery();
+		runQuery( !mIsRecreated );
 	}
 
 	@Override
@@ -108,7 +117,23 @@ public class POIsListActivity extends ListActivity implements
 		super.onDestroy();
 	}
 
-	public void runQuery() {
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		if ( state.containsKey( EXTRA_IS_RECREATED ))
+			mIsRecreated = true;
+		else
+			mIsRecreated = false;
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean( EXTRA_IS_RECREATED, true);
+		
+		super.onSaveInstanceState(outState);
+	}
+
+	public void runQuery( boolean forceReload ) {
+		Log.d( TAG, "runQuery: forceReload = " + forceReload );
 		long startTime = System.currentTimeMillis();
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
@@ -118,7 +143,8 @@ public class POIsListActivity extends ListActivity implements
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
 
-		requestData();
+		if ( forceReload )
+			requestData();
 
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);
@@ -242,8 +268,10 @@ public class POIsListActivity extends ListActivity implements
 	}
 	
 	private boolean isFarerThanDeltaDistance( Location location ) {
-		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(location.getLongitude(), location.getLatitude());
+		if ( mLastQueryLocation == null )
+			return false;
 		
+		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(location.getLongitude(), location.getLatitude());
 		Wgs84GeoCoordinates lastQueryCoordinates = new Wgs84GeoCoordinates( mLastQueryLocation.getLongitude(), mLastQueryLocation.getLatitude());
 		
 		if ( GeocoordinatesMath.calculateDistance( lastQueryCoordinates, crrCoordinates) >= QUERY_DISTANCE_MIN )
@@ -279,7 +307,7 @@ public class POIsListActivity extends ListActivity implements
 			mLocation = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			if ( isFarerThanDeltaDistance( mLocation )) {
-				runQuery();
+				runQuery(true);
 			}
 			break;
 		}

@@ -42,7 +42,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends Abstrac
 	}
 
 	
-	protected void retrieveAllPages( RequestBuilder requestBuilder) throws RemoteException, OperationApplicationException {
+	protected void retrieveMaxNPages( RequestBuilder requestBuilder, int n) throws RemoteException, OperationApplicationException {
 		// Server seems to count from 1...
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
 
@@ -51,8 +51,9 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends Abstrac
 
 		int numOfPages = m.getNumPages().intValue();
 
+		int numOfPagesToRetrieve = n < numOfPages ? n : numOfPages;
 		int crrPage;
-		for (crrPage = 2; crrPage <= numOfPages; crrPage++) {
+		for (crrPage = 2; crrPage <= numOfPagesToRetrieve; crrPage++) {
 			page.setPage(crrPage);
 			executeSingleRequest(requestBuilder);
 		}
