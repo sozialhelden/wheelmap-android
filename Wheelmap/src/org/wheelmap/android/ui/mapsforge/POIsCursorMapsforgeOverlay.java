@@ -65,6 +65,9 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			OverlayItem item = new OverlayItem();
 			item.setTitle( name );
 			item.setSnippet( name );
+			lat = lat + 10;
+			lng = lng - 10;
+			
 			item.setPoint( new GeoPoint(lat, lng));
 			item.setMarker( marker );
 			return item;
