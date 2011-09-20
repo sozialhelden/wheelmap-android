@@ -12,7 +12,6 @@ import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
-
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class POIsListActivity extends ListActivity implements
@@ -54,6 +54,20 @@ DetachableResultReceiver.Receiver {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
+		
+		TextView mapView = (TextView) findViewById(R.id.switch_maps);
+		
+		// Attach event handlers
+		mapView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	mState.mListPosition = getListView().getSelectedItemPosition();
+        		Intent intent = new Intent(POIsListActivity.this, POIsMapsforgeActivity.class);
+        		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+        		startActivity(intent);
+                
+            }
+            
+        });
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -190,9 +204,7 @@ DetachableResultReceiver.Receiver {
 		startActivity(intent);
 	}
 	
-	public void onListClick(View v) {
-	}
-
+	
 	public void onNewPOIClick(View v) {
 
 		// create new POI and start editing
@@ -251,10 +263,6 @@ DetachableResultReceiver.Receiver {
 	}
 
 	private void updateRefreshStatus() {
-		findViewById(R.id.btn_title_refresh).setVisibility(
-				mState.mSyncing ? View.GONE : View.VISIBLE);
-		findViewById(R.id.title_refresh_progress).setVisibility(
-				mState.mSyncing ? View.VISIBLE : View.GONE);
 	}
 
 	/** {@inheritDoc} */

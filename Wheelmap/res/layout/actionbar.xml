@@ -2,17 +2,15 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 	<LinearLayout style="@style/ActionBarCompat" />
 	<LinearLayout style="@style/ActionBarSwitcher">
-		<TextView android:text="@string/title_pois_list"
+		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"
 			android:layout_width="0dip" android:layout_height="fill_parent"
 			android:gravity="center_vertical|center_horizontal"
 			android:textStyle="bold" android:textColor="#FFFFFFFF"
-			android:layout_weight="1"
-			android:onClick="onListClick" />
-		<TextView android:text="@string/title_pois_map"
+			android:layout_weight="1" />
+		<TextView android:id="@id/switch_maps" android:text="@string/title_pois_map"
 			android:layout_width="0dip" android:layout_height="fill_parent"
 			android:gravity="center_vertical|center_horizontal"
 			android:textStyle="bold" android:textColor="#FFFFFFFF"
-			android:layout_weight="1" 
-			android:onClick="onMapClick"/>
+			android:layout_weight="1"/>
 	</LinearLayout>
 </merge>
