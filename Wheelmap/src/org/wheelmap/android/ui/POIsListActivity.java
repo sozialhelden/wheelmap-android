@@ -88,6 +88,7 @@ DetachableResultReceiver.Receiver {
 	protected void onResume() {
 		super.onResume();
 		mLocationManager.register(mState.mReceiver, true);
+		runQuery();
 	}
 
 	@Override
@@ -225,8 +226,7 @@ DetachableResultReceiver.Receiver {
 		switch( item.getItemId() )
 		{
 		case OPTION_SETTINGS:
-			startActivity(new Intent(this, SettingsActivity.class));
-			runQuery();
+			startActivity(new Intent(this, SettingsActivity.class));			
 			break;
 		}
 
