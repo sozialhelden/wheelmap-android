@@ -11,14 +11,12 @@
 			<TextView android:text="Name:" />
 			<EditText android:id="@+id/name"
 			  style="@style/DetailFont"
-			  android:background="@drawable/detail_border"
 			/>
 		</TableRow>
 		<TableRow>
 			<TextView android:text="Address:" />
 			<EditText android:id="@+id/addr" 
-			  style="@style/DetailFont"
-			  android:background="@drawable/detail_border"/>
+			  style="@style/DetailFont"/>
 		</TableRow>
 		<TableRow>
 			<TextView android:text="Wheelchair:" />
