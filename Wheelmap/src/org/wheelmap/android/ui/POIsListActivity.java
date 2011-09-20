@@ -226,7 +226,7 @@ DetachableResultReceiver.Receiver {
 		switch( item.getItemId() )
 		{
 		case OPTION_SETTINGS:
-			startActivity(new Intent(this, SettingsActivity.class));			
+			startActivity(new Intent(this, NewSettingsActivity.class));			
 			break;
 		}
 

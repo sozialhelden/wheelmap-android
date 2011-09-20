@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 	android:title="Settings">
-	<PreferenceCategory android:title="@string/settings_category_accesibility">
+	<PreferenceCategory android:title="@string/settings_category_selection">
 		<Preference android:title="@string/settings_wheelchair_state"
 			android:summary="@string/settings_wheelchair_state_summary">
 			<intent android:targetPackage="org.wheelmap.android"

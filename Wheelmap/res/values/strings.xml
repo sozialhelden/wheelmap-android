@@ -49,7 +49,6 @@
     <string name="btn_mapsforge">Mapsforge</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <string name="settings_wheelchair_state_summary">Set the desired wheelchair state filter</string>
-    <string name="settings_category_accesibility">Display Wheelchair Accesibility</string>
     <string name="spinner_description_distance_km">Distance in km</string>
     <string name="spinner_description_distance_miles">Distance in miles</string>
     <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
@@ -73,11 +72,7 @@
     <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
     <string name="settings_list_distance">Distance in the List</string>
     <string name="error_no_mapfilefound">No offline map found or selected. Using online map.</string>
-    <string name="settings_wheelchair_full_accesible">Full accesibility</string>
-    <string name="settings_wheelchair_no_accesible">No accesibility</string>
-    <string name="settings_wheelchair_limited_accesible">Limited accesibility</string>
-    <string name="settings_wheelchair_nopreference">No preference</string>
-    <string name="settings_wheelchair_unknown_accesible">Unknown accesibility</string>
+    <string name="settings_wheelchair_unknown_accesible">Unknown</string>
     <string name="value_onehalf_distance_unit">0.5</string>
     <string name="poi_property_nodetype">Type</string>
     <string name="poi_property_category">Category</string>
@@ -90,4 +85,9 @@
     <string name="title_category_select">Select Categories to display</string>
     <string name="settings_category_filter">Category Filter</string>
     <string name="settings_category_filter_summary">Filter locations by categories</string>
+    <string name="settings_category_selection">Category Selection</string>
+    <string name="settings_wheelchair_accessibility">Wheelchair Accessibility</string>
+    <string name="settings_wheelchair_no_accessible">No</string>
+    <string name="settings_wheelchair_limited_accessible">Limited</string>
+    <string name="settings_wheelchair_full_accessible">Yes</string>
 </resources>

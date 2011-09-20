@@ -48,7 +48,7 @@
             
             
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".ui.NewSettingsActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_settings" />
             

@@ -20,7 +20,7 @@ public class CategorySelectCursorAdapter extends CursorAdapter {
 		CategorySelectItemView itemView = (CategorySelectItemView) view;
 		
 		String name = Support.CategoriesContent.getLocalizedName( cursor );
-		boolean selected = CategoriesContent.getSelected( cursor );
+		boolean selected = CategoriesContent.getSelected( cursor );			
 		itemView.setName( name );
 		itemView.setCheckboxChecked( selected );
 	}
