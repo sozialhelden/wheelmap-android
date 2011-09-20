@@ -189,6 +189,9 @@ DetachableResultReceiver.Receiver {
 		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		startActivity(intent);
 	}
+	
+	public void onListClick(View v) {
+	}
 
 	public void onNewPOIClick(View v) {
 
