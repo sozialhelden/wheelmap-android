@@ -115,6 +115,7 @@
         <item name="android:layout_height">@dimen/actionbar_compat_height</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">#FF8F8F8F</item>
+         
     </style>
 
     <style name="TextHeader">

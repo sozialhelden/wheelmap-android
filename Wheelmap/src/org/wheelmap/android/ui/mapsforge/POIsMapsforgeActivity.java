@@ -29,6 +29,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class POIsMapsforgeActivity extends MapActivity implements
@@ -106,7 +107,20 @@ DetachableResultReceiver.Receiver {
 		}
 
 		mLocationManager = MyLocationManager.get( mState.mReceiver, true );
-		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
+		
+        TextView listView = (TextView) findViewById(R.id.switch_list);
+		
+		// Attach event handlers
+        listView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+            	Intent intent = new Intent(POIsMapsforgeActivity.this, POIsListActivity.class);
+        		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+        		startActivity(intent);
+                
+            }
+            
+        });  
+//		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
 	}
 
 	@Override
@@ -158,7 +172,7 @@ DetachableResultReceiver.Receiver {
 
 			// we got the first time current position so center map on it
 			if (mLastGeoPointE6 == null) {
-				findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
+		//		findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
 				mMapController.setCenter(geoPoint);
 			}
 			mLastGeoPointE6 = geoPoint;
@@ -171,10 +185,6 @@ DetachableResultReceiver.Receiver {
 	}
 
 	private void updateRefreshStatus() {
-		findViewById(R.id.btn_title_refresh).setVisibility(
-				mState.mSyncing ? View.GONE : View.VISIBLE);
-		findViewById(R.id.title_refresh_progress).setVisibility(
-				mState.mSyncing ? View.VISIBLE : View.GONE);
 	}
 	
 	@Override
