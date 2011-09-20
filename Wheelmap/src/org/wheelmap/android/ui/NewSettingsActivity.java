@@ -28,45 +28,47 @@ public class NewSettingsActivity extends ListActivity {
 	private final static String TAG = "category";
 	private Uri mUri = Support.CategoriesContent.CONTENT_URI;
 	private SharedPreferences mPrefs;
+	private LayoutInflater mInflater;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_category_select);
+		setContentView(R.layout.activity_settings_select);
 		
 		mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
+		mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
 		Cursor cursor = managedQuery(mUri, Support.CategoriesContent.PROJECTION,
 				null, null, Support.CategoriesContent.DEFAULT_SORT_ORDER );
 		startManagingCursor(cursor);
 
 		CategorySelectCursorAdapter adapterCatList = new CategorySelectCursorAdapter( this, cursor );		
-		View catTitleView = createCatTitle();
 		WheelchairStateAdapter adapterWSList = new WheelchairStateAdapter( this );
-		
-		View wsTitleView = createWheelStateTitle();
-		
+	
 		MergeAdapter adapter = new MergeAdapter();
-		adapter.addView( wsTitleView );
+		adapter.addView( createWheelStateTitle() );
 		adapter.addAdapter( adapterWSList);
-		adapter.addView( catTitleView );
+		adapter.addView( createBlackBar());
+		adapter.addView( createCatTitle() );
 		adapter.addAdapter( adapterCatList );
 		
 		this.setListAdapter( adapter );
 	}
 	
 	private View createWheelStateTitle() {
-		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		LinearLayout layout = (LinearLayout) inflater.inflate( R.layout.settings_wheelstate_item_title, null);
+		LinearLayout layout = (LinearLayout) mInflater.inflate( R.layout.settings_wheelstate_item_title, null);
 		return layout;
 	}
 	
 	private View createCatTitle() {
-		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		LinearLayout layout = (LinearLayout) inflater.inflate( R.layout.settings_category_item_title, null);
+		LinearLayout layout = (LinearLayout) mInflater.inflate( R.layout.settings_category_item_title, null);
+		return layout;
+	}
+	
+	private View createBlackBar() {
+		LinearLayout layout = (LinearLayout) mInflater.inflate( R.layout.settings_black_item, null);
 		return layout;
 	}
 
@@ -77,10 +79,8 @@ public class NewSettingsActivity extends ListActivity {
 		MergeAdapter adapter = (MergeAdapter) l.getAdapter();
 		Object item = l.getItemAtPosition(position);
 		if ( item instanceof WheelchairStateItem ) {
-			clickWheelStateItem( (WheelchairStateItem) item, adapter );
-			
-		}
-		if ( item instanceof Cursor ) {
+			clickWheelStateItem( (WheelchairStateItem) item, adapter );	
+		} else if ( item instanceof Cursor ) {
 			clickCategorieItem( (Cursor) item );
 		}
 	}

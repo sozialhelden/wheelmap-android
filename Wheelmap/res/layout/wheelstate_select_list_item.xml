@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:paddingLeft="12dip" android:paddingRight="5dip"
+	android:paddingTop="9dip" android:paddingBottom="5dip">
 	<ImageView android:id="@+id/list_item_wheelstate_icon"
-		android:layout_width="24dip" android:layout_height="24dip"
-		android:layout_marginTop="9dip" android:layout_marginBottom="5dip"
-		android:layout_marginLeft="5dip" android:layout_alignParentLeft="true" />
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true" android:layout_marginTop="5dip" />
 	<TextView android:id="@+id/list_item_wheelstate_text"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_marginTop="9dip" android:layout_marginBottom="5dip"
-		android:layout_marginLeft="5dip" android:layout_toRightOf="@+id/list_item_wheelstate_icon"
+		android:layout_toRightOf="@+id/list_item_wheelstate_icon"
 		android:layout_toLeftOf="@+id/list_item_select_wheelstate_checkbox"
 		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:singleLine="true" />
-
+		android:singleLine="true" android:layout_marginTop="9dip"
+		android:layout_marginLeft="5dip" />
 	<CheckBox android:id="@+id/list_item_wheelstate_checkbox"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_alignParentRight="true" android:layout_marginTop="5dip"
-		android:layout_marginBottom="5dip" android:layout_marginRight="5dip" />
+		android:layout_alignParentRight="true" />
 </RelativeLayout>

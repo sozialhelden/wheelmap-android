@@ -13,8 +13,16 @@
     <color name="wheel_enabled">#ff78b13e</color> 
     <color name="wheel_limited">#fff29436</color> 
     <color name="wheel_disabled">#ffE30127</color>
-    <color name="wheel_unknown">#ff656565</color> 
-   
+    <color name="wheel_unknown">#ff656565</color>
+    
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <color name="dark_grey_one">#FF3F3F3F</color>
+    <color name="dark_grey_two">#FF9F9F9F</color>
+    
+    <color name="light_grey_one">#FF949494</color>
+    <color name="light_grey_two">#FFDFDFDF</color>
     
        
 </resources>
