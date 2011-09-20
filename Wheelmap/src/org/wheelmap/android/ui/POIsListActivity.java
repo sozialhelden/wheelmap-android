@@ -5,6 +5,7 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
+import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
@@ -33,7 +34,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class POIsListActivity extends ListActivity implements
-		DetachableResultReceiver.Receiver {
+DetachableResultReceiver.Receiver {
 
 	private final static String TAG = "poislist";
 	private MyLocationManager mLocationManager;
@@ -49,7 +50,7 @@ public class POIsListActivity extends ListActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		
+
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
 
@@ -65,11 +66,11 @@ public class POIsListActivity extends ListActivity implements
 		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
 		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
-		
+
 		// Run query
 		runQuery();
 		getListView().setTextFilterEnabled(true);
-		
+
 
 	}
 
@@ -84,7 +85,7 @@ public class POIsListActivity extends ListActivity implements
 		super.onResume();
 		mLocationManager.register(mState.mReceiver, true);
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();		
@@ -94,11 +95,11 @@ public class POIsListActivity extends ListActivity implements
 		long startTime = System.currentTimeMillis();		
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
-		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, null,
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, QueriesBuilderHelper.categoriesFilter(this),
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
-		
+
 		if ( wrappingCursor.getCount() == 0 ) {
 			onRefreshClick(null);
 		}
@@ -107,15 +108,18 @@ public class POIsListActivity extends ListActivity implements
 				wrappingCursor);
 		setListAdapter(adapter);
 		getListView().setSelection( mState.mListPosition);
-		
+
 		long duration = System.currentTimeMillis() - startTime;
 		Log.d ( TAG, "runQuery duration = " + duration + "ms" );
 	}
 
+	
+
 	public String[] createWhereValues() {
+
 		String[] lonlat = new String[] {
 				String.valueOf(mLocation.getLongitude()),
-				String.valueOf(mLocation.getLatitude()) };
+				String.valueOf(mLocation.getLatitude())};
 		return lonlat;
 	}
 
@@ -127,7 +131,7 @@ public class POIsListActivity extends ListActivity implements
 
 	public float getDistanceFromPreferences() {
 		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		.getDefaultSharedPreferences(this);
 
 		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE, "0.5");
 		return Float.valueOf(prefDist);
@@ -157,11 +161,11 @@ public class POIsListActivity extends ListActivity implements
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		this.startActivity(intent);
 	}
-	
+
 	public void onFilterClick(View v) {
 		final Resources res = getResources();
 		final CharSequence[] items = res
-				.getStringArray(R.array.distance_array);
+		.getStringArray(R.array.distance_array);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		int textRes = GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES ? R.string.spinner_description_distance_km
@@ -170,12 +174,12 @@ public class POIsListActivity extends ListActivity implements
 
 		builder.setSingleChoiceItems(items, getSelectionFromPreferences(),
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						mDistance = Float.valueOf( res.getStringArray( R.array.distance_array_values)[item]);
-						onRefreshClick(null);
-						dialog.dismiss();
-					}
-				});
+			public void onClick(DialogInterface dialog, int item) {
+				mDistance = Float.valueOf( res.getStringArray( R.array.distance_array_values)[item]);
+				onRefreshClick(null);
+				dialog.dismiss();
+			}
+		});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -186,29 +190,29 @@ public class POIsListActivity extends ListActivity implements
 		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		startActivity(intent);
 	}
-	
-    public void onNewPOIClick(View v) {
-    	
-    	// create new POI and start editing
-        ContentValues cv = new ContentValues();
-        cv.put(Wheelmap.POIs.NAME,  getString(R.string.new_default_name));
-        cv.put(Wheelmap.POIs.COORD_LAT,  Math.ceil(mLocation.getLatitude() * 1E6));
-        cv.put(Wheelmap.POIs.COORD_LON,  Math.ceil(mLocation.getLongitude() * 1E6));
-        cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
-        cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
-        
-        Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI, cv);
-        
-        // edit activity
-        Log.i(TAG, new_pois.toString());
-        long poiId = Long.parseLong(new_pois.getLastPathSegment());
-    	Intent i = new Intent(POIsListActivity.this, POIDetailActivityEditable.class);
-    	i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
-    	startActivity(i);
-        
-		
+
+	public void onNewPOIClick(View v) {
+
+		// create new POI and start editing
+		ContentValues cv = new ContentValues();
+		cv.put(Wheelmap.POIs.NAME,  getString(R.string.new_default_name));
+		cv.put(Wheelmap.POIs.COORD_LAT,  Math.ceil(mLocation.getLatitude() * 1E6));
+		cv.put(Wheelmap.POIs.COORD_LON,  Math.ceil(mLocation.getLongitude() * 1E6));
+		cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
+		cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
+
+		Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI, cv);
+
+		// edit activity
+		Log.i(TAG, new_pois.toString());
+		long poiId = Long.parseLong(new_pois.getLastPathSegment());
+		Intent i = new Intent(POIsListActivity.this, POIDetailActivityEditable.class);
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		startActivity(i);
+
+
 	}
-	
+
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -250,12 +254,12 @@ public class POIsListActivity extends ListActivity implements
 			final String errorText = getString(R.string.toast_sync_error,
 					resultData.getString(Intent.EXTRA_TEXT));
 			Toast.makeText(POIsListActivity.this, errorText, Toast.LENGTH_LONG)
-					.show();
+			.show();
 			break;
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			mLocation = (Location) resultData
-					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+			.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			break;
 		}
 		}

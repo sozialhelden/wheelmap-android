@@ -3,7 +3,6 @@ package org.wheelmap.android.ui;
 import org.wheelmap.android.R;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.ui.map.POIsMapActivity;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
@@ -60,11 +59,6 @@ public class WheelmapHomeActivity extends Activity implements
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
 				WheelmapHomeActivity.this.mState.mReceiver);
 		startService(intent);
-	}
-
-	/** Handle "map" action. */
-	public void onMapClick(View v) {
-		startActivity(new Intent(this, POIsMapActivity.class));
 	}
 
 	public void onMapsforgeClick(View v) {
