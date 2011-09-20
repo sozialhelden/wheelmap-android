@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <include layout="@layout/actionbar" />
+    <include layout="@layout/actionbar_list" />
 
     <ProgressBar android:id="@android:id/empty"
         android:indeterminate="true"

@@ -112,9 +112,9 @@
     <style name="ActionBarSwitcher">
         <item name="android:id">@id/actionbar_compat_switcher</item>
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">@dimen/actionbar_compat_height</item>
+        <item name="android:layout_height">@dimen/actionbar_compat_switcher_height</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">#FF8F8F8F</item>
+        <item name="android:background">@drawable/bar_gradient_dark_grey</item>
          
     </style>
 

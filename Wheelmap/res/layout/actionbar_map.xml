@@ -10,12 +10,12 @@
 			android:layout_width="0dip" android:layout_height="fill_parent"
 			android:gravity="center_vertical|center_horizontal"
 			android:textStyle="bold" android:textColor="#FFFFFFFF"
-			android:layout_weight="1" />
+			android:layout_weight="1" android:background="@drawable/bar_gradient_light_grey"/>
 		<TextView android:id="@id/switch_maps" android:text="@string/title_pois_map"
 			android:layout_width="0dip" android:layout_height="fill_parent"
 			android:gravity="center_vertical|center_horizontal"
 			android:textStyle="bold" android:textColor="#FFFFFFFF"
 			android:layout_weight="1"
-			android:background="@drawable/bar_gradient_light_grey"/>
+			/>
 	</LinearLayout>
 </merge>

@@ -203,7 +203,6 @@ DetachableResultReceiver.Receiver {
 		startActivity(intent);
 	}
 	
-	
 	public void onNewPOIClick(View v) {
 
 		// create new POI and start editing

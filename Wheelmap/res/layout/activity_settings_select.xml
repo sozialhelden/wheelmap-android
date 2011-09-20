@@ -3,12 +3,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-
-	<LinearLayout android:id="@+id/title_bar_logo" style="@style/ActionBarCompat">
-
+	<LinearLayout style="@style/ActionBarCompat">
+		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
+			android:padding="3dip" />
 	</LinearLayout>
-	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher"
-		android:background="@drawable/bar_gradient_dark_grey">
+	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
 		<TextView android:layout_width="fill_parent"
 			android:layout_height="fill_parent" android:gravity="center"
 			android:text="@string/title_pois_settings" android:textColor="@color/white"
