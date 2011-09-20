@@ -30,7 +30,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -134,8 +133,6 @@ DetachableResultReceiver.Receiver {
 		Log.d ( TAG, "runQuery duration = " + duration + "ms" );
 	}
 
-	
-
 	public String[] createWhereValues() {
 
 		String[] lonlat = new String[] {
@@ -228,28 +225,12 @@ DetachableResultReceiver.Receiver {
 
 
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu( Menu menu ) 
-	{
-		menu.add( 0, OPTION_SETTINGS, 0, "Settings" );
-		return true;
-	}
 
 	@Override
-	public boolean onMenuItemSelected( int id, MenuItem item )
-	{
-
-		switch( item.getItemId() )
-		{
-		case OPTION_SETTINGS:
-			startActivity(new Intent(this, NewSettingsActivity.class));			
-			break;
-		}
-
-		return super.onMenuItemSelected( id, item );
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		startActivity(new Intent(this, NewSettingsActivity.class));			
+		return super.onPrepareOptionsMenu(menu);
 	}
-
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {

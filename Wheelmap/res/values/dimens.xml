@@ -16,6 +16,7 @@
 -->
 <resources>
     <dimen name="actionbar_compat_height">52dp</dimen>
+	<dimen name="list_separator_height">36dip</dimen>
     <dimen name="title_height">45dip</dimen>
     <dimen name="now_playing_height">90dip</dimen>
     <dimen name="text_size_small">14sp</dimen>

@@ -31,6 +31,7 @@ public class WheelchairStateAdapter extends BaseAdapter {
 			this.text = text;
 			this.icon = icon;
 			this.prefsKey = prefsKey;
+			this.color = color;
 		}
 
 		public WheelchairState state;
@@ -124,7 +125,7 @@ public class WheelchairStateAdapter extends BaseAdapter {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-			inflater.inflate(R.layout.wheelstate_select_list_item, this, true);
+			inflater.inflate(R.layout.settings_wheelstate_select_list_item, this, true);
 
 			mWheelStateIcon = (ImageView) findViewById(R.id.list_item_wheelstate_icon);
 			mWheelStateText = (TextView) findViewById(R.id.list_item_wheelstate_text);
@@ -143,7 +144,7 @@ public class WheelchairStateAdapter extends BaseAdapter {
 		}
 
 		public void setTextColor(int color) {
-			// mWheelStateText.setTextColor(color);
+			mWheelStateText.setTextColor(color);
 		}
 
 		public void setCheckboxChecked(boolean checked) {

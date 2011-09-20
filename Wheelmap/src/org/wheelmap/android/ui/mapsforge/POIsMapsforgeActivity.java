@@ -12,6 +12,7 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -25,6 +26,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
@@ -183,6 +185,12 @@ DetachableResultReceiver.Receiver {
 	}
 
 	private void updateRefreshStatus() {
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		startActivity(new Intent(this, NewSettingsActivity.class));			
+		return super.onPrepareOptionsMenu(menu);
 	}
 	
 	public void onListClick(View v) {

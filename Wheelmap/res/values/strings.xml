@@ -31,22 +31,10 @@
     <!-- deploy 
     <string name="mapskey">02BU05u7kh4oKs1RpT2WHfyuQdb6C0MZnixRF2Q</string>
     -->
-    <string name="btn_mapfile">Offline Maps</string>
-    <string name="download_file_local_available">Local Available</string>
-    <string name="download_file_local_incomplete">Local Incomplete</string>
     <string name="btn_delete">Delete</string>
-    <string name="btn_download">Download</string>
     <string name="pending">Pending</string>
-    <string name="download_update_available">Update Available</string>
-    <string name="settings_mapfile_manager">Offline Map Manager</string>
-    <string name="description_mapfile_manager">Download Offline Maps</string>
-    <string name="settings_mapfile_select">Select Offline Map</string>
-    <string name="description_mapfile_select">Choose between the local available maps</string>
-    <string name="title_mapfile_select">Select between maps</string>
-    <string name="title_mapfile_download">Offline Maps Download</string>
     <string name="settings_category_mapfile">Offline Maps</string>
     <string name="select_map_location">Location:</string>
-    <string name="btn_mapsforge">Mapsforge</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <string name="settings_wheelchair_state_summary">Set the desired wheelchair state filter</string>
     <string name="spinner_description_distance_km">Distance in km</string>
@@ -71,7 +59,6 @@
     <string name="poi_property_website">Website</string>
     <string name="settings_list_distance_summary">Allows to set the default distance in the list (in km or miles)</string>
     <string name="settings_list_distance">Distance in the List</string>
-    <string name="error_no_mapfilefound">No offline map found or selected. Using online map.</string>
     <string name="settings_wheelchair_unknown_accesible">Unknown</string>
     <string name="value_onehalf_distance_unit">0.5</string>
     <string name="poi_property_nodetype">Type</string>
