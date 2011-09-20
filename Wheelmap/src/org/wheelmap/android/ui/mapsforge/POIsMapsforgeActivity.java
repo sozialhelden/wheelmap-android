@@ -9,6 +9,7 @@ import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 
@@ -65,7 +66,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				null, null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
+				QueriesBuilderHelper.categoriesFilter(this), null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
 		// overlays
 		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);

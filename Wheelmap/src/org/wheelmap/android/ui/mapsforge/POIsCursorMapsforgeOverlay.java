@@ -3,7 +3,6 @@ package org.wheelmap.android.ui.mapsforge;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.ItemizedOverlay;
 import org.mapsforge.android.maps.OverlayItem;
-import org.wheelmap.android.R;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;

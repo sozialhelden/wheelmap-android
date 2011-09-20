@@ -5,8 +5,7 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
-import org.wheelmap.android.model.Support;
-import org.wheelmap.android.model.Support.CategoriesContent;
+import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
@@ -96,7 +95,7 @@ DetachableResultReceiver.Receiver {
 		long startTime = System.currentTimeMillis();		
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
-		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, categoriesFilter(),
+		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION, QueriesBuilderHelper.categoriesFilter(this),
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
@@ -114,62 +113,7 @@ DetachableResultReceiver.Receiver {
 		Log.d ( TAG, "runQuery duration = " + duration + "ms" );
 	}
 
-	private String categoriesFilter() {
-		// categories id
-
-		// Run query
-		Uri uri = Support.CategoriesContent.CONTENT_URI;
-		Cursor cursor = getContentResolver().query(uri, null, null, null,null);
-
-		StringBuilder categories = new StringBuilder("");
-
-		int selectedCount = 0;
-		if (cursor.moveToFirst()) {
-			do { 
-				int id = CategoriesContent.getCategoryId(cursor);				
-				if (CategoriesContent.getSelected(cursor)) {
-					selectedCount++;
-					if (categories.length() > 0)
-						categories.append(" OR category_id=");
-					else
-						categories.append(" category_id=");
-					categories.append(new Integer(id).toString());
-
-				}
-
-
-			} while(cursor.moveToNext());
-		}
-		if (selectedCount == 0) {
-			if (cursor.moveToFirst()) {
-				do { 
-					int id = CategoriesContent.getCategoryId(cursor);				
-					if (categories.length() > 0)
-						categories.append(" AND NOT category_id=");
-					else
-						categories.append(" NOT category_id=");
-
-					categories.append(new Integer(id).toString());
-
-				} while(cursor.moveToNext());
-			}
-
-		}
-
-		// wheelchair state filter
-
-		// Get a reference to the checkbox preference
-		//CheckBoxPreference mCheckBoxPreference = (CheckBoxPreference)getPreferenceActivity().findPreference(                KEY_ADVANCED_CHECKBOX_PREFERENCE);
-
-
-
-		Log.d(TAG, categories.toString());
-
-		// 
-
-		return categories.toString();
-
-	}
+	
 
 	public String[] createWhereValues() {
 
