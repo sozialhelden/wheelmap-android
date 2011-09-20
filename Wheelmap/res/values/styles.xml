@@ -91,33 +91,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="SessionTitle">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="SessionSubtitle">
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:textColor">@android:color/secondary_text_light</item>
-    </style>
-
-    <style name="NoteCreate">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="NoteContent">
-        <item name="android:textSize">15sp</item>
-        <item name="android:lineSpacingMultiplier">1.1</item>
-        <item name="android:textColor">@android:color/primary_text_light</item>
-    </style>
-
-    <style name="NoteTime">
-        <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@android:color/secondary_text_light</item>
-    </style>
+    
 
     <style name="ListItem">
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
@@ -125,6 +99,22 @@
         <item name="android:paddingRight">10dip</item>
         <item name="android:paddingTop">8dip</item>
         <item name="android:paddingBottom">8dip</item>
+    </style>
+    
+    <style name="ActionBarCompat">
+        <item name="android:id">@id/actionbar_compat</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/actionbar_compat_height</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
+    
+    <style name="ActionBarSwitcher">
+        <item name="android:id">@id/actionbar_compat_switcher</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/actionbar_compat_height</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">#FF8F8F8F</item>
     </style>
 
     <style name="TextHeader">
@@ -144,6 +134,8 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
+    
+   
     
     <style name="WheelStateTitleEnabled">
         <item name="android:textSize">22sp</item>

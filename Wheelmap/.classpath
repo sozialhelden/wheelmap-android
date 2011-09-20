@@ -10,5 +10,7 @@
 	<classpathentry kind="lib" path="libs/jackson-core-asl-1.8.5.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-mapper-asl-1.8.5.jar"/>
 	<classpathentry kind="lib" path="libs/mapsforge-map-0.2.4.jar" sourcepath="/mapsforge/src"/>
+	<classpathentry kind="lib" path="/Users/tucniak/projects/wheelmap/cms/wheelmap-android/Wheelmap/libs/libGoogleAnalytics.jar"/>
+	<classpathentry kind="lib" path="/Users/tucniak/projects/wheelmap/cms/wheelmap-android/Wheelmap/libs/android-support-v4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

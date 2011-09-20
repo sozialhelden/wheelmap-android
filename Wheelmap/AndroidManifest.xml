@@ -22,12 +22,16 @@
             </intent-filter>
             </activity>
             
+           
+            
         <activity
             android:name=".ui.map.POIsMapActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map">
               
        </activity>
+       
+       
             
       	<activity
       		android:name=".ui.mapsforge.POIsMapsforgeActivity"
