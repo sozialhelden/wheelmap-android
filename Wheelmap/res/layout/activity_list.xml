@@ -7,11 +7,6 @@
 
 
 	<LinearLayout style="@style/TitleBar">
-		<ImageButton style="@style/TitleBarAction"
-			android:contentDescription="@string/description_home" android:src="@drawable/ic_title_home"
-			android:onClick="onHomeClick" />
-
-		<ImageView style="@style/TitleBarSeparator" />
 		<TextView style="@style/TitleBarText" />
 
 		<ImageView style="@style/TitleBarSeparator" />

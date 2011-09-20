@@ -156,12 +156,6 @@ DetachableResultReceiver.Receiver {
 		return mState;
 	}
 
-	public void onHomeClick(View v) {
-		final Intent intent = new Intent(this, WheelmapHomeActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivity(intent);
-	}
-
 	public void onFilterClick(View v) {
 		final Resources res = getResources();
 		final CharSequence[] items = res
