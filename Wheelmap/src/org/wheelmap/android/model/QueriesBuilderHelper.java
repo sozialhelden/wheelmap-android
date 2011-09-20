@@ -111,20 +111,17 @@ public class QueriesBuilderHelper {
 			wheelchair.append(new Integer(state.getId()).toString());
 		}
 
-		if (result.length() > 0) {
-			if (wheelchair.toString().length() > 0)
-				result = "(" + result + ") AND  (" + wheelchair.toString() + ")";
-			else
-				result = "(" + result + ")";
-
-		}
-		else {
-			if (wheelchair.toString().length() > 0)				
-			  result =  "(" + wheelchair.toString() + ")";
-			else
-				result = "";
+		if (wheelchair.toString().length() == 0) {
+			for(WheelchairState state : WheelchairState.values()) {
+				if (wheelchair.length() > 0)
+					wheelchair.append(" AND NOT wheelchair=");
+				else 
+					wheelchair.append(" NOT wheelchair=");
+				wheelchair.append(new Integer(state.getId()).toString());
+			}
 		}
 
+		result = "(" + result + ") AND  (" + wheelchair.toString() + ")";
 
 		Log.d("QueriesBuilderHelper userSettingsFilter", result);
 
