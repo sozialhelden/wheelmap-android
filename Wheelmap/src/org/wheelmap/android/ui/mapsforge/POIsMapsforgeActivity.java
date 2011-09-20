@@ -65,7 +65,7 @@ DetachableResultReceiver.Receiver {
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.categoriesFilter(this), null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
+				QueriesBuilderHelper.userSettingsFilter(this), null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
 		// overlays
 		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
