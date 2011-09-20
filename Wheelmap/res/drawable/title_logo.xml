@@ -14,12 +14,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
-    <dimen name="actionbar_compat_height">52dp</dimen>
-    <dimen name="title_height">45dip</dimen>
-    <dimen name="now_playing_height">90dip</dimen>
-    <dimen name="text_size_small">14sp</dimen>
-    <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_large">22sp</dimen>
-    <dimen name="checkbox_small">36dp</dimen>
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/title_logo_pressed"/>
+    <item android:state_focused="false" android:state_pressed="true" android:drawable="@drawable/title_logo_pressed"/>
+    <item android:state_focused="true" android:drawable="@drawable/title_logo_selected"/>
+    <item android:state_focused="false" android:state_pressed="false" android:drawable="@drawable/title_logo_default"/>
+</selector>

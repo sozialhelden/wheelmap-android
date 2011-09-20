@@ -12,6 +12,7 @@ import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
+
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -45,7 +46,7 @@ DetachableResultReceiver.Receiver {
 	private Location mLocation;
 
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
-
+	
 	private State mState;
 	private float mDistance;
 
@@ -84,7 +85,8 @@ DetachableResultReceiver.Receiver {
 		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
 		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
-
+		
+	
 		// Run query
 		runQuery();
 		getListView().setTextFilterEnabled(true);
