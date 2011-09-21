@@ -13,6 +13,7 @@ import org.wheelmap.android.R;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
+import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -24,6 +25,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,9 +34,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class SupportManager implements DetachableResultReceiver.Receiver {
+public class SupportManager {
 	private static final String TAG = "support";
 	private static SupportManager INSTANCE;
 
@@ -42,7 +45,6 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	private Map<Integer, NodeType> mNodeTypeLookup;
 	private Map<Integer, Category> mCategoryLookup;
 
-	private DetachableResultReceiver mReceiver;
 	private DetachableResultReceiver mStatusSender;
 
 	private NodeType mDefaultNodeType;
@@ -55,6 +57,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	public final static int CREATION_RUNNING = 0x20;
 	public final static int CREATION_FINISHED = 0x21;
 	public final static int CREATION_ERROR = 0x22;
+
+	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 
 	public static class NodeType {
 		public NodeType(int id, String identifier, String localizedName,
@@ -85,11 +89,11 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		public String localizedName;
 	}
 
-	private SupportManager(Context ctx) {
+	private SupportManager(Context ctx, DetachableResultReceiver receiver ) {
 		mContext = ctx;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
-		mStatusSender = new DetachableResultReceiver(new Handler());
+		mStatusSender = receiver;
 
 		mDefaultCategory = new Category(0, "unknown",
 				mContext.getString(R.string.category_unknown));
@@ -102,9 +106,9 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		return INSTANCE;
 	}
 
-	public static SupportManager initOnce(Context ctx) {
+	public static SupportManager initOnce(Context ctx, DetachableResultReceiver receiver ) {
 		if (INSTANCE == null) {
-			INSTANCE = new SupportManager(ctx);
+			INSTANCE = new SupportManager(ctx, receiver );
 			INSTANCE.init();
 		}
 		return INSTANCE;
@@ -113,31 +117,51 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 	public void init() {
 		Log.d(TAG, "SupportManager:init");
 
-		if (!checkIfUpdateDurationPassed()) {
+		if (checkForLocales() || !checkIfUpdateDurationPassed()) {
 			initLookup();
+			mStatusSender.send( CREATION_FINISHED, Bundle.EMPTY );
 			return;
 		}
 
 		mStatusSender.send(CREATION_RUNNING, Bundle.EMPTY);
 
-		mReceiver = new DetachableResultReceiver(new Handler());
-		mReceiver.setReceiver(this);
+		Intent localesIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
+				SyncService.class);
+		localesIntent.putExtra(SyncService.EXTRA_WHAT,
+				SyncService.WHAT_RETRIEVE_LOCALES);
+		localesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
+		mContext.startService(localesIntent);
+	}
+	
+	public void retrieveCategories() {
+	
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		String locale = prefs.getString(PREFS_SERVICE_LOCALE, "");
 
 		Intent categoriesIntent = new Intent(Intent.ACTION_SYNC, null,
 				mContext, SyncService.class);
 		categoriesIntent.putExtra(SyncService.EXTRA_WHAT,
 				SyncService.WHAT_RETRIEVE_CATEGORIES);
-		categoriesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		categoriesIntent.putExtra(SyncService.EXTRA_LOCALE, locale);
+		categoriesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
 		mContext.startService(categoriesIntent);
-
+	}
+	
+	public void retrieveNodeTypes() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		String locale = prefs.getString(PREFS_SERVICE_LOCALE, "");
+		
 		Intent nodeTypesIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
 				SyncService.class);
 		nodeTypesIntent.putExtra(SyncService.EXTRA_WHAT,
 				SyncService.WHAT_RETRIEVE_NODETYPES);
-		nodeTypesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		nodeTypesIntent.putExtra(SyncService.EXTRA_LOCALE, locale);
+
+		nodeTypesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
 		mContext.startService(nodeTypesIntent);
 
-		createCurrentTimeTag();
 	}
 
 	public void registerReceiver(Receiver receiver) {
@@ -172,7 +196,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		return true;
 	}
 
-	private void createCurrentTimeTag() {
+	public void createCurrentTimeTag() {
 		ContentValues values = new ContentValues();
 		String date = Support.LastUpdateContent.formatDate(new Date());
 		values.put(LastUpdateContent.DATE, date);
@@ -183,40 +207,59 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				LastUpdateContent.PROJECTION, whereClause, whereValues, values);
 	}
 
-	@Override
-	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "SupportManager:onReceiveResult");
-		if (resultCode == SyncService.STATUS_FINISHED) {
-			int what = resultData.getInt(SyncService.EXTRA_WHAT);
-			switch (what) {
-			case SyncService.WHAT_RETRIEVE_LOCALES:
-				initLocales();
-				break;
-			case SyncService.WHAT_RETRIEVE_CATEGORIES:
-				initCategories();
-				break;
-			case SyncService.WHAT_RETRIEVE_NODETYPES:
-				initNodeTypes();
-				mStatusSender.send(CREATION_FINISHED, Bundle.EMPTY);
-				break;
-			default:
-				// nothing to do
-			}
-		} else if (resultCode == SyncService.STATUS_ERROR) {
-			mStatusSender.send(CREATION_ERROR, resultData);
-		}
-	}
-
 	private void initLookup() {
 		initCategories();
 		initNodeTypes();
 	}
 
-	private void initLocales() {
-		Log.d(TAG, "SupportManager:initLocales");
+	private boolean checkForLocales() {
+		ContentResolver resolver = mContext.getContentResolver();
+		Cursor cursor = resolver.query(LocalesContent.CONTENT_URI,
+				LocalesContent.PROJECTION, null, null, null);
+
+		boolean dbEmpty = cursor.getCount() == 0;
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		boolean prefsEmpty = prefs.getString(PREFS_SERVICE_LOCALE, "").equals(
+				"");
+
+		if (dbEmpty || prefsEmpty)
+			return false;
+		else
+			return true;
 	}
 
-	private void initCategories() {
+	public void initLocales() {
+		Log.d(TAG, "SupportManager:initLocales");
+		String locale = mContext.getResources().getConfiguration().locale
+				.getLanguage();
+		Log.d(TAG, "SupportManager: locale = " + locale);
+		ContentResolver resolver = mContext.getContentResolver();
+		String whereClause = "( " + LocalesContent.LOCALE_ID + " = ? )";
+		String[] whereValues = { locale };
+
+		Cursor cursor = resolver.query(LocalesContent.CONTENT_URI,
+				LocalesContent.PROJECTION, whereClause, whereValues, null);
+		String serviceLocale = null;
+		if (cursor.getCount() == 1)
+			serviceLocale = locale;
+		else
+			serviceLocale = "en";
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+
+		String storedLocale = prefs.getString(PREFS_SERVICE_LOCALE, "");
+		if (storedLocale.length() == 0 || !storedLocale.equals(serviceLocale)) {
+			prefs.edit().putString(PREFS_SERVICE_LOCALE, serviceLocale)
+					.commit();
+		}
+		Log.d(TAG, "SupportManager:initLocales: serviceLocale = "
+				+ serviceLocale);
+	}
+
+	public void initCategories() {
 		Log.d(TAG, "SupportManager:initCategories");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
@@ -235,7 +278,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		}
 	}
 
-	private void initNodeTypes() {
+	public void initNodeTypes() {
 		Log.d(TAG, "SupportManager:initNodeTypes");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
@@ -246,7 +289,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		while (!cursor.isAfterLast()) {
 			int id = NodeTypesContent.getNodeTypeId(cursor);
 			String identifier = NodeTypesContent.getIdentifier(cursor);
-//			Log.d(TAG, "Loading nodetype: identifier = " + identifier);
+			// Log.d(TAG, "Loading nodetype: identifier = " + identifier);
 			String localizedName = CategoriesContent.getLocalizedName(cursor);
 			int categoryId = NodeTypesContent.getCategoryId(cursor);
 			String iconPath = NodeTypesContent.getIconURL(cursor);
@@ -262,13 +305,13 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 	private Drawable createIconDrawable(String assetPath) {
 		Bitmap bitmap;
-//		Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
+		// Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
 		try {
 			bitmap = BitmapFactory.decodeStream(mContext.getAssets().open(
 					"icons/" + assetPath));
 
 		} catch (IOException e) {
-			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage() );
+			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage());
 			return null;
 		}
 		Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 15,
@@ -293,7 +336,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				drawable = Drawable.createFromStream(
 						mContext.getAssets().open(path), null);
 			} catch (IOException e) {
-				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage() );
+				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage());
 			}
 			drawable.setBounds(-32, -64, 32, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
@@ -301,7 +344,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 		return lookupMap;
 	}
-	
+
 	private Map<WheelchairState, Drawable> createDrawableLookup(String assetPath) {
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
 		Log.d(TAG, "SupportManager:createDrawableLookup loading " + assetPath);
@@ -316,7 +359,8 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 						mContext.getAssets().open(path), null);
 			} catch (IOException e) {
 				Log.w(TAG,
-						"Error in createDrawableLookup. Assigning fallback. " + e.getMessage());
+						"Error in createDrawableLookup. Assigning fallback. "
+								+ e.getMessage());
 				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
 						.valueOf(idx));
 			}
@@ -326,21 +370,21 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 		return lookupMap;
 	}
-	
+
 	public void cleanReferences() {
-		Log.d( TAG, "clearing callbacks for mDefaultNodeType " );
-		cleanReferences( mDefaultNodeType.stateDrawables );
-		
-		for( int nodeTypeId: mNodeTypeLookup.keySet()) {
-			NodeType nodeType = mNodeTypeLookup.get( nodeTypeId );
-			Log.d( TAG, "clearing callbacks for " + nodeType.identifier);
-			cleanReferences( nodeType.stateDrawables );
+		Log.d(TAG, "clearing callbacks for mDefaultNodeType ");
+		cleanReferences(mDefaultNodeType.stateDrawables);
+
+		for (int nodeTypeId : mNodeTypeLookup.keySet()) {
+			NodeType nodeType = mNodeTypeLookup.get(nodeTypeId);
+			Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
+			cleanReferences(nodeType.stateDrawables);
 		}
 	}
-	
-	public void cleanReferences( Map<WheelchairState, Drawable> lookupMap ) {
-		for( WheelchairState state: lookupMap.keySet()) {
-			Drawable drawable = lookupMap.get( state );
+
+	public void cleanReferences(Map<WheelchairState, Drawable> lookupMap) {
+		for (WheelchairState state : lookupMap.keySet()) {
+			Drawable drawable = lookupMap.get(state);
 			drawable.setCallback(null);
 		}
 	}

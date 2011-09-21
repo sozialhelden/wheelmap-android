@@ -7,7 +7,6 @@
     android:layout_height="fill_parent">
     <include layout="@layout/actionbar_map" />
 
-<!-- 	<org.mapsforge.android.maps.MapView -->
 	<org.wheelmap.android.ui.mapsforge.MyMapView
        		android:id="@+id/map"
             android:layout_width="fill_parent"

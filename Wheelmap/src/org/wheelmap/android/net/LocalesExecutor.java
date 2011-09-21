@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.LocalesContent;
 
-import wheelmap.org.domain.locale.Locale;
 import wheelmap.org.domain.locale.Locales;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.LocalesRequestBuilder;
@@ -65,8 +64,8 @@ public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements IE
 	private void batchApply( Locales locales ) throws RemoteException, OperationApplicationException {
 		ContentValues values = new ContentValues();
 		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-		for( Locale loc : locales.getLocales()) {
-			copyCategoryToValues( loc, values );
+		for ( String localeId: locales.getLocales().keySet()) {
+			copyLocaleToValues( localeId, locales.getLocales().get( localeId ), values);
 			ContentProviderOperation operation = ContentProviderOperation
 					.newInsert(LocalesContent.CONTENT_URI).withValues(values).build();
 			operations.add( operation );
@@ -75,9 +74,9 @@ public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements IE
 		getResolver().applyBatch( Support.AUTHORITY, operations);
 	}
 
-	private void copyCategoryToValues(Locale locale, ContentValues values) {
+	private void copyLocaleToValues( String localeId, String localeName, ContentValues values) {
 		values.clear();
-		values.put( LocalesContent.LOCALE_ID, locale.getId());
-		values.put( LocalesContent.LOCALIZED_NAME, locale.getLocalizedName());
+		values.put( LocalesContent.LOCALE_ID, localeId);
+		values.put( LocalesContent.LOCALIZED_NAME, localeName);
 	}
 }
