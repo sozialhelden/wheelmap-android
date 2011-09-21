@@ -20,7 +20,7 @@
 	<dimen name="list_separator_height">36dip</dimen>
     <dimen name="title_height">45dip</dimen>
     <dimen name="now_playing_height">90dip</dimen>
-    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
     <dimen name="checkbox_small">36dp</dimen>

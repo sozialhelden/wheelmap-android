@@ -14,17 +14,20 @@
 			android:onClick="onItemEdit" />
 	</LinearLayout>
 
-	<LinearLayout style="@style/ActionBarSwitcher" 	android:orientation="vertical">
-		<TextView android:id="@+id/title_name" android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
-			android:layout_height="wrap_content" android:textColor="@color/white" android:textStyle="bold"></TextView>
-		<TextView android:id="@+id/title_category" android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
-			android:layout_height="wrap_content" android:textColor="@color/white" android:textStyle="bold"></TextView>
+	<LinearLayout style="@style/ActionBarSwitcher"
+		android:orientation="vertical">
+		<TextView style="@style/TitleBarTitle" android:id="@+id/title_name"
+			android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
+			android:layout_height="wrap_content"></TextView>
+		<TextView android:id="@+id/title_category" style="@style/TitleBarSubtext"
+			android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
+			android:layout_height="wrap_content"></TextView>
 	</LinearLayout>
-	
-		
+
+
 	<ScrollView android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:layout_weight="1" android:padding="5px">
+		android:layout_weight="1" >
 
 
 		<LinearLayout android:layout_width="fill_parent"
@@ -49,41 +52,50 @@
 					android:layout_alignParentRight="true"></ImageView>
 			</RelativeLayout>
 
-			<TableLayout android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:stretchColumns="1"
-				android:shrinkColumns="1">
+			<LinearLayout android:layout_width="fill_parent" android:orientation="vertical"
+				android:layout_height="wrap_content" >
+				<TextView android:hint="@string/poi_property_nodetype"
+					android:id="@+id/nodetype" style="@style/DetailFont" />
+					
 
-				<TableRow>
-					<TextView android:text="@string/poi_property_category" />
-					<TextView android:id="@+id/category" style="@style/DetailFont" />
-				</TableRow>
-				<TableRow>
-					<TextView android:text="@string/poi_property_nodetype" />
-					<TextView android:id="@+id/nodetype" style="@style/DetailFont" />
-				</TableRow>
-				<TableRow>
-					<TextView android:text="@string/poi_property_comment" />
-					<TextView android:id="@+id/comment" style="@style/DetailFont" />
-				</TableRow>
-				<TableRow>
-					<TextView android:text="@string/poi_property_address" />
-					<TextView android:id="@+id/addr" style="@style/DetailFont" />
-				</TableRow>
-				<TableRow>
-					<TextView android:text="@string/poi_property_phone" />
-					<TextView android:id="@+id/phone" style="@style/DetailFont"
+				<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				
+				<TextView android:hint="@string/poi_property_comment"
+					android:id="@+id/comment" style="@style/DetailFont" />
+					
+					<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>			
+
+				<TextView android:hint="@string/poi_property_address"
+					android:id="@+id/addr" style="@style/DetailFont" />
+
+					<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>			
+		
+					<TextView android:hint="@string/poi_property_phone" android:id="@+id/phone" style="@style/DetailFont"
 						android:autoLink="phone" />
-				</TableRow>
-				<TableRow>
-					<TextView android:text="@string/poi_property_website" />
-					<TextView android:id="@+id/website" style="@style/DetailFont"
+
+				<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>			
+
+					<TextView android:hint="@string/poi_property_website" android:id="@+id/website" style="@style/DetailFont"
 						android:autoLink="web" />
-				</TableRow>
-			</TableLayout>
+				<LinearLayout android:background="#FF000000" android:layout_width="fill_parent"
+				  android:layout_height="4dp"/>				 
+			</LinearLayout>
 
 			<org.mapsforge.android.maps.MapView
 				android:id="@+id/map" android:layout_width="fill_parent"
-				android:layout_height="235dp" android:layout_marginTop="10dip" />
+				android:layout_height="235dp"/>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

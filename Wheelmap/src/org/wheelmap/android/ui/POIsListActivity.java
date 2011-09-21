@@ -65,7 +65,7 @@ public class POIsListActivity extends ListActivity implements
 		
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
-	    // tracker.startNewSession("UA-25843648-1", 20, this);
+	    tracker.startNewSession("UA-25843648-1", 20, this);
 	    tracker.setAnonymizeIp(true);
 	    tracker.trackPageView("/ListActivity");
 		
