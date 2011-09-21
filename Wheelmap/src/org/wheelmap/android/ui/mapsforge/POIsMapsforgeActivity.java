@@ -26,6 +26,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -50,6 +51,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
+	
+	private static final int ZOOMLEVEL_MIN = 16;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -243,7 +246,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	
 	@Override
 	public void onMapViewTouchMoveEnough() {
-		requestUpdate();
+		Log.d( "poislist", "Zoomlevel = " + mMapView.getZoomLevel());
+		if ( mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
+			requestUpdate();
+		}
 	}
 
 	/**
