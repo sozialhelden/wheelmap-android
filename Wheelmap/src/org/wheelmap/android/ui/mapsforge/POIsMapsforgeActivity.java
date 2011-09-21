@@ -51,6 +51,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
+	private boolean mIsRecreated;
 	
 	private static final int ZOOMLEVEL_MIN = 16;
 
@@ -67,15 +68,11 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mMapController = mMapView.getController();
 
-		// Run query
-		Uri uri = Wheelmap.POIs.CONTENT_URI;
-		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(this), null,
-				Wheelmap.POIs.DEFAULT_SORT_ORDER);
-
 		// overlays
 		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, mCursor);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, null);
+		runQuery();
+		
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay();
@@ -141,6 +138,23 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		super.onResume();
 		mCursor.requery();
 		mLocationManager.register(mState.mReceiver, true);
+		runQuery();
+	}
+	
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		mIsRecreated = false;
+	}
+	
+	private void runQuery() {
+		// Run query
+		Uri uri = Wheelmap.POIs.CONTENT_URI;
+		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
+				QueriesBuilderHelper.userSettingsFilter(this), null,
+				Wheelmap.POIs.DEFAULT_SORT_ORDER);
+		
+		mPoisItemizedOverlay.setCursor( mCursor );
 	}
 
 	/** {@inheritDoc} */
