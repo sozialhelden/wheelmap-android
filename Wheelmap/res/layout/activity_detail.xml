@@ -2,21 +2,26 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-    <!-- ActionBar -->
-	<LinearLayout style="@style/TitleBar">
+	<!-- ActionBar -->
+	<LinearLayout style="@style/ActionBarCompat">
+		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
+			android:padding="3dip" />
+		<View style="@style/TitleBarSpring" />
 
-	   <ImageView android:id="@+id/icon" style="@style/TitleBarTypeIcon" 
-	   		android:layout_marginLeft="6dip" 
-	   		android:layout_gravity="center_vertical" />
-       <TextView android:id="@+id/name" style="@style/TitleBarText" />
-       
-       <ImageView style="@style/TitleBarSeparator" />
-	   <ImageButton style="@style/TitleBarAction"
-			android:contentDescription="@string/description_edit" android:src="@drawable/ic_title_edit"
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
+			android:contentDescription="@string/description_refresh" android:src="@android:drawable/ic_menu_edit"
 			android:onClick="onItemEdit" />
+	</LinearLayout>
 
+	<LinearLayout style="@style/ActionBarSwitcher" 	android:orientation="vertical">
+		<TextView android:id="@+id/title_name" android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
+			android:layout_height="wrap_content" android:textColor="@color/white" android:textStyle="bold"></TextView>
+		<TextView android:id="@+id/title_category" android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
+			android:layout_height="wrap_content" android:textColor="@color/white" android:textStyle="bold"></TextView>
 	</LinearLayout>
 	
+		
 	<ScrollView android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1" android:padding="5px">
@@ -25,9 +30,9 @@
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical">
 
-			<RelativeLayout
-				android:layout_marginTop="4dip" android:layout_marginLeft="4dip"
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<RelativeLayout android:layout_marginTop="4dip"
+				android:layout_marginLeft="4dip" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
 				<ImageView android:id="@+id/wheelchair_state_icon"
 					android:src="@drawable/wheelchair_state_enabled"
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
@@ -36,12 +41,10 @@
 					android:layout_height="wrap_content" style="@style/WheelStateTitleEnabled"
 					android:layout_marginTop="10dip" android:layout_width="wrap_content"
 					android:layout_toLeftOf="@+id/wheelchair_state_further"
-					android:layout_toRightOf="@+id/wheelchair_state_icon"
-					android:text="@string/ws_enabled_title"></TextView>
+					android:layout_toRightOf="@+id/wheelchair_state_icon" android:text="@string/ws_enabled_title"></TextView>
 				<ImageView android:id="@+id/wheelchair_state_further"
-				    android:src="@drawable/expander_ic_minimized"
-					android:layout_height="wrap_content" 
-					android:layout_width="wrap_content"
+					android:src="@drawable/expander_ic_minimized"
+					android:layout_height="wrap_content" android:layout_width="wrap_content"
 					android:onClick="onEditWheelchairState"
 					android:layout_alignParentRight="true"></ImageView>
 			</RelativeLayout>
@@ -49,7 +52,7 @@
 			<TableLayout android:layout_width="fill_parent"
 				android:layout_height="wrap_content" android:stretchColumns="1"
 				android:shrinkColumns="1">
-				
+
 				<TableRow>
 					<TextView android:text="@string/poi_property_category" />
 					<TextView android:id="@+id/category" style="@style/DetailFont" />
@@ -68,20 +71,19 @@
 				</TableRow>
 				<TableRow>
 					<TextView android:text="@string/poi_property_phone" />
-					<TextView android:id="@+id/phone" style="@style/DetailFont" android:autoLink="phone"/>
+					<TextView android:id="@+id/phone" style="@style/DetailFont"
+						android:autoLink="phone" />
 				</TableRow>
 				<TableRow>
 					<TextView android:text="@string/poi_property_website" />
-					<TextView android:id="@+id/website" style="@style/DetailFont" android:autoLink="web" />
+					<TextView android:id="@+id/website" style="@style/DetailFont"
+						android:autoLink="web" />
 				</TableRow>
 			</TableLayout>
-			
+
 			<org.mapsforge.android.maps.MapView
-       			android:id="@+id/map"
-                android:layout_width="fill_parent"
-                android:layout_height="235dp"
-                android:layout_marginTop="10dip"
-                 /> 
+				android:id="@+id/map" android:layout_width="fill_parent"
+				android:layout_height="235dp" android:layout_marginTop="10dip" />
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>
