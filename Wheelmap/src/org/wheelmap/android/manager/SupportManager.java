@@ -295,7 +295,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 			} catch (IOException e) {
 				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage() );
 			}
-			drawable.setBounds(0, 0, 64, 64);
+			drawable.setBounds(-32, -64, 32, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
@@ -320,7 +320,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
 						.valueOf(idx));
 			}
-			drawable.setBounds(0, 0, 64, 64);
+			drawable.setBounds(-32, -64, 32, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 

@@ -33,7 +33,7 @@ public class MyMapView extends MapView {
 		boolean result = super.onTouchEvent( event );
 		int minimalLatitudeSpan = getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = getLongitudeSpan() / 3;
-		
+			
 		GeoPoint centerLocation = getMapCenter();
 		if ( Math.abs( mLastRequestedLatitude - centerLocation.getLatitudeE6()) > minimalLatitudeSpan ||
 				Math.abs( mLastRequestedLongitude - centerLocation.getLongitudeE6()) > minimalLongitudeSpan ) {
