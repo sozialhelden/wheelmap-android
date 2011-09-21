@@ -1,6 +1,5 @@
 package org.wheelmap.android.ui.mapsforge;
 
-
 import org.mapsforge.android.maps.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
@@ -14,6 +13,7 @@ import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIsListActivity;
+import org.wheelmap.android.ui.mapsforge.MyMapView.MapViewTouchMove;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
@@ -26,6 +26,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -33,7 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-DetachableResultReceiver.Receiver {
+		DetachableResultReceiver.Receiver, MapViewTouchMove {
 
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
@@ -43,32 +44,34 @@ DetachableResultReceiver.Receiver {
 	private Cursor mCursor;
 
 	private MapController mMapController;
-	private MapView mMapView;
-	// private POIsPaintedMapsforgeOverlay poisItemizedOverlay;
+	private MyMapView mMapView;
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
+	
+	private static final int ZOOMLEVEL_MIN = 16;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mapsforge);
-		mMapView = (MapView) findViewById(R.id.map);
+		mMapView = (MyMapView) findViewById(R.id.map);
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
 
-		ConfigureMapView.pickAppropriateMap( this, mMapView );
+		ConfigureMapView.pickAppropriateMap(this, mMapView);
 
 		mMapController = mMapView.getController();
 
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(this), null, Wheelmap.POIs.DEFAULT_SORT_ORDER);
+				QueriesBuilderHelper.userSettingsFilter(this), null,
+				Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
 		// overlays
 		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
@@ -77,9 +80,11 @@ DetachableResultReceiver.Receiver {
 
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mMapView.getOverlays().add(mCurrLocationOverlay);
+		mMapView.registerListener( this );
 		isCentered = false;
 
-		if (getIntent() != null && !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
+		if (getIntent() != null
+				&& !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
 			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
 
@@ -88,7 +93,7 @@ DetachableResultReceiver.Receiver {
 							mMapController.setZoom(18); // Zoon 1 is world view
 							requestUpdate();
 							mMapView.getViewTreeObserver()
-							.removeGlobalOnLayoutListener(this);
+									.removeGlobalOnLayoutListener(this);
 						}
 					});
 		}
@@ -106,36 +111,36 @@ DetachableResultReceiver.Receiver {
 			mState.mReceiver.setReceiver(this);
 		}
 
-		mLocationManager = MyLocationManager.get( mState.mReceiver, true );
-		
-        TextView listView = (TextView) findViewById(R.id.switch_list);
-		
+		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
+
+		TextView listView = (TextView) findViewById(R.id.switch_list);
+
 		// Attach event handlers
-        listView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-            	Intent intent = new Intent(POIsMapsforgeActivity.this, POIsListActivity.class);
-        		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
-        		startActivity(intent);
-                
-            }
-            
-        });  
-//		findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
+		listView.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				Intent intent = new Intent(POIsMapsforgeActivity.this,
+						POIsListActivity.class);
+				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+				startActivity(intent);
+
+			}
+
+		});
+		// findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		mCursor.deactivate();
-		mLocationManager.release( mState.mReceiver );
+		mLocationManager.release(mState.mReceiver);
 	}
-
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		mCursor.requery();
-		mLocationManager.register( mState.mReceiver, true );
+		mLocationManager.register(mState.mReceiver, true);
 	}
 
 	/** {@inheritDoc} */
@@ -163,16 +168,17 @@ DetachableResultReceiver.Receiver {
 			break;
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
-			Location location = (Location)resultData.getParcelable( MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION );
+			Location location = (Location) resultData
+					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			GeoPoint geoPoint = calcGeoPoint(location);
-			if ( !isCentered ) {
+			if (!isCentered) {
 				mMapController.setCenter(geoPoint);
 				isCentered = true;
 			}
 
 			// we got the first time current position so center map on it
 			if (mLastGeoPointE6 == null) {
-		//		findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
+				// findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
 				mMapController.setCenter(geoPoint);
 			}
 			mLastGeoPointE6 = geoPoint;
@@ -186,19 +192,18 @@ DetachableResultReceiver.Receiver {
 
 	private void updateRefreshStatus() {
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		startActivity(new Intent(this, NewSettingsActivity.class));			
+		startActivity(new Intent(this, NewSettingsActivity.class));
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
-		//intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		startActivity(intent);
 	}
-
 
 	public void onCenterOnCurrentLocationClick(View v) {
 		if (mLastGeoPointE6 != null) {
@@ -213,11 +218,10 @@ DetachableResultReceiver.Receiver {
 		GeoPoint center = mMapView.getMapCenter();
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
-				+ (lonSpan / 2),
+						+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
-				- (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX,
-				boundingBox);
+						- (lonSpan / 2));
+		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX, boundingBox);
 	}
 
 	private void requestUpdate() {
@@ -230,13 +234,22 @@ DetachableResultReceiver.Receiver {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
 		intent.putExtras(extras);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES );
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
+
 	}
 
 	public void onRefreshClick(View v) {
 		requestUpdate();
+	}
+	
+	@Override
+	public void onMapViewTouchMoveEnough() {
+		Log.d( "poislist", "Zoomlevel = " + mMapView.getZoomLevel());
+		if ( mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
+			requestUpdate();
+		}
 	}
 
 	/**

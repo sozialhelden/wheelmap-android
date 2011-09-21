@@ -65,11 +65,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			OverlayItem item = new OverlayItem();
 			item.setTitle( name );
 			item.setSnippet( name );
-			// FIXME: Mapsforge doesnt allow move of
-			// icons. Therefore, we move the icon by
-			// ugly changing the geo location
-			lat = lat + 230; // some degrees up
-			lng = lng - 175; // some degrees left
 			item.setPoint( new GeoPoint(lat, lng));
 			item.setMarker( marker );
 			return item;

@@ -268,11 +268,6 @@ public class POIDetailActivity extends MapActivity {
 			item.setTitle(title);
 			item.setSnippet(snippet);
 			item.setMarker(marker);
-			// FIXME: Mapsforge doesnt allow move of
-			// icons. Therefore, we move the icon by
-			// ugly changing the geo location
-			latitude = latitude + 230; // some degrees up
-			longitude = longitude - 175; // some degrees left
 			item.setPoint(new GeoPoint(latitude, longitude));
 			items = 1;
 

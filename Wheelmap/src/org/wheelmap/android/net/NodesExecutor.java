@@ -29,10 +29,11 @@ import android.util.Log;
 public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecutor {
 	
 	private BoundingBox mBoundingBox;
-	private List<WheelchairState> mWheelchairStates;
 	private Context mContext;
 	private int mCategory = -1;
 	private int mNodeType = -1;
+	
+	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 	
 
 	public NodesExecutor(Context context, ContentResolver resolver, Bundle bundle) {
@@ -67,10 +68,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 			mCategory = getBundle().getInt( SyncService.EXTRA_CATEGORY );
 		} else if ( getBundle().containsKey( SyncService.EXTRA_NODETYPE )) {
 			mNodeType = getBundle().getInt( SyncService.EXTRA_NODETYPE );
-		}
-		
-		mWheelchairStates = QueriesBuilderHelper.getWheelchairStateFromPreferences(mContext);
-		
+		}		
 		deleteRetrievedData();
 	}
 	
@@ -91,12 +89,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements IExecu
 		
 		clearTempStore();
 		try {
-			for( WheelchairState state: mWheelchairStates) {
-				requestBuilder.wheelchairState( state );
-				retrieveSinglePage(requestBuilder);
-			}
-//			retrieveSinglePage( requestBuilder );
-			// retrieveAllPages( requestBuilder );
+			retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
 		} catch ( Exception e ) {
 			throw new ExecutorException( e );
 		}
