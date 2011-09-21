@@ -301,7 +301,7 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 
 		return lookupMap;
 	}
-
+	
 	private Map<WheelchairState, Drawable> createDrawableLookup(String assetPath) {
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
 		Log.d(TAG, "SupportManager:createDrawableLookup loading " + assetPath);
@@ -325,6 +325,24 @@ public class SupportManager implements DetachableResultReceiver.Receiver {
 		}
 
 		return lookupMap;
+	}
+	
+	public void cleanReferences() {
+		Log.d( TAG, "clearing callbacks for mDefaultNodeType " );
+		cleanReferences( mDefaultNodeType.stateDrawables );
+		
+		for( int nodeTypeId: mNodeTypeLookup.keySet()) {
+			NodeType nodeType = mNodeTypeLookup.get( nodeTypeId );
+			Log.d( TAG, "clearing callbacks for " + nodeType.identifier);
+			cleanReferences( nodeType.stateDrawables );
+		}
+	}
+	
+	public void cleanReferences( Map<WheelchairState, Drawable> lookupMap ) {
+		for( WheelchairState state: lookupMap.keySet()) {
+			Drawable drawable = lookupMap.get( state );
+			drawable.setCallback(null);
+		}
 	}
 
 	public Category lookupCategory(int id) {
