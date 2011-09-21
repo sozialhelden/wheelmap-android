@@ -3,6 +3,20 @@
 	<LinearLayout style="@style/ActionBarCompat">
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
+			    <View style="@style/TitleBarSpring" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageView style="@style/TitleBarAction"
+            android:id="@+id/btn_title_refresh"
+            android:contentDescription="@string/description_refresh"
+            android:src="@android:drawable/ic_menu_add"
+            android:onClick="onNewPOIClick" />
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageView style="@style/TitleBarAction"
+            android:id="@+id/btn_title_refresh"
+            android:contentDescription="@string/description_refresh"
+            android:src="@android:drawable/ic_menu_info_details"
+            android:onClick="onInfoClick" />
 	</LinearLayout>
 	<LinearLayout style="@style/ActionBarSwitcher">
 		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"

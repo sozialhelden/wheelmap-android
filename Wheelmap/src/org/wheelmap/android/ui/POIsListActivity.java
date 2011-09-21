@@ -216,6 +216,13 @@ public class POIsListActivity extends ListActivity implements
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
+	public void onInfoClick(View v) {
+		/*Intent intent = new Intent(this, POIsMapsforgeActivity.class);
+		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		startActivity(intent);
+		*/
+	}	
 
 	public void onMapClick(View v) {
 		Intent intent = new Intent(this, POIsMapsforgeActivity.class);
