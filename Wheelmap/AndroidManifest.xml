@@ -65,9 +65,9 @@
         />
         
         <activity
-        	android:name=".ui.AboutActivity"
+        	android:name=".ui.InfoActivity"
         	android:theme="@style/Theme.IOSched"
-        	android:label="@string/title_about"
+        	android:label="@string/title_info"
         />
         
         <activity

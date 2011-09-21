@@ -77,5 +77,13 @@
     <string name="settings_wheelchair_no_accessible">No</string>
     <string name="settings_wheelchair_limited_accessible">Limited</string>
     <string name="settings_wheelchair_full_accessible">Yes</string>
-    <string name="title_about">Credits</string>
+    <string name="title_info">Credits</string>
+    <string name="info_a_project_of">a project of</string>
+    <string name="info_reserved_sozialhelden">© 2011 SOZIALHELDEN e.V. | All rights reserved</string>
+    <string name="info_kartendaten">Mapdata: OpenStreetMap</string>
+    <string name="info_android_development">Android Development:</string>
+    <string name="info_icons">Icons:</string>
+    <string name="info_webdevelopment">Web Development:</string>
+    <string name="info_android_development_two">Michael Kröz</string>
+    <string name="info_android_development_one">Michal Harakal</string>
 </resources>

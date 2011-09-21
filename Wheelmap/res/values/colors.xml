@@ -24,5 +24,7 @@
     <color name="light_grey_one">#FF949494</color>
     <color name="light_grey_two">#FFDFDFDF</color>
     
+    <color name="red_logo">#FFBF3F3F</color>
+    
        
 </resources>

@@ -236,7 +236,7 @@ public class POIsListActivity extends ListActivity implements
 	}
 	
 	public void onInfoClick(View v) {
-		Intent intent = new Intent(this, AboutActivity.class);
+		Intent intent = new Intent(this, InfoActivity.class);
 		startActivity(intent);
 	}	
 
