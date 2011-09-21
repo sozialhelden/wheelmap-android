@@ -1,5 +1,7 @@
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.service.SyncServiceException;
+
 import wheelmap.org.request.RequestProcessor;
 import android.content.ContentResolver;
 import android.os.Bundle;
@@ -32,8 +34,8 @@ public abstract class AbstractExecutor implements IExecutor {
 	}
 	
 	public abstract void prepareContent();
-	public abstract void execute() throws ExecutorException;
-	public abstract void prepareDatabase();
+	public abstract void execute() throws SyncServiceException;
+	public abstract void prepareDatabase() throws SyncServiceException;
 
 }
 

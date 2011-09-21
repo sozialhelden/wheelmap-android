@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.apikey.ApiKey;
 import wheelmap.org.request.AcceptType;
@@ -34,7 +35,7 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	}
 
 	@Override
-	public void execute() throws ExecutorException {
+	public void execute() throws SyncServiceException {
 
 		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(SERVER,
 				AcceptType.JSON);
@@ -44,13 +45,13 @@ public class ApiKeyExecutor extends AbstractExecutor {
 			request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
 					"utf-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new ExecutorException(e);
+			throw new SyncServiceException( SyncServiceException.ERROR_INTERNAL_ERROR, e);
 		}
 		ApiKey apiKey;
 		try {
 			// apiKey = mRequestProcessor.get(new URI(request), ApiKey.class);
 		} catch (Exception e) {
-			throw new ExecutorException(e);
+			throw new SyncServiceException( SyncServiceException.ERROR_INTERNAL_ERROR, e);
 		}
 
 		// mApiKey = apiKey.getApiKey();

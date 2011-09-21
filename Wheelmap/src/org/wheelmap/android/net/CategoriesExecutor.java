@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.Locale;
 import wheelmap.org.domain.categories.Categories;
@@ -30,7 +31,7 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 	@Override
 	public void prepareContent() {
 		String locale = getBundle().getString( SyncService.EXTRA_LOCALE );
-		if ( locale != null ) {
+		if ( locale != null && !locale.equals( "de" )) {
 			mLocale = new Locale( locale );
 		}
 		
@@ -38,7 +39,7 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 	}
 	
 	@Override
-	public void execute() throws ExecutorException {
+	public void execute() throws SyncServiceException {
 		final long startRemote = System.currentTimeMillis();
 		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder( SERVER, getApiKey(), AcceptType.JSON );
 //		requestBuilder.paging( new Paging( DEFAULT_TEST_PAGE_SIZE ));
@@ -46,26 +47,22 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 			requestBuilder.locale( mLocale );
 
 		clearTempStore();
-		try {
-			// retrieveAllPages( requestBuilder );
-			retrieveSinglePage(requestBuilder);
-		} catch ( Exception e ) {
-			throw new ExecutorException( e );
-		}
+		retrieveSinglePage(requestBuilder);
+		
 		Log.d(TAG, "remote sync took "
 				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
-	public void prepareDatabase() throws ExecutorException {
+	public void prepareDatabase() throws SyncServiceException {
 		long insertStart = System.currentTimeMillis();
 		for( Categories categories: getTempStore() ) {
 			try {
 				batchApply( categories );
 			} catch (RemoteException e) {
-				throw new ExecutorException( e );
+				throw new SyncServiceException( SyncServiceException.ERROR_DATABASE_ERROR, e);
 			} catch (OperationApplicationException e) {
-				throw new ExecutorException( e );
+				throw new SyncServiceException( SyncServiceException.ERROR_DATABASE_ERROR, e);
 			}
 		}
 		long insertEnd = System.currentTimeMillis();

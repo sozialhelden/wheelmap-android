@@ -2,7 +2,6 @@ package org.wheelmap.android.service;
 
 import org.wheelmap.android.net.ApiKeyExecutor;
 import org.wheelmap.android.net.CategoriesExecutor;
-import org.wheelmap.android.net.ExecutorException;
 import org.wheelmap.android.net.IExecutor;
 import org.wheelmap.android.net.LocalesExecutor;
 import org.wheelmap.android.net.NodeTypesExecutor;
@@ -33,6 +32,7 @@ public class SyncService extends IntentService {
 	public static final String EXTRA_NODETYPE = "org.wheelmap.android.EXTRA_NODETYPE";
 	public static final String EXTRA_USERNAME = "org.wheelmap.android.EXTRA_USERNAME";
 	public static final String EXTRA_PASSWORD = "org.wheelmap.android.EXTRA_PASSWORD";
+	public static final String EXTRA_ERROR = "org.wheelmap.android.EXTRA_ERROR";
 	
 	public static final String EXTRA_WHAT = "org.wheelmap.android.EXTRA_WHAT";
 	public static final int WHAT_RETRIEVE_NODES = 0x1;
@@ -100,12 +100,13 @@ public class SyncService extends IntentService {
 		try {
 			executor.execute();
 			executor.prepareDatabase();
-		} catch (ExecutorException e) {
+		} catch ( SyncServiceException e ) {
+		
 			Log.e(TAG, "Problem while executing", e);
 			if (receiver != null) {
 				// Pass back error to surface listener
 				final Bundle responsebundle = new Bundle();
-				responsebundle.putString(Intent.EXTRA_TEXT, e.toString());
+				responsebundle.putParcelable( SyncService.EXTRA_ERROR, e );
 				responsebundle.putInt( EXTRA_WHAT, what );
 				receiver.send(STATUS_ERROR, responsebundle);
 				return;

@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.BaseDomain;
 import wheelmap.org.domain.Meta;
 import wheelmap.org.request.Paging;
 import wheelmap.org.request.RequestBuilder;
 import android.content.ContentResolver;
-import android.content.OperationApplicationException;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
 
 public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends AbstractExecutor implements IExecutor {
@@ -36,13 +35,13 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends Abstrac
 		return mTempStore;
 	}
 
-	protected void retrieveSinglePage( RequestBuilder requestBuilder ) throws RemoteException, OperationApplicationException {
+	protected void retrieveSinglePage( RequestBuilder requestBuilder ) throws SyncServiceException {
 		Meta m = executeSingleRequest(requestBuilder);
 		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 	}
 
 	
-	protected void retrieveMaxNPages( RequestBuilder requestBuilder, int n) throws RemoteException, OperationApplicationException {
+	protected void retrieveMaxNPages( RequestBuilder requestBuilder, int n) throws SyncServiceException {
 		// Server seems to count from 1...
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
 
@@ -59,7 +58,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends Abstrac
 		}
 	}
 		
-	protected Meta executeSingleRequest(RequestBuilder requestBuilder) throws RemoteException, OperationApplicationException {
+	protected Meta executeSingleRequest(RequestBuilder requestBuilder) throws SyncServiceException {
 		String getRequest = requestBuilder.buildRequestUri();
 		Log.d(TAG, "getRequest " + getRequest);
 		long retrieveStart = System.currentTimeMillis();
@@ -72,7 +71,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends Abstrac
 		return items.getMeta();
 	}
 		
-	private T retrieveNumberOfHits(String getRequest) {
+	private T retrieveNumberOfHits(String getRequest) throws SyncServiceException {
 		T content;
 		
 		long requestTime = System.currentTimeMillis();
@@ -80,13 +79,15 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends Abstrac
 		try {
 			request = UriUtils.encodeQuery( getRequest, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new ExecutorException( e );
+			throw new SyncServiceException( SyncServiceException.ERROR_INTERNAL_ERROR, e );
 		}
 	
 		try {
 			content = mRequestProcessor.get(new URI(request), mClazz);
 		} catch (URISyntaxException e) {
-			throw new ExecutorException( e );
+			throw new SyncServiceException( SyncServiceException.ERROR_INTERNAL_ERROR, e );
+		} catch (Exception e ) {
+			throw new SyncServiceException( SyncServiceException.ERROR_NETWORK_FAILURE, e );
 		}
 		// Log.d(TAG, "response " + response);
 		long requestEndTime = System.currentTimeMillis();

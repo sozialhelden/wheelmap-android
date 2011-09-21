@@ -89,7 +89,7 @@ public class SupportManager {
 		public String localizedName;
 	}
 
-	private SupportManager(Context ctx, DetachableResultReceiver receiver ) {
+	private SupportManager(Context ctx, DetachableResultReceiver receiver) {
 		mContext = ctx;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
@@ -106,20 +106,22 @@ public class SupportManager {
 		return INSTANCE;
 	}
 
-	public static SupportManager initOnce(Context ctx, DetachableResultReceiver receiver ) {
+	public static SupportManager initOnce(Context ctx,
+			DetachableResultReceiver receiver) {
 		if (INSTANCE == null) {
-			INSTANCE = new SupportManager(ctx, receiver );
-			INSTANCE.init();
+			INSTANCE = new SupportManager(ctx, receiver);
 		}
+		INSTANCE.init();
 		return INSTANCE;
 	}
 
-	public void init() {
+	private void init() {
 		Log.d(TAG, "SupportManager:init");
 
-		if (checkForLocales() || !checkIfUpdateDurationPassed()) {
+		if (checkForLocales() && checkForCategories() && checkForNodeTypes()
+				&& !checkIfUpdateDurationPassed()) {
 			initLookup();
-			mStatusSender.send( CREATION_FINISHED, Bundle.EMPTY );
+			mStatusSender.send(CREATION_FINISHED, Bundle.EMPTY);
 			return;
 		}
 
@@ -129,12 +131,13 @@ public class SupportManager {
 				SyncService.class);
 		localesIntent.putExtra(SyncService.EXTRA_WHAT,
 				SyncService.WHAT_RETRIEVE_LOCALES);
-		localesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
+		localesIntent
+				.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
 		mContext.startService(localesIntent);
 	}
-	
+
 	public void retrieveCategories() {
-	
+
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		String locale = prefs.getString(PREFS_SERVICE_LOCALE, "");
@@ -144,22 +147,24 @@ public class SupportManager {
 		categoriesIntent.putExtra(SyncService.EXTRA_WHAT,
 				SyncService.WHAT_RETRIEVE_CATEGORIES);
 		categoriesIntent.putExtra(SyncService.EXTRA_LOCALE, locale);
-		categoriesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
+		categoriesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
+				mStatusSender);
 		mContext.startService(categoriesIntent);
 	}
-	
+
 	public void retrieveNodeTypes() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		String locale = prefs.getString(PREFS_SERVICE_LOCALE, "");
-		
+
 		Intent nodeTypesIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
 				SyncService.class);
 		nodeTypesIntent.putExtra(SyncService.EXTRA_WHAT,
 				SyncService.WHAT_RETRIEVE_NODETYPES);
 		nodeTypesIntent.putExtra(SyncService.EXTRA_LOCALE, locale);
 
-		nodeTypesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
+		nodeTypesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
+				mStatusSender);
 		mContext.startService(nodeTypesIntent);
 
 	}
@@ -221,13 +226,36 @@ public class SupportManager {
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
-		boolean prefsEmpty = prefs.getString(PREFS_SERVICE_LOCALE, "").equals(
-				"");
+		String prefsLocale = prefs.getString(PREFS_SERVICE_LOCALE, "");
+		boolean prefsEmpty = prefsLocale.equals("");
 
-		if (dbEmpty || prefsEmpty)
+		String locale = mContext.getResources().getConfiguration().locale
+				.getLanguage();
+
+		if (dbEmpty || prefsEmpty || !locale.equals(prefsLocale)) {
+			Log.d(TAG, "dbEmpty = " + dbEmpty + " prefsLocale = " + prefsLocale
+					+ " locale = " + locale);
 			return false;
-		else
+		} else
 			return true;
+	}
+
+	private boolean checkForCategories() {
+		ContentResolver resolver = mContext.getContentResolver();
+		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
+				CategoriesContent.PROJECTION, null, null, null);
+
+		boolean dbEmpty = cursor.getCount() != 0;
+		return dbEmpty;
+	}
+
+	private boolean checkForNodeTypes() {
+		ContentResolver resolver = mContext.getContentResolver();
+		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
+				NodeTypesContent.PROJECTION, null, null, null);
+
+		boolean dbEmpty = cursor.getCount() != 0;
+		return dbEmpty;
 	}
 
 	public void initLocales() {
@@ -251,7 +279,7 @@ public class SupportManager {
 				.getDefaultSharedPreferences(mContext);
 
 		String storedLocale = prefs.getString(PREFS_SERVICE_LOCALE, "");
-		if (storedLocale.length() == 0 || !storedLocale.equals(serviceLocale)) {
+		if (storedLocale.equals("") || !storedLocale.equals(serviceLocale)) {
 			prefs.edit().putString(PREFS_SERVICE_LOCALE, serviceLocale)
 					.commit();
 		}

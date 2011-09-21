@@ -86,4 +86,10 @@
     <string name="info_webdevelopment">Web Development:</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakal</string>
+    <string name="error_network_failure">Network failure. Please check your internet connection or try again later.</string>
+    <string name="error_database_error">Internal database error. Sorry. Please start the app again.</string>
+    <string name="error_internal_error">An unexpected internal error occurred. Please restart the app.</string>
+    <string name="error_authorization_error">No proper authorization for editing available.</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="okay">Okay</string>
 </resources>

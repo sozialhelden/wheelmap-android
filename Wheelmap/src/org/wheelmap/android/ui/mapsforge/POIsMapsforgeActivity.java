@@ -11,6 +11,7 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.ui.mapsforge.MyMapView.MapViewTouchMove;
@@ -18,6 +19,8 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Paint;
@@ -73,7 +76,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController = mMapView.getController();
 
 		// overlays
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(getApplicationContext(), null);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, null);
 		runQuery();
 		
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
@@ -190,10 +193,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			// Error happened down in SyncService, show as toast.
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			final String errorText = getString(R.string.toast_sync_error,
-					resultData.getString(Intent.EXTRA_TEXT));
-			Toast.makeText(POIsMapsforgeActivity.this, errorText,
-					Toast.LENGTH_LONG).show();
+			SyncServiceException e = resultData.getParcelable( SyncService.EXTRA_ERROR );
+			showErrorDialog( e );
 			break;
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
@@ -295,6 +296,23 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		private State() {
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
+	}
+	
+	private void showErrorDialog( SyncServiceException e ) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.error_occurred);
+		builder.setIcon( android.R.drawable.ic_dialog_alert);
+		builder.setMessage( e.getRessourceString());
+		builder.setNeutralButton( R.string.okay, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+				
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	private GeoPoint calcGeoPoint(Location location) {

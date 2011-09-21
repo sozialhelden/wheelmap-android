@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.LocalesContent;
+import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.locale.Locales;
 import wheelmap.org.request.AcceptType;
@@ -30,30 +31,26 @@ public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements IE
 	}
 	
 	@Override
-	public void execute() throws ExecutorException {
+	public void execute() throws SyncServiceException {
 		final long startRemote = System.currentTimeMillis();
 		final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder( SERVER, getApiKey(), AcceptType.JSON);
 
 		clearTempStore();
-		try {
-			retrieveSinglePage(requestBuilder);
-		} catch ( Exception e ) {
-			throw new ExecutorException( e );
-		}
+		retrieveSinglePage(requestBuilder);
 		Log.d(TAG, "remote sync took "
 				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
-	public void prepareDatabase() throws ExecutorException {
+	public void prepareDatabase() throws SyncServiceException {
 		long insertStart = System.currentTimeMillis();
 		for( Locales locales: getTempStore()) {
 			try {
 				batchApply( locales );
 			} catch (RemoteException e) {
-				throw new ExecutorException( e );
+				throw new SyncServiceException( SyncServiceException.ERROR_DATABASE_ERROR, e);
 			} catch (OperationApplicationException e) {
-				throw new ExecutorException( e );
+				throw new SyncServiceException( SyncServiceException.ERROR_DATABASE_ERROR, e);
 			}
 		}
 		long insertEnd = System.currentTimeMillis();
