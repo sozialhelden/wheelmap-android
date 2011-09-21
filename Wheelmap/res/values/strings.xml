@@ -77,4 +77,5 @@
     <string name="settings_wheelchair_no_accessible">No</string>
     <string name="settings_wheelchair_limited_accessible">Limited</string>
     <string name="settings_wheelchair_full_accessible">Yes</string>
+    <string name="title_about">Credits</string>
 </resources>

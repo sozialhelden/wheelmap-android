@@ -8,13 +8,11 @@ import android.app.Application;
 public class WheelmapApp extends Application {
 	
 	private MyLocationManager mLocationManager;
-	private SupportManager mSupportManager;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		mLocationManager = MyLocationManager.initOnce( this );
-		mSupportManager = SupportManager.initOnce( this );
 	}
 
 	@Override

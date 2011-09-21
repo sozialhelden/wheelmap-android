@@ -4,10 +4,10 @@ import org.mapsforge.android.maps.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
-import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
@@ -36,6 +36,8 @@ import android.widget.Toast;
 public class POIsMapsforgeActivity extends MapActivity implements
 		DetachableResultReceiver.Receiver, MapViewTouchMove {
 
+	private final static String TAG = "mapsforge";
+	
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
 	/** State held between configuration changes. */
@@ -56,10 +58,12 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private static final int ZOOMLEVEL_MIN = 16;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		System.gc();
+		
 		setContentView(R.layout.activity_mapsforge);
-		mMapView = (MyMapView) findViewById(R.id.map);
+		 mMapView = (MyMapView) findViewById(R.id.map);
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
@@ -69,8 +73,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController = mMapView.getController();
 
 		// overlays
-		// poisItemizedOverlay = new POIsPaintedMapsforgeOverlay(this, mCursor);
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, null);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(getApplicationContext(), null);
 		runQuery();
 		
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
@@ -127,13 +130,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		mCursor.deactivate();
-		mLocationManager.release(mState.mReceiver);
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 		mCursor.requery();
@@ -142,16 +138,35 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 	
 	@Override
-	public void onRestart() {
+	protected void onRestart() {
 		super.onRestart();
 		mIsRecreated = false;
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		mCursor.deactivate();
+		mLocationManager.release(mState.mReceiver);
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		SupportManager.get().cleanReferences();
+		System.gc();
 	}
 	
 	private void runQuery() {
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(this), null,
+				QueriesBuilderHelper.userSettingsFilter(getApplicationContext()), null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
 		
 		mPoisItemizedOverlay.setCursor( mCursor );
@@ -216,6 +231,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
 		// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 

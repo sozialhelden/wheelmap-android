@@ -75,7 +75,7 @@ public class SyncService extends IntentService {
 		IExecutor executor = null;
 		switch(what) {
 		case WHAT_RETRIEVE_NODES:
-			executor = new NodesExecutor(this, mResolver, bundle);
+			executor = new NodesExecutor(getApplicationContext(), mResolver, bundle);
 			break;
 		case WHAT_RETRIEVE_LOCALES:
 			executor = new LocalesExecutor(mResolver, bundle );
@@ -87,10 +87,10 @@ public class SyncService extends IntentService {
 			executor = new NodeTypesExecutor( mResolver, bundle );
 			break;
 		case WHAT_UPDATE_SERVER:
-			executor = new NodeUpdateOrNewExecutor( this, mResolver );
+			executor = new NodeUpdateOrNewExecutor( getApplicationContext(), mResolver );
 			break;
 		case WHAT_RETRIEVE_APIKEY:
-			executor = new ApiKeyExecutor(this, mResolver, bundle);
+			executor = new ApiKeyExecutor(getApplicationContext(), mResolver, bundle);
 			break;
 		default:
 			return; // noop no instruction, no operation;

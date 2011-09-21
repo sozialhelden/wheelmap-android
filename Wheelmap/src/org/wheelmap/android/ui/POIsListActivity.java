@@ -156,7 +156,7 @@ public class POIsListActivity extends ListActivity implements
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
 		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(this),
+				QueriesBuilderHelper.userSettingsFilter(getApplicationContext()),
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
@@ -188,7 +188,7 @@ public class POIsListActivity extends ListActivity implements
 
 	public float getDistanceFromPreferences() {
 		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+				.getDefaultSharedPreferences(getApplicationContext());
 
 		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE, "0.5");
 		return Float.valueOf(prefDist);
@@ -245,6 +245,7 @@ public class POIsListActivity extends ListActivity implements
 	public void onMapClick(View v) {
 		Intent intent = new Intent(this, POIsMapsforgeActivity.class);
 		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 

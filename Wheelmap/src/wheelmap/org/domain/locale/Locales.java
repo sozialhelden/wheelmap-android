@@ -1,8 +1,10 @@
 package wheelmap.org.domain.locale;
 
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import wheelmap.org.domain.BaseDomain;
 import wheelmap.org.domain.categories.Conditions;
@@ -11,7 +13,8 @@ import wheelmap.org.domain.categories.Conditions;
 public class Locales extends BaseDomain {
 
     protected Conditions conditions;
-	protected List<Locale> locales;
+    @JsonProperty( value="locales" )
+	protected Map<String, String> locales;
 
     /**
      * Gets the value of the conditions property.
@@ -43,7 +46,7 @@ public class Locales extends BaseDomain {
 	 * @return possible object is list of {@link Locale }
 	 * 
 	 */
-	public List<Locale> getLocales() {
+	public Map<String, String> getLocales() {
 		return locales;
 	}
 
@@ -54,7 +57,7 @@ public class Locales extends BaseDomain {
 	 *            allowed object is list of {@link Locale }
 	 * 
 	 */
-	public void setLocales(List<Locale> value) {
+	public void setLocales(Map<String, String> value) {
 		this.locales = value;
 	}
 

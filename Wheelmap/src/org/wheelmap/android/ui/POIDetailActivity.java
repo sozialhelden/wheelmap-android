@@ -130,6 +130,12 @@ public class POIDetailActivity extends MapActivity {
 		}
 		super.onResume();
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		SupportManager.get().cleanReferences();
+	}
 
 	public void onItemEdit(View v) {
 		// Launch overall conference schedule
