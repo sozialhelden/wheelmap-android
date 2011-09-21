@@ -236,10 +236,8 @@ public class POIsListActivity extends ListActivity implements
 	}
 	
 	public void onInfoClick(View v) {
-		/*Intent intent = new Intent(this, POIsMapsforgeActivity.class);
-		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		Intent intent = new Intent(this, AboutActivity.class);
 		startActivity(intent);
-		*/
 	}	
 
 	public void onMapClick(View v) {

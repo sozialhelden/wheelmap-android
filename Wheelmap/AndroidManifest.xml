@@ -65,9 +65,9 @@
         />
         
         <activity
-        	android:name=".ui.CategorySelectActivity"
+        	android:name=".ui.AboutActivity"
         	android:theme="@style/Theme.IOSched"
-        	android:label="@string/title_category_select"
+        	android:label="@string/title_about"
         />
         
         <activity
