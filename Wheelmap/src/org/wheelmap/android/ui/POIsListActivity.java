@@ -35,6 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 public class POIsListActivity extends ListActivity implements
 		DetachableResultReceiver.Receiver {
 
@@ -51,11 +53,22 @@ public class POIsListActivity extends ListActivity implements
 	private State mState;
 	private float mDistance;
 	private boolean mIsRecreated;
+	
+	GoogleAnalyticsTracker tracker;
+	
+	
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// GA
+		tracker = GoogleAnalyticsTracker.getInstance();
+	    // tracker.startNewSession("UA-25843648-1", 20, this);
+	    tracker.setAnonymizeIp(true);
+	    tracker.trackPageView("/ListActivity");
+		
 		setContentView(R.layout.activity_list);
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
@@ -67,6 +80,11 @@ public class POIsListActivity extends ListActivity implements
 						POIsMapsforgeActivity.class);
 				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 				startActivity(intent);
+				tracker.trackEvent(
+			            "Clicks",  // Category
+			            "Button",  // Action
+			            "SwitchMaps", // Label
+			            0);       // Value
 
 			}
 
@@ -89,8 +107,6 @@ public class POIsListActivity extends ListActivity implements
 		mDistance = getDistanceFromPreferences();
 
 		getListView().setTextFilterEnabled(true);
-		
-		
 	}
 	
 	@Override
@@ -115,6 +131,8 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		// Stop the tracker when it is no longer needed.
+	    tracker.stopSession();
 	}
 
 	@Override

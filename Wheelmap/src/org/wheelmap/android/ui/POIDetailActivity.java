@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity {
 
-	private ImageView iconImage = null;
+	//private ImageView iconImage = null;
 	private TextView nameText = null;
 	private TextView categoryText = null;
 	private TextView nodetypeText = null;
@@ -56,9 +56,9 @@ public class POIDetailActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
 
-		iconImage = (ImageView) findViewById(R.id.icon);
-		nameText = (TextView) findViewById(R.id.name);
-		categoryText = (TextView) findViewById(R.id.category);
+		//iconImage = (ImageView) findViewById(R.id.icon);
+		nameText = (TextView) findViewById(R.id.title_name);
+		categoryText = (TextView) findViewById(R.id.title_category);
 		nodetypeText = (TextView) findViewById(R.id.nodetype);
 
 		phoneText = (TextView) findViewById(R.id.phone);
@@ -182,7 +182,7 @@ public class POIDetailActivity extends MapActivity {
 		int categoryId = POIHelper.getCategoryId(cur);
 
 		NodeType nodeType = SupportManager.get().lookupNodeType(nodeTypeId);
-		iconImage.setImageDrawable(nodeType.iconDrawable);
+		//iconImage.setImageDrawable(nodeType.iconDrawable);
 
 		setWheelchairState(state);
 		nameText.setText(name);
