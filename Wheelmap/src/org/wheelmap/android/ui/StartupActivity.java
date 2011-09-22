@@ -5,8 +5,6 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.GeocoordinatesMath;
-import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 public class StartupActivity extends Activity implements
 		DetachableResultReceiver.Receiver {
@@ -25,17 +29,29 @@ public class StartupActivity extends Activity implements
 	private SupportManager mSupportManager;
 	private ProgressBar mProgressBar;
 	public static Boolean ENABLE_RESTART = false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_startup);
-
+		
+		FrameLayout layout = (FrameLayout) findViewById( R.id.startup_frame );
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_animation );
+		LayoutAnimationController controller = new LayoutAnimationController(anim , 0.0f );
+		layout.setLayoutAnimation( controller );
+		
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
 
-		mState = new State();
-		mState.mReceiver.setReceiver(this);
+		mState = (State) getLastNonConfigurationInstance();
+		final boolean previousState = mState != null;
+
+		if (previousState) {
+			// Start listening for SyncService updates again
+			mState.mReceiver.setReceiver(this);
+		} else {
+			mState = new State();
+			mState.mReceiver.setReceiver(this);
+		}
 		mSupportManager = SupportManager.initOnce(getApplicationContext(),
 				mState.mReceiver);
 	}
@@ -45,40 +61,29 @@ public class StartupActivity extends Activity implements
 		super.onRestart();
 		ENABLE_RESTART = false;
 		startupApp();
-		Log.d(TAG, "onRestart");
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		Log.d(TAG, "onStart");
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(TAG, "onResume");
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "onDestroy");
 	}
 
 	private void startupApp() {
 		if (ENABLE_RESTART) {
 			Intent intent = new Intent(getApplicationContext(),
 					POIsListActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			startActivity(intent);
+			overridePendingTransition( R.anim.fade_in, R.anim.fade_out);
 		}
 		finish();
 	}
 
 	@Override
+	public Object onRetainNonConfigurationInstance() {
+		// Clear any strong references to this Activity, we'll reattach to
+		// handle events on the other side.
+		mState.mReceiver.clearReceiver();
+		return mState;
+	}
+
+	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "StartupActivity:onReceiveResult resultCode = " + resultCode);
 
 		if (resultCode == SyncService.STATUS_FINISHED) {
 			int what = resultData.getInt(SyncService.EXTRA_WHAT);
@@ -102,10 +107,22 @@ public class StartupActivity extends Activity implements
 			}
 		} else if (resultCode == SupportManager.CREATION_FINISHED) {
 			ENABLE_RESTART = true;
-			startupApp();
+			Handler h = new Handler();
+			h.postDelayed( new Runnable() {
+
+				@Override
+				public void run() {
+					startupApp();					
+				}
+				
+			}, 1000);
 		} else if (resultCode == SyncService.STATUS_ERROR) {
-			SyncServiceException e = resultData.getParcelable( SyncService.EXTRA_ERROR );
-			showErrorDialog( e );
+			final SyncServiceException e = resultData
+					.getParcelable(SyncService.EXTRA_ERROR);
+			Log.d(TAG, "SyncService: Error occurred");
+			// Log.w(TAG, e.getCause());
+			mProgressBar.setVisibility(View.GONE);
+			showErrorDialog(e);
 		}
 	}
 
@@ -116,21 +133,28 @@ public class StartupActivity extends Activity implements
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
-	
-	private void showErrorDialog( SyncServiceException e ) {
+
+	private void showErrorDialog(SyncServiceException e) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.error_occurred);
-		builder.setIcon( android.R.drawable.ic_dialog_alert);
-		builder.setMessage( e.getRessourceString());
-		builder.setNeutralButton( R.string.okay, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				finish();
-				
-			}
-		});
+		builder.setIcon(android.R.drawable.ic_dialog_alert);
+		builder.setMessage(e.getRessourceString());
+		builder.setPositiveButton(R.string.okay,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				});
 		AlertDialog alert = builder.create();
-		alert.show();
+		try {
+			alert.show();
+		} catch (Exception ex) {
+			Toast.makeText(
+					StartupActivity.this,
+					getApplicationContext().getResources().getString(
+							e.getRessourceString()), Toast.LENGTH_LONG).show();
+		}
 	}
 }

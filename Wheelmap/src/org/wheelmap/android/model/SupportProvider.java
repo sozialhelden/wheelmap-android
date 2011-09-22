@@ -6,6 +6,7 @@ import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
+import org.wheelmap.android.model.Wheelmap.POIs;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -13,6 +14,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -24,7 +26,7 @@ public class SupportProvider extends ContentProvider {
 
 	private static final String TAG = "support";
 	private static final String DATABASE_NAME = "support.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sLocalesProjectionMap;
@@ -75,7 +77,6 @@ public class SupportProvider extends ContentProvider {
 					+ NodeTypesContent.NODETYPE_ID + " INTEGER, "
 					+ NodeTypesContent.IDENTIFIER + " TEXT, "
 					+ NodeTypesContent.ICON_URL + " TEXT, "
-					+ NodeTypesContent.ICON_DATA + " BLOB, "
 					+ NodeTypesContent.LOCALIZED_NAME + " TEXT, "
 					+ NodeTypesContent.CATEGORY_ID + " INTEGER, "
 					+ NodeTypesContent.CATEGORY_IDENTIFIER + " TEXT)");
@@ -252,6 +253,147 @@ public class SupportProvider extends ContentProvider {
 		return count;
 	}
 
+	@Override
+	public int bulkInsert(Uri uri, ContentValues[] valuesArray) {
+
+		int result;
+		switch (sUriMatcher.match(uri)) {
+		case LOCALES:
+			result = bulkInsertLocales(valuesArray);
+			break;
+		case CATEGORIES:
+			result = bulkInsertCategories(valuesArray);
+			break;
+		case NODETYPES:
+			result = bulkInsertNodeTypes(valuesArray);
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		getContext().getContentResolver().notifyChange(POIs.CONTENT_URI, null);
+		return result;
+	}
+
+	private int bulkInsertLocales(ContentValues[] values) {
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
+				db, LOCALES_TABLE_NAME);
+
+		final int localeIdColumn = inserter
+				.getColumnIndex(LocalesContent.LOCALE_ID);
+		final int localizedNameColumn = inserter
+				.getColumnIndex(LocalesContent.LOCALIZED_NAME);
+
+		int count = 0;
+		db.beginTransaction();
+		int i;
+		try {
+			for (i = 0; i < values.length; i++) {
+				inserter.prepareForInsert();
+				String localeId = values[i]
+						.getAsString(LocalesContent.LOCALE_ID);
+				inserter.bind(localeIdColumn, localeId);
+				String localizedName = values[i]
+						.getAsString(LocalesContent.LOCALIZED_NAME);
+				inserter.bind(localizedNameColumn, localizedName);
+
+				long rowId = inserter.execute();
+
+				count++;
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			inserter.close();
+		}
+		return count;
+	}
+	
+	private int bulkInsertCategories( ContentValues[] values) {
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
+				db, CATEGORIES_TABLE_NAME);
+		
+		final int categoryIdColumn = inserter.getColumnIndex( CategoriesContent.CATEGORY_ID );
+		final int localizedNameColumn = inserter.getColumnIndex( CategoriesContent.LOCALIZED_NAME );
+		final int identifierColumn = inserter.getColumnIndex( CategoriesContent.IDENTIFIER );
+		final int selectedColumn = inserter.getColumnIndex( CategoriesContent.SELECTED );
+
+		int count = 0;
+		db.beginTransaction();
+		int i;
+		try {
+			for (i = 0; i < values.length; i++) {
+				inserter.prepareForInsert();
+				
+				int categoryId = values[i].getAsInteger( CategoriesContent.CATEGORY_ID );
+				inserter.bind( categoryIdColumn, categoryId);
+				
+				String localizeName = values[i].getAsString( CategoriesContent.LOCALIZED_NAME );
+				inserter.bind( localizedNameColumn, localizeName );
+				
+				String identifier = values[i].getAsString( CategoriesContent.IDENTIFIER );
+				inserter.bind( identifierColumn, identifier );
+				
+				int selected = values[i].getAsInteger( CategoriesContent.SELECTED);
+				inserter.bind( selectedColumn, selected );
+
+				long rowId = inserter.execute();
+
+				count++;
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			inserter.close();
+		}
+		return count;
+	}
+
+	private int bulkInsertNodeTypes( ContentValues[] values) {
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
+				db, NODETYPES_TABLE_NAME);
+
+		final int nodeTypeIdColumn = inserter.getColumnIndex( NodeTypesContent.NODETYPE_ID );
+		final int identifierColumn = inserter.getColumnIndex( NodeTypesContent.IDENTIFIER );
+		final int iconUrlColumn = inserter.getColumnIndex( NodeTypesContent.ICON_URL );
+		final int localizedNameColumn = inserter.getColumnIndex( NodeTypesContent.LOCALIZED_NAME );
+		final int categoryIdColumn = inserter.getColumnIndex( NodeTypesContent.CATEGORY_ID );
+		final int categoryIdentifierColumn = inserter.getColumnIndex( NodeTypesContent.CATEGORY_IDENTIFIER  );
+		
+		int count = 0;
+		db.beginTransaction();
+		int i;
+		try {
+			for (i = 0; i < values.length; i++) {
+				inserter.prepareForInsert();
+				int nodeTypeId = values[i].getAsInteger( NodeTypesContent.NODETYPE_ID );
+				inserter.bind( nodeTypeIdColumn, nodeTypeId );
+				String identifier = values[i].getAsString( NodeTypesContent.IDENTIFIER );
+				inserter.bind( identifierColumn, identifier );
+				String iconUrl = values[i].getAsString( NodeTypesContent.ICON_URL );
+				inserter.bind( iconUrlColumn, iconUrl );
+				String localizedName = values[i].getAsString( NodeTypesContent.LOCALIZED_NAME );
+				inserter.bind( localizedNameColumn, localizedName );
+				int categoryId = values[i].getAsInteger( NodeTypesContent.CATEGORY_ID );
+				inserter.bind( categoryIdColumn, categoryId );
+				String categoryIdentifier = values[i].getAsString( NodeTypesContent.CATEGORY_IDENTIFIER );
+				inserter.bind( categoryIdentifierColumn, categoryIdentifier );
+				
+				long rowId = inserter.execute();
+
+				count++;
+			}
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+			inserter.close();
+		}
+		return count;
+	}
+
+
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		sUriMatcher.addURI(Support.AUTHORITY, "lastupdate", LASTUPDATE);
@@ -292,8 +434,6 @@ public class SupportProvider extends ContentProvider {
 				NodeTypesContent.IDENTIFIER);
 		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_URL,
 				NodeTypesContent.ICON_URL);
-		sNodeTypesProjectionMap.put(NodeTypesContent.ICON_DATA,
-				NodeTypesContent.ICON_DATA);
 		sNodeTypesProjectionMap.put(NodeTypesContent.LOCALIZED_NAME,
 				NodeTypesContent.LOCALIZED_NAME);
 		sNodeTypesProjectionMap.put(NodeTypesContent.CATEGORY_ID,

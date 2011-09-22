@@ -12,9 +12,9 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeocoordinatesMath;
-import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -22,7 +22,6 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
@@ -34,7 +33,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -47,29 +45,27 @@ public class POIsListActivity extends ListActivity implements
 	private MyLocationManager mLocationManager;
 	private Location mLocation, mLastQueryLocation;
 
-	private final static double QUERY_DISTANCE_MIN = 0.1;
+	private final static double QUERY_DISTANCE_MIN = 0.15;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 	private final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
 
 	private State mState;
 	private float mDistance;
 	private boolean mIsRecreated;
-	
+
 	GoogleAnalyticsTracker tracker;
-	
-	
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
-	    tracker.startNewSession("UA-25843648-1", 20, this);
-	    tracker.setAnonymizeIp(true);
-	    tracker.trackPageView("/ListActivity");
-		
+		tracker.startNewSession("UA-25843648-1", 20, this);
+		tracker.setAnonymizeIp(true);
+		tracker.trackPageView("/ListActivity");
+
 		setContentView(R.layout.activity_list);
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
@@ -81,11 +77,11 @@ public class POIsListActivity extends ListActivity implements
 						POIsMapsforgeActivity.class);
 				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 				startActivity(intent);
-				tracker.trackEvent(
-			            "Clicks",  // Category
-			            "Button",  // Action
-			            "SwitchMaps", // Label
-			            0);       // Value
+				overridePendingTransition(0, 0);
+				tracker.trackEvent("Clicks", // Category
+						"Button", // Action
+						"SwitchMaps", // Label
+						0); // Value
 
 			}
 
@@ -109,7 +105,7 @@ public class POIsListActivity extends ListActivity implements
 
 		getListView().setTextFilterEnabled(true);
 	}
-	
+
 	@Override
 	public void onRestart() {
 		super.onRestart();
@@ -126,43 +122,44 @@ public class POIsListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		mLocationManager.register(mState.mReceiver, true);
-		runQuery( !mIsRecreated );
+		runQuery(!mIsRecreated);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		// Stop the tracker when it is no longer needed.
-	    tracker.stopSession();
+		tracker.stopSession();
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
-		if ( state.containsKey( EXTRA_IS_RECREATED ))
+		if (state.containsKey(EXTRA_IS_RECREATED))
 			mIsRecreated = true;
 		else
 			mIsRecreated = false;
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean( EXTRA_IS_RECREATED, true);
-		
+		outState.putBoolean(EXTRA_IS_RECREATED, true);
+
 		super.onSaveInstanceState(outState);
 	}
 
-	public void runQuery( boolean forceReload ) {
-		Log.d( TAG, "runQuery: forceReload = " + forceReload );
+	public void runQuery(boolean forceReload) {
+		Log.d(TAG, "runQuery: forceReload = " + forceReload);
 		long startTime = System.currentTimeMillis();
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 
 		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(getApplicationContext()),
+				QueriesBuilderHelper
+						.userSettingsFilter(getApplicationContext()),
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
 
-		if ( forceReload )
+		if (forceReload)
 			requestData();
 
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
@@ -195,17 +192,6 @@ public class POIsListActivity extends ListActivity implements
 		return Float.valueOf(prefDist);
 	}
 
-	public int getSelectionFromPreferences() {
-		String[] values = getResources().getStringArray(
-				R.array.distance_array_values);
-		int i;
-		for (i = 0; i < values.length; i++) {
-			if (Float.valueOf(values[i]) == mDistance)
-				return i;
-		}
-		return 0;
-	}
-
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		// Clear any strong references to this Activity, we'll reattach to
@@ -214,37 +200,8 @@ public class POIsListActivity extends ListActivity implements
 		return mState;
 	}
 
-	public void onFilterClick(View v) {
-		final Resources res = getResources();
-		final CharSequence[] items = res.getStringArray(R.array.distance_array);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		int textRes = GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES ? R.string.spinner_description_distance_km
-				: R.string.spinner_description_distance_miles;
-		builder.setTitle(textRes);
-
-		builder.setSingleChoiceItems(items, getSelectionFromPreferences(),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						mDistance = Float.valueOf(res
-								.getStringArray(R.array.distance_array_values)[item]);
-						onRefreshClick(null);
-						dialog.dismiss();
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-	
 	public void onInfoClick(View v) {
 		Intent intent = new Intent(this, InfoActivity.class);
-		startActivity(intent);
-	}	
-
-	public void onMapClick(View v) {
-		Intent intent = new Intent(this, POIsMapsforgeActivity.class);
-		intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
-		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 
@@ -291,15 +248,19 @@ public class POIsListActivity extends ListActivity implements
 
 	private void updateRefreshStatus() {
 	}
-	
-	private boolean isFarerThanDeltaDistance( Location location ) {
-		if ( mLastQueryLocation == null )
+
+	private boolean isFarerThanDeltaDistance(Location location) {
+		if (mLastQueryLocation == null)
 			return false;
-		
-		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(location.getLongitude(), location.getLatitude());
-		Wgs84GeoCoordinates lastQueryCoordinates = new Wgs84GeoCoordinates( mLastQueryLocation.getLongitude(), mLastQueryLocation.getLatitude());
-		
-		if ( GeocoordinatesMath.calculateDistance( lastQueryCoordinates, crrCoordinates) >= QUERY_DISTANCE_MIN )
+
+		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(
+				location.getLongitude(), location.getLatitude());
+		Wgs84GeoCoordinates lastQueryCoordinates = new Wgs84GeoCoordinates(
+				mLastQueryLocation.getLongitude(),
+				mLastQueryLocation.getLatitude());
+
+		if (GeocoordinatesMath.calculateDistance(lastQueryCoordinates,
+				crrCoordinates) >= QUERY_DISTANCE_MIN)
 			return true;
 		else
 			return false;
@@ -322,14 +283,15 @@ public class POIsListActivity extends ListActivity implements
 			// Error happened down in SyncService, show as toast.
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			SyncServiceException e = resultData.getParcelable( SyncService.EXTRA_ERROR );
-			showErrorDialog( e );
+			SyncServiceException e = resultData
+					.getParcelable(SyncService.EXTRA_ERROR);
+			showErrorDialog(e);
 			break;
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			mLocation = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
-			if ( isFarerThanDeltaDistance( mLocation )) {
+			if (isFarerThanDeltaDistance(mLocation)) {
 				runQuery(true);
 			}
 			break;
@@ -351,7 +313,7 @@ public class POIsListActivity extends ListActivity implements
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
-	
+
 	public void onRefreshClick(View v) {
 		requestData();
 	}
@@ -367,20 +329,20 @@ public class POIsListActivity extends ListActivity implements
 		startService(intent);
 		mLastQueryLocation = mLocation;
 	}
-	
-	private void showErrorDialog( SyncServiceException e ) {
+
+	private void showErrorDialog(SyncServiceException e) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.error_occurred);
-		builder.setIcon( android.R.drawable.ic_dialog_alert);
-		builder.setMessage( e.getRessourceString());
-		builder.setNeutralButton( R.string.okay, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				finish();
-				
-			}
-		});
+		builder.setIcon(android.R.drawable.ic_dialog_alert);
+		builder.setMessage(e.getRessourceString());
+		builder.setNeutralButton(R.string.okay,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}

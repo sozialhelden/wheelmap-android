@@ -1,18 +1,9 @@
 package org.wheelmap.android.utils;
 
-import com.google.android.maps.GeoPoint;
+import org.mapsforge.android.maps.GeoPoint;
+
 
 public class MapUtils {
-	/*public static void sortListOfMapObject(List<? extends MapObject> list, final double lat, final double lon){
-		Collections.sort(list, new Comparator<MapObject>() {
-			@Override
-			public int compare(MapObject o1, MapObject o2) {
-				return Double.compare(MapUtils.getDistance(o1.getLocation(), lat, lon), MapUtils.getDistance(o2.getLocation(),
-						lat, lon));
-			}
-		});
-	}
-	*/
 		
 	public static boolean NearPonits(GeoPoint p1, GeoPoint p2, int lngSpan, int latSpan) {
 		int lonDistance = Math.abs(p1.getLongitudeE6() - p2.getLongitudeE6());

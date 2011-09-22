@@ -1,7 +1,6 @@
 package org.wheelmap.android.app;
 
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
 
 import android.app.Application;
 

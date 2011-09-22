@@ -37,7 +37,6 @@ public class Support {
 		public static final String NODETYPE_ID = "nodetype_id";
 		public static final String IDENTIFIER = "identifier";
 		public static final String ICON_URL = "icon_url";
-		public static final String ICON_DATA = "icon_data";
 		public static final String LOCALIZED_NAME = "localized_name";
 		public static final String CATEGORY_ID = "category_id";
 		public static final String CATEGORY_IDENTIFIER = "category_identifier";
@@ -143,7 +142,7 @@ public class Support {
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.nodetypes";
 
 		public static final String[] PROJECTION = new String[] { _ID,
-				NODETYPE_ID, IDENTIFIER, ICON_URL, ICON_DATA, LOCALIZED_NAME,
+				NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME,
 				CATEGORY_ID, CATEGORY_IDENTIFIER };
 
 		public static int getNodeTypeId(Cursor c) {
@@ -156,10 +155,6 @@ public class Support {
 
 		public static String getIconURL(Cursor c) {
 			return c.getString(c.getColumnIndexOrThrow(ICON_URL));
-		}
-
-		public static byte[] getIconData(Cursor c) {
-			return c.getBlob(c.getColumnIndexOrThrow(ICON_DATA));
 		}
 
 		public static String getLocalizedName(Cursor c) {

@@ -19,7 +19,6 @@ import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,16 +27,14 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		IExecutor {
 
 	private BoundingBox mBoundingBox;
-	private Context mContext;
 	private int mCategory = -1;
 	private int mNodeType = -1;
 
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
-	public NodesExecutor(Context context, ContentResolver resolver,
+	public NodesExecutor( ContentResolver resolver,
 			Bundle bundle) {
 		super(resolver, bundle, Nodes.class);
-		mContext = context;
 	}
 
 	@Override

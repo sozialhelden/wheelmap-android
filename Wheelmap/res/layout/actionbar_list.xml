@@ -8,13 +8,11 @@
         <ImageView style="@style/TitleBarSeparator" />
         <ImageView style="@style/TitleBarAction"
             android:id="@+id/btn_title_refresh"
-            android:contentDescription="@string/description_refresh"
             android:src="@android:drawable/ic_menu_add"
             android:onClick="onNewPOIClick" />
         <ImageView style="@style/TitleBarSeparator" />
         <ImageView style="@style/TitleBarAction"
             android:id="@+id/btn_title_refresh"
-            android:contentDescription="@string/description_refresh"
             android:src="@android:drawable/ic_menu_info_details"
             android:onClick="onInfoClick" />
 	</LinearLayout>

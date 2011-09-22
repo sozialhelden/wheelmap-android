@@ -25,6 +25,6 @@
     <color name="light_grey_two">#FFDFDFDF</color>
     
     <color name="red_logo">#FFBF3F3F</color>
-    
+    <color name="grey_background_overlay">#AA949494</color>
        
 </resources>

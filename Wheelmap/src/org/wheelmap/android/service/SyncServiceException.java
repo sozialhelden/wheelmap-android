@@ -13,13 +13,11 @@ public class SyncServiceException extends RuntimeException implements Parcelable
 	private final int id;
 
 	public final static int ERROR_NETWORK_FAILURE = 0x0;
-	public final static int ERROR_DATABASE_ERROR = 0x1;
-	public final static int ERROR_INTERNAL_ERROR = 0x2;
-	public final static int ERROR_AUTHORIZATION_ERROR = 0x3;
+	public final static int ERROR_INTERNAL_ERROR = 0x1;
+	public final static int ERROR_AUTHORIZATION_ERROR = 0x2;
 	
 	private final int[] errorString = {
 			R.string.error_network_failure,
-			R.string.error_database_error,
 			R.string.error_internal_error,
 			R.string.error_authorization_error,
 			

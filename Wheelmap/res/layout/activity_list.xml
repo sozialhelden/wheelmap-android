@@ -10,7 +10,7 @@
         android:indeterminate="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_vertical|center_horizontal"
         android:visibility="gone" />
     <ListView android:id="@android:id/list"
         android:layout_width="fill_parent"

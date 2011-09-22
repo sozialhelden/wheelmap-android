@@ -3,13 +3,13 @@ package org.wheelmap.android.utils;
 
 import java.io.Serializable;
 
+import org.mapsforge.android.maps.GeoPoint;
+
 import wheelmap.org.BoundingBox;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.maps.GeoPoint;
 
 public class ParceableBoundingBox implements Parcelable, Serializable {
 

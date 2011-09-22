@@ -1,8 +1,5 @@
 package org.wheelmap.android.net;
 
-import java.util.ArrayList;
-
-import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -12,12 +9,9 @@ import wheelmap.org.domain.categories.Categories;
 import wheelmap.org.domain.categories.Category;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.CategoriesRequestBuilder;
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.OperationApplicationException;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
 
 public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> implements IExecutor {
@@ -57,30 +51,39 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 	public void prepareDatabase() throws SyncServiceException {
 		long insertStart = System.currentTimeMillis();
 		for( Categories categories: getTempStore() ) {
-			try {
-				batchApply( categories );
-			} catch (RemoteException e) {
-				throw new SyncServiceException( SyncServiceException.ERROR_DATABASE_ERROR, e);
-			} catch (OperationApplicationException e) {
-				throw new SyncServiceException( SyncServiceException.ERROR_DATABASE_ERROR, e);
-			}
+			bulkInsert( categories );
 		}
 		long insertEnd = System.currentTimeMillis();
 		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
 		clearTempStore();
 	}
 	
-	private void batchApply( Categories categories ) throws RemoteException, OperationApplicationException {
-		ContentValues values = new ContentValues();
-		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-		for( Category cat: categories.getCategories()) {
-			copyCategoryToValues( cat, values );
-			ContentProviderOperation operation = ContentProviderOperation
-					.newInsert(CategoriesContent.CONTENT_URI).withValues(values).build();
-			operations.add( operation );
+//	private void batchApply( Categories categories ) throws RemoteException, OperationApplicationException {
+//		ContentValues values = new ContentValues();
+//		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+//		for( Category cat: categories.getCategories()) {
+//			copyCategoryToValues( cat, values );
+//			ContentProviderOperation operation = ContentProviderOperation
+//					.newInsert(CategoriesContent.CONTENT_URI).withValues(values).build();
+//			operations.add( operation );
+//		}
+//		
+//		getResolver().applyBatch( Support.AUTHORITY, operations);
+//	}
+	
+	private void bulkInsert(Categories categories) {
+		int size = categories.getCategories().size();
+		ContentValues[] contentValuesArray = new ContentValues[size];
+		int i;
+		for (i = 0; i < size; i++) {
+			ContentValues values = new ContentValues();
+			copyCategoryToValues(categories.getCategories().get(i),
+					values );
+			contentValuesArray[i] = values;
 		}
-		
-		getResolver().applyBatch( Support.AUTHORITY, operations);
+
+		getResolver().bulkInsert(CategoriesContent.CONTENT_URI,
+				contentValuesArray);
 	}
 
 	private void copyCategoryToValues(Category category, ContentValues values) {

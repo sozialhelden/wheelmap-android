@@ -34,7 +34,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class POIsMapsforgeActivity extends MapActivity implements
 		DetachableResultReceiver.Receiver, MapViewTouchMove {
@@ -56,7 +55,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
-	private boolean mIsRecreated;
 	
 	private static final int ZOOMLEVEL_MIN = 16;
 
@@ -66,7 +64,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		System.gc();
 		
 		setContentView(R.layout.activity_mapsforge);
-		 mMapView = (MyMapView) findViewById(R.id.map);
+		mMapView = (MyMapView) findViewById(R.id.map);
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
@@ -124,7 +122,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 				Intent intent = new Intent(POIsMapsforgeActivity.this,
 						POIsListActivity.class);
 				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				startActivity(intent);
+				overridePendingTransition(0, 0);
 
 			}
 
@@ -138,12 +138,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mCursor.requery();
 		mLocationManager.register(mState.mReceiver, true);
 		runQuery();
-	}
-	
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		mIsRecreated = false;
 	}
 	
 	@Override
@@ -232,8 +226,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
 		// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
-		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(intent);
+		overridePendingTransition(0, 0);
+
 	}
 
 	public void onCenterOnCurrentLocationClick(View v) {

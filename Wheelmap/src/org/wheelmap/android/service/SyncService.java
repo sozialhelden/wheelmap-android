@@ -75,7 +75,7 @@ public class SyncService extends IntentService {
 		IExecutor executor = null;
 		switch(what) {
 		case WHAT_RETRIEVE_NODES:
-			executor = new NodesExecutor(getApplicationContext(), mResolver, bundle);
+			executor = new NodesExecutor( mResolver, bundle);
 			break;
 		case WHAT_RETRIEVE_LOCALES:
 			executor = new LocalesExecutor(mResolver, bundle );

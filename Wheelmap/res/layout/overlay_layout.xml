@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_gravity="center">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="horizontal"
+			android:background="@drawable/bar_gradient_dark_grey">
+			<ImageView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:src="@android:drawable/ic_dialog_alert"
+				android:layout_marginLeft="12dip" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge"
+				android:text="@string/error_occurred" android:layout_marginLeft="6dip" />
+		</LinearLayout>
+
+		<TextView android:id="@+id/error_message"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_margin="12dip" />
+		<FrameLayout android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_margin="12dip">
+			<Button android:id="@+id/btn_okay" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_gravity="center"
+				android:text="@string/okay" />
+		</FrameLayout>
+	</LinearLayout>
+</FrameLayout>

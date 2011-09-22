@@ -17,7 +17,6 @@ import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
 import wheelmap.org.WheelchairState;
 
@@ -33,7 +32,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -52,7 +50,7 @@ public class SupportManager {
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	// TODO: put in a proper update INTERVAL
-	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 1;
+	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 2;
 
 	public final static int CREATION_RUNNING = 0x20;
 	public final static int CREATION_FINISHED = 0x21;
@@ -167,10 +165,6 @@ public class SupportManager {
 				mStatusSender);
 		mContext.startService(nodeTypesIntent);
 
-	}
-
-	public void registerReceiver(Receiver receiver) {
-		mStatusSender.setReceiver(receiver, true);
 	}
 
 	private boolean checkIfUpdateDurationPassed() {
@@ -366,7 +360,8 @@ public class SupportManager {
 			} catch (IOException e) {
 				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage());
 			}
-			drawable.setBounds(-32, -64, 32, 0);
+//			drawable.setBounds(-32, -64, 32, 0);
+			drawable.setBounds(-24, -48, 24, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
@@ -392,7 +387,8 @@ public class SupportManager {
 				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
 						.valueOf(idx));
 			}
-			drawable.setBounds(-32, -64, 32, 0);
+//			drawable.setBounds(-32, -64, 32, 0);
+			drawable.setBounds(-24, -48, 24, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 

@@ -158,8 +158,8 @@ public class POIDetailActivity extends MapActivity {
 	private void setWheelchairState(WheelchairState newState) {
 		mWheelChairState = newState;
 		mStateIcon.setImageResource(mWheelchairStateDrawablesMap.get(newState));
-		mWheelchairStateText.setTextColor(mWheelchairStateTextColorMap
-				.get(newState));
+		mWheelchairStateText.setTextColor(getResources().getColor(mWheelchairStateTextColorMap
+				.get(newState)));
 		mWheelchairStateText.setText(mWheelchairStateTextsMap.get(newState));
 	}
 
