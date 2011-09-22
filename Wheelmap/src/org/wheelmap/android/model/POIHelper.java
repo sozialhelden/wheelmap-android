@@ -73,7 +73,7 @@ public class POIHelper {
 		// post code  & city
 		String postcode = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.POSTCODE));
 		String city = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.CITY));
-		if ( postcode != null || city != null )
+		if ( street != null || nr != null)
 			address.append(',');
 		
 		if (postcode != null){

@@ -12,14 +12,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 public class StartupActivity extends Activity implements
 		DetachableResultReceiver.Receiver {
@@ -53,6 +51,7 @@ public class StartupActivity extends Activity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
+
 		mSupportManager = SupportManager.initOnce(getApplicationContext(),
 				mState.mReceiver);
 	}
@@ -60,16 +59,27 @@ public class StartupActivity extends Activity implements
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		startupApp();
+		finish();
 	}
 
 	private void startupApp() {
-		finish();
 		Intent intent = new Intent(getApplicationContext(),
 				POIsListActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP );
 		startActivity(intent);
+		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+	private void startupAppDelayed() {
+		Handler h = new Handler();
+		h.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				startupApp();
+			}
+
+		}, 1000);
 	}
 
 	@Override
@@ -97,21 +107,13 @@ public class StartupActivity extends Activity implements
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
 				mSupportManager.initNodeTypes();
 				mSupportManager.createCurrentTimeTag();
-				startupApp();
+				startupAppDelayed();
 				break;
 			default:
 				// nothing to do
 			}
 		} else if (resultCode == SupportManager.CREATION_FINISHED) {
-			Handler h = new Handler();
-			h.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					startupApp();
-				}
-
-			}, 1000);
+			startupAppDelayed();
 		} else if (resultCode == SyncService.STATUS_ERROR) {
 			final SyncServiceException e = resultData
 					.getParcelable(SyncService.EXTRA_ERROR);
@@ -130,11 +132,12 @@ public class StartupActivity extends Activity implements
 	}
 
 	private void showErrorDialog(SyncServiceException e) {
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.error_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		builder.setMessage(e.getRessourceString());
-		builder.setPositiveButton(R.string.okay,
+		builder.setPositiveButton(R.string.quit,
 				new DialogInterface.OnClickListener() {
 
 					@Override
@@ -142,14 +145,8 @@ public class StartupActivity extends Activity implements
 						finish();
 					}
 				});
-		AlertDialog alert = builder.create();
-		try {
-			alert.show();
-		} catch (Exception ex) {
-			Toast.makeText(
-					StartupActivity.this,
-					getApplicationContext().getResources().getString(
-							e.getRessourceString()), Toast.LENGTH_LONG).show();
-		}
+		final AlertDialog alert = builder.create();
+		alert.show();
+
 	}
 }

@@ -87,11 +87,10 @@ public class SupportManager {
 		public String localizedName;
 	}
 
-	private SupportManager(Context ctx, DetachableResultReceiver receiver) {
+	private SupportManager(Context ctx) {
 		mContext = ctx;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
-		mStatusSender = receiver;
 
 		mDefaultCategory = new Category(0, "unknown",
 				mContext.getString(R.string.category_unknown));
@@ -107,15 +106,17 @@ public class SupportManager {
 	public static SupportManager initOnce(Context ctx,
 			DetachableResultReceiver receiver) {
 		if (INSTANCE == null) {
-			INSTANCE = new SupportManager(ctx, receiver);
+			INSTANCE = new SupportManager(ctx);
 		}
-		INSTANCE.init();
+		INSTANCE.init(receiver);
 		return INSTANCE;
 	}
+	
 
-	private void init() {
+	private void init(DetachableResultReceiver receiver) {
 		Log.d(TAG, "SupportManager:init");
-
+		mStatusSender = receiver;
+		
 		if (checkForLocales() && checkForCategories() && checkForNodeTypes()
 				&& !checkIfUpdateDurationPassed()) {
 			initLookup();

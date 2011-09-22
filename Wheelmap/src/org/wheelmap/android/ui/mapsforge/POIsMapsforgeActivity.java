@@ -299,7 +299,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		builder.setTitle(R.string.error_occurred);
 		builder.setIcon( android.R.drawable.ic_dialog_alert);
 		builder.setMessage( e.getRessourceString());
-		builder.setNeutralButton( R.string.okay, new DialogInterface.OnClickListener() {
+		builder.setNeutralButton( R.string.quit, new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

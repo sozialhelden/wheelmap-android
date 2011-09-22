@@ -43,7 +43,6 @@ public class DetachableResultReceiver extends ResultReceiver {
 	protected void onReceiveResult(int resultCode, Bundle resultData) {
 		this.resultCode = resultCode;
 		this.resultData = resultData;
-		
 		if (mReceiver != null) {
 			mReceiver.onReceiveResult(resultCode, resultData);
 		} else {

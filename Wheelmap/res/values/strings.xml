@@ -73,8 +73,8 @@
     <string name="error_internal_error">An unexpected internal error occurred. Please restart the app.</string>
     <string name="error_authorization_error">No proper authorization for editing available.</string>
     <string name="error_occurred">An error occurred</string>
-    <string name="okay">Okay</string>
     <string name="info_webdevelopment_one">Christoph Bünte</string>
     <string name="info_kartendaten_one">OpenStreetMap</string>
     <string name="title_wheelchairstate">Wheelchair</string>
+    <string name="quit">Quit</string>
 </resources>

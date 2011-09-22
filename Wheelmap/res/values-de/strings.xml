@@ -62,7 +62,7 @@
     <string name="nodetype_unknown">Typ Unbekannt</string>
     <string name="poi_property_phone">Telefon</string>
     <string name="poi_property_website">Webseite</string>
-    <string name="okay">Okay</string>
     <string name="poi_property_address">Adresse</string>
     <string name="title_wheelchairstate">Rollstuhl</string>
+    <string name="quit">Quit</string>
 </resources>
