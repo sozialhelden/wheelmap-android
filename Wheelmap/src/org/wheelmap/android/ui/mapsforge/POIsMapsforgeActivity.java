@@ -149,11 +149,6 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		SupportManager.get().cleanReferences();
@@ -233,7 +228,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 
 	}
 
-	public void onCenterOnCurrentLocationClick(View v) {
+	public void onCenterClick(View v) {
 		if (mLastGeoPointE6 != null) {
 			mMapController.setCenter(mLastGeoPointE6);
 			requestUpdate();

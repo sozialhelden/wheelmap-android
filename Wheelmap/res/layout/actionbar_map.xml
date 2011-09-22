@@ -3,6 +3,7 @@
 	<LinearLayout style="@style/ActionBarCompat">
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
+<<<<<<< HEAD
 
 		<!-- dummy view forces action aligned right -->
 		<View style="@style/TitleBarSpring" />
@@ -11,6 +12,15 @@
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
 			android:src="@android:drawable/ic_menu_info_details" android:onClick="onInfoClick" />
+=======
+			    <View style="@style/TitleBarSpring" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageView style="@style/TitleBarAction"
+            android:id="@+id/btn_title_refresh"
+            android:src="@android:drawable/ic_menu_mylocation"
+            android:onClick="onCenterClick" />
+>>>>>>> 1427531d3925acf5bfbc4d7139c6116c0d195a90
 	</LinearLayout>
 	<LinearLayout style="@style/ActionBarSwitcher">
 		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"
