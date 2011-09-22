@@ -28,18 +28,19 @@ public class StartupActivity extends Activity implements
 	private State mState;
 	private SupportManager mSupportManager;
 	private ProgressBar mProgressBar;
-	public static Boolean ENABLE_RESTART = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_startup);
-		
-		FrameLayout layout = (FrameLayout) findViewById( R.id.startup_frame );
-		Animation anim = AnimationUtils.loadAnimation(this, R.anim.zoom_in_animation );
-		LayoutAnimationController controller = new LayoutAnimationController(anim , 0.0f );
-		layout.setLayoutAnimation( controller );
-		
+
+		FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
+		Animation anim = AnimationUtils.loadAnimation(this,
+				R.anim.zoom_in_animation);
+		LayoutAnimationController controller = new LayoutAnimationController(
+				anim, 0.0f);
+		layout.setLayoutAnimation(controller);
+
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
 
 		mState = (State) getLastNonConfigurationInstance();
@@ -59,19 +60,16 @@ public class StartupActivity extends Activity implements
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		ENABLE_RESTART = false;
 		startupApp();
 	}
 
 	private void startupApp() {
-		if (ENABLE_RESTART) {
-			Intent intent = new Intent(getApplicationContext(),
-					POIsListActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-			startActivity(intent);
-			overridePendingTransition( R.anim.fade_in, R.anim.fade_out);
-		}
 		finish();
+		Intent intent = new Intent(getApplicationContext(),
+				POIsListActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	@Override
@@ -99,27 +97,24 @@ public class StartupActivity extends Activity implements
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
 				mSupportManager.initNodeTypes();
 				mSupportManager.createCurrentTimeTag();
-				ENABLE_RESTART = true;
 				startupApp();
 				break;
 			default:
 				// nothing to do
 			}
 		} else if (resultCode == SupportManager.CREATION_FINISHED) {
-			ENABLE_RESTART = true;
 			Handler h = new Handler();
-			h.postDelayed( new Runnable() {
+			h.postDelayed(new Runnable() {
 
 				@Override
 				public void run() {
-					startupApp();					
+					startupApp();
 				}
-				
+
 			}, 1000);
 		} else if (resultCode == SyncService.STATUS_ERROR) {
 			final SyncServiceException e = resultData
 					.getParcelable(SyncService.EXTRA_ERROR);
-			Log.d(TAG, "SyncService: Error occurred");
 			// Log.w(TAG, e.getCause());
 			mProgressBar.setVisibility(View.GONE);
 			showErrorDialog(e);
