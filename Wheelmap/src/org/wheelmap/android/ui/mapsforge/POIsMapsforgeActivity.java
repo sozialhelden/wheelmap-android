@@ -146,11 +146,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mCursor.deactivate();
 		mLocationManager.release(mState.mReceiver);
 	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -232,7 +227,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	}
 
-	public void onCenterOnCurrentLocationClick(View v) {
+	public void onCenterClick(View v) {
 		if (mLastGeoPointE6 != null) {
 			mMapController.setCenter(mLastGeoPointE6);
 			requestUpdate();
