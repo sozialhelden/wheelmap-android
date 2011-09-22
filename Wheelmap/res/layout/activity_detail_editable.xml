@@ -1,54 +1,59 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
-	<TableLayout
-     	android:layout_width="fill_parent"
- 		android:layout_height="wrap_content"
-		android:stretchColumns="1"
-		android:shrinkColumns="1"
-		>
-		<TableRow>
-			<TextView android:text="Name:" />
-			<EditText android:id="@+id/name"
-			  style="@style/DetailFont"
-			/>
-		</TableRow>
-		<TableRow>
-			<TextView android:text="Address:" />
-			<EditText android:id="@+id/addr" 
-			  style="@style/DetailFont"/>
-		</TableRow>
-		<TableRow>
-			<TextView android:text="Wheelchair:" />
-			<RadioGroup android:id="@+id/wheel_chair_type">
-				<RadioButton android:id="@+id/unknown"
-					android:text="Unknown"
-					android:checked="true"
-				/>
-				<RadioButton android:id="@+id/yes"
-					android:text="Yes"
-				/>
-				<RadioButton android:id="@+id/no"
-					android:text="No"
-				/>
-				<RadioButton android:id="@+id/limited"
-					android:text="Limited"
-				/>
-			</RadioGroup>
-		</TableRow>
-		<EditText android:id="@+id/notes"
-			android:inputType="textMultiLine"
-			android:gravity="top"
-			android:lines="2"
-			android:scrollHorizontally="false"
-			android:maxLines="2"
-			android:layout_span="2"
-			android:hint="Comment"
-			android:layout_marginTop="4dip"
-		/>
-		<EditText android:id="@+id/phone"
-			android:layout_span="2"
-			android:hint="Phone"
-		/>
-	</TableLayout>
-</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/home_root" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<include layout="@layout/actionbar_detail_editable" />
+	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
+		<TextView android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:gravity="center"
+			android:text="@string/title_pois_detail_edit" android:textColor="@color/white"
+			android:textStyle="bold" />
+	</LinearLayout>
+
+	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
+		<LinearLayout android:layout_width="fill_parent" android:orientation="vertical"
+				android:layout_height="wrap_content" >
+				
+				
+				<TextView android:hint="@string/poi_property_nodetype"
+					android:id="@+id/nodetype" style="@style/DetailFont" />
+					
+
+				<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				
+				<EditText android:hint="@string/poi_property_comment"
+					android:id="@+id/comment" style="@style/DetailFont" />
+					
+					<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>			
+
+				<EditText android:hint="@string/poi_property_address"
+					android:id="@+id/addr" style="@style/DetailFont" />
+
+					<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>			
+		
+					<EditText android:hint="@string/poi_property_phone" android:id="@+id/phone" style="@style/DetailFont"
+						android:autoLink="phone" />
+
+				<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>			
+
+					<EditText android:hint="@string/poi_property_website" android:id="@+id/website" style="@style/DetailFont"
+						android:autoLink="web" />
+				<LinearLayout android:background="#FF000000" android:layout_width="fill_parent"
+				  android:layout_height="4dp"/>				 
+			</LinearLayout>
+		
+	</ScrollView>
+</LinearLayout>
