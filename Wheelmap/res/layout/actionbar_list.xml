@@ -3,7 +3,8 @@
 	<LinearLayout style="@style/ActionBarCompat">
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
-			    <View style="@style/TitleBarSpring" />
+	    <!-- dummy view forces action aligned right  -->
+	    <View style="@style/TitleBarSpring" />
 
         <ImageView style="@style/TitleBarSeparator" />
         <ImageView style="@style/TitleBarAction"
