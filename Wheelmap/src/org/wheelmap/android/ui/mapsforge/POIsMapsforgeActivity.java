@@ -12,6 +12,7 @@ import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.ui.mapsforge.MyMapView.MapViewTouchMove;
@@ -35,7 +36,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver, MapViewTouchMove {
+DetachableResultReceiver.Receiver, MapViewTouchMove {
 
 	// private final static String TAG = "mapsforge";
 	
@@ -54,14 +55,14 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
-	
+
 	private static final int ZOOMLEVEL_MIN = 16;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		System.gc();
-		
+
 		setContentView(R.layout.activity_mapsforge);
 		mMapView = (MyMapView) findViewById(R.id.map);
 
@@ -75,7 +76,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		// overlays
 		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, null);
 		runQuery();
-		
+
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay();
@@ -93,7 +94,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 							mMapController.setZoom(18); // Zoon 1 is world view
 							requestUpdate();
 							mMapView.getViewTreeObserver()
-									.removeGlobalOnLayoutListener(this);
+							.removeGlobalOnLayoutListener(this);
 						}
 					});
 		}
@@ -138,7 +139,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mLocationManager.register(mState.mReceiver, true);
 		runQuery();
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -152,14 +153,14 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		SupportManager.get().cleanReferences();
 		System.gc();
 	}
-	
+
 	private void runQuery() {
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
 				QueriesBuilderHelper.userSettingsFilter(getApplicationContext()), null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
-		
+
 		mPoisItemizedOverlay.setCursor( mCursor );
 	}
 
@@ -187,7 +188,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			Location location = (Location) resultData
-					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+			.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			GeoPoint geoPoint = calcGeoPoint(location);
 			if (!isCentered) {
 				mMapController.setCenter(geoPoint);
@@ -239,9 +240,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		GeoPoint center = mMapView.getMapCenter();
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
-						+ (lonSpan / 2),
+				+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
-						- (lonSpan / 2));
+				- (lonSpan / 2));
 		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX, boundingBox);
 	}
 
@@ -261,10 +262,11 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	}
 
-	public void onRefreshClick(View v) {
-		requestUpdate();
+	public void onInfoClick(View v) {
+		Intent intent = new Intent(this, InfoActivity.class);
+		startActivity(intent);
 	}
-	
+
 	@Override
 	public void onMapViewTouchMoveEnough() {
 		if ( mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
@@ -286,18 +288,18 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
-	
+
 	private void showErrorDialog( SyncServiceException e ) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.error_occurred);
 		builder.setIcon( android.R.drawable.ic_dialog_alert);
 		builder.setMessage( e.getRessourceString());
 		builder.setNeutralButton( R.string.quit, new DialogInterface.OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				finish();
-				
+
 			}
 		});
 		AlertDialog alert = builder.create();

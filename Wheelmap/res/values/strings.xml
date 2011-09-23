@@ -16,6 +16,8 @@
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Settings</string>
     <string name="title_pois_detail">Info</string>
+    <string name="title_pois_detail_edit">Edit the point of interest</string>
+    
     <string name="title_wheelchair_state">Wheelchair Settings</string>
     <string name="edit_poi">Edit</string>
     <string name="btn_list">List</string>
@@ -42,6 +44,7 @@
     <string name="ws_disabled_l2">Localities: most important localities are not accessible for wheelchair users</string>
     <string name="ws_unknown_title">Unknown Status</string>
     <string name="ws_unknown_l1">The status is unknown. Help us and mark this location.</string>
+    <string name="poi_property_name">Name</string>    
     <string name="poi_property_comment">Comment</string>
     <string name="poi_property_address">Address</string>
     <string name="poi_property_phone">Phone</string>
