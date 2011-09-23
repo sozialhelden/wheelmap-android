@@ -48,6 +48,8 @@
     <string name="poi_property_address">Address</string>
     <string name="poi_property_phone">Phone</string>
     <string name="poi_property_website">Website</string>
+    <string name="poi_property_position">Position</string>
+    
     <string name="settings_wheelchair_unknown_accesible">Unknown</string>
     <string name="poi_property_nodetype">Type</string>
     <string name="poi_property_category">Category</string>
