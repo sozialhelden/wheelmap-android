@@ -65,4 +65,8 @@
     <string name="poi_property_address">Adresse</string>
     <string name="title_wheelchairstate">Rollstuhl</string>
     <string name="quit">Quit</string>
+    <string name="pull_to_refresh_pull_label">Ziehen um zu laden...</string>
+    <string name="pull_to_refresh_refreshing_label">Lade...</string>
+    <string name="pull_to_refresh_release_label">Loslassen um zu laden</string>
+    <string name="pull_to_refresh_tap_label">Tap um zu laden</string>
 </resources>

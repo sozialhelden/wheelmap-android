@@ -38,7 +38,7 @@ import android.widget.TextView;
 public class POIsMapsforgeActivity extends MapActivity implements
 DetachableResultReceiver.Receiver, MapViewTouchMove {
 
-	// private final static String TAG = "mapsforge";
+	 private final static String TAG = "mapsforge";
 	
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
@@ -57,6 +57,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	private boolean isCentered;
 
 	private static final int ZOOMLEVEL_MIN = 16;
+	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +222,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
 		// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+		intent.putExtra( POIsListActivity.EXTRA_IS_RECREATED, false );
 		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(intent);
 		overridePendingTransition(0, 0);
@@ -235,8 +237,8 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	}
 
 	private void fillExtrasWithBoundingRect(Bundle bundle) {
-		int latSpan = mMapView.getLatitudeSpan();
-		int lonSpan = mMapView.getLongitudeSpan();
+		int latSpan = (int)(mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
+		int lonSpan = (int)(mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		GeoPoint center = mMapView.getMapCenter();
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()

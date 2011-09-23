@@ -17,7 +17,6 @@
     <string name="title_pois_settings">Settings</string>
     <string name="title_pois_detail">Info</string>
     <string name="title_pois_detail_edit">Edit the point of interest</string>
-    
     <string name="title_wheelchair_state">Wheelchair Settings</string>
     <string name="edit_poi">Edit</string>
     <string name="btn_list">List</string>
@@ -44,7 +43,7 @@
     <string name="ws_disabled_l2">Localities: most important localities are not accessible for wheelchair users</string>
     <string name="ws_unknown_title">Unknown Status</string>
     <string name="ws_unknown_l1">The status is unknown. Help us and mark this location.</string>
-    <string name="poi_property_name">Name</string>    
+    <string name="poi_property_name">Name</string>
     <string name="poi_property_comment">Comment</string>
     <string name="poi_property_address">Address</string>
     <string name="poi_property_phone">Phone</string>
@@ -80,4 +79,8 @@
     <string name="info_kartendaten_one">OpenStreetMap</string>
     <string name="title_wheelchairstate">Wheelchair</string>
     <string name="quit">Quit</string>
+    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
+    <string name="pull_to_refresh_release_label">Release to refresh...</string>
+    <string name="pull_to_refresh_refreshing_label">Loading...</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
 </resources>

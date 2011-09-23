@@ -32,27 +32,28 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 
 public class POIsListActivity extends ListActivity implements
-		DetachableResultReceiver.Receiver {
-
-	public static final int OPTION_SETTINGS = 0;
+		DetachableResultReceiver.Receiver, OnRefreshListener {
 
 	private final static String TAG = "poislist";
 	private MyLocationManager mLocationManager;
 	private Location mLocation, mLastQueryLocation;
-	private ProgressBar mProgressBar;
 
-	private final static double QUERY_DISTANCE_MIN = 0.15;
+	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
+	private final static double QUERY_AUTO_DISTANCE_MIN = 0.25;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
-	private final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
-
+	public final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
+	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
+	
 	private State mState;
 	private float mDistance;
+	private int mFirstVisiblePosition;
 
 	GoogleAnalyticsTracker tracker;
 
@@ -60,6 +61,7 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
 		tracker.startNewSession("UA-25843648-1", 20, this);
@@ -68,7 +70,6 @@ public class POIsListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_list);
 
-		mProgressBar = (ProgressBar) findViewById( R.id.progressbar );
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
 		// Attach event handlers
@@ -105,6 +106,8 @@ public class POIsListActivity extends ListActivity implements
 		mDistance = getDistanceFromPreferences();
 
 		getListView().setTextFilterEnabled(true);
+
+		((PullToRefreshListView) getListView()).setOnRefreshListener(this);
 	}
 
 	@Override
@@ -115,20 +118,18 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	@Override
-	protected void onRestart() {
-		super.onRestart();
-		setIsRecreated(false);
-	}
-
-	public void setIsRecreated(boolean recreated) {
-		mState.mIsRecreated = recreated;
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if (intent.getExtras() != null) {
+			isRecreated(intent.getExtras());
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		mLocationManager.register(mState.mReceiver, true);
-		runQuery(!mState.mIsRecreated);
+		runQueryOnCreation();
 	}
 
 	@Override
@@ -140,26 +141,49 @@ public class POIsListActivity extends ListActivity implements
 
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
-		boolean isRecreated;
-		if (state.containsKey(EXTRA_IS_RECREATED)) {
-			isRecreated = true;
-		} else
-			isRecreated = false;
-		setIsRecreated(isRecreated);
+		isRecreated(state);
+		mFirstVisiblePosition = state.getInt( EXTRA_FIRST_VISIBLE_POSITION, 0);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(EXTRA_IS_RECREATED, true);
-
+		saveListPosition();
+		outState.putInt( EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition );
 		super.onSaveInstanceState(outState);
 	}
 
+	private void isRecreated(Bundle state) {
+		boolean isRecreated;
+
+		if (!state.containsKey(EXTRA_IS_RECREATED))
+			isRecreated = false;
+		else
+			isRecreated = state.getBoolean(EXTRA_IS_RECREATED);
+
+		Log.d(TAG, "isRecreated? isRecreated = " + isRecreated);
+		setIsRecreated(isRecreated);
+	}
+
+	public void setIsRecreated(boolean recreated) {
+		Log.d(TAG, "setIsRecreated = " + recreated);
+		mState.mIsRecreated = recreated;
+	}
+
+	public void runQueryOnCreation() {
+		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
+
+		if (!mState.mIsRecreated)
+			((PullToRefreshListView) getListView()).prepareForRefresh();
+		runQuery(!mState.mIsRecreated);
+	}
+
 	public void runQuery(boolean forceReload) {
+		Log.d(TAG, "runQuery: forceReload = " + forceReload);
 		if (forceReload)
 			requestData();
-		setIsRecreated(true);
-		
+		// setIsRecreated(true);
+
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION,
 				QueriesBuilderHelper
@@ -167,10 +191,12 @@ public class POIsListActivity extends ListActivity implements
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
-		
+
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);
+
 		setListAdapter(adapter);
+		getListView().setSelection( mFirstVisiblePosition );
 
 	}
 
@@ -188,11 +214,12 @@ public class POIsListActivity extends ListActivity implements
 		return new POIsCursorWrapper(cursor, wgsLocation);
 	}
 
-	public float getDistanceFromPreferences() {
+	private float getDistanceFromPreferences() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 
-		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE, "0.5");
+		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE,
+				String.valueOf(QUERY_DISTANCE_DEFAULT));
 		return Float.valueOf(prefDist);
 	}
 
@@ -210,7 +237,8 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void onNewPOIClick(View v) {
-
+		saveListPosition();
+		
 		// create new POI and start editing
 		ContentValues cv = new ContentValues();
 		cv.put(Wheelmap.POIs.NAME, getString(R.string.new_default_name));
@@ -233,6 +261,15 @@ public class POIsListActivity extends ListActivity implements
 		startActivity(i);
 
 	}
+	
+	private void saveListPosition() {
+		mFirstVisiblePosition = getListView().getFirstVisiblePosition();
+	}
+
+	@Override
+	public void onRefresh() {
+		runQuery(true);
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -243,6 +280,7 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+		saveListPosition();
 		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
 		long poiId = POIHelper.getId(cursor);
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
@@ -251,10 +289,8 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	private void updateRefreshStatus() {
-		if ( mState.mSyncing )
-			mProgressBar.setVisibility(View.VISIBLE );
-		else
-			mProgressBar.setVisibility(View.GONE);
+		if (!mState.mSyncing)
+			((PullToRefreshListView) getListView()).onRefreshComplete();
 	}
 
 	private boolean isFarerThanDeltaDistance(Location location) {
@@ -268,7 +304,7 @@ public class POIsListActivity extends ListActivity implements
 				mLastQueryLocation.getLatitude());
 
 		if (GeocoordinatesMath.calculateDistance(lastQueryCoordinates,
-				crrCoordinates) >= QUERY_DISTANCE_MIN)
+				crrCoordinates) >= QUERY_AUTO_DISTANCE_MIN)
 			return true;
 		else
 			return false;
@@ -293,7 +329,7 @@ public class POIsListActivity extends ListActivity implements
 			updateRefreshStatus();
 			final SyncServiceException e = resultData
 					.getParcelable(SyncService.EXTRA_ERROR);
-			showErrorDialog(e);		
+			showErrorDialog(e);
 			break;
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
@@ -323,10 +359,6 @@ public class POIsListActivity extends ListActivity implements
 		}
 	}
 
-	public void onRefreshClick(View v) {
-		requestData();
-	}
-
 	private void requestData() {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				POIsListActivity.this, SyncService.class);
@@ -338,7 +370,7 @@ public class POIsListActivity extends ListActivity implements
 		mLastQueryLocation = mLocation;
 	}
 
-	private void showErrorDialog(SyncServiceException e) {		
+	private void showErrorDialog(SyncServiceException e) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.error_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
@@ -353,6 +385,5 @@ public class POIsListActivity extends ListActivity implements
 				});
 		AlertDialog alert = builder.create();
 		alert.show();
-		mProgressBar.setVisibility( View.GONE );
 	}
 }
