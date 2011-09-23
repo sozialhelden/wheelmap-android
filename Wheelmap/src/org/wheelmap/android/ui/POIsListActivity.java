@@ -282,6 +282,9 @@ public class POIsListActivity extends ListActivity implements
 		super.onListItemClick(l, v, position, id);
 		saveListPosition();
 		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
+		if ( cursor == null )
+			return;
+		
 		long poiId = POIHelper.getId(cursor);
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);

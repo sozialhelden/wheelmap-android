@@ -28,6 +28,7 @@
             android:name="org.wheelmap.android.ui.POIsListActivity"
             android:theme="@style/Theme.IOSched" 
             android:label="@string/title_pois_list"
+            android:launchMode="singleTask"
             />
             
             <!-- android:launchMode="singleTask" -->            

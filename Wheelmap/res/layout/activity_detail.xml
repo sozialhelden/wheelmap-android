@@ -10,7 +10,7 @@
 
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_edit"
-			android:visibility="gone"
+			android:visibility="gone" android:clickable="false"
 			android:src="@android:drawable/ic_menu_edit"
 			android:onClick="onItemEdit" />
 	</LinearLayout>
