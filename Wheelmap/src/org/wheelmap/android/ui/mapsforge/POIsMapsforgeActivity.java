@@ -29,7 +29,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -38,7 +37,7 @@ import android.widget.TextView;
 public class POIsMapsforgeActivity extends MapActivity implements
 		DetachableResultReceiver.Receiver, MapViewTouchMove {
 
-	private final static String TAG = "mapsforge";
+	// private final static String TAG = "mapsforge";
 	
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
@@ -268,7 +267,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	
 	@Override
 	public void onMapViewTouchMoveEnough() {
-		Log.d( "poislist", "Zoomlevel = " + mMapView.getZoomLevel());
 		if ( mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
 			requestUpdate();
 		}

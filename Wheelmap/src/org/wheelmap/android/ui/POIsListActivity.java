@@ -156,11 +156,9 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void runQuery(boolean forceReload) {
-		long startTime = System.currentTimeMillis();
 		if (forceReload)
 			requestData();
 		setIsRecreated(true);
-		
 		
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION,
@@ -174,8 +172,6 @@ public class POIsListActivity extends ListActivity implements
 				wrappingCursor);
 		setListAdapter(adapter);
 
-		long duration = System.currentTimeMillis() - startTime;
-		Log.d(TAG, "runQuery duration = " + duration + "ms");
 	}
 
 	public String[] createWhereValues() {

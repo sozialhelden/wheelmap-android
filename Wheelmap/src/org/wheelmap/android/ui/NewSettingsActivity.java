@@ -19,13 +19,15 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
-public class NewSettingsActivity extends ListActivity {
+public class NewSettingsActivity extends ListActivity implements OnLongClickListener {
 
-	private final static String TAG = "category";
+	private final static String TAG = "settings";
 	private Uri mUri = Support.CategoriesContent.CONTENT_URI;
 	private SharedPreferences mPrefs;
 	private LayoutInflater mInflater;
@@ -38,6 +40,8 @@ public class NewSettingsActivity extends ListActivity {
 		mPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ImageView titleLogo = (ImageView) findViewById( R.id.title_logo );
+		titleLogo.setOnLongClickListener( this );
 		
 		Cursor cursor = managedQuery(mUri, Support.CategoriesContent.PROJECTION,
 				null, null, Support.CategoriesContent.DEFAULT_SORT_ORDER );
@@ -54,6 +58,7 @@ public class NewSettingsActivity extends ListActivity {
 		adapter.addAdapter( adapterCatList );
 		
 		this.setListAdapter( adapter );
+		
 	}
 	
 	private View createWheelStateTitle() {
@@ -71,7 +76,7 @@ public class NewSettingsActivity extends ListActivity {
 		LinearLayout layout = (LinearLayout) mInflater.inflate( R.layout.settings_black_item, null);
 		return layout;
 	}
-
+		
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -83,6 +88,12 @@ public class NewSettingsActivity extends ListActivity {
 		} else if ( item instanceof Cursor ) {
 			clickCategorieItem( (Cursor) item );
 		}
+	}
+	
+	@Override
+	public boolean onLongClick(View v) {
+		Log.d( TAG, "long click test" );
+		return true;
 	}
 	
 	private void clickWheelStateItem( WheelchairStateItem item, MergeAdapter adapter ) {
