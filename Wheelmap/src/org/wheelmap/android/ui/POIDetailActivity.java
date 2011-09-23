@@ -56,7 +56,6 @@ public class POIDetailActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
 
-		//iconImage = (ImageView) findViewById(R.id.icon);
 		nameText = (TextView) findViewById(R.id.title_name);
 		categoryText = (TextView) findViewById(R.id.title_category);
 		nodetypeText = (TextView) findViewById(R.id.nodetype);
