@@ -12,7 +12,7 @@
     <string name="description_new">New</string>
     <string name="new_default_name">New POI</string>
     <string name="title_search">Search</string>
-    <string name="title_pois_list">Wheelmap</string>
+    <string name="title_pois_list">List</string>
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Filter Settings</string>
     <string name="title_pois_detail">Info</string>
@@ -20,11 +20,10 @@
     <string name="title_wheelchair_state">Wheelchair Settings</string>
     <string name="edit_poi">Edit</string>
     <string name="btn_list">List</string>
+    <string name="no_pois">no places found</string>
+    
+    
     <string name="btn_map">Map</string>
-    <!-- DEBUG MH     -->
-    <!-- deploy 
-    <string name="mapskey">02BU05u7kh4oKs1RpT2WHfyuQdb6C0MZnixRF2Q</string>
-    -->
     <string name="btn_delete">Delete</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <string name="spinner_description_distance_km">Distance in km</string>

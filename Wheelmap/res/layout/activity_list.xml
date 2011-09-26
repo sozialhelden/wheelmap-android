@@ -3,7 +3,6 @@
 	android:id="@+id/home_root" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 	<include layout="@layout/actionbar_list" />
-
 <!-- 	<ProgressBar android:id="@+id/progressbar" -->
 <!-- 		android:indeterminate="true" android:layout_width="wrap_content" -->
 <!-- 		android:layout_height="wrap_content" android:layout_gravity="center_vertical|center_horizontal" -->
@@ -17,6 +16,13 @@
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         />
+	 <ViewStub
+            android:id="@android:id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout="@layout/empty" />
+ 
 </LinearLayout>
 
 
