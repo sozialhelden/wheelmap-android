@@ -102,6 +102,11 @@ public class SupportManager {
 	public static SupportManager get() {
 		return INSTANCE;
 	}
+	
+	@Override
+	protected void finalize() {
+		Log.d(TAG, "SupportManager killed" );
+	}
 
 	public static SupportManager initOnce(Context ctx,
 			DetachableResultReceiver receiver) {
@@ -397,12 +402,12 @@ public class SupportManager {
 	}
 
 	public void cleanReferences() {
-		Log.d(TAG, "clearing callbacks for mDefaultNodeType ");
+		// Log.d(TAG, "clearing callbacks for mDefaultNodeType ");
 		cleanReferences(mDefaultNodeType.stateDrawables);
 
 		for (int nodeTypeId : mNodeTypeLookup.keySet()) {
 			NodeType nodeType = mNodeTypeLookup.get(nodeTypeId);
-			Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
+			// Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
 			cleanReferences(nodeType.stateDrawables);
 		}
 	}

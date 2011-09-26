@@ -14,7 +14,7 @@
     <string name="title_search">Search</string>
     <string name="title_pois_list">List</string>
     <string name="title_pois_map">Map</string>
-    <string name="title_pois_settings">Settings</string>
+    <string name="title_pois_settings">Filter Settings</string>
     <string name="title_pois_detail">Info</string>
     <string name="title_pois_detail_edit">Edit the point of interest</string>
     <string name="title_wheelchair_state">Wheelchair Settings</string>
@@ -49,7 +49,6 @@
     <string name="poi_property_phone">Phone</string>
     <string name="poi_property_website">Website</string>
     <string name="poi_property_position">Position</string>
-    
     <string name="settings_wheelchair_unknown_accesible">Unknown</string>
     <string name="poi_property_nodetype">Type</string>
     <string name="poi_property_category">Category</string>
@@ -60,7 +59,6 @@
     <string name="btn_save">Save</string>
     <string name="title_category_select">Select Categories to display</string>
     <string name="settings_category_filter">Category Filter</string>
-    <string name="settings_category_selection">Category Selection</string>
     <string name="settings_wheelchair_no_accessible">No</string>
     <string name="settings_wheelchair_limited_accessible">Limited</string>
     <string name="settings_wheelchair_full_accessible">Yes</string>
@@ -73,7 +71,7 @@
     <string name="info_webdevelopment">Web Development:</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakal</string>
-    <string name="error_network_failure">Network failure. Please check your internet connection or try again later.</string>
+    <string name="error_network_failure">Network unstable. Please check your internet connection or try again later.</string>
     <string name="error_internal_error">An unexpected internal error occurred. Please restart the app.</string>
     <string name="error_authorization_error">No proper authorization for editing available.</string>
     <string name="error_occurred">An error occurred</string>
@@ -83,6 +81,8 @@
     <string name="quit">Quit</string>
     <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
     <string name="pull_to_refresh_release_label">Release to refresh...</string>
-    <string name="pull_to_refresh_refreshing_label">Loading...</string>
+    <string name="pull_to_refresh_refreshing_label">Refreshing...</string>
     <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    <string name="okay">Okay</string>
+    <string name="error_network_title">Network issue</string>
 </resources>

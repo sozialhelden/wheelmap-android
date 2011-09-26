@@ -28,6 +28,10 @@ public class SyncServiceException extends RuntimeException implements Parcelable
 		this.id = id;
 	}
 	
+	public int getErrorCode() {
+		return this.id;
+	}
+	
 	public int getRessourceString() {
 		return errorString[id];
 	}

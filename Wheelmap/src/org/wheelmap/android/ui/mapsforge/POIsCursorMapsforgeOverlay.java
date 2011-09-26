@@ -64,7 +64,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 				return null;
 			
 			int count = mCursor.getCount();
-			if (count == 0)
+			if (count == 0 || i >= count)
 				return null;
 
 			mCursor.moveToPosition(i);

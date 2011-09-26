@@ -8,24 +8,32 @@ import org.wheelmap.android.model.WheelchairStateAdapter;
 import org.wheelmap.android.model.WheelchairStateAdapter.WheelchairStateItem;
 
 import android.app.ListActivity;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
-public class NewSettingsActivity extends ListActivity implements OnLongClickListener {
+public class NewSettingsActivity extends ListActivity implements OnClickListener {
 
 	private final static String TAG = "settings";
 	private Uri mUri = Support.CategoriesContent.CONTENT_URI;
@@ -41,7 +49,7 @@ public class NewSettingsActivity extends ListActivity implements OnLongClickList
 				.getDefaultSharedPreferences(this);
 		mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ImageView titleLogo = (ImageView) findViewById( R.id.title_logo );
-		titleLogo.setOnLongClickListener( this );
+		titleLogo.setOnClickListener( this );
 		
 		Cursor cursor = managedQuery(mUri, Support.CategoriesContent.PROJECTION,
 				null, null, Support.CategoriesContent.DEFAULT_SORT_ORDER );
@@ -76,6 +84,12 @@ public class NewSettingsActivity extends ListActivity implements OnLongClickList
 		LinearLayout layout = (LinearLayout) mInflater.inflate( R.layout.settings_black_item, null);
 		return layout;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		finish();
+		return true;
+	}
 		
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -91,9 +105,17 @@ public class NewSettingsActivity extends ListActivity implements OnLongClickList
 	}
 	
 	@Override
-	public boolean onLongClick(View v) {
-		Log.d( TAG, "long click test" );
-		return true;
+	public void onClick(View v) {
+		String packageInfo = "de.studiorutton.android.offlinemap";
+		try {
+			PackageInfo info = getApplicationContext().getPackageManager().getPackageInfo( packageInfo, PackageManager.GET_ACTIVITIES );
+		} catch (NameNotFoundException e) {
+			return;
+		}
+	
+		Intent intent = new Intent();
+		intent.setComponent(new ComponentName( packageInfo, packageInfo + ".ui.MapFileDownloadActivity"));
+		startActivity(intent);
 	}
 	
 	private void clickWheelStateItem( WheelchairStateItem item, MergeAdapter adapter ) {

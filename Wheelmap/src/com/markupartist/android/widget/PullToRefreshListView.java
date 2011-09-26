@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import org.wheelmap.android.R;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private static final int PULL_TO_REFRESH = 2;
     private static final int RELEASE_TO_REFRESH = 3;
     private static final int REFRESHING = 4;
+    
+    private static final String EXTRA_REFRESH_STATE = "com.markupartist.PullToRefresh";
 
     private static final String TAG = "PullToRefreshListView";
 
@@ -107,13 +111,34 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         mRefreshOriginalTopPadding = mRefreshView.getPaddingTop();
 
         mRefreshState = TAP_TO_REFRESH;
-
+        
         addHeaderView(mRefreshView);
 
         super.setOnScrollListener(this);
 
         measureView(mRefreshView);
         mRefreshViewHeight = mRefreshView.getMeasuredHeight();
+    }
+    
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+            Bundle bundle = (Bundle) state;
+            mRefreshState = bundle.getInt( EXTRA_REFRESH_STATE );
+            Log.d( "startup", "restore mRefreshState = " + mRefreshState );
+
+            super.onRestoreInstanceState(bundle.getParcelable("superState"));
+            
+            
+    }
+
+    @Override
+	public Parcelable onSaveInstanceState() {
+            Parcelable superState = super.onSaveInstanceState();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("superState", superState);
+            bundle.putInt( EXTRA_REFRESH_STATE, mRefreshState );
+            Log.d( "startup", "save instance" );
+            return bundle;
     }
 
     @Override

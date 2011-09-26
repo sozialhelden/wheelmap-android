@@ -15,7 +15,7 @@
     <string name="ws_unknown_l1">Der Status ist unbekannt. Hilf mit und markiere diesen Ort.</string>
     <string name="title_wheelchair_state">Rollstuhl Einstellungen</string>
     <string name="title_please_wait">Bitte warten</string>
-    <string name="title_pois_settings">Einstellungen</string>
+    <string name="title_pois_settings">Filter-Einstellungen</string>
     <string name="spinner_description_distance_km">Entfernung in km</string>
     <string name="settings_wheelchair_full_accessible">Ja</string>
     <string name="settings_wheelchair_no_accessible">Nein</string>
@@ -53,20 +53,20 @@
     <string name="info_icons">Icons:</string>
     <string name="description_share">Verteilen</string>
     <string name="error_occurred">Ein Fehler ist aufgetreten</string>
-    <string name="error_network_failure">Netzwerk Fehler. Bitte überprüfen sie die Internet-Verbindung oder versuchen sie es später nocheinmal.</string>
+    <string name="error_network_failure">Netzwerk instabil. Bitte überprüfen sie die Internet-Verbindung oder versuchen sie es später nocheinmal.</string>
     <string name="settings_category_filter">Kategorien Filter</string>
     <string name="poi_property_nodetype">Typ</string>
     <string name="poi_property_comment">Kommentar</string>
     <string name="poi_property_category">Kategorie</string>
-    <string name="settings_category_selection">Kategorien Auswahl</string>
     <string name="nodetype_unknown">Typ Unbekannt</string>
     <string name="poi_property_phone">Telefon</string>
     <string name="poi_property_website">Webseite</string>
     <string name="poi_property_address">Adresse</string>
     <string name="title_wheelchairstate">Rollstuhl</string>
     <string name="quit">Quit</string>
-    <string name="pull_to_refresh_pull_label">Ziehen um zu laden...</string>
-    <string name="pull_to_refresh_refreshing_label">Lade...</string>
-    <string name="pull_to_refresh_release_label">Loslassen um zu laden</string>
-    <string name="pull_to_refresh_tap_label">Tap um zu laden</string>
+    <string name="pull_to_refresh_pull_label">Ziehen aktualisiert...</string>
+    <string name="pull_to_refresh_refreshing_label">Aktualisiere...</string>
+    <string name="pull_to_refresh_release_label">Loslassen aktualisiert</string>
+    <string name="pull_to_refresh_tap_label">Berühren aktualisiert</string>
+    <string name="error_network_title">Netzwerk Problem</string>
 </resources>

@@ -3,10 +3,13 @@
 	<LinearLayout style="@style/ActionBarCompat">
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
-
+	<ProgressBar android:id="@+id/progressbar_map"
+			android:layout_width="18dip" android:layout_height="18dip"
+			android:indeterminate="true"  android:layout_gravity="center_vertical"
+			android:layout_margin="8dip"/>
 		<!-- dummy view forces action aligned right -->
 		<View style="@style/TitleBarSpring" />
-
+        
         <ImageView style="@style/TitleBarSeparator" />
         <ImageView style="@style/TitleBarAction"
             android:id="@+id/btn_title_refresh"

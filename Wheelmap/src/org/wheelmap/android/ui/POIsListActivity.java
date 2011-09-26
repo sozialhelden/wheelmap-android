@@ -54,6 +54,7 @@ public class POIsListActivity extends ListActivity implements
 	private State mState;
 	private float mDistance;
 	private int mFirstVisiblePosition;
+	private boolean isInForeground;
 
 	GoogleAnalyticsTracker tracker;
 
@@ -111,13 +112,6 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		mLocationManager.release(mState.mReceiver);
-		setIsRecreated(true);
-	}
-
-	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		if (intent.getExtras() != null) {
@@ -128,8 +122,19 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isInForeground = true;
+		Log.d( TAG, "onResume isInForeground = " + isInForeground);
 		mLocationManager.register(mState.mReceiver, true);
 		runQueryOnCreation();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		isInForeground = false;
+		Log.d( TAG, "onPause isInForeground = " + isInForeground);
+		mLocationManager.release(mState.mReceiver);
+		setIsRecreated(true);
 	}
 
 	@Override
@@ -180,7 +185,7 @@ public class POIsListActivity extends ListActivity implements
 
 	public void runQuery(boolean forceReload) {
 		Log.d(TAG, "runQuery: forceReload = " + forceReload);
-		if (forceReload)
+		if (forceReload) 
 			requestData();
 		// setIsRecreated(true);
 
@@ -315,6 +320,7 @@ public class POIsListActivity extends ListActivity implements
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.d( TAG, "onReceiveResult in list resultCode = " + resultCode );
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			mState.mSyncing = true;
@@ -339,6 +345,7 @@ public class POIsListActivity extends ListActivity implements
 			mLocation = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			if (isFarerThanDeltaDistance(mLocation)) {
+				((PullToRefreshListView) getListView()).prepareForRefresh();
 				runQuery(true);
 			}
 			break;
@@ -374,16 +381,22 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	private void showErrorDialog(SyncServiceException e) {
+		if (!isInForeground)
+			return;
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.error_occurred);
+		Log.d( TAG, "showErrorDialog: e.getCode = " + e.getErrorCode());
+		if ( e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
+			builder.setTitle( R.string.error_network_title );
+		else
+			builder.setTitle(R.string.error_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		builder.setMessage(e.getRessourceString());
-		builder.setNeutralButton(R.string.quit,
+		builder.setNeutralButton(R.string.okay,
 				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						POIsListActivity.this.finish();
 					}
 				});
 		AlertDialog alert = builder.create();

@@ -30,16 +30,18 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-DetachableResultReceiver.Receiver, MapViewTouchMove {
+		DetachableResultReceiver.Receiver, MapViewTouchMove {
 
-	 private final static String TAG = "mapsforge";
-	
+	private final static String TAG = "mapsforge";
+
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
 
 	/** State held between configuration changes. */
@@ -52,12 +54,15 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 
+	private ProgressBar mProgressBar;
+
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
 
 	private static final int ZOOMLEVEL_MIN = 16;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
+	private boolean isInForeground;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 
 		setContentView(R.layout.activity_mapsforge);
 		mMapView = (MyMapView) findViewById(R.id.map);
+		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
@@ -82,7 +88,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mMapView.getOverlays().add(mCurrLocationOverlay);
-		mMapView.registerListener( this );
+		mMapView.registerListener(this);
 		isCentered = false;
 
 		if (getIntent() != null
@@ -95,7 +101,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 							mMapController.setZoom(18); // Zoon 1 is world view
 							requestUpdate();
 							mMapView.getViewTreeObserver()
-							.removeGlobalOnLayoutListener(this);
+									.removeGlobalOnLayoutListener(this);
 						}
 					});
 		}
@@ -136,6 +142,8 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isInForeground = true;
+		Log.d(TAG, "onResume isInForeground = " + isInForeground);
 		mCursor.requery();
 		mLocationManager.register(mState.mReceiver, true);
 		runQuery();
@@ -144,6 +152,8 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	@Override
 	public void onPause() {
 		super.onPause();
+		isInForeground = false;
+		Log.d(TAG, "onPause isInForeground = " + isInForeground);
 		mCursor.deactivate();
 		mLocationManager.release(mState.mReceiver);
 	}
@@ -158,38 +168,45 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	private void runQuery() {
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
-		mCursor = getContentResolver().query(uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(getApplicationContext()), null,
+		mCursor = getContentResolver().query(
+				uri,
+				Wheelmap.POIs.PROJECTION,
+				QueriesBuilderHelper
+						.userSettingsFilter(getApplicationContext()), null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
-		mPoisItemizedOverlay.setCursor( mCursor );
+		mPoisItemizedOverlay.setCursor(mCursor);
 	}
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.d(TAG, "onReceiveResult in mapsforge resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			mState.mSyncing = true;
-			updateRefreshStatus();
+			if (isInForeground)
+				updateRefreshStatus();
 			break;
 		}
 		case SyncService.STATUS_FINISHED: {
 			mState.mSyncing = false;
-			updateRefreshStatus();
-			mMapView.invalidate();
+			if (isInForeground)
+				updateRefreshStatus();
+			// mMapView.invalidate();
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
 			// Error happened down in SyncService, show as toast.
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			SyncServiceException e = resultData.getParcelable( SyncService.EXTRA_ERROR );
-			showErrorDialog( e );
+			SyncServiceException e = resultData
+					.getParcelable(SyncService.EXTRA_ERROR);
+			showErrorDialog(e);
 			break;
 		}
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			Location location = (Location) resultData
-			.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			GeoPoint geoPoint = calcGeoPoint(location);
 			if (!isCentered) {
 				mMapController.setCenter(geoPoint);
@@ -211,6 +228,10 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	}
 
 	private void updateRefreshStatus() {
+		if (mState.mSyncing)
+			mProgressBar.setVisibility(View.VISIBLE);
+		else
+			mProgressBar.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -222,8 +243,9 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
 		// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
-		intent.putExtra( POIsListActivity.EXTRA_IS_RECREATED, false );
-		intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+		intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(intent);
 		overridePendingTransition(0, 0);
 
@@ -237,14 +259,14 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 	}
 
 	private void fillExtrasWithBoundingRect(Bundle bundle) {
-		int latSpan = (int)(mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
-		int lonSpan = (int)(mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
+		int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
+		int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		GeoPoint center = mMapView.getMapCenter();
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
-				+ (lonSpan / 2),
+						+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
-				- (lonSpan / 2));
+						- (lonSpan / 2));
 		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX, boundingBox);
 	}
 
@@ -271,7 +293,7 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 
 	@Override
 	public void onMapViewTouchMoveEnough() {
-		if ( mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
+		if (mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
 			requestUpdate();
 		}
 	}
@@ -291,19 +313,25 @@ DetachableResultReceiver.Receiver, MapViewTouchMove {
 		}
 	}
 
-	private void showErrorDialog( SyncServiceException e ) {
+	private void showErrorDialog(SyncServiceException e) {
+		if (!isInForeground)
+			return;
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.error_occurred);
-		builder.setIcon( android.R.drawable.ic_dialog_alert);
-		builder.setMessage( e.getRessourceString());
-		builder.setNeutralButton( R.string.quit, new DialogInterface.OnClickListener() {
+		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
+			builder.setTitle(R.string.error_network_title);
+		else
+			builder.setTitle(R.string.error_occurred);
+		builder.setIcon(android.R.drawable.ic_dialog_alert);
+		builder.setMessage(e.getRessourceString());
+		builder.setNeutralButton(R.string.okay,
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				finish();
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
 
-			}
-		});
+					}
+				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}

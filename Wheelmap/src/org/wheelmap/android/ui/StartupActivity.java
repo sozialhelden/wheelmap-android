@@ -1,6 +1,7 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -54,6 +55,7 @@ public class StartupActivity extends Activity implements
 
 		mSupportManager = SupportManager.initOnce(getApplicationContext(),
 				mState.mReceiver);
+		((WheelmapApp)getApplication()).setSupportManager( mSupportManager );
 	}
 
 	@Override
@@ -134,7 +136,10 @@ public class StartupActivity extends Activity implements
 	private void showErrorDialog(SyncServiceException e) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.error_occurred);
+		if ( e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
+			builder.setTitle( R.string.error_network_title );
+		else
+			builder.setTitle(R.string.error_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		builder.setMessage(e.getRessourceString());
 		builder.setPositiveButton(R.string.quit,

@@ -32,8 +32,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
-	public NodesExecutor( ContentResolver resolver,
-			Bundle bundle) {
+	public NodesExecutor(ContentResolver resolver, Bundle bundle) {
 		super(resolver, bundle, Nodes.class);
 	}
 
@@ -66,7 +65,6 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		} else if (getBundle().containsKey(SyncService.EXTRA_NODETYPE)) {
 			mNodeType = getBundle().getInt(SyncService.EXTRA_NODETYPE);
 		}
-		deleteRetrievedData();
 	}
 
 	@Override
@@ -86,16 +84,18 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
 				mBoundingBox);
-
+		
 		clearTempStore();
 		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
-
+				
 		Log.d(TAG, "remote sync took "
 				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
 	public void prepareDatabase() {
+		deleteRetrievedData();
+
 		long insertStart = System.currentTimeMillis();
 		for (Nodes nodes : getTempStore()) {
 			bulkInsert(nodes);

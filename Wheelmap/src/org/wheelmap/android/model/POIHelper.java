@@ -13,6 +13,7 @@ public class POIHelper {
 		String name = c.getString(c.getColumnIndexOrThrow(Wheelmap.POIsColumns.NAME));
 		if ( name == null)
 			name = "";
+		name = name.replace( "&#38;", "&" );
 		
 		return name;
 	}
