@@ -36,15 +36,18 @@
     <TextView android:id="@+id/list_item_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignBaseline="@+id/list_item_place_name"
+        android:layout_alignBaseline="@+id/list_item_category"
         android:layout_marginRight="8dip"
-        android:gravity="right"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="bold"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="?android:attr/textColorSecondary"
         android:singleLine="true"
+        android:layout_toLeftOf="@+id/list_item_arrow" 
     />
+    <ImageView android:id="@+id/list_item_arrow" android:layout_width="wrap_content"
+    android:layout_alignParentRight="true"
+                android:gravity="right"
+      		android:layout_height="fill_parent" android:src="@drawable/arrow">
+	</ImageView>
     
 </RelativeLayout>
 
