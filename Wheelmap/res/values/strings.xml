@@ -12,7 +12,7 @@
     <string name="description_new">New</string>
     <string name="new_default_name">New POI</string>
     <string name="title_search">Search</string>
-    <string name="title_pois_list">List</string>
+    <string name="title_pois_list">Wheelmap</string>
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Filter Settings</string>
     <string name="title_pois_detail">Info</string>
