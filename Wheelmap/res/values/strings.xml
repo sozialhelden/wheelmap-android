@@ -2,16 +2,11 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
-    <string name="description_search">Search</string>
     <string name="description_map">Map</string>
     <string name="description_filter">Filter</string>
-    <string name="description_share">Share</string>
-    <string name="description_export">Export</string>
     <string name="description_gps">Current location</string>
     <string name="description_edit">Edit</string>
-    <string name="description_new">New</string>
     <string name="new_default_name">New POI</string>
-    <string name="title_search">Search</string>
     <string name="title_pois_list">List</string>
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Filter Settings</string>
@@ -21,13 +16,7 @@
     <string name="edit_poi">Edit</string>
     <string name="btn_list">List</string>
     <string name="no_pois">no places found</string>
-    
-    
-    <string name="btn_map">Map</string>
-    <string name="btn_delete">Delete</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
-    <string name="spinner_description_distance_km">Distance in km</string>
-    <string name="spinner_description_distance_miles">Distance in miles</string>
     <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
     <string name="ws_enabled_title">Wheelchair accessible</string>
     <string name="ws_enabled_l1">Entrance: the entrance step is not higher than 7 cm</string>
@@ -54,8 +43,6 @@
     <string name="title_please_wait">Please wait</string>
     <string name="category_unknown">Category Unknown</string>
     <string name="nodetype_unknown">Type Unknown</string>
-    <string name="btn_cancel">Cancel</string>
-    <string name="btn_save">Save</string>
     <string name="title_category_select">Select Categories to display</string>
     <string name="settings_category_filter">Category Filter</string>
     <string name="settings_wheelchair_no_accessible">No</string>
@@ -77,7 +64,6 @@
     <string name="info_webdevelopment_one">Christoph Bünte</string>
     <string name="info_kartendaten_one">OpenStreetMap</string>
     <string name="title_wheelchairstate">Wheelchair</string>
-    <string name="quit">Quit</string>
     <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
     <string name="pull_to_refresh_release_label">Release to refresh...</string>
     <string name="pull_to_refresh_refreshing_label">Refreshing...</string>
