@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -294,6 +295,8 @@ public class POIDetailActivity extends MapActivity {
 		
 		@Override
 		public boolean onTap(int index) {
+			finish();
+			
 			int lat = item.getPoint().getLatitudeE6();
 			int lon = item.getPoint().getLongitudeE6();
 						

@@ -34,24 +34,24 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		mContext = context;
 		mCursor = cursor;
 
-		if ( mCursor != null)
+		if (mCursor != null)
 			mCursor.registerContentObserver(new ChangeObserver());
 		populate();
 	}
-	
-	public void setCursor( Cursor cursor ) {
-		if ( cursor == null )
+
+	public void setCursor(Cursor cursor) {
+		if (cursor == null)
 			return;
-		
-			mCursor = cursor;
-			mCursor.registerContentObserver(new ChangeObserver());
-			populate();
+
+		mCursor = cursor;
+		mCursor.registerContentObserver(new ChangeObserver());
+		populate();
 	}
 
 	@Override
 	public int size() {
 		synchronized (mCursor) {
-			if ( mCursor == null )
+			if (mCursor == null)
 				return 0;
 			return mCursor.getCount();
 		}
@@ -60,28 +60,29 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected OverlayItem createItem(int i) {
 		synchronized (mCursor) {
-			if ( mCursor == null )
+			if (mCursor == null)
 				return null;
-			
+
 			int count = mCursor.getCount();
 			if (count == 0 || i >= count)
 				return null;
 
 			mCursor.moveToPosition(i);
 			String name = POIHelper.getName(mCursor);
-			WheelchairState state = POIHelper.getWheelchair( mCursor );
-			int lat = POIHelper.getLatitudeAsInt( mCursor );
-			int lng = POIHelper.getLongitudeAsInt( mCursor );
-			int nodeTypeId = POIHelper.getNodeTypeId( mCursor );
+			WheelchairState state = POIHelper.getWheelchair(mCursor);
+			int lat = POIHelper.getLatitudeAsInt(mCursor);
+			int lng = POIHelper.getLongitudeAsInt(mCursor);
+			int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
 			Drawable marker = null;
-			if ( nodeTypeId != 0 )
-				marker = SupportManager.get().lookupNodeType( nodeTypeId ).stateDrawables.get( state );
+			if (nodeTypeId != 0)
+				marker = SupportManager.get().lookupNodeType(nodeTypeId).stateDrawables
+						.get(state);
 
 			OverlayItem item = new OverlayItem();
-			item.setTitle( name );
-			item.setSnippet( name );
-			item.setPoint( new GeoPoint(lat, lng));
-			item.setMarker( marker );
+			item.setTitle(name);
+			item.setSnippet(name);
+			item.setPoint(new GeoPoint(lat, lng));
+			item.setMarker(marker);
 			return item;
 		}
 	}
@@ -109,15 +110,16 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onTap(int index) {
 		mCursor.moveToPosition(index);
-		long poiId = POIHelper.getId( mCursor );
-		
+		long poiId = POIHelper.getId(mCursor);
+		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
+
 		Intent i = new Intent(mContext, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
-		mContext.startActivity( i );
+		mContext.startActivity(i);
 		return true;
 	}
 
@@ -126,18 +128,20 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		mCursor.moveToPosition(index);
 		int idColumn = mCursor.getColumnIndex(Wheelmap.POIs._ID);
 		int poiId = mCursor.getInt(idColumn);
-		
+
 		Log.d(TAG, "onTap: index = " + index + " id = " + poiId);
 
 		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI,
-				String.valueOf( poiId ));
+				String.valueOf(poiId));
 
 		// Then query for this specific record:
 		Cursor cur = mContext.getContentResolver().query(poiUri, null, null,
 				null, null);
 		if (cur.moveToFirst()) {
-			Log.d(TAG, Integer.toBinaryString(poiId) + " "
-					+ POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur));
+			Log.d(TAG,
+					Integer.toBinaryString(poiId) + " "
+							+ POIHelper.getName(cur) + ' '
+							+ POIHelper.getAddress(cur));
 
 			Toast.makeText(mContext,
 					POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur),

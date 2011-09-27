@@ -62,7 +62,7 @@ public class SyncService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d(TAG, "onHandleIntent(intent=" + intent.getIntExtra( EXTRA_WHAT, -1 ) + ")");
+//		Log.d(TAG, "onHandleIntent(intent=" + intent.getIntExtra( EXTRA_WHAT, -1 ) + ")");
 
 		final ResultReceiver receiver = intent
 				.getParcelableExtra(EXTRA_STATUS_RECEIVER);
@@ -113,7 +113,7 @@ public class SyncService extends IntentService {
 			}
 		}
 		
-		Log.d(TAG, "sync finished");
+//		Log.d(TAG, "sync finished");
 		if (receiver != null) {
 			Log.d( TAG, "sending STATUS_FINISHED" );
 			final Bundle responsebundle = new Bundle();

@@ -100,6 +100,10 @@ public class SupportManager {
 	}
 
 	public static SupportManager get() {
+		if ( INSTANCE == null ) {
+			Log.d( TAG, "supportmanager instance == null. How is that?" );
+		}
+		
 		return INSTANCE;
 	}
 	
@@ -119,7 +123,7 @@ public class SupportManager {
 	
 
 	private void init(DetachableResultReceiver receiver) {
-		Log.d(TAG, "SupportManager:init");
+//		Log.d(TAG, "SupportManager:init");
 		mStatusSender = receiver;
 		
 		if (checkForLocales() && checkForCategories() && checkForNodeTypes()
@@ -223,7 +227,8 @@ public class SupportManager {
 				LocalesContent.PROJECTION, null, null, null);
 
 		boolean dbEmpty = cursor.getCount() == 0;
-
+		cursor.close();
+		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		String prefsLocale = prefs.getString(PREFS_SERVICE_LOCALE, "");
@@ -246,6 +251,7 @@ public class SupportManager {
 				CategoriesContent.PROJECTION, null, null, null);
 
 		boolean dbEmpty = cursor.getCount() != 0;
+		cursor.close();
 		return dbEmpty;
 	}
 
@@ -255,14 +261,15 @@ public class SupportManager {
 				NodeTypesContent.PROJECTION, null, null, null);
 
 		boolean dbEmpty = cursor.getCount() != 0;
+		cursor.close();
 		return dbEmpty;
 	}
 
 	public void initLocales() {
-		Log.d(TAG, "SupportManager:initLocales");
+//		Log.d(TAG, "SupportManager:initLocales");
 		String locale = mContext.getResources().getConfiguration().locale
 				.getLanguage();
-		Log.d(TAG, "SupportManager: locale = " + locale);
+//		Log.d(TAG, "SupportManager: locale = " + locale);
 		ContentResolver resolver = mContext.getContentResolver();
 		String whereClause = "( " + LocalesContent.LOCALE_ID + " = ? )";
 		String[] whereValues = { locale };
@@ -274,7 +281,8 @@ public class SupportManager {
 			serviceLocale = locale;
 		else
 			serviceLocale = "en";
-
+		cursor.close();
+		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 
@@ -283,12 +291,12 @@ public class SupportManager {
 			prefs.edit().putString(PREFS_SERVICE_LOCALE, serviceLocale)
 					.commit();
 		}
-		Log.d(TAG, "SupportManager:initLocales: serviceLocale = "
-				+ serviceLocale);
+//		Log.d(TAG, "SupportManager:initLocales: serviceLocale = "
+//				+ serviceLocale);
 	}
 
 	public void initCategories() {
-		Log.d(TAG, "SupportManager:initCategories");
+//		Log.d(TAG, "SupportManager:initCategories");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
 				CategoriesContent.PROJECTION, null, null, null);
@@ -304,10 +312,12 @@ public class SupportManager {
 
 			cursor.moveToNext();
 		}
+		
+		cursor.close();
 	}
 
 	public void initNodeTypes() {
-		Log.d(TAG, "SupportManager:initNodeTypes");
+//		Log.d(TAG, "SupportManager:initNodeTypes");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
 				NodeTypesContent.PROJECTION, null, null, null);
@@ -329,6 +339,8 @@ public class SupportManager {
 			mNodeTypeLookup.put(id, nodeType);
 			cursor.moveToNext();
 		}
+		
+		cursor.close();
 	}
 
 	private Drawable createIconDrawable(String assetPath) {
@@ -376,7 +388,7 @@ public class SupportManager {
 
 	private Map<WheelchairState, Drawable> createDrawableLookup(String assetPath) {
 		Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
-		Log.d(TAG, "SupportManager:createDrawableLookup loading " + assetPath);
+//		Log.d(TAG, "SupportManager:createDrawableLookup loading " + assetPath);
 
 		int idx;
 		for (idx = 0; idx < WheelchairState.values().length - 1; idx++) {

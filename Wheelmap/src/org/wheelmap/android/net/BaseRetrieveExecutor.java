@@ -42,7 +42,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 	protected void retrieveSinglePage(RequestBuilder requestBuilder)
 			throws SyncServiceException {
 		Meta m = executeSingleRequest(requestBuilder);
-		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
+//		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 	}
 
 	protected void retrieveMaxNPages(RequestBuilder requestBuilder, int n)
@@ -51,7 +51,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
 
 		Meta m = executeSingleRequest(requestBuilder);
-		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
+//		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 
 		int numOfPages = m.getNumPages().intValue();
 
@@ -73,7 +73,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		mTempStore.add(items);
 
 		long retrieveEnd = System.currentTimeMillis();
-		Log.d(TAG, "retrieveTime = " + (retrieveEnd - retrieveStart) / 1000f);
+//		Log.d(TAG, "retrieveTime = " + (retrieveEnd - retrieveStart) / 1000f);
 		return items.getMeta();
 	}
 
@@ -115,7 +115,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		}
 		// Log.d(TAG, "response " + response);
 		long requestEndTime = System.currentTimeMillis();
-		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
+//		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
 
 		return content;
 	}

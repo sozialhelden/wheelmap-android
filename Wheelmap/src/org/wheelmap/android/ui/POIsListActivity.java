@@ -53,8 +53,10 @@ public class POIsListActivity extends ListActivity implements
 	
 	private State mState;
 	private float mDistance;
-	private int mFirstVisiblePosition;
+	private int mFirstVisiblePosition = 0;
 	private boolean isInForeground;
+	
+	private TextView mNoPoisText;
 
 	GoogleAnalyticsTracker tracker;
 
@@ -70,6 +72,7 @@ public class POIsListActivity extends ListActivity implements
 		tracker.trackPageView("/ListActivity");
 
 		setContentView(R.layout.activity_list);
+		mNoPoisText = (TextView) findViewById( R.id.nopois );
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
@@ -146,8 +149,9 @@ public class POIsListActivity extends ListActivity implements
 
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState( state );
 		isRecreated(state);
-		mFirstVisiblePosition = state.getInt( EXTRA_FIRST_VISIBLE_POSITION, 0);
+		mFirstVisiblePosition = state.getInt( EXTRA_FIRST_VISIBLE_POSITION, 1);
 	}
 
 	@Override
@@ -166,17 +170,17 @@ public class POIsListActivity extends ListActivity implements
 		else
 			isRecreated = state.getBoolean(EXTRA_IS_RECREATED);
 
-		Log.d(TAG, "isRecreated? isRecreated = " + isRecreated);
+//		Log.d(TAG, "isRecreated? isRecreated = " + isRecreated);
 		setIsRecreated(isRecreated);
 	}
 
 	public void setIsRecreated(boolean recreated) {
-		Log.d(TAG, "setIsRecreated = " + recreated);
+//		Log.d(TAG, "setIsRecreated = " + recreated);
 		mState.mIsRecreated = recreated;
 	}
 
 	public void runQueryOnCreation() {
-		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
+//		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
 
 		if (!mState.mIsRecreated)
 			((PullToRefreshListView) getListView()).prepareForRefresh();
@@ -184,9 +188,11 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void runQuery(boolean forceReload) {
-		Log.d(TAG, "runQuery: forceReload = " + forceReload);
-		if (forceReload) 
+//		Log.d(TAG, "runQuery: forceReload = " + forceReload);
+		if (forceReload) {
+			mFirstVisiblePosition = 0;
 			requestData();
+		}
 		// setIsRecreated(true);
 
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
@@ -201,6 +207,7 @@ public class POIsListActivity extends ListActivity implements
 				wrappingCursor);
 
 		setListAdapter(adapter);
+		Log.d( TAG, "runQuery: mFirstVisible = " + mFirstVisiblePosition );
 		getListView().setSelection( mFirstVisiblePosition );
 
 	}
@@ -297,8 +304,12 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	private void updateRefreshStatus() {
-		if (!mState.mSyncing)
+		if ( mState.mSyncing )
+			mNoPoisText.setVisibility( View.INVISIBLE );
+		else {
+			mNoPoisText.setVisibility( View.VISIBLE );
 			((PullToRefreshListView) getListView()).onRefreshComplete();
+		}
 	}
 
 	private boolean isFarerThanDeltaDistance(Location location) {

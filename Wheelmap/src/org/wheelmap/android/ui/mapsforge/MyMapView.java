@@ -28,6 +28,11 @@ public class MyMapView extends MapView {
 		this.listener = listener;
 	}
 	
+	public void setLastRequestedLocation( GeoPoint point ) {
+		mLastRequestedLatitude = point.getLatitudeE6();
+		mLastRequestedLongitude = point.getLongitudeE6();
+	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		boolean result = super.onTouchEvent( event );

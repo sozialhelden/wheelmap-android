@@ -42,9 +42,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) getBundle()
 					.getSerializable(SyncService.EXTRA_BOUNDING_BOX);
 			mBoundingBox = parcBoundingBox.toBoundingBox();
-			Log.d(TAG,
-					"retrieving with bounding box: "
-							+ parcBoundingBox.toString());
+//			Log.d(TAG,
+//					"retrieving with bounding box: "
+//							+ parcBoundingBox.toString());
 		} else if (getBundle().containsKey(SyncService.EXTRA_LOCATION)) {
 			float distance = getBundle().getFloat(
 					SyncService.EXTRA_DISTANCE_LIMIT);
@@ -53,11 +53,11 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			mBoundingBox = GeocoordinatesMath.calculateBoundingBox(
 					new Wgs84GeoCoordinates(location.getLongitude(), location
 							.getLatitude()), distance);
-			Log.d(TAG,
-					"retrieving with current location = ("
-							+ location.getLongitude() + ","
-							+ location.getLatitude() + ") and distance = "
-							+ distance);
+//			Log.d(TAG,
+//					"retrieving with current location = ("
+//							+ location.getLongitude() + ","
+//							+ location.getLatitude() + ") and distance = "
+//							+ distance);
 		}
 
 		if (getBundle().containsKey(SyncService.EXTRA_CATEGORY)) {
@@ -101,7 +101,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			bulkInsert(nodes);
 		}
 		long insertEnd = System.currentTimeMillis();
-		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
+//		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
 		clearTempStore();
 	}
 
@@ -124,13 +124,13 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			contentValuesArray[i] = values;
 		}
 		long bulkInsertTime = System.currentTimeMillis();
-		Log.d(TAG, "makeupTime = " + (bulkInsertTime - makeupTime) / 1000f);
+//		Log.d(TAG, "makeupTime = " + (bulkInsertTime - makeupTime) / 1000f);
 		int count = getResolver().bulkInsert(Wheelmap.POIs.CONTENT_URI,
 				contentValuesArray);
 		long bulkInsertDoneTime = System.currentTimeMillis();
-		Log.d(TAG, "bulkInsertTime = " + (bulkInsertDoneTime - bulkInsertTime)
-				/ 1000f);
-		Log.d(TAG, "Inserted records count = " + count);
+//		Log.d(TAG, "bulkInsertTime = " + (bulkInsertDoneTime - bulkInsertTime)
+//				/ 1000f);
+//		Log.d(TAG, "Inserted records count = " + count);
 	}
 
 	private void copyNodeToValues(Node node, ContentValues values) {

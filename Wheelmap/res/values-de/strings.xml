@@ -69,4 +69,5 @@
     <string name="pull_to_refresh_release_label">Loslassen aktualisiert</string>
     <string name="pull_to_refresh_tap_label">Berühren aktualisiert</string>
     <string name="error_network_title">Netzwerk Problem</string>
+    <string name="no_pois">Keine Orte gefunden</string>
 </resources>

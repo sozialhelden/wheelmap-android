@@ -60,23 +60,6 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 		clearTempStore();
 	}
 
-	// private void batchApply(NodeTypes nodeTypes) throws RemoteException,
-	// OperationApplicationException {
-	// ContentValues values = new ContentValues();
-	// ArrayList<ContentProviderOperation> operations = new
-	// ArrayList<ContentProviderOperation>();
-	// for (NodeType nodeType : nodeTypes.getNodeTypes()) {
-	// // nodeType.setIconData( retrieveIconData( nodeType.getIconUrl() ));
-	// copyCategoryToValues(nodeType, values);
-	// ContentProviderOperation operation = ContentProviderOperation
-	// .newInsert(NodeTypesContent.CONTENT_URI).withValues(values)
-	// .build();
-	// operations.add(operation);
-	// }
-	//
-	// getResolver().applyBatch(Support.AUTHORITY, operations);
-	// }
-
 	private void bulkInsert(NodeTypes nodeTypes) {
 		int size = nodeTypes.getNodeTypes().size();
 		ContentValues[] contentValuesArray = new ContentValues[size];

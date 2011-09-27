@@ -93,32 +93,31 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView.registerListener(this);
 		isCentered = false;
 
-		Log.d( TAG, "mapsforge start" );
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
 			if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
 				int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
 				int lon = extras.getInt(EXTRA_CENTER_AT_LON);
-				Log.d( TAG, "centering at lat = " + lat + " lon = " + lon );
 				GeoPoint gp = new GeoPoint(lat, lon);
 				mMapController.setCenter(gp);
 				isCentered = true;
 			}
-			if (!extras.containsKey(EXTRA_NO_RETRIEVAL)) {
-				mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
-						new OnGlobalLayoutListener() {
+		}
 
-							@Override
-							public void onGlobalLayout() {
-								mMapController.setZoom(18); // Zoon 1 is world
-															// view
-								requestUpdate();
-								mMapView.getViewTreeObserver()
-										.removeGlobalOnLayoutListener(this);
-							}
-						});
-			}
+		if (getIntent() != null
+				&& !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
+			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
+					new OnGlobalLayoutListener() {
 
+						@Override
+						public void onGlobalLayout() {
+							mMapController.setZoom(18); // Zoon 1 is world
+														// view
+							requestUpdate();
+							mMapView.getViewTreeObserver()
+									.removeGlobalOnLayoutListener(this);
+						}
+					});
 		}
 
 		mState = (State) getLastNonConfigurationInstance();
@@ -176,25 +175,35 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if ( mCursor != null )
+			mCursor.close();
 		SupportManager.get().cleanReferences();
 		System.gc();
 	}
 
-	
-	// TODO: MapController needs a way to retrieve
-	//       the current center of the map
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
+		int lat = savedInstanceState.getInt( EXTRA_CENTER_AT_LAT );
+		int lon = savedInstanceState.getInt( EXTRA_CENTER_AT_LON );
+		GeoPoint gp = new GeoPoint( lat, lon );
+		mMapController.setCenter( gp );
+		isCentered = true;
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		GeoPoint gp = mMapView.getMapCenter();
+		outState.putInt( EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
+		outState.putInt( EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
 	}
 
 	private void runQuery() {
 		// Run query
+		if ( mCursor != null )
+			mCursor.close();
+		
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(
 				uri,
@@ -290,6 +299,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		GeoPoint center = mMapView.getMapCenter();
+		mMapView.setLastRequestedLocation( center );
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
 						+ (lonSpan / 2),

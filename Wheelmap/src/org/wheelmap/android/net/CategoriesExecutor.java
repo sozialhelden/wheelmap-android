@@ -58,19 +58,6 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories> impleme
 		clearTempStore();
 	}
 	
-//	private void batchApply( Categories categories ) throws RemoteException, OperationApplicationException {
-//		ContentValues values = new ContentValues();
-//		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-//		for( Category cat: categories.getCategories()) {
-//			copyCategoryToValues( cat, values );
-//			ContentProviderOperation operation = ContentProviderOperation
-//					.newInsert(CategoriesContent.CONTENT_URI).withValues(values).build();
-//			operations.add( operation );
-//		}
-//		
-//		getResolver().applyBatch( Support.AUTHORITY, operations);
-//	}
-	
 	private void bulkInsert(Categories categories) {
 		int size = categories.getCategories().size();
 		ContentValues[] contentValuesArray = new ContentValues[size];

@@ -154,7 +154,7 @@ public class MyLocationManager {
 					+ location.getAccuracy());
 			requestOnce = false;
 			wasLastKnownLocation = false;
-
+			
 			mBestLastKnownLocation = location;
 			notifyReceiver();
 

@@ -42,6 +42,8 @@ public class ConfigureMapView {
 			mapView.setMapViewMode(defaultViewMode);
 			return;
 		}
+		
+		c.close();
 	
 		String mapFile;
 		if (c.getCount() == 1) {

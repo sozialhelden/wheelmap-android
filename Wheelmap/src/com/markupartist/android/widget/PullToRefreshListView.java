@@ -61,6 +61,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private int mRefreshViewHeight;
     private int mRefreshOriginalTopPadding;
     private int mLastMotionY;
+    
+    private int mAfterAttachedPosition = 1;
 
     public PullToRefreshListView(Context context) {
         super(context);
@@ -118,6 +120,7 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 
         measureView(mRefreshView);
         mRefreshViewHeight = mRefreshView.getMeasuredHeight();
+        mAfterAttachedPosition = 1;
     }
     
     @Override
@@ -127,8 +130,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
             Log.d( "startup", "restore mRefreshState = " + mRefreshState );
 
             super.onRestoreInstanceState(bundle.getParcelable("superState"));
-            
-            
     }
 
     @Override
@@ -137,13 +138,21 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
             Bundle bundle = new Bundle();
             bundle.putParcelable("superState", superState);
             bundle.putInt( EXTRA_REFRESH_STATE, mRefreshState );
-            Log.d( "startup", "save instance" );
             return bundle;
     }
+    
+    
 
     @Override
+	public void setSelection(int position) {
+		super.setSelection(position);
+		mAfterAttachedPosition = position;
+		
+	}
+
+	@Override
     protected void onAttachedToWindow() {
-        setSelection(1);
+		setSelection(mAfterAttachedPosition);
     }
 
     @Override
@@ -396,7 +405,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     }
 
     public void onRefresh() {
-        Log.d(TAG, "onRefresh");
 
         if (mOnRefreshListener != null) {
             mOnRefreshListener.onRefresh();
@@ -416,7 +424,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
      * Resets the list to a normal state after a refresh.
      */
     public void onRefreshComplete() {        
-        Log.d(TAG, "onRefreshComplete");
 
         resetHeader();
 
