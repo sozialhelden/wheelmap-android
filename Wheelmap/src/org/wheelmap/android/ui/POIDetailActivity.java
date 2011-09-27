@@ -15,6 +15,7 @@ import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
+import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
@@ -102,7 +103,7 @@ public class POIDetailActivity extends MapActivity {
 
 		mapView = (MapView) findViewById(R.id.map);
 
-		mapView.setClickable(false);
+		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
 		ConfigureMapView.pickAppropriateMap(this, mapView);
 		mapController = mapView.getController();
@@ -290,6 +291,20 @@ public class POIDetailActivity extends MapActivity {
 				return null;
 			return item;
 		}
+		
+		@Override
+		public boolean onTap(int index) {
+			int lat = item.getPoint().getLatitudeE6();
+			int lon = item.getPoint().getLongitudeE6();
+						
+			Intent i = new Intent(POIDetailActivity.this, POIsMapsforgeActivity.class);
+			i.putExtra( POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat );
+			i.putExtra( POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon );
+			
+			POIDetailActivity.this.startActivity( i );
+			return true;
+		}
+
 	}
 
 }

@@ -43,6 +43,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private final static String TAG = "mapsforge";
 
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
+	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_X";
+	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_Y";
 
 	/** State held between configuration changes. */
 	private State mState;
@@ -91,19 +93,32 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView.registerListener(this);
 		isCentered = false;
 
-		if (getIntent() != null
-				&& !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
-			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
+		Log.d( TAG, "mapsforge start" );
+		if (getIntent() != null) {
+			Bundle extras = getIntent().getExtras();
+			if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
+				int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
+				int lon = extras.getInt(EXTRA_CENTER_AT_LON);
+				Log.d( TAG, "centering at lat = " + lat + " lon = " + lon );
+				GeoPoint gp = new GeoPoint(lat, lon);
+				mMapController.setCenter(gp);
+				isCentered = true;
+			}
+			if (!extras.containsKey(EXTRA_NO_RETRIEVAL)) {
+				mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
+						new OnGlobalLayoutListener() {
 
-						@Override
-						public void onGlobalLayout() {
-							mMapController.setZoom(18); // Zoon 1 is world view
-							requestUpdate();
-							mMapView.getViewTreeObserver()
-									.removeGlobalOnLayoutListener(this);
-						}
-					});
+							@Override
+							public void onGlobalLayout() {
+								mMapController.setZoom(18); // Zoon 1 is world
+															// view
+								requestUpdate();
+								mMapView.getViewTreeObserver()
+										.removeGlobalOnLayoutListener(this);
+							}
+						});
+			}
+
 		}
 
 		mState = (State) getLastNonConfigurationInstance();
@@ -165,6 +180,19 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		System.gc();
 	}
 
+	
+	// TODO: MapController needs a way to retrieve
+	//       the current center of the map
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
+
 	private void runQuery() {
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
@@ -208,13 +236,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			Location location = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			GeoPoint geoPoint = calcGeoPoint(location);
-			if (!isCentered) {
+			if (!isCentered && isInForeground) {
 				mMapController.setCenter(geoPoint);
 				isCentered = true;
 			}
 
 			// we got the first time current position so center map on it
-			if (mLastGeoPointE6 == null) {
+			if (mLastGeoPointE6 == null && !isCentered && isInForeground) {
 				// findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
 				mMapController.setCenter(geoPoint);
 			}

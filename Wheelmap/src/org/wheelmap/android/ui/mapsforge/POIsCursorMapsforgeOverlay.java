@@ -105,8 +105,8 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		public void onChange(boolean selfChange) {
 			synchronized (mCursor) {
 				mCursor.requery();
+				populate();
 			}
-			populate();
 		}
 	}
 	
