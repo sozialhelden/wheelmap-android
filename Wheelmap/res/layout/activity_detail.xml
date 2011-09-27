@@ -35,10 +35,14 @@
 			android:layout_height="wrap_content" android:orientation="vertical">
 
 			<RelativeLayout android:layout_marginTop="4dip"
+			android:layout_marginBottom="4dip"
 				android:layout_marginLeft="4dip" android:layout_width="fill_parent"
 				android:layout_height="wrap_content">
 				<ImageView android:id="@+id/wheelchair_state_icon"
 					android:src="@drawable/wheelchair_state_enabled"
+					android:layout_marginLeft="4dip"
+        android:layout_marginTop="4dip"
+        
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
 					android:layout_alignParentLeft="true"></ImageView>
 				<TextView android:id="@+id/wheelchair_state_text"
@@ -47,14 +51,19 @@
 					android:layout_toLeftOf="@+id/wheelchair_state_further"
 					android:layout_toRightOf="@+id/wheelchair_state_icon" android:text="@string/ws_enabled_title"></TextView>
 				<ImageView android:id="@+id/wheelchair_state_further"
-					android:src="@drawable/expander_ic_minimized"
+					android:src="@drawable/arrow"
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
+					android:layout_centerVertical="true"
 					android:onClick="onEditWheelchairState"
 					android:layout_alignParentRight="true"></ImageView>
 			</RelativeLayout>
 
 			<LinearLayout android:layout_width="fill_parent" android:orientation="vertical"
 				android:layout_height="wrap_content" >
+				<LinearLayout android:background="#FFC6C6C6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
+				<LinearLayout android:background="#FFE6E6E6" android:layout_width="fill_parent"
+				  android:layout_height="1dp"/>				 
 				<TextView android:hint="@string/poi_property_nodetype"
 					android:id="@+id/nodetype" style="@style/DetailFont" />
 					
