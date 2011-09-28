@@ -108,6 +108,14 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	public synchronized boolean onTap(int index) {
+		if (mCursor == null)
+			return false;
+
+		int count = mCursor.getCount();
+		if (count == 0 || index >= count)
+			return false;
+		
+		
 		mCursor.moveToPosition(index);
 		long poiId = POIHelper.getId(mCursor);
 		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
@@ -120,6 +128,13 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected synchronized boolean onLongPress(int index) {
+		if (mCursor == null)
+			return false;
+
+		int count = mCursor.getCount();
+		if (count == 0 || index >= count)
+			return false;
+		
 		mCursor.moveToPosition(index);
 		int idColumn = mCursor.getColumnIndex(Wheelmap.POIs._ID);
 		int poiId = mCursor.getInt(idColumn);
