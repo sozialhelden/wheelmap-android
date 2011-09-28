@@ -51,6 +51,8 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
 
 		Meta m = executeSingleRequest(requestBuilder);
+		if ( m == null )
+			return;
 //		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 
 		int numOfPages = m.getNumPages().intValue();
@@ -70,6 +72,9 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		long retrieveStart = System.currentTimeMillis();
 
 		T items = retrieveNumberOfHits(getRequest);
+		if ( items == null )
+			return null;
+		
 		mTempStore.add(items);
 
 		long retrieveEnd = System.currentTimeMillis();
@@ -105,7 +110,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 					try {
 						Thread.sleep( 200 );
 					} catch (InterruptedException e1) {
-						// this is ignored
+						// do nothing, just continue and try again
 					}
 					continue;
 				} else

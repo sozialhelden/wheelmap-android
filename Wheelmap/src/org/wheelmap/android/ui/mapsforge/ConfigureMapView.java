@@ -12,9 +12,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.provider.Settings.System;
+import android.util.Log;
 
 public class ConfigureMapView {
 	private final static MapViewMode defaultViewMode = MapViewMode.MAPNIK_TILE_DOWNLOAD;
+	private final static int MAP_CACHE_IN_MB = 10;
+	private final static int MB_TO_BYTES_MULTIPLIER = 1000000;
+	
 
 	// private final static MapViewMode defaultViewMode =
 	// MapViewMode.OSMARENDER_TILE_DOWNLOAD;
@@ -55,6 +59,11 @@ public class ConfigureMapView {
 		} else
 			mapView.setMapViewMode(defaultViewMode);
 
+		int tileSizeInBytes = MapView.getTileSizeInBytes();
+		int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER / tileSizeInBytes;
+		Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes + " tileNum = " + tileNum );
+		
+		mapView.setMemoryCardCacheSize( tileNum );
 		c.close();
 	}
 }

@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.test.IsolatedContext;
 import android.util.Log;
 
 public class MyLocationManager {
@@ -29,13 +30,16 @@ public class MyLocationManager {
 	private boolean requestOnce;
 	private boolean doesRequestUpdates;
 	private boolean wasLastKnownLocation;
+	private boolean gpsDisabled;
+	private boolean networkDisabled;
 
 	private static final long TIME_DISTANCE_LIMIT = 1000 * 60 * 5; // 5 Minutes
 	private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
 	private static final float TIME_GPS_UPDATE_DISTANCE = 20f;
 	private static final long TIME_NETWORK_SUPERSEED_TIME = 1000 * 25;
+	private static final long TIME_GPS_SUPERSEED_TIME = 1000 * 9;
 	private static final float ACCURACY_MAX_REQUIRE = 500;
-
+	
 	private MyLocationManager(Context context) {
 
 		mLocationManager = (LocationManager) context
@@ -155,9 +159,18 @@ public class MyLocationManager {
 			requestOnce = false;
 			wasLastKnownLocation = false;
 			
-			mBestLastKnownLocation = location;
-			notifyReceiver();
-
+			long now = System.currentTimeMillis();
+			if ( networkDisabled )
+				updateLocation( location );
+			if ( mBestLastKnownLocation.getProvider().equals(LocationManager.NETWORK_PROVIDER) &&
+					location.getProvider().equals( LocationManager.GPS_PROVIDER ) &&
+					mBestLastKnownLocation.getAccuracy() > location.getAccuracy()) {
+				updateLocation( location );
+			} else if ( mBestLastKnownLocation.getProvider().equals( LocationManager.GPS_PROVIDER ) &&
+					location.getProvider().equals( LocationManager.GPS_PROVIDER )) {
+				updateLocation( location );
+			}
+			
 			if (requestOnce && mReceiver.getReceiverCount() == 0) {
 				releaseLocationUpdates();
 			}
@@ -165,10 +178,12 @@ public class MyLocationManager {
 
 		@Override
 		public void onProviderDisabled(String provider) {
+			gpsDisabled = true;
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
+			gpsDisabled = false;
 		}
 
 		@Override
@@ -183,35 +198,35 @@ public class MyLocationManager {
 					"MyNetworkLocationListener: location received. Accuracy = "
 							+ location.getAccuracy());
 			long now = System.currentTimeMillis();
+			if ( gpsDisabled )
+				updateLocation( location );
 			if (wasLastKnownLocation
 					&& (now - mBestLastKnownLocation.getTime()) > TIME_NETWORK_SUPERSEED_TIME) {
 				Log.d(TAG, "network location superseeds lastKnownLocation");
-				mBestLastKnownLocation = location;
-				wasLastKnownLocation = false;
-				notifyReceiver();
+				updateLocation( location );
 			} else if ((mBestLastKnownLocation.getProvider()
 					.equals(LocationManager.GPS_PROVIDER))
 					&& (now - mBestLastKnownLocation.getTime() > TIME_NETWORK_SUPERSEED_TIME)
 					&& (location.getAccuracy() < ACCURACY_MAX_REQUIRE)) {
 				Log.d(TAG, "network location superseeds old gps location");
-				mBestLastKnownLocation = location;
-				notifyReceiver();
+				updateLocation( location );
 			} else if (mBestLastKnownLocation.getProvider().equals(
 					LocationManager.NETWORK_PROVIDER)
 					&& mBestLastKnownLocation.getAccuracy() >= location
 							.getAccuracy()) {
 				Log.d(TAG, "network location superseeds old network location");
-				mBestLastKnownLocation = location;
-				notifyReceiver();
+				updateLocation( location );
 			}
 		}
 
 		@Override
 		public void onProviderDisabled(String provider) {
+			networkDisabled = true;
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
+			networkDisabled = false;
 		}
 
 		@Override
@@ -221,6 +236,13 @@ public class MyLocationManager {
 
 	public interface LocationUpdate {
 		public void onNewLocation(Location location);
+	}
+	
+	public void updateLocation( Location location ) {
+		mBestLastKnownLocation = location;
+		wasLastKnownLocation = false;
+		mBestLastKnownLocation = location;
+		notifyReceiver();
 	}
 
 }

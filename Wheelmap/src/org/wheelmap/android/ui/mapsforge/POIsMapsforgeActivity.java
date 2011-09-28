@@ -8,7 +8,6 @@ import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
@@ -84,7 +83,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController = mMapView.getController();
 
 		// overlays
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, null);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this);
 		runQuery();
 
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
@@ -202,9 +201,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	private void runQuery() {
 		// Run query
-		if ( mCursor != null )
-			mCursor.close();
-		
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		mCursor = getContentResolver().query(
 				uri,

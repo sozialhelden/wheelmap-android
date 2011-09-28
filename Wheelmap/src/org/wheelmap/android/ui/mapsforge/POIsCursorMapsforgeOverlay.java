@@ -29,64 +29,55 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context mContext;
 	private Cursor mCursor;
 
-	public POIsCursorMapsforgeOverlay(Context context, Cursor cursor) {
+	public POIsCursorMapsforgeOverlay(Context context) {
 		super(null);
 
 		mContext = context;
-		mCursor = cursor;
-
-		if (mCursor != null)
-			mCursor.registerContentObserver(new ChangeObserver());
 		populate();
 	}
 
-	public void setCursor(Cursor cursor) {
+	public synchronized void setCursor(Cursor cursor) {
 		if (cursor == null)
 			return;
-
 		mCursor = cursor;
 		mCursor.registerContentObserver(new ChangeObserver());
 		populate();
 	}
 
 	@Override
-	public int size() {
-		synchronized (mCursor) {
-			if (mCursor == null)
-				return 0;
-			return mCursor.getCount();
-		}
+	public synchronized int size() {
+		if (mCursor == null)
+			return 0;
+		return mCursor.getCount();
 	}
 
 	@Override
-	protected OverlayItem createItem(int i) {
-		synchronized (mCursor) {
-			if (mCursor == null)
-				return null;
+	protected synchronized OverlayItem createItem(int i) {
+		if (mCursor == null)
+			return null;
 
-			int count = mCursor.getCount();
-			if (count == 0 || i >= count)
-				return null;
+		int count = mCursor.getCount();
+		if (count == 0 || i >= count)
+			return null;
 
-			mCursor.moveToPosition(i);
-			String name = POIHelper.getName(mCursor);
-			SupportManager manager = WheelmapApp.getSupportManager();
-			WheelchairState state = POIHelper.getWheelchair(mCursor);
-			int lat = POIHelper.getLatitudeAsInt(mCursor);
-			int lng = POIHelper.getLongitudeAsInt(mCursor);
-			int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
-			Drawable marker = null;
-			if (nodeTypeId != 0)
-				marker = manager.lookupNodeType(nodeTypeId).stateDrawables
-						.get(state);
+		mCursor.moveToPosition(i);
+		String name = POIHelper.getName(mCursor);
+		SupportManager manager = WheelmapApp.getSupportManager();
+		WheelchairState state = POIHelper.getWheelchair(mCursor);
+		int lat = POIHelper.getLatitudeAsInt(mCursor);
+		int lng = POIHelper.getLongitudeAsInt(mCursor);
+		int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
+		Drawable marker = null;
+		if (nodeTypeId != 0)
+			marker = manager.lookupNodeType(nodeTypeId).stateDrawables
+					.get(state);
 
-			OverlayItem item = new OverlayItem();
-			item.setTitle(name);
-			item.setSnippet(name);
-			item.setPoint(new GeoPoint(lat, lng));
-			item.setMarker(marker);
-			return item;
-		}
+		OverlayItem item = new OverlayItem();
+		item.setTitle(name);
+		item.setSnippet(name);
+		item.setPoint(new GeoPoint(lat, lng));
+		item.setMarker(marker);
+		return item;
 	}
 
 	@Override
@@ -106,15 +97,17 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 		@Override
 		public void onChange(boolean selfChange) {
-			synchronized (mCursor) {
-				mCursor.requery();
-				populate();
-			}
+			reload();
 		}
+	}
+	
+	private synchronized void reload() {
+		mCursor.requery();
+		populate();
 	}
 
 	@Override
-	public boolean onTap(int index) {
+	public synchronized boolean onTap(int index) {
 		mCursor.moveToPosition(index);
 		long poiId = POIHelper.getId(mCursor);
 		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
@@ -126,7 +119,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	@Override
-	protected boolean onLongPress(int index) {
+	protected synchronized boolean onLongPress(int index) {
 		mCursor.moveToPosition(index);
 		int idColumn = mCursor.getColumnIndex(Wheelmap.POIs._ID);
 		int poiId = mCursor.getInt(idColumn);
