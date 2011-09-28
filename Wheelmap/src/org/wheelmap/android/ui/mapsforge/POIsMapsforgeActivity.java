@@ -6,6 +6,7 @@ import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
@@ -177,7 +178,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		super.onDestroy();
 		if ( mCursor != null )
 			mCursor.close();
-		SupportManager.get().cleanReferences();
+		WheelmapApp.getSupportManager().cleanReferences();
 		System.gc();
 	}
 

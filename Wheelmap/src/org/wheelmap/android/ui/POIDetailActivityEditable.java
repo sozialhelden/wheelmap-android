@@ -3,6 +3,7 @@ package org.wheelmap.android.ui;
 import java.util.HashMap;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
@@ -195,6 +196,8 @@ public class POIDetailActivityEditable extends Activity {
 		}
 
 		cur.moveToFirst();
+		
+		SupportManager manager = WheelmapApp.getSupportManager();
 		WheelchairState state = POIHelper.getWheelchair(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
@@ -203,11 +206,11 @@ public class POIDetailActivityEditable extends Activity {
 		int nodeTypeId = POIHelper.getNodeTypeId(cur);
 		int categoryId = POIHelper.getCategoryId(cur);
 
-		NodeType nodeType = SupportManager.get().lookupNodeType(nodeTypeId);
+		NodeType nodeType = manager.lookupNodeType(nodeTypeId);
 	
 		setWheelchairState(state);
 		nameText.setText(name);
-		String category = SupportManager.get().lookupCategory(categoryId).localizedName;
+		String category =  manager.lookupCategory(categoryId).localizedName;
 		nodetypeText.setText(nodeType.localizedName);
 		commentText.setText(comment);
 		addressText.setText(POIHelper.getAddress(cur));

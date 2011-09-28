@@ -3,6 +3,7 @@ package org.wheelmap.android.ui.mapsforge;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.ItemizedOverlay;
 import org.mapsforge.android.maps.OverlayItem;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -69,13 +70,14 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 			mCursor.moveToPosition(i);
 			String name = POIHelper.getName(mCursor);
+			SupportManager manager = WheelmapApp.getSupportManager();
 			WheelchairState state = POIHelper.getWheelchair(mCursor);
 			int lat = POIHelper.getLatitudeAsInt(mCursor);
 			int lng = POIHelper.getLongitudeAsInt(mCursor);
 			int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
 			Drawable marker = null;
 			if (nodeTypeId != 0)
-				marker = SupportManager.get().lookupNodeType(nodeTypeId).stateDrawables
+				marker = manager.lookupNodeType(nodeTypeId).stateDrawables
 						.get(state);
 
 			OverlayItem item = new OverlayItem();

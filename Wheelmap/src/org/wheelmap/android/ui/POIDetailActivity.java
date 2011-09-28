@@ -9,6 +9,7 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayItem;
 import org.wheelmap.android.R;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
@@ -19,6 +20,7 @@ import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -31,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity {
+	private final static String TAG = "poidetail";
 
 	//private ImageView iconImage = null;
 	private TextView nameText = null;
@@ -42,7 +45,6 @@ public class POIDetailActivity extends MapActivity {
 	private TextView phoneText = null;
 	private ImageView mStateIcon = null;
 	private TextView mWheelchairStateText = null;
-	private HashMap<WheelchairState, Integer> mWheelchairStateDrawablesMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
 
@@ -50,6 +52,7 @@ public class POIDetailActivity extends MapActivity {
 	private MapView mapView;
 
 	private WheelchairState mWheelChairState;
+	private SupportManager mSupportManager;
 
 	private Long poiID;
 
@@ -57,7 +60,8 @@ public class POIDetailActivity extends MapActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
-
+		mSupportManager = WheelmapApp.getSupportManager();
+		
 		nameText = (TextView) findViewById(R.id.title_name);
 		categoryText = (TextView) findViewById(R.id.title_category);
 		nodetypeText = (TextView) findViewById(R.id.nodetype);
@@ -68,15 +72,6 @@ public class POIDetailActivity extends MapActivity {
 		websiteText = (TextView) findViewById(R.id.website);
 		mStateIcon = (ImageView) findViewById(R.id.wheelchair_state_icon);
 		mWheelchairStateText = (TextView) findViewById(R.id.wheelchair_state_text);
-
-		mWheelchairStateDrawablesMap.put(WheelchairState.YES, new Integer(
-				R.drawable.wheelchair_state_enabled));
-		mWheelchairStateDrawablesMap.put(WheelchairState.NO, new Integer(
-				R.drawable.wheelchair_state_disabled));
-		mWheelchairStateDrawablesMap.put(WheelchairState.LIMITED, new Integer(
-				R.drawable.wheelchair_state_limited));
-		mWheelchairStateDrawablesMap.put(WheelchairState.UNKNOWN, new Integer(
-				R.drawable.wheelchair_state_unknown));
 
 		mWheelchairStateTextColorMap.put(WheelchairState.YES, new Integer(
 				R.color.wheel_enabled));
@@ -135,7 +130,8 @@ public class POIDetailActivity extends MapActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		SupportManager.get().cleanReferences();
+		mSupportManager.cleanReferences();
+		Log.d( TAG, "onDestroy" );
 	}
 
 	public void onItemEdit(View v) {
@@ -158,7 +154,7 @@ public class POIDetailActivity extends MapActivity {
 
 	private void setWheelchairState(WheelchairState newState) {
 		mWheelChairState = newState;
-		mStateIcon.setImageResource(mWheelchairStateDrawablesMap.get(newState));
+		mStateIcon.setImageDrawable(mSupportManager.lookupWheelDrawable( newState.getId()));
 		mWheelchairStateText.setTextColor(getResources().getColor(mWheelchairStateTextColorMap
 				.get(newState)));
 		mWheelchairStateText.setText(mWheelchairStateTextsMap.get(newState));
@@ -188,12 +184,12 @@ public class POIDetailActivity extends MapActivity {
 		int nodeTypeId = POIHelper.getNodeTypeId(cur);
 		int categoryId = POIHelper.getCategoryId(cur);
 
-		NodeType nodeType = SupportManager.get().lookupNodeType(nodeTypeId);
+		NodeType nodeType = mSupportManager.lookupNodeType(nodeTypeId);
 		//iconImage.setImageDrawable(nodeType.iconDrawable);
 
 		setWheelchairState(state);
 		nameText.setText(name);
-		String category = SupportManager.get().lookupCategory(categoryId).localizedName;
+		String category = mSupportManager.lookupCategory(categoryId).localizedName;
 		categoryText.setText(category);
 		nodetypeText.setText(nodeType.localizedName);
 		commentText.setText(comment);

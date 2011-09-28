@@ -63,6 +63,12 @@ public class StartupActivity extends Activity implements
 		super.onRestart();
 		finish();
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mSupportManager.releaseReceiver();
+	}
 
 	private void startupApp() {
 		Intent intent = new Intent(getApplicationContext(),

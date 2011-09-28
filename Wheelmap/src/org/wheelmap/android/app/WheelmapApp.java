@@ -10,6 +10,7 @@ import android.app.Application;
 @ReportsCrashes(formKey = "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ" )
 public class WheelmapApp extends Application {
 	
+	private static WheelmapApp INSTANCE;
 	private MyLocationManager mLocationManager;
 	private SupportManager mSupportManager;
 	
@@ -18,6 +19,7 @@ public class WheelmapApp extends Application {
 		ACRA.init(this);
 		super.onCreate();
 		mLocationManager = MyLocationManager.initOnce( this );
+		INSTANCE = this;
 	}
 
 	@Override
@@ -28,5 +30,9 @@ public class WheelmapApp extends Application {
 	
 	public void setSupportManager( SupportManager manager ) {
 		mSupportManager = manager;
+	}
+	
+	public static SupportManager getSupportManager() {
+		return INSTANCE.mSupportManager;
 	}
 }

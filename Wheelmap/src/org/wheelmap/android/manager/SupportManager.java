@@ -37,11 +37,11 @@ import android.util.Log;
 
 public class SupportManager {
 	private static final String TAG = "support";
-	private static SupportManager INSTANCE;
 
 	private Context mContext;
 	private Map<Integer, NodeType> mNodeTypeLookup;
 	private Map<Integer, Category> mCategoryLookup;
+	private Drawable[] mWheelDrawables;
 
 	private DetachableResultReceiver mStatusSender;
 
@@ -97,14 +97,12 @@ public class SupportManager {
 		mDefaultNodeType = new NodeType(0, "unknown",
 				mContext.getString(R.string.nodetype_unknown), 0);
 		mDefaultNodeType.stateDrawables = createDefaultDrawables();
-	}
-
-	public static SupportManager get() {
-		if ( INSTANCE == null ) {
-			Log.d( TAG, "supportmanager instance == null. How is that?" );
-		}
 		
-		return INSTANCE;
+		Drawable wheelYes = ctx.getResources().getDrawable( R.drawable.wheelchair_state_enabled );
+		Drawable wheelLimited = ctx.getResources().getDrawable( R.drawable.wheelchair_state_limited );
+		Drawable wheelNo = ctx.getResources().getDrawable( R.drawable.wheelchair_state_disabled );
+		Drawable wheelUnknown = ctx.getResources().getDrawable( R.drawable.wheelchair_state_unknown );
+		mWheelDrawables = new Drawable[] { wheelUnknown, wheelYes, wheelLimited, wheelNo, null };
 	}
 	
 	@Override
@@ -114,11 +112,14 @@ public class SupportManager {
 
 	public static SupportManager initOnce(Context ctx,
 			DetachableResultReceiver receiver) {
-		if (INSTANCE == null) {
-			INSTANCE = new SupportManager(ctx);
-		}
-		INSTANCE.init(receiver);
-		return INSTANCE;
+		
+		SupportManager manager = new SupportManager(ctx);
+		manager.init(receiver);
+		return manager;
+	}
+	
+	public void releaseReceiver() {
+		mStatusSender = null;
 	}
 	
 
@@ -416,11 +417,16 @@ public class SupportManager {
 	public void cleanReferences() {
 		// Log.d(TAG, "clearing callbacks for mDefaultNodeType ");
 		cleanReferences(mDefaultNodeType.stateDrawables);
-
+		
 		for (int nodeTypeId : mNodeTypeLookup.keySet()) {
 			NodeType nodeType = mNodeTypeLookup.get(nodeTypeId);
 			// Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
 			cleanReferences(nodeType.stateDrawables);
+		}
+		
+		for( Drawable wheelDrawable: mWheelDrawables) {
+			if ( wheelDrawable != null)
+				wheelDrawable.setCallback( null );
 		}
 	}
 
@@ -444,6 +450,10 @@ public class SupportManager {
 			return mNodeTypeLookup.get(id);
 		else
 			return mDefaultNodeType;
+	}
+	
+	public Drawable lookupWheelDrawable( int idx ) {
+		return mWheelDrawables[idx];
 	}
 
 	public List<Category> getCategoryList() {

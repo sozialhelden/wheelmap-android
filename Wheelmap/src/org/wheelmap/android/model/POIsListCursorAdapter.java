@@ -1,6 +1,7 @@
 package org.wheelmap.android.model;
 
 import org.wheelmap.android.R;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.ui.POIsListItemView;
@@ -18,21 +19,13 @@ import android.widget.CursorAdapter;
 public class POIsListCursorAdapter extends CursorAdapter {
 	private final static String TAG = "poislist";
 	private DistanceFormatter mDistanceFormatter;
-	private Drawable[] wheelDrawables;
 		
 	public POIsListCursorAdapter(Context context, Cursor cursor) {
 		super( context, cursor );
-		
 		if ( GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES )
 			mDistanceFormatter = new DistanceFormatterMetric();
 		else
 			mDistanceFormatter = new DistanceFormatterAnglo();
-		
-		Drawable wheelYes = context.getResources().getDrawable( R.drawable.wheelchair_state_enabled );
-		Drawable wheelLimited = context.getResources().getDrawable( R.drawable.wheelchair_state_limited );
-		Drawable wheelNo = context.getResources().getDrawable( R.drawable.wheelchair_state_disabled );
-		Drawable wheelUnknown = context.getResources().getDrawable( R.drawable.wheelchair_state_unknown );
-		wheelDrawables = new Drawable[] { wheelUnknown, wheelYes, wheelLimited, wheelNo, null };
 	}
 
 	@Override
@@ -43,6 +36,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		POIsListItemView  pliv = (POIsListItemView ) view;
+		SupportManager manager = WheelmapApp.getSupportManager();
 		
 		String name = POIHelper.getName(cursor);
 		WheelchairState state = POIHelper.getWheelchair(cursor);
@@ -50,7 +44,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		double distance = cursor.getDouble( index );
 		int categoryId = POIHelper.getCategoryId( cursor );
 		int nodeTypeId = POIHelper.getNodeTypeId( cursor );
-		NodeType nodeType = SupportManager.get().lookupNodeType(nodeTypeId);
+		NodeType nodeType = manager.lookupNodeType(nodeTypeId);
 
 		if ( name.length() > 0 )
 			pliv.setName( name );
@@ -58,11 +52,11 @@ public class POIsListCursorAdapter extends CursorAdapter {
 			String nodeTypeName = nodeType.localizedName;
 			pliv.setName( nodeTypeName );
 		}
-		String category = SupportManager.get().lookupCategory( categoryId ).localizedName;
+		String category = manager.lookupCategory( categoryId ).localizedName;
 		pliv.setCategory( category + " - " + nodeType.localizedName );
 
 		pliv.setDistance( mDistanceFormatter.format( distance ));
-		Drawable marker = wheelDrawables[state.getId()];
+		Drawable marker = manager.lookupWheelDrawable(state.getId());
 		pliv.setIcon( marker );
 	}
 
