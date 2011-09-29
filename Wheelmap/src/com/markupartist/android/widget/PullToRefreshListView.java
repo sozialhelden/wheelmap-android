@@ -127,7 +127,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     public void onRestoreInstanceState(Parcelable state) {
             Bundle bundle = (Bundle) state;
             mRefreshState = bundle.getInt( EXTRA_REFRESH_STATE );
-            Log.d( "startup", "restore mRefreshState = " + mRefreshState );
 
             super.onRestoreInstanceState(bundle.getParcelable("superState"));
     }

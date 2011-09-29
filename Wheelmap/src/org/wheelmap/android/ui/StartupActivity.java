@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -31,6 +32,7 @@ public class StartupActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d( TAG, "onCreate" );
 		setContentView(R.layout.activity_startup);
 
 		FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
@@ -65,9 +67,24 @@ public class StartupActivity extends Activity implements
 	@Override
 	protected void onRestart() {
 		super.onRestart();
+		Log.d( TAG, "onRestart" );
 		finish();
 	}
 	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d( TAG, "onNewIntent" );
+	}
+	
+	
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.d( TAG, "onStart" );
+	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
