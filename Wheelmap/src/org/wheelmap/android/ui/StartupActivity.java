@@ -28,6 +28,7 @@ public class StartupActivity extends Activity implements
 	private State mState;
 	private SupportManager mSupportManager;
 	private ProgressBar mProgressBar;
+	private boolean mStartedOnce;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +56,15 @@ public class StartupActivity extends Activity implements
 			mState.mReceiver.setReceiver(this);
 		}
 		
-		if ( WheelmapApp.getSupportManager() != null ) {
+		if ( mStartedOnce )
 			finish();
-		}
+		else if ( !mStartedOnce && WheelmapApp.getSupportManager() != null)
+			startupAppDelayed();
 
 		mSupportManager = SupportManager.initOnce(getApplicationContext(),
 				mState.mReceiver);
 		((WheelmapApp)getApplication()).setSupportManager( mSupportManager );
+		mStartedOnce = true;
 	}
 
 	@Override
@@ -90,6 +93,7 @@ public class StartupActivity extends Activity implements
 		super.onDestroy();
 		if ( mSupportManager != null )
 			mSupportManager.releaseReceiver();
+		mStartedOnce = false;
 	}
 
 	private void startupApp() {

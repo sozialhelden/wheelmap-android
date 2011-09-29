@@ -15,7 +15,7 @@
     <string name="ws_unknown_l1">Der Status ist unbekannt. Hilf mit und markiere diesen Ort.</string>
     <string name="title_wheelchair_state">Rollstuhl Einstellungen</string>
     <string name="title_please_wait">Bitte warten</string>
-    <string name="title_pois_settings">Filter-Einstellungen</string>
+    <string name="title_pois_settings">Filter setzen</string>
     <string name="spinner_description_distance_km">Entfernung in km</string>
     <string name="settings_wheelchair_full_accessible">Ja</string>
     <string name="settings_wheelchair_no_accessible">Nein</string>
