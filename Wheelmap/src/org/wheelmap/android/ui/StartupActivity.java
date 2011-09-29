@@ -52,6 +52,10 @@ public class StartupActivity extends Activity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
+		
+		if ( WheelmapApp.getSupportManager() != null ) {
+			finish();
+		}
 
 		mSupportManager = SupportManager.initOnce(getApplicationContext(),
 				mState.mReceiver);
@@ -67,7 +71,8 @@ public class StartupActivity extends Activity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mSupportManager.releaseReceiver();
+		if ( mSupportManager != null )
+			mSupportManager.releaseReceiver();
 	}
 
 	private void startupApp() {

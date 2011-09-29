@@ -52,9 +52,10 @@ public class MyLocationManager {
 		mBestLastKnownLocation = calcBestLastKnownLocation();
 		if (mBestLastKnownLocation == null) {
 			// Berlin, Andreasstra�e 10
-			mBestLastKnownLocation = new Location("");
+			mBestLastKnownLocation = new Location(LocationManager.NETWORK_PROVIDER);
 			mBestLastKnownLocation.setLongitude(13.431240);
 			mBestLastKnownLocation.setLatitude(52.512523);
+			mBestLastKnownLocation.setAccuracy(1000 * 100 );
 		}
 		wasLastKnownLocation = true;
 		notifyReceiver();

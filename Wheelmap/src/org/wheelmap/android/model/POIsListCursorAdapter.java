@@ -12,6 +12,7 @@ import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -37,6 +38,9 @@ public class POIsListCursorAdapter extends CursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		POIsListItemView  pliv = (POIsListItemView ) view;
 		SupportManager manager = WheelmapApp.getSupportManager();
+		if ( manager == null ) {
+			Log.d( TAG, "SupportManager is null - how can that be?");
+		}
 		
 		String name = POIHelper.getName(cursor);
 		WheelchairState state = POIHelper.getWheelchair(cursor);
