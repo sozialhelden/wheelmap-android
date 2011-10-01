@@ -184,7 +184,7 @@ public class POIDetailActivityEditable extends Activity {
 
 	private void load() {
 
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI,
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
 				String.valueOf(poiID));
 
 		// Then query for this specific record:
@@ -255,7 +255,7 @@ public class POIDetailActivityEditable extends Activity {
 					WheelchairState newState = WheelchairState.valueOf(Integer
 							.parseInt(data.getAction()));
 					Uri poiUri = Uri.withAppendedPath(
-							Wheelmap.POIs.CONTENT_URI, String.valueOf(poiID));
+							Wheelmap.POIs.CONTENT_URI_POI_ID, String.valueOf(poiID));
 					ContentValues values = new ContentValues();
 					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
 					values.put(Wheelmap.POIs.UPDATE_TAG,

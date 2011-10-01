@@ -63,12 +63,12 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	protected synchronized OverlayItem createItem(int i) {
 		if (mCursor == null)
 			return null;
-		
+				
 		int count = mCursor.getCount();
 		if (count == 0 || i >= count) {
 			Log.d( TAG, "createItem cursor count = " + count + " item index = " + i );
 			return null;
-		}		
+		} 
 		
 		mCursor.moveToPosition(i);
 		String name = POIHelper.getName(mCursor);
@@ -118,11 +118,12 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 	
 	public synchronized void deactivateCursor() {
+		Log.d( TAG, "deactivate" );
 		mCursor.deactivate();
 	}
 
 	@Override
-	public synchronized boolean onTap(int index) {
+	protected synchronized boolean onTap(int index) {
 		if (mCursor == null)
 			return false;
 
@@ -156,7 +157,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 		Log.d(TAG, "onTap: index = " + index + " id = " + poiId);
 
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI,
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
 				String.valueOf(poiId));
 
 		// Then query for this specific record:

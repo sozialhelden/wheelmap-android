@@ -167,7 +167,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS:
 			return POIs.CONTENT_TYPE;
 		case POI_ID:
-			return POIs.CONTENT_ITEM_TYPE;
+			return POIs.CONTENT_TYPE_POI_ID;
 		case POIS_SORTED:
 			return POIs.CONTENT_TYPE_SORTED;
 		default:
@@ -254,7 +254,7 @@ public class POIsProvider extends ContentProvider {
 			long rowId = db.insert(POIS_TABLE_NAME, POIs.NAME, mValues);
 			if (rowId > 0) {
 				Uri placeUri = ContentUris.withAppendedId(
-						Wheelmap.POIs.CONTENT_URI, rowId);
+						Wheelmap.POIs.CONTENT_URI_POI_ID, rowId);
 				getContext().getContentResolver().notifyChange(placeUri, null);
 				getContext().getContentResolver().notifyChange(
 						POIs.CONTENT_URI_POI_SORTED, null);
@@ -405,7 +405,7 @@ public class POIsProvider extends ContentProvider {
 
 					if (rowId > 0) {
 						Uri placeUri = ContentUris.withAppendedId(
-								Wheelmap.POIs.CONTENT_URI, rowId);
+								Wheelmap.POIs.CONTENT_URI_POI_ID, rowId);
 						getContext().getContentResolver().notifyChange(placeUri, null);
 					}
 					count++;	
@@ -431,7 +431,7 @@ public class POIsProvider extends ContentProvider {
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois", POIS);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, "pois/#", POI_ID);
+		sUriMatcher.addURI(Wheelmap.AUTHORITY, "poi_id/#", POI_ID);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, "poissorted", POIS_SORTED);
 
 		// POIs

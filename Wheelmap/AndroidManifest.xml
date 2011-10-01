@@ -24,7 +24,6 @@
             </intent-filter>
             </activity>
            
-           
         <activity
             android:name="org.wheelmap.android.ui.POIsListActivity"
             android:theme="@style/Theme.IOSched" 

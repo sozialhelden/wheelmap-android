@@ -75,12 +75,14 @@ public class Wheelmap {
 			 * The content:// style URL for this table
 			 */
 			public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/pois");
+			public static final Uri CONTENT_URI_POI_ID = Uri.parse( "content://" + AUTHORITY + "/poi_id" );
 			public static final Uri CONTENT_URI_POI_SORTED = Uri.parse("content://" + AUTHORITY + "/poissorted" );
 
 			/**
 			 * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
 			 */
 			public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.pois";
+			public static final String CONTENT_TYPE_POI_ID = "vnd.android.cursor.dir/vnd.wheelmap.poi_id";
 			public static final String CONTENT_TYPE_SORTED = "vnd.android.cursor.dir/vnd.wheelmap.poissorted";
 			/**
 			 * The MIME type of a {@link #CONTENT_URI} sub-directory of a single note.

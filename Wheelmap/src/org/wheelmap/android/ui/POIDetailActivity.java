@@ -179,7 +179,7 @@ public class POIDetailActivity extends MapActivity {
 
 		// Use the ContentUris method to produce the base URI for the contact
 		// with _ID == 23.
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI,
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
 				String.valueOf(poiID));
 
 		// Then query for this specific record:
@@ -246,7 +246,7 @@ public class POIDetailActivity extends MapActivity {
 					WheelchairState newState = WheelchairState.valueOf(Integer
 							.parseInt(data.getAction()));
 					Uri poiUri = Uri.withAppendedPath(
-							Wheelmap.POIs.CONTENT_URI, String.valueOf(poiID));
+							Wheelmap.POIs.CONTENT_URI_POI_ID, String.valueOf(poiID));
 					ContentValues values = new ContentValues();
 					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
 					values.put(Wheelmap.POIs.UPDATE_TAG,
