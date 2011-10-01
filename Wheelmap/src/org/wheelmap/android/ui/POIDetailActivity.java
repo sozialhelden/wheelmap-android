@@ -27,15 +27,17 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity {
 	private final static String TAG = "poidetail";
 
-	//private ImageView iconImage = null;
+	// private ImageView iconImage = null;
 	private TextView nameText = null;
 	private TextView categoryText = null;
 	private TextView nodetypeText = null;
@@ -53,6 +55,7 @@ public class POIDetailActivity extends MapActivity {
 
 	private WheelchairState mWheelChairState;
 	private SupportManager mSupportManager;
+	private ViewGroup mContentView;
 
 	private Long poiID;
 
@@ -61,7 +64,8 @@ public class POIDetailActivity extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
 		mSupportManager = WheelmapApp.getSupportManager();
-		
+		System.gc();
+
 		nameText = (TextView) findViewById(R.id.title_name);
 		categoryText = (TextView) findViewById(R.id.title_category);
 		nodetypeText = (TextView) findViewById(R.id.nodetype);
@@ -126,12 +130,22 @@ public class POIDetailActivity extends MapActivity {
 		}
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mSupportManager.cleanReferences();
-		Log.d( TAG, "onDestroy" );
+		nullViewDrawable( mContentView);
+		mapView = null;
+		mapController = null;
+		System.gc();
+		System.gc(); // to be sure ;-)
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		Log.d("lowmemory", "detail - onLowMemory");
 	}
 
 	public void onItemEdit(View v) {
@@ -154,9 +168,10 @@ public class POIDetailActivity extends MapActivity {
 
 	private void setWheelchairState(WheelchairState newState) {
 		mWheelChairState = newState;
-		mStateIcon.setImageDrawable(mSupportManager.lookupWheelDrawable( newState.getId()));
-		mWheelchairStateText.setTextColor(getResources().getColor(mWheelchairStateTextColorMap
-				.get(newState)));
+		mStateIcon.setImageDrawable(mSupportManager
+				.lookupWheelDrawable(newState.getId()));
+		mWheelchairStateText.setTextColor(getResources().getColor(
+				mWheelchairStateTextColorMap.get(newState)));
 		mWheelchairStateText.setText(mWheelchairStateTextsMap.get(newState));
 	}
 
@@ -185,7 +200,7 @@ public class POIDetailActivity extends MapActivity {
 		int categoryId = POIHelper.getCategoryId(cur);
 
 		NodeType nodeType = mSupportManager.lookupNodeType(nodeTypeId);
-		//iconImage.setImageDrawable(nodeType.iconDrawable);
+		// iconImage.setImageDrawable(nodeType.iconDrawable);
 
 		setWheelchairState(state);
 		nameText.setText(name);
@@ -288,22 +303,69 @@ public class POIDetailActivity extends MapActivity {
 				return null;
 			return item;
 		}
-		
+
 		@Override
 		public boolean onTap(int index) {
 			finish();
-			
+
 			int lat = item.getPoint().getLatitudeE6();
 			int lon = item.getPoint().getLongitudeE6();
-						
-			Intent i = new Intent(POIDetailActivity.this, POIsMapsforgeActivity.class);
-			i.putExtra( POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat );
-			i.putExtra( POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon );
-			
-			POIDetailActivity.this.startActivity( i );
+
+			Intent i = new Intent(POIDetailActivity.this,
+					POIsMapsforgeActivity.class);
+			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
+			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
+
+			POIDetailActivity.this.startActivity(i);
 			return true;
 		}
 
+	}
+
+	@Override
+	public void setContentView(int layoutResID) {
+		ViewGroup mainView = (ViewGroup) LayoutInflater.from(this).inflate(
+				layoutResID, null);
+
+		setContentView(mainView);
+	}
+
+	@Override
+	public void setContentView(View view) {
+		super.setContentView(view);
+
+		mContentView = (ViewGroup) view;
+	}
+
+	private void nullViewDrawablesRecursive(View view) {
+		if (view != null) {
+			try {
+				ViewGroup viewGroup = (ViewGroup) view;
+
+				int childCount = viewGroup.getChildCount();
+				for (int index = 0; index < childCount; index++) {
+					View child = viewGroup.getChildAt(index);
+					nullViewDrawablesRecursive(child);
+				}
+			} catch (Exception e) {
+			}
+
+			nullViewDrawable(view);
+		}
+	}
+
+	private void nullViewDrawable(View view) {
+		try {
+			view.setBackgroundDrawable(null);
+		} catch (Exception e) {
+		}
+
+		try {
+			ImageView imageView = (ImageView) view;
+			imageView.setImageDrawable(null);
+			imageView.setBackgroundDrawable(null);
+		} catch (Exception e) {
+		}
 	}
 
 }

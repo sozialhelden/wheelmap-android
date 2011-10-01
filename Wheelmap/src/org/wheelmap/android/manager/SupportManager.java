@@ -47,6 +47,7 @@ public class SupportManager {
 
 	private NodeType mDefaultNodeType;
 	private Category mDefaultCategory;
+	private boolean mInitialized;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	// TODO: put in a proper update INTERVAL
@@ -89,6 +90,7 @@ public class SupportManager {
 
 	private SupportManager(Context ctx) {
 		mContext = ctx;
+		mInitialized = false;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
 
@@ -108,6 +110,10 @@ public class SupportManager {
 	@Override
 	protected void finalize() {
 		Log.d(TAG, "SupportManager killed" );
+	}
+	
+	public boolean isInitialized() {
+		return mInitialized;
 	}
 
 	public static SupportManager initOnce(Context ctx,
@@ -183,12 +189,15 @@ public class SupportManager {
 		Cursor cursor = resolver.query(LastUpdateContent.CONTENT_URI,
 				LastUpdateContent.PROJECTION, null, null, null);
 		cursor.moveToFirst();
-		if (cursor.getCount() == 1) {
+		int count = cursor.getCount();
+		
+		if (count == 1) {
 			Date date;
 			try {
 				date = Support.LastUpdateContent.parseDate(LastUpdateContent
 						.getDate(cursor));
 			} catch (ParseException e) {
+				cursor.close();
 				return true;
 			}
 
@@ -197,9 +206,12 @@ public class SupportManager {
 			long days = (now - date.getTime()) / MILLISECS_PER_DAY;
 			Log.d(TAG, "checkIfUpdateDurationPassed: days = " + days);
 
-			if (days >= DATE_INTERVAL_FOR_UPDATE_IN_DAYS)
+			if (days >= DATE_INTERVAL_FOR_UPDATE_IN_DAYS) {
+				cursor.close();
 				return true;
+			}
 
+			cursor.close();
 			return false;
 		}
 
@@ -207,6 +219,8 @@ public class SupportManager {
 	}
 
 	public void createCurrentTimeTag() {
+		mInitialized = true;
+		
 		ContentValues values = new ContentValues();
 		String date = Support.LastUpdateContent.formatDate(new Date());
 		values.put(LastUpdateContent.DATE, date);
@@ -220,6 +234,7 @@ public class SupportManager {
 	private void initLookup() {
 		initCategories();
 		initNodeTypes();
+		mInitialized = true;
 	}
 
 	private boolean checkForLocales() {
@@ -494,6 +509,7 @@ public class SupportManager {
 		Cursor c = resolver.query(contentUri, projection, whereClause,
 				whereValues, null);
 		int cursorCount = c.getCount();
+		c.close();
 		if (cursorCount == 0)
 			resolver.insert(contentUri, values);
 		else if (cursorCount == 1)

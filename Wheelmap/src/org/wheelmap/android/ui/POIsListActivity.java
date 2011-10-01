@@ -180,7 +180,7 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void runQueryOnCreation() {
-//		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
+		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
 
 		if (!mState.mIsRecreated)
 			((PullToRefreshListView) getListView()).prepareForRefresh();
@@ -188,7 +188,7 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void runQuery(boolean forceReload) {
-//		Log.d(TAG, "runQuery: forceReload = " + forceReload);
+		Log.d(TAG, "runQuery: forceReload = " + forceReload);
 		if (forceReload) {
 			mFirstVisiblePosition = 0;
 			requestData();

@@ -11,6 +11,7 @@ import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.BaseDomain;
 import wheelmap.org.domain.Meta;
+import wheelmap.org.request.BaseNodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import wheelmap.org.request.RequestBuilder;
 import android.content.ContentResolver;
@@ -49,10 +50,13 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 			throws SyncServiceException {
 		// Server seems to count from 1...
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
-
+		if ( requestBuilder instanceof BaseNodesRequestBuilder)
+				((BaseNodesRequestBuilder)requestBuilder).paging( page );
+		
 		Meta m = executeSingleRequest(requestBuilder);
 		if ( m == null )
 			return;
+		
 //		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 
 		int numOfPages = m.getNumPages().intValue();
@@ -105,8 +109,8 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_INTERNAL_ERROR, e);
 			} catch (Exception e) {
+				retryCount++;
 				if (retryCount < MAX_RETRY_COUNT) {
-					retryCount++;
 					try {
 						Thread.sleep( 200 );
 					} catch (InterruptedException e1) {

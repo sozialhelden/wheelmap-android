@@ -24,22 +24,30 @@ import android.widget.Toast;
 public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	private final static String TAG = "mapsforge";
 
-	private final static String THREAD_NAME = "CursorMapsforgeOverlay";
+	private final static String THREAD_NAME = "MapsforgeOverlay";
 
 	private Context mContext;
 	private Cursor mCursor;
 
 	public POIsCursorMapsforgeOverlay(Context context) {
 		super(null);
-
 		mContext = context;
-		populate();
+	}
+	
+	@Override
+	public void finalize() {
+		if ( mCursor != null )
+			mCursor.close();
 	}
 
 	public synchronized void setCursor(Cursor cursor) {
-		if (cursor == null)
-			return;
+		if ( mCursor != null)
+			mCursor.close();
+		
 		mCursor = cursor;
+		if ( mCursor == null )
+			return;
+		
 		mCursor.registerContentObserver(new ChangeObserver());
 		populate();
 	}
@@ -50,16 +58,18 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			return 0;
 		return mCursor.getCount();
 	}
-
+	
 	@Override
 	protected synchronized OverlayItem createItem(int i) {
 		if (mCursor == null)
 			return null;
-
+		
 		int count = mCursor.getCount();
-		if (count == 0 || i >= count)
+		if (count == 0 || i >= count) {
+			Log.d( TAG, "createItem cursor count = " + count + " item index = " + i );
 			return null;
-
+		}		
+		
 		mCursor.moveToPosition(i);
 		String name = POIHelper.getName(mCursor);
 		SupportManager manager = WheelmapApp.getSupportManager();
@@ -101,9 +111,14 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		}
 	}
 	
-	private synchronized void reload() {
+	public synchronized void reload() {
+		Log.d( TAG, "reload - requery and populate" );
 		mCursor.requery();
 		populate();
+	}
+	
+	public synchronized void deactivateCursor() {
+		mCursor.deactivate();
 	}
 
 	@Override

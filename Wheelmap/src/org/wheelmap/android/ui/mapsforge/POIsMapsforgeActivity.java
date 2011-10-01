@@ -49,8 +49,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	/** State held between configuration changes. */
 	private State mState;
 
-	private Cursor mCursor;
-
 	private MapController mMapController;
 	private MyMapView mMapView;
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
@@ -77,6 +75,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
+		mMapView.setScaleBar( true );
 
 		ConfigureMapView.pickAppropriateMap(this, mMapView);
 
@@ -158,7 +157,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		super.onResume();
 		isInForeground = true;
 		Log.d(TAG, "onResume isInForeground = " + isInForeground);
-		mCursor.requery();
+		// We dont need that here as we do a runQuery anyways
+	
+		// mPoisItemizedOverlay.reload();
 		mLocationManager.register(mState.mReceiver, true);
 		runQuery();
 	}
@@ -168,26 +169,30 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		super.onPause();
 		isInForeground = false;
 		Log.d(TAG, "onPause isInForeground = " + isInForeground);
-		mCursor.deactivate();
+		mPoisItemizedOverlay.deactivateCursor();
 		mLocationManager.release(mState.mReceiver);
+		System.gc();
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		Log.d( "lowmemory", "mapsforge - onLowMemory" );
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if ( mCursor != null )
-			mCursor.close();
 		WheelmapApp.getSupportManager().cleanReferences();
-		System.gc();
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		int lat = savedInstanceState.getInt( EXTRA_CENTER_AT_LAT );
-		int lon = savedInstanceState.getInt( EXTRA_CENTER_AT_LON );
-		GeoPoint gp = new GeoPoint( lat, lon );
-		mMapController.setCenter( gp );
+		int lat = savedInstanceState.getInt(EXTRA_CENTER_AT_LAT);
+		int lon = savedInstanceState.getInt(EXTRA_CENTER_AT_LON);
+		GeoPoint gp = new GeoPoint(lat, lon);
+		mMapController.setCenter(gp);
 		isCentered = true;
 	}
 
@@ -195,21 +200,22 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		GeoPoint gp = mMapView.getMapCenter();
-		outState.putInt( EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
-		outState.putInt( EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
+		outState.putInt(EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
+		outState.putInt(EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
 	}
+	
 
 	private void runQuery() {
 		// Run query
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
-		mCursor = getContentResolver().query(
+		Cursor cursor = getContentResolver().query(
 				uri,
 				Wheelmap.POIs.PROJECTION,
 				QueriesBuilderHelper
 						.userSettingsFilter(getApplicationContext()), null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
 
-		mPoisItemizedOverlay.setCursor(mCursor);
+		mPoisItemizedOverlay.setCursor(cursor);
 	}
 
 	/** {@inheritDoc} */
@@ -296,7 +302,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		GeoPoint center = mMapView.getMapCenter();
-		mMapView.setLastRequestedLocation( center );
+		mMapView.setLastRequestedLocation(center);
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
 						+ (lonSpan / 2),

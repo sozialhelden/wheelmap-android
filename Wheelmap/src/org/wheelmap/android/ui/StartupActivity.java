@@ -33,7 +33,7 @@ public class StartupActivity extends Activity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d( TAG, "onCreate" );
+		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_startup);
 
 		FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
@@ -55,43 +55,32 @@ public class StartupActivity extends Activity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
-		
-		if ( mStartedOnce )
-			finish();
-		else if ( !mStartedOnce && WheelmapApp.getSupportManager() != null)
-			startupAppDelayed();
+
+		SupportManager manager = WheelmapApp.getSupportManager();
+		if (manager != null && manager.isInitialized()) {
+			if (mStartedOnce)
+				finish();
+			else
+				startupAppDelayed();
+		}
 
 		mSupportManager = SupportManager.initOnce(getApplicationContext(),
 				mState.mReceiver);
-		((WheelmapApp)getApplication()).setSupportManager( mSupportManager );
+		((WheelmapApp) getApplication()).setSupportManager(mSupportManager);
 		mStartedOnce = true;
 	}
 
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Log.d( TAG, "onRestart" );
+		Log.d(TAG, "onRestart");
 		finish();
-	}
-	
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		Log.d( TAG, "onNewIntent" );
-	}
-	
-	
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		Log.d( TAG, "onStart" );
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if ( mSupportManager != null )
+		if (mSupportManager != null)
 			mSupportManager.releaseReceiver();
 		mStartedOnce = false;
 	}
@@ -168,8 +157,8 @@ public class StartupActivity extends Activity implements
 	private void showErrorDialog(SyncServiceException e) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if ( e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
-			builder.setTitle( R.string.error_network_title );
+		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
+			builder.setTitle(R.string.error_network_title);
 		else
 			builder.setTitle(R.string.error_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);

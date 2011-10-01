@@ -20,6 +20,7 @@ public class WheelmapApp extends Application {
 	public void onCreate() {
 		ACRA.init(this);
 		super.onCreate();
+		Log.d( TAG, "onCreate" );
 		mLocationManager = MyLocationManager.initOnce( this );
 		INSTANCE = this;
 	}
@@ -28,8 +29,15 @@ public class WheelmapApp extends Application {
 	public void onTerminate() {
 		super.onTerminate();
 		mLocationManager.clear();
+		Log.d(TAG,  "onTerminate" );
 	}
 	
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		Log.d( "lowmemory", "wheelmap app - onLowMemory" );
+	}
+
 	public void setSupportManager( SupportManager manager ) {
 		Log.d( TAG, "Setting new SupportManager" );
 		mSupportManager = manager;

@@ -3,21 +3,21 @@
 	<LinearLayout style="@style/ActionBarCompat">
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
-	<ProgressBar android:id="@+id/progressbar_map"
+		<ProgressBar android:id="@+id/progressbar_map"
 			android:layout_width="18dip" android:layout_height="18dip"
-			android:indeterminate="true"  android:layout_gravity="center_vertical"
-			android:layout_margin="8dip"/>
+			android:indeterminate="true" android:layout_gravity="center_vertical"
+			android:layout_margin="8dip" />
 		<!-- dummy view forces action aligned right -->
 		<View style="@style/TitleBarSpring" />
-        
-        <ImageView style="@style/TitleBarSeparator" />
-        <ImageView style="@style/TitleBarAction"
-            android:id="@+id/btn_title_refresh"
-            android:src="@android:drawable/ic_menu_mylocation"
-            android:onClick="onCenterClick" />
+
 		<ImageView style="@style/TitleBarSeparator" />
-		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
-			android:src="@android:drawable/ic_menu_info_details" android:onClick="onInfoClick" />
+		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_center_location"
+			android:src="@android:drawable/ic_menu_mylocation"
+			android:background="@drawable/title_button" android:onClick="onCenterClick" />
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_info"
+			android:src="@android:drawable/ic_menu_info_details"
+			android:background="@drawable/title_button" android:onClick="onInfoClick" />
 	</LinearLayout>
 	<LinearLayout style="@style/ActionBarSwitcher">
 		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"

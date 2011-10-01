@@ -6,13 +6,16 @@
 		<!-- dummy view forces action aligned right -->
 		<View style="@style/TitleBarSpring" />
 
-		<ImageView style="@style/TitleBarSeparator" android:visibility="gone" />
-		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
-			android:src="@android:drawable/ic_menu_add" android:onClick="onNewPOIClick"
-			android:visibility="gone" android:clickable="false" />
+		<ImageView style="@style/TitleBarSeparator"
+			android:visibility="gone" />
+		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_newpoi"
+			android:src="@android:drawable/ic_menu_add" android:background="@drawable/title_button"
+			android:onClick="onNewPOIClick" android:visibility="gone"
+			android:clickable="false" />
 		<ImageView style="@style/TitleBarSeparator" />
-		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_refresh"
-			android:src="@android:drawable/ic_menu_info_details" android:onClick="onInfoClick" />
+		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_info"
+			android:src="@android:drawable/ic_menu_info_details"
+			android:background="@drawable/title_button" android:onClick="onInfoClick" />
 	</LinearLayout>
 	<LinearLayout style="@style/ActionBarSwitcher">
 		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"

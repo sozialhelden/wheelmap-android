@@ -62,7 +62,8 @@ public class QueriesBuilderHelper {
 			}
 
 		}
-
+		
+		cursor.close();
 		// wheelchair state filter
 
 
