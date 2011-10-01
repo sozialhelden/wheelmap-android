@@ -15,7 +15,7 @@
     <string name="title_wheelchair_state">Wheelchair Settings</string>
     <string name="edit_poi">Edit</string>
     <string name="btn_list">List</string>
-    <string name="no_pois">no places found</string>
+    <string name="no_pois">no places found according your filter settings</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
     <string name="ws_enabled_title">Wheelchair accessible</string>
