@@ -121,7 +121,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
-
+		Log.d( TAG, "has prevoius state = " + previousState );
 		if (previousState) {
 			// Start listening for SyncService updates again
 			mState.mReceiver.setReceiver(this);
@@ -265,6 +265,14 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		}
 
 		}
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		// Clear any strong references to this Activity, we'll reattach to
+		// handle events on the other side.
+		mState.mReceiver.clearReceiver();
+		return mState;
 	}
 
 	private void updateRefreshStatus() {

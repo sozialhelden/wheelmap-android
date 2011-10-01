@@ -47,17 +47,14 @@ public class SupportManager {
 
 	private NodeType mDefaultNodeType;
 	private Category mDefaultCategory;
+	private boolean mNeedsReloading;
 	private boolean mInitialized;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	// TODO: put in a proper update INTERVAL
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 2;
-
-	public final static int CREATION_RUNNING = 0x20;
-	public final static int CREATION_FINISHED = 0x21;
-	public final static int CREATION_ERROR = 0x22;
-
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
+	
 
 	public static class NodeType {
 		public NodeType(int id, String identifier, String localizedName,
@@ -88,9 +85,8 @@ public class SupportManager {
 		public String localizedName;
 	}
 
-	private SupportManager(Context ctx) {
+	public SupportManager(Context ctx) {
 		mContext = ctx;
-		mInitialized = false;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
 
@@ -105,43 +101,39 @@ public class SupportManager {
 		Drawable wheelNo = ctx.getResources().getDrawable( R.drawable.wheelchair_state_disabled );
 		Drawable wheelUnknown = ctx.getResources().getDrawable( R.drawable.wheelchair_state_unknown );
 		mWheelDrawables = new Drawable[] { wheelUnknown, wheelYes, wheelLimited, wheelNo, null };
+			
+		mInitialized = false;
+		mNeedsReloading = false;
+		if (checkForLocales() && checkForCategories() && checkForNodeTypes()) {
+			initLookup();
+			
+			if (checkIfUpdateDurationPassed())
+				mNeedsReloading = true;
+		} else
+			mNeedsReloading = true;
 	}
 	
-	@Override
-	protected void finalize() {
-		Log.d(TAG, "SupportManager killed" );
+	public void releaseReceiver() {
+		if ( mStatusSender != null)
+			mStatusSender.clearReceiver();
 	}
 	
 	public boolean isInitialized() {
 		return mInitialized;
 	}
-
-	public static SupportManager initOnce(Context ctx,
-			DetachableResultReceiver receiver) {
-		
-		SupportManager manager = new SupportManager(ctx);
-		manager.init(receiver);
-		return manager;
+	
+	public boolean needsReloading() {
+		return mNeedsReloading;
 	}
 	
-	public void releaseReceiver() {
-		mStatusSender = null;
+	private void initLookup() {
+		initCategories();
+		initNodeTypes();
+		mInitialized = true;
 	}
 	
-
-	private void init(DetachableResultReceiver receiver) {
-//		Log.d(TAG, "SupportManager:init");
+	public void reload( DetachableResultReceiver receiver ) {
 		mStatusSender = receiver;
-		
-		if (checkForLocales() && checkForCategories() && checkForNodeTypes()
-				&& !checkIfUpdateDurationPassed()) {
-			initLookup();
-			mStatusSender.send(CREATION_FINISHED, Bundle.EMPTY);
-			return;
-		}
-
-		mStatusSender.send(CREATION_RUNNING, Bundle.EMPTY);
-
 		Intent localesIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
 				SyncService.class);
 		localesIntent.putExtra(SyncService.EXTRA_WHAT,
@@ -149,6 +141,23 @@ public class SupportManager {
 		localesIntent
 				.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
 		mContext.startService(localesIntent);
+	}
+	
+	public void reloadStageTwo() {
+		initLocales();
+		retrieveCategories();
+	}
+	
+	public void reloadStageThree() {
+		initCategories();
+		retrieveNodeTypes();
+	}
+	
+	public void reloadStageFour() {
+		initNodeTypes();
+		createCurrentTimeTag();
+		mInitialized = true;
+		mNeedsReloading = false;
 	}
 
 	public void retrieveCategories() {
@@ -219,7 +228,6 @@ public class SupportManager {
 	}
 
 	public void createCurrentTimeTag() {
-		mInitialized = true;
 		
 		ContentValues values = new ContentValues();
 		String date = Support.LastUpdateContent.formatDate(new Date());
@@ -229,12 +237,6 @@ public class SupportManager {
 
 		insertContentValues(LastUpdateContent.CONTENT_URI,
 				LastUpdateContent.PROJECTION, whereClause, whereValues, values);
-	}
-
-	private void initLookup() {
-		initCategories();
-		initNodeTypes();
-		mInitialized = true;
 	}
 
 	private boolean checkForLocales() {
@@ -266,9 +268,9 @@ public class SupportManager {
 		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
 				CategoriesContent.PROJECTION, null, null, null);
 
-		boolean dbEmpty = cursor.getCount() != 0;
+		boolean dbFull = cursor.getCount() != 0;
 		cursor.close();
-		return dbEmpty;
+		return dbFull;
 	}
 
 	private boolean checkForNodeTypes() {
@@ -276,9 +278,9 @@ public class SupportManager {
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
 				NodeTypesContent.PROJECTION, null, null, null);
 
-		boolean dbEmpty = cursor.getCount() != 0;
+		boolean dbFull = cursor.getCount() != 0;
 		cursor.close();
-		return dbEmpty;
+		return dbFull;
 	}
 
 	public void initLocales() {

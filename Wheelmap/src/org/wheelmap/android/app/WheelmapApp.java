@@ -22,6 +22,7 @@ public class WheelmapApp extends Application {
 		super.onCreate();
 		Log.d( TAG, "onCreate" );
 		mLocationManager = MyLocationManager.initOnce( this );
+		mSupportManager = new SupportManager( this );
 		INSTANCE = this;
 	}
 
@@ -36,11 +37,6 @@ public class WheelmapApp extends Application {
 	public void onLowMemory() {
 		super.onLowMemory();
 		Log.d( "lowmemory", "wheelmap app - onLowMemory" );
-	}
-
-	public void setSupportManager( SupportManager manager ) {
-		Log.d( TAG, "Setting new SupportManager" );
-		mSupportManager = manager;
 	}
 	
 	public static SupportManager getSupportManager() {

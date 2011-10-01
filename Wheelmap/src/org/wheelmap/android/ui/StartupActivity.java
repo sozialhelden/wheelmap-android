@@ -56,17 +56,16 @@ public class StartupActivity extends Activity implements
 			mState.mReceiver.setReceiver(this);
 		}
 
-		SupportManager manager = WheelmapApp.getSupportManager();
-		if (manager != null && manager.isInitialized()) {
+		mSupportManager = WheelmapApp.getSupportManager();
+		if (mSupportManager.isInitialized()) {
 			if (mStartedOnce)
 				finish();
 			else
 				startupAppDelayed();
+		} else if ( mSupportManager.needsReloading()) {
+			mSupportManager.reload( mState.mReceiver );
 		}
-
-		mSupportManager = SupportManager.initOnce(getApplicationContext(),
-				mState.mReceiver);
-		((WheelmapApp) getApplication()).setSupportManager(mSupportManager);
+		
 		mStartedOnce = true;
 	}
 
@@ -85,14 +84,6 @@ public class StartupActivity extends Activity implements
 		mStartedOnce = false;
 	}
 
-	private void startupApp() {
-		Intent intent = new Intent(getApplicationContext(),
-				POIsListActivity.class);
-		startActivity(intent);
-		finish();
-		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-	}
-
 	private void startupAppDelayed() {
 		Handler h = new Handler();
 		h.postDelayed(new Runnable() {
@@ -105,6 +96,14 @@ public class StartupActivity extends Activity implements
 		}, 1000);
 	}
 
+	private void startupApp() {
+		Intent intent = new Intent(getApplicationContext(),
+				POIsListActivity.class);
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		// Clear any strong references to this Activity, we'll reattach to
@@ -120,23 +119,18 @@ public class StartupActivity extends Activity implements
 			int what = resultData.getInt(SyncService.EXTRA_WHAT);
 			switch (what) {
 			case SyncService.WHAT_RETRIEVE_LOCALES:
-				mSupportManager.initLocales();
-				mSupportManager.retrieveCategories();
+				mSupportManager.reloadStageTwo();
 				break;
 			case SyncService.WHAT_RETRIEVE_CATEGORIES:
-				mSupportManager.initCategories();
-				mSupportManager.retrieveNodeTypes();
+				mSupportManager.reloadStageThree();
 				break;
 			case SyncService.WHAT_RETRIEVE_NODETYPES:
-				mSupportManager.initNodeTypes();
-				mSupportManager.createCurrentTimeTag();
+				mSupportManager.reloadStageFour();
 				startupAppDelayed();
 				break;
 			default:
 				// nothing to do
 			}
-		} else if (resultCode == SupportManager.CREATION_FINISHED) {
-			startupAppDelayed();
 		} else if (resultCode == SyncService.STATUS_ERROR) {
 			final SyncServiceException e = resultData
 					.getParcelable(SyncService.EXTRA_ERROR);

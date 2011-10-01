@@ -61,7 +61,7 @@ public class ConfigureMapView {
 
 		int tileSizeInBytes = MapView.getTileSizeInBytes();
 		int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER / tileSizeInBytes;
-		Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes + " tileNum = " + tileNum );
+//		Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes + " tileNum = " + tileNum );
 		
 		mapView.setMemoryCardCacheSize( tileNum );
 		c.close();
