@@ -22,7 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.SectionIndexer;
 import java.util.ArrayList;
 import java.util.List;
-//import com.commonsware.cwac.sacklist.SackOfViewsAdapter;
+
 
 /**
  * Adapter that merges multiple child adapters and views into a single

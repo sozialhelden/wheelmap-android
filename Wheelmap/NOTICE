@@ -1,3 +1,6 @@
+This Software is licenses undert the Apache License V2.
+See the LICENSE file for details.
+
 This App is based on a couple of other works. Credits go to:
 
 - Mapsforge at http://www.mapsforge.org (LGPL V3)
@@ -7,6 +10,8 @@ This App is based on a couple of other works. Credits go to:
 - Jackson JSon Parser (Apache License, Version 2.0)
 - CommonsWare (some Modules) (Apache License, Version 2.0)
 - Icons – Maps Icons Collection http://mapicons.nicolasmollet.com (CC BY-SA 3.0)
+
+See the licenses directory for the respective licenses
 
 The LGPL can be found at https://www.gnu.org/licenses/lgpl.html V3
 The Apache license can be found at http://www.apache.org/licenses/LICENSE-2.0.html
