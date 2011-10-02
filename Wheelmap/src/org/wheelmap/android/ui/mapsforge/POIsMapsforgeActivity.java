@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.ui.mapsforge;
 
@@ -60,8 +60,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private final static String TAG = "mapsforge";
 
 	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
-	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_X";
-	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_Y";
+	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LAT";
+	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LON";
+	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.ui.Mapsforge.CENTER_ZOOM";
+
 
 	/** State held between configuration changes. */
 	private State mState;
@@ -92,7 +94,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
-		mMapView.setScaleBar( true );
+		mMapView.setScaleBar(true);
 
 		ConfigureMapView.pickAppropriateMap(this, mMapView);
 
@@ -107,38 +109,19 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		mMapView.registerListener(this);
+		mMapController.setZoom(18); // Zoon 1 is world view
+
 		isCentered = false;
 
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
-			if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
-				int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
-				int lon = extras.getInt(EXTRA_CENTER_AT_LON);
-				GeoPoint gp = new GeoPoint(lat, lon);
-				mMapController.setCenter(gp);
-				isCentered = true;
-			}
-		}
 
-		if (getIntent() != null
-				&& !getIntent().getBooleanExtra(EXTRA_NO_RETRIEVAL, false)) {
-			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
-
-						@Override
-						public void onGlobalLayout() {
-							mMapController.setZoom(18); // Zoon 1 is world
-														// view
-							requestUpdate();
-							mMapView.getViewTreeObserver()
-									.removeGlobalOnLayoutListener(this);
-						}
-					});
+			executeTargetCenterExtras(extras);
+			executeRetrieval(extras);
 		}
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
-		Log.d( TAG, "has prevoius state = " + previousState );
 		if (previousState) {
 			// Start listening for SyncService updates again
 			mState.mReceiver.setReceiver(this);
@@ -147,6 +130,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		} else {
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
+			updateRefreshStatus();
 		}
 
 		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
@@ -169,12 +153,20 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Bundle extras = intent.getExtras();
+		executeTargetCenterExtras(extras);
+		executeRetrieval(extras);
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		isInForeground = true;
 		Log.d(TAG, "onResume isInForeground = " + isInForeground);
 		// We dont need that here as we do a runQuery anyways
-	
+
 		// mPoisItemizedOverlay.reload();
 		mLocationManager.register(mState.mReceiver, true);
 		runQuery();
@@ -193,7 +185,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	@Override
 	public void onLowMemory() {
 		super.onLowMemory();
-		Log.d( "lowmemory", "mapsforge - onLowMemory" );
+		Log.d("lowmemory", "mapsforge - onLowMemory");
 	}
 
 	@Override
@@ -205,11 +197,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		int lat = savedInstanceState.getInt(EXTRA_CENTER_AT_LAT);
-		int lon = savedInstanceState.getInt(EXTRA_CENTER_AT_LON);
-		GeoPoint gp = new GeoPoint(lat, lon);
-		mMapController.setCenter(gp);
-		isCentered = true;
+		executeTargetCenterExtras( savedInstanceState );
 	}
 
 	@Override
@@ -218,8 +206,42 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		GeoPoint gp = mMapView.getMapCenter();
 		outState.putInt(EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
 		outState.putInt(EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
+		outState.putInt( EXTRA_CENTER_ZOOM, mMapView.getZoomLevel());
 	}
-	
+
+	private void executeTargetCenterExtras(Bundle extras) {
+		if (extras == null) {
+			return;
+		}
+		if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
+			int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
+			int lon = extras.getInt(EXTRA_CENTER_AT_LON);
+			int zoom = extras.getInt( EXTRA_CENTER_ZOOM, 18 );
+			
+			GeoPoint gp = new GeoPoint(lat, lon);
+			mMapController.setCenter(gp);
+			mMapController.setZoom(zoom); // Zoon 1 is world view
+			isCentered = true;
+		}
+	}
+
+	private void executeRetrieval(Bundle extras) {
+		boolean retrieval = ! extras.getBoolean(EXTRA_NO_RETRIEVAL, false);
+		Log.d( TAG, "retrieval = " + retrieval );
+		if (retrieval) {
+			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
+					new OnGlobalLayoutListener() {
+
+						@Override
+						public void onGlobalLayout() {
+							mMapController.setZoom(18); // Zoon 1 is world view
+							requestUpdate();
+							mMapView.getViewTreeObserver()
+									.removeGlobalOnLayoutListener(this);
+						}
+					});
+		}
+	}
 
 	private void runQuery() {
 		// Run query
@@ -278,7 +300,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		}
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		// Clear any strong references to this Activity, we'll reattach to
@@ -332,7 +354,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void requestUpdate() {
-		// get bounding box from current view
 		Bundle extras = new Bundle();
 		//
 		fillExtrasWithBoundingRect(extras);

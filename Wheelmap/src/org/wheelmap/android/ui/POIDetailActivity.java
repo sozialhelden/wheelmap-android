@@ -37,7 +37,6 @@ import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -131,6 +130,7 @@ public class POIDetailActivity extends MapActivity {
 		if (poiID != -1) {
 			load();
 		}
+		
 	}
 
 	@Override
@@ -330,6 +330,7 @@ public class POIDetailActivity extends MapActivity {
 
 			Intent i = new Intent(POIDetailActivity.this,
 					POIsMapsforgeActivity.class);
+			i.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, true);
 			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
 			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
 

@@ -73,12 +73,12 @@ public class POIsListActivity extends ListActivity implements
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 	public final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
 	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
-	
+
 	private State mState;
 	private float mDistance;
 	private int mFirstVisiblePosition = 0;
 	private boolean isInForeground;
-	
+
 	private ViewStub mEmptyNoPois;
 
 	GoogleAnalyticsTracker tracker;
@@ -95,9 +95,8 @@ public class POIsListActivity extends ListActivity implements
 		tracker.trackPageView("/ListActivity");
 
 		setContentView(R.layout.activity_list);
-		mEmptyNoPois = (ViewStub)getListView().getEmptyView();
-		
-		Log.d( TAG, "mEmptyNoPois = " + mEmptyNoPois);
+		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
+
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
 		// Attach event handlers
@@ -106,6 +105,8 @@ public class POIsListActivity extends ListActivity implements
 				Intent intent = new Intent(POIsListActivity.this,
 						POIsMapsforgeActivity.class);
 				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+						| Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				startActivity(intent);
 				overridePendingTransition(0, 0);
 				tracker.trackEvent("Clicks", // Category
@@ -150,16 +151,16 @@ public class POIsListActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		isInForeground = true;
-		Log.d( TAG, "onResume isInForeground = " + isInForeground);
+		Log.d(TAG, "onResume isInForeground = " + isInForeground);
 		mLocationManager.register(mState.mReceiver, true);
 		runQueryOnCreation();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		isInForeground = false;
-		Log.d( TAG, "onPause isInForeground = " + isInForeground);
+		Log.d(TAG, "onPause isInForeground = " + isInForeground);
 		mLocationManager.release(mState.mReceiver);
 		setIsRecreated(true);
 	}
@@ -173,16 +174,16 @@ public class POIsListActivity extends ListActivity implements
 
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState( state );
+		super.onRestoreInstanceState(state);
 		isRecreated(state);
-		mFirstVisiblePosition = state.getInt( EXTRA_FIRST_VISIBLE_POSITION, 1);
+		mFirstVisiblePosition = state.getInt(EXTRA_FIRST_VISIBLE_POSITION, 1);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(EXTRA_IS_RECREATED, true);
 		saveListPosition();
-		outState.putInt( EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition );
+		outState.putInt(EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -203,9 +204,9 @@ public class POIsListActivity extends ListActivity implements
 
 	public void runQueryOnCreation() {
 		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
-		if ( !mState.mIsRecreated) {
+		if (!mState.mIsRecreated) {
 			mFirstVisiblePosition = 0;
-			getListView().setSelection( mFirstVisiblePosition );
+			getListView().setSelection(mFirstVisiblePosition);
 			((PullToRefreshListView) getListView()).prepareForRefresh();
 		}
 		runQuery(!mState.mIsRecreated);
@@ -230,8 +231,8 @@ public class POIsListActivity extends ListActivity implements
 				wrappingCursor);
 
 		setListAdapter(adapter);
-		Log.d( TAG, "runQuery: mFirstVisible = " + mFirstVisiblePosition );
-		getListView().setSelection( mFirstVisiblePosition );
+		Log.d(TAG, "runQuery: mFirstVisible = " + mFirstVisiblePosition);
+		getListView().setSelection(mFirstVisiblePosition);
 
 	}
 
@@ -273,7 +274,7 @@ public class POIsListActivity extends ListActivity implements
 
 	public void onNewPOIClick(View v) {
 		saveListPosition();
-		
+
 		// create new POI and start editing
 		ContentValues cv = new ContentValues();
 		cv.put(Wheelmap.POIs.NAME, getString(R.string.new_default_name));
@@ -296,7 +297,7 @@ public class POIsListActivity extends ListActivity implements
 		startActivity(i);
 
 	}
-	
+
 	private void saveListPosition() {
 		mFirstVisiblePosition = getListView().getFirstVisiblePosition();
 	}
@@ -317,9 +318,9 @@ public class POIsListActivity extends ListActivity implements
 		super.onListItemClick(l, v, position, id);
 		saveListPosition();
 		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
-		if ( cursor == null )
+		if (cursor == null)
 			return;
-		
+
 		long poiId = POIHelper.getId(cursor);
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
@@ -327,13 +328,12 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	private void updateRefreshStatus() {
-		if ( mState.mSyncing ) {
-			getListView().setEmptyView( null );
+		if (mState.mSyncing) {
+			getListView().setEmptyView(null);
 		} else {
-			Animation anim = AnimationUtils.loadAnimation(this,
-					R.anim.fade_in );
-			mEmptyNoPois.startAnimation( anim );
-			getListView().setEmptyView( mEmptyNoPois );
+			Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+			mEmptyNoPois.startAnimation(anim);
+			getListView().setEmptyView(mEmptyNoPois);
 			((PullToRefreshListView) getListView()).onRefreshComplete();
 		}
 	}
@@ -357,7 +357,7 @@ public class POIsListActivity extends ListActivity implements
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d( TAG, "onReceiveResult in list resultCode = " + resultCode );
+		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			mState.mSyncing = true;
@@ -420,11 +420,11 @@ public class POIsListActivity extends ListActivity implements
 	private void showErrorDialog(SyncServiceException e) {
 		if (!isInForeground)
 			return;
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Log.d( TAG, "showErrorDialog: e.getCode = " + e.getErrorCode());
-		if ( e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
-			builder.setTitle( R.string.error_network_title );
+		Log.d(TAG, "showErrorDialog: e.getCode = " + e.getErrorCode());
+		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
+			builder.setTitle(R.string.error_network_title);
 		else
 			builder.setTitle(R.string.error_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
