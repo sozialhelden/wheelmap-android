@@ -23,13 +23,8 @@ import org.wheelmap.android.model.Map;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
-import android.provider.Settings.System;
-import android.util.Log;
 
 public class ConfigureMapView {
 	private final static MapViewMode defaultViewMode = MapViewMode.MAPNIK_TILE_DOWNLOAD;
@@ -41,10 +36,16 @@ public class ConfigureMapView {
 	// MapViewMode.OSMARENDER_TILE_DOWNLOAD;
 
 	public static void pickAppropriateMap(Context context, MapView mapView) {
-
+		int tileSizeInBytes = MapView.getTileSizeInBytes();
+		int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER / tileSizeInBytes;
+//		Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes + " tileNum = " + tileNum );
+		
+		mapView.setMemoryCardCacheSize( tileNum );
+		mapView.setMemoryCardCachePersistence( true );
+		
 		ProviderInfo info = context.getPackageManager().resolveContentProvider(
 				Map.AUTHORITY, 0);
-
+		
 		if (info == null) {
 			mapView.setMapViewMode(defaultViewMode);
 			return;
@@ -63,7 +64,7 @@ public class ConfigureMapView {
 			mapView.setMapViewMode(defaultViewMode);
 			return;
 		}
-	
+					
 		String mapFile;
 		if (c.getCount() == 1) {
 			c.moveToFirst();
@@ -76,11 +77,6 @@ public class ConfigureMapView {
 		} else
 			mapView.setMapViewMode(defaultViewMode);
 
-		int tileSizeInBytes = MapView.getTileSizeInBytes();
-		int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER / tileSizeInBytes;
-//		Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes + " tileNum = " + tileNum );
-		
-		mapView.setMemoryCardCacheSize( tileNum );
 		c.close();
 	}
 }
