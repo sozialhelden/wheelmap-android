@@ -25,7 +25,8 @@ import org.wheelmap.android.manager.SupportManager;
 import android.app.Application;
 import android.util.Log;
 
-@ReportsCrashes(formKey = "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ" )
+// Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
+@ReportsCrashes(formKey = "dC1VVDdKenJLRUpZTC1MZXBVR3p6ZlE6MQ" )
 public class WheelmapApp extends Application {
 	private final static String TAG = "wheelmapapp";
 	
