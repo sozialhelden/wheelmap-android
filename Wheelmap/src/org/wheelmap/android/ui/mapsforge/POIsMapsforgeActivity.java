@@ -166,7 +166,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			}
 
 		});
-		// findViewById(R.id.btn_title_gps).setVisibility(View.GONE);
 	}
 
 	@Override
@@ -241,19 +240,15 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			mState.mSyncing = true;
-			if (isInForeground)
-				updateRefreshStatus();
+			updateRefreshStatus();
 			break;
 		}
 		case SyncService.STATUS_FINISHED: {
 			mState.mSyncing = false;
-			if (isInForeground)
-				updateRefreshStatus();
-			// mMapView.invalidate();
+			updateRefreshStatus();
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
-			// Error happened down in SyncService, show as toast.
 			mState.mSyncing = false;
 			updateRefreshStatus();
 			SyncServiceException e = resultData
@@ -265,13 +260,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			Location location = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			GeoPoint geoPoint = calcGeoPoint(location);
-			if (!isCentered && isInForeground) {
+			if (!isCentered) {
 				mMapController.setCenter(geoPoint);
 				isCentered = true;
 			}
 
 			// we got the first time current position so center map on it
-			if (mLastGeoPointE6 == null && !isCentered && isInForeground) {
+			if (mLastGeoPointE6 == null && !isCentered) {
 				// findViewById(R.id.btn_title_gps).setVisibility(View.VISIBLE);
 				mMapController.setCenter(geoPoint);
 			}

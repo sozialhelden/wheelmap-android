@@ -48,6 +48,12 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -73,7 +79,7 @@ public class POIsListActivity extends ListActivity implements
 	private int mFirstVisiblePosition = 0;
 	private boolean isInForeground;
 	
-	private TextView mNoPoisText;
+	private ViewStub mEmptyNoPois;
 
 	GoogleAnalyticsTracker tracker;
 
@@ -89,8 +95,9 @@ public class POIsListActivity extends ListActivity implements
 		tracker.trackPageView("/ListActivity");
 
 		setContentView(R.layout.activity_list);
-		mNoPoisText = (TextView) findViewById( R.id.nopois );
-
+		mEmptyNoPois = (ViewStub)getListView().getEmptyView();
+		
+		Log.d( TAG, "mEmptyNoPois = " + mEmptyNoPois);
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
 		// Attach event handlers
@@ -187,20 +194,20 @@ public class POIsListActivity extends ListActivity implements
 		else
 			isRecreated = state.getBoolean(EXTRA_IS_RECREATED);
 
-//		Log.d(TAG, "isRecreated? isRecreated = " + isRecreated);
 		setIsRecreated(isRecreated);
 	}
 
 	public void setIsRecreated(boolean recreated) {
-//		Log.d(TAG, "setIsRecreated = " + recreated);
 		mState.mIsRecreated = recreated;
 	}
 
 	public void runQueryOnCreation() {
 		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
-
-		if (!mState.mIsRecreated)
+		if ( !mState.mIsRecreated) {
+			mFirstVisiblePosition = 0;
+			getListView().setSelection( mFirstVisiblePosition );
 			((PullToRefreshListView) getListView()).prepareForRefresh();
+		}
 		runQuery(!mState.mIsRecreated);
 	}
 
@@ -210,7 +217,6 @@ public class POIsListActivity extends ListActivity implements
 			mFirstVisiblePosition = 0;
 			requestData();
 		}
-		// setIsRecreated(true);
 
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 		Cursor cursor = managedQuery(uri, Wheelmap.POIs.PROJECTION,
@@ -321,10 +327,13 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	private void updateRefreshStatus() {
-		if ( mState.mSyncing )
-			mNoPoisText.setVisibility( View.INVISIBLE );
-		else {
-			mNoPoisText.setVisibility( View.VISIBLE );
+		if ( mState.mSyncing ) {
+			getListView().setEmptyView( null );
+		} else {
+			Animation anim = AnimationUtils.loadAnimation(this,
+					R.anim.fade_in );
+			mEmptyNoPois.startAnimation( anim );
+			getListView().setEmptyView( mEmptyNoPois );
 			((PullToRefreshListView) getListView()).onRefreshComplete();
 		}
 	}
