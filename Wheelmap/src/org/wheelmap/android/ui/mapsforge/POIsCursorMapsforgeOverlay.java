@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.ui.mapsforge;
 
@@ -46,26 +46,28 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private Context mContext;
 	private Cursor mCursor;
+	private Handler mHandler;
 
 	public POIsCursorMapsforgeOverlay(Context context) {
 		super(null);
 		mContext = context;
+		mHandler = new Handler();
 	}
-	
+
 	@Override
 	public void finalize() {
-		if ( mCursor != null )
+		if (mCursor != null)
 			mCursor.close();
 	}
 
 	public synchronized void setCursor(Cursor cursor) {
-		if ( mCursor != null)
+		if (mCursor != null)
 			mCursor.close();
-		
+
 		mCursor = cursor;
-		if ( mCursor == null )
+		if (mCursor == null)
 			return;
-		
+
 		mCursor.registerContentObserver(new ChangeObserver());
 		populate();
 	}
@@ -76,18 +78,19 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			return 0;
 		return mCursor.getCount();
 	}
-	
+
 	@Override
 	protected synchronized OverlayItem createItem(int i) {
 		if (mCursor == null)
 			return null;
-				
+
 		int count = mCursor.getCount();
 		if (count == 0 || i >= count) {
-			Log.d( TAG, "createItem cursor count = " + count + " item index = " + i );
+			Log.d(TAG, "createItem cursor count = " + count + " item index = "
+					+ i);
 			return null;
-		} 
-		
+		}
+
 		mCursor.moveToPosition(i);
 		String name = POIHelper.getName(mCursor);
 		SupportManager manager = WheelmapApp.getSupportManager();
@@ -128,17 +131,17 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 			reload();
 		}
 	}
-	
+
 	private synchronized void reload() {
-		Log.d( TAG, "reload - requery and populate" );
+		Log.d(TAG, "reload - requery and populate");
 		mCursor.requery();
 		// Only populate, if db hasnt deleted
-		if ( mCursor.getCount() != 0 )
+		if (mCursor.getCount() != 0)
 			populate();
 	}
-	
+
 	public synchronized void deactivateCursor() {
-		Log.d( TAG, "deactivate" );
+		Log.d(TAG, "deactivate");
 		mCursor.deactivate();
 	}
 
@@ -150,8 +153,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		int count = mCursor.getCount();
 		if (count == 0 || index >= count)
 			return false;
-		
-		
+
 		mCursor.moveToPosition(index);
 		long poiId = POIHelper.getId(mCursor);
 		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
@@ -161,44 +163,49 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		mContext.startActivity(i);
 		return true;
 	}
-	
 
 	//
-	// Does not work - this thread needs Looper.prepare and a way to make a handler
+	// Does not work - this thread needs Looper.prepare and a way to make a
+	// handler
 	//
-//	@Override
-//	protected synchronized boolean onLongPress(int index) {
-//		if (mCursor == null)
-//			return false;
-//
-//		int count = mCursor.getCount();
-//		if (count == 0 || index >= count)
-//			return false;
-//		
-//		mCursor.moveToPosition(index);
-//		int idColumn = mCursor.getColumnIndex(Wheelmap.POIs._ID);
-//		int poiId = mCursor.getInt(idColumn);
-//
-//		Log.d(TAG, "onTap: index = " + index + " id = " + poiId);
-//
-//		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-//				String.valueOf(poiId));
-//
-//		// Then query for this specific record:
-//		Cursor cur = mContext.getContentResolver().query(poiUri, null, null,
-//				null, null);
-//		if (cur.moveToFirst()) {
-//			Log.d(TAG,
-//					Integer.toBinaryString(poiId) + " "
-//							+ POIHelper.getName(cur) + ' '
-//							+ POIHelper.getAddress(cur));
-//
-//			Toast.makeText(mContext,
-//					POIHelper.getName(cur) + ' ' + POIHelper.getAddress(cur),
-//					Toast.LENGTH_SHORT).show();
-//		}
-//		cur.close();
-//		return true;
-//	}
+	@Override
+	protected synchronized boolean onLongPress(int index) {
+		if (mCursor == null)
+			return false;
 
+		int count = mCursor.getCount();
+		if (count == 0 || index >= count)
+			return false;
+
+		mCursor.moveToPosition(index);
+		long poiId = POIHelper.getId( mCursor );
+		String name = POIHelper.getName( mCursor );
+		int nodeTypeId = POIHelper.getNodeTypeId( mCursor );
+		String nodeTypeName = WheelmapApp.getSupportManager().lookupNodeType( nodeTypeId).localizedName;
+		String address = POIHelper.getAddress(mCursor );
+				
+		StringBuilder builder = new StringBuilder();
+		if ( name.length() > 0 )
+			builder.append( name );
+		else
+			builder.append( nodeTypeName );
+		
+		if ( address.length() > 0 ) {
+			builder.append( ", " );
+			builder.append( address );
+		}
+		
+		final String outputText = builder.toString();
+		Log.d( TAG, Long.toString(poiId) + " " + outputText );
+		mHandler.post( new Runnable() {
+
+				@Override
+				public void run() {
+					Toast.makeText( mContext, outputText, Toast.LENGTH_SHORT ).show();				
+				}
+				
+		});
+			
+		return true;
+	}
 }
