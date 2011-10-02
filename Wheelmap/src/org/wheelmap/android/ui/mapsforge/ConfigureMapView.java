@@ -50,7 +50,7 @@ public class ConfigureMapView {
 			mapView.setMapViewMode(defaultViewMode);
 			return;
 		}
-
+		
 		ContentResolver resolver = context.getContentResolver();
 		Cursor c;
 		try {
