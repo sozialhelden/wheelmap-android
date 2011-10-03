@@ -78,6 +78,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
+	private boolean isShowingDialog;
 
 	private static final int ZOOMLEVEL_MIN = 16;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
@@ -394,6 +395,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private void showErrorDialog(SyncServiceException e) {
 		if (!isInForeground)
 			return;
+		if (isShowingDialog)
+			return;
+		
+		isShowingDialog = true;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
@@ -407,7 +412,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-
+						isShowingDialog = false;
 					}
 				});
 		AlertDialog alert = builder.create();

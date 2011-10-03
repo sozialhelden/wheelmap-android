@@ -78,6 +78,7 @@ public class POIsListActivity extends ListActivity implements
 	private float mDistance;
 	private int mFirstVisiblePosition = 0;
 	private boolean isInForeground;
+	private boolean isShowingDialog;
 
 	private ViewStub mEmptyNoPois;
 
@@ -420,6 +421,10 @@ public class POIsListActivity extends ListActivity implements
 	private void showErrorDialog(SyncServiceException e) {
 		if (!isInForeground)
 			return;
+		if (isShowingDialog)
+			return;
+		
+		isShowingDialog = true;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		Log.d(TAG, "showErrorDialog: e.getCode = " + e.getErrorCode());
@@ -434,6 +439,7 @@ public class POIsListActivity extends ListActivity implements
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						isShowingDialog = false;
 					}
 				});
 		AlertDialog alert = builder.create();
