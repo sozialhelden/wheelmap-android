@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
         
 -->
-
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
@@ -58,8 +57,6 @@ limitations under the License.
     <string name="poi_property_nodetype">Type</string>
     <string name="poi_property_category">Category</string>
     <string name="title_please_wait">Please wait</string>
-    <string name="category_unknown">Category Unknown</string>
-    <string name="nodetype_unknown">Type Unknown</string>
     <string name="title_category_select">Select Categories to display</string>
     <string name="settings_category_filter">Category Filter</string>
     <string name="settings_wheelchair_no_accessible">No</string>
@@ -87,4 +84,31 @@ limitations under the License.
     <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
     <string name="okay">Okay</string>
     <string name="error_network_title">Network issue</string>
+    <string name="btn_legal_notice">Legal Notice</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_save">Save</string>
+    <string name="support_nodetype_unknown">Type Unknown</string>
+    <string name="quit">Quit</string>
+    <string name="support_category_unknown">Category Unknown</string>
+    <string name="title_legal_notice">Legal Notice</string>
+    <string name="legal_notice_mapsforge">Mapsforge</string>
+    <string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3)</string>
+    <string name="legal_notice_pulltorefresh_copyright">© Johan Nilsson (Apache License V2)</string>
+    <string name="legal_notice_pulltorefresh">PullToRefresh Widget</string>
+    <string name="legal_notice_springandroid">Spring Android</string>
+    <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
+    <string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
+    <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org</string>
+    <string name="legal_notice_jackson">Jackson JSON Processor</string>
+    <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
+    <string name="legal_notice_commonsware">Two Modules</string>
+    <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
+    <string name="legal_notice_iconscollection">Maps Icons Collection</string>
+    <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>
+    <string name="legal_notice_opensource">This Software is OpenSource</string>
+    <string name="legal_notice_opensource_copyright">https://github.com/sozialhelden/wheelmap-android</string>
+    <string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
+    <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com</string>
+    <string name="legal_notice_intro">This Software is based on other works. Their copyright is as follows:</string>
+    <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
 </resources>

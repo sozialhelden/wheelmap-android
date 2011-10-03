@@ -108,9 +108,9 @@ public class SupportManager {
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
 
 		mDefaultCategory = new Category(0, "unknown",
-				mContext.getString(R.string.category_unknown));
+				mContext.getString(R.string.support_category_unknown));
 		mDefaultNodeType = new NodeType(0, "unknown",
-				mContext.getString(R.string.nodetype_unknown), 0);
+				mContext.getString(R.string.support_nodetype_unknown), 0);
 		mDefaultNodeType.stateDrawables = createDefaultDrawables();
 		
 		Drawable wheelYes = ctx.getResources().getDrawable( R.drawable.wheelchair_state_enabled );

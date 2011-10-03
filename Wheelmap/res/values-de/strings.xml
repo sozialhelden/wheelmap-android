@@ -15,7 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
         
 -->
-
 <resources>
     <string name="ws_enabled_title">rollstuhlgerecht</string>
     <string name="ws_enabled_l1">Eingang: stufenlos ereichbar</string>
@@ -33,15 +32,12 @@ limitations under the License.
     <string name="title_wheelchair_state">Rollstuhl Einstellungen</string>
     <string name="title_please_wait">Bitte warten</string>
     <string name="title_pois_settings">Filter setzen</string>
-    <string name="spinner_description_distance_km">Entfernung in km</string>
     <string name="settings_wheelchair_full_accessible">Ja</string>
     <string name="settings_wheelchair_no_accessible">Nein</string>
-    <string name="title_search">Suche</string>
     <string name="title_pois_map">Karte</string>
     <string name="settings_wheelchair_state">Rollstuhlgeignet?</string>
     <string name="settings_wheelchair_limited_accessible">Teilweise</string>
     <string name="title_pois_detail">Info</string>
-    <string name="spinner_description_distance_miles">Entfernung in Meilen</string>
     <string name="title_info">Credits</string>
     <string name="settings_wheelchair_unknown_accesible">Unbekannt</string>
     <string name="title_pois_list">Liste</string>
@@ -49,42 +45,41 @@ limitations under the License.
     <string name="description_logo">Wheelmap</string>
     <string name="description_gps">Gegenwärtiger Ort</string>
     <string name="description_filter">Filtern</string>
-    <string name="btn_map">Karte</string>
-    <string name="btn_cancel">Abbrechen</string>
-    <string name="description_search">Suche</string>
-    <string name="btn_delete">Löschen</string>
     <string name="description_edit">Editieren</string>
     <string name="btn_list">Liste</string>
-    <string name="description_export">Exportieren</string>
-    <string name="category_unknown">Kategorie unbekannt</string>
     <string name="description_map">Karte</string>
     <string name="edit_poi">Editieren</string>
     <string name="error_authorization_error">Keine Authorisierung zum Editieren verfügbar.</string>
-    <string name="btn_save">Sichern</string>
-    <string name="description_new">Neu</string>
     <string name="error_internal_error">Ein interner Fehler ist aufgetreten. Bitte öffnen sie die App neu.</string>
     <string name="info_a_project_of">ein Projekt der</string>
     <string name="info_kartendaten">Kartendaten:</string>
     <string name="info_webdevelopment">Web Entwicklung:</string>
     <string name="info_android_development">Android Entwicklung:</string>
     <string name="info_icons">Icons:</string>
-    <string name="description_share">Verteilen</string>
     <string name="error_occurred">Ein Fehler ist aufgetreten</string>
     <string name="error_network_failure">Netzwerk instabil. Bitte überprüfen sie die Internet-Verbindung oder versuchen sie es später nocheinmal.</string>
     <string name="settings_category_filter">Kategorien Filter</string>
     <string name="poi_property_nodetype">Typ</string>
     <string name="poi_property_comment">Kommentar</string>
     <string name="poi_property_category">Kategorie</string>
-    <string name="nodetype_unknown">Typ Unbekannt</string>
     <string name="poi_property_phone">Telefon</string>
     <string name="poi_property_website">Webseite</string>
     <string name="poi_property_address">Adresse</string>
     <string name="title_wheelchairstate">Rollstuhl</string>
-    <string name="quit">Quit</string>
     <string name="pull_to_refresh_pull_label">Ziehen aktualisiert...</string>
     <string name="pull_to_refresh_refreshing_label">Aktualisiere...</string>
     <string name="pull_to_refresh_release_label">Loslassen aktualisiert</string>
     <string name="pull_to_refresh_tap_label">Berühren aktualisiert</string>
     <string name="error_network_title">Netzwerk Problem</string>
     <string name="no_pois">keine Orte entsprechend der gewählten Kriterien gefunden</string>
+    <string name="btn_legal_notice">Rechtliche Hinweise</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="btn_save">Sichern</string>
+    <string name="support_nodetype_unknown">Typ Unbekannt</string>
+    <string name="quit">Beenden</string>
+    <string name="support_category_unknown">Kategorie unbekannt</string>
+    <string name="title_legal_notice">Rechtliche Hinweise</string>
+    <string name="legal_notice_intro">Diese Software basiert auf anderen Arbeiten. Deren Copyright ist wie folgt:</string>
+    <string name="legal_notice_opensource">Diese Software ist OpenSource</string>
+    <string name="legal_notice_commonsware">Zwei Module</string>
 </resources>

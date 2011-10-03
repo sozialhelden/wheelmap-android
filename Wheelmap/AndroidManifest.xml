@@ -79,6 +79,12 @@ limitations under the License.
         />
         
         <activity
+        	android:name=".ui.LegalNoticeActivity"
+        	android:theme="@style/Theme.IOSched"
+        	android:label="@string/title_legal_notice"
+        />
+        
+        <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_detail">
