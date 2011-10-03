@@ -17,6 +17,8 @@ limitations under the License.
 
 package org.wheelmap.android.ui;
 
+import java.util.List;
+
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -25,9 +27,13 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -45,7 +51,6 @@ public class StartupActivity extends Activity implements
 	private State mState;
 	private SupportManager mSupportManager;
 	private ProgressBar mProgressBar;
-	private boolean mStartedOnce;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +80,14 @@ public class StartupActivity extends Activity implements
 
 		mSupportManager = WheelmapApp.getSupportManager();
 		if (mSupportManager.isInitialized()) {
-			if (mStartedOnce)
-				finish();
-			else
+			if (needStartApp())
 				startupAppDelayed();
+			else
+				finish();
 		} else if ( mSupportManager.needsReloading()) {
 			mSupportManager.reload( mState.mReceiver );
 		}
 		
-		mStartedOnce = true;
 	}
 
 	@Override
@@ -98,8 +102,36 @@ public class StartupActivity extends Activity implements
 		super.onDestroy();
 		if (mSupportManager != null)
 			mSupportManager.releaseReceiver();
-		mStartedOnce = false;
 	}
+	
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        // this prevents StartupActivity recreation on Configuration changes
+        // (device orientation changes or hardware keyboard open/close).
+        // just do nothing on these changes:
+        super.onConfigurationChanged(null);
+    }
+    
+    private boolean needStartApp() {
+        final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        final List<RunningTaskInfo> tasksInfo = am.getRunningTasks(1024);
+        
+        if (!tasksInfo.isEmpty()) {
+            final String ourAppPackageName = getPackageName();
+            RunningTaskInfo taskInfo;
+            final int size = tasksInfo.size();
+            for (int i = 0; i < size; i++) {
+                taskInfo = tasksInfo.get(i);
+                if (ourAppPackageName.equals(taskInfo.baseActivity.getPackageName())) {
+                    // continue application start only if there is the only Activity in the task
+                    // (BTW in this case this is the StartupActivity)
+                    return taskInfo.numActivities == 1;
+                }
+            }
+        }
+        
+        return true;
+    }
 
 	private void startupAppDelayed() {
 		Handler h = new Handler();

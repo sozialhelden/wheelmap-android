@@ -126,7 +126,8 @@ public class POIDetailActivity extends MapActivity {
 		mapController.setZoom(18);
 
 		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
-
+		Log.d( TAG, "onCreate: poiID = " + poiID );
+		
 		if (poiID != -1) {
 			load();
 		}
@@ -330,7 +331,6 @@ public class POIDetailActivity extends MapActivity {
 
 			Intent i = new Intent(POIDetailActivity.this,
 					POIsMapsforgeActivity.class);
-			i.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, true);
 			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
 			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
 

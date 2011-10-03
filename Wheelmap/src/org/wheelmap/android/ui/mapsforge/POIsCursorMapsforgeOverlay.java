@@ -32,9 +32,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -46,6 +46,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context mContext;
 	private Cursor mCursor;
 	private Handler mHandler;
+	private boolean mCursorInvalidated;
 
 	public POIsCursorMapsforgeOverlay(Context context) {
 		super(null);
@@ -54,20 +55,24 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	@Override
-	public void finalize() {
+	public synchronized void finalize() {
 		if (mCursor != null)
 			mCursor.close();
 	}
 
 	public synchronized void setCursor(Cursor cursor) {
-		if (mCursor != null)
+		if ( mCursor != null ) {
 			mCursor.close();
-
+		}
+			
 		mCursor = cursor;
+		mCursorInvalidated = false;
+	
 		if (mCursor == null)
 			return;
 
-		mCursor.registerContentObserver(new ChangeObserver());
+		mCursor.registerContentObserver( mContentObserver );
+		mCursor.registerDataSetObserver( mCursorObserver );
 		populate();
 	}
 
@@ -80,7 +85,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected synchronized OverlayItem createItem(int i) {
-		if (mCursor == null)
+		if (mCursor == null || mCursor.isClosed() || mCursorInvalidated)
 			return null;
 
 		int count = mCursor.getCount();
@@ -114,11 +119,8 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	protected String getThreadName() {
 		return THREAD_NAME;
 	}
-
-	private class ChangeObserver extends ContentObserver {
-		public ChangeObserver() {
-			super(new Handler());
-		}
+	
+	private ContentObserver mContentObserver = new ContentObserver(new Handler()) {
 
 		@Override
 		public boolean deliverSelfNotifications() {
@@ -129,11 +131,28 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		public void onChange(boolean selfChange) {
 			reload();
 		}
-	}
+		
+	};
+	
+	private DataSetObserver mCursorObserver = new DataSetObserver() {
+		@Override
+		public void onChanged() {
+			super.onChanged();
+			Log.d( TAG, "cursor changed" );
+		}
+
+		@Override
+		public void onInvalidated() {
+			super.onInvalidated();
+			Log.d( TAG, "cursor invalidated" );
+			mCursorInvalidated = true;
+		}
+	};
 
 	private synchronized void reload() {
 		Log.d(TAG, "reload - requery and populate");
 		mCursor.requery();
+		mCursorInvalidated = false;
 		// Only populate, if db hasnt deleted
 		if (mCursor.getCount() != 0)
 			populate();
@@ -163,10 +182,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		return true;
 	}
 
-	//
-	// Does not work - this thread needs Looper.prepare and a way to make a
-	// handler
-	//
 	@Override
 	protected synchronized boolean onLongPress(int index) {
 		if (mCursor == null)

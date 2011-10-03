@@ -165,9 +165,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		super.onResume();
 		isInForeground = true;
 		Log.d(TAG, "onResume isInForeground = " + isInForeground);
-		// We dont need that here as we do a runQuery anyways
-
-		// mPoisItemizedOverlay.reload();
 		mLocationManager.register(mState.mReceiver, true);
 		runQuery();
 	}
@@ -324,7 +321,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
-		// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 		intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NO_ANIMATION);
