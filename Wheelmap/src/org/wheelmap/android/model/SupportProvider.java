@@ -43,7 +43,7 @@ public class SupportProvider extends ContentProvider {
 
 	private static final String TAG = "support";
 	private static final String DATABASE_NAME = "support.db";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sLocalesProjectionMap;
@@ -69,17 +69,20 @@ public class SupportProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("DROP TABLE IF EXISTS " + LASTUPDATE_TABLE_NAME);
 			db.execSQL("CREATE TABLE " + LASTUPDATE_TABLE_NAME + " ("
 					+ LastUpdateContent._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ LastUpdateContent.DATE + " TEXT)");
 
+			db.execSQL("DROP TABLE IF EXISTS " + LOCALES_TABLE_NAME );
 			db.execSQL("CREATE TABLE " + LOCALES_TABLE_NAME + " ("
 					+ LocalesContent._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ LocalesContent.LOCALE_ID + " TEXT, "
 					+ LocalesContent.LOCALIZED_NAME + " TEXT)");
 
+			db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE_NAME );
 			db.execSQL("CREATE TABLE " + CATEGORIES_TABLE_NAME + " ("
 					+ CategoriesContent._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -88,6 +91,7 @@ public class SupportProvider extends ContentProvider {
 					+ CategoriesContent.IDENTIFIER + " TEXT,"
 					+ CategoriesContent.SELECTED + " INTEGER )");
 
+			db.execSQL("DROP TABLE IF EXISTS " + NODETYPES_TABLE_NAME );
 			db.execSQL("CREATE TABLE " + NODETYPES_TABLE_NAME + " ("
 					+ NodeTypesContent._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "

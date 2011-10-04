@@ -113,7 +113,7 @@ public class POIsProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			// places
+			db.execSQL("DROP TABLE IF EXISTS " + POIS_TABLE_NAME);
 			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME + " (" + POIs._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + POIs.WM_ID
 					+ " INTEGER, " + POIs.NAME + " TEXT," + POIs.COORD_LAT
