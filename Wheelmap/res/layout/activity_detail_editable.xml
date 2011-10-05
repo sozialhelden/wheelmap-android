@@ -71,7 +71,7 @@ limitations under the License.
 					android:layout_toLeftOf="@+id/wheelchair_state_further"
 					android:layout_toRightOf="@+id/wheelchair_state_icon" android:text="@string/ws_enabled_title"></TextView>
 				<ImageView android:id="@+id/wheelchair_state_further"
-					android:src="@drawable/expander_ic_minimized"
+					android:src="@drawable/arrow"
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
 					android:onClick="onEditWheelchairState"
 					android:layout_alignParentRight="true"></ImageView>
