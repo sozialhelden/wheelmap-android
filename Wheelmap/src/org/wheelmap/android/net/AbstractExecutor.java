@@ -29,9 +29,9 @@ public abstract class AbstractExecutor implements IExecutor {
 	private final ContentResolver mResolver;
 	private final Bundle mBundle;
 	// Testserver
-	protected static final String SERVER = "staging.wheelmap.org";
+	// protected static final String SERVER = "staging.wheelmap.org";
 	// Production Server
-	// protected static final String SERVER = "wheelmap.org";
+	protected static final String SERVER = "wheelmap.org";
 	
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();

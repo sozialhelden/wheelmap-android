@@ -68,8 +68,7 @@ public class SupportManager {
 	private boolean mInitialized;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
-	// TODO: put in a proper update INTERVAL
-	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 2;
+	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 	
 
