@@ -62,7 +62,7 @@ limitations under the License.
 				<ImageView android:id="@+id/wheelchair_state_icon"
 					android:src="@drawable/wheelchair_state_enabled"
 					android:layout_marginLeft="4dip"
-        android:layout_marginTop="4dip"
+        			android:layout_marginTop="4dip"
         
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
 					android:layout_alignParentLeft="true"></ImageView>

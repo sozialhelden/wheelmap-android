@@ -21,19 +21,50 @@ import org.wheelmap.android.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class InfoActivity extends Activity {
+public class InfoActivity extends Activity implements OnClickListener {
+	private TextView mChristophBuente;
+	private ImageView mSozialhelden;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView( R.layout.activity_info );
+		mChristophBuente = (TextView) findViewById( R.id.name_christophbuente );
+		mSozialhelden = (ImageView) findViewById( R.id.logo_sozialhelden );
+		
+		mChristophBuente.setOnClickListener( this );
+		mSozialhelden.setOnClickListener( this );
 	}
 	
 	public void onLegalNotice(View v) {
 		Intent intent = new Intent(this, LegalNoticeActivity.class);
 		startActivity(intent);
+		
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch(id) {
+		case R.id.name_christophbuente: {
+			Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://www.christophbuente.de" ));
+			startActivity(intent);
+			break;
+		}
+		case R.id.logo_sozialhelden: {
+			Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://www.sozialhelden.de" ));
+			startActivity(intent);
+			break;
+		}
+		default:
+			// nothing
+		}
 		
 	}
 }
