@@ -90,7 +90,6 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 			throws SyncServiceException {
 		String getRequest = requestBuilder.buildRequestUri();
 		Log.d(TAG, "getRequest " + getRequest);
-		long retrieveStart = System.currentTimeMillis();
 
 		T items = retrieveNumberOfHits(getRequest);
 		if ( items == null )
@@ -98,8 +97,6 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		
 		mTempStore.add(items);
 
-		long retrieveEnd = System.currentTimeMillis();
-//		Log.d(TAG, "retrieveTime = " + (retrieveEnd - retrieveStart) / 1000f);
 		return items.getMeta();
 	}
 
@@ -107,7 +104,6 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 			throws SyncServiceException {
 		T content = null;
 
-		long requestTime = System.currentTimeMillis();
 		String request;
 		try {
 			request = UriUtils.encodeQuery(getRequest, "utf-8");
@@ -139,9 +135,6 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 							SyncServiceException.ERROR_NETWORK_FAILURE, e);
 			}
 		}
-		// Log.d(TAG, "response " + response);
-		long requestEndTime = System.currentTimeMillis();
-//		Log.d(TAG, "requestTime = " + (requestEndTime - requestTime) / 1000f);
 
 		return content;
 	}

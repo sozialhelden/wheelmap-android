@@ -10,7 +10,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,9 +34,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     private static final int REFRESHING = 4;
     
     private static final String EXTRA_REFRESH_STATE = "com.markupartist.PullToRefresh";
-
-    private static final String TAG = "PullToRefreshListView";
-
     private OnRefreshListener mOnRefreshListener;
 
     /**

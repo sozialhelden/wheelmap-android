@@ -21,6 +21,7 @@ import org.mapsforge.android.maps.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
+import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
@@ -55,7 +56,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver, MapViewTouchMove {
+		DetachableResultReceiver.Receiver, MapViewTouchMove, OnZoomListener {
 
 	private final static String TAG = "mapsforge";
 
@@ -63,7 +64,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LAT";
 	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LON";
 	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.ui.Mapsforge.CENTER_ZOOM";
-
 
 	/** State held between configuration changes. */
 	private State mState;
@@ -79,8 +79,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private GeoPoint mLastGeoPointE6;
 	private boolean isCentered;
 	private boolean isShowingDialog;
+	private boolean isZoomedEnough;
+	private int oldZoomLevel;
 
-	private static final int ZOOMLEVEL_MIN = 16;
+	private static final byte ZOOMLEVEL_MIN = 16;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 	private boolean isInForeground;
 
@@ -110,6 +112,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mCurrLocationOverlay = new MyLocationOverlay();
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		mMapView.registerListener(this);
+		mMapView.registerZoomListener(this);
 		mMapController.setZoom(18); // Zoon 1 is world view
 
 		isCentered = false;
@@ -181,12 +184,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-		Log.d("lowmemory", "mapsforge - onLowMemory");
-	}
-
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		WheelmapApp.getSupportManager().cleanReferences();
@@ -195,7 +192,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		executeTargetCenterExtras( savedInstanceState );
+		executeTargetCenterExtras(savedInstanceState);
 	}
 
 	@Override
@@ -204,7 +201,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		GeoPoint gp = mMapView.getMapCenter();
 		outState.putInt(EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
 		outState.putInt(EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
-		outState.putInt( EXTRA_CENTER_ZOOM, mMapView.getZoomLevel());
+		outState.putInt(EXTRA_CENTER_ZOOM, mMapView.getZoomLevel());
 	}
 
 	private void executeTargetCenterExtras(Bundle extras) {
@@ -214,18 +211,20 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
 			int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
 			int lon = extras.getInt(EXTRA_CENTER_AT_LON);
-			int zoom = extras.getInt( EXTRA_CENTER_ZOOM, 18 );
-			
+			int zoom = extras.getInt(EXTRA_CENTER_ZOOM, 18);
+
 			GeoPoint gp = new GeoPoint(lat, lon);
 			mMapController.setCenter(gp);
 			mMapController.setZoom(zoom); // Zoon 1 is world view
 			isCentered = true;
+			isZoomedEnough = true;
+			oldZoomLevel = zoom;
 		}
 	}
 
 	private void executeRetrieval(Bundle extras) {
-		boolean retrieval = ! extras.getBoolean(EXTRA_NO_RETRIEVAL, false);
-		Log.d( TAG, "retrieval = " + retrieval );
+		boolean retrieval = !extras.getBoolean(EXTRA_NO_RETRIEVAL, false);
+		Log.d(TAG, "retrieval = " + retrieval);
 		if (retrieval) {
 			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
@@ -233,6 +232,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 						@Override
 						public void onGlobalLayout() {
 							mMapController.setZoom(18); // Zoon 1 is world view
+							isZoomedEnough = true;
+							oldZoomLevel = 18;
 							requestUpdate();
 							mMapView.getViewTreeObserver()
 									.removeGlobalOnLayoutListener(this);
@@ -377,6 +378,18 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		}
 	}
 
+	@Override
+	public void onZoom(byte zoomLevel) {
+		if (zoomLevel >= ZOOMLEVEL_MIN && isInForeground
+				&& (!isZoomedEnough || zoomLevel <= oldZoomLevel)) {
+			requestUpdate();
+			isZoomedEnough = true;
+		} else
+			isZoomedEnough = false;
+
+		oldZoomLevel = zoomLevel;
+	}
+
 	/**
 	 * State specific to {@link HomeActivity} that is held between configuration
 	 * changes. Any strong {@link Activity} references <strong>must</strong> be
@@ -397,7 +410,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			return;
 		if (isShowingDialog)
 			return;
-		
+
 		isShowingDialog = true;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

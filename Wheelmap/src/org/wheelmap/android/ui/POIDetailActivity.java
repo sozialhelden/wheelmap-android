@@ -48,6 +48,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity {
@@ -63,6 +64,7 @@ public class POIDetailActivity extends MapActivity {
 	private TextView phoneText = null;
 	private ImageView mStateIcon = null;
 	private TextView mWheelchairStateText = null;
+	private RelativeLayout mWheelchairStateLayout = null;
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
 
@@ -92,6 +94,7 @@ public class POIDetailActivity extends MapActivity {
 		websiteText = (TextView) findViewById(R.id.website);
 		mStateIcon = (ImageView) findViewById(R.id.wheelchair_state_icon);
 		mWheelchairStateText = (TextView) findViewById(R.id.wheelchair_state_text);
+		mWheelchairStateLayout = (RelativeLayout) findViewById( R.id.wheelchair_state_layout );
 
 		mWheelchairStateTextColorMap.put(WheelchairState.YES, new Integer(
 				R.color.wheel_enabled));
@@ -111,7 +114,7 @@ public class POIDetailActivity extends MapActivity {
 		mWheelchairStateTextsMap.put(WheelchairState.UNKNOWN, new Integer(
 				R.string.ws_unknown_title));
 
-		mWheelchairStateText.setOnClickListener(new OnClickListener() {
+		mWheelchairStateLayout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onEditWheelchairState(v);
 			}
@@ -153,17 +156,11 @@ public class POIDetailActivity extends MapActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		mSupportManager.cleanReferences();
-		nullViewDrawable( mContentView);
+		nullViewDrawablesRecursive( mContentView);
 		mapView = null;
 		mapController = null;
 		System.gc();
 		System.gc(); // to be sure ;-)
-	}
-
-	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-		Log.d("lowmemory", "detail - onLowMemory");
 	}
 
 	public void onItemEdit(View v) {

@@ -23,6 +23,7 @@ import org.mapsforge.android.maps.MapViewMode;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class MyMapView extends MapView {
@@ -52,6 +53,7 @@ public class MyMapView extends MapView {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		Log.d( "mapsforge", "onTouchEvent" );
 		boolean result = super.onTouchEvent( event );
 		int minimalLatitudeSpan = getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = getLongitudeSpan() / 3;

@@ -90,8 +90,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 		int count = mCursor.getCount();
 		if (count == 0 || i >= count) {
-			Log.d(TAG, "createItem cursor count = " + count + " item index = "
-					+ i);
 			return null;
 		}
 

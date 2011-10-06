@@ -113,12 +113,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	public void prepareDatabase() {
 		deleteRetrievedData();
 
-		long insertStart = System.currentTimeMillis();
 		for (Nodes nodes : getTempStore()) {
 			bulkInsert(nodes);
 		}
-		long insertEnd = System.currentTimeMillis();
-//		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
 		clearTempStore();
 	}
 
@@ -131,7 +128,6 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	}
 
 	private void bulkInsert(Nodes nodes) {
-		long makeupTime = System.currentTimeMillis();
 		int size = nodes.getMeta().getItemCount().intValue();
 		ContentValues[] contentValuesArray = new ContentValues[size];
 		for (int i = 0; i < size; i++) {
@@ -140,14 +136,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 			contentValuesArray[i] = values;
 		}
-		long bulkInsertTime = System.currentTimeMillis();
-//		Log.d(TAG, "makeupTime = " + (bulkInsertTime - makeupTime) / 1000f);
 		int count = getResolver().bulkInsert(Wheelmap.POIs.CONTENT_URI,
 				contentValuesArray);
-		long bulkInsertDoneTime = System.currentTimeMillis();
-//		Log.d(TAG, "bulkInsertTime = " + (bulkInsertDoneTime - bulkInsertTime)
-//				/ 1000f);
-//		Log.d(TAG, "Inserted records count = " + count);
+		Log.d(TAG, "Inserted records count = " + count);
 	}
 
 	private void copyNodeToValues(Node node, ContentValues values) {

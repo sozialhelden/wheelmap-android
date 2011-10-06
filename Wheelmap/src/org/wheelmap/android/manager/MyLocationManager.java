@@ -26,7 +26,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.test.IsolatedContext;
 import android.util.Log;
 
 public class MyLocationManager {
@@ -177,7 +176,6 @@ public class MyLocationManager {
 			requestOnce = false;
 			wasLastKnownLocation = false;
 			
-			long now = System.currentTimeMillis();
 			if ( networkDisabled )
 				updateLocation( location );
 			if ( mBestLastKnownLocation.getProvider().equals(LocationManager.NETWORK_PROVIDER) &&
