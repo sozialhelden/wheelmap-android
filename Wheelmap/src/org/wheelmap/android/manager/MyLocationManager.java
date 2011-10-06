@@ -257,7 +257,6 @@ public class MyLocationManager {
 	public void updateLocation( Location location ) {
 		mBestLastKnownLocation = location;
 		wasLastKnownLocation = false;
-		mBestLastKnownLocation = location;
 		notifyReceiver();
 	}
 

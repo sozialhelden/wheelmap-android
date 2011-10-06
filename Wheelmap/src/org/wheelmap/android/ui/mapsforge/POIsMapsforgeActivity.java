@@ -187,6 +187,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		WheelmapApp.getSupportManager().cleanReferences();
+		System.gc();
 	}
 
 	@Override
@@ -373,20 +374,24 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	@Override
 	public void onMapViewTouchMoveEnough() {
-		if (mMapView.getZoomLevel() >= ZOOMLEVEL_MIN) {
-			requestUpdate();
-		}
+		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN )
+			return;
+		
+		requestUpdate();
 	}
 
 	@Override
 	public void onZoom(byte zoomLevel) {
-		if (zoomLevel >= ZOOMLEVEL_MIN && isInForeground
-				&& (!isZoomedEnough || zoomLevel <= oldZoomLevel)) {
-			requestUpdate();
-			isZoomedEnough = true;
-		} else
+		if ( zoomLevel < ZOOMLEVEL_MIN || !isInForeground) {
 			isZoomedEnough = false;
-
+			return;
+		}
+		
+		if ( isZoomedEnough && zoomLevel >= oldZoomLevel )
+			return;
+		
+		requestUpdate();
+		isZoomedEnough = true;
 		oldZoomLevel = zoomLevel;
 	}
 
