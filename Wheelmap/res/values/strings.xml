@@ -64,7 +64,8 @@ limitations under the License.
     <string name="settings_wheelchair_full_accessible">Yes</string>
     <string name="title_info">Credits</string>
     <string name="info_a_project_of">a project of</string>
-    <string name="info_reserved_sozialhelden">© 2011 SOZIALHELDEN e.V. | All rights reserved</string>
+    <string name="info_web_version">Web-Version:</string>
+    <string name="stiftung_text_one">Thanks to Fürst Donnersmarck-Stiftung</string>
     <string name="info_kartendaten">Mapdata:</string>
     <string name="info_android_development">Android Development:</string>
     <string name="info_icons">Icons:</string>
@@ -76,7 +77,11 @@ limitations under the License.
     <string name="error_authorization_error">No proper authorization for editing available.</string>
     <string name="error_occurred">An error occurred</string>
     <string name="info_webdevelopment_one">Christoph Bünte</string>
-    <string name="info_kartendaten_one">OpenStreetMap</string>
+    <string name="info_kartendaten_one">www.openstreetmap.org</string>
+    <string name="info_kartendaten_two">(c) OpenStreetMap contributors, CC-BY-SA</string>
+    
+    <string name="info_web_version_one">www.wheelmap.org</string>
+    
     <string name="title_wheelchairstate">Wheelchair</string>
     <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
     <string name="pull_to_refresh_release_label">Release to refresh...</string>
