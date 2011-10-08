@@ -53,7 +53,6 @@ public class MyMapView extends MapView {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		Log.d( "mapsforge", "onTouchEvent" );
 		boolean result = super.onTouchEvent( event );
 		int minimalLatitudeSpan = getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = getLongitudeSpan() / 3;

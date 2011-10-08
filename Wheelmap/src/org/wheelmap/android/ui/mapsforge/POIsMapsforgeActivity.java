@@ -384,11 +384,18 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	public void onZoom(byte zoomLevel) {
 		if ( zoomLevel < ZOOMLEVEL_MIN || !isInForeground) {
 			isZoomedEnough = false;
+			oldZoomLevel = zoomLevel;
 			return;
 		}
 		
-		if ( isZoomedEnough && zoomLevel >= oldZoomLevel )
+		if ( zoomLevel < oldZoomLevel ) {
+			isZoomedEnough = false;
+		}
+		
+		if ( isZoomedEnough && zoomLevel >= oldZoomLevel ) {
+			oldZoomLevel = zoomLevel;
 			return;
+		}
 		
 		requestUpdate();
 		isZoomedEnough = true;
