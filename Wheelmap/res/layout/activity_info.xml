@@ -51,7 +51,7 @@ limitations under the License.
 					android:layout_width="fill_parent" android:text="@string/info_web_version_one"
 					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:textStyle="bold" android:gravity="center_horizontal"
-					android:autoLink="web" android:textColorLink="@color/black"
+					android:autoLink="web"
 					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" />
 				
 				<ImageView android:layout_height="2dip"
@@ -65,7 +65,7 @@ limitations under the License.
 				<TextView android:layout_height="wrap_content"
 					android:layout_width="fill_parent" android:text="@string/info_kartendaten_one"
 					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:autoLink="web" android:textColorLink="@color/black"
+					android:autoLink="web"
 					android:textStyle="bold" android:gravity="center_horizontal"
 					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" />
 				<TextView android:layout_height="wrap_content"
@@ -102,7 +102,7 @@ limitations under the License.
 					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:textStyle="bold" 
 					android:layout_marginLeft="12dip" android:layout_marginRight="12dip" android:layout_marginTop="5dip"/>
-				<TextView android:id="@+id/name_christophbuente" android:layout_height="wrap_content"
+				<TextView android:layout_height="wrap_content"
 					android:layout_width="fill_parent" android:text="@string/info_webdevelopment_one"
 					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:textStyle="bold" android:gravity="center"
@@ -131,8 +131,8 @@ limitations under the License.
 						android:textStyle="bold" android:textColor="@color/red_logo"
 						android:gravity="center_vertical" android:layout_marginTop="5dip"
 						android:layout_marginRight="5dip" />
-					<ImageView android:id="@+id/logo_sozialhelden" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:src="@drawable/logo_sozialhelden_232x47"/>
+					<ImageView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:src="@drawable/logo_sozialhelden_232x47" />
 						
 						<ImageView android:layout_height="2dip"
 					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
@@ -149,8 +149,8 @@ limitations under the License.
 					android:layout_marginLeft="12dip" android:layout_marginRight="12dip" android:layout_marginTop="5dip"/>
 					
 				
-					<ImageView android:id="@+id/logo_stiftung" android:layout_width="wrap_content" android:layout_gravity="center"
-						android:layout_height="wrap_content" android:src="@drawable/logo_fds_4c300_232x105" android:layout_marginBottom="5dip"/>
+					<ImageView android:layout_width="wrap_content" android:layout_gravity="center"
+						android:layout_height="wrap_content" android:src="@drawable/logo_fds_4c300_232x105" android:layout_marginBottom	="5dip"/>
 			</LinearLayout>
 		</LinearLayout>
 	</ScrollView>
