@@ -25,23 +25,34 @@ import org.wheelmap.android.ui.info.InfoTypes;
 import org.wheelmap.android.ui.info.InfoWidgetsAdapter;
 
 import android.app.ListActivity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 
 public class InfoActivity extends ListActivity {
-
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
        super.onCreate(icicle);
        setContentView(R.layout.activity_info);
-	   ArrayList<Info> weatherList = new ArrayList<Info>();
-	   Info w = new Info(R.string.info_android_development, R.string.info_android_development_one, 3, InfoTypes.SIMPLE_TEXT );
-	   weatherList.add( w );
-	   InfoWidgetsAdapter weatherAdapter = new InfoWidgetsAdapter( 
-				this,
-				weatherList ); 
-       setListAdapter( weatherAdapter );
+	   ArrayList<Info> infoList = new ArrayList<Info>();
+	   Info w = new Info(R.string.info_android_development, R.string.info_android_development_one, "http://fiwio.com", InfoTypes.SIMPLE_TEXT );
+	   infoList.add( w );
+	   InfoWidgetsAdapter infoAdapter = new InfoWidgetsAdapter(this, infoList); 
+       setListAdapter( infoAdapter );
     }
+    
+    @Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Info info = (Info) this.getListAdapter().getItem(position);
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info.getUrl()));
+        startActivity(intent);
+	}
+
 }
 
 /*

@@ -5,13 +5,13 @@ public class Info {
 	// resources ids
 	private int title;
 	private int text;
-	private int link;
+	private String url;
 	private  InfoTypes infotype;
 
-	public Info( int title, int text, int link,  InfoTypes infotype) {
+	public Info( int title, int text, String url,  InfoTypes infotype) {
 		this.title = title;
 		this.text = text;
-		this.link = link;
+		this.url = url;
 		this.infotype = infotype;
 	}
 
@@ -21,6 +21,10 @@ public class Info {
 	
 	public int getText() {
 		return text;
+	}
+	
+	public String getUrl() {
+		return url;
 	}
 	
 	public InfoTypes getInfoType() {
