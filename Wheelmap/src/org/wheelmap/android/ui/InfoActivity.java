@@ -17,17 +17,34 @@ limitations under the License.
 
 package org.wheelmap.android.ui;
 
+import java.util.ArrayList;
+
 import org.wheelmap.android.R;
+import org.wheelmap.android.ui.info.Info;
+import org.wheelmap.android.ui.info.InfoTypes;
+import org.wheelmap.android.ui.info.InfoWidgetsAdapter;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.ListActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+public class InfoActivity extends ListActivity {
+
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle icicle) {
+       super.onCreate(icicle);
+       setContentView(R.layout.activity_info);
+	   ArrayList<Info> weatherList = new ArrayList<Info>();
+	   Info w = new Info(R.string.info_android_development, R.string.info_android_development_one, 3, InfoTypes.SIMPLE_TEXT );
+	   weatherList.add( w );
+	   InfoWidgetsAdapter weatherAdapter = new InfoWidgetsAdapter( 
+				this,
+				weatherList ); 
+       setListAdapter( weatherAdapter );
+    }
+}
+
+/*
 public class InfoActivity extends Activity implements OnClickListener {
 	private TextView mChristophBuente;
 	private ImageView mSozialhelden;
@@ -76,3 +93,4 @@ public class InfoActivity extends Activity implements OnClickListener {
 		
 	}
 }
+*/
