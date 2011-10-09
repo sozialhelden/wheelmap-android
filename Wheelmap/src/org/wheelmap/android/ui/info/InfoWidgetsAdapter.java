@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,8 +39,10 @@ class InfoSimpleView extends LinearLayout {
 
 	protected void initComponent(Context context) {
 		LayoutInflater inflater = LayoutInflater.from(context);
+        // inflating of partial layout ignores layout_widht and layout_height attributes
+		LinearLayout.LayoutParams parametri = new  LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		View v = inflater.inflate(getLayout(), null, false);
-		this.addView(v);
+		this.addView(v, parametri);
 
 		title = (TextView) findViewById(R.id.info_activity_title);
 		first = (TextView) findViewById(R.id.info_activity_first_line);
@@ -86,6 +89,29 @@ class InfoSimpleViewActivity extends InfoSimpleView {
 	}
 }
 
+class InfoSimpleViewImage extends InfoSimpleView {
+
+	private ImageView image;
+
+	public InfoSimpleViewImage(Context context, Info info ) {
+		super(context, info);
+	}
+
+	@Override	
+	protected int getLayout() {
+		return R.layout.info_simple_image;
+	}
+
+	@Override
+	protected void initComponent(Context context) {
+		super.initComponent(context);
+		image = (ImageView) findViewById(R.id.info_activity_image);
+		if (image != null)
+			image.setImageResource(info.getText());
+	}
+}
+
+
 public class InfoWidgetsAdapter extends BaseAdapter {
 
 	private Context context;
@@ -122,7 +148,7 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 		case NEXT_ACTIVITY:
 			return new InfoSimpleViewActivity(this.context, info );
 		case WITH_IMAGE:
-			return new InfoSimpleView(this.context, info );
+			return new InfoSimpleViewImage(this.context, info );
 		default:
 			return new InfoSimpleView(this.context, info );
 		}

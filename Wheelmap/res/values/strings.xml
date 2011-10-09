@@ -71,7 +71,7 @@ limitations under the License.
     <string name="info_icons">Icons:</string>
     <string name="info_webdevelopment">Web Development:</string>
     <string name="info_android_development_two">Michael Kröz</string>
-    <string name="info_android_development_one">Michal Harakal</string>
+    <string name="info_android_development_one">Michal Harakaľ</string>
     <string name="error_network_failure">Network unstable. Please check your internet connection or try again later.</string>
     <string name="error_internal_error">An unexpected internal error occurred. Please restart the app.</string>
     <string name="error_authorization_error">No proper authorization for editing available.</string>

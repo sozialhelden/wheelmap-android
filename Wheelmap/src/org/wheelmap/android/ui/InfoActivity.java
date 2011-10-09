@@ -76,6 +76,24 @@ public class InfoActivity extends ListActivity {
 				LegalNoticeActivity.class,
 				InfoTypes.NEXT_ACTIVITY );	   
 		infoList.add( info );
+		
+		// project by sozialhelden
+		info = new Info(
+				R.string.info_a_project_of,
+				R.drawable.logo_sozialhelden_232x47,
+				"http://www.sozialhelden.de",
+				InfoTypes.WITH_IMAGE );	   
+		infoList.add( info );
+        // thanks stiftung
+		info = new Info(
+				R.string.stiftung_text_one,
+				R.drawable.logo_fds,
+				"http://www.fdst.de/",
+				InfoTypes.WITH_IMAGE );	   
+		infoList.add( info );
+		
+		
+		
 
 
 
