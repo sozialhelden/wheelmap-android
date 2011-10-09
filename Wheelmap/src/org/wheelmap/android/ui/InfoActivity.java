@@ -61,7 +61,10 @@ public class InfoActivity extends ListActivity {
 		info = new Info(
 				R.string.info_android_development, 
 				R.string.info_android_development_one, 
-				"http://fiwio.com", InfoTypes.SIMPLE_TEXT );	   
+				"http://fiwio.com", 
+				R.string.info_android_development_two, 
+				"http://sozialhelden.de",				
+				InfoTypes.WITH_TWO_LINKS );	   
 		infoList.add( info );
 
 		// web development
@@ -91,10 +94,6 @@ public class InfoActivity extends ListActivity {
 				"http://www.fdst.de/",
 				InfoTypes.WITH_IMAGE );	   
 		infoList.add( info );
-		
-		
-		
-
 
 
 		InfoWidgetsAdapter infoAdapter = new InfoWidgetsAdapter(this, infoList); 
@@ -113,9 +112,10 @@ public class InfoActivity extends ListActivity {
 		default:
 			intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info.getUrl()));
 			startActivity(intent);
-			intent = new Intent();
 		}
 	}
+	
+	
 
 }
 

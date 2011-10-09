@@ -8,6 +8,8 @@ public class Info {
 	private int second_text;
 
 	private String url;
+	private String second_url;
+	
 	private  InfoTypes infotype;
 	private  Class<?> cls = null;
 
@@ -24,6 +26,15 @@ public class Info {
 		this.text = text;
 		this.second_text = second_text;
 		this.url = url;
+		this.infotype = infotype;		
+	}
+	
+	public Info( int title, int text, String url, int second_text, String second_url,  InfoTypes infotype) {
+		this.title = title;
+		this.text = text;
+		this.second_text = second_text;
+		this.url = url;
+		this.second_url = second_url;
 		this.infotype = infotype;		
 	}
 	
@@ -53,6 +64,10 @@ public class Info {
 		return url;
 	}
 	
+	public String getSecondUrl() {
+		return second_url;
+	}
+	
 	public InfoTypes getInfoType() {
 		return infotype;
 	}
@@ -60,7 +75,4 @@ public class Info {
 	public Class<?> getActivityClass() {
 		return cls;
 	}
-
-
-
 }

@@ -5,9 +5,13 @@ import java.util.List;
 import org.wheelmap.android.R;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -18,7 +22,7 @@ import android.widget.TextView;
 class InfoSimpleView extends LinearLayout {
 
 	private TextView title;
-	private TextView first;
+	protected TextView first;
 	protected Info info;
 
 	public InfoSimpleView(Context context, Info info ) {
@@ -39,7 +43,7 @@ class InfoSimpleView extends LinearLayout {
 
 	protected void initComponent(Context context) {
 		LayoutInflater inflater = LayoutInflater.from(context);
-        // inflating of partial layout ignores layout_widht and layout_height attributes
+		// inflating of partial layout ignores layout_widht and layout_height attributes
 		LinearLayout.LayoutParams parametri = new  LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		View v = inflater.inflate(getLayout(), null, false);
 		this.addView(v, parametri);
@@ -57,7 +61,7 @@ class InfoSimpleView extends LinearLayout {
 
 class InfoSimpleViewTwoLines extends InfoSimpleView {
 
-	private TextView second;
+	protected TextView second;
 
 	public InfoSimpleViewTwoLines(Context context, Info info ) {
 		super(context, info);
@@ -76,6 +80,31 @@ class InfoSimpleViewTwoLines extends InfoSimpleView {
 			second.setText(info.getSecondText());
 	}
 }
+
+
+
+class InfoSimpleViewTwoUrls extends InfoSimpleViewTwoLines {
+
+	public InfoSimpleViewTwoUrls(Context context, Info info ) {
+		super(context, info);
+	}
+
+	@Override	
+	protected int getLayout() {
+		return R.layout.info_simple_two_urls;
+	}
+
+	public void onFirstLinkClick(View V) {
+		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://fiwio.com"));
+		getContext().startActivity(intent);
+	}
+
+	public void onSecondLinkClick(View V) {
+		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://harakalovci.net"));
+		getContext().startActivity(intent);
+	}
+}
+
 
 class InfoSimpleViewActivity extends InfoSimpleView {
 
@@ -136,6 +165,24 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+	
+	private OnClickListener mOnFirstClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+           	Info info = (Info) v.getTag();
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info.getUrl()));
+			context.startActivity(intent);
+            }
+    };
+
+    private OnClickListener mOnSecondClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+         	Info info = (Info) v.getTag();
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info.getSecondUrl()));
+			context.startActivity(intent);
+       }
+    };
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -145,6 +192,13 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 			return new InfoSimpleView(this.context, info );
 		case DOUBLE_TEXT:
 			return new InfoSimpleViewTwoLines(this.context, info );
+		case WITH_TWO_LINKS:
+			InfoSimpleViewTwoUrls result = new InfoSimpleViewTwoUrls(this.context, info );
+			result.first.setOnClickListener(mOnFirstClickListener);
+			result.second.setOnClickListener(mOnSecondClickListener);
+			result.first.setTag(info);
+			result.second.setTag(info);
+			return result;
 		case NEXT_ACTIVITY:
 			return new InfoSimpleViewActivity(this.context, info );
 		case WITH_IMAGE:
@@ -152,8 +206,5 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 		default:
 			return new InfoSimpleView(this.context, info );
 		}
-
-
 	}
-
 }
