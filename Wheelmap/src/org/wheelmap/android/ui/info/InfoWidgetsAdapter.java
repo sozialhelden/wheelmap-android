@@ -13,16 +13,21 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 class InfoSimpleView extends LinearLayout {
 
 	private TextView title;
 	private TextView first;
-	private Info info;
+	protected Info info;
 
 	public InfoSimpleView(Context context, Info info ) {
 		super(context);
 		this.info = info;
 		this.initComponent(context);
+	}
+
+	protected int getLayout() {
+		return R.layout.info_simple;
 	}
 
 	public InfoSimpleView(Context context, AttributeSet attrs) {
@@ -31,17 +36,53 @@ class InfoSimpleView extends LinearLayout {
 	}
 
 
-	private void initComponent(Context context) {
+	protected void initComponent(Context context) {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View v = inflater.inflate(R.layout.info_simple, null, false);
+		View v = inflater.inflate(getLayout(), null, false);
 		this.addView(v);
 
 		title = (TextView) findViewById(R.id.info_activity_title);
 		first = (TextView) findViewById(R.id.info_activity_first_line);
 
-		title.setText(info.getTitle());
-		first.setText(info.getText());
+		if (title != null)
+			title.setText(info.getTitle());
+		if (first != null)
+			first.setText(info.getText());
 
+	}
+}
+
+class InfoSimpleViewTwoLines extends InfoSimpleView {
+
+	private TextView second;
+
+	public InfoSimpleViewTwoLines(Context context, Info info ) {
+		super(context, info);
+	}
+
+	@Override	
+	protected int getLayout() {
+		return R.layout.info_simple_two_lines;
+	}
+
+	@Override
+	protected void initComponent(Context context) {
+		super.initComponent(context);
+		second = (TextView) findViewById(R.id.info_activity_second_line);
+		if (second != null)
+			second.setText(info.getSecondText());
+	}
+}
+
+class InfoSimpleViewActivity extends InfoSimpleView {
+
+	public InfoSimpleViewActivity(Context context, Info info ) {
+		super(context, info);
+	}
+
+	@Override	
+	protected int getLayout() {
+		return R.layout.info_simple_activity;
 	}
 }
 
@@ -77,9 +118,9 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 		case SIMPLE_TEXT:
 			return new InfoSimpleView(this.context, info );
 		case DOUBLE_TEXT:
-			return new InfoSimpleView(this.context, info );
+			return new InfoSimpleViewTwoLines(this.context, info );
 		case NEXT_ACTIVITY:
-			return new InfoSimpleView(this.context, info );
+			return new InfoSimpleViewActivity(this.context, info );
 		case WITH_IMAGE:
 			return new InfoSimpleView(this.context, info );
 		default:

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@drawable/list_item_background">
+
+	
+		<TextView android:id="@+id/info_activity_title"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="15dip" 
+			android:layout_marginBottom="15dip"
+			android:layout_marginLeft="5dip"			
+			android:layout_width="wrap_content" 
+			android:layout_centerVertical="true"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textStyle="bold" />
+		<ImageView android:id="@+id/list_item_arrow"
+	        android:layout_alignParentRight="true"
+            android:gravity="right"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
+			android:src="@drawable/arrow">
+		</ImageView>
+</RelativeLayout>
+
+
+
