@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Copyright (C) 2011 Michal Harakal and Michael Kroez
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS-IS" BASIS
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-        
--->
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/home_root" android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
-
-	<LinearLayout style="@style/ActionBarCompat">
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    
+    <LinearLayout style="@style/ActionBarCompat">
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
 	</LinearLayout>
@@ -32,126 +16,13 @@ limitations under the License.
 			android:textStyle="bold" />
 	</LinearLayout>
 
-	<ScrollView android:orientation="vertical" android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+  <ListView android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
+  <TextView android:id="@+id/android:empty"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
 
-			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:orientation="vertical"
-				android:layout_marginBottom="6dip">
-				
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/info_web_version"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" android:paddingLeft="12dip"
-					android:layout_marginTop="10dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/info_web_version_one"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" android:gravity="center_horizontal"
-					android:autoLink="web" android:textColorLink="@color/black"
-					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" />
-				
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/info_kartendaten"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" android:paddingLeft="12dip"
-					android:layout_marginTop="10dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/info_kartendaten_one"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:autoLink="web" android:textColorLink="@color/black"
-					android:textStyle="bold" android:gravity="center_horizontal"
-					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/info_kartendaten_two"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:autoLink="web"
-					android:textStyle="bold" android:gravity="center_horizontal"
-					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" />
-					
-
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-					
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/info_android_development"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" 
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip" android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/info_android_development_one"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" android:gravity="center"
-					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/info_android_development_two"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" android:gravity="center" />
-
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/info_webdevelopment"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" 
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip" android:layout_marginTop="5dip"/>
-				<TextView android:id="@+id/name_christophbuente" android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/info_webdevelopment_one"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" android:gravity="center"
-					android:layout_marginTop="5dip" android:layout_marginBottom="5dip"/>
-
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-
-				<Button android:layout_height="wrap_content" android:layout_width="wrap_content"
-					android:background="@drawable/legal_notice_button" 
-					android:paddingLeft="5dip" android:paddingRight="5dip" android:paddingTop="3dip" android:paddingBottom="3dip"
-					android:layout_marginTop="5dip" android:layout_marginBottom="5dip" android:layout_gravity="center_horizontal"
-					android:onClick="onLegalNotice" android:textAppearance="?android:attr/textAppearanceLarge" 
-					android:textColor="@color/white" android:text="@string/btn_legal_notice" />
-					
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-					
-				<LinearLayout android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:orientation="horizontal"
-					android:layout_marginLeft="6dip" android:layout_marginRight="6dip"
-					android:layout_gravity="center_horizontal">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="fill_parent" android:text="@string/info_a_project_of"
-						android:textAppearance="?android:attr/textAppearanceMedium"
-						android:textStyle="bold" android:textColor="@color/red_logo"
-						android:gravity="center_vertical" android:layout_marginTop="5dip"
-						android:layout_marginRight="5dip" />
-					<ImageView android:id="@+id/logo_sozialhelden" android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:src="@drawable/logo_sozialhelden_232x47"/>
-						
-						<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-					
-				</LinearLayout>
-		
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
-				
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/stiftung_text_one"
-					android:textAppearance="?android:attr/textAppearanceLarge"
-					android:textStyle="bold" 
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip" android:layout_marginTop="5dip"/>
-					
-				
-					<ImageView android:id="@+id/logo_stiftung" android:layout_width="wrap_content" android:layout_gravity="center"
-						android:layout_height="wrap_content" android:src="@drawable/logo_fds_4c300_232x105" android:layout_marginBottom="5dip"/>
-			</LinearLayout>
-		</LinearLayout>
-	</ScrollView>
 </LinearLayout>
+
