@@ -43,7 +43,6 @@ public class MyLocationManager {
 
 	private MultiResultReceiver mReceiver;
 
-	private boolean requestOnce;
 	private boolean doesRequestUpdates;
 	private boolean wasLastKnownLocation;
 	private boolean gpsDisabled;
@@ -76,7 +75,6 @@ public class MyLocationManager {
 		wasLastKnownLocation = true;
 		notifyReceiver();
 
-		requestOnce = true;
 		requestLocationUpdates();
 
 	}
@@ -173,7 +171,6 @@ public class MyLocationManager {
 		public void onLocationChanged(Location location) {
 			Log.d(TAG, "MyGPSLocationListener: location received. Accuracy = "
 					+ location.getAccuracy());
-			requestOnce = false;
 			wasLastKnownLocation = false;
 			
 			if ( networkDisabled )
@@ -185,10 +182,6 @@ public class MyLocationManager {
 			} else if ( mBestLastKnownLocation.getProvider().equals( LocationManager.GPS_PROVIDER ) &&
 					location.getProvider().equals( LocationManager.GPS_PROVIDER )) {
 				updateLocation( location );
-			}
-			
-			if (requestOnce && mReceiver.getReceiverCount() == 0) {
-				releaseLocationUpdates();
 			}
 		}
 
