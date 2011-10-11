@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+Copyright (C) 2011 Michal Harakal and Michael Kroez
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS-IS" BASIS
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+        
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="description_map">Mapa</string>
+    <string name="description_filter">Filter</string>
+    <string name="description_gps">Aktuálna poloha</string>
+    <string name="description_edit">Upraviť</string>
+    <string name="new_default_name">Nové miesto</string>
+    <string name="title_pois_list">Zoznam</string>
+    <string name="title_pois_map">Mapa</string>
+    <string name="title_pois_settings">Nastavenia filtra</string>
+    <string name="title_pois_detail">Informácia</string>
+    <string name="title_pois_detail_edit">Upraviť miesto záujmu</string>
+    <string name="title_wheelchair_state">Nastavenia bezbariérovosti</string>
+    <string name="edit_poi">Upraviť</string>
+    <string name="btn_list">Zoznam</string>
+    <string name="no_pois">Nenašli sa žiadne miesta zodpovedajúce filtru</string>
+    <string name="settings_wheelchair_state">Nastavenie bezbariérovosti</string>
+    <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
+    <string name="ws_enabled_title">Prístupné</string>
+    <string name="ws_enabled_l1">Vstup: schod na vstupe nie je vyšší ako 7 cm</string>
+    <string name="ws_enabled_l2">Miestnosti: všetky miestnosti sú bez výnimky pre vozíčkárov prístupné</string>
+    <string name="ws_enabled_l3">Toaleta:  Bezbariérová</string>
+    <string name="ws_limited_title">Čiastočne prístupné </string>
+    <string name="ws_limited_l1">Vstup: schod na vstupe nie je vyšší ako 7 cm</string>
+    <string name="ws_limited_l2">Miestnosti: dôležité miestnosti sú pre vozíčkárov prístupné</string>
+    <string name="ws_limited_l3">Toaleta: nezáleží</string>
+    <string name="ws_disabled_title">Neprístupné</string>
+    <string name="ws_disabled_l1">Vstup: schod na vstupe je vyšší ako 7 cm</string>
+    <string name="ws_disabled_l2">Miestnosti: dôležité miestnosti nie sú pre vozíčkárov prístupné</string>
+    <string name="ws_unknown_title">Neznáme</string>
+    <string name="ws_unknown_l1">Stav nie je známy. Pomôžte nám, prosím, s označením</string>
+    <string name="poi_property_name">Meno</string>
+    <string name="poi_property_comment">Komentár</string>
+    <string name="poi_property_address">Adresa</string>
+    <string name="poi_property_phone">Telefón</string>
+    <string name="poi_property_website">Webovská stránka</string>
+    <string name="poi_property_position">Poloha</string>
+    <string name="settings_wheelchair_unknown_accesible">Neznáme</string>
+    <string name="poi_property_nodetype">Typ</string>
+    <string name="poi_property_category">Kategória</string>
+    <string name="title_please_wait">Prosím čakajte</string>
+    <string name="title_category_select">Zvolenie kategórie na zobrazenie</string>
+    <string name="settings_category_filter">Filter kategórií</string>
+    <string name="settings_wheelchair_no_accessible">Nie</string>
+    <string name="settings_wheelchair_limited_accessible">Obmedzené</string>
+    <string name="settings_wheelchair_full_accessible">Áno</string>
+    <string name="title_info">Zásluhy</string>
+    <string name="info_a_project_of">projekt</string>
+    <string name="info_web_version">Webovská verzia</string>
+    <string name="stiftung_text_one">Ďakujeme Fürst Donnersmarck-Stiftung</string>
+    <string name="info_kartendaten">Mapové dáta:</string>
+    <string name="info_android_development">Verzia pre Android:</string>
+    <string name="info_icons">Ikonky:</string>
+    <string name="info_webdevelopment">Vývoj pre Web:</string>
+    <string name="error_network_failure">Problémy s pripojením na internet. Overte si, prosím, že pripojenie na internet pracuje správne alebo skúste neskôr.</string>
+    <string name="error_internal_error">Hopla. Nastala neočakávaná chyba. Reštartuje, prosím, aplikáciu.</string>
+    <string name="error_occurred">Nastala chyba.</string>
+    <string name="info_kartendaten_two">© OpenStreetMap prispievatelia, CC-BY-SA</string>
+    <string name="title_wheelchairstate">Bezbarierovosť</string>
+    <string name="pull_to_refresh_pull_label">Potiahnúť pre aktualizáciu...</string>
+    <string name="pull_to_refresh_release_label">Uvolniť  pre aktualizáciu...</string>
+    <string name="pull_to_refresh_refreshing_label">Aktualizácia...</string>
+    <string name="pull_to_refresh_tap_label">Siahnuť pre aktualizáciu...</string>
+    <string name="okay">V poriadku</string>
+    <string name="error_network_title">Problémy so sieťou</string>
+    <string name="btn_legal_notice">Právne informácie</string>
+    <string name="btn_cancel">Prerušiť</string>
+    <string name="btn_save">Uložiť</string>
+    <string name="support_nodetype_unknown">Neznámy typ</string>
+    <string name="quit">Ukončiť</string>
+    <string name="support_category_unknown">Neznáma kategória</string>
+    <string name="title_legal_notice">Právne informácie</string>
+    <string name="legal_notice_opensource">Toto je slobodný softvér</string>
+    <string name="legal_notice_intro">Tento softvér obsahuje prácu iných. Nasladuje copyright:</string>
+</resources>
