@@ -47,6 +47,7 @@ class InfoSimpleView extends LinearLayout {
 		LinearLayout.LayoutParams parametri = new  LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		View v = inflater.inflate(getLayout(), null, false);
 		this.addView(v, parametri);
+		setBackgroundDrawable( getResources().getDrawable( R.drawable.list_item_background ));
 
 		title = (TextView) findViewById(R.id.info_activity_title);
 		first = (TextView) findViewById(R.id.info_activity_first_line);
@@ -165,7 +166,15 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
-	
+
+	@Override
+	public boolean isEnabled(int position) {
+		if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS)
+			return false;
+		else
+			return true;
+	}
+
 	private OnClickListener mOnFirstClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {

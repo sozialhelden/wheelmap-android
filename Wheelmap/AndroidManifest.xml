@@ -19,7 +19,8 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.wheelmap.android"
       android:versionCode="9"
-      android:versionName="0.7rc2">
+      android:versionName="0.7rc2"
+      android:installLocation="auto">
     <uses-sdk android:minSdkVersion="7" />
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

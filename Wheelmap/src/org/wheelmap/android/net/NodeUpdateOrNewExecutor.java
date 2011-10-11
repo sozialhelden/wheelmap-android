@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.net;
 
@@ -43,10 +43,12 @@ import android.util.Log;
 public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	private Context mContext;
 	private Cursor mCursor;
-	private static final String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG
-			+ " != ? ) ";
-	private static final String[] whereValue = new String[] { String
-			.valueOf(Wheelmap.UPDATE_NO) };
+	private static final String whereClauseToUpdate = "( "
+			+ Wheelmap.POIs.UPDATE_TAG + " != ? ) AND ( "
+			+ Wheelmap.POIs.UPDATE_TAG + " != ? )";
+	private static final String[] whereValueToUpdate = new String[] {
+			Integer.toString(Wheelmap.UPDATE_NO),
+			Integer.toString(Wheelmap.UPDATE_PENDING) };
 
 	public NodeUpdateOrNewExecutor(Context context, ContentResolver resolver) {
 		super(resolver, null);
@@ -55,7 +57,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 
 	public void prepareContent() {
 		mCursor = getResolver().query(Wheelmap.POIs.CONTENT_URI,
-				Wheelmap.POIs.PROJECTION, whereClause, whereValue, null);
+				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
+				whereValueToUpdate, null);
 		mCursor.moveToFirst();
 	}
 
@@ -110,10 +113,14 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareDatabase() {
+		deleteAllPending();
+		copyAllUpdatedToPending();
 		ContentValues values = new ContentValues();
+		values.clear();
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
-		getResolver().update(Wheelmap.POIs.CONTENT_URI, values, whereClause,
-				whereValue);
+		getResolver().update(Wheelmap.POIs.CONTENT_URI, values,
+				whereClauseToUpdate, whereValueToUpdate);
+
 	}
 
 	private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
@@ -154,5 +161,28 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
 		return prefs.getString(SyncService.PREFS_API_KEY, getApiKey());
+	}
+	
+	private void deleteAllPending() {
+		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " == ? )";
+		String[] whereValues = { Integer.toString( Wheelmap.UPDATE_PENDING ) };
+		
+		getResolver().delete( Wheelmap.POIs.CONTENT_URI, whereClause, whereValues );
+	}
+
+	private void copyAllUpdatedToPending() {
+		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
+				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
+				whereValueToUpdate, null);
+		c.moveToFirst();
+		ContentValues values = new ContentValues();
+		while (!c.isAfterLast()) {
+			values.put(Wheelmap.POIs.WM_ID, POIHelper.getWMId(c));
+			values.put(Wheelmap.POIs.WHEELCHAIR, POIHelper.getWheelchair(c)
+					.getId());
+			values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_PENDING);
+			getResolver().insert(Wheelmap.POIs.CONTENT_URI, values);
+			c.moveToNext();
+		}
 	}
 }

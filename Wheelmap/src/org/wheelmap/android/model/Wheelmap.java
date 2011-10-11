@@ -31,6 +31,7 @@ public class Wheelmap {
 		public static final int UPDATE_NO = 0x0;
 		public static final int UPDATE_WHEELCHAIR_STATE = 0x1;
 		public static final int UPDATE_ALL_NEW = 0x2;
+		public static final int UPDATE_PENDING = 0x3;
 
 		
 		/**

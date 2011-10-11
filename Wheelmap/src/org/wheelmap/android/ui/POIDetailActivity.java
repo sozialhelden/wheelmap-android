@@ -150,6 +150,7 @@ public class POIDetailActivity extends MapActivity {
 			load();
 		}
 		super.onResume();
+		logMemory();
 	}
 
 	@Override
@@ -381,6 +382,14 @@ public class POIDetailActivity extends MapActivity {
 			imageView.setBackgroundDrawable(null);
 		} catch (Exception e) {
 		}
+	}
+	
+	private void logMemory() {
+		long totalMemory = Runtime.getRuntime().totalMemory();
+		long freeMemory = Runtime.getRuntime().freeMemory();
+		Log.d( TAG, "memory: totalMemory = " + totalMemory + " freeMemory = " + freeMemory );
+		
+		
 	}
 
 }

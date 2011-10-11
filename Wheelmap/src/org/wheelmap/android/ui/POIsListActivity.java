@@ -66,7 +66,7 @@ public class POIsListActivity extends ListActivity implements
 	private Location mLocation, mLastQueryLocation;
 
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
-	private final static double QUERY_AUTO_DISTANCE_MIN = 0.25;
+//	private final static double QUERY_AUTO_DISTANCE_MIN = 0.25;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 	public final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
 	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
@@ -336,22 +336,22 @@ public class POIsListActivity extends ListActivity implements
 		}
 	}
 
-	private boolean isFarerThanDeltaDistance(Location location) {
-		if (mLastQueryLocation == null)
-			return false;
-
-		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(
-				location.getLongitude(), location.getLatitude());
-		Wgs84GeoCoordinates lastQueryCoordinates = new Wgs84GeoCoordinates(
-				mLastQueryLocation.getLongitude(),
-				mLastQueryLocation.getLatitude());
-
-		if (GeocoordinatesMath.calculateDistance(lastQueryCoordinates,
-				crrCoordinates) >= QUERY_AUTO_DISTANCE_MIN)
-			return true;
-		else
-			return false;
-	}
+//	private boolean isFarerThanDeltaDistance(Location location) {
+//		if (mLastQueryLocation == null)
+//			return false;
+//
+//		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(
+//				location.getLongitude(), location.getLatitude());
+//		Wgs84GeoCoordinates lastQueryCoordinates = new Wgs84GeoCoordinates(
+//				mLastQueryLocation.getLongitude(),
+//				mLastQueryLocation.getLatitude());
+//
+//		if (GeocoordinatesMath.calculateDistance(lastQueryCoordinates,
+//				crrCoordinates) >= QUERY_AUTO_DISTANCE_MIN)
+//			return true;
+//		else
+//			return false;
+//	}
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -379,10 +379,11 @@ public class POIsListActivity extends ListActivity implements
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			mLocation = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
-			if (isFarerThanDeltaDistance(mLocation)) {
-				((PullToRefreshListView) getListView()).prepareForRefresh();
-				runQuery(true);
-			}
+			// Removed, as it makes problems with wonky gps data
+//			if (isFarerThanDeltaDistance(mLocation)) {
+//				((PullToRefreshListView) getListView()).prepareForRefresh();
+//				runQuery(true);
+//			}
 			break;
 		}
 		}

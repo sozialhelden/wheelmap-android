@@ -32,19 +32,6 @@ limitations under the License.
     <string name="no_pois">Nenašli sa žiadne miesta zodpovedajúce filtru</string>
     <string name="settings_wheelchair_state">Nastavenie bezbariérovosti</string>
     <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
-    <string name="ws_enabled_title">Prístupné</string>
-    <string name="ws_enabled_l1">Vstup: schod na vstupe nie je vyšší ako 7 cm</string>
-    <string name="ws_enabled_l2">Miestnosti: všetky miestnosti sú bez výnimky pre vozíčkárov prístupné</string>
-    <string name="ws_enabled_l3">Toaleta:  Bezbariérová</string>
-    <string name="ws_limited_title">Čiastočne prístupné </string>
-    <string name="ws_limited_l1">Vstup: schod na vstupe nie je vyšší ako 7 cm</string>
-    <string name="ws_limited_l2">Miestnosti: dôležité miestnosti sú pre vozíčkárov prístupné</string>
-    <string name="ws_limited_l3">Toaleta: nezáleží</string>
-    <string name="ws_disabled_title">Neprístupné</string>
-    <string name="ws_disabled_l1">Vstup: schod na vstupe je vyšší ako 7 cm</string>
-    <string name="ws_disabled_l2">Miestnosti: dôležité miestnosti nie sú pre vozíčkárov prístupné</string>
-    <string name="ws_unknown_title">Neznáme</string>
-    <string name="ws_unknown_l1">Stav nie je známy. Pomôžte nám, prosím, s označením</string>
     <string name="poi_property_name">Meno</string>
     <string name="poi_property_comment">Komentár</string>
     <string name="poi_property_address">Adresa</string>
@@ -88,4 +75,12 @@ limitations under the License.
     <string name="title_legal_notice">Právne informácie</string>
     <string name="legal_notice_opensource">Toto je slobodný softvér</string>
     <string name="legal_notice_intro">Tento softvér obsahuje prácu iných. Nasladuje copyright:</string>
+    <string name="ws_unknown">Neznáme: Stav nie je známy. Pomôžte nám, prosím, s označením</string>
+    <string name="ws_enabled">Prístupné: Vstup: schod na vstupe nie je vyšší ako 7 cm, Miestnosti: všetky miestnosti sú bez výnimky pre vozíčkárov prístupné, Toaleta:  Bezbariérová</string>
+    <string name="ws_limited">Čiastočne prístupné: Vstup: schod na vstupe nie je vyšší ako 7 cm, Miestnosti: dôležité miestnosti sú pre vozíčkárov prístupné, Toaleta: nezáleží</string>
+    <string name="ws_disabled">Neprístupné: Vstup: schod na vstupe je vyšší ako 7 cm, Miestnosti: dôležité miestnosti nie sú pre vozíčkárov prístupné</string>
+    <string name="ws_limited_title">Čiastočne prístupné</string>
+    <string name="ws_enabled_title">Prístupné</string>
+    <string name="ws_disabled_title">Neprístupné</string>
+    <string name="ws_unknown_title">Neznáme</string>
 </resources>

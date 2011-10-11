@@ -18,11 +18,14 @@ limitations under the License.
 package org.wheelmap.android.app;
 
 import org.acra.ACRA;
+import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 // Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
@@ -38,6 +41,9 @@ public class WheelmapApp extends Application {
 	@Override
 	public void onCreate() {
 		ACRA.init(this);
+		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        String memoryClass = String.valueOf( am.getMemoryClass());
+		ErrorReporter.getInstance().putCustomData("memoryClass", memoryClass);
 		super.onCreate();
 		Log.d( TAG, "onCreate" );
 		mLocationManager = MyLocationManager.initOnce( this );

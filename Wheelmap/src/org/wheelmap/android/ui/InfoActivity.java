@@ -63,7 +63,7 @@ public class InfoActivity extends ListActivity {
 				R.string.info_android_development_one, 
 				"http://fiwio.com", 
 				R.string.info_android_development_two, 
-				"http://sozialhelden.de",				
+				"http://studiorutton.de",				
 				InfoTypes.WITH_TWO_LINKS );	   
 		infoList.add( info );
 

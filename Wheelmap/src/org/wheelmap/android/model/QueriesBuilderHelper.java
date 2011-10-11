@@ -37,6 +37,8 @@ public class QueriesBuilderHelper {
 	public static final String PREF_KEY_WHEELCHAIR_STATE_LIMITED = "showLimited";
 	public static final String PREF_KEY_WHEELCHAIR_STATE_NO = "showNo";
 	public static final String PREF_KEY_WHEELCHAIR_STATE_UNKNOWN = "showUnknown";
+	
+	private static final String ENTRY_NOT_UPDATE_PENDING = " NOT update_tag=" + Wheelmap.UPDATE_PENDING;
 
 	static private String categoriesFilter(Context context) {
 		// categories id
@@ -140,9 +142,9 @@ public class QueriesBuilderHelper {
 		}
 		
 		if (result.length() > 0)
-			result = "(" + result + ") AND  (" + wheelchair.toString() + ")";
+			result = "(" + result + ") AND  (" + wheelchair.toString() + ") AND (" + ENTRY_NOT_UPDATE_PENDING + ")";
 		else
-			result =  "(" + wheelchair.toString() + ")";
+			result =  "(" + wheelchair.toString() + ") AND (" + ENTRY_NOT_UPDATE_PENDING + ")";
 
 		Log.d("QueriesBuilderHelper userSettingsFilter", result);
 

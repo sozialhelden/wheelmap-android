@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -36,6 +37,7 @@ import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -116,6 +118,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		for (Nodes nodes : getTempStore()) {
 			bulkInsert(nodes);
 		}
+		copyAllPendingDataToRetrievedData();
 		clearTempStore();
 	}
 
@@ -125,6 +128,28 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 				.valueOf(Wheelmap.UPDATE_NO) };
 		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,
 				whereValues);
+	}
+	
+	private void copyAllPendingDataToRetrievedData() {
+		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
+		String[] whereValues = new String[] { Integer.toString( Wheelmap.UPDATE_PENDING ) };
+		
+		String whereClauseTarget = "( " + Wheelmap.POIs.WM_ID + " = ? )";
+		String[] whereValuesTarget = new String[1];
+		
+		Cursor c = getResolver().query( Wheelmap.POIs.CONTENT_URI, Wheelmap.POIs.PROJECTION, whereClause, whereValues, null );
+		c.moveToFirst();
+		ContentValues values = new ContentValues();
+		while( !c.isAfterLast()) {
+			long wmId = POIHelper.getWMId( c );
+			int wheelchairState = POIHelper.getWheelchair( c ).getId();
+			values.clear();
+			values.put( Wheelmap.POIs.WHEELCHAIR, wheelchairState );
+			whereValuesTarget[0] = Long.toString( wmId );
+			getResolver().update( Wheelmap.POIs.CONTENT_URI, values, whereClauseTarget, whereValuesTarget );
+			c.moveToNext();
+		}
+		
 	}
 
 	private void bulkInsert(Nodes nodes) {

@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Copyright (C) 2011 Michal Harakal and Michael Kroez
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS-IS" BASIS
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-        
--->
+<!-- Copyright (C) 2011 Michal Harakal and Michael Kroez Licensed under the 
+	Apache License, Version 2.0 (the "License"); you may not use this file except 
+	in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS-IS" BASIS WITHOUT WARRANTIES OR 
+	CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+	specific language governing permissions and limitations under the License. -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
@@ -35,189 +26,90 @@ limitations under the License.
 	<ScrollView android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_weight="1">
-		
+
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="vertical">
 
-			<!-- icon + big text -->
-			<LinearLayout android:orientation="horizontal"
-				android:layout_marginTop="4dip" android:layout_marginLeft="4dip"
+			<RelativeLayout android:layout_marginLeft="4dip"
+				android:layout_marginTop="8dip" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
 
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
-
-				<ImageView android:src="@drawable/wheelchair_state_enabled"
+				<ImageView android:id="@+id/wheelchair_state_enabled_icon"
+					android:src="@drawable/wheelchair_state_enabled"
 					android:layout_height="@dimen/wheelchair_state_icon_height"
-					android:layout_width="@dimen/wheelchair_state_icon_width"></ImageView>
+					android:layout_width="@dimen/wheelchair_state_icon_width"
+					android:layout_alignParentLeft="true" />
 
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
+					android:text="@string/ws_enabled" android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
+					android:layout_toLeftOf="@+id/radio_enabled"
+					android:layout_centerVertical="true" />
 
-				<TextView android:layout_height="wrap_content"
-					style="@style/WheelStateTitleEnabled" android:layout_marginTop="@dimen/wheelstate_text_margin"
-					android:layout_width="wrap_content" android:text="@string/ws_enabled_title"></TextView>
-			</LinearLayout>
-			<!-- explanation -->
-
-			<LinearLayout android:layout_marginLeft="4dip"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:weightSum="1.0">
-
-
-
-				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					android:layout_marginLeft="20dip" android:layout_width="0px"
-					android:layout_weight=".85" android:layout_height="wrap_content">
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_enabled_l1"></TextView>
-					</TableRow>
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_enabled_l2"></TextView>
-					</TableRow>
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_enabled_l3"></TextView>
-					</TableRow>
-				</TableLayout>
 				<RadioButton android:id="@+id/radio_enabled"
-					android:layout_width="0px" android:layout_weight=".15"
-					android:layout_height="wrap_content" />
-			</LinearLayout>
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_alignParentRight="true" />
+			</RelativeLayout>
 
-			<!-- icon + big text -->
-			<LinearLayout android:orientation="horizontal"
-				android:layout_marginTop="4dip" android:layout_marginLeft="4dip"
+			<RelativeLayout android:layout_marginLeft="4dip"
+				android:layout_marginTop="8dip" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
 
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
-
-				<ImageView android:src="@drawable/wheelchair_state_limited"
+				<ImageView android:id="@+id/wheelchair_state_limited_icon"
+					android:src="@drawable/wheelchair_state_limited"
 					android:layout_height="@dimen/wheelchair_state_icon_height"
-					android:layout_width="@dimen/wheelchair_state_icon_width"></ImageView>
+					android:layout_width="@dimen/wheelchair_state_icon_width"
+					android:layout_alignParentLeft="true"></ImageView>
 
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
+					android:text="@string/ws_limited" android:layout_toRightOf="@+id/wheelchair_state_limited_icon"
+					android:layout_toLeftOf="@+id/radio_limited"
+					android:layout_centerVertical="true" />
 
-				<TextView android:layout_height="wrap_content"
-					style="@style/WheelStateTitleLimited" android:layout_marginTop="@dimen/wheelstate_text_margin"
-					android:layout_width="wrap_content" android:text="@string/ws_limited_title"></TextView>
-			</LinearLayout>
-			<!-- explanation -->
-
-			<LinearLayout android:layout_marginLeft="4dip"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:weightSum="1.0">
-
-
-
-				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					android:layout_marginLeft="20dip" android:layout_width="0px"
-					android:layout_height="wrap_content" android:layout_weight=".85">
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_limited_l1"></TextView>
-					</TableRow>
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_limited_l2"></TextView>
-					</TableRow>
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_limited_l3"></TextView>
-					</TableRow>
-				</TableLayout>
 				<RadioButton android:id="@+id/radio_limited"
-					android:layout_width="0px" android:layout_height="wrap_content"
-					android:layout_weight=".15" />
-			</LinearLayout>
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_alignParentRight="true" />
+			</RelativeLayout>
 
-			<!-- icon + big text -->
-			<LinearLayout android:orientation="horizontal"
-				android:layout_marginTop="4dip" android:layout_marginLeft="4dip"
+			<RelativeLayout android:layout_marginLeft="4dip"
+				android:layout_marginTop="8dip" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
 
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
-
-				<ImageView android:src="@drawable/wheelchair_state_disabled"
+				<ImageView android:id="@+id/wheelchair_state_disabled_icon"
+					android:src="@drawable/wheelchair_state_disabled"
 					android:layout_height="@dimen/wheelchair_state_icon_height"
-					android:layout_width="@dimen/wheelchair_state_icon_width"></ImageView>
+					android:layout_width="@dimen/wheelchair_state_icon_width"
+					android:layout_alignParentLeft="true" />
 
-
-				<TextView android:layout_height="wrap_content"
-					style="@style/WheelStateTitleDisabled" android:layout_marginTop="@dimen/wheelstate_text_margin"
-					android:layout_width="wrap_content" android:text="@string/ws_disabled_title"></TextView>
-			</LinearLayout>
-			<!-- explanation -->
-
-			<LinearLayout android:layout_marginLeft="4dip"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:weightSum="1.0">
-
-
-
-				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					android:layout_marginLeft="20dip" android:layout_width="0px"
-					android:layout_height="wrap_content" android:layout_weight=".85">
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_disabled_l1"></TextView>
-					</TableRow>
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_disabled_l2"></TextView>
-					</TableRow>
-
-				</TableLayout>
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
+					android:text="@string/ws_disabled" android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
+					android:layout_toLeftOf="@+id/radio_disabled"
+					android:layout_centerVertical="true" />
 				<RadioButton android:id="@+id/radio_disabled"
-					android:layout_width="0px" android:layout_height="wrap_content"
-					android:layout_weight=".15" />
-			</LinearLayout>
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_alignParentRight="true" />
+			</RelativeLayout>
 
-			<!-- icon + big text -->
-			<LinearLayout android:orientation="horizontal"
-				android:layout_marginTop="4dip" android:layout_marginLeft="4dip"
+			<RelativeLayout android:layout_marginLeft="4dip"
+				android:layout_marginTop="8dip" android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
 
-				android:layout_width="fill_parent" android:layout_height="wrap_content">
-
-				<ImageView android:src="@drawable/wheelchair_state_unknown"
+				<ImageView android:id="@+id/wheelchair_state_unknown_icon"
+					android:src="@drawable/wheelchair_state_unknown"
 					android:layout_height="@dimen/wheelchair_state_icon_height"
-					android:layout_width="@dimen/wheelchair_state_icon_width"></ImageView>
-
-
-				<TextView android:layout_height="wrap_content"
-					style="@style/WheelStateTitleUnknown" android:layout_marginTop="@dimen/wheelstate_text_margin"
-					android:layout_width="wrap_content" android:text="@string/ws_unknown_title"></TextView>
-			</LinearLayout>
-			<!-- explanation -->
-
-			<LinearLayout android:layout_marginLeft="4dip"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:weightSum="1.0">
-
-
-
-				<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-					android:layout_marginLeft="20dip" android:layout_width="0px"
-					android:layout_height="wrap_content" android:layout_weight=".85">
-					<TableRow>
-						<TextView android:layout_column="1" android:text="•"></TextView>
-						<TextView android:layout_column="2" android:layout_width="wrap_content"
-							android:text="@string/ws_unknown_l1"></TextView>
-					</TableRow>
-
-				</TableLayout>
+					android:layout_width="@dimen/wheelchair_state_icon_width"
+					android:layout_alignParentLeft="true" />
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
+					android:text="@string/ws_unknown" android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
+					android:layout_toLeftOf="@+id/radio_unknown"
+					android:layout_centerVertical="true" />
 				<RadioButton android:id="@+id/radio_unknown"
-					android:layout_width="0px" android:layout_height="wrap_content"
-					android:layout_weight=".15" />
-			</LinearLayout>
-
-
-
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_alignParentRight="true" />
+			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>
-
-
 </LinearLayout>

@@ -34,19 +34,6 @@ limitations under the License.
     <string name="no_pois">no places found according your filter settings</string>
     <string name="settings_wheelchair_state">Wheelchair State</string>
     <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
-    <string name="ws_enabled_title">Wheelchair accessible</string>
-    <string name="ws_enabled_l1">Entrance: the entrance step is not higher than 7 cm</string>
-    <string name="ws_enabled_l2">Localities: all localities accessible for wheelchair users (without exception)</string>
-    <string name="ws_enabled_l3">Toilet: disabled toilet available</string>
-    <string name="ws_limited_title">Partly wheelchair accessible</string>
-    <string name="ws_limited_l1">Entrance: the entrance step is not higher than 7 cm</string>
-    <string name="ws_limited_l2">Localities: most important localitites accessible for wheelchair users</string>
-    <string name="ws_limited_l3">Toilet: don\'t care</string>
-    <string name="ws_disabled_title">Not wheelchair accessible</string>
-    <string name="ws_disabled_l1">Entrance: the entrance step is higher than 7 cm; or a stair at the entrance</string>
-    <string name="ws_disabled_l2">Localities: most important localities are not accessible for wheelchair users</string>
-    <string name="ws_unknown_title">Unknown Status</string>
-    <string name="ws_unknown_l1">The status is unknown. Help us and mark this location.</string>
     <string name="poi_property_name">Name</string>
     <string name="poi_property_comment">Comment</string>
     <string name="poi_property_address">Address</string>
@@ -80,7 +67,7 @@ limitations under the License.
     <string name="info_kartendaten_one">www.openstreetmap.org</string>
     <string name="info_kartendaten_two">© OpenStreetMap contributors, CC-BY-SA</string>
     <string name="info_web_version_one">www.wheelmap.org</string>
-    <string name="title_wheelchairstate">Wheelchair</string>
+    <string name="title_wheelchairstate">Wheelchair accessible?</string>
     <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
     <string name="pull_to_refresh_release_label">Release to refresh...</string>
     <string name="pull_to_refresh_refreshing_label">Refreshing...</string>
@@ -114,4 +101,12 @@ limitations under the License.
     <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com</string>
     <string name="legal_notice_intro">This Software is based on other works. Their copyright is as follows:</string>
     <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
+    <string name="ws_enabled">Yes: Entrance without steps, all rooms without steps, accessible toilet</string>
+    <string name="ws_limited">Limited: Entry has a step (max. height 7cm), most rooms are stepless, toilet not accessible</string>
+    <string name="ws_disabled">No: Entry has high or several steps, rooms not accessible</string>
+    <string name="ws_unknown">Unknown: Help us and mark this location.</string>
+    <string name="ws_unknown_title">Unknown Status</string>
+    <string name="ws_limited_title">Partly wheelchair accessible</string>
+    <string name="ws_disabled_title">Not wheelchair accessible</string>
+    <string name="ws_enabled_title">Wheelchair accessible</string>
 </resources>
