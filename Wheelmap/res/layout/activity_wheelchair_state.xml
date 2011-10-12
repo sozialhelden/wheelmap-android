@@ -40,11 +40,9 @@
 					android:layout_width="@dimen/wheelchair_state_icon_width"
 					android:layout_alignParentLeft="true" />
 
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
-					android:text="@string/ws_enabled" android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
-					android:layout_toLeftOf="@+id/radio_enabled"
-					android:layout_centerVertical="true" />
+				<TextView style="@style/WheelStateSelectFont" android:text="@string/ws_enabled"
+					android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
+					android:layout_toLeftOf="@+id/radio_enabled" />
 
 				<RadioButton android:id="@+id/radio_enabled"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -61,11 +59,9 @@
 					android:layout_width="@dimen/wheelchair_state_icon_width"
 					android:layout_alignParentLeft="true"></ImageView>
 
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
-					android:text="@string/ws_limited" android:layout_toRightOf="@+id/wheelchair_state_limited_icon"
-					android:layout_toLeftOf="@+id/radio_limited"
-					android:layout_centerVertical="true" />
+				<TextView style="@style/WheelStateSelectFont" android:text="@string/ws_limited"
+					android:layout_toRightOf="@+id/wheelchair_state_limited_icon"
+					android:layout_toLeftOf="@+id/radio_limited" />
 
 				<RadioButton android:id="@+id/radio_limited"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -82,11 +78,9 @@
 					android:layout_width="@dimen/wheelchair_state_icon_width"
 					android:layout_alignParentLeft="true" />
 
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
-					android:text="@string/ws_disabled" android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
-					android:layout_toLeftOf="@+id/radio_disabled"
-					android:layout_centerVertical="true" />
+				<TextView style="@style/WheelStateSelectFont" android:text="@string/ws_disabled"
+					android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
+					android:layout_toLeftOf="@+id/radio_disabled" />
 				<RadioButton android:id="@+id/radio_disabled"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
 					android:layout_alignParentRight="true" />
@@ -101,11 +95,9 @@
 					android:layout_height="@dimen/wheelchair_state_icon_height"
 					android:layout_width="@dimen/wheelchair_state_icon_width"
 					android:layout_alignParentLeft="true" />
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginLeft="6dip"
-					android:text="@string/ws_unknown" android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
-					android:layout_toLeftOf="@+id/radio_unknown"
-					android:layout_centerVertical="true" />
+				<TextView style="@style/WheelStateSelectFont" android:text="@string/ws_unknown"
+					android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
+					android:layout_toLeftOf="@+id/radio_unknown" />
 				<RadioButton android:id="@+id/radio_unknown"
 					android:layout_width="wrap_content" android:layout_height="wrap_content"
 					android:layout_alignParentRight="true" />
