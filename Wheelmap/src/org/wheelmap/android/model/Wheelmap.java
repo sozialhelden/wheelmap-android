@@ -82,6 +82,7 @@ public class Wheelmap {
 			public static final String COS_LON_RAD = "cos_lon_rad";
 			
 			public static final String UPDATE_TAG = "update_tag";
+			public static final String UPDATE_TIMESTAMP = "update_timestamp";
 			
 		}
 
@@ -139,7 +140,8 @@ public class Wheelmap {
 				CATEGORY_IDENTIFIER,
 				NODETYPE_ID,
 				NODETYPE_IDENTIFIER,
-				UPDATE_TAG
+				UPDATE_TAG,
+				UPDATE_TIMESTAMP
 			};
 		}
 }

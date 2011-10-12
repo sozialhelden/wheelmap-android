@@ -50,6 +50,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	private int mNodeType = -1;
 
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
+	private static final long TIME_TO_DELETE_FOR_PENDING = 10 * 60 * 1000;
 
 	public NodesExecutor(ContentResolver resolver, Bundle bundle) {
 		super(resolver, bundle, Nodes.class);
@@ -114,6 +115,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	@Override
 	public void prepareDatabase() {
 		deleteRetrievedData();
+		deleteAllOldPending();
 
 		for (Nodes nodes : getTempStore()) {
 			bulkInsert(nodes);
@@ -193,5 +195,16 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, node.getNodeType()
 				.getIdentifier());
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
+	}
+	
+	private void deleteAllOldPending() {
+		long now = System.currentTimeMillis();
+		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " == ? ) AND ( "
+				+ Wheelmap.POIs.UPDATE_TIMESTAMP + " < ?)";
+		String[] whereValues = { Integer.toString(Wheelmap.UPDATE_PENDING),
+				Long.toString(now - TIME_TO_DELETE_FOR_PENDING) };
+
+		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,
+				whereValues);
 	}
 }

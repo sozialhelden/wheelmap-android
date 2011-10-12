@@ -37,6 +37,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -113,7 +114,6 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareDatabase() {
-		deleteAllPending();
 		copyAllUpdatedToPending();
 		ContentValues values = new ContentValues();
 		values.clear();
@@ -162,27 +162,48 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				.getDefaultSharedPreferences(mContext);
 		return prefs.getString(SyncService.PREFS_API_KEY, getApiKey());
 	}
-	
-	private void deleteAllPending() {
-		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " == ? )";
-		String[] whereValues = { Integer.toString( Wheelmap.UPDATE_PENDING ) };
-		
-		getResolver().delete( Wheelmap.POIs.CONTENT_URI, whereClause, whereValues );
-	}
 
 	private void copyAllUpdatedToPending() {
+		long now = System.currentTimeMillis();
+
 		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
 				whereValueToUpdate, null);
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
-			values.put(Wheelmap.POIs.WM_ID, POIHelper.getWMId(c));
+			long wmId = POIHelper.getWMId(c);
+			String whereClauseDest = " ( " + Wheelmap.POIs.UPDATE_TAG
+					+ " = ? ) AND ( " + Wheelmap.POIs.WM_ID + " = ? )";
+			String[] whereValuesDest = {
+					Integer.toString(Wheelmap.UPDATE_PENDING),
+					Long.toString(wmId) };
+
+			values.put(Wheelmap.POIs.WM_ID, wmId);
 			values.put(Wheelmap.POIs.WHEELCHAIR, POIHelper.getWheelchair(c)
 					.getId());
 			values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_PENDING);
-			getResolver().insert(Wheelmap.POIs.CONTENT_URI, values);
+			values.put(Wheelmap.POIs.UPDATE_TIMESTAMP, now);
+			insertOrUpdateContentValues(Wheelmap.POIs.CONTENT_URI,
+					Wheelmap.POIs.PROJECTION, whereClauseDest, whereValuesDest,
+					values);
 			c.moveToNext();
 		}
+	}
+
+	private void insertOrUpdateContentValues(Uri contentUri,
+			String[] projection, String whereClause, String[] whereValues,
+			ContentValues values) {
+		Cursor c = getResolver().query(contentUri, projection, whereClause,
+				whereValues, null);
+		int cursorCount = c.getCount();
+		if (cursorCount == 0)
+			getResolver().insert(contentUri, values);
+		else if (cursorCount > 0) {
+			getResolver().update(contentUri, values, whereClause, whereValues);
+		} else {
+			// do nothing, as more than one file would be updated
+		}
+		c.close();
 	}
 }

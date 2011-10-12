@@ -59,7 +59,7 @@ public class POIsProvider extends ContentProvider {
 	private static final String TAG = "POIsProvider";
 
 	private static final String DATABASE_NAME = "wheelmap.db";
-	private static final int DATABASE_VERSION = 8;
+	private static final int DATABASE_VERSION = 9;
 	private static final String POIS_TABLE_NAME = "pois";
 
 	private static class DistanceQueryBuilder {
@@ -113,7 +113,6 @@ public class POIsProvider extends ContentProvider {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("DROP TABLE IF EXISTS " + POIS_TABLE_NAME);
 			db.execSQL("CREATE TABLE " + POIS_TABLE_NAME + " (" + POIs._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT," + POIs.WM_ID
 					+ " INTEGER, " + POIs.NAME + " TEXT," + POIs.COORD_LAT
@@ -129,7 +128,8 @@ public class POIsProvider extends ContentProvider {
 					+ POIs.CATEGORY_IDENTIFIER + " TEXT, "
 					+ POIs.NODETYPE_ID + " INTEGER, "
 					+ POIs.NODETYPE_IDENTIFIER + " TEXT, "
-					+ POIs.UPDATE_TAG + " NUMERIC )");
+					+ POIs.UPDATE_TAG + " NUMERIC, "
+					+ POIs.UPDATE_TIMESTAMP + " NUMERIC)");
 
 		}
 
@@ -471,6 +471,7 @@ public class POIsProvider extends ContentProvider {
 		sPOIsProjectionMap.put(POIs.NODETYPE_ID, POIs.NODETYPE_ID);
 		sPOIsProjectionMap.put(POIs.NODETYPE_IDENTIFIER, POIs.NODETYPE_IDENTIFIER);
 		sPOIsProjectionMap.put(POIs.UPDATE_TAG, POIs.UPDATE_TAG );
+		sPOIsProjectionMap.put(POIs.UPDATE_TIMESTAMP, POIs.UPDATE_TIMESTAMP );
 
 	}
 }
