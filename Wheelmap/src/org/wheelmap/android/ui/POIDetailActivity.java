@@ -173,6 +173,14 @@ public class POIDetailActivity extends MapActivity {
 	}
 
 	public void onEditWheelchairState(View v) {
+		// Sometimes, the poiId doesnt exists in the db, as the db got loaded again
+		// Actually it would be better to use the wmId in this activity, instead
+		// of the poiId, as the wmId is persistent during reload
+		// This is only a quick fix to take care of a npe here,
+		// as mWheelchairState is null in this case.
+		if ( mWheelChairState == null )
+			return;
+		
 		// Start the activity whose result we want to retrieve. The
 		// result will come back with request code GET_CODE.
 		Intent intent = new Intent(POIDetailActivity.this,
