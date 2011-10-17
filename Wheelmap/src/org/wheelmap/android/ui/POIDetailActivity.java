@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.ui;
 
@@ -27,6 +27,7 @@ import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayItem;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
@@ -47,6 +48,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -76,11 +78,23 @@ public class POIDetailActivity extends MapActivity {
 	private ViewGroup mContentView;
 
 	private Long poiID;
+	private Button mMapButton;
+	private Capability mCap;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_detail);
+		
+		mCap = WheelmapApp.getCapabilityLevel();
+
+		int contentLayout;
+		if ( mCap == Capability.DEGRADED_MAX )
+			contentLayout = R.layout.activity_detail_without_mapview;
+		else
+			contentLayout = R.layout.activity_detail;
+
+		setContentView(contentLayout);
+
 		mSupportManager = WheelmapApp.getSupportManager();
 		System.gc();
 
@@ -94,7 +108,7 @@ public class POIDetailActivity extends MapActivity {
 		websiteText = (TextView) findViewById(R.id.website);
 		mStateIcon = (ImageView) findViewById(R.id.wheelchair_state_icon);
 		mWheelchairStateText = (TextView) findViewById(R.id.wheelchair_state_text);
-		mWheelchairStateLayout = (RelativeLayout) findViewById( R.id.wheelchair_state_layout );
+		mWheelchairStateLayout = (RelativeLayout) findViewById(R.id.wheelchair_state_layout);
 
 		mWheelchairStateTextColorMap.put(WheelchairState.YES, new Integer(
 				R.color.wheel_enabled));
@@ -119,7 +133,21 @@ public class POIDetailActivity extends MapActivity {
 				onEditWheelchairState(v);
 			}
 		});
+		
+		if (mCap == Capability.DEGRADED_MAX)
+			assignButton();
+		else
+			assignMapView();
 
+		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
+		Log.d(TAG, "onCreate: poiID = " + poiID);
+
+		if (poiID != -1) {
+			load();
+		}
+	}
+
+	private void assignMapView() {
 		mapView = (MapView) findViewById(R.id.map);
 
 		mapView.setClickable(true);
@@ -127,14 +155,10 @@ public class POIDetailActivity extends MapActivity {
 		ConfigureMapView.pickAppropriateMap(this, mapView);
 		mapController = mapView.getController();
 		mapController.setZoom(18);
-
-		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
-		Log.d( TAG, "onCreate: poiID = " + poiID );
-		
-		if (poiID != -1) {
-			load();
-		}
-		
+	}
+	
+	private void assignButton() {
+		mMapButton = (Button) findViewById( R.id.btn_map);
 	}
 
 	@Override
@@ -157,7 +181,7 @@ public class POIDetailActivity extends MapActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		mSupportManager.cleanReferences();
-		nullViewDrawablesRecursive( mContentView);
+		nullViewDrawablesRecursive(mContentView);
 		mapView = null;
 		mapController = null;
 		System.gc();
@@ -173,14 +197,15 @@ public class POIDetailActivity extends MapActivity {
 	}
 
 	public void onEditWheelchairState(View v) {
-		// Sometimes, the poiId doesnt exists in the db, as the db got loaded again
+		// Sometimes, the poiId doesnt exists in the db, as the db got loaded
+		// again
 		// Actually it would be better to use the wmId in this activity, instead
 		// of the poiId, as the wmId is persistent during reload
 		// This is only a quick fix to take care of a npe here,
 		// as mWheelchairState is null in this case.
-		if ( mWheelChairState == null )
+		if (mWheelChairState == null)
 			return;
-		
+
 		// Start the activity whose result we want to retrieve. The
 		// result will come back with request code GET_CODE.
 		Intent intent = new Intent(POIDetailActivity.this,
@@ -208,6 +233,7 @@ public class POIDetailActivity extends MapActivity {
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
+		startManagingCursor( cur );
 
 		if (cur.getCount() < 1) {
 			cur.close();
@@ -218,8 +244,8 @@ public class POIDetailActivity extends MapActivity {
 		WheelchairState state = POIHelper.getWheelchair(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
-		int lat = (int) (POIHelper.getLatitude(cur) * 1E6);
-		int lon = (int) (POIHelper.getLongitude(cur) * 1E6);
+		final int lat = (int) (POIHelper.getLatitude(cur) * 1E6);
+		final int lon = (int) (POIHelper.getLongitude(cur) * 1E6);
 		int nodeTypeId = POIHelper.getNodeTypeId(cur);
 		int categoryId = POIHelper.getCategoryId(cur);
 
@@ -236,11 +262,28 @@ public class POIDetailActivity extends MapActivity {
 		websiteText.setText(POIHelper.getWebsite(cur));
 		phoneText.setText(POIHelper.getPhone(cur));
 
-		POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
-		overlay.setItem(name, comment, nodeType, state, lat, lon);
-		mapView.getOverlays().clear();
-		mapView.getOverlays().add(overlay);
-		mapController.setCenter(new GeoPoint(lat, lon));
+		if ( mCap == Capability.DEGRADED_MAX) {
+			mMapButton.setOnClickListener( new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(POIDetailActivity.this,
+							POIsMapsforgeActivity.class);
+					i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
+					i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
+					startActivity(i);
+					
+				}
+			});
+		} else {
+			POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
+			overlay.setItem(name, comment, nodeType, state, lat, lon);
+			overlay.enableLowDrawQuality( true );
+			mapView.getOverlays().clear();
+			mapView.getOverlays().add(overlay);
+			mapController.setCenter(new GeoPoint(lat, lon));
+		}
+		
 		cur.close();
 	}
 
@@ -270,7 +313,8 @@ public class POIDetailActivity extends MapActivity {
 					WheelchairState newState = WheelchairState.valueOf(Integer
 							.parseInt(data.getAction()));
 					Uri poiUri = Uri.withAppendedPath(
-							Wheelmap.POIs.CONTENT_URI_POI_ID, String.valueOf(poiID));
+							Wheelmap.POIs.CONTENT_URI_POI_ID,
+							String.valueOf(poiID));
 					ContentValues values = new ContentValues();
 					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
 					values.put(Wheelmap.POIs.UPDATE_TAG,
@@ -391,13 +435,13 @@ public class POIDetailActivity extends MapActivity {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	private void logMemory() {
 		long totalMemory = Runtime.getRuntime().totalMemory();
 		long freeMemory = Runtime.getRuntime().freeMemory();
-		Log.d( TAG, "memory: totalMemory = " + totalMemory + " freeMemory = " + freeMemory );
-		
-		
+		Log.d(TAG, "memory: totalMemory = " + totalMemory + " freeMemory = "
+				+ freeMemory);
+
 	}
 
 }

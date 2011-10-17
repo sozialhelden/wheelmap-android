@@ -123,11 +123,14 @@ limitations under the License.
 				<LinearLayout android:background="#FF000000" android:layout_width="fill_parent"
 				  android:layout_height="4dp"/>				 
 			</LinearLayout>
-
-			<org.mapsforge.android.maps.MapView
-				android:id="@+id/map" android:layout_width="fill_parent"
-				ramCacheSize="4" ramCacheShared="true"
-				android:layout_height="235dp"/>
+			<RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+			
+				<Button android:id="@+id/btn_map" android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:text="@string/title_pois_map" android:layout_centerHorizontal="true"
+						android:layout_marginLeft="6dip" android:layout_marginRight="6dip"
+						android:layout_marginTop="6dip"/>
+			
+			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

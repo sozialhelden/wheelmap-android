@@ -26,25 +26,42 @@ import org.wheelmap.android.manager.SupportManager;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.os.Debug;
 import android.util.Log;
 
 // Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
 // RC1 - key: @ReportsCrashes(formKey = "dC1VVDdKenJLRUpZTC1MZXBVR3p6ZlE6MQ" )
 // RC2 - key: @ReportsCrashes(formKey = "dG1fUDltTlNiM3V4NmRvaVExT3dJclE6MQ" )
-@ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
+// @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
 public class WheelmapApp extends Application {
 	private final static String TAG = "wheelmapapp";
 	
 	private static WheelmapApp INSTANCE;
 	private MyLocationManager mLocationManager;
 	private SupportManager mSupportManager;
+	private int mMemoryClass;
+	
+	private int mMaxMemoryMB;
+	private final static long MAX_MEMORY_DIVISOR = 1024 * 1024;
+	private final static int MAX_MEMORY_LIMIT_FULL = 28;
+	private final static int MAX_MEMORY_LIMIT_DEGRADED_MIN = 24;
+	private final static int MAX_MEMORY_LIMIT_DEGRADED_MAX = 20;
+	
+	public enum Capability { FULL, DEGRADED_MIN, DEGRADED_MAX, NOTWORKING };
 	
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
+		// ACRA.init(this);
+		
 		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        String memoryClass = String.valueOf( am.getMemoryClass());
-		ErrorReporter.getInstance().putCustomData("memoryClass", memoryClass);
+		mMemoryClass = am.getMemoryClass();
+		Log.d( TAG, "memoryClass = " + mMemoryClass );
+		// ErrorReporter.getInstance().putCustomData("memoryClass", Integer.toString( mMemoryClass));
+		
+		mMaxMemoryMB = (int)(Runtime.getRuntime().maxMemory() / MAX_MEMORY_DIVISOR);
+		Log.d( TAG, "mMaxMemoryMB = " + mMaxMemoryMB );
+		// ErrorReporter.getInstance().putCustomData("maxMemoryMB", Integer.toString(mMaxMemoryMB ));
+		
 		super.onCreate();
 		Log.d( TAG, "onCreate" );
 		mLocationManager = MyLocationManager.initOnce( this );
@@ -63,6 +80,22 @@ public class WheelmapApp extends Application {
 	public void onLowMemory() {
 		super.onLowMemory();
 		Log.d( "lowmemory", "wheelmap app - onLowMemory" );
+	}
+	
+	public static int getMemoryClass() {
+		return INSTANCE.mMemoryClass;
+	}
+	
+	public static Capability getCapabilityLevel() {
+		int maxMemoryMB = INSTANCE.mMaxMemoryMB;
+		if ( maxMemoryMB >= MAX_MEMORY_LIMIT_FULL )
+			return Capability.FULL;
+		else if ( maxMemoryMB < MAX_MEMORY_LIMIT_FULL && maxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MIN )
+			return Capability.DEGRADED_MIN;
+		else if ( maxMemoryMB < MAX_MEMORY_LIMIT_DEGRADED_MIN && maxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MAX )
+			return Capability.DEGRADED_MAX;
+		else
+			return Capability.NOTWORKING;
 	}
 	
 	public static SupportManager getSupportManager() {

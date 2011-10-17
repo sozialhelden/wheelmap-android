@@ -25,6 +25,7 @@ import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -105,16 +106,20 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		// overlays
 		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this);
-		runQuery();
-
-		mMapView.getOverlays().add(mPoisItemizedOverlay);
-
 		mCurrLocationOverlay = new MyLocationOverlay();
+		
+		Capability cap = WheelmapApp.getCapabilityLevel();
+		if (cap == Capability.DEGRADED_MIN || cap == Capability.DEGRADED_MAX) {
+			mPoisItemizedOverlay.enableLowDrawQuality(true);
+			mCurrLocationOverlay.enableLowDrawQuality(true);
+		}
+		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		mMapView.registerListener(this);
 		mMapView.registerZoomListener(this);
 		mMapController.setZoom(18); // Zoon 1 is world view
 
+		runQuery();
 		isCentered = false;
 
 		if (getIntent() != null) {
@@ -374,29 +379,29 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	@Override
 	public void onMapViewTouchMoveEnough() {
-		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN )
+		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
 			return;
-		
+
 		requestUpdate();
 	}
 
 	@Override
 	public void onZoom(byte zoomLevel) {
-		if ( zoomLevel < ZOOMLEVEL_MIN || !isInForeground) {
+		if (zoomLevel < ZOOMLEVEL_MIN || !isInForeground) {
 			isZoomedEnough = false;
 			oldZoomLevel = zoomLevel;
 			return;
 		}
-		
-		if ( zoomLevel < oldZoomLevel ) {
+
+		if (zoomLevel < oldZoomLevel) {
 			isZoomedEnough = false;
 		}
-		
-		if ( isZoomedEnough && zoomLevel >= oldZoomLevel ) {
+
+		if (isZoomedEnough && zoomLevel >= oldZoomLevel) {
 			oldZoomLevel = zoomLevel;
 			return;
 		}
-		
+
 		requestUpdate();
 		isZoomedEnough = true;
 		oldZoomLevel = zoomLevel;

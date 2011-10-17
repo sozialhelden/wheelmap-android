@@ -152,6 +152,8 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			c.moveToNext();
 		}
 		
+		c.close();
+		
 	}
 
 	private void bulkInsert(Nodes nodes) {

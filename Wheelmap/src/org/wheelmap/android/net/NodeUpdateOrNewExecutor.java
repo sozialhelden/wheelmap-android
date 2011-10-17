@@ -189,6 +189,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 					values);
 			c.moveToNext();
 		}
+		
+		c.close();
 	}
 
 	private void insertOrUpdateContentValues(Uri contentUri,

@@ -79,4 +79,5 @@ limitations under the License.
     <string name="ws_limited_title">teilweise rollstuhlgerecht</string>
     <string name="ws_disabled_title">nicht rollstuhlgerecht</string>
     <string name="ws_unknown_title">Unbekannter Status</string>
+    <string name="error_not_enough_memory">Ihr Telefon stellt dieser App nicht genügend Speicher zur Verfügung. Tut uns leid.</string>
 </resources>
