@@ -20,6 +20,7 @@ package org.wheelmap.android.app;
 import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
+import org.mapsforge.android.maps.MapActivity;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 
@@ -47,6 +48,10 @@ public class WheelmapApp extends Application {
 	private final static int MAX_MEMORY_LIMIT_DEGRADED_MIN = 24;
 	private final static int MAX_MEMORY_LIMIT_DEGRADED_MAX = 20;
 	
+	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MAX = 16;
+	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MED = 8;
+	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MIN = 0;
+	
 	public enum Capability { FULL, DEGRADED_MIN, DEGRADED_MAX, NOTWORKING };
 	
 	@Override
@@ -66,6 +71,7 @@ public class WheelmapApp extends Application {
 		Log.d( TAG, "onCreate" );
 		mLocationManager = MyLocationManager.initOnce( this );
 		mSupportManager = new SupportManager( this );
+		setMapsforgeSharedMemcacheSize();
 		INSTANCE = this;
 	}
 
@@ -86,16 +92,19 @@ public class WheelmapApp extends Application {
 		return INSTANCE.mMemoryClass;
 	}
 	
-	public static Capability getCapabilityLevel() {
-		int maxMemoryMB = INSTANCE.mMaxMemoryMB;
-		if ( maxMemoryMB >= MAX_MEMORY_LIMIT_FULL )
+	private Capability calcCapabilityLevel() {
+		if ( mMaxMemoryMB >= MAX_MEMORY_LIMIT_FULL )
 			return Capability.FULL;
-		else if ( maxMemoryMB < MAX_MEMORY_LIMIT_FULL && maxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MIN )
+		else if ( mMaxMemoryMB < MAX_MEMORY_LIMIT_FULL && mMaxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MIN )
 			return Capability.DEGRADED_MIN;
-		else if ( maxMemoryMB < MAX_MEMORY_LIMIT_DEGRADED_MIN && maxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MAX )
+		else if ( mMaxMemoryMB < MAX_MEMORY_LIMIT_DEGRADED_MIN && mMaxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MAX )
 			return Capability.DEGRADED_MAX;
 		else
 			return Capability.NOTWORKING;
+	}
+	
+	public static Capability getCapabilityLevel() {
+		return INSTANCE.calcCapabilityLevel();
 	}
 	
 	public static SupportManager getSupportManager() {
@@ -105,5 +114,18 @@ public class WheelmapApp extends Application {
 			Log.d(TAG, "INSTANCE != null - mSupportManager = null - how can that be?" );
 		
 		return INSTANCE.mSupportManager;
+	}
+	
+	private void setMapsforgeSharedMemcacheSize() {
+		Capability cap = calcCapabilityLevel();
+		int capacity;
+		if ( cap == Capability.FULL )
+			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MAX;
+		else if ( cap == Capability.DEGRADED_MAX)
+			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MED;
+		else
+			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MIN;
+		
+		MapActivity.setSharedRAMCacheCapacity( capacity );
 	}
 }
