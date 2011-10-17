@@ -18,8 +18,8 @@ limitations under the License.
 package org.wheelmap.android.ui.mapsforge;
 
 import org.mapsforge.android.maps.GeoPoint;
-import org.mapsforge.android.maps.ItemizedOverlay;
-import org.mapsforge.android.maps.OverlayItem;
+import org.mapsforge.android.maps.overlay.ItemizedOverlay;
+import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;

@@ -17,12 +17,12 @@ limitations under the License.
 
 package org.wheelmap.android.ui.mapsforge;
 
-import org.mapsforge.android.maps.CircleOverlay;
+import org.mapsforge.android.maps.overlay.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
-import org.mapsforge.android.maps.OverlayCircle;
+import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
