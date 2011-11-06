@@ -56,7 +56,14 @@ limitations under the License.
         <activity
             android:name=".ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched"
-            android:label="@string/title_pois_map" />
+            android:label="@string/title_pois_map">
+                 
+            <intent-filter>
+   <action android:name="android.intent.action.SEND" />
+   <category android:name="android.intent.category.DEFAULT" />
+   <data android:mimeType="image/*" />
+</intent-filter>
+</activity>
             
         <activity
             android:name=".ui.POIDetailActivityEditable"

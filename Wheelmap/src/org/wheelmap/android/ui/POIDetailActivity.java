@@ -42,6 +42,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,6 +172,44 @@ public class POIDetailActivity extends MapActivity {
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiID);
 		startActivity(i);
 	}
+	
+	public void onItemShare(View v) {
+		
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
+				String.valueOf(poiID));
+		
+		// Then query for this specific record:
+		Cursor cur = managedQuery(poiUri, null, null, null, null);
+
+		if (cur.getCount() < 1) {
+			cur.close();
+			return;
+		}
+
+		cur.moveToFirst();
+		WheelchairState state = POIHelper.getWheelchair(cur);
+		String name = POIHelper.getName(cur);
+		String comment = POIHelper.getComment(cur);
+		int lat = (int) (POIHelper.getLatitude(cur) * 1E6);
+		int lon = (int) (POIHelper.getLongitude(cur) * 1E6);
+		int nodeTypeId = POIHelper.getNodeTypeId(cur);
+		int categoryId = POIHelper.getCategoryId(cur);
+	
+		StringBuilder sb = new StringBuilder(name);
+		sb.append(comment);
+		sb.append(',');
+		sb.append(POIHelper.getAddress(cur));
+		sb.append(',');
+		sb.append(POIHelper.getWebsite(cur));
+		
+		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+		sharingIntent.setType("text/plain");
+		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
+		startActivity(Intent.createChooser(sharingIntent,"Share using"));
+	}
+	
+	
+	
 
 	public void onEditWheelchairState(View v) {
 		// Sometimes, the poiId doesnt exists in the db, as the db got loaded again
