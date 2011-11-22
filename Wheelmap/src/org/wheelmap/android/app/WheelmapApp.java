@@ -27,13 +27,14 @@ import org.wheelmap.android.manager.SupportManager;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.os.Debug;
 import android.util.Log;
 
 // Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
 // RC1 - key: @ReportsCrashes(formKey = "dC1VVDdKenJLRUpZTC1MZXBVR3p6ZlE6MQ" )
 // RC2 - key: @ReportsCrashes(formKey = "dG1fUDltTlNiM3V4NmRvaVExT3dJclE6MQ" )
-// @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
+// Release v0.7 @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
+
+@ReportsCrashes( formKey = "dEh5TzdhUXJOR0phV1dzQUZCOWFqM1E6MQ")
 public class WheelmapApp extends Application {
 	private final static String TAG = "wheelmapapp";
 	
@@ -56,16 +57,16 @@ public class WheelmapApp extends Application {
 	
 	@Override
 	public void onCreate() {
-		// ACRA.init(this);
+		ACRA.init(this);
 		
 		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		mMemoryClass = am.getMemoryClass();
 		Log.d( TAG, "memoryClass = " + mMemoryClass );
-		// ErrorReporter.getInstance().putCustomData("memoryClass", Integer.toString( mMemoryClass));
+		ErrorReporter.getInstance().putCustomData("memoryClass", Integer.toString( mMemoryClass));
 		
 		mMaxMemoryMB = (int)(Runtime.getRuntime().maxMemory() / MAX_MEMORY_DIVISOR);
 		Log.d( TAG, "mMaxMemoryMB = " + mMaxMemoryMB );
-		// ErrorReporter.getInstance().putCustomData("maxMemoryMB", Integer.toString(mMaxMemoryMB ));
+		ErrorReporter.getInstance().putCustomData("maxMemoryMB", Integer.toString(mMaxMemoryMB ));
 		
 		super.onCreate();
 		Log.d( TAG, "onCreate" );
