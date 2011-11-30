@@ -61,7 +61,7 @@ limitations under the License.
     <string name="info_android_development_one">Michal Harakaľ</string>
     <string name="error_network_failure">Network unstable. Please check your internet connection or try again later.</string>
     <string name="error_internal_error">An unexpected internal error occurred. Please restart the app.</string>
-    <string name="error_authorization_error">No proper authorization for editing available.</string>
+    <string name="error_authorization_error">Email or password was wrong. Sorry. Can\'t log you in.</string>
     <string name="error_occurred">An error occurred</string>
     <string name="info_webdevelopment_one">Christoph Bünte</string>
     <string name="info_kartendaten_one">www.openstreetmap.org</string>
@@ -109,4 +109,11 @@ limitations under the License.
     <string name="ws_limited_title">Partly wheelchair accessible</string>
     <string name="ws_disabled_title">Not wheelchair accessible</string>
     <string name="ws_enabled_title">Wheelchair accessible</string>
+    <string name="error_not_osm_connected">Your wheelmap account is not connected to openstreetmap</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_submit">Login</string>
+    <string name="title_login">Login</string>
+    <string name="error_authorization_required">Authorization required</string>
+    <string name="error_request_forbidden">Request forbidden</string>
 </resources>

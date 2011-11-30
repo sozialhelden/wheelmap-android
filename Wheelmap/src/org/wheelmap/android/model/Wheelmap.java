@@ -30,8 +30,9 @@ public class Wheelmap {
 		
 		public static final int UPDATE_NO = 0x0;
 		public static final int UPDATE_WHEELCHAIR_STATE = 0x1;
-		public static final int UPDATE_ALL_NEW = 0x2;
-		public static final int UPDATE_PENDING = 0x3;
+		public static final int UPDATE_ALL_FIELDS = 0x2;
+		public static final int UPDATE_PENDING_STATE_ONLY = 0x3;
+		public static final int UPDATE_PENDING_FIELDS_ALL = 0x4;
 
 		
 		/**
@@ -101,12 +102,11 @@ public class Wheelmap {
 			 * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
 			 */
 			public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.pois";
-			public static final String CONTENT_TYPE_POI_ID = "vnd.android.cursor.dir/vnd.wheelmap.poi_id";
 			public static final String CONTENT_TYPE_SORTED = "vnd.android.cursor.dir/vnd.wheelmap.poissorted";
 			/**
 			 * The MIME type of a {@link #CONTENT_URI} sub-directory of a single note.
 			 */
-			public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.pois";
+			public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.poi_id";
    
 	        /**
 			 * The default sort order for this table - categories

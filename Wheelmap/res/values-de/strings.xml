@@ -36,7 +36,7 @@ limitations under the License.
     <string name="btn_list">Liste</string>
     <string name="description_map">Karte</string>
     <string name="edit_poi">Editieren</string>
-    <string name="error_authorization_error">Keine Authorisierung zum Editieren verfügbar.</string>
+    <string name="error_authorization_error">Email oder Passwort war falsch. Tut mir leid. Kein Login möglich.</string>
     <string name="error_internal_error">Ein interner Fehler ist aufgetreten. Bitte öffnen sie die App neu.</string>
     <string name="info_a_project_of">ein Projekt der</string>
     <string name="info_kartendaten">Kartendaten:</string>
@@ -79,4 +79,11 @@ limitations under the License.
     <string name="ws_limited_title">teilweise rollstuhlgerecht</string>
     <string name="ws_disabled_title">nicht rollstuhlgerecht</string>
     <string name="ws_unknown_title">Unbekannter Status</string>
+    <string name="error_not_osm_connected">Ihr Wheelmap Account ist nicht mit openstreetmap verbunden</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Passwort</string>
+    <string name="login_submit">Login</string>
+    <string name="title_login">Einloggen</string>
+    <string name="error_authorization_required">Authorisierung erforderlich</string>
+    <string name="error_request_forbidden">Anfrage nicht erlaubt</string>
 </resources>

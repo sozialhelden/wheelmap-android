@@ -17,9 +17,14 @@ limitations under the License.
 
 package wheelmap.org.request;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 import org.apache.http.client.methods.HttpUriRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,8 +45,8 @@ public class RequestProcessor {
 		return restTemplate.getForObject(uri,clazz);
 	}
 	
-	public <T> String post (final URI uri, final T postObject) {
-		return restTemplate.postForObject(uri, postObject, String.class);
+	public <T> T post (final URI uri, final T postObject, Class<T> clazz) {
+		return restTemplate.postForObject(uri, postObject, clazz);
 	}
 	
 	public <T> void put( final URI uri, final T putObject) {

@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.model;
 
@@ -37,22 +37,25 @@ public class QueriesBuilderHelper {
 	public static final String PREF_KEY_WHEELCHAIR_STATE_LIMITED = "showLimited";
 	public static final String PREF_KEY_WHEELCHAIR_STATE_NO = "showNo";
 	public static final String PREF_KEY_WHEELCHAIR_STATE_UNKNOWN = "showUnknown";
-	
-	private static final String ENTRY_NOT_UPDATE_PENDING = " NOT update_tag=" + Wheelmap.UPDATE_PENDING;
+
+	private static final String ENTRY_NOT_UPDATE_PENDING = " ("
+			+ Wheelmap.POIs.UPDATE_TAG + "!="
+			+ Wheelmap.UPDATE_PENDING_STATE_ONLY + " ) AND ( " + Wheelmap.POIs.UPDATE_TAG + "!=" + Wheelmap.UPDATE_ALL_FIELDS + ")";
 
 	static private String categoriesFilter(Context context) {
 		// categories id
 
 		// Run query
 		Uri uri = Support.CategoriesContent.CONTENT_URI;
-		Cursor cursor = context.getContentResolver().query(uri, null, null, null,null);
+		Cursor cursor = context.getContentResolver().query(uri, null, null,
+				null, null);
 
 		StringBuilder categories = new StringBuilder("");
 
 		int selectedCount = 0;
 		if (cursor.moveToFirst()) {
-			do { 
-				int id = CategoriesContent.getCategoryId(cursor);				
+			do {
+				int id = CategoriesContent.getCategoryId(cursor);
 				if (CategoriesContent.getSelected(cursor)) {
 					selectedCount++;
 					if (categories.length() > 0)
@@ -63,13 +66,12 @@ public class QueriesBuilderHelper {
 
 				}
 
-
-			} while(cursor.moveToNext());
+			} while (cursor.moveToNext());
 		}
 		if (selectedCount == 0) {
 			if (cursor.moveToFirst()) {
-				do { 
-					int id = CategoriesContent.getCategoryId(cursor);				
+				do {
+					int id = CategoriesContent.getCategoryId(cursor);
 					if (categories.length() > 0)
 						categories.append(" AND NOT category_id=");
 					else
@@ -77,41 +79,45 @@ public class QueriesBuilderHelper {
 
 					categories.append(new Integer(id).toString());
 
-				} while(cursor.moveToNext());
+				} while (cursor.moveToNext());
 			}
 
 		}
-		
+
 		cursor.close();
 		// wheelchair state filter
 
-
 		Log.d("QueriesBuilderHelper", categories.toString());
 
-		// 
+		//
 
 		return categories.toString();
 
 	}
 
-	static public List<WheelchairState> getWheelchairStateFromPreferences(Context context) {
+	static public List<WheelchairState> getWheelchairStateFromPreferences(
+			Context context) {
 		SharedPreferences prefs = PreferenceManager
-		.getDefaultSharedPreferences(context);
+				.getDefaultSharedPreferences(context);
 
-		boolean prefStateFull = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_FULL, true);	
-		boolean prefStateLimited = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_LIMITED, true );
-		boolean prefStateNo = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_NO, true );
-		boolean prefStateUnknown = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_UNKNOWN, true );
+		boolean prefStateFull = prefs.getBoolean(
+				PREF_KEY_WHEELCHAIR_STATE_FULL, true);
+		boolean prefStateLimited = prefs.getBoolean(
+				PREF_KEY_WHEELCHAIR_STATE_LIMITED, true);
+		boolean prefStateNo = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_NO,
+				true);
+		boolean prefStateUnknown = prefs.getBoolean(
+				PREF_KEY_WHEELCHAIR_STATE_UNKNOWN, true);
 
 		ArrayList<WheelchairState> list = new ArrayList<WheelchairState>();
-		if ( prefStateFull )
-			list.add( WheelchairState.YES);
-		if ( prefStateLimited )
-			list.add( WheelchairState.LIMITED);
-		if ( prefStateNo )
-			list.add( WheelchairState.NO);
-		if ( prefStateUnknown )
-			list.add( WheelchairState.UNKNOWN);
+		if (prefStateFull)
+			list.add(WheelchairState.YES);
+		if (prefStateLimited)
+			list.add(WheelchairState.LIMITED);
+		if (prefStateNo)
+			list.add(WheelchairState.NO);
+		if (prefStateUnknown)
+			list.add(WheelchairState.UNKNOWN);
 
 		return list;
 	}
@@ -126,28 +132,29 @@ public class QueriesBuilderHelper {
 		for (WheelchairState state : wheelChairState) {
 			if (wheelchair.length() > 0)
 				wheelchair.append(" OR wheelchair=");
-			else 
+			else
 				wheelchair.append(" wheelchair=");
 			wheelchair.append(new Integer(state.getId()).toString());
 		}
 
 		if (wheelchair.toString().length() == 0) {
-			for(WheelchairState state : WheelchairState.values()) {
+			for (WheelchairState state : WheelchairState.values()) {
 				if (wheelchair.length() > 0)
 					wheelchair.append(" AND NOT wheelchair=");
-				else 
+				else
 					wheelchair.append(" NOT wheelchair=");
 				wheelchair.append(new Integer(state.getId()).toString());
 			}
 		}
-		
+
 		if (result.length() > 0)
-			result = "(" + result + ") AND  (" + wheelchair.toString() + ") AND (" + ENTRY_NOT_UPDATE_PENDING + ")";
+			result = "(" + result + ") AND  (" + wheelchair.toString()
+					+ ") AND (" + ENTRY_NOT_UPDATE_PENDING + ")";
 		else
-			result =  "(" + wheelchair.toString() + ") AND (" + ENTRY_NOT_UPDATE_PENDING + ")";
+			result = "(" + wheelchair.toString() + ") AND "
+					+ ENTRY_NOT_UPDATE_PENDING;
 
 		Log.d("QueriesBuilderHelper userSettingsFilter", result);
-
 
 		return result;
 

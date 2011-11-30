@@ -23,6 +23,12 @@ limitations under the License.
     <uses-sdk android:minSdkVersion="4" />
     <instrumentation android:name="MyInstrumentationTestRunner" android:targetPackage="org.wheelmap.android"></instrumentation>
     <application android:icon="@drawable/icon" android:label="@string/app_name">
+        
+        
+    <activity 
+        	android:name="org.wheelmap.android.test.TestActivity"
+        	android:label="TestActivity"
+        />
 
     <uses-library android:name="android.test.runner" />
     </application>

@@ -13,9 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.manager;
+
+import java.util.List;
 
 import org.wheelmap.android.utils.MultiResultReceiver;
 
@@ -40,13 +42,16 @@ public class MyLocationManager {
 	private MyGPSLocationListener mGPSLocationListener;
 	private MyNetworkLocationListener mNetworkLocationListener;
 	private Location mBestLastKnownLocation;
+	private List<String> mProviders;
 
 	private MultiResultReceiver mReceiver;
 
 	private boolean doesRequestUpdates;
 	private boolean wasLastKnownLocation;
-	private boolean gpsDisabled;
-	private boolean networkDisabled;
+	private boolean gpsEnabled = false;
+	private boolean networkEnabled = false;
+	private boolean gpsExists;
+	private boolean networkExists;
 
 	private static final long TIME_DISTANCE_LIMIT = 1000 * 60 * 5; // 5 Minutes
 	private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
@@ -54,11 +59,15 @@ public class MyLocationManager {
 	private static final long TIME_NETWORK_SUPERSEED_TIME = 1000 * 25;
 	private static final long TIME_GPS_SUPERSEED_TIME = 1000 * 9;
 	private static final float ACCURACY_MAX_REQUIRE = 500;
-	
+
 	private MyLocationManager(Context context) {
 
 		mLocationManager = (LocationManager) context
 				.getSystemService(Context.LOCATION_SERVICE);
+
+		mProviders = mLocationManager.getAllProviders();
+		gpsExists = findProvider(LocationManager.GPS_PROVIDER);
+		networkExists = findProvider(LocationManager.NETWORK_PROVIDER);
 
 		mGPSLocationListener = new MyGPSLocationListener();
 		mNetworkLocationListener = new MyNetworkLocationListener();
@@ -67,10 +76,11 @@ public class MyLocationManager {
 		mBestLastKnownLocation = calcBestLastKnownLocation();
 		if (mBestLastKnownLocation == null) {
 			// Berlin, Andreasstra�e 10
-			mBestLastKnownLocation = new Location(LocationManager.NETWORK_PROVIDER);
+			mBestLastKnownLocation = new Location(
+					LocationManager.NETWORK_PROVIDER);
 			mBestLastKnownLocation.setLongitude(13.431240);
 			mBestLastKnownLocation.setLatitude(52.512523);
-			mBestLastKnownLocation.setAccuracy(1000 * 100 );
+			mBestLastKnownLocation.setAccuracy(1000 * 100);
 		}
 		wasLastKnownLocation = true;
 		notifyReceiver();
@@ -118,15 +128,28 @@ public class MyLocationManager {
 			releaseLocationUpdates();
 	}
 
+	private boolean findProvider(String find) {
+		for (String provider : mProviders) {
+			if (provider.equals(find))
+				return true;
+		}
+
+		return false;
+	}
+
 	private void requestLocationUpdates() {
+
 		if (!doesRequestUpdates) {
 			Log.d(TAG, "requestLocationUpdates");
-			mLocationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, TIME_GPS_UPDATE_INTERVAL,
-					TIME_GPS_UPDATE_DISTANCE, mGPSLocationListener);
-			mLocationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0,
-					mNetworkLocationListener);
+
+			if (gpsExists)
+				mLocationManager.requestLocationUpdates(
+						LocationManager.GPS_PROVIDER, TIME_GPS_UPDATE_INTERVAL,
+						TIME_GPS_UPDATE_DISTANCE, mGPSLocationListener);
+			if (networkExists)
+				mLocationManager.requestLocationUpdates(
+						LocationManager.NETWORK_PROVIDER, 0, 0,
+						mNetworkLocationListener);
 			doesRequestUpdates = true;
 		}
 	}
@@ -172,27 +195,32 @@ public class MyLocationManager {
 			Log.d(TAG, "MyGPSLocationListener: location received. Accuracy = "
 					+ location.getAccuracy());
 			wasLastKnownLocation = false;
-			
-			if ( networkDisabled )
-				updateLocation( location );
-			if ( mBestLastKnownLocation.getProvider().equals(LocationManager.NETWORK_PROVIDER) &&
-					location.getProvider().equals( LocationManager.GPS_PROVIDER ) &&
-					mBestLastKnownLocation.getAccuracy() > location.getAccuracy()) {
-				updateLocation( location );
-			} else if ( mBestLastKnownLocation.getProvider().equals( LocationManager.GPS_PROVIDER ) &&
-					location.getProvider().equals( LocationManager.GPS_PROVIDER )) {
-				updateLocation( location );
+
+			if (!networkEnabled)
+				updateLocation(location);
+			if (mBestLastKnownLocation.getProvider().equals(
+					LocationManager.NETWORK_PROVIDER)
+					&& location.getProvider().equals(
+							LocationManager.GPS_PROVIDER)
+					&& mBestLastKnownLocation.getAccuracy() > location
+							.getAccuracy()) {
+				updateLocation(location);
+			} else if (mBestLastKnownLocation.getProvider().equals(
+					LocationManager.GPS_PROVIDER)
+					&& location.getProvider().equals(
+							LocationManager.GPS_PROVIDER)) {
+				updateLocation(location);
 			}
 		}
 
 		@Override
 		public void onProviderDisabled(String provider) {
-			gpsDisabled = true;
+			gpsEnabled = false;
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
-			gpsDisabled = false;
+			gpsEnabled = true;
 		}
 
 		@Override
@@ -207,35 +235,35 @@ public class MyLocationManager {
 					"MyNetworkLocationListener: location received. Accuracy = "
 							+ location.getAccuracy());
 			long now = System.currentTimeMillis();
-			if ( gpsDisabled )
-				updateLocation( location );
+			if (!gpsEnabled)
+				updateLocation(location);
 			if (wasLastKnownLocation
 					&& (now - mBestLastKnownLocation.getTime()) > TIME_NETWORK_SUPERSEED_TIME) {
 				Log.d(TAG, "network location superseeds lastKnownLocation");
-				updateLocation( location );
+				updateLocation(location);
 			} else if ((mBestLastKnownLocation.getProvider()
 					.equals(LocationManager.GPS_PROVIDER))
 					&& (now - mBestLastKnownLocation.getTime() > TIME_NETWORK_SUPERSEED_TIME)
 					&& (location.getAccuracy() < ACCURACY_MAX_REQUIRE)) {
 				Log.d(TAG, "network location superseeds old gps location");
-				updateLocation( location );
+				updateLocation(location);
 			} else if (mBestLastKnownLocation.getProvider().equals(
 					LocationManager.NETWORK_PROVIDER)
 					&& mBestLastKnownLocation.getAccuracy() >= location
 							.getAccuracy()) {
 				Log.d(TAG, "network location superseeds old network location");
-				updateLocation( location );
+				updateLocation(location);
 			}
 		}
 
 		@Override
 		public void onProviderDisabled(String provider) {
-			networkDisabled = true;
+			networkEnabled = false;
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
-			networkDisabled = false;
+			networkEnabled = true;
 		}
 
 		@Override
@@ -246,8 +274,8 @@ public class MyLocationManager {
 	public interface LocationUpdate {
 		public void onNewLocation(Location location);
 	}
-	
-	public void updateLocation( Location location ) {
+
+	public void updateLocation(Location location) {
 		mBestLastKnownLocation = location;
 		wasLastKnownLocation = false;
 		notifyReceiver();

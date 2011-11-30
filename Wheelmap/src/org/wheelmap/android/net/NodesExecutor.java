@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.net;
 
@@ -62,9 +62,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) getBundle()
 					.getSerializable(SyncService.EXTRA_BOUNDING_BOX);
 			mBoundingBox = parcBoundingBox.toBoundingBox();
-//			Log.d(TAG,
-//					"retrieving with bounding box: "
-//							+ parcBoundingBox.toString());
+			// Log.d(TAG,
+			// "retrieving with bounding box: "
+			// + parcBoundingBox.toString());
 		} else if (getBundle().containsKey(SyncService.EXTRA_LOCATION)) {
 			float distance = getBundle().getFloat(
 					SyncService.EXTRA_DISTANCE_LIMIT);
@@ -73,11 +73,11 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			mBoundingBox = GeocoordinatesMath.calculateBoundingBox(
 					new Wgs84GeoCoordinates(location.getLongitude(), location
 							.getLatitude()), distance);
-//			Log.d(TAG,
-//					"retrieving with current location = ("
-//							+ location.getLongitude() + ","
-//							+ location.getLatitude() + ") and distance = "
-//							+ distance);
+			// Log.d(TAG,
+			// "retrieving with current location = ("
+			// + location.getLongitude() + ","
+			// + location.getLatitude() + ") and distance = "
+			// + distance);
 		}
 
 		if (getBundle().containsKey(SyncService.EXTRA_CATEGORY)) {
@@ -104,10 +104,10 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
 				mBoundingBox);
-		
+
 		clearTempStore();
 		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
-				
+
 		Log.d(TAG, "remote sync took "
 				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
@@ -131,27 +131,49 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,
 				whereValues);
 	}
-	
+
 	private void copyAllPendingDataToRetrievedData() {
-		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
-		String[] whereValues = new String[] { Integer.toString( Wheelmap.UPDATE_PENDING ) };
-		
+		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? ) OR ( "
+				+ Wheelmap.POIs.UPDATE_TAG + " = ? )";
+		String[] whereValues = new String[] {
+				Integer.toString(Wheelmap.UPDATE_PENDING_STATE_ONLY),
+				Integer.toString(Wheelmap.UPDATE_PENDING_FIELDS_ALL) };
+
 		String whereClauseTarget = "( " + Wheelmap.POIs.WM_ID + " = ? )";
 		String[] whereValuesTarget = new String[1];
-		
-		Cursor c = getResolver().query( Wheelmap.POIs.CONTENT_URI, Wheelmap.POIs.PROJECTION, whereClause, whereValues, null );
+
+		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
+				Wheelmap.POIs.PROJECTION, whereClause, whereValues, null);
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
-		while( !c.isAfterLast()) {
-			long wmId = POIHelper.getWMId( c );
-			int wheelchairState = POIHelper.getWheelchair( c ).getId();
+		while (!c.isAfterLast()) {
+			long wmId = POIHelper.getWMId(c);
+
 			values.clear();
-			values.put( Wheelmap.POIs.WHEELCHAIR, wheelchairState );
-			whereValuesTarget[0] = Long.toString( wmId );
-			getResolver().update( Wheelmap.POIs.CONTENT_URI, values, whereClauseTarget, whereValuesTarget );
+			int updateTag = POIHelper.getUpdateTag(c);
+			if (updateTag == Wheelmap.UPDATE_PENDING_STATE_ONLY)
+				copyPendingWheelchairState(c, values);
+			else if (updateTag == Wheelmap.UPDATE_PENDING_FIELDS_ALL)
+				copyPendingAllValues(c, values);
+			else
+				continue;
+
+			whereValuesTarget[0] = Long.toString(wmId);
+			getResolver().update(Wheelmap.POIs.CONTENT_URI, values,
+					whereClauseTarget, whereValuesTarget);
 			c.moveToNext();
 		}
-		
+
+		c.close();
+	}
+
+	private void copyPendingWheelchairState(Cursor c, ContentValues values) {
+		int wheelchairState = POIHelper.getWheelchair(c).getId();
+		values.put(Wheelmap.POIs.WHEELCHAIR, wheelchairState);
+	}
+
+	private void copyPendingAllValues(Cursor c, ContentValues values) {
+		POIHelper.copyItemToValues(c, values);
 	}
 
 	private void bulkInsert(Nodes nodes) {
@@ -196,12 +218,15 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 				.getIdentifier());
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
 	}
-	
+
 	private void deleteAllOldPending() {
 		long now = System.currentTimeMillis();
-		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " == ? ) AND ( "
+		String whereClause = "(( " + Wheelmap.POIs.UPDATE_TAG + " == ? ) OR ( "
+				+ Wheelmap.POIs.UPDATE_TAG + " == ? )) AND ( "
 				+ Wheelmap.POIs.UPDATE_TIMESTAMP + " < ?)";
-		String[] whereValues = { Integer.toString(Wheelmap.UPDATE_PENDING),
+		String[] whereValues = {
+				Integer.toString(Wheelmap.UPDATE_PENDING_STATE_ONLY),
+				Integer.toString(Wheelmap.UPDATE_PENDING_FIELDS_ALL),
 				Long.toString(now - TIME_TO_DELETE_FOR_PENDING) };
 
 		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,

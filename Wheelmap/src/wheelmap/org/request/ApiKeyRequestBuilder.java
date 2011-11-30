@@ -19,16 +19,16 @@ package wheelmap.org.request;
 
 public class ApiKeyRequestBuilder extends RequestBuilder {
 
-	private static final String RESOURCE = "apikey";
-	private String userName;
+	private static final String RESOURCE = "users/authenticate";
+	private String email;
 	private String password;
 
 	public ApiKeyRequestBuilder(final String server, final AcceptType acceptType) {
 		super(server, null, acceptType);
 	}
 	
-	public void setCredentials( String userName, String password ) {
-		this.userName = userName;
+	public void setCredentials( String email, String password ) {
+		this.email = email;
 		this.password = password;
 	}
 
@@ -36,9 +36,10 @@ public class ApiKeyRequestBuilder extends RequestBuilder {
 	public String buildRequestUri() {
 		final StringBuilder requestAsStringBuffer = new StringBuilder(200);
 		requestAsStringBuffer.append(String.format(baseUrl()));
-		requestAsStringBuffer.append("username=");
-		requestAsStringBuffer.append(userName);
-		requestAsStringBuffer.append("&password=");
+		requestAsStringBuffer.append("email=" );
+		requestAsStringBuffer.append(email);
+		requestAsStringBuffer.append("&");
+		requestAsStringBuffer.append("password=" );
 		requestAsStringBuffer.append(password);
 
 		return requestAsStringBuffer.toString();

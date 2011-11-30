@@ -18,6 +18,7 @@ limitations under the License.
 package org.wheelmap.android.model;
 
 import wheelmap.org.WheelchairState;
+import android.content.ContentValues;
 import android.database.Cursor;
 
 public class POIHelper {
@@ -160,5 +161,25 @@ public class POIHelper {
 	
 	public static String getNodeTypeIdentifier( Cursor c ) {
 		return c.getString( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.NODETYPE_IDENTIFIER));
+	}
+	
+	public static void copyItemToValues( Cursor c, ContentValues values ) {
+		values.put(Wheelmap.POIs.WM_ID, POIHelper.getWMId(c));
+		values.put(Wheelmap.POIs.NAME, POIHelper.getName(c));
+		values.put(Wheelmap.POIs.CATEGORY_ID, POIHelper.getCategoryId(c));
+		values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, POIHelper.getCategoryIdentifier(c));
+		values.put(Wheelmap.POIs.NODETYPE_ID, POIHelper.getNodeTypeId(c));
+		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, POIHelper.getNodeTypeIdentifier(c));
+		values.put(Wheelmap.POIs.COORD_LAT, POIHelper.getLatitude(c));
+		values.put(Wheelmap.POIs.COORD_LON, POIHelper.getLongitude(c));
+		values.put(Wheelmap.POIs.WHEELCHAIR, POIHelper.getWheelchair(c)
+				.getId());
+		values.put(Wheelmap.POIs.WHEELCHAIR_DESC, POIHelper.getComment(c));
+		values.put(Wheelmap.POIs.STREET, POIHelper.getStreet(c));
+		values.put(Wheelmap.POIs.HOUSE_NUM, POIHelper.getHouseNumber(c));
+		values.put(Wheelmap.POIs.POSTCODE, POIHelper.getPostcode(c));
+		values.put(Wheelmap.POIs.CITY, POIHelper.getCity(c));
+		values.put(Wheelmap.POIs.WEBSITE, POIHelper.getWebsite(c));
+		values.put(Wheelmap.POIs.PHONE, POIHelper.getPhone(c));
 	}
 }

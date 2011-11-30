@@ -29,9 +29,10 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 //		suite.addTestSuite( ModelTest.class );
 //		suite.addTestSuite( MapFileInfoProviderTest.class );
 //		suite.addTestSuite( MapFileServiceTest.class );
-		suite.addTestSuite( TestPOIContentProvider.class );
-		suite.addTestSuite( SupportDataTest.class );
-
+//		suite.addTestSuite( TestPOIContentProvider.class );
+//		suite.addTestSuite( SupportDataTest.class );
+//		suite.addTestSuite( LoginTest.class );
+		
 		// $JUnit-END$
 		return suite;
 	}

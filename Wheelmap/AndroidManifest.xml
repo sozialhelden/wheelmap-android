@@ -75,6 +75,12 @@ limitations under the License.
         />
         
         <activity
+            android:name=".ui.LoginActivity"
+            android:theme="@style/Theme.Transparent"
+            android:label="@string/title_login"
+        />
+        
+        <activity
         	android:name=".ui.InfoActivity"
         	android:theme="@style/Theme.IOSched"
         	android:label="@string/title_info"

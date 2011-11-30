@@ -32,6 +32,10 @@ public abstract class AbstractExecutor implements IExecutor {
 	// protected static final String SERVER = "staging.wheelmap.org";
 	// Production Server
 	protected static final String SERVER = "wheelmap.org";
+	protected static final String SERVER_STAGING = "staging.wheelmap.org";
+	
+	protected final static int statusAuthRequired = 401;
+	protected final static int statusRequestForbidden = 403;
 	
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
@@ -42,7 +46,7 @@ public abstract class AbstractExecutor implements IExecutor {
 	}
 	
 	public String getApiKey() {
-		return "jWeAsb34CJq4yVAryjtc";
+		return API_KEY;
 	}
 	
 	protected ContentResolver getResolver() {

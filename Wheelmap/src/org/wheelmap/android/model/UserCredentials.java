@@ -37,17 +37,17 @@ public class UserCredentials {
 		load();
 	}
 
-	public void login(String login, String password) {
+	public void login(String login, String password, String apiKey) {
 		mLogin = login;
 		mPassword = password;
 		mIsLoggenIn = true;
 		// TODO make request to server to get the API_key for login/password
-		mApiKey = getApiKey();
+		mApiKey = apiKey;
 		save();
 	}
 	
-	private String getApiKey() {
-		return "jWeAsb34CJq4yVAryjtc";
+	public String getApiKey() {
+		return mApiKey;
 	};
 	
 	public void logout() {

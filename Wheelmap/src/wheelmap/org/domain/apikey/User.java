@@ -17,13 +17,16 @@ limitations under the License.
 
 package wheelmap.org.domain.apikey;
 
+import java.math.BigDecimal;
+
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonAutoDetect
-public class ApiKey {
+public class User {
 	@JsonProperty( value = "api_key" )
 	protected String apiKey;
+	protected BigDecimal id;
 	
 	public String getApiKey() {
 		return apiKey;
@@ -33,4 +36,11 @@ public class ApiKey {
 		this.apiKey = apiKey;
 	}
 	
+	public BigDecimal getId() {
+		return id;
+	}
+	
+	public void setId( BigDecimal id ) {
+		this.id = id;
+	}
 }

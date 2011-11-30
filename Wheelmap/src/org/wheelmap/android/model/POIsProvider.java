@@ -184,7 +184,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS:
 			return POIs.CONTENT_TYPE;
 		case POI_ID:
-			return POIs.CONTENT_TYPE_POI_ID;
+			return POIs.CONTENT_ITEM_TYPE;
 		case POIS_SORTED:
 			return POIs.CONTENT_TYPE_SORTED;
 		default:

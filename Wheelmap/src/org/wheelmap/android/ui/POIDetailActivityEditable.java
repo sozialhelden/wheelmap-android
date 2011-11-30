@@ -46,8 +46,8 @@ public class POIDetailActivityEditable extends Activity {
 	private final static String TAG = "poidetail";
 	
 	// Definition of the one requestCode we use for receiving resuls.
-	static final private int SELECT_WHEELCHAIRSTATE = 0;
-
+	private static final int SELECT_WHEELCHAIRSTATE = 0;
+	public static final int PERFORM_LOGIN = 1;
 	
 	private Long poiID;
 	
@@ -62,7 +62,7 @@ public class POIDetailActivityEditable extends Activity {
 	private TextView mWheelchairStateText = null;
 	
 	private WheelchairState mWheelChairState;
-	
+		
 	private HashMap<WheelchairState, Integer> mWheelchairStateDrawablesMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
@@ -124,6 +124,12 @@ public class POIDetailActivityEditable extends Activity {
 		if (poiID != -1) {
 			load();
 		}
+		
+		UserCredentials credentials = new UserCredentials( getApplicationContext());
+		if ( !credentials.isLoggedIn()) {
+			Intent intent = new Intent( this, LoginActivity.class);
+			startActivityForResult(intent, PERFORM_LOGIN );
+		}
 	}
 	
 	public void onEditWheelchairState(View v) {
@@ -161,6 +167,8 @@ public class POIDetailActivityEditable extends Activity {
 	//	if (userCredentials.isLoggedIn()) {
 
 			ContentValues values = new ContentValues();
+			
+			
 			//values.put(Wheelmap.POIs.NAME, jo.get("name").toString());
 			/*
 				int categoryId = jo.getInt( "category" );			
@@ -288,6 +296,10 @@ public class POIDetailActivityEditable extends Activity {
 					load();
 				}
 			}
+		} else if ( requestCode == PERFORM_LOGIN ) {
+			
+			if (resultCode != RESULT_OK )
+				finish();
 		}
 	}
 

@@ -47,7 +47,7 @@ public class SyncService extends IntentService {
 	public static final String EXTRA_LOCALE = "org.wheelmap.android.EXTRA_LOCALE";
 	public static final String EXTRA_CATEGORY = "org.wheelmap.android.EXTRA_CATEGORY";
 	public static final String EXTRA_NODETYPE = "org.wheelmap.android.EXTRA_NODETYPE";
-	public static final String EXTRA_USERNAME = "org.wheelmap.android.EXTRA_USERNAME";
+	public static final String EXTRA_EMAIL = "org.wheelmap.android.EXTRA_EMAIL";
 	public static final String EXTRA_PASSWORD = "org.wheelmap.android.EXTRA_PASSWORD";
 	public static final String EXTRA_ERROR = "org.wheelmap.android.EXTRA_ERROR";
 	
@@ -63,8 +63,6 @@ public class SyncService extends IntentService {
 	public static final int STATUS_ERROR = 0x2;
 	public static final int STATUS_FINISHED = 0x3;
 	
-	public static final String PREFS_API_KEY = "prefs_apikey";
-
 	private ContentResolver mResolver;
 	
 	public SyncService() {
