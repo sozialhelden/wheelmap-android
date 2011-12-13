@@ -35,6 +35,8 @@ import wheelmap.org.request.CategoryNodesRequestBuilder;
 import wheelmap.org.request.NodeTypeNodesRequestBuilder;
 import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
+import wheelmap.org.request.SearchNodesRequestBuilder;
+import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -45,9 +47,10 @@ import android.util.Log;
 public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		IExecutor {
 
-	private BoundingBox mBoundingBox;
+	private BoundingBox mBoundingBox = null;
 	private int mCategory = -1;
 	private int mNodeType = -1;
+	private String mSearchTerm = null;
 
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 	private static final long TIME_TO_DELETE_FOR_PENDING = 10 * 60 * 1000;
@@ -85,6 +88,10 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		} else if (getBundle().containsKey(SyncService.EXTRA_NODETYPE)) {
 			mNodeType = getBundle().getInt(SyncService.EXTRA_NODETYPE);
 		}
+
+		if (getBundle().containsKey(SearchManager.QUERY)) {
+			mSearchTerm = getBundle().getString(SearchManager.QUERY);
+		}
 	}
 
 	@Override
@@ -97,6 +104,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		} else if (mNodeType != -1) {
 			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER,
 					getApiKey(), AcceptType.JSON, mNodeType);
+		} else if (mSearchTerm != null) {
+			requestBuilder = new SearchNodesRequestBuilder(SERVER, getApiKey(),
+					AcceptType.JSON, mSearchTerm);
 		} else {
 			requestBuilder = new NodesRequestBuilder(SERVER, getApiKey(),
 					AcceptType.JSON);

@@ -30,12 +30,12 @@ limitations under the License.
 	
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_share"
-			android:src="@android:drawable/ic_menu_share"
+			android:src="@drawable/ic_menu_share"
 			android:onClick="onItemShare" />
 
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_edit"
-			android:src="@android:drawable/ic_menu_edit"
+			android:src="@drawable/ic_menu_edit"
 			android:onClick="onItemEdit" />
 	</LinearLayout>
 

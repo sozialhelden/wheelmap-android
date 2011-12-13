@@ -58,6 +58,8 @@ public class SyncService extends IntentService {
 	public static final int WHAT_RETRIEVE_NODETYPES = 0x4;
 	public static final int WHAT_UPDATE_SERVER = 0x5;
 	public static final int WHAT_RETRIEVE_APIKEY = 0x6;
+	public static final int WHAT_SEARCH_NODES_IN_BOX = 0x7;
+	public static final int WHAT_SEARCH_NODES = 0x8;
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
@@ -90,6 +92,8 @@ public class SyncService extends IntentService {
 		IExecutor executor = null;
 		switch(what) {
 		case WHAT_RETRIEVE_NODES:
+		case WHAT_SEARCH_NODES:
+		case WHAT_SEARCH_NODES_IN_BOX:
 			executor = new NodesExecutor( mResolver, bundle);
 			break;
 		case WHAT_RETRIEVE_LOCALES:

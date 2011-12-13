@@ -26,12 +26,16 @@ limitations under the License.
 		<ImageView style="@style/TitleBarSeparator"
 			android:visibility="gone" />
 		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_newpoi"
-			android:src="@android:drawable/ic_menu_add" android:background="@drawable/title_button"
+			android:src="@drawable/ic_menu_add" android:background="@drawable/title_button"
 			android:onClick="onNewPOIClick" android:visibility="gone"
 			android:clickable="false" />
 		<ImageView style="@style/TitleBarSeparator" />
+		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_search"
+			android:src="@drawable/ic_menu_search"
+			android:background="@drawable/title_button" android:onClick="onSearchClick" />
+		<ImageView style="@style/TitleBarSeparator" />
 		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_info"
-			android:src="@android:drawable/ic_menu_info_details"
+			android:src="@drawable/ic_menu_info_details"
 			android:background="@drawable/title_button" android:onClick="onInfoClick" />
 	</LinearLayout>
 	<LinearLayout style="@style/ActionBarSwitcher">

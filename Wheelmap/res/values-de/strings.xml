@@ -86,4 +86,6 @@ limitations under the License.
     <string name="title_login">Einloggen</string>
     <string name="error_authorization_required">Authorisierung erforderlich</string>
     <string name="error_request_forbidden">Anfrage nicht erlaubt</string>
+    <string name="search_hint_map">Ausschnitt und Begriff wählen</string>
+    <string name="search_hint_list">Suchbegriff</string>
 </resources>

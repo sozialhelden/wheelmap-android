@@ -66,6 +66,12 @@ public class InfoActivity extends ListActivity {
 				"http://studiorutton.de",				
 				InfoTypes.WITH_TWO_LINKS );	   
 		infoList.add( info );
+		
+		info = new Info(
+				R.string.info_clientdevelopment, 
+				R.string.info_clientdevelopment_one, 
+				"", InfoTypes.SIMPLE_TEXT );	   
+		infoList.add( info );
 
 		// web development
 		info = new Info(

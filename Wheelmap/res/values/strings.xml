@@ -116,4 +116,8 @@ limitations under the License.
     <string name="title_login">Login</string>
     <string name="error_authorization_required">Authorization required</string>
     <string name="error_request_forbidden">Request forbidden</string>
+    <string name="search_hint_map">Pick map part and keyword</string>
+    <string name="search_hint_list">Keyword</string>
+    <string name="info_clientdevelopment">Android API Client</string>
+    <string name="info_clientdevelopment_one">Patricia Lipp</string>
 </resources>

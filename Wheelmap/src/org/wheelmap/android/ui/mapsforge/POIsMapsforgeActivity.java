@@ -39,6 +39,7 @@ import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -52,6 +53,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -74,6 +76,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private MyLocationOverlay mCurrLocationOverlay;
 
 	private ProgressBar mProgressBar;
+	private ImageButton mSearchButton;
 
 	private MyLocationManager mLocationManager;
 	private GeoPoint mLastGeoPointE6;
@@ -81,6 +84,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private boolean isShowingDialog;
 	private boolean isZoomedEnough;
 	private int oldZoomLevel;
+	private boolean isSearchMode;
 
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
@@ -94,7 +98,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		setContentView(R.layout.activity_mapsforge);
 		mMapView = (MyMapView) findViewById(R.id.map);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
-
+		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
+		isSearchMode = false;
+			
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.setScaleBar(true);
@@ -116,13 +122,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController.setZoom(18); // Zoon 1 is world view
 
 		isCentered = false;
-
-		if (getIntent() != null) {
-			Bundle extras = getIntent().getExtras();
-
-			executeTargetCenterExtras(extras);
-			executeRetrieval(extras);
-		}
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -154,13 +153,26 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			}
 
 		});
+		
+		if (getIntent() != null) {
+			Bundle extras = getIntent().getExtras();
+			if ( extras != null ) {
+				executeTargetCenterExtras(extras);
+				executeSearch(extras);
+				executeRetrieval(extras);
+			}
+		}
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Bundle extras = intent.getExtras();
+		if ( extras == null )
+			return;
+		
 		executeTargetCenterExtras(extras);
+		executeSearch(extras);
 		executeRetrieval(extras);
 	}
 
@@ -242,6 +254,20 @@ public class POIsMapsforgeActivity extends MapActivity implements
 					});
 		}
 	}
+	
+	private void executeSearch(Bundle extras) {
+		if ( extras.containsKey( SearchManager.QUERY )) {
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+				SyncService.class);
+			intent.putExtras(extras);
+			intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_SEARCH_NODES_IN_BOX);
+			intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+			startService(intent);
+			extras.putBoolean( EXTRA_NO_RETRIEVAL, true);
+			isSearchMode = true;
+			updateSearchStatus();
+		}
+	}
 
 	private void runQuery() {
 		// Run query
@@ -315,6 +341,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		else
 			mProgressBar.setVisibility(View.GONE);
 	}
+	
+	private void updateSearchStatus() {
+		mSearchButton.setSelected(isSearchMode);
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -353,6 +383,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void requestUpdate() {
+		if ( isSearchMode)
+			return;
+		
 		Bundle extras = new Bundle();
 		//
 		fillExtrasWithBoundingRect(extras);
@@ -364,6 +397,14 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
+	}
+	
+	public void onSearchClick( View v ) {
+		isSearchMode = !isSearchMode;
+		updateSearchStatus();
+		
+		if ( isSearchMode )
+			onSearchRequested();
 
 	}
 
@@ -371,6 +412,14 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		Intent intent = new Intent(this, InfoActivity.class);
 		startActivity(intent);
 	}
+	
+	@Override
+	public boolean onSearchRequested() {
+	     Bundle extras = new Bundle();
+	     fillExtrasWithBoundingRect(extras);
+	     startSearch(null, false, extras, false);
+	     return true;
+	 }
 
 	@Override
 	public void onMapViewTouchMoveEnough() {

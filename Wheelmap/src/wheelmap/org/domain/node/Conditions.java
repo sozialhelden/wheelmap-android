@@ -31,6 +31,7 @@ public class Conditions {
     protected BigInteger perPage;
     protected BigInteger page;
     protected String bbox;
+    protected String search;
 
     /**
      * Gets the value of the format property.
@@ -126,6 +127,30 @@ public class Conditions {
      */
     public void setBbox(String value) {
         this.bbox = value;
+    }
+    
+    /**
+     * Gets the value of the search property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSearch() {
+        return search;
+    }
+
+    /**
+     * Sets the value of the search property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSearch(String value) {
+        this.search = value;
     }
 
 }

@@ -35,6 +35,7 @@ import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -85,6 +86,7 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d( TAG, "onCreate");
 
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
@@ -115,7 +117,7 @@ public class POIsListActivity extends ListActivity implements
 			}
 
 		});
-
+		
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
 
@@ -135,13 +137,24 @@ public class POIsListActivity extends ListActivity implements
 		getListView().setTextFilterEnabled(true);
 
 		((PullToRefreshListView) getListView()).setOnRefreshListener(this);
+		
+		if (getIntent() != null) {
+			Bundle extras = getIntent().getExtras();
+			if ( extras != null ) {
+				executeSearch(extras);
+			}
+		}
+
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		if (intent.getExtras() != null) {
+		Log.d( TAG, "onNewIntent");
+		Bundle extras = intent.getExtras();
+		if (extras != null) {
 			isRecreated(intent.getExtras());
+			executeSearch(extras);
 		}
 	}
 
@@ -168,6 +181,19 @@ public class POIsListActivity extends ListActivity implements
 		super.onDestroy();
 		// Stop the tracker when it is no longer needed.
 		tracker.stopSession();
+	}
+	
+	private void executeSearch(Bundle extras) {
+		if ( extras.containsKey( SearchManager.QUERY )) {
+			Log.d( TAG, "executeSearch" );
+			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+				SyncService.class);
+			intent.putExtras(extras);
+			intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_SEARCH_NODES);
+			intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+			startService(intent);
+			setIsRecreated( true );
+		}
 	}
 
 	@Override
@@ -294,6 +320,10 @@ public class POIsListActivity extends ListActivity implements
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
 		startActivity(i);
 
+	}
+	
+	public void onSearchClick( View v ) {
+		onSearchRequested();
 	}
 
 	private void saveListPosition() {
