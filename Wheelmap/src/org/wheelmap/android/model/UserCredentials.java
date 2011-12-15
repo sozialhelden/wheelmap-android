@@ -52,6 +52,9 @@ public class UserCredentials {
 	
 	public void logout() {
 		mIsLoggenIn = false;
+		mLogin = null;
+		mPassword = null;
+		mApiKey = null;
 		save();
 	}	
 

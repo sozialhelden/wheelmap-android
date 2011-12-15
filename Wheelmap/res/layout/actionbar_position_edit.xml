@@ -34,6 +34,6 @@ limitations under the License.
 	
 	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
 		<TextView style="@style/ActionBarTitleText"
-			android:text="@string/title_pois_detail_edit" />
+			android:text="@string/title_pois_position_edit" />
 	</LinearLayout>
 </merge>

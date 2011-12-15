@@ -17,12 +17,12 @@ limitations under the License.
 
 package org.wheelmap.android.ui.mapsforge;
 
-import org.mapsforge.android.maps.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
-import org.mapsforge.android.maps.OverlayCircle;
+import org.mapsforge.android.maps.overlay.CircleOverlay;
+import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -33,6 +33,7 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIsListActivity;
+import org.wheelmap.android.ui.SearchActivity;
 import org.wheelmap.android.ui.mapsforge.MyMapView.MapViewTouchMove;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -52,6 +53,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -99,6 +101,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView = (MyMapView) findViewById(R.id.map);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
+		mSearchButton.setOnLongClickListener( mExtendedSearchListener );
 		isSearchMode = false;
 			
 		mMapView.setClickable(true);
@@ -111,11 +114,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 		// overlays
 		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this);
+		// mPoisItemizedOverlay.enableUseOnlyOneBitmap( true );
 		runQuery();
 
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay();
+		mCurrLocationOverlay.enableUseOnlyOneBitmap( true );
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		mMapView.registerListener(this);
 		mMapView.registerZoomListener(this);
@@ -407,6 +412,15 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			onSearchRequested();
 
 	}
+	
+	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
+		@Override
+		public boolean onLongClick(View v) {
+			final Intent intent = new Intent(POIsMapsforgeActivity.this, SearchActivity.class);
+			startActivity( intent );
+			return true;
+		}
+	};
 
 	public void onInfoClick(View v) {
 		Intent intent = new Intent(this, InfoActivity.class);

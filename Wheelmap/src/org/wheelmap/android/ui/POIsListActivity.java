@@ -50,8 +50,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.View.OnLongClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -78,6 +80,7 @@ public class POIsListActivity extends ListActivity implements
 	private boolean isInForeground;
 	private boolean isShowingDialog;
 
+	private ImageButton mSearchButton;
 	private ViewStub mEmptyNoPois;
 
 	GoogleAnalyticsTracker tracker;
@@ -96,6 +99,8 @@ public class POIsListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_list);
 		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
+		mSearchButton = (ImageButton) findViewById( R.id.btn_title_search );
+		mSearchButton.setOnLongClickListener( mExtendedSearchListener );
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
@@ -325,6 +330,15 @@ public class POIsListActivity extends ListActivity implements
 	public void onSearchClick( View v ) {
 		onSearchRequested();
 	}
+	
+	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
+		@Override
+		public boolean onLongClick(View v) {
+			final Intent intent = new Intent(POIsListActivity.this, SearchActivity.class);
+			startActivity( intent );
+			return true;
+		}
+	};
 
 	private void saveListPosition() {
 		mFirstVisiblePosition = getListView().getFirstVisiblePosition();

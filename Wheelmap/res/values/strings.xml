@@ -27,7 +27,6 @@ limitations under the License.
     <string name="title_pois_map">Map</string>
     <string name="title_pois_settings">Filter Settings</string>
     <string name="title_pois_detail">Info</string>
-    <string name="title_pois_detail_edit">Edit the point of interest</string>
     <string name="title_wheelchair_state">Wheelchair Settings</string>
     <string name="edit_poi">Edit</string>
     <string name="btn_list">List</string>
@@ -119,5 +118,16 @@ limitations under the License.
     <string name="search_hint_map">Pick map part and keyword</string>
     <string name="search_hint_list">Keyword</string>
     <string name="info_clientdevelopment">Android API Client</string>
-    <string name="info_clientdevelopment_one">Patricia Lipp</string>
+    <string name="info_clientdevelopment_one">Pat Lipp</string>
+    <string name="title_search">Search</string>
+    <string name="search_selection">Pick category or type</string>
+    <string name="search_no_selection">No selection</string>
+    <string name="search_pick">Pick category or type</string>
+    <string name="search_execute">Search</string>
+    <string name="settings_delete_logindata">Delete Email and Password</string>
+    <string name="title_pois_detail_edit">Edit the point of interest</string>
+    <string name="title_pois_position_edit">Location Positioning</string>
+    <string name="latitude_short">Lat</string>
+    <string name="position_longitude_short">Long</string>
+    <string name="position_latitude_short">Lat</string>
 </resources>

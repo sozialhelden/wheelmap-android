@@ -1,177 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 Michal Harakal and Michael Kroez Licensed under the 
+<!--
+     Copyright (C) 2011 Michal Harakal and Michael Kroez Licensed under the 
 	Apache License, Version 2.0 (the "License"); you may not use this file except 
 	in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
 	Unless required by applicable law or agreed to in writing, software distributed 
 	under the License is distributed on an "AS-IS" BASIS WITHOUT WARRANTIES OR 
 	CONDITIONS OF ANY KIND, either express or implied. See the License for the 
-	specific language governing permissions and limitations under the License. -->
-
+	specific language governing permissions and limitations under the License.
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/home_root" android:orientation="vertical"
-	android:layout_width="fill_parent" android:layout_height="fill_parent">
+    android:id="@+id/home_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-	<LinearLayout style="@style/ActionBarCompat">
-		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
-			android:padding="3dip" />
-	</LinearLayout>
-	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
-		<TextView android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:gravity="center"
-			android:text="@string/title_legal_notice" android:textColor="@color/white"
-			android:textStyle="bold" />
-	</LinearLayout>
+    <LinearLayout style="@style/ActionBarCompat" >
 
-	<ScrollView android:orientation="vertical"
-		android:layout_width="fill_parent" android:layout_height="wrap_content">
-		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+        <ImageView
+            style="@style/TitleBarLogo"
+            android:padding="3dip"
+            android:src="@drawable/title_logo" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/title_bar_text"
+        style="@style/ActionBarSwitcher" >
 
-			<LinearLayout android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:orientation="vertical"
-				android:paddingTop="6dip" android:paddingBottom="6dip">
+        <TextView style="@style/ActionBarTitleText"
+            android:text="@string/title_legal_notice" />
+    </LinearLayout>
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_intro"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:layout_marginLeft="12dip" android:textStyle="bold"
-					android:layout_marginRight="12dip" android:layout_marginTop="5dip"
-					android:layout_marginBottom="5dip" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
 
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_mapsforge"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/legal_notice_mapsforge_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" android:textColorLink="@color/dark_grey_one"
-					android:autoLink="web" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:paddingBottom="6dip"
+                android:paddingTop="6dip" >
 
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_intro"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold" />
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_pulltorefresh"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/legal_notice_pulltorefresh_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" />
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
 
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_mapsforge"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_springandroid"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/legal_notice_springandroid_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:text="@string/legal_notice_springandroid_copyright_two"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:layout_marginTop="5dip"
-					android:layout_marginBottom="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:text="@string/legal_notice_springandroid_copyright_three"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:layout_marginTop="5dip"
-					android:layout_marginBottom="5dip" android:textColorLink="@color/dark_grey_one"
-					android:autoLink="web" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_mapsforge_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColorLink="@color/dark_grey_one" />
 
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_jackson"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/legal_notice_jackson_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_pulltorefresh"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_pulltorefresh_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_commonsware"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/legal_notice_commonsware_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:text="@string/legal_notice_commonsware_copyright_two"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" />
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
 
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_springandroid"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_iconscollection"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:text="@string/legal_notice_iconscollection_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" android:textColorLink="@color/dark_grey_one"
-					android:autoLink="web" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:text="@string/legal_notice_iconscollection_copyright_two"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" />
-				<ImageView android:layout_height="2dip"
-					android:layout_width="fill_parent" android:background="@color/light_grey_two" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:gravity="center_horizontal"
+                    android:text="@string/legal_notice_springandroid_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="wrap_content" android:text="@string/legal_notice_opensource"
-					android:textAppearance="?android:attr/textAppearanceMedium"
-					android:layout_marginLeft="12dip" android:layout_marginRight="12dip"
-					android:layout_marginTop="5dip" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="@string/legal_notice_opensource_copyright"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" android:textColorLink="@color/dark_grey_one"
-					android:autoLink="web" />
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:text="@string/legal_notice_opensource_copyright_one"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:gravity="center_horizontal" android:paddingTop="5dip"
-					android:paddingBottom="5dip" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:gravity="center_horizontal"
+                    android:text="@string/legal_notice_springandroid_copyright_two"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
-			</LinearLayout>
-		</LinearLayout>
-	</ScrollView>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dip"
+                    android:layout_marginTop="5dip"
+                    android:autoLink="web"
+                    android:gravity="center_horizontal"
+                    android:text="@string/legal_notice_springandroid_copyright_three"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColorLink="@color/dark_grey_one" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_jackson"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_jackson_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_commonsware"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_commonsware_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_commonsware_copyright_two"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_iconscollection"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_iconscollection_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColorLink="@color/dark_grey_one" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_iconscollection_copyright_two"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/light_grey_two" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dip"
+                    android:layout_marginRight="12dip"
+                    android:layout_marginTop="5dip"
+                    android:text="@string/legal_notice_opensource"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_opensource_copyright"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColorLink="@color/dark_grey_one" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip"
+                    android:text="@string/legal_notice_opensource_copyright_one"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

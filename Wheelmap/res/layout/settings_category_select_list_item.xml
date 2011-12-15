@@ -19,7 +19,8 @@ limitations under the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:paddingLeft="12dip" android:paddingRight="5dip"
-	android:paddingTop="9dip" android:paddingBottom="5dip">
+	android:paddingTop="9dip" android:paddingBottom="5dip"
+	android:background="@drawable/list_item_background">
 	<ImageView android:id="@+id/list_item_category_icon"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true" />

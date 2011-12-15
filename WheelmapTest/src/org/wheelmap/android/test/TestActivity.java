@@ -10,13 +10,13 @@ import android.util.Log;
 
 public class TestActivity extends Activity {
 	private final static String TAG = "logintest";
-	
+	private static final int PERFORM_LOGIN = 2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = new Intent( this, LoginActivity.class );
-		startActivityForResult( intent, POIDetailActivityEditable.PERFORM_LOGIN );
+		startActivityForResult( intent, PERFORM_LOGIN );
 	}
 	
 	@Override

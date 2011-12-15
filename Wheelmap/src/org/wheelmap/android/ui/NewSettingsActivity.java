@@ -21,6 +21,7 @@ import org.wheelmap.android.R;
 import org.wheelmap.android.model.CategorySelectCursorAdapter;
 import org.wheelmap.android.model.MergeAdapter;
 import org.wheelmap.android.model.Support;
+import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.WheelchairStateAdapter;
 import org.wheelmap.android.model.WheelchairStateAdapter.WheelchairStateItem;
 
@@ -43,6 +44,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -79,6 +82,8 @@ public class NewSettingsActivity extends ListActivity implements OnClickListener
 		adapter.addView( createBlackBar());
 		adapter.addView( createCatTitle() );
 		adapter.addAdapter( adapterCatList );
+		adapter.addView( createBlackBar());
+		adapter.addAdapter( createAdapterDeleteLogin());
 		
 		this.setListAdapter( adapter );
 		
@@ -100,6 +105,10 @@ public class NewSettingsActivity extends ListActivity implements OnClickListener
 		return layout;
 	}
 	
+	private DeleteLoginAdapter createAdapterDeleteLogin() {
+		return new DeleteLoginAdapter();
+	}
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		finish();
@@ -116,6 +125,8 @@ public class NewSettingsActivity extends ListActivity implements OnClickListener
 			clickWheelStateItem( (WheelchairStateItem) item, adapter );	
 		} else if ( item instanceof Cursor ) {
 			clickCategorieItem( (Cursor) item );
+		} else if ( item instanceof String && ((String)item).equals( "deletelogin")) {
+			clickDeleteLoginData();
 		}
 	}
 	
@@ -158,6 +169,46 @@ public class NewSettingsActivity extends ListActivity implements OnClickListener
 		resolver.update( mUri, values, whereClause, whereValues );
 		
 		Log.d(TAG,  "Name = " + Support.CategoriesContent.getLocalizedName( cursor ));		
+	}
+	
+	private void clickDeleteLoginData() {
+		UserCredentials credentials = new UserCredentials( this );
+		credentials.logout();
+	}
+	
+	private class DeleteLoginAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			return 1;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			return new String( "deletelogin" );
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+		
+		@Override
+		public boolean isEnabled(int position) {
+			UserCredentials credentials = new UserCredentials( NewSettingsActivity.this );
+			if ( credentials.isLoggedIn())
+				return true;
+			else
+				return false;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout layout = (LinearLayout) mInflater.inflate( R.layout.settings_delete_logindata, null );
+			
+			return layout;
+		}
+		
 	}
 	
 }

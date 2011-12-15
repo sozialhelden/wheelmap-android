@@ -10,10 +10,8 @@
 			android:padding="3dip" />
 	</LinearLayout>
 	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
-		<TextView android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:gravity="center"
-			android:text="@string/title_info" android:textColor="@color/white"
-			android:textStyle="bold" />
+		<TextView style="@style/ActionBarTitleText"
+			android:text="@string/title_info" />
 	</LinearLayout>
 
   <ListView android:id="@+id/android:list"

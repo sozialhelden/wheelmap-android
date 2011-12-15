@@ -169,7 +169,8 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS)
+		if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS ||
+				infoList.get(position).getUrl().length() == 0)
 			return false;
 		else
 			return true;

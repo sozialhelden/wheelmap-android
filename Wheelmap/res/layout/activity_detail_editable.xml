@@ -20,14 +20,8 @@ limitations under the License.
 	android:id="@+id/home_root" android:orientation="vertical"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 	<include layout="@layout/actionbar_detail_editable" />
-	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
-		<TextView android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:gravity="center"
-			android:text="@string/title_pois_detail_edit" android:textColor="@color/white"
-			android:textStyle="bold" />
-	</LinearLayout>
 
-	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	<ScrollView
 		android:layout_width="fill_parent" android:layout_height="wrap_content">
 		<LinearLayout android:layout_width="fill_parent"
 			android:orientation="vertical" android:layout_height="wrap_content">
@@ -49,18 +43,26 @@ limitations under the License.
 			<LinearLayout android:background="#FFE6E6E6"
 				android:layout_width="fill_parent" android:layout_height="1dp" />
 
-
-			<TextView android:hint="@string/poi_property_position"
-				android:id="@+id/position" style="@style/DetailFont" />
-
+			<RelativeLayout android:id="@+id/edit_geolocation"
+			    android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TextView android:hint="@string/poi_property_position"
+					android:id="@+id/edit_position_text" style="@style/DetailFont" />
+				<ImageView android:id="@+id/position_further"
+					android:src="@drawable/arrow"
+					android:layout_height="wrap_content" android:layout_width="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_centerVertical="true" />
+			</RelativeLayout>
+			
 			<LinearLayout android:background="#FFC6C6C6"
 				android:layout_width="fill_parent" android:layout_height="1dp" />
 			<LinearLayout android:background="#FFE6E6E6"
 				android:layout_width="fill_parent" android:layout_height="1dp" />
 
-			<RelativeLayout android:layout_marginTop="4dip"
-				android:layout_marginLeft="4dip" android:layout_width="fill_parent"
-				android:layout_height="wrap_content">
+			<RelativeLayout android:id="@+id/edit_wheelchairstate" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:layout_marginTop="4dip"
+				android:layout_marginBottom="4dip"
+				android:layout_marginLeft="4dip" >
 				<ImageView android:id="@+id/wheelchair_state_icon"
 					android:src="@drawable/wheelchair_state_enabled"
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
@@ -73,8 +75,8 @@ limitations under the License.
 				<ImageView android:id="@+id/wheelchair_state_further"
 					android:src="@drawable/arrow"
 					android:layout_height="wrap_content" android:layout_width="wrap_content"
-					android:onClick="onEditWheelchairState"
-					android:layout_alignParentRight="true"></ImageView>
+					android:layout_alignParentRight="true"
+					android:layout_centerVertical="true"></ImageView>
 			</RelativeLayout>
 
 			<LinearLayout android:background="#FFC6C6C6"

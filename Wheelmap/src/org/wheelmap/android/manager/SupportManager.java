@@ -20,6 +20,7 @@ package org.wheelmap.android.manager;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +71,6 @@ public class SupportManager {
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 	
-
 	public static class NodeType {
 		public NodeType(int id, String identifier, String localizedName,
 				int categoryId) {
@@ -87,6 +87,13 @@ public class SupportManager {
 		public String localizedName;
 		public int categoryId;
 	}
+	
+	public static class NodeTypeComparator implements Comparator<NodeType> {
+		@Override
+	    public int compare(NodeType n1, NodeType n2) {
+	        return n1.localizedName.compareTo( n2.localizedName );
+	    }
+	}
 
 	public static class Category {
 		public Category(int id, String identifier, String localizedName) {
@@ -98,6 +105,13 @@ public class SupportManager {
 		public int id;
 		public String identifier;
 		public String localizedName;
+	}
+	
+	public static class CategoryComparator implements Comparator<Category> {
+		@Override
+		public int compare( Category c1, Category c2 ) {
+			return c1.localizedName.compareTo( c2.localizedName );
+		}
 	}
 
 	public SupportManager(Context ctx) {

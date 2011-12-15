@@ -15,39 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
         
 -->
-
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<!-- ActionBar -->
-	<LinearLayout style="@style/ActionBarCompat">
-		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
-			android:padding="3dip" />
-		<View style="@style/TitleBarSpring" />
+	<include layout="@layout/actionbar_detail" />
+
 	
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_share"
-			android:src="@drawable/ic_menu_share"
-			android:onClick="onItemShare" />
-
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_edit"
-			android:src="@drawable/ic_menu_edit"
-			android:onClick="onItemEdit" />
-	</LinearLayout>
-
-	<LinearLayout style="@style/ActionBarSwitcher"
-		android:orientation="vertical">
-		<TextView style="@style/TitleBarTitle" android:id="@+id/title_name"
-			android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
-			android:layout_height="wrap_content"></TextView>
-		<TextView android:id="@+id/title_category" style="@style/TitleBarSubtext"
-			android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
-			android:layout_height="wrap_content"></TextView>
-	</LinearLayout>
 
 
 	<ScrollView android:orientation="vertical"

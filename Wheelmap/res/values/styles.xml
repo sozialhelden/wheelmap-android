@@ -18,15 +18,15 @@ limitations under the License.
 <resources>
 
     <!-- Base application theme is the default theme. -->
-    <style name="Theme" parent="android:Theme"></style>
+    <style name="Theme" parent="@android:Theme"></style>
 
     <!-- Variation on the Light theme that turns off the title -->
-    <style name="Theme.IOSched" parent="android:style/Theme.Light">
+    <style name="Theme.IOSched" parent="@android:style/Theme.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="Theme.Transparent" parent="android:Theme">
+    <style name="Theme.IOSched.Transparent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--   <item name="android:windowContentOverlay">@null</item> -->
@@ -162,6 +162,14 @@ limitations under the License.
         <item name="android:layout_height">@dimen/actionbar_compat_switcher_height</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/bar_gradient_dark_grey</item>
+    </style>
+    
+    <style name="ActionBarTitleText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="TextHeader">
