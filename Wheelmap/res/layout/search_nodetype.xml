@@ -19,5 +19,5 @@ limitations under the License.
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:layout_marginLeft="16dip"
+    android:paddingLeft="16dip"
     android:background="@drawable/list_item_background" />

@@ -44,7 +44,8 @@ limitations under the License.
 				android:layout_width="fill_parent" android:layout_height="1dp" />
 
 			<RelativeLayout android:id="@+id/edit_geolocation"
-			    android:layout_width="fill_parent" android:layout_height="wrap_content">
+			    android:layout_width="fill_parent" android:layout_height="wrap_content"
+			    android:layout_marginTop="4dip" android:layout_marginBottom="4dip">
 				<TextView android:hint="@string/poi_property_position"
 					android:id="@+id/edit_position_text" style="@style/DetailFont" />
 				<ImageView android:id="@+id/position_further"

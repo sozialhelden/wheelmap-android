@@ -191,7 +191,8 @@ public class POIsListActivity extends ListActivity implements
 	private void executeSearch(Bundle extras) {
 		if (!extras.containsKey(SearchManager.QUERY)
 				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !extras.containsKey(SyncService.EXTRA_NODETYPE))
+				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
+				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
 			return;
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
@@ -207,10 +208,10 @@ public class POIsListActivity extends ListActivity implements
 
 			intent.putExtra(SyncService.EXTRA_WHAT, what);
 		}
-		
-		if (extras.containsKey( SyncService.EXTRA_DISTANCE_LIMIT))
+
+		if (extras.containsKey(SyncService.EXTRA_DISTANCE_LIMIT))
 			intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
-		
+
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 		setIsRecreated(true);
@@ -350,7 +351,7 @@ public class POIsListActivity extends ListActivity implements
 		public boolean onLongClick(View v) {
 			final Intent intent = new Intent(POIsListActivity.this,
 					SearchActivity.class);
-			intent.putExtra( SearchActivity.EXTRA_SHOW_DISTANCE, true );
+			intent.putExtra(SearchActivity.EXTRA_SHOW_DISTANCE, true);
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 			return true;
 		}

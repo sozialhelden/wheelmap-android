@@ -270,7 +270,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private void executeSearch(Bundle extras) {
 		if (!extras.containsKey(SearchManager.QUERY)
 				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !extras.containsKey(SyncService.EXTRA_NODETYPE))
+				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
+				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
 			return;
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
@@ -437,6 +438,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
+			isSearchMode = true;
+			updateSearchStatus();
+			
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
