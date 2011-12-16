@@ -21,8 +21,9 @@ import org.mapsforge.android.maps.overlay.CircleOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
+import org.mapsforge.android.maps.MapView;
+import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
-import org.mapsforge.android.maps.overlay.CircleOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
@@ -36,7 +37,6 @@ import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.ui.SearchActivity;
-import org.wheelmap.android.ui.mapsforge.MyMapView.MapViewTouchMove;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
@@ -62,7 +62,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver, MapViewTouchMove, OnZoomListener {
+		DetachableResultReceiver.Receiver, OnMoveListener, OnZoomListener {
 
 	private final static String TAG = "mapsforge";
 
@@ -75,10 +75,11 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private State mState;
 
 	private MapController mMapController;
-	private MyMapView mMapView;
+	private MapView mMapView;
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
-
+	private GeoPoint mLastRequestedPosition;
+	
 	private ProgressBar mProgressBar;
 	private ImageButton mSearchButton;
 
@@ -100,7 +101,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		System.gc();
 
 		setContentView(R.layout.activity_mapsforge);
-		mMapView = (MyMapView) findViewById(R.id.map);
+		mMapView = (MapView) findViewById(R.id.map);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
 		mSearchButton.setOnLongClickListener(mExtendedSearchListener);
@@ -128,8 +129,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		}
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
-		mMapView.registerListener(this);
-		mMapView.registerZoomListener(this);
+		mMapView.setMoveListener(this);
+		mMapView.setZoomListener(this);
 		mMapController.setZoom(18); // Zoon 1 is world view
 
 		runQuery();
@@ -400,7 +401,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		GeoPoint center = mMapView.getMapCenter();
-		mMapView.setLastRequestedLocation(center);
+		mLastRequestedPosition = center;
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
 						+ (lonSpan / 2),
@@ -462,7 +463,15 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	@Override
-	public void onMapViewTouchMoveEnough() {
+	public void onMove( float vertical, float horizontal ) {
+		GeoPoint centerLocation = mMapView.getMapCenter();
+		int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
+		int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
+		
+		if ( Math.abs( mLastRequestedPosition.getLatitudeE6() - centerLocation.getLatitudeE6()) < minimalLatitudeSpan &&
+				Math.abs( mLastRequestedPosition.getLongitudeE6() - centerLocation.getLongitudeE6()) < minimalLongitudeSpan )
+			return;
+		
 		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
 			return;
 
