@@ -101,9 +101,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView = (MyMapView) findViewById(R.id.map);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
-		mSearchButton.setOnLongClickListener( mExtendedSearchListener );
+		mSearchButton.setOnLongClickListener(mExtendedSearchListener);
 		isSearchMode = false;
-			
+
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.setScaleBar(true);
@@ -120,7 +120,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 
 		mCurrLocationOverlay = new MyLocationOverlay();
-		mCurrLocationOverlay.enableUseOnlyOneBitmap( true );
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		mMapView.registerListener(this);
 		mMapView.registerZoomListener(this);
@@ -158,10 +157,10 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			}
 
 		});
-		
+
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
-			if ( extras != null ) {
+			if (extras != null) {
 				executeTargetCenterExtras(extras);
 				executeSearch(extras);
 				executeRetrieval(extras);
@@ -173,9 +172,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Bundle extras = intent.getExtras();
-		if ( extras == null )
+		if (extras == null)
 			return;
-		
+
 		executeTargetCenterExtras(extras);
 		executeSearch(extras);
 		executeRetrieval(extras);
@@ -259,19 +258,33 @@ public class POIsMapsforgeActivity extends MapActivity implements
 					});
 		}
 	}
-	
+
 	private void executeSearch(Bundle extras) {
-		if ( extras.containsKey( SearchManager.QUERY )) {
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+		if (!extras.containsKey(SearchManager.QUERY)
+				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
+				&& !extras.containsKey(SyncService.EXTRA_NODETYPE))
+			return;
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
-			intent.putExtras(extras);
-			intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_SEARCH_NODES_IN_BOX);
-			intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-			startService(intent);
-			extras.putBoolean( EXTRA_NO_RETRIEVAL, true);
-			isSearchMode = true;
-			updateSearchStatus();
+
+		intent.putExtras(extras);
+		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
+			int what;
+			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
+					|| extras.containsKey(SyncService.EXTRA_NODETYPE))
+				what = SyncService.WHAT_RETRIEVE_NODES;
+			else
+				what = SyncService.WHAT_SEARCH_NODES_IN_BOX;
+
+			intent.putExtra(SyncService.EXTRA_WHAT, what);
 		}
+
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+		startService(intent);
+		extras.putBoolean(EXTRA_NO_RETRIEVAL, true);
+		isSearchMode = true;
+		updateSearchStatus();
 	}
 
 	private void runQuery() {
@@ -346,7 +359,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		else
 			mProgressBar.setVisibility(View.GONE);
 	}
-	
+
 	private void updateSearchStatus() {
 		mSearchButton.setSelected(isSearchMode);
 	}
@@ -388,9 +401,9 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void requestUpdate() {
-		if ( isSearchMode)
+		if (isSearchMode)
 			return;
-		
+
 		Bundle extras = new Bundle();
 		//
 		fillExtrasWithBoundingRect(extras);
@@ -403,21 +416,22 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 	}
-	
-	public void onSearchClick( View v ) {
+
+	public void onSearchClick(View v) {
 		isSearchMode = !isSearchMode;
 		updateSearchStatus();
-		
-		if ( isSearchMode )
+
+		if (isSearchMode)
 			onSearchRequested();
 
 	}
-	
+
 	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-			final Intent intent = new Intent(POIsMapsforgeActivity.this, SearchActivity.class);
-			startActivity( intent );
+			final Intent intent = new Intent(POIsMapsforgeActivity.this,
+					SearchActivity.class);
+			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 			return true;
 		}
 	};
@@ -426,43 +440,73 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		Intent intent = new Intent(this, InfoActivity.class);
 		startActivity(intent);
 	}
-	
+
 	@Override
 	public boolean onSearchRequested() {
-	     Bundle extras = new Bundle();
-	     fillExtrasWithBoundingRect(extras);
-	     startSearch(null, false, extras, false);
-	     return true;
-	 }
+		Bundle extras = new Bundle();
+		fillExtrasWithBoundingRect(extras);
+		startSearch(null, false, extras, false);
+		return true;
+	}
 
 	@Override
 	public void onMapViewTouchMoveEnough() {
-		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN )
+		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
 			return;
-		
+
 		requestUpdate();
 	}
 
 	@Override
 	public void onZoom(byte zoomLevel) {
-		if ( zoomLevel < ZOOMLEVEL_MIN || !isInForeground) {
+		if (zoomLevel < ZOOMLEVEL_MIN || !isInForeground) {
 			isZoomedEnough = false;
 			oldZoomLevel = zoomLevel;
 			return;
 		}
-		
-		if ( zoomLevel < oldZoomLevel ) {
+
+		if (zoomLevel < oldZoomLevel) {
 			isZoomedEnough = false;
 		}
-		
-		if ( isZoomedEnough && zoomLevel >= oldZoomLevel ) {
+
+		if (isZoomedEnough && zoomLevel >= oldZoomLevel) {
 			oldZoomLevel = zoomLevel;
 			return;
 		}
-		
+
 		requestUpdate();
 		isZoomedEnough = true;
 		oldZoomLevel = zoomLevel;
+	}
+
+	/**
+	 * This method is called when the sending activity has finished, with the
+	 * result it supplied.
+	 * 
+	 * @param requestCode
+	 *            The original request code as given to startActivity().
+	 * @param resultCode
+	 *            From sending activity as per setResult().
+	 * @param data
+	 *            From sending activity as per setResult().
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// You can use the requestCode to select between multiple child
+		// activities you may have started. Here there is only one thing
+		// we launch.
+		if (requestCode == SearchActivity.PERFORM_SEARCH) {
+			// This is a standard resultCode that is sent back if the
+			// activity doesn't supply an explicit result. It will also
+			// be returned if the activity failed to launch.
+			if (resultCode == RESULT_OK) {
+				if (data != null && data.getExtras() != null) {
+					Bundle bundle = data.getExtras();
+					fillExtrasWithBoundingRect(bundle);
+					executeSearch(bundle);
+				}
+			}
+		}
 	}
 
 	/**

@@ -50,6 +50,7 @@ public class SyncService extends IntentService {
 	public static final String EXTRA_EMAIL = "org.wheelmap.android.EXTRA_EMAIL";
 	public static final String EXTRA_PASSWORD = "org.wheelmap.android.EXTRA_PASSWORD";
 	public static final String EXTRA_ERROR = "org.wheelmap.android.EXTRA_ERROR";
+	public static final String EXTRA_WHEELCHAIR_STATE = "org.wheelmap.android.EXTRA_WHEELCHAIR_STATE";
 	
 	public static final String EXTRA_WHAT = "org.wheelmap.android.EXTRA_WHAT";
 	public static final int WHAT_RETRIEVE_NODES = 0x1;

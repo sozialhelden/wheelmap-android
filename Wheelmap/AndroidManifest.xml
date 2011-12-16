@@ -101,7 +101,7 @@ limitations under the License.
         <activity
             android:label="@string/title_search"
             android:name=".ui.SearchActivity"
-            android:theme="@style/Theme.IOSched" />
+            android:theme="@style/Theme.IOSched.Transparent" />
         <activity
             android:label="@string/title_login"
             android:name=".ui.LoginActivity"

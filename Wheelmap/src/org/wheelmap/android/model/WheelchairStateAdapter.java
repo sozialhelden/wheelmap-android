@@ -90,7 +90,7 @@ public class WheelchairStateAdapter extends BaseAdapter {
 		mItems.add(stateItem);
 		stateItem = new WheelchairStateItem(
 				WheelchairState.UNKNOWN,
-				mContext.getString(R.string.settings_wheelchair_unknown_accesible),
+				mContext.getString(R.string.settings_wheelchair_unknown_accessible),
 				mContext.getResources().getDrawable(
 						R.drawable.wheelchair_state_unknown),
 				QueriesBuilderHelper.PREF_KEY_WHEELCHAIR_STATE_UNKNOWN,

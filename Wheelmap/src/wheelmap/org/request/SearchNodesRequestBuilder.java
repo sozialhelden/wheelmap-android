@@ -25,17 +25,20 @@ package wheelmap.org.request;
 public class SearchNodesRequestBuilder extends BaseNodesRequestBuilder {
 	
 	private static final String RESOURCE = "nodes/search";
-	private String mSearchTerm;
+	private String searchTerm;
 	
 	public SearchNodesRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, final String searchTerm) {
 		super(server,apiKey, acceptType);
-		mSearchTerm = searchTerm;
+		this.searchTerm = searchTerm;
 	}
 	
 	@Override
 	public String buildRequestUri() {
 		String request = super.buildRequestUri();
-		return String.format( "%s&q=%s", request, mSearchTerm );
+		if ( searchTerm != null && searchTerm.length() > 0)
+			return String.format( "%s&q=%s", request, searchTerm );
+		else
+			return request;
 	}
 		
 	@Override

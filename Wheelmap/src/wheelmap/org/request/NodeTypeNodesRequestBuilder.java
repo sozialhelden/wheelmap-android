@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2011 Michal Harakal and Michael Kroez
+noCopyright (C) 2011 Michal Harakal and Michael Kroez
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,18 +18,35 @@ limitations under the License.
 package wheelmap.org.request;
 
 /**
- * Constructs the Uri of a <code>/api/nodes?bbox&wheelchair&page&per_page</code> request
+ * Constructs the Uri of a <code>/api/node_types/1/nodes/search?api_key=&q=&bbox=&wheelchair=</code> request
  * @author p.lipp@web.de
  */
 public class NodeTypeNodesRequestBuilder extends BaseNodesRequestBuilder {
 	
-	private static final String RESOURCE = "node_types/%d/nodes";
+	private static final String RESOURCE_SEARCH = "node_types/%d/nodes/search";
+	private static final String RESOURCE_NODETYPE_ONLY = "node_types/%d/nodes";
+	private String RESOURCE;
 	
 	private int nodeType;
+	private String searchTerm;
 
-	public NodeTypeNodesRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, int nodeType) {
+	public NodeTypeNodesRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, int nodeType, String searchTerm) {
 		super(server,apiKey, acceptType);
 		this.nodeType = nodeType;
+		this.searchTerm = searchTerm;
+		if ( searchTerm != null && searchTerm.length() > 0 )
+			RESOURCE = RESOURCE_SEARCH;
+		else
+			RESOURCE = RESOURCE_NODETYPE_ONLY;
+	}
+	
+	@Override
+	public String buildRequestUri() {
+		String request = super.buildRequestUri();
+		if ( searchTerm != null && searchTerm.length() > 0)
+			return String.format( "%s&q=%s", request, searchTerm );
+		else
+			return request;
 	}
 	
 	@Override

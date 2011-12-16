@@ -37,7 +37,6 @@ limitations under the License.
     <string name="poi_property_phone">Telefón</string>
     <string name="poi_property_website">Webovská stránka</string>
     <string name="poi_property_position">Poloha</string>
-    <string name="settings_wheelchair_unknown_accesible">Neznáme</string>
     <string name="poi_property_nodetype">Typ</string>
     <string name="poi_property_category">Kategória</string>
     <string name="title_please_wait">Prosím čakajte</string>
@@ -83,4 +82,5 @@ limitations under the License.
     <string name="ws_disabled_title">Neprístupné</string>
     <string name="ws_unknown_title">Neznáme</string>
     <string name="title_pois_detail_edit">Upraviť miesto záujmu</string>
+    <string name="settings_wheelchair_unknown_accessible">Neznáme</string>
 </resources>

@@ -26,7 +26,6 @@ limitations under the License.
     <string name="settings_wheelchair_limited_accessible">Teilweise</string>
     <string name="title_pois_detail">Info</string>
     <string name="title_info">Credits</string>
-    <string name="settings_wheelchair_unknown_accesible">Unbekannt</string>
     <string name="title_pois_list">Liste</string>
     <string name="title_category_select">Auswahl der angezeigten Kategorien</string>
     <string name="description_logo">Wheelmap</string>
@@ -88,14 +87,18 @@ limitations under the License.
     <string name="search_hint_map">Ausschnitt und Begriff wählen</string>
     <string name="search_hint_list">Suchbegriff</string>
     <string name="title_search">Suche</string>
-    <string name="search_selection">Wähle Kategorie oder Typ</string>
+    <string name="search_selection">Wähle (Unter)Kategorie</string>
     <string name="search_no_selection">Keine Wahl getroffen</string>
-    <string name="search_pick">Wähle Kategorie oder Typ</string>
+    <string name="search_pick">Wähle (Unter)Kategorie</string>
     <string name="search_execute">Suchen</string>
     <string name="settings_delete_logindata">Löschen von Email und Passwort</string>
     <string name="title_pois_detail_edit">Editieren des Ortes</string>
-    <string name="title_pois_position_edit">Orts Positionierung</string>
+    <string name="title_pois_position_edit">Positionierung des Ortes</string>
     <string name="latitude_short">Breite</string>
     <string name="position_longitude_short">Länge</string>
     <string name="position_latitude_short">Breite</string>
+    <string name="search_distance">Entfernung in km</string>
+    <string name="search_distance_unspecified">Nicht angegeben</string>
+    <string name="settings_wheelchair_unknown_accessible">Unbekannt</string>
+    <string name="settings_wheelchair_unspecified_accessible">Undefiniert</string>
 </resources>

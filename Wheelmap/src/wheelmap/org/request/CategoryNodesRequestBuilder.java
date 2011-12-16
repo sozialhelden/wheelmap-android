@@ -19,19 +19,36 @@ package wheelmap.org.request;
 
 
 /**
- * Constructs the Uri of a <code>/api/nodes?bbox&wheelchair&page&per_page</code> request
+ * Constructs the Uri of a <code>/api/categories/1/nodes/search?api_key=&q=&bbox=&wheelchair=</code> request
  * @author p.lipp@web.de
  */
 public class CategoryNodesRequestBuilder extends BaseNodesRequestBuilder {
 	
-	private static final String RESOURCE = "categories/%d/nodes";
+	private static final String RESOURCE_SEARCH = "categories/%d/nodes/search";
+	private static final String RESOURCE_CATEGORY_ONLY = "categories/%d/nodes";
+	private String RESOURCE;
 	
 	private int category;
+	private String searchTerm;
 
-	public CategoryNodesRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, int category) {
+	public CategoryNodesRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, int category, String searchTerm) {
 		super(server,apiKey, acceptType);
 		this.category = category;
+		this.searchTerm = searchTerm;
+		if ( searchTerm != null && searchTerm.length() > 0 )
+			RESOURCE = RESOURCE_SEARCH;
+		else
+			RESOURCE = RESOURCE_CATEGORY_ONLY;
 	}
+	
+	@Override
+	public String buildRequestUri() {
+		String request = super.buildRequestUri();
+		if ( searchTerm != null && searchTerm.length() > 0)
+			return String.format( "%s&q=%s", request, searchTerm );
+		else
+			return request;
+		}
 	
 	@Override
 	protected  String resourcePath() {

@@ -51,7 +51,7 @@ public class POIDetailActivityEditable extends Activity implements
 
 	// Definition of the one requestCode we use for receiving resuls.
 	private static final int SELECT_WHEELCHAIRSTATE = 0;
-	private static final int SELECT_GEOLOCATION = 1;
+	private static final int SELECT_GEOPOSITION = 1;
 	private static final int PERFORM_LOGIN = 2;
 
 	private Long poiID;
@@ -178,7 +178,7 @@ public class POIDetailActivityEditable extends Activity implements
 			Intent intent = new Intent(this, EditPositionActivity.class);
 			intent.putExtra(EditPositionActivity.EXTRA_LATITUDE, mLatitude);
 			intent.putExtra(EditPositionActivity.EXTRA_LONGITUDE, mLongitude);
-			startActivityForResult(intent, SELECT_GEOLOCATION);
+			startActivityForResult(intent, SELECT_GEOPOSITION);
 			break;
 		}
 		default:
@@ -324,7 +324,7 @@ public class POIDetailActivityEditable extends Activity implements
 					load();
 				}
 			}
-		} else if (requestCode == SELECT_GEOLOCATION) {
+		} else if (requestCode == SELECT_GEOPOSITION) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
 					Bundle bundle = data.getExtras();

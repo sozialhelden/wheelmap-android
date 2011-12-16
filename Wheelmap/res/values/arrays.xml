@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="distance_array">
+        <item>@string/search_distance_unspecified</item>
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
+    <string-array name="wheelchair_state">
+        <item>@string/settings_wheelchair_unknown_accessible</item>
+		<item>@string/settings_wheelchair_full_accessible</item>
+     	<item>@string/settings_wheelchair_limited_accessible</item>
+     	<item>@string/settings_wheelchair_no_accessible</item>
+		<item>@string/settings_wheelchair_unspecified_accessible</item>    
+   </string-array>
+</resources>

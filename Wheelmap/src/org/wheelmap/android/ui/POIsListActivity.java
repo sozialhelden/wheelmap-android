@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.ui;
 
@@ -69,7 +69,7 @@ public class POIsListActivity extends ListActivity implements
 	private Location mLocation, mLastQueryLocation;
 
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
-//	private final static double QUERY_AUTO_DISTANCE_MIN = 0.25;
+	// private final static double QUERY_AUTO_DISTANCE_MIN = 0.25;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 	public final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
 	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
@@ -89,7 +89,7 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d( TAG, "onCreate");
+		Log.d(TAG, "onCreate");
 
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
@@ -99,8 +99,8 @@ public class POIsListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_list);
 		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
-		mSearchButton = (ImageButton) findViewById( R.id.btn_title_search );
-		mSearchButton.setOnLongClickListener( mExtendedSearchListener );
+		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
+		mSearchButton.setOnLongClickListener(mExtendedSearchListener);
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
@@ -122,7 +122,7 @@ public class POIsListActivity extends ListActivity implements
 			}
 
 		});
-		
+
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
 
@@ -142,10 +142,10 @@ public class POIsListActivity extends ListActivity implements
 		getListView().setTextFilterEnabled(true);
 
 		((PullToRefreshListView) getListView()).setOnRefreshListener(this);
-		
+
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
-			if ( extras != null ) {
+			if (extras != null) {
 				executeSearch(extras);
 			}
 		}
@@ -155,7 +155,7 @@ public class POIsListActivity extends ListActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.d( TAG, "onNewIntent");
+		Log.d(TAG, "onNewIntent");
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			isRecreated(intent.getExtras());
@@ -187,18 +187,33 @@ public class POIsListActivity extends ListActivity implements
 		// Stop the tracker when it is no longer needed.
 		tracker.stopSession();
 	}
-	
+
 	private void executeSearch(Bundle extras) {
-		if ( extras.containsKey( SearchManager.QUERY )) {
-			Log.d( TAG, "executeSearch" );
-			final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+		if (!extras.containsKey(SearchManager.QUERY)
+				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
+				&& !extras.containsKey(SyncService.EXTRA_NODETYPE))
+			return;
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
-			intent.putExtras(extras);
-			intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_SEARCH_NODES);
-			intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-			startService(intent);
-			setIsRecreated( true );
+		intent.putExtras(extras);
+		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
+			int what;
+			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
+					|| extras.containsKey(SyncService.EXTRA_NODETYPE))
+				what = SyncService.WHAT_RETRIEVE_NODES;
+			else
+				what = SyncService.WHAT_SEARCH_NODES;
+
+			intent.putExtra(SyncService.EXTRA_WHAT, what);
 		}
+		
+		if (extras.containsKey( SyncService.EXTRA_DISTANCE_LIMIT))
+			intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
+		
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+		startService(intent);
+		setIsRecreated(true);
 	}
 
 	@Override
@@ -236,7 +251,6 @@ public class POIsListActivity extends ListActivity implements
 		if (!mState.mIsRecreated) {
 			mFirstVisiblePosition = 0;
 			getListView().setSelection(mFirstVisiblePosition);
-			((PullToRefreshListView) getListView()).prepareForRefresh();
 		}
 		runQuery(!mState.mIsRecreated);
 	}
@@ -326,16 +340,18 @@ public class POIsListActivity extends ListActivity implements
 		startActivity(i);
 
 	}
-	
-	public void onSearchClick( View v ) {
+
+	public void onSearchClick(View v) {
 		onSearchRequested();
 	}
-	
+
 	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
-			final Intent intent = new Intent(POIsListActivity.this, SearchActivity.class);
-			startActivity( intent );
+			final Intent intent = new Intent(POIsListActivity.this,
+					SearchActivity.class);
+			intent.putExtra( SearchActivity.EXTRA_SHOW_DISTANCE, true );
+			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 			return true;
 		}
 	};
@@ -372,6 +388,7 @@ public class POIsListActivity extends ListActivity implements
 	private void updateRefreshStatus() {
 		if (mState.mSyncing) {
 			getListView().setEmptyView(null);
+			((PullToRefreshListView) getListView()).prepareForRefresh();
 		} else {
 			Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 			mEmptyNoPois.startAnimation(anim);
@@ -379,23 +396,6 @@ public class POIsListActivity extends ListActivity implements
 			((PullToRefreshListView) getListView()).onRefreshComplete();
 		}
 	}
-
-//	private boolean isFarerThanDeltaDistance(Location location) {
-//		if (mLastQueryLocation == null)
-//			return false;
-//
-//		Wgs84GeoCoordinates crrCoordinates = new Wgs84GeoCoordinates(
-//				location.getLongitude(), location.getLatitude());
-//		Wgs84GeoCoordinates lastQueryCoordinates = new Wgs84GeoCoordinates(
-//				mLastQueryLocation.getLongitude(),
-//				mLastQueryLocation.getLatitude());
-//
-//		if (GeocoordinatesMath.calculateDistance(lastQueryCoordinates,
-//				crrCoordinates) >= QUERY_AUTO_DISTANCE_MIN)
-//			return true;
-//		else
-//			return false;
-//	}
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -424,12 +424,41 @@ public class POIsListActivity extends ListActivity implements
 			mLocation = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
 			// Removed, as it makes problems with wonky gps data
-//			if (isFarerThanDeltaDistance(mLocation)) {
-//				((PullToRefreshListView) getListView()).prepareForRefresh();
-//				runQuery(true);
-//			}
+			// if (isFarerThanDeltaDistance(mLocation)) {
+			// ((PullToRefreshListView) getListView()).prepareForRefresh();
+			// runQuery(true);
+			// }
 			break;
 		}
+		}
+	}
+
+	/**
+	 * This method is called when the sending activity has finished, with the
+	 * result it supplied.
+	 * 
+	 * @param requestCode
+	 *            The original request code as given to startActivity().
+	 * @param resultCode
+	 *            From sending activity as per setResult().
+	 * @param data
+	 *            From sending activity as per setResult().
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// You can use the requestCode to select between multiple child
+		// activities you may have started. Here there is only one thing
+		// we launch.
+		Log.d(TAG, "onActivityResult: requestCode = " + requestCode
+				+ " resultCode = " + resultCode + " data = " + data);
+		if (requestCode == SearchActivity.PERFORM_SEARCH) {
+			// This is a standard resultCode that is sent back if the
+			// activity doesn't supply an explicit result. It will also
+			// be returned if the activity failed to launch.
+			if (resultCode == RESULT_OK) {
+				if (data != null && data.getExtras() != null)
+					executeSearch(data.getExtras());
+			}
 		}
 	}
 
@@ -465,7 +494,7 @@ public class POIsListActivity extends ListActivity implements
 			return;
 		if (isShowingDialog)
 			return;
-		
+
 		isShowingDialog = true;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -22,7 +22,6 @@
     <string name="poi_property_phone">Teléfono</string>
     <string name="poi_property_website">Sitio Web</string>
     <string name="poi_property_position">Posición</string>
-    <string name="settings_wheelchair_unknown_accesible">Desconocido</string>
     <string name="poi_property_nodetype">Tipo</string>
     <string name="poi_property_category">Categoría</string>
     <string name="title_please_wait">Por favor espere</string>
@@ -92,4 +91,5 @@
     <string name="ws_disabled_title">No accesible a sillas de ruedas</string>
     <string name="ws_enabled_title">Accesible a sillas de ruedas</string>
     <string name="title_pois_detail_edit">Editar el punto de interés</string>
+    <string name="settings_wheelchair_unknown_accessible">Desconocido</string>
 </resources>

@@ -39,7 +39,6 @@ limitations under the License.
     <string name="poi_property_phone">Phone</string>
     <string name="poi_property_website">Website</string>
     <string name="poi_property_position">Position</string>
-    <string name="settings_wheelchair_unknown_accesible">Unknown</string>
     <string name="poi_property_nodetype">Type</string>
     <string name="poi_property_category">Category</string>
     <string name="title_please_wait">Please wait</string>
@@ -120,9 +119,9 @@ limitations under the License.
     <string name="info_clientdevelopment">Android API Client</string>
     <string name="info_clientdevelopment_one">Pat Lipp</string>
     <string name="title_search">Search</string>
-    <string name="search_selection">Pick category or type</string>
+    <string name="search_selection">Pick (sub)category</string>
     <string name="search_no_selection">No selection</string>
-    <string name="search_pick">Pick category or type</string>
+    <string name="search_pick">Pick (sub)category</string>
     <string name="search_execute">Search</string>
     <string name="settings_delete_logindata">Delete Email and Password</string>
     <string name="title_pois_detail_edit">Edit the point of interest</string>
@@ -130,4 +129,8 @@ limitations under the License.
     <string name="latitude_short">Lat</string>
     <string name="position_longitude_short">Long</string>
     <string name="position_latitude_short">Lat</string>
+    <string name="search_distance">Distance in km</string>
+    <string name="search_distance_unspecified">Unspecified</string>
+    <string name="settings_wheelchair_unknown_accessible">Unknown</string>
+    <string name="settings_wheelchair_unspecified_accessible">Unspecified</string>
 </resources>

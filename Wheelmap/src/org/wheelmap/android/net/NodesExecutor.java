@@ -51,6 +51,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	private int mCategory = -1;
 	private int mNodeType = -1;
 	private String mSearchTerm = null;
+	private WheelchairState mWheelchairState = null;
 
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 	private static final long TIME_TO_DELETE_FOR_PENDING = 10 * 60 * 1000;
@@ -92,6 +93,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		if (getBundle().containsKey(SearchManager.QUERY)) {
 			mSearchTerm = getBundle().getString(SearchManager.QUERY);
 		}
+		
+		if (getBundle().containsKey(SyncService.EXTRA_WHEELCHAIR_STATE ))
+			mWheelchairState = WheelchairState.valueOf( getBundle().getInt( SyncService.EXTRA_WHEELCHAIR_STATE));
 	}
 
 	@Override
@@ -100,10 +104,10 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		BaseNodesRequestBuilder requestBuilder;
 		if (mCategory != -1) {
 			requestBuilder = new CategoryNodesRequestBuilder(SERVER,
-					getApiKey(), AcceptType.JSON, mCategory);
+					getApiKey(), AcceptType.JSON, mCategory, mSearchTerm);
 		} else if (mNodeType != -1) {
 			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER,
-					getApiKey(), AcceptType.JSON, mNodeType);
+					getApiKey(), AcceptType.JSON, mNodeType, mSearchTerm);
 		} else if (mSearchTerm != null) {
 			requestBuilder = new SearchNodesRequestBuilder(SERVER, getApiKey(),
 					AcceptType.JSON, mSearchTerm);
@@ -114,6 +118,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
 				mBoundingBox);
+		requestBuilder.wheelchairState( mWheelchairState);
 
 		clearTempStore();
 		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
