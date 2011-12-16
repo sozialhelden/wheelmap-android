@@ -231,6 +231,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				
 		values.put( Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_FIELDS);
 	}
+
 	private void insertOrUpdateContentValues(Uri contentUri,
 			String[] projection, String whereClause, String[] whereValues,
 			ContentValues values) {

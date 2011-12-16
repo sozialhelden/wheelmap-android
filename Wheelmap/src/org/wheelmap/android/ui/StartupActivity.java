@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -51,6 +52,7 @@ public class StartupActivity extends Activity implements
 	private State mState;
 	private SupportManager mSupportManager;
 	private ProgressBar mProgressBar;
+	private boolean mIsInForeground;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,11 @@ public class StartupActivity extends Activity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
+		
+		if ( WheelmapApp.getCapabilityLevel() == Capability.NOTWORKING) {
+			showDialogNotWorking();
+			return;
+		}
 
 		mSupportManager = WheelmapApp.getSupportManager();
 		if (mSupportManager.isInitialized()) {
@@ -95,6 +102,20 @@ public class StartupActivity extends Activity implements
 		super.onRestart();
 		Log.d(TAG, "onRestart");
 		finish();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mIsInForeground = true;
+		Log.d(TAG, "onResume isInForeground = " + mIsInForeground);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mIsInForeground = false;
+		Log.d(TAG, "onPause isInForeground = " + mIsInForeground);
 	}
 
 	@Override
@@ -196,8 +217,28 @@ public class StartupActivity extends Activity implements
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
+	
+	private void showDialogNotWorking() {
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+		builder.setIcon(android.R.drawable.ic_dialog_alert);
+		builder.setTitle(R.string.error_occurred);
+		builder.setMessage(getResources().getString( R.string.error_not_enough_memory ));
+		builder.setPositiveButton( R.string.quit,
+				new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				});
+		final AlertDialog alert = builder.create();
+		alert.show();
+	}
 
 	private void showErrorDialog(SyncServiceException e) {
+		if ( !mIsInForeground)
+			return;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)

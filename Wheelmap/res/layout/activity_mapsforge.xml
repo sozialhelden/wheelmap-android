@@ -26,7 +26,8 @@ limitations under the License.
 	<org.wheelmap.android.ui.mapsforge.MyMapView
        		android:id="@+id/map"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />   
+            android:layout_height="fill_parent"
+            ramCacheShared="true" />   
 </LinearLayout>
 
 

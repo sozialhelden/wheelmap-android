@@ -18,6 +18,7 @@ limitations under the License.
 package org.wheelmap.android.manager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,6 +44,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,6 +73,8 @@ public class SupportManager {
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 	
+	private AssetManager mAssetManager;
+
 	public static class NodeType {
 		public NodeType(int id, String identifier, String localizedName,
 				int categoryId) {
@@ -118,6 +122,7 @@ public class SupportManager {
 		mContext = ctx;
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
+		mAssetManager = mContext.getAssets();
 
 		mDefaultCategory = new Category(0, "unknown",
 				mContext.getString(R.string.support_category_unknown));
@@ -394,9 +399,9 @@ public class SupportManager {
 		Bitmap bitmap;
 		// Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
 		try {
-			bitmap = BitmapFactory.decodeStream(mContext.getAssets().open(
-					"icons/" + assetPath));
-
+			InputStream is = mAssetManager.open( "icons/" + assetPath );
+			bitmap = BitmapFactory.decodeStream( is );
+			is.close();
 		} catch (IOException e) {
 			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage());
 			return null;
@@ -419,9 +424,11 @@ public class SupportManager {
 			String path = String.format("marker/%s.png", WheelchairState
 					.valueOf(idx).toString().toLowerCase());
 			Drawable drawable = null;
+			
 			try {
-				drawable = Drawable.createFromStream(
-						mContext.getAssets().open(path), null);
+				InputStream is = mAssetManager.open( path );
+				drawable = Drawable.createFromStream(is, null);
+				is.close();
 			} catch (IOException e) {
 				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage());
 			}
@@ -429,6 +436,7 @@ public class SupportManager {
 			drawable.setBounds(-24, -48, 24, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
+		
 
 		return lookupMap;
 	}
@@ -443,8 +451,9 @@ public class SupportManager {
 					.valueOf(idx).toString().toLowerCase(), assetPath);
 			Drawable drawable = null;
 			try {
-				drawable = Drawable.createFromStream(
-						mContext.getAssets().open(path), null);
+				InputStream is = mAssetManager.open( path );
+				drawable = Drawable.createFromStream( is , null);
+				is.close();
 			} catch (IOException e) {
 				Log.w(TAG,
 						"Error in createDrawableLookup. Assigning fallback. "

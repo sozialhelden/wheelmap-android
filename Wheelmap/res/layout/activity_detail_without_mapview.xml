@@ -15,13 +15,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
         
 -->
+
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<include layout="@layout/actionbar_detail" />
+	<!-- ActionBar -->
+	<LinearLayout style="@style/ActionBarCompat">
+		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
+			android:padding="3dip" />
+		<View style="@style/TitleBarSpring" />
 
-	
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_edit"
+			android:visibility="gone" android:clickable="false"
+			android:src="@android:drawable/ic_menu_edit"
+			android:onClick="onItemEdit" />
+	</LinearLayout>
+
+	<LinearLayout style="@style/ActionBarSwitcher"
+		android:orientation="vertical">
+		<TextView style="@style/TitleBarTitle" android:id="@+id/title_name"
+			android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
+			android:layout_height="wrap_content"></TextView>
+		<TextView android:id="@+id/title_category" style="@style/TitleBarSubtext"
+			android:layout_width="fill_parent" android:gravity="center_vertical|center_horizontal"
+			android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
 
 
 	<ScrollView android:orientation="vertical"
@@ -101,11 +123,14 @@ limitations under the License.
 				<LinearLayout android:background="#FF000000" android:layout_width="fill_parent"
 				  android:layout_height="4dp"/>				 
 			</LinearLayout>
-
-			<org.mapsforge.android.maps.MapView
-				android:id="@+id/map" android:layout_width="fill_parent"
-				ramCacheSize="4" ramCacheShared="true"
-				android:layout_height="235dp"/>
+			<RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+			
+				<Button android:id="@+id/btn_map" android:layout_width="fill_parent" android:layout_height="wrap_content"
+						android:text="@string/title_pois_map" android:layout_centerHorizontal="true"
+						android:layout_marginLeft="6dip" android:layout_marginRight="6dip"
+						android:layout_marginTop="6dip"/>
+			
+			</RelativeLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

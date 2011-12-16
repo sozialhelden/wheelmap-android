@@ -133,4 +133,5 @@ limitations under the License.
     <string name="search_distance_unspecified">Unspecified</string>
     <string name="settings_wheelchair_unknown_accessible">Unknown</string>
     <string name="settings_wheelchair_unspecified_accessible">Unspecified</string>
+    <string name="error_not_enough_memory">Your phone does not provide enough memory for this application. Sorry.</string>
 </resources>
