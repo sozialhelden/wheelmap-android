@@ -79,7 +79,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 	private GeoPoint mLastRequestedPosition;
-	
+
 	private ProgressBar mProgressBar;
 	private ImageButton mSearchButton;
 
@@ -119,13 +119,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this);
 		runQuery();
 		mCurrLocationOverlay = new MyLocationOverlay();
-		
+
 		Capability cap = WheelmapApp.getCapabilityLevel();
 		if (cap == Capability.DEGRADED_MIN || cap == Capability.DEGRADED_MAX) {
 			mPoisItemizedOverlay.enableLowDrawQuality(true);
 			mCurrLocationOverlay.enableLowDrawQuality(true);
 			mCurrLocationOverlay.enableUseOnlyOneBitmap(true);
-  
+
 		}
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
@@ -441,7 +441,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		public boolean onLongClick(View v) {
 			isSearchMode = true;
 			updateSearchStatus();
-			
+
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
@@ -463,15 +463,17 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	@Override
-	public void onMove( float vertical, float horizontal ) {
+	public void onMove(float vertical, float horizontal) {
 		GeoPoint centerLocation = mMapView.getMapCenter();
 		int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
-		
-		if ( Math.abs( mLastRequestedPosition.getLatitudeE6() - centerLocation.getLatitudeE6()) < minimalLatitudeSpan &&
-				Math.abs( mLastRequestedPosition.getLongitudeE6() - centerLocation.getLongitudeE6()) < minimalLongitudeSpan )
+
+		if (Math.abs(mLastRequestedPosition.getLatitudeE6()
+				- centerLocation.getLatitudeE6()) < minimalLatitudeSpan
+				&& Math.abs(mLastRequestedPosition.getLongitudeE6()
+						- centerLocation.getLongitudeE6()) < minimalLongitudeSpan)
 			return;
-		
+
 		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
 			return;
 
