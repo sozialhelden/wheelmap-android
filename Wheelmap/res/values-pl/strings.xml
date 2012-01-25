@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--
+Copyright (C) 2011 Michal Harakal and Michael Kroez
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS-IS" BASIS
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+        
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="description_map">Mapa</string>
+    <string name="description_filter">Filtr</string>
+    <string name="description_gps">Aktualna pozycja</string>
+    <string name="description_edit">Zmień</string>
+    <string name="new_default_name">Nowy punkt</string>
+    <string name="title_pois_list">Lista</string>
+    <string name="title_pois_map">Mapa</string>
+    <string name="title_pois_settings">Ustawienia filtra</string>
+    <string name="title_pois_detail">Informacja</string>
+    <string name="title_pois_detail_edit">Zmień dane punktu</string>
+    <string name="title_wheelchair_state">Ustawienia aplikacji</string>
+    <string name="edit_poi">Zmień</string>
+    <string name="btn_list">Lista</string>
+    <string name="no_pois">Żadne miejsca nie zostały odnalezione przy tym filtrze</string>
+    <string name="settings_wheelchair_state">Stan aplikacji</string>
+    <!-- wheelchair texts  - english version from the english website (see selector hovertext) -->
+    <string name="poi_property_name">Nazwa</string>
+    <string name="poi_property_comment">Komentarz</string>
+    <string name="poi_property_address">Adres</string>
+    <string name="poi_property_phone">Telefon</string>
+    <string name="poi_property_website">Strona www</string>
+    <string name="poi_property_position">Położenie</string>
+    <string name="settings_wheelchair_unknown_accesible">Nieznane</string>
+    <string name="poi_property_nodetype">Typ</string>
+    <string name="poi_property_category">Kategoria</string>
+    <string name="title_please_wait">Proszę czekać</string>
+    <string name="title_category_select">Wybierz kategorię do wyświetlenia</string>
+    <string name="settings_category_filter">Filtr kategorii</string>
+    <string name="settings_wheelchair_no_accessible">Nie</string>
+    <string name="settings_wheelchair_limited_accessible">Ograniczony</string>
+    <string name="settings_wheelchair_full_accessible">Tak</string>
+    <string name="title_info">Podziękowania</string>
+    <string name="info_a_project_of">projekt</string>
+    <string name="info_web_version">wersja www</string>
+    <string name="stiftung_text_one">Dziękujemy Fürst Donnersmarck-Stiftung</string>
+    <string name="info_kartendaten">Dane mapy:</string>
+    <string name="info_android_development">Wesja na Androida:</string>
+    <string name="info_icons">Ikony:</string>
+    <string name="info_webdevelopment">Projektowanie www:</string>
+    <string name="error_network_failure">Problem z dostępem do sieci. Sprawdź zasięg i połączenie z Internetem.</string>
+    <string name="error_internal_error">Ups! Wystąpił błąd wewnętrzny. Prosimy o ponowne uruchomienie aplikacji.</string>
+    <string name="error_occurred">Wystąpił błąd.</string>
+    <string name="info_kartendaten_two">© kontrybutorzy OpenStreetMap, CC-BY-SA</string>
+    <string name="title_wheelchairstate">Bezbarierowość?</string>
+    <string name="pull_to_refresh_pull_label">Pociągnij, aby odświeżyć...</string>
+    <string name="pull_to_refresh_release_label">Puść, aby odświeżyć...</string>
+    <string name="pull_to_refresh_refreshing_label">Aktualizacja...</string>
+    <string name="pull_to_refresh_tap_label">Puknij, aby odświeżyć...</string>
+    <string name="okay">W porządku</string>
+    <string name="error_network_title">Problem z siecią</string>
+    <string name="btn_legal_notice">Informacje prawne</string>
+    <string name="btn_cancel">Anuluj</string>
+    <string name="btn_save">Zapisz</string>
+    <string name="support_nodetype_unknown">Nieznany typ</string>
+    <string name="quit">Wyjście</string>
+    <string name="support_category_unknown">Nieznana kategoria</string>
+    <string name="title_legal_notice">Informacje prawne</string>
+    <string name="legal_notice_opensource">Otwarte oprogramowanie (Open Source)</string>
+    <string name="legal_notice_intro">Ten program jest oparty o inne oprogramowanie. Oto prawa autorskie:</string>
+    <string name="ws_unknown">Nie wiadomo: Pomóż nam i zaznacz miejsca na mapie!</string>
+    <string name="ws_enabled">Tak: Wejście bez stopni, wszystkie pomieszczenia bez stopni, toaleta dostępna</string>
+    <string name="ws_limited">Ograniczone: Wejście ma stopień (do 7 cm), większość pomieszczeń bez stopni, toaleta niedostępna.</string>
+    <string name="ws_disabled">Nie: Wejście ma wysoki stopień lub kilka stopni, pomieszczenia są niedostępne.</string>
+    <string name="ws_limited_title">Częściowo dostępne</string>
+    <string name="ws_enabled_title">Dostępne</string>
+    <string name="ws_disabled_title">Niedostępne</string>
+    <string name="ws_unknown_title">Nieznane</string>
+</resources>
