@@ -14,82 +14,78 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/login_layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/title_bar_text"
+        style="@style/ActionBarSwitcher.Small"
+        android:layout_width="@dimen/login_window_width"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/actionbar_compat_height" >
+
+        <TextView
+            style="@style/ActionBarTitleText"
+            android:text="@string/login_info" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="@dimen/login_window_width"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/overlay_background"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
         android:orientation="vertical"
         android:padding="12dip" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/login_email"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:hint="@string/login_email"
+            android:inputType="textEmailAddress"
+            android:freezesText="true"
+            android:singleLine="true"
+            android:background="@drawable/textfield_background" />
 
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="@string/login_email"
-                android:textColor="@android:color/primary_text_dark" />
-
-            <EditText
-                android:id="@+id/login_email"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dip"
-                android:inputType="textEmailAddress" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:hint="@string/login_password"
+            android:inputType="textPassword"
+            android:freezesText="true"
+            android:singleLine="true"
+            android:background="@drawable/textfield_background" />
 
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="@string/login_password"
-                android:textColor="@android:color/primary_text_dark" />
-
-            <EditText
-                android:id="@+id/login_password"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dip"
-                android:inputType="textPassword" />
-        </LinearLayout>
-        
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="12dip"
             android:gravity="right"
-            android:layout_marginTop="12dip" >
-            
-			<ProgressBar
+            android:orientation="horizontal" >
+
+            <ProgressBar
                 android:id="@+id/progressbar"
                 android:layout_width="18dip"
                 android:layout_height="18dip"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="12dip"
                 android:indeterminate="true"
-                android:visibility="invisible"
-                android:layout_gravity="center_vertical" />
-            
+                android:visibility="invisible" />
+
             <Button
                 android:id="@+id/login_submit"
+                style="@android:style/TextAppearance.Large.Inverse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/button_background"
                 android:onClick="onSubmit"
-                android:text="@string/login_submit"/>
-
-            
+                android:text="@string/login_submit" />
         </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

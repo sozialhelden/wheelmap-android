@@ -42,6 +42,10 @@ limitations under the License.
         <item name="android:layout_marginTop">4dip</item>
         <item name="android:layout_marginBottom">4dip</item>
     </style>
+    
+    <style name="DetailFont.Editable">
+        <item name="android:background">@drawable/textfield_background</item>
+    </style>
 
     <style name="WheelStateSelectFont" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">wrap_content</item>
@@ -162,6 +166,10 @@ limitations under the License.
         <item name="android:layout_height">@dimen/actionbar_compat_switcher_height</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/bar_gradient_dark_grey</item>
+    </style>
+    
+    <style name="ActionBarSwitcher.Small">
+        <item name="android:layout_height">@dimen/actionbar_compat_switcher_height_small</item>
     </style>
     
     <style name="ActionBarTitleText">

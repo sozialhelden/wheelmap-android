@@ -22,7 +22,7 @@ limitations under the License.
     <string name="settings_wheelchair_full_accessible">Ja</string>
     <string name="settings_wheelchair_no_accessible">Nein</string>
     <string name="title_pois_map">Karte</string>
-    <string name="settings_wheelchair_state">Rollstuhlgeignet?</string>
+    <string name="settings_wheelchair_state">Rollstuhlgeeignet?</string>
     <string name="settings_wheelchair_limited_accessible">Teilweise</string>
     <string name="title_pois_detail">Info</string>
     <string name="title_info">Credits</string>
@@ -87,9 +87,9 @@ limitations under the License.
     <string name="search_hint_map">Ausschnitt und Begriff wählen</string>
     <string name="search_hint_list">Suchbegriff</string>
     <string name="title_search">Suche</string>
-    <string name="search_selection">Wähle (Unter)Kategorie</string>
-    <string name="search_no_selection">Keine Wahl getroffen</string>
-    <string name="search_pick">Wähle (Unter)Kategorie</string>
+    <string name="search_selection">Wähle eine (Unter)Kategorie</string>
+    <string name="search_no_selection">Alle</string>
+    <string name="search_pick">Wähle eine (Unter)Kategorie</string>
     <string name="search_execute">Suchen</string>
     <string name="settings_delete_logindata">Löschen von Email und Passwort</string>
     <string name="title_pois_detail_edit">Editieren des Ortes</string>
@@ -98,8 +98,11 @@ limitations under the License.
     <string name="position_longitude_short">Länge</string>
     <string name="position_latitude_short">Breite</string>
     <string name="search_distance">Entfernung in km</string>
-    <string name="search_distance_unspecified">Nicht angegeben</string>
+    <string name="search_distance_unspecified">Egal</string>
     <string name="settings_wheelchair_unknown_accessible">Unbekannt</string>
-    <string name="settings_wheelchair_unspecified_accessible">Undefiniert</string>
+    <string name="settings_wheelchair_unspecified_accessible">Alle</string>
     <string name="error_not_enough_memory">Ihr Telefon stellt dieser App nicht genügend Speicher zur Verfügung. Tut uns leid.</string>
+    <string name="login_info">Melde dich an</string>
+    <string name="search_info">Suche</string>
+    <string name="title_nodetype_edit">Wähle einen Typen aus</string>
 </resources>

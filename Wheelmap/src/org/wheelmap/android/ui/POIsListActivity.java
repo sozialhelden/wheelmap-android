@@ -100,7 +100,6 @@ public class POIsListActivity extends ListActivity implements
 		setContentView(R.layout.activity_list);
 		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
-		mSearchButton.setOnLongClickListener(mExtendedSearchListener);
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
@@ -343,19 +342,11 @@ public class POIsListActivity extends ListActivity implements
 	}
 
 	public void onSearchClick(View v) {
-		onSearchRequested();
+		final Intent intent = new Intent(POIsListActivity.this,
+				SearchActivity.class);
+		intent.putExtra(SearchActivity.EXTRA_SHOW_DISTANCE, true);
+		startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 	}
-
-	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
-		@Override
-		public boolean onLongClick(View v) {
-			final Intent intent = new Intent(POIsListActivity.this,
-					SearchActivity.class);
-			intent.putExtra(SearchActivity.EXTRA_SHOW_DISTANCE, true);
-			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
-			return true;
-		}
-	};
 
 	private void saveListPosition() {
 		mFirstVisiblePosition = getListView().getFirstVisiblePosition();

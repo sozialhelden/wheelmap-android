@@ -37,8 +37,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 public class LoginActivity extends Activity implements
 		DetachableResultReceiver.Receiver {
@@ -60,7 +60,7 @@ public class LoginActivity extends Activity implements
 		mPasswordText = (EditText) findViewById(R.id.login_password);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
 
-		RelativeLayout layout = (RelativeLayout) findViewById(R.id.login_layout);
+		LinearLayout layout = (LinearLayout) findViewById(R.id.login_layout);
 		Animation anim = AnimationUtils.loadAnimation(this,
 				R.anim.move_in_from_top);
 		LayoutAnimationController controller = new LayoutAnimationController(

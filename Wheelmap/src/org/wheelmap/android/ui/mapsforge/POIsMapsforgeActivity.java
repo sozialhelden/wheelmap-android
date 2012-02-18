@@ -104,7 +104,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView = (MapView) findViewById(R.id.map);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
-		mSearchButton.setOnLongClickListener(mExtendedSearchListener);
 		isSearchMode = false;
 
 		mMapView.setClickable(true);
@@ -431,23 +430,14 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		isSearchMode = !isSearchMode;
 		updateSearchStatus();
 
-		if (isSearchMode)
-			onSearchRequested();
-
-	}
-
-	private OnLongClickListener mExtendedSearchListener = new OnLongClickListener() {
-		@Override
-		public boolean onLongClick(View v) {
-			isSearchMode = true;
+		if (isSearchMode) {
 			updateSearchStatus();
 
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
-			return true;
 		}
-	};
+	}
 
 	public void onInfoClick(View v) {
 		Intent intent = new Intent(this, InfoActivity.class);

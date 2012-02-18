@@ -48,6 +48,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -84,16 +85,18 @@ public class POIDetailActivity extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView( R.layout.activity_detail);
 		
 		mCap = WheelmapApp.getCapabilityLevel();
 
-		int contentLayout;
+		int stubId;
 		if ( mCap == Capability.DEGRADED_MAX )
-			contentLayout = R.layout.activity_detail_without_mapview;
+			stubId = R.id.stub_button;
 		else
-			contentLayout = R.layout.activity_detail;
-
-		setContentView(contentLayout);
+			stubId = R.id.stub_map;
+		
+		ViewStub stub = (ViewStub) findViewById( stubId );
+		stub.inflate();
 
 		mSupportManager = WheelmapApp.getSupportManager();
 		System.gc();
@@ -142,9 +145,9 @@ public class POIDetailActivity extends MapActivity {
 		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 		Log.d(TAG, "onCreate: poiID = " + poiID);
 
-		if (poiID != -1) {
-			load();
-		}
+//		if (poiID != -1) {
+//			load();
+//		}
 	}
 
 	private void assignMapView() {
@@ -274,10 +277,9 @@ public class POIDetailActivity extends MapActivity {
 		startManagingCursor( cur );
 
 		if (cur.getCount() < 1) {
-			cur.close();
 			return;
 		}
-
+		
 		cur.moveToFirst();
 		WheelchairState state = POIHelper.getWheelchair(cur);
 		String name = POIHelper.getName(cur);
@@ -322,7 +324,7 @@ public class POIDetailActivity extends MapActivity {
 			mapController.setCenter(new GeoPoint(lat, lon));
 		}
 		
-		cur.close();
+		
 	}
 
 	/**

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (C) 2011 Michal Harakal and Michael Kroez
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS-IS" BASIS
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+        
+-->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+	<LinearLayout style="@style/ActionBarCompat">
+		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
+			android:padding="3dip" />
+
+		<!-- dummy view forces action aligned right -->
+		<View style="@style/TitleBarSpring" />
+        
+		<ImageView style="@style/TitleBarSeparator" />
+		<ImageView style="@style/TitleBarAction" 
+		    android:id="@+id/btn_title_search"
+			android:src="@drawable/ic_menu_save"
+			android:background="@drawable/title_button"
+			android:onClick="onSaveClick" />
+	</LinearLayout>	
+	
+	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
+		<TextView style="@style/ActionBarTitleText"
+			android:text="@string/title_nodetype_edit" />
+	</LinearLayout>
+</merge>

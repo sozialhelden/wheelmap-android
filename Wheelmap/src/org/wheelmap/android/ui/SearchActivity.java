@@ -20,13 +20,15 @@ package org.wheelmap.android.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import org.wheelmap.android.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.Category;
 import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.model.CategoryNodeTypesAdapter;
+import org.wheelmap.android.model.CategoryOrNodeType;
+import org.wheelmap.android.model.CategoryOrNodeType.Types;
 import org.wheelmap.android.service.SyncService;
 
 import wheelmap.org.WheelchairState;
@@ -46,12 +48,8 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -60,10 +58,6 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 	public final static int PERFORM_SEARCH = 1;
 	public final static String EXTRA_SHOW_DISTANCE = "org.wheelmap.android.ui.EXTRA_SHOW_DISTANCE";
-
-	private enum SearchTypes {
-		NO_SELECTION, CATEGORY, NODETYPE
-	}
 
 	private EditText mKeywordText;
 
@@ -78,17 +72,20 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 		setContentView(R.layout.activity_search);
 
 		mKeywordText = (EditText) findViewById(R.id.search_keyword);
+
 		Spinner categorySpinner = (Spinner) findViewById(R.id.search_spinner_categorie_nodetype);
-		ArrayList<Search> searchTypes = createSearchTypesList();
-		categorySpinner.setAdapter(new SearchTypesAdapter(searchTypes));
+		
+		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType.createTypesList(this, true);
+		categorySpinner.setAdapter(new CategoryNodeTypesAdapter(this, searchTypes, CategoryNodeTypesAdapter.SEARCH_MODE));
 		categorySpinner.setOnItemSelectedListener(this);
 
 		Spinner wheelchairSpinner = (Spinner) findViewById(R.id.search_spinner_wheelchair_state);
-		ArrayAdapter<CharSequence> wheelchairSpinnerAdapter = ArrayAdapter
+		MyCustomSpinnerAdapter wheelchairSpinnerAdapter = MyCustomSpinnerAdapter
 				.createFromResource(this, R.array.wheelchair_state,
-						android.R.layout.simple_spinner_item);
+						R.layout.simple_my_spinner_item);
 		wheelchairSpinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 		wheelchairSpinner.setAdapter(wheelchairSpinnerAdapter);
 		wheelchairSpinner.setOnItemSelectedListener(this);
 		wheelchairSpinner.setPromptId(R.string.settings_wheelchair_state);
@@ -96,9 +93,9 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 		Spinner distanceSpinner = (Spinner) findViewById(R.id.search_spinner_distance);
 
-		ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
+		MyCustomSpinnerAdapter distanceSpinnerAdapter = MyCustomSpinnerAdapter
 				.createFromResource(this, R.array.distance_array,
-						android.R.layout.simple_spinner_item);
+						R.layout.simple_my_spinner_item);
 
 		distanceSpinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -113,36 +110,12 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 				distanceContainer.setVisibility(View.VISIBLE);
 		}
 
-		RelativeLayout layout = (RelativeLayout) findViewById(R.id.search_layout);
+		LinearLayout layout = (LinearLayout) findViewById(R.id.search_layout);
 		Animation anim = AnimationUtils.loadAnimation(this,
 				R.anim.move_in_from_top);
 		LayoutAnimationController controller = new LayoutAnimationController(
 				anim, 0.0f);
 		layout.setLayoutAnimation(controller);
-	}
-
-	private ArrayList<Search> createSearchTypesList() {
-		SupportManager support = WheelmapApp.getSupportManager();
-		ArrayList<Search> searchTypes = new ArrayList<Search>();
-		searchTypes.add(new Search(getResources().getString(
-				R.string.search_no_selection), -1, SearchTypes.NO_SELECTION));
-
-		List<Category> categories = support.getCategoryList();
-		Collections.sort(categories, new SupportManager.CategoryComparator());
-		for (Category category : categories) {
-			searchTypes.add(new Search(category.localizedName, category.id,
-					SearchTypes.CATEGORY));
-			List<NodeType> nodeTypes = support
-					.getNodeTypeListByCategory(category.id);
-			Collections
-					.sort(nodeTypes, new SupportManager.NodeTypeComparator());
-			for (NodeType nodeType : nodeTypes) {
-				searchTypes.add(new Search(nodeType.localizedName, nodeType.id,
-						SearchTypes.NODETYPE));
-			}
-		}
-
-		return searchTypes;
 	}
 
 	public void onSearch(View v) {
@@ -177,8 +150,8 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 		switch (viewId) {
 		case R.id.search_spinner_categorie_nodetype: {
-			Search search = (Search) adapterView.getAdapter().getItem(position);
-			switch (search.searchType) {
+			CategoryOrNodeType search = (CategoryOrNodeType) adapterView.getAdapter().getItem(position);
+			switch (search.type) {
 			case CATEGORY:
 				mCategorySelected = search.id;
 				break;
@@ -212,118 +185,39 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 	}
 
-	private static class Search {
-		public SearchTypes searchType;
-		public String text;
-		public int id;
+	private static class MyCustomSpinnerAdapter extends
+			ArrayAdapter<CharSequence> {
 
-		public Search(String text, int id, SearchTypes searchType) {
-			this.text = text;
-			this.id = id;
-			this.searchType = searchType;
-
-		}
-	}
-
-	private class SearchTypesAdapter extends BaseAdapter {
-
-		private ArrayList<Search> items;
-
-		public SearchTypesAdapter(ArrayList<Search> items) {
-			this.items = items;
-		}
-
-		@Override
-		public int getCount() {
-			return items.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return items.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
+		public MyCustomSpinnerAdapter(Context context, int textViewResourceId,
+				CharSequence[] strings) {
+			super(context, textViewResourceId, strings);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view;
-	        TextView text;
+			TextView text;
 
-	        if (convertView == null) {
-	        	LayoutInflater inflater = (LayoutInflater) SearchActivity.this
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE); 
-	            view = inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
-	        } else {
-	            view = convertView;
-	        }
-	        
-	        text = (TextView) view.findViewById( android.R.id.text1);
-	        text.setText(items.get(position).text);
-	        return view;
-		}
-		
-		@Override
-		public View getDropDownView(int position, View convertView,
-				ViewGroup parent) {
-			View useView;
-			Search item = items.get(position);
+			if (convertView == null) {
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = inflater.inflate(R.layout.simple_my_spinner_item,
+						parent, false);
+			} else {
+				view = convertView;
+			}
 
-			if (item.searchType == SearchTypes.CATEGORY
-					|| item.searchType == SearchTypes.NO_SELECTION)
-				useView = new CategorySearchItemView(SearchActivity.this);
-			else
-				useView = new NodeTypeSearchItemView(SearchActivity.this);
-
-			((ItemViewText) useView).setText(item.text);
-
-			return useView;
-		}
-	}
-
-	private interface ItemViewText {
-		public void setText(String text);
-	}
-
-	private static class CategorySearchItemView extends FrameLayout implements
-			ItemViewText {
-		private CheckedTextView mText;
-
-		public CategorySearchItemView(Context context) {
-			super(context);
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			inflater.inflate(R.layout.search_category, this, true);
-			mText = (CheckedTextView) findViewById(R.id.search_type);
+			text = (TextView) view.findViewById(android.R.id.text1);
+			text.setText(getItem(position));
+			return view;
 		}
 
-		public void setText(String text) {
-			mText.setText(text);
-		}
-	}
-
-	private static class NodeTypeSearchItemView extends FrameLayout implements
-			ItemViewText {
-		private CheckedTextView mText;
-
-		public NodeTypeSearchItemView(Context context) {
-			super(context);
-			LayoutInflater inflater = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			inflater.inflate(R.layout.search_nodetype, this, true);
-
-			mText = (CheckedTextView) findViewById(R.id.search_type);
-		}
-
-		public void setText(String text) {
-			mText.setText(text);
+		public static MyCustomSpinnerAdapter createFromResource(
+				Context context, int textArrayResId, int textViewResId) {
+			CharSequence[] strings = context.getResources().getTextArray(
+					textArrayResId);
+			return new MyCustomSpinnerAdapter(context, textViewResId, strings);
 		}
 
 	}
-
 }

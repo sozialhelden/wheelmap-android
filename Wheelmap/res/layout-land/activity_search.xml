@@ -15,27 +15,44 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="430dip"
+        android:id="@+id/title_bar_text"
+        style="@style/ActionBarSwitcher.Small"
+        android:layout_width="@dimen/search_window_width_land"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/actionbar_compat_height" >
+
+        <TextView
+            style="@style/ActionBarTitleText"
+            android:text="@string/search_info" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/search_window_width_land"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/overlay_background"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:padding="12dip" >
+        android:paddingLeft="12dip"
+        android:paddingRight="12dip"
+        android:paddingTop="6dip"
+        android:paddingBottom="6dip" >
 
         <EditText
             android:id="@+id/search_keyword"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dip"
+            android:freezesText="true"
             android:hint="@string/search_hint_list"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:freezesText="true" />
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:singleLine="true" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -45,17 +62,18 @@ limitations under the License.
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/search_pick"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/primary_text_dark"
-                android:layout_gravity="center_vertical" />
+                android:textAppearance="?android:attr/textAppearanceMediumInverse"
+                android:textColor="@color/light_grey_one" />
 
             <Spinner
                 android:id="@+id/search_spinner_categorie_nodetype"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:prompt="@string/search_selection"
-                android:layout_marginLeft="8dip" />
+                android:layout_marginLeft="8dip"
+                android:background="@drawable/spinner_background"
+                android:prompt="@string/search_selection" />
         </LinearLayout>
 
         <LinearLayout
@@ -66,17 +84,18 @@ limitations under the License.
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/settings_wheelchair_state"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/primary_text_dark"
-                android:layout_gravity="center_vertical" />
+                android:textAppearance="?android:attr/textAppearanceMediumInverse"
+                android:textColor="@color/light_grey_one" />
 
             <Spinner
                 android:id="@+id/search_spinner_wheelchair_state"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settings_wheelchair_state"
-                android:layout_marginLeft="8dip" />
+                android:layout_marginLeft="8dip"
+                android:background="@drawable/spinner_background"
+                android:text="@string/settings_wheelchair_state" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,27 +108,30 @@ limitations under the License.
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/search_distance"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/primary_text_dark"
-                android:layout_gravity="center_vertical" />
+                android:textAppearance="?android:attr/textAppearanceMediumInverse"
+                android:textColor="@color/light_grey_one" />
 
             <Spinner
                 android:id="@+id/search_spinner_distance"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/search_distance"
-                android:layout_marginLeft="8dip" />
+                android:layout_marginLeft="8dip"
+                android:background="@drawable/spinner_background"
+                android:text="@string/search_distance" />
         </LinearLayout>
 
         <Button
             android:id="@+id/search_button"
+            style="@android:style/TextAppearance.Medium.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginTop="12dip"
+            android:background="@drawable/button_background"
             android:onClick="onSearch"
             android:text="@string/search_execute" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

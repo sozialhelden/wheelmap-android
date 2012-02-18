@@ -91,6 +91,10 @@ limitations under the License.
             android:name=".ui.mapsforge.EditPositionActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
+            android:label="@string/title_nodetype_edit"
+            android:name=".ui.NodeTypeSelectActivity"
+            android:theme="@style/Theme.IOSched" />
+        <activity
             android:label="@string/title_pois_settings"
             android:name=".ui.NewSettingsActivity"
             android:theme="@style/Theme.IOSched" />

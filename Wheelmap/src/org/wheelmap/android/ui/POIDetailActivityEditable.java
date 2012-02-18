@@ -40,6 +40,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -53,6 +54,7 @@ public class POIDetailActivityEditable extends Activity implements
 	private static final int SELECT_WHEELCHAIRSTATE = 0;
 	private static final int SELECT_GEOPOSITION = 1;
 	private static final int PERFORM_LOGIN = 2;
+	private static final int SELECT_NODETYPE = 3;
 
 	private Long poiID;
 
@@ -69,6 +71,7 @@ public class POIDetailActivityEditable extends Activity implements
 
 	private RelativeLayout mEditWheelchairStateContainer;
 	private RelativeLayout mEditGeolocationContainer;
+	private RelativeLayout mEditNodeTypeContainer;
 
 	private WheelchairState mWheelChairState;
 	private int mLatitude;
@@ -78,6 +81,10 @@ public class POIDetailActivityEditable extends Activity implements
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
 	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
 
+	private int mNodeType;
+
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,10 +94,11 @@ public class POIDetailActivityEditable extends Activity implements
 		mEditWheelchairStateContainer.setOnClickListener(this);
 		mEditGeolocationContainer = (RelativeLayout) findViewById(R.id.edit_geolocation);
 		mEditGeolocationContainer.setOnClickListener(this);
+		mEditNodeTypeContainer = (RelativeLayout) findViewById( R.id.edit_nodetype );
+		mEditNodeTypeContainer.setOnClickListener(this);
 
 		nameText = (EditText) findViewById(R.id.name);
-		nodetypeText = (TextView) findViewById(R.id.nodetype);
-
+		nodetypeText = (TextView) findViewById( R.id.nodetype );		
 		phoneText = (EditText) findViewById(R.id.phone);
 		addressText = (EditText) findViewById(R.id.addr);
 		commentText = (EditText) findViewById(R.id.comment);
@@ -181,6 +189,12 @@ public class POIDetailActivityEditable extends Activity implements
 			startActivityForResult(intent, SELECT_GEOPOSITION);
 			break;
 		}
+		case R.id.edit_nodetype: {
+			Intent intent = new Intent(this, NodeTypeSelectActivity.class);
+			intent.putExtra(NodeTypeSelectActivity.EXTRA_NODETYPE, mNodeType );
+			startActivityForResult(intent, SELECT_NODETYPE );
+		}
+		
 		default:
 			// do nothing
 		}
@@ -318,8 +332,6 @@ public class POIDetailActivityEditable extends Activity implements
 							String.valueOf(poiID));
 					ContentValues values = new ContentValues();
 					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
-					values.put(Wheelmap.POIs.UPDATE_TAG,
-							Wheelmap.UPDATE_WHEELCHAIR_STATE);
 					getContentResolver().update(poiUri, values, "", null);
 					load();
 				}
@@ -349,7 +361,25 @@ public class POIDetailActivityEditable extends Activity implements
 
 			if (resultCode != RESULT_OK)
 				finish();
-		}
+		} else if (requestCode == SELECT_NODETYPE )
+			if (resultCode == RESULT_OK) {
+				if (data != null ) {
+					Bundle bundle = data.getExtras();
+					int newNodeType = bundle.getInt(NodeTypeSelectActivity.EXTRA_NODETYPE);
+					if ( mNodeType == newNodeType )
+						return;
+					
+					mNodeType = newNodeType;
+					Uri poiUri = Uri.withAppendedPath(
+							Wheelmap.POIs.CONTENT_URI_POI_ID,
+							String.valueOf(poiID));
+					ContentValues values = new ContentValues();
+					values.put(Wheelmap.POIs.NODETYPE_ID, mNodeType);
+					int categoryId = WheelmapApp.getSupportManager().lookupNodeType( newNodeType ).categoryId;
+					values.put(Wheelmap.POIs.CATEGORY_ID, categoryId );
+					getContentResolver().update(poiUri, values, "", null);
+					load();
+				}
+			}
 	}
-
 }

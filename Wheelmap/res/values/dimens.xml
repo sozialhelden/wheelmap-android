@@ -19,6 +19,7 @@ limitations under the License.
 <resources>
     <dimen name="actionbar_compat_height">50dp</dimen>
 	<dimen name="actionbar_compat_switcher_height">45dp</dimen>
+	<dimen name="actionbar_compat_switcher_height_small">25dp</dimen>
 	<dimen name="list_separator_height">36dip</dimen>
     <dimen name="title_height">45dip</dimen>
     <dimen name="now_playing_height">90dip</dimen>
@@ -29,4 +30,8 @@ limitations under the License.
     <dimen name="wheelchair_state_icon_width">40dip</dimen>
     <dimen name="wheelchair_state_icon_height">42dip</dimen>
 	<dimen name="wheelstate_text_margin">3dip</dimen>
+	<dimen name="detail_mapview_height">235dip</dimen>
+	<dimen name="login_window_width">240dip</dimen>
+	<dimen name="search_window_width_land">430dip</dimen>
+	<dimen name="search_window_width_port">280dip</dimen>
 </resources>

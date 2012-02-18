@@ -38,7 +38,6 @@ limitations under the License.
     <string name="poi_property_phone">Telefon</string>
     <string name="poi_property_website">Strona www</string>
     <string name="poi_property_position">Położenie</string>
-    <string name="settings_wheelchair_unknown_accesible">Nieznane</string>
     <string name="poi_property_nodetype">Typ</string>
     <string name="poi_property_category">Kategoria</string>
     <string name="title_please_wait">Proszę czekać</string>

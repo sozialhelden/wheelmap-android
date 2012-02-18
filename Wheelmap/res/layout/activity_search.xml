@@ -15,86 +15,112 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_layout"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="280dip"
+        android:id="@+id/title_bar_text"
+        style="@style/ActionBarSwitcher.Small"
+        android:layout_width="@dimen/search_window_width_port"
+        android:layout_marginTop="@dimen/actionbar_compat_height"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+            style="@style/ActionBarTitleText"
+            android:text="@string/search_info" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/title_bar_text"
+        android:layout_width="@dimen/search_window_width_port"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/overlay_background"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:padding="12dip" >
+        android:paddingBottom="12dip"
+        android:paddingLeft="12dip"
+        android:paddingRight="12dip" >
 
         <EditText
             android:id="@+id/search_keyword"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dip"
+            android:layout_marginTop="12dip"
+            android:freezesText="true"
             android:hint="@string/search_hint_list"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:freezesText="true" />
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:singleLine="true"
+            android:background="@drawable/textfield_background" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dip"
+            android:layout_marginLeft="8dip"
+            android:layout_marginTop="8dip"
             android:text="@string/search_pick"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/primary_text_dark" />
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textColor="@color/light_grey_one" />
 
         <Spinner
             android:id="@+id/search_spinner_categorie_nodetype"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:prompt="@string/search_selection" />
+            android:prompt="@string/search_selection"
+            android:background="@drawable/spinner_background" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dip"
+            android:layout_marginLeft="8dip"
+            android:layout_marginTop="8dip"
             android:text="@string/settings_wheelchair_state"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/primary_text_dark" />
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:textColor="@color/light_grey_one" />
 
         <Spinner
             android:id="@+id/search_spinner_wheelchair_state"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_wheelchair_state" />
+            android:text="@string/settings_wheelchair_state"
+            android:background="@drawable/spinner_background" />
 
         <LinearLayout
             android:id="@+id/search_spinner_distance_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dip"
+            android:layout_marginTop="8dip"
             android:orientation="vertical"
             android:visibility="gone" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dip"
                 android:text="@string/search_distance"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/primary_text_dark" />
+                android:textAppearance="?android:attr/textAppearanceMediumInverse"
+                android:textColor="@color/light_grey_one" />
 
             <Spinner
                 android:id="@+id/search_spinner_distance"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/search_distance" />
+                android:text="@string/search_distance"
+                android:background="@drawable/spinner_background" />
         </LinearLayout>
 
         <Button
             android:id="@+id/search_button"
+            style="@android:style/TextAppearance.Medium.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginTop="12dip"
+            android:background="@drawable/button_background"
             android:onClick="onSearch"
             android:text="@string/search_execute" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

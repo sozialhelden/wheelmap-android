@@ -43,5 +43,7 @@ limitations under the License.
     
     <color name="red_logo">#FFBF3F3F</color>
     <color name="grey_background_overlay">#AA949494</color>
-       
+    
+    <color name="button_green_dark">#FF548a04</color>
+    <color name="button_green_light">#FF89c506</color>       
 </resources>

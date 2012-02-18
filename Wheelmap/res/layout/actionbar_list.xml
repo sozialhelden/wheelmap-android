@@ -13,41 +13,74 @@ distributed under the License is distributed on an "AS-IS" BASIS
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-        
 -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
-	<LinearLayout style="@style/ActionBarCompat">
-		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
-			android:padding="3dip" />
-		<!-- dummy view forces action aligned right -->
-		<View style="@style/TitleBarSpring" />
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-		<ImageView style="@style/TitleBarSeparator"
-			android:visibility="gone" />
-		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_newpoi"
-			android:src="@drawable/ic_menu_add" android:background="@drawable/title_button"
-			android:onClick="onNewPOIClick" android:visibility="gone"
-			android:clickable="false" />
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_search"
-			android:src="@drawable/ic_menu_search"
-			android:background="@drawable/title_button" android:onClick="onSearchClick" />
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageButton style="@style/TitleBarAction" android:id="@+id/btn_title_info"
-			android:src="@drawable/ic_menu_info_details"
-			android:background="@drawable/title_button" android:onClick="onInfoClick" />
-	</LinearLayout>
-	<LinearLayout style="@style/ActionBarSwitcher">
-		<TextView android:id="@id/switch_list" android:text="@string/title_pois_list"
-			android:layout_width="0dip" android:layout_height="fill_parent"
-			android:gravity="center_vertical|center_horizontal"
-			android:textStyle="bold" android:textColor="#FFFFFFFF"
-			android:layout_weight="1" />
-		<TextView android:id="@id/switch_maps" android:text="@string/title_pois_map"
-			android:layout_width="0dip" android:layout_height="fill_parent"
-			android:gravity="center_vertical|center_horizontal"
-			android:textStyle="bold" android:textColor="#FFFFFFFF"
-			android:layout_weight="1" android:background="@drawable/bar_gradient_light_grey" />
-	</LinearLayout>
+    <LinearLayout style="@style/ActionBarCompat" >
+
+        <ImageView
+            style="@style/TitleBarLogo"
+            android:padding="3dip"
+            android:src="@drawable/title_logo" />
+        <!-- dummy view forces action aligned right -->
+
+        <View style="@style/TitleBarSpring" />
+
+        <ImageView
+            style="@style/TitleBarSeparator"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btn_title_newpoi"
+            style="@style/TitleBarAction"
+            android:background="@drawable/title_button"
+            android:clickable="false"
+            android:onClick="onNewPOIClick"
+            android:src="@drawable/ic_menu_add"
+            android:visibility="gone" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <ImageButton
+            android:id="@+id/btn_title_search"
+            style="@style/TitleBarAction"
+            android:background="@drawable/title_button"
+            android:onClick="onSearchClick"
+            android:src="@drawable/ic_menu_search" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <ImageButton
+            android:id="@+id/btn_title_info"
+            style="@style/TitleBarAction"
+            android:background="@drawable/title_button"
+            android:onClick="onInfoClick"
+            android:src="@drawable/ic_menu_info_details" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ActionBarSwitcher" >
+
+        <TextView
+            android:id="@id/switch_list"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/title_pois_list"
+            android:textColor="#FFFFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@id/switch_maps"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bar_gradient_light_grey"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/title_pois_map"
+            android:textColor="#FFFFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 </merge>

@@ -14,25 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_root"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_type"
+    style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <include layout="@layout/actionbar_list" />
-
-    <com.markupartist.android.widget.PullToRefreshListView
-        android:id="@+id/android:list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
-    <ViewStub
-        android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout="@layout/empty" />
-
-</LinearLayout>
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@drawable/list_item_background"
+    android:textStyle="bold" />
