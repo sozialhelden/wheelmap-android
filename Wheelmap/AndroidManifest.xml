@@ -17,9 +17,9 @@ limitations under the License.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.wheelmap.android"
-      android:versionCode="11"
-      android:versionName="0.7.1"
+      package="org.wheelmap.android.online"
+      android:versionCode="12"
+      android:versionName="0.7.2"
       android:installLocation="auto">
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8" />
     
@@ -30,7 +30,7 @@ limitations under the License.
 	<uses-permission android:name="android.permission.GET_TASKS" />
 	
 	
-    <application android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name=".app.WheelmapApp">
+    <application android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="org.wheelmap.android.app.WheelmapApp">
         <activity
             android:name="org.wheelmap.android.ui.StartupActivity"
             android:theme="@style/Theme.IOSched"
@@ -47,40 +47,40 @@ limitations under the License.
             android:label="@string/app_name"/>
                        
       	<activity
-      		android:name=".ui.mapsforge.POIsMapsforgeActivity"
+      		android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
       		android:theme="@style/Theme.IOSched"
       		android:label="@string/title_pois_map"
       		android:launchMode="singleTask" />
          
         <activity
-            android:name=".ui.POIDetailActivity"
+            android:name="org.wheelmap.android.ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map" />
             
         <activity
-            android:name=".ui.POIDetailActivityEditable"
+            android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_map" />
                  
         <activity
-            android:name=".ui.NewSettingsActivity"
+            android:name="org.wheelmap.android.ui.NewSettingsActivity"
             android:theme="@style/Theme.IOSched"
             android:label="@string/title_pois_settings" />   
      
         <activity 
-        	android:name=".ui.WheelchairStateActivity"
+        	android:name="org.wheelmap.android.ui.WheelchairStateActivity"
         	android:theme="@style/Theme.IOSched"
         	android:label="@string/title_wheelchair_state"
         />
         
         <activity
-        	android:name=".ui.InfoActivity"
+        	android:name="org.wheelmap.android.ui.InfoActivity"
         	android:theme="@style/Theme.IOSched"
         	android:label="@string/title_info"
         />
         
         <activity
-        	android:name=".ui.LegalNoticeActivity"
+        	android:name="org.wheelmap.android.ui.LegalNoticeActivity"
         	android:theme="@style/Theme.IOSched"
         	android:label="@string/title_legal_notice"
         />
@@ -109,7 +109,7 @@ limitations under the License.
             </intent-filter>
             </activity>
             
-        <service android:name=".service.SyncService" />    
+        <service android:name="org.wheelmap.android.service.SyncService" />    
             
         <provider android:name="org.wheelmap.android.model.POIsProvider"
           android:authorities="org.wheelmap.android"/>   

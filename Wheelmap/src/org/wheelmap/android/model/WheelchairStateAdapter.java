@@ -20,7 +20,7 @@ package org.wheelmap.android.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;

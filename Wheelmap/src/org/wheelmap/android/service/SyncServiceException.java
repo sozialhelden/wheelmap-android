@@ -19,7 +19,7 @@ package org.wheelmap.android.service;
 
 import java.io.Serializable;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import android.os.Parcel;
 import android.os.Parcelable;

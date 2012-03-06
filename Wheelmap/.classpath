@@ -10,5 +10,5 @@
 	<classpathentry kind="lib" path="libs/mapsforge-map-0.2.4.jar" sourcepath="/mapsforge/src"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalytics.jar"/>
 	<classpathentry kind="lib" path="libs/acra-4.2.3.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

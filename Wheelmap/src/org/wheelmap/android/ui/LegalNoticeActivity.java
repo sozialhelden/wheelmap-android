@@ -1,6 +1,6 @@
 package org.wheelmap.android.ui;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import android.app.Activity;
 import android.os.Bundle;

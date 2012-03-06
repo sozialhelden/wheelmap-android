@@ -23,7 +23,7 @@ import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.OverlayCircle;
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;

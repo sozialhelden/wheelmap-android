@@ -19,7 +19,7 @@ package org.wheelmap.android.ui;
 
 import java.util.List;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.service.SyncService;

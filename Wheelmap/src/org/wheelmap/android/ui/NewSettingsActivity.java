@@ -17,7 +17,7 @@ limitations under the License.
 
 package org.wheelmap.android.ui;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.model.CategorySelectCursorAdapter;
 import org.wheelmap.android.model.MergeAdapter;
 import org.wheelmap.android.model.Support;
