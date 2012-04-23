@@ -43,7 +43,7 @@ public class Info {
 		this.title = title;
 		this.text = -1;
 		this.second_text = -1;
-		this.url = null;
+		this.url = null; 
 		this.cls = cls;
 		this.infotype = infotype;		
 	}

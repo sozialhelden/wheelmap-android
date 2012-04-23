@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import org.wheelmap.android.R;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 interface ItemViewText {
@@ -38,18 +40,18 @@ class NodeTypeSearchItemView extends FrameLayout implements ItemViewText {
 
 class CategorySearchItemView extends FrameLayout implements ItemViewText {
 	private TextView mText;
-	
+
 	public CategorySearchItemView(Context context, int type) {
 		super(context);
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		int resource;
-		if ( type == CategoryNodeTypesAdapter.SEARCH_MODE)
+		if (type == CategoryNodeTypesAdapter.SEARCH_MODE)
 			resource = R.layout.search_category;
 		else
 			resource = R.layout.search_category_noselect;
-		
+
 		inflater.inflate(resource, this, true);
 		mText = (TextView) findViewById(R.id.search_type);
 	}
@@ -59,16 +61,17 @@ class CategorySearchItemView extends FrameLayout implements ItemViewText {
 	}
 }
 
-public class CategoryNodeTypesAdapter extends BaseAdapter {
+public class CategoryNodeTypesAdapter extends BaseAdapter implements SpinnerAdapter {
 	public static final int SEARCH_MODE = 0;
 	public static final int SELECT_MODE = 1;
-	
+
 	private int mType;
 
 	private Context mContext;
 	private ArrayList<CategoryOrNodeType> items;
 
-	public CategoryNodeTypesAdapter(Context context, ArrayList<CategoryOrNodeType> items, int type) {
+	public CategoryNodeTypesAdapter(Context context,
+			ArrayList<CategoryOrNodeType> items, int type) {
 		mContext = context;
 		this.items = items;
 		mType = type;
@@ -90,15 +93,26 @@ public class CategoryNodeTypesAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		if ( mType == SELECT_MODE )
-			return getDropDownView( position, convertView, parent );
-		else
-			return getSelectedItemView( position, convertView, parent );
+	public int getItemViewType(int position) {		
+		return items.get( position ).type.ordinal();
 	}
 	
-	private View getSelectedItemView( int position, View convertView, ViewGroup parent ) {
+	@Override
+	public int getViewTypeCount() {
+		return 3;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+
+		if (mType == SELECT_MODE)
+			return getDropDownView(position, convertView, parent);
+		else
+			return getSelectedItemView(position, convertView, parent);
+	}
+
+	private View getSelectedItemView(int position, View convertView,
+			ViewGroup parent) {
 		View view;
 		TextView text;
 		if (convertView == null) {
@@ -119,12 +133,18 @@ public class CategoryNodeTypesAdapter extends BaseAdapter {
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		View useView;
 		CategoryOrNodeType item = items.get(position);
-
+		
 		if (item.type == CategoryOrNodeType.Types.CATEGORY
 				|| item.type == CategoryOrNodeType.Types.NO_SELECTION)
-			useView = new CategorySearchItemView(mContext, mType);
+			if ( convertView instanceof CategorySearchItemView )
+				useView = convertView;
+			else
+				useView = new CategorySearchItemView(mContext, mType);
 		else
-			useView = new NodeTypeSearchItemView(mContext);
+			if ( convertView instanceof NodeTypeSearchItemView )
+				useView = convertView;
+			else
+				useView = new NodeTypeSearchItemView(mContext);
 
 		((ItemViewText) useView).setText(item.text);
 

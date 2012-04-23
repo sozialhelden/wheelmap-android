@@ -21,15 +21,6 @@ limitations under the License.
 		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
 			android:padding="3dip" />
 
-		<!-- dummy view forces action aligned right -->
-		<View style="@style/TitleBarSpring" />
-        
-		<ImageView style="@style/TitleBarSeparator" />
-		<ImageView style="@style/TitleBarAction" 
-		    android:id="@+id/btn_title_search"
-			android:src="@drawable/ic_menu_save"
-			android:background="@drawable/title_button"
-			android:onClick="onSaveClick" />
 	</LinearLayout>	
 	
 	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">

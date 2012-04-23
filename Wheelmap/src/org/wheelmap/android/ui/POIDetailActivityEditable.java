@@ -259,7 +259,7 @@ public class POIDetailActivityEditable extends Activity implements
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
 
 		if (cur.getCount() < 1) {
-			cur.close();
+			// cur.close(); managed cursors dont need to be closed
 			return;
 		}
 
@@ -290,7 +290,7 @@ public class POIDetailActivityEditable extends Activity implements
 		websiteText.setText(POIHelper.getWebsite(cur));
 		phoneText.setText(POIHelper.getPhone(cur));
 
-		cur.close();
+//		cur.close(); managed cursors dont need to be closed
 
 	}
 

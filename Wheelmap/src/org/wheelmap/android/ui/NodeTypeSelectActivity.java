@@ -29,19 +29,15 @@ public class NodeTypeSelectActivity extends ListActivity {
 		ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
 				.createTypesList(this, false);
 		setListAdapter(new PickOnlyNodeTypesAdapter(this, types));
-	}
-	
-	public void onSaveClick(View v) {
-		Intent intent = new Intent();
-		intent.putExtra(EXTRA_NODETYPE, mNodeTypeSelected);
-		setResult(RESULT_OK, intent);
-		finish();
+		
+		// Dont know how to set a checkbox to selected
+		int nodeType;
+		if ( getIntent().getExtras() != null)
+			nodeType = getIntent().getExtras().getInt( EXTRA_NODETYPE );
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		
-		
 		CategoryOrNodeType item = (CategoryOrNodeType) l.getAdapter().getItem(
 				position);
 		switch (item.type) {
@@ -52,6 +48,11 @@ public class NodeTypeSelectActivity extends ListActivity {
 			CheckedTextView view = (CheckedTextView) v.findViewById( R.id.search_type );
 			view.setChecked( true );
 			oldCheckedView = view;
+			
+			Intent intent = new Intent();
+			intent.putExtra(EXTRA_NODETYPE, mNodeTypeSelected);
+			setResult(RESULT_OK, intent);
+			finish();
 			break;
 		default:
 			//
