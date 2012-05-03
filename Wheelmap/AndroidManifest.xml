@@ -60,7 +60,7 @@ limitations under the License.
         <activity
             android:label="@string/title_pois_map"
             android:launchMode="singleTask"
-            android:name=".ui.mapsforge.POIsMapsforgeActivity"
+            android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
             android:theme="@style/Theme.IOSched" >
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
@@ -72,7 +72,7 @@ limitations under the License.
         </activity>
         <activity
             android:label="@string/title_pois_map"
-            android:name=".ui.POIDetailActivity"
+            android:name="org.wheelmap.android.ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched" >
             <intent-filter >
                 <action android:name="android.intent.action.SEND" />
@@ -84,39 +84,39 @@ limitations under the License.
         </activity>
         <activity
             android:label="@string/title_pois_map"
-            android:name=".ui.POIDetailActivityEditable"
+            android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_pois_position_edit"
-            android:name=".ui.mapsforge.EditPositionActivity"
+            android:name="org.wheelmap.android.ui.mapsforge.EditPositionActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_nodetype_edit"
-            android:name=".ui.NodeTypeSelectActivity"
+            android:name="org.wheelmap.android.ui.NodeTypeSelectActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_pois_settings"
-            android:name=".ui.NewSettingsActivity"
+            android:name="org.wheelmap.android.ui.NewSettingsActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_wheelchair_state"
-            android:name=".ui.WheelchairStateActivity"
+            android:name="org.wheelmap.android.ui.WheelchairStateActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_search"
-            android:name=".ui.SearchActivity"
+            android:name="org.wheelmap.android.ui.SearchActivity"
             android:theme="@style/Theme.IOSched.Transparent" />
         <activity
             android:label="@string/title_login"
-            android:name=".ui.LoginActivity"
+            android:name="org.wheelmap.android.ui.LoginActivity"
             android:theme="@style/Theme.IOSched.Transparent" />
         <activity
             android:label="@string/title_info"
-            android:name=".ui.InfoActivity"
+            android:name="org.wheelmap.android.ui.InfoActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_legal_notice"
-            android:name=".ui.LegalNoticeActivity"
+            android:name="org.wheelmap.android.ui.LegalNoticeActivity"
             android:theme="@style/Theme.IOSched" />
         <activity
             android:label="@string/title_pois_detail"
@@ -150,7 +150,7 @@ limitations under the License.
             </intent-filter>
         </activity>
 
-        <service android:name=".service.SyncService" />
+        <service android:name="org.wheelmap.android.service.SyncService" />
 
         <provider
             android:authorities="org.wheelmap.android"
