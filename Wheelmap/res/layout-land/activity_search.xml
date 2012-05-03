@@ -64,7 +64,7 @@ limitations under the License.
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/search_pick"
+                android:text="@string/search_pick_category"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
                 android:textColor="@color/light_grey_one" />
 
@@ -74,7 +74,7 @@ limitations under the License.
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dip"
                 android:background="@drawable/spinner_background"
-                android:prompt="@string/search_selection" />
+                android:prompt="@string/search_pick_category" />
         </LinearLayout>
 
         <LinearLayout

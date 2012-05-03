@@ -115,13 +115,12 @@ limitations under the License.
     <string name="error_authorization_required">Authorization required</string>
     <string name="error_request_forbidden">Request forbidden</string>
     <string name="search_hint_map">Pick map part and keyword</string>
-    <string name="search_hint_list">Keyword</string>
+    <string name="search_hint_list">Keyword (optional)</string>
     <string name="info_clientdevelopment">Android API Client</string>
     <string name="info_clientdevelopment_one">Pat Lipp</string>
     <string name="title_search">Search</string>
-    <string name="search_selection">Pick a (sub)category</string>
     <string name="search_no_selection">All</string>
-    <string name="search_pick">Pick a (sub)category</string>
+    <string name="search_pick_category">Pick a (sub)category</string>
     <string name="search_execute">Search</string>
     <string name="settings_delete_logindata">Delete Email and Password</string>
     <string name="title_pois_detail_edit">Edit the point of interest</string>

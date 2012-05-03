@@ -85,11 +85,9 @@ limitations under the License.
     <string name="error_authorization_required">Authorisierung erforderlich</string>
     <string name="error_request_forbidden">Anfrage nicht erlaubt</string>
     <string name="search_hint_map">Ausschnitt und Begriff wählen</string>
-    <string name="search_hint_list">Suchbegriff</string>
+    <string name="search_hint_list">Suchbegriff (optional)</string>
     <string name="title_search">Suche</string>
-    <string name="search_selection">Wähle eine (Unter)Kategorie</string>
     <string name="search_no_selection">Alle</string>
-    <string name="search_pick">Wähle eine (Unter)Kategorie</string>
     <string name="search_execute">Suchen</string>
     <string name="settings_delete_logindata">Löschen von Email und Passwort</string>
     <string name="title_pois_detail_edit">Editieren des Ortes</string>
@@ -105,4 +103,5 @@ limitations under the License.
     <string name="login_info">Melde dich an</string>
     <string name="search_info">Suche</string>
     <string name="title_nodetype_edit">Wähle einen Typen aus</string>
+    <string name="search_pick_category">Wähle eine (Unter)Kategorie</string>
 </resources>

@@ -17,9 +17,9 @@ limitations under the License.
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto"
-    package="org.wheelmap.android"
-    android:versionCode="10"
-    android:versionName="0.7" >
+    package="org.wheelmap.android.online"
+    android:versionCode="13"
+    android:versionName="0.8" >
 
     <uses-sdk android:minSdkVersion="7" />
 
