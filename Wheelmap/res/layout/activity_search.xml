@@ -71,22 +71,6 @@ limitations under the License.
             android:prompt="@string/search_selection"
             android:background="@drawable/spinner_background" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dip"
-            android:layout_marginTop="8dip"
-            android:text="@string/settings_wheelchair_state"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            android:textColor="@color/light_grey_one" />
-
-        <Spinner
-            android:id="@+id/search_spinner_wheelchair_state"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_wheelchair_state"
-            android:background="@drawable/spinner_background" />
-
         <LinearLayout
             android:id="@+id/search_spinner_distance_container"
             android:layout_width="wrap_content"

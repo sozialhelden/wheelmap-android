@@ -64,7 +64,6 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 	private int mCategorySelected = -1;
 	private int mNodeTypeSelected = -1;
 	private float mDistance = -1;
-	private WheelchairState mWheelchairState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +77,6 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType.createTypesList(this, true);
 		categorySpinner.setAdapter(new CategoryNodeTypesAdapter(this, searchTypes, CategoryNodeTypesAdapter.SEARCH_MODE));
 		categorySpinner.setOnItemSelectedListener(this);
-
-		Spinner wheelchairSpinner = (Spinner) findViewById(R.id.search_spinner_wheelchair_state);
-		MyCustomSpinnerAdapter wheelchairSpinnerAdapter = MyCustomSpinnerAdapter
-				.createFromResource(this, R.array.wheelchair_state,
-						R.layout.simple_my_spinner_item);
-		wheelchairSpinnerAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		wheelchairSpinner.setAdapter(wheelchairSpinnerAdapter);
-		wheelchairSpinner.setOnItemSelectedListener(this);
-		wheelchairSpinner.setPromptId(R.string.settings_wheelchair_state);
-		wheelchairSpinner.setSelection(4);
 
 		Spinner distanceSpinner = (Spinner) findViewById(R.id.search_spinner_distance);
 
@@ -135,10 +122,6 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 		if (mDistance != -1)
 			intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
 
-		if (mWheelchairState != null)
-			intent.putExtra(SyncService.EXTRA_WHEELCHAIR_STATE,
-					mWheelchairState.getId());
-
 		setResult(Activity.RESULT_OK, intent);
 		Log.d(TAG, "onSearch: setResult");
 		finish();
@@ -168,11 +151,6 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 			} catch (NumberFormatException e) {
 				// ignore
 			}
-			break;
-		}
-
-		case R.id.search_spinner_wheelchair_state: {
-			mWheelchairState = WheelchairState.valueOf(position);
 			break;
 		}
 		default:
