@@ -33,8 +33,11 @@ import android.util.Log;
 // RC1 - key: @ReportsCrashes(formKey = "dC1VVDdKenJLRUpZTC1MZXBVR3p6ZlE6MQ" )
 // RC2 - key: @ReportsCrashes(formKey = "dG1fUDltTlNiM3V4NmRvaVExT3dJclE6MQ" )
 // Release v0.7 @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
+// the first market version. @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
+// the second market version @ReportsCrashes( formKey = "dEFLbUtHV1VlNEp2MHc0UXg3M0VyUnc6MQ")
 
-@ReportsCrashes( formKey = "dEh5TzdhUXJOR0phV1dzQUZCOWFqM1E6MQ")
+
+@ReportsCrashes( formKey = "dGEyal90UGZ2Mk0tSmROYnBsVk02THc6MQ")
 public class WheelmapApp extends Application {
 	private final static String TAG = "wheelmapapp";
 	
