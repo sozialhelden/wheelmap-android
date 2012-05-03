@@ -19,7 +19,7 @@ package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.ui.info.Info;
 import org.wheelmap.android.ui.info.InfoTypes;
 import org.wheelmap.android.ui.info.InfoWidgetsAdapter;

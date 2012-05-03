@@ -17,7 +17,7 @@ limitations under the License.
 
 package org.wheelmap.android.ui;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;

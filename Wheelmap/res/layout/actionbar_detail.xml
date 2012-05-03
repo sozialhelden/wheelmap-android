@@ -31,7 +31,7 @@ limitations under the License.
 		<ImageView style="@style/TitleBarSeparator" />
 		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_edit"
 			android:src="@drawable/ic_menu_edit" android:background="@drawable/title_button"
-			android:onClick="onItemEdit" />
+			android:onClick="onItemEdit" android:visibility="gone" />
 	</LinearLayout>
     
 	<LinearLayout style="@style/ActionBarSwitcher"

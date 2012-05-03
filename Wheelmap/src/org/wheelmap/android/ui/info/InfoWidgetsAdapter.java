@@ -2,7 +2,7 @@ package org.wheelmap.android.ui.info;
 
 import java.util.List;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.content.Intent;

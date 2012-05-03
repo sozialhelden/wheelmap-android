@@ -23,7 +23,7 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;

@@ -18,20 +18,11 @@ limitations under the License.
 package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import org.wheelmap.android.R;
-import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.manager.SupportManager;
-import org.wheelmap.android.manager.SupportManager.Category;
-import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.model.CategoryNodeTypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
-import org.wheelmap.android.model.CategoryOrNodeType.Types;
 import org.wheelmap.android.service.SyncService;
-
-import wheelmap.org.WheelchairState;
 
 import android.app.Activity;
 import android.app.SearchManager;

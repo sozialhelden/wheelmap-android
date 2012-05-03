@@ -2,7 +2,7 @@ package org.wheelmap.android.model;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.util.Log;

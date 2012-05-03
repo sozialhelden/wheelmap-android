@@ -4,7 +4,7 @@ package com.markupartist.android.widget;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.wheelmap.android.R;
+import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.os.Bundle;
