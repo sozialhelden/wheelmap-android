@@ -216,19 +216,40 @@ public class POIDetailActivity extends MapActivity {
 		WheelchairState state = POIHelper.getWheelchair(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
-		int lat = (int) (POIHelper.getLatitude(cur) * 1E6);
-		int lon = (int) (POIHelper.getLongitude(cur) * 1E6);
+		double lat = POIHelper.getLatitude(cur);
+		double lon = POIHelper.getLongitude(cur);
 		int nodeTypeId = POIHelper.getNodeTypeId(cur);
 		int categoryId = POIHelper.getCategoryId(cur);
-	
-		StringBuilder sb = new StringBuilder(name);
-		sb.append(comment);
-		sb.append(',');
-		sb.append(POIHelper.getAddress(cur));
-		sb.append(',');
-		sb.append(POIHelper.getWebsite(cur));
+		String address = POIHelper.getAddress( cur );
+		String website = POIHelper.getWebsite( cur );
 		
-		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+		StringBuilder sb = new StringBuilder(name);
+		
+		if ( comment.length() > 0 ) {
+			sb.append(", ");
+			sb.append(comment);
+		}
+		
+		if ( address.length() > 0 ) {
+			sb.append(", ");
+			sb.append( address );
+		}
+		
+		if ( website.length() > 0 ) {
+			sb.append(", ");
+			sb.append(POIHelper.getWebsite(cur));
+		}
+		
+		Uri geoURI;
+		
+		if ( address.length() > 0 ) {
+			geoURI = Uri.parse("geo:0,0?q=" + address );
+		} else
+			geoURI = Uri.parse("geo:" + lat + "," + lon );
+		
+		// Log.d( TAG, "geoURI = " + geoURI.toString());
+		
+		Intent sharingIntent = new Intent(Intent.ACTION_SEND, geoURI );
 		sharingIntent.setType("text/plain");
 		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
 		startActivity(Intent.createChooser(sharingIntent,"Share using"));
