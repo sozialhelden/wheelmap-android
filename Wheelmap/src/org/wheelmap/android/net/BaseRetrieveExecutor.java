@@ -89,7 +89,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 	protected Meta executeSingleRequest(RequestBuilder requestBuilder)
 			throws SyncServiceException {
 		String getRequest = requestBuilder.buildRequestUri();
-		Log.d(TAG, "getRequest " + getRequest);
+		// Log.d(TAG, "getRequest " + getRequest);
 
 		T items = retrieveNumberOfHits(getRequest);
 		if ( items == null )

@@ -413,11 +413,6 @@ public class POIsListActivity extends ListActivity implements
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			mLocation = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
-			// Removed, as it makes problems with wonky gps data
-			// if (isFarerThanDeltaDistance(mLocation)) {
-			// ((PullToRefreshListView) getListView()).prepareForRefresh();
-			// runQuery(true);
-			// }
 			break;
 		}
 		}

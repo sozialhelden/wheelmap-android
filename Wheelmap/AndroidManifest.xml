@@ -83,7 +83,7 @@ limitations under the License.
                 <action android:name="android.intent.action.VIEW"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
 				<category android:name="android.intent.category.BROWSABLE"></category>
-				<data android:scheme="http" android:host="*wheelmap.org" ></data>
+				<data android:scheme="http" android:host="*wheelmap.org" android:pathPrefix="/nodes"></data>
 			</intent-filter>
   
         </activity>

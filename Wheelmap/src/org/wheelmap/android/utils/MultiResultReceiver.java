@@ -76,7 +76,7 @@ public class MultiResultReceiver extends ResultReceiver {
 		
 		mResultCode = resultCode;
 		mResultData = resultData;
-
+		
 		for (ResultReceiver receiver : mReceivers) {
 			receiver.send( resultCode, resultData );
 			sentOnce = true;

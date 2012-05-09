@@ -129,8 +129,8 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	@Override
 	public void prepareDatabase() {
 		deleteRetrievedData();
+		
 		prepDbHelper.deleteAllOldPending();
-
 		for (Nodes nodes : getTempStore()) {
 			bulkInsert(nodes);
 		}
@@ -145,9 +145,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,
 				whereValues);
 	}
-
 	
-
 	private void bulkInsert(Nodes nodes) {
 		int size = nodes.getMeta().getItemCount().intValue();
 		ContentValues[] contentValuesArray = new ContentValues[size];

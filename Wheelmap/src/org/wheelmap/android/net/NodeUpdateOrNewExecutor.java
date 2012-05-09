@@ -209,6 +209,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 			prebDbHelp.insertOrUpdateContentValues(Wheelmap.POIs.CONTENT_URI,
 					Wheelmap.POIs.PROJECTION, whereClauseDest, whereValuesDest,
 					values);
+			
+			c.moveToNext();
 		}
 
 		c.close();
