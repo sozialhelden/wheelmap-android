@@ -21,6 +21,7 @@ import org.wheelmap.android.net.ApiKeyExecutor;
 import org.wheelmap.android.net.CategoriesExecutor;
 import org.wheelmap.android.net.IExecutor;
 import org.wheelmap.android.net.LocalesExecutor;
+import org.wheelmap.android.net.NodeExecutor;
 import org.wheelmap.android.net.NodeTypesExecutor;
 import org.wheelmap.android.net.NodesExecutor;
 import org.wheelmap.android.net.NodeUpdateOrNewExecutor;
@@ -51,16 +52,18 @@ public class SyncService extends IntentService {
 	public static final String EXTRA_PASSWORD = "org.wheelmap.android.EXTRA_PASSWORD";
 	public static final String EXTRA_ERROR = "org.wheelmap.android.EXTRA_ERROR";
 	public static final String EXTRA_WHEELCHAIR_STATE = "org.wheelmap.android.EXTRA_WHEELCHAIR_STATE";
+	public static final String EXTRA_WHEELMAP_ID = "org.wheelmap.android.EXTRA_WHEELMAP_ID";
 	
 	public static final String EXTRA_WHAT = "org.wheelmap.android.EXTRA_WHAT";
 	public static final int WHAT_RETRIEVE_NODES = 0x1;
-	public static final int WHAT_RETRIEVE_LOCALES = 0x2;
-	public static final int WHAT_RETRIEVE_CATEGORIES = 0x3;
-	public static final int WHAT_RETRIEVE_NODETYPES = 0x4;
-	public static final int WHAT_UPDATE_SERVER = 0x5;
-	public static final int WHAT_RETRIEVE_APIKEY = 0x6;
-	public static final int WHAT_SEARCH_NODES_IN_BOX = 0x7;
-	public static final int WHAT_SEARCH_NODES = 0x8;
+	public static final int WHAT_RETRIEVE_NODE = 0x2;
+	public static final int WHAT_RETRIEVE_LOCALES = 0x3;
+	public static final int WHAT_RETRIEVE_CATEGORIES = 0x4;
+	public static final int WHAT_RETRIEVE_NODETYPES = 0x5;
+	public static final int WHAT_UPDATE_SERVER = 0x6;
+	public static final int WHAT_RETRIEVE_APIKEY = 0x7;
+	public static final int WHAT_SEARCH_NODES_IN_BOX = 0x8;
+	public static final int WHAT_SEARCH_NODES = 0x9;
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
@@ -92,6 +95,9 @@ public class SyncService extends IntentService {
 		int what = bundle.getInt(EXTRA_WHAT);
 		IExecutor executor = null;
 		switch(what) {
+		case WHAT_RETRIEVE_NODE:
+			executor = new NodeExecutor( mResolver, bundle );
+			break;
 		case WHAT_RETRIEVE_NODES:
 		case WHAT_SEARCH_NODES:
 		case WHAT_SEARCH_NODES_IN_BOX:

@@ -28,21 +28,27 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
+import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +60,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class POIDetailActivity extends MapActivity {
+public class POIDetailActivity extends MapActivity implements
+		DetachableResultReceiver.Receiver {
 	private final static String TAG = "poidetail";
 
 	// private ImageView iconImage = null;
@@ -78,24 +85,27 @@ public class POIDetailActivity extends MapActivity {
 	private SupportManager mSupportManager;
 	private ViewGroup mContentView;
 
-	private Long poiID;
+	private Long poiID = -1l;
+	private Long wmID = -1l;
+	public DetachableResultReceiver mReceiver;
+	
 	private Button mMapButton;
 	private Capability mCap;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView( R.layout.activity_detail);
-		
+		setContentView(R.layout.activity_detail);
+
 		mCap = WheelmapApp.getCapabilityLevel();
 
 		int stubId;
-		if ( mCap == Capability.DEGRADED_MAX )
+		if (mCap == Capability.DEGRADED_MAX)
 			stubId = R.id.stub_button;
 		else
 			stubId = R.id.stub_map;
-		
-		ViewStub stub = (ViewStub) findViewById( stubId );
+
+		ViewStub stub = (ViewStub) findViewById(stubId);
 		stub.inflate();
 
 		mSupportManager = WheelmapApp.getSupportManager();
@@ -136,18 +146,23 @@ public class POIDetailActivity extends MapActivity {
 				onEditWheelchairState(v);
 			}
 		});
-		
+
 		if (mCap == Capability.DEGRADED_MAX)
 			assignButton();
 		else
 			assignMapView();
 
-		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
-		Log.d(TAG, "onCreate: poiID = " + poiID);
+		Intent intent = getIntent();
+		// check if this intent is started via custom scheme link
 
-//		if (poiID != -1) {
-//			load();
-//		}
+		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			Uri uri = intent.getData();
+			wmID = Long.valueOf(uri.getLastPathSegment());
+			Log.d(TAG, "onCreate: wmId = " + wmID);
+		} else {
+			poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
+			Log.d(TAG, "onCreate: poiID = " + poiID);
+		}
 	}
 
 	private void assignMapView() {
@@ -159,9 +174,9 @@ public class POIDetailActivity extends MapActivity {
 		mapController = mapView.getController();
 		mapController.setZoom(18);
 	}
-	
+
 	private void assignButton() {
-		mMapButton = (Button) findViewById( R.id.btn_map);
+		mMapButton = (Button) findViewById(R.id.btn_map);
 	}
 
 	@Override
@@ -173,9 +188,11 @@ public class POIDetailActivity extends MapActivity {
 
 	@Override
 	public void onResume() {
-		if (poiID != -1) {
-			load();
-		}
+		if (poiID != -1)
+			load( poiID, false);
+		else
+			requestData( wmID );
+		
 		super.onResume();
 		logMemory();
 	}
@@ -191,6 +208,18 @@ public class POIDetailActivity extends MapActivity {
 		System.gc(); // to be sure ;-)
 	}
 
+	private void requestData( Long id ) {
+		mReceiver = new DetachableResultReceiver(new Handler());
+		mReceiver.setReceiver( this );
+		
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
+				SyncService.class);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODE);
+		intent.putExtra( SyncService.EXTRA_WHEELMAP_ID, id );
+		intent.putExtra( SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		startService(intent);
+	}
+
 	public void onItemEdit(View v) {
 		// Launch overall conference schedule
 		Intent i = new Intent(POIDetailActivity.this,
@@ -198,14 +227,14 @@ public class POIDetailActivity extends MapActivity {
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiID);
 		startActivity(i);
 	}
-	
+
 	public void onItemShare(View v) {
-		
+
 		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
 				String.valueOf(poiID));
-		
+
 		// Then query for this specific record:
-		Cursor cur = managedQuery(poiUri, null, null, null, null);
+		Cursor cur = getContentResolver().query(poiUri, null, null, null, null);
 
 		if (cur.getCount() < 1) {
 			cur.close();
@@ -213,50 +242,77 @@ public class POIDetailActivity extends MapActivity {
 		}
 
 		cur.moveToFirst();
-		WheelchairState state = POIHelper.getWheelchair(cur);
+		long wmId = POIHelper.getWMId(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
-		double lat = POIHelper.getLatitude(cur);
-		double lon = POIHelper.getLongitude(cur);
-		int nodeTypeId = POIHelper.getNodeTypeId(cur);
-		int categoryId = POIHelper.getCategoryId(cur);
-		String address = POIHelper.getAddress( cur );
-		String website = POIHelper.getWebsite( cur );
-		
+		String address = POIHelper.getAddress(cur);
+		String website = POIHelper.getWebsite(cur);
+		cur.close();
+
 		StringBuilder sb = new StringBuilder(name);
-		
-		if ( comment.length() > 0 ) {
+
+		if (comment.length() > 0) {
 			sb.append(", ");
 			sb.append(comment);
 		}
-		
-		if ( address.length() > 0 ) {
+
+		if (address.length() > 0) {
 			sb.append(", ");
-			sb.append( address );
+			sb.append(address);
 		}
-		
-		if ( website.length() > 0 ) {
+
+		if (website.length() > 0) {
 			sb.append(", ");
-			sb.append(POIHelper.getWebsite(cur));
+			sb.append(website);
 		}
-		
-		Uri geoURI;
-		
-		if ( address.length() > 0 ) {
-			geoURI = Uri.parse("geo:0,0?q=" + address );
-		} else
-			geoURI = Uri.parse("geo:" + lat + "," + lon );
-		
-		// Log.d( TAG, "geoURI = " + geoURI.toString());
-		
-		Intent sharingIntent = new Intent(Intent.ACTION_SEND, geoURI );
+
+		sb.append(", ");
+		sb.append("http://wheelmap.org/nodes/" + String.valueOf(wmId));
+
+		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 		sharingIntent.setType("text/plain");
-		sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
-		startActivity(Intent.createChooser(sharingIntent,"Share using"));
+		sharingIntent
+				.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
+		startActivity(Intent.createChooser(sharingIntent, getResources()
+				.getString(R.string.title_share_using)));
 	}
-	
-	
-	
+
+	public void onItemExtern(View v) {
+
+		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
+				String.valueOf(poiID));
+
+		// Then query for this specific record:
+		Cursor cur = getContentResolver().query(poiUri, null, null, null, null);
+
+		if (cur.getCount() < 1) {
+			cur.close();
+			return;
+		}
+
+		cur.moveToFirst();
+		String name = POIHelper.getName(cur);
+		double lat = POIHelper.getLatitude(cur);
+		double lon = POIHelper.getLongitude(cur);
+		String address = POIHelper.getAddress(cur);
+		cur.close();
+
+		Uri geoURI;
+
+		if (address.length() > 0) {
+			String searchAddress = name + "+" + address.replace(" ", "+");
+			geoURI = Uri.parse("geo:0,0?q=" + searchAddress);
+		} else
+			geoURI = Uri.parse("geo:" + String.valueOf(lat) + ","
+					+ String.valueOf(lon));
+
+		Log.d(TAG, "geoURI = " + geoURI.toString());
+
+		Intent sharingIntent = new Intent(Intent.ACTION_VIEW);
+		sharingIntent.setData(geoURI);
+		startActivity(Intent.createChooser(sharingIntent, getResources()
+				.getString(R.string.title_view_using)));
+	}
 
 	public void onEditWheelchairState(View v) {
 		// Sometimes, the poiId doesnt exists in the db, as the db got loaded
@@ -286,22 +342,39 @@ public class POIDetailActivity extends MapActivity {
 		mWheelchairStateText.setText(mWheelchairStateTextsMap.get(newState));
 	}
 
-	private void load() {
-
+	private Cursor queryByLocalId( long id ) {
 		// Use the ContentUris method to produce the base URI for the contact
 		// with _ID == 23.
 		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-				String.valueOf(poiID));
+				String.valueOf(id));
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
-		startManagingCursor( cur );
-
-		if (cur.getCount() < 1) {
-			return;
-		}
+		startManagingCursor(cur);
+		return cur;
+	}
+	
+	private Cursor queryByWmId( long id ) {
+		String whereClause = "( " + POIs.WM_ID + " = ? )";
+		String whereValues[] = { String.valueOf( id ) };
 		
+		Cursor cur = managedQuery(Wheelmap.POIs.CONTENT_URI, null, whereClause, whereValues, null );
+		
+		return cur;
+	}
+
+	private void load(long id, boolean retrieveByWmId ) {
+		Cursor cur;
+		if ( retrieveByWmId )
+			cur = queryByWmId( id );
+		else
+			cur = queryByLocalId( id );
+		
+		if (cur.getCount() < 1)
+			return;
+
 		cur.moveToFirst();
+		poiID = POIHelper.getId( cur );
 		WheelchairState state = POIHelper.getWheelchair(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
@@ -323,9 +396,9 @@ public class POIDetailActivity extends MapActivity {
 		websiteText.setText(POIHelper.getWebsite(cur));
 		phoneText.setText(POIHelper.getPhone(cur));
 
-		if ( mCap == Capability.DEGRADED_MAX) {
-			mMapButton.setOnClickListener( new OnClickListener() {
-				
+		if (mCap == Capability.DEGRADED_MAX) {
+			mMapButton.setOnClickListener(new OnClickListener() {
+
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(POIDetailActivity.this,
@@ -333,19 +406,38 @@ public class POIDetailActivity extends MapActivity {
 					i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
 					i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
 					startActivity(i);
-					
+
 				}
 			});
 		} else {
 			POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
 			overlay.setItem(name, comment, nodeType, state, lat, lon);
-			overlay.enableLowDrawQuality( true );
+			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
 			mapView.getOverlays().add(overlay);
 			mapController.setCenter(new GeoPoint(lat, lon));
 		}
-		
-		
+
+	}
+
+	/** {@inheritDoc} */
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
+		switch (resultCode) {
+		case SyncService.STATUS_RUNNING: {
+			break;
+		}
+		case SyncService.STATUS_FINISHED: {
+			load(wmID, true);
+			break;
+		}
+		case SyncService.STATUS_ERROR: {
+			break;
+		}
+		default: {
+			// noop
+		}
+		}
 	}
 
 	/**
@@ -388,7 +480,7 @@ public class POIDetailActivity extends MapActivity {
 							SyncService.WHAT_UPDATE_SERVER);
 					startService(intent);
 
-					load();
+					load( poiID, false);
 				}
 			}
 		}

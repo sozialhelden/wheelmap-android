@@ -40,7 +40,6 @@ limitations under the License.
     <string name="poi_property_phone">Telefon</string>
     <string name="poi_property_website">Website</string>
     <string name="poi_property_position">Pozitie</string>
-    <string name="settings_wheelchair_unknown_accesible">Necunoscut</string>
     <string name="poi_property_nodetype">Tip</string>
     <string name="poi_property_category">Categorie</string>
     <string name="title_please_wait">Asteptati!</string>
@@ -109,4 +108,5 @@ limitations under the License.
     <string name="ws_limited_title">Partial accesibil cu scaunul rulant</string>
     <string name="ws_disabled_title">Inaccesibil cu scaunul rulant</string>
     <string name="ws_enabled_title">Accesibil cu scaunul rulant</string>
+    <string name="settings_wheelchair_unknown_accessible">Necunoscut</string>
 </resources>

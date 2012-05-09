@@ -104,4 +104,7 @@ limitations under the License.
     <string name="search_info">Suche</string>
     <string name="title_nodetype_edit">Wähle einen Typen aus</string>
     <string name="search_pick_category">Wähle eine (Unter)Kategorie</string>
+    <string name="title_share_using">Verbreiten mit</string>
+    <string name="title_view_using">Ansehen mit</string>
+    <string name="title_pois_detail_activity">Wheelmap Detail</string>
 </resources>

@@ -136,4 +136,7 @@ limitations under the License.
     <string name="login_info">Please login</string>
     <string name="search_info">Search</string>
     <string name="title_nodetype_edit">Pick a Type</string>
+    <string name="title_share_using">Share Using</string>
+    <string name="title_view_using">View using</string>
+    <string name="title_pois_detail_activity">Wheelmap Detail</string>
 </resources>

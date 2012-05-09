@@ -28,7 +28,6 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.GeocoordinatesMath;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 
@@ -50,7 +49,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewStub;
-import android.view.View.OnLongClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;

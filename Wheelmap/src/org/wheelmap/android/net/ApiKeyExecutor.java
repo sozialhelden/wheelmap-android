@@ -29,15 +29,12 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.apikey.AuthInfo;
-import wheelmap.org.domain.apikey.User;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.ApiKeyRequestBuilder;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class ApiKeyExecutor extends AbstractExecutor {

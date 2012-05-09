@@ -69,16 +69,23 @@ limitations under the License.
                 android:resource="@xml/searchable_map" />
         </activity>
         <activity
-            android:label="@string/title_pois_map"
+            android:label="@string/title_pois_detail_activity"
             android:name="org.wheelmap.android.ui.POIDetailActivity"
             android:theme="@style/Theme.IOSched" >
-            <intent-filter >
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="image/*" />
-            </intent-filter>
+            <!-- <intent-filter >
+                 // What does this intent filter?
+                 <action android:name="android.intent.action.SEND" />
+                 <category android:name="android.intent.category.DEFAULT" />
+                 <data android:mimeType="image/*" />
+                 </intent-filter>
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+				<category android:name="android.intent.category.DEFAULT"></category>
+				<category android:name="android.intent.category.BROWSABLE"></category>
+				<data android:scheme="http" android:host="*wheelmap.org" ></data>
+			</intent-filter>
+  
         </activity>
         <activity
             android:label="@string/title_pois_map"

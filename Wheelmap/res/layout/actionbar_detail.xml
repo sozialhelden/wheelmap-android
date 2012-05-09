@@ -24,6 +24,11 @@ limitations under the License.
 		<View style="@style/TitleBarSpring" />
 	
 		<ImageView style="@style/TitleBarSeparator" />
+		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_extern"
+			android:src="@drawable/ic_menu_directions" android:background="@drawable/title_button"
+			android:onClick="onItemExtern" />
+		
+		<ImageView style="@style/TitleBarSeparator" />
 		<ImageView style="@style/TitleBarAction" android:id="@+id/btn_title_share"
 			android:src="@drawable/ic_menu_share" android:background="@drawable/title_button"
 			android:onClick="onItemShare" />
