@@ -294,17 +294,20 @@ public class POIDetailActivity extends MapActivity implements
 		String name = POIHelper.getName(cur);
 		double lat = POIHelper.getLatitude(cur);
 		double lon = POIHelper.getLongitude(cur);
-		String address = POIHelper.getAddress(cur);
+		String street = POIHelper.getStreet(cur);
+		String houseNum = POIHelper.getHouseNumber(cur);
+		String postCode = POIHelper.getPostcode( cur );
+		String city = POIHelper.getCity( cur );		
 		cur.close();
 
 		Uri geoURI;
-
-		if (address.length() > 0) {
-			String searchAddress = name + "+" + address.replace(" ", "+");
-			geoURI = Uri.parse("geo:0,0?q=" + searchAddress);
-		} else
+		if ( street.length() > 0 && ( postCode.length() > 0 || city.length() > 0 )) {
+			String address = street + "+" + houseNum + "+" + postCode + "+" + city;
+			geoURI = Uri.parse("geo:0,0?q=" + address.replace( " " , "+" ));
+		} else {
 			geoURI = Uri.parse("geo:" + String.valueOf(lat) + ","
-					+ String.valueOf(lon));
+					+ String.valueOf(lon) + "?z=17");
+		}
 
 		Log.d(TAG, "geoURI = " + geoURI.toString());
 
