@@ -44,6 +44,20 @@ limitations under the License.
         android:paddingTop="6dip"
         android:paddingBottom="6dip" >
 
+        <LinearLayout android:id="@+id/search_map_hint"
+            		  android:layout_height="wrap_content"
+            		  android:layout_width="wrap_content"
+            		  android:visibility="gone">
+            <TextView
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_marginLeft="8dip"
+            	android:layout_marginTop="8dip"
+            	android:text="@string/search_pick_map"
+            	android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            	android:textColor="@color/light_grey_one" />
+        </LinearLayout>
+        
         <EditText
             android:id="@+id/search_keyword"
             android:layout_width="fill_parent"

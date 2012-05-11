@@ -61,10 +61,18 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		mCursor = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
 				whereValueToUpdate, null);
+		if ( mCursor == null )
+			return;
+		
 		mCursor.moveToFirst();
 	}
 
 	public void execute() throws SyncServiceException {
+		if (mCursor == null)
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_INTERNAL_ERROR,
+					new NullPointerException("Cursor is null"));
+
 		while (!mCursor.isAfterLast()) {
 			int updateWay = POIHelper.getUpdateTag(mCursor);
 			String editApiKey = getEditApiKey();
@@ -187,6 +195,9 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
 				whereValueToUpdate, null);
+		if ( c == null )
+			return;
+		
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
@@ -209,7 +220,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 			prebDbHelp.insertOrUpdateContentValues(Wheelmap.POIs.CONTENT_URI,
 					Wheelmap.POIs.PROJECTION, whereClauseDest, whereValuesDest,
 					values);
-			
+
 			c.moveToNext();
 		}
 

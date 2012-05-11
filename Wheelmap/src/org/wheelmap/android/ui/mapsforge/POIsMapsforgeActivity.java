@@ -55,7 +55,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -435,6 +434,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
+			intent.putExtra( SearchActivity.EXTRA_SHOW_MAP_HINT, true );
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 		}
 	}

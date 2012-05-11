@@ -235,6 +235,8 @@ public class POIDetailActivity extends MapActivity implements
 
 		// Then query for this specific record:
 		Cursor cur = getContentResolver().query(poiUri, null, null, null, null);
+		if ( cur == null )
+			return;
 
 		if (cur.getCount() < 1) {
 			cur.close();
@@ -284,6 +286,8 @@ public class POIDetailActivity extends MapActivity implements
 
 		// Then query for this specific record:
 		Cursor cur = getContentResolver().query(poiUri, null, null, null, null);
+		if ( cur == null )
+			return;
 
 		if (cur.getCount() < 1) {
 			cur.close();
@@ -372,6 +376,9 @@ public class POIDetailActivity extends MapActivity implements
 			cur = queryByWmId( id );
 		else
 			cur = queryByLocalId( id );
+		
+		if ( cur == null )
+			return;
 		
 		if (cur.getCount() < 1)
 			return;

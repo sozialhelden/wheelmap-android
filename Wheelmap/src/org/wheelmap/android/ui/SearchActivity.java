@@ -49,6 +49,7 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 	public final static int PERFORM_SEARCH = 1;
 	public final static String EXTRA_SHOW_DISTANCE = "org.wheelmap.android.ui.EXTRA_SHOW_DISTANCE";
+	public final static String EXTRA_SHOW_MAP_HINT = "org.wheelmap.android.ui.EXTRA_SHOW_MAP_HINT";
 
 	private EditText mKeywordText;
 
@@ -60,6 +61,13 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
+		
+		LinearLayout mapHintContainer = (LinearLayout) findViewById( R.id.search_map_hint);
+		if (getIntent() != null && getIntent().getExtras() != null) {
+			if (getIntent().getExtras().containsKey(EXTRA_SHOW_MAP_HINT))
+				mapHintContainer.setVisibility(View.VISIBLE);
+		}
+		
 
 		mKeywordText = (EditText) findViewById(R.id.search_keyword);
 

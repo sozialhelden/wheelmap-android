@@ -257,6 +257,8 @@ public class POIDetailActivityEditable extends Activity implements
 
 		// Then query for this specific record:
 		Cursor cur = managedQuery(poiUri, null, null, null, null);
+		if ( cur == null )
+			return;
 
 		if (cur.getCount() < 1) {
 			// cur.close(); managed cursors dont need to be closed

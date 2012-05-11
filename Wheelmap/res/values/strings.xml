@@ -139,4 +139,5 @@ limitations under the License.
     <string name="title_share_using">Share Using</string>
     <string name="title_view_using">View using</string>
     <string name="title_pois_detail_activity">Wheelmap Detail</string>
+    <string name="search_pick_map">It is only searched within the selected map area.</string>
 </resources>

@@ -36,6 +36,9 @@ public class PrepareDatabaseHelper {
 
 		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClause, whereValues, null);
+		if ( c == null )
+			return;
+		
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
@@ -116,6 +119,9 @@ public class PrepareDatabaseHelper {
 			ContentValues values) {
 		Cursor c = getResolver().query(contentUri, projection, whereClause,
 				whereValues, null);
+		if ( c == null )
+			return;
+		
 		int cursorCount = c.getCount();
 		if (cursorCount == 0)
 			getResolver().insert(contentUri, values);

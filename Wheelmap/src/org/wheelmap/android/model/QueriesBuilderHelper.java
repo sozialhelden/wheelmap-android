@@ -49,6 +49,8 @@ public class QueriesBuilderHelper {
 		Uri uri = Support.CategoriesContent.CONTENT_URI;
 		Cursor cursor = context.getContentResolver().query(uri, null, null,
 				null, null);
+		if ( cursor == null )
+			return null;
 
 		StringBuilder categories = new StringBuilder("");
 
