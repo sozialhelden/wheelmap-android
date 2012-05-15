@@ -152,7 +152,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		mCursor.requery();
 		mCursorInvalidated = false;
 		// Only populate, if db hasnt deleted
-		if (mCursor.getCount() != 0)
+		// if (mCursor.getCount() != 0)
 			populate();
 	}
 

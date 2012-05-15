@@ -67,7 +67,6 @@ public class POIsListActivity extends ListActivity implements
 	private Location mLocation, mLastQueryLocation;
 
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
-	// private final static double QUERY_AUTO_DISTANCE_MIN = 0.25;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 	public final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
 	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
@@ -78,7 +77,6 @@ public class POIsListActivity extends ListActivity implements
 	private boolean isInForeground;
 	private boolean isShowingDialog;
 
-	private ImageButton mSearchButton;
 	private ViewStub mEmptyNoPois;
 
 	GoogleAnalyticsTracker tracker;
@@ -97,7 +95,6 @@ public class POIsListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_list);
 		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
-		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 

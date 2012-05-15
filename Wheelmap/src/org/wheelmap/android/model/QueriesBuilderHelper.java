@@ -40,7 +40,10 @@ public class QueriesBuilderHelper {
 
 	private static final String ENTRY_NOT_UPDATE_PENDING = " ("
 			+ Wheelmap.POIs.UPDATE_TAG + "!="
-			+ Wheelmap.UPDATE_PENDING_STATE_ONLY + " ) AND ( " + Wheelmap.POIs.UPDATE_TAG + "!=" + Wheelmap.UPDATE_ALL_FIELDS + ")";
+			+ Wheelmap.UPDATE_PENDING_STATE_ONLY + " ) AND ( "
+			+ Wheelmap.POIs.UPDATE_TAG + "!=" + Wheelmap.UPDATE_ALL_FIELDS
+			+ ") AND ( " + Wheelmap.POIs.UPDATE_TAG + "!="
+			+ Wheelmap.UPDATE_WHEELCHAIR_STATE + ")";
 
 	static private String categoriesFilter(Context context) {
 		// categories id
@@ -49,7 +52,7 @@ public class QueriesBuilderHelper {
 		Uri uri = Support.CategoriesContent.CONTENT_URI;
 		Cursor cursor = context.getContentResolver().query(uri, null, null,
 				null, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return null;
 
 		StringBuilder categories = new StringBuilder("");
