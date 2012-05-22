@@ -57,6 +57,7 @@ public class WheelmapApp extends Application {
 	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MIN = 0;
 	
 	public enum Capability { FULL, DEGRADED_MIN, DEGRADED_MAX, NOTWORKING };
+	public Capability mCapability;
 	
 	@Override
 	public void onCreate() {
@@ -75,6 +76,8 @@ public class WheelmapApp extends Application {
 		Log.d( TAG, "onCreate" );
 		mLocationManager = MyLocationManager.initOnce( this );
 		mSupportManager = new SupportManager( this );
+		
+		calcCapabilityLevel();
 		setMapsforgeSharedMemcacheSize();
 		INSTANCE = this;
 	}
@@ -96,19 +99,19 @@ public class WheelmapApp extends Application {
 		return INSTANCE.mMemoryClass;
 	}
 	
-	private Capability calcCapabilityLevel() {
+	private void calcCapabilityLevel() {
 		if ( mMaxMemoryMB >= MAX_MEMORY_LIMIT_FULL )
-			return Capability.FULL;
+			mCapability = Capability.FULL;
 		else if ( mMaxMemoryMB < MAX_MEMORY_LIMIT_FULL && mMaxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MIN )
-			return Capability.DEGRADED_MIN;
+			mCapability = Capability.DEGRADED_MIN;
 		else if ( mMaxMemoryMB < MAX_MEMORY_LIMIT_DEGRADED_MIN && mMaxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MAX )
-			return Capability.DEGRADED_MAX;
+			mCapability = Capability.DEGRADED_MAX;
 		else
-			return Capability.NOTWORKING;
+			mCapability = Capability.NOTWORKING;
 	}
 	
 	public static Capability getCapabilityLevel() {
-		return INSTANCE.calcCapabilityLevel();
+		return INSTANCE.mCapability;
 	}
 	
 	public static SupportManager getSupportManager() {
@@ -121,11 +124,10 @@ public class WheelmapApp extends Application {
 	}
 	
 	private void setMapsforgeSharedMemcacheSize() {
-		Capability cap = calcCapabilityLevel();
 		int capacity;
-		if ( cap == Capability.FULL )
+		if ( mCapability == Capability.FULL )
 			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MAX;
-		else if ( cap == Capability.DEGRADED_MAX)
+		else if ( mCapability == Capability.DEGRADED_MAX)
 			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MED;
 		else
 			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MIN;
