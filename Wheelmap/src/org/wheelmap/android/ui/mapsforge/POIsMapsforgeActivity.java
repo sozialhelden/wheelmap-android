@@ -88,7 +88,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private boolean isShowingDialog;
 	private boolean isZoomedEnough;
 	private int oldZoomLevel;
-	private boolean isSearchMode;
 
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
@@ -103,7 +102,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapView = (MapView) findViewById(R.id.map);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
-		isSearchMode = false;
 
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
@@ -140,11 +138,12 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			// Start listening for SyncService updates again
 			mState.mReceiver.setReceiver(this);
 			updateRefreshStatus();
-
+			updateSearchStatus();
 		} else {
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 			updateRefreshStatus();
+			updateSearchStatus();
 		}
 
 		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
@@ -291,7 +290,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 		extras.putBoolean(EXTRA_NO_RETRIEVAL, true);
-		isSearchMode = true;
+		mState.isSearchMode = true;
 		updateSearchStatus();
 	}
 
@@ -369,7 +368,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void updateSearchStatus() {
-		mSearchButton.setSelected(isSearchMode);
+		mSearchButton.setSelected(mState.isSearchMode);
 	}
 
 	@Override
@@ -409,7 +408,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void requestUpdate() {
-		if (isSearchMode)
+		if (mState.isSearchMode)
 			return;
 
 		Bundle extras = new Bundle();
@@ -426,15 +425,15 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	public void onSearchClick(View v) {
-		isSearchMode = !isSearchMode;
+		mState.isSearchMode = !mState.isSearchMode;
 		updateSearchStatus();
 
-		if (isSearchMode) {
+		if (mState.isSearchMode) {
 			updateSearchStatus();
 
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
-			intent.putExtra( SearchActivity.EXTRA_SHOW_MAP_HINT, true );
+			intent.putExtra(SearchActivity.EXTRA_SHOW_MAP_HINT, true);
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 		}
 	}
@@ -458,10 +457,12 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
 
-		if (Math.abs(mLastRequestedPosition.getLatitudeE6()
-				- centerLocation.getLatitudeE6()) < minimalLatitudeSpan
-				&& Math.abs(mLastRequestedPosition.getLongitudeE6()
-						- centerLocation.getLongitudeE6()) < minimalLongitudeSpan)
+		if (mLastRequestedPosition != null
+				&&
+				(Math.abs(mLastRequestedPosition.getLatitudeE6()
+						- centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
+				&& (Math.abs(mLastRequestedPosition.getLongitudeE6()
+						- centerLocation.getLongitudeE6()) < minimalLongitudeSpan))
 			return;
 
 		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
@@ -531,6 +532,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	private static class State {
 		public DetachableResultReceiver mReceiver;
 		public boolean mSyncing = false;
+		public boolean isSearchMode = false;
 
 		private State() {
 			mReceiver = new DetachableResultReceiver(new Handler());
