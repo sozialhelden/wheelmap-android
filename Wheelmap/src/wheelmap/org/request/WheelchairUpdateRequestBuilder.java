@@ -26,11 +26,11 @@ import wheelmap.org.WheelchairState;
 public class WheelchairUpdateRequestBuilder extends RequestBuilder {
 
 	private static final String RESOURCE = "nodes";
-	private long id;
+	private String id;
 	private WheelchairState state;
 
 	public WheelchairUpdateRequestBuilder(final String server,
-			final String apiKey, final AcceptType acceptType, long id,
+			final String apiKey, final AcceptType acceptType, String id,
 			WheelchairState state) {
 		super(server, apiKey, acceptType);
 		this.id = id;

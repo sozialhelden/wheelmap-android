@@ -148,17 +148,17 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
-		long id = POIHelper.getWMId(mCursor);
+		String id = POIHelper.getWMId(mCursor);
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
 		return new WheelchairUpdateRequestBuilder(SERVER, apiKey,
-				AcceptType.JSON, (int) id, state);
+				AcceptType.JSON, id, state);
 	}
 
 	private RequestBuilder updateOrNewRequestBuilder(String apiKey) {
-		long id = POIHelper.getWMId(mCursor);
+		String id = POIHelper.getWMId(mCursor);
 
 		boolean update = false;
-		if (id != 0)
+		if ( id.equals( "0" ))
 			update = true;
 
 		String name = POIHelper.getName(mCursor);
@@ -201,11 +201,11 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
-			long wmId = POIHelper.getWMId(c);
+			String wmId = POIHelper.getWMId(c);
 			String whereClauseDest = " ( " + Wheelmap.POIs.UPDATE_TAG
 					+ " = ? ) AND ( " + Wheelmap.POIs.WM_ID + " = ? )";
 			String[] whereValuesDest = new String[2];
-			whereValuesDest[1] = Long.toString(wmId);
+			whereValuesDest[1] = wmId;
 
 			int updateTag = POIHelper.getUpdateTag(c);
 			values.clear();

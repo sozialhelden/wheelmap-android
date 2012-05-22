@@ -244,7 +244,7 @@ public class POIDetailActivity extends MapActivity implements
 		}
 
 		cur.moveToFirst();
-		long wmId = POIHelper.getWMId(cur);
+		String wmId = POIHelper.getWMId(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
 		String address = POIHelper.getAddress(cur);

@@ -118,7 +118,6 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
 				mBoundingBox);
 		requestBuilder.wheelchairState(mWheelchairState);
-
 		clearTempStore();
 		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
 

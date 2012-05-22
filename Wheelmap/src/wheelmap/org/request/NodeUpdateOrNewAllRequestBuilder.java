@@ -26,7 +26,7 @@ import wheelmap.org.WheelchairState;
 public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 
 	private static final String RESOURCE = "nodes";
-	private long id;
+	private String id;
 	private String name;
 	private String category;
 	private String type;
@@ -44,7 +44,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 	private boolean update;
 
 	public NodeUpdateOrNewAllRequestBuilder(final String server,
-			final String apiKey, final AcceptType acceptType, long id,
+			final String apiKey, final AcceptType acceptType, String id,
 			String name, String category, String type, double latitude, double longitude,
 			WheelchairState state, String wheelchair_desc, String street,
 			String housenumber, String city, String postcode, String website,

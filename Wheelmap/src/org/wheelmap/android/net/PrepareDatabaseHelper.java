@@ -10,8 +10,11 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 public class PrepareDatabaseHelper {
+	private static final String TAG = "PrepareDatabase";
+
 	private static final long TIME_TO_DELETE_FOR_PENDING = 10 * 60 * 1000;
 
 	private final ContentResolver mResolver;
@@ -42,7 +45,7 @@ public class PrepareDatabaseHelper {
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
-			long wmId = POIHelper.getWMId(c);
+			String wmId = POIHelper.getWMId(c);
 
 			values.clear();
 			int updateTag = POIHelper.getUpdateTag(c);
@@ -53,7 +56,7 @@ public class PrepareDatabaseHelper {
 			else
 				continue;
 
-			whereValuesTarget[0] = Long.toString(wmId);
+			whereValuesTarget[0] = wmId;
 			getResolver().update(Wheelmap.POIs.CONTENT_URI, values,
 					whereClauseTarget, whereValuesTarget);
 			c.moveToNext();
@@ -73,7 +76,7 @@ public class PrepareDatabaseHelper {
 	
 	protected void copyNodeToValues(Node node, ContentValues values) {
 		values.clear();
-		values.put(Wheelmap.POIs.WM_ID, node.getId().intValue());
+		values.put(Wheelmap.POIs.WM_ID, node.getId().longValue());		
 		values.put(Wheelmap.POIs.NAME, node.getName());
 		values.put(Wheelmap.POIs.COORD_LAT,
 				Math.ceil(node.getLat().doubleValue() * 1E6));

@@ -23,8 +23,8 @@ import android.database.Cursor;
 
 public class POIHelper {
 	
-	public static long getWMId( Cursor c ) {
-		return c.getLong( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.WM_ID));
+	public static String getWMId( Cursor c ) {
+		return c.getString( c.getColumnIndexOrThrow( Wheelmap.POIsColumns.WM_ID));
 	}
 		
 	public static String getName(Cursor c) {
