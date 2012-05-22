@@ -151,9 +151,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		Log.d(TAG, "reload - requery and populate");
 		mCursor.requery();
 		mCursorInvalidated = false;
-		// Only populate, if db hasnt deleted
-		// if (mCursor.getCount() != 0)
-			populate();
+		populate();
 	}
 
 	public synchronized void deactivateCursor() {
