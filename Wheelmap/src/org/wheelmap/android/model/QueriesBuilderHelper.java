@@ -90,12 +90,7 @@ public class QueriesBuilderHelper {
 		}
 
 		cursor.close();
-		// wheelchair state filter
-
-		Log.d("QueriesBuilderHelper", categories.toString());
-
-		//
-
+		// Log.d("QueriesBuilderHelper", categories.toString());
 		return categories.toString();
 
 	}
@@ -159,8 +154,7 @@ public class QueriesBuilderHelper {
 			result = "(" + wheelchair.toString() + ") AND "
 					+ ENTRY_NOT_UPDATE_PENDING;
 
-		Log.d("QueriesBuilderHelper userSettingsFilter", result);
-
+		// Log.d("QueriesBuilderHelper userSettingsFilter", result);
 		return result;
 
 	}
