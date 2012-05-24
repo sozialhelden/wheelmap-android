@@ -10,6 +10,9 @@ mvn compile, mvn install
 mvn android:deploy
 - installiert auf einem verfügbaren Gerät
 
+mvn android:run
+- führt das Projekt auf einem verfügbaren Gerät aus
+
 mvn integration-test
 - fuehrt die Instrumentation-Tests aus
 
