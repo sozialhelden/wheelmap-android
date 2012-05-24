@@ -1,0 +1,18 @@
+// Preliminaries:
+
+Im Verzeichnis libs/ mit "sh add_jars_to_local_repository.sh" alle nicht gehosteten
+Libraries in das locale Maven-Repository aufnehmen
+
+// Maven commands:
+mvn compile, mvn install 
+- compiliert oder baut
+
+mvn android:deploy
+- installiert auf einem verfügbaren Gerät
+
+mvn integration-test
+- fuehrt die Instrumentation-Tests aus
+
+Ein unsigniertes APK findet sich unter
+wheelmap/target/wheelmap-1.0-SNAPSHOT.ap_
+
