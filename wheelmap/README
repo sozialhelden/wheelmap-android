@@ -15,6 +15,11 @@ git clone https://github.com/chrisbanes/Android-PullToRefresh.git
 Und als Maven-Project in Eclipse zu importieren und in der Projektkonfiguration von 
 wheelmap im Android-Tab diese Projekte als Library-Projekte einzutragen.
 
+Wenn es einen Fehler beim Importieren des Maven Projekts in Eclipse gibt, erzeuge die Files
+wheelmap/project.properties
+wheelmap-it/project.properties
+von Hand und importiere die Projekte nochmals
+
 // Maven commands:
 mvn compile, mvn install 
 - compiliert oder baut
