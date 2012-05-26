@@ -23,13 +23,13 @@ limitations under the License.
 
     <include layout="@layout/actionbar_list" />
 
-    <com.markupartist.android.widget.PullToRefreshListView
-        android:id="@+id/android:list"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pull_to_refresh_listview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
     <ViewStub
-        android:id="@android:id/empty"
+        android:id="@+id/empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -42,6 +42,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -51,13 +52,14 @@ import android.view.View;
 import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.markupartist.android.widget.PullToRefreshListView;
-import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class POIsListActivity extends ListActivity implements
 		DetachableResultReceiver.Receiver, OnRefreshListener {
@@ -78,8 +80,11 @@ public class POIsListActivity extends ListActivity implements
 	private boolean isShowingDialog;
 
 	private ViewStub mEmptyNoPois;
+	private FrameLayout mReallyEmptyLayout;
 
 	GoogleAnalyticsTracker tracker;
+	PullToRefreshListView mPullToRefreshListView;
+	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -94,7 +99,6 @@ public class POIsListActivity extends ListActivity implements
 		tracker.trackPageView("/ListActivity");
 
 		setContentView(R.layout.activity_list);
-		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
@@ -116,6 +120,12 @@ public class POIsListActivity extends ListActivity implements
 			}
 
 		});
+		
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
+		mPullToRefreshListView.setOnRefreshListener( this );
+		mEmptyNoPois = (ViewStub) findViewById( R.id.empty );		
+		Log.d( TAG, "POISList: mEmptyNoPost = " + mEmptyNoPois );
+		mReallyEmptyLayout = new FrameLayout( this );
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -132,11 +142,7 @@ public class POIsListActivity extends ListActivity implements
 		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
 		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
-
-		getListView().setTextFilterEnabled(true);
-
-		((PullToRefreshListView) getListView()).setOnRefreshListener(this);
-
+		
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {
@@ -245,6 +251,7 @@ public class POIsListActivity extends ListActivity implements
 		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
 		if (!mState.mIsRecreated) {
 			mFirstVisiblePosition = 0;
+			mPullToRefreshListView.setRefreshing();
 			getListView().setSelection(mFirstVisiblePosition);
 		}
 		runQuery(!mState.mIsRecreated);
@@ -267,8 +274,7 @@ public class POIsListActivity extends ListActivity implements
 
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);
-
-		setListAdapter(adapter);
+		mPullToRefreshListView.getRefreshableView().setAdapter( adapter );
 		Log.d(TAG, "runQuery: mFirstVisible = " + mFirstVisiblePosition);
 		getListView().setSelection(mFirstVisiblePosition);
 
@@ -374,13 +380,13 @@ public class POIsListActivity extends ListActivity implements
 
 	private void updateRefreshStatus() {
 		if (mState.mSyncing) {
-			getListView().setEmptyView(null);
-			((PullToRefreshListView) getListView()).prepareForRefresh();
+			mPullToRefreshListView.setRefreshing();
+			mPullToRefreshListView.setEmptyView( mReallyEmptyLayout );
 		} else {
 			Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 			mEmptyNoPois.startAnimation(anim);
-			getListView().setEmptyView(mEmptyNoPois);
-			((PullToRefreshListView) getListView()).onRefreshComplete();
+			mPullToRefreshListView.setEmptyView(mEmptyNoPois);
+			mPullToRefreshListView.onRefreshComplete();
 		}
 	}
 
