@@ -1,7 +1,19 @@
 // Preliminaries:
+Das android-maven Modul benötigt unbedingt die Maven-Version > 3.0.3
 
 Im Verzeichnis libs/ mit "sh add_jars_to_local_repository.sh" alle nicht gehosteten
 Libraries in das locale Maven-Repository aufnehmen
+
+Leider können die APKLib-Dependencies in wheelmap/pom.xml nicht automatisch von Eclipse
+eingebunden werden, sodass Eclipse rote Fehler anzeigt. Deshalb ist es nötig, diese
+Projekte manuell aus Git auszuchecken.
+
+git clone https://github.com/JakeWharton/ActionBarSherlock.git
+und
+git clone https://github.com/chrisbanes/Android-PullToRefresh.git
+
+Und als Maven-Project in Eclipse zu importieren und in der Projektkonfiguration von 
+wheelmap im Android-Tab diese Projekte als Library-Projekte einzutragen.
 
 // Maven commands:
 mvn compile, mvn install 
