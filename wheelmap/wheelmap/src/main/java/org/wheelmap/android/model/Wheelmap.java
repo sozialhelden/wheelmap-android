@@ -33,7 +33,8 @@ public class Wheelmap {
 		public static final int UPDATE_ALL_FIELDS = 0x2;
 		public static final int UPDATE_PENDING_STATE_ONLY = 0x3;
 		public static final int UPDATE_PENDING_FIELDS_ALL = 0x4;
-
+		
+		public static final String QUERY_DELETE_NOTIFY_PARAM = "delete";
 		
 		/**
 		 * Columns from the Places table that other columns join into themselves.

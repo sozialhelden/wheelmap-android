@@ -158,7 +158,7 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 	}
 
-	public void onNothingSelected(AdapterView parent) {
+	public void onNothingSelected(AdapterView<?> parent) {
 
 	}
 

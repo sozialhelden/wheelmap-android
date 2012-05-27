@@ -38,6 +38,7 @@ import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -52,10 +53,9 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	private WheelchairState mWheelchairState = null;
 	private PrepareDatabaseHelper prepDbHelper;
 
-
 	public NodesExecutor(ContentResolver resolver, Bundle bundle) {
 		super(resolver, bundle, Nodes.class);
-		prepDbHelper = new PrepareDatabaseHelper( resolver );
+		prepDbHelper = new PrepareDatabaseHelper(resolver);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	@Override
 	public void prepareDatabase() {
 		deleteRetrievedData();
-		
+
 		prepDbHelper.deleteAllOldPending();
 		for (Nodes nodes : getTempStore()) {
 			bulkInsert(nodes);
@@ -141,10 +141,12 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
 		String[] whereValues = new String[] { String
 				.valueOf(Wheelmap.UPDATE_NO) };
-		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,
-				whereValues);
+		Uri uri = Wheelmap.POIs.CONTENT_URI.buildUpon()
+				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM, "false")
+				.build();
+		getResolver().delete(uri, whereClause, whereValues);
 	}
-	
+
 	private void bulkInsert(Nodes nodes) {
 		int size = nodes.getMeta().getItemCount().intValue();
 		ContentValues[] contentValuesArray = new ContentValues[size];

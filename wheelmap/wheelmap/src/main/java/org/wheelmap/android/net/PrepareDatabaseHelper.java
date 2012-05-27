@@ -18,15 +18,15 @@ public class PrepareDatabaseHelper {
 	private static final long TIME_TO_DELETE_FOR_PENDING = 10 * 60 * 1000;
 
 	private final ContentResolver mResolver;
-	
-	PrepareDatabaseHelper( ContentResolver resolver ) {
+
+	PrepareDatabaseHelper(ContentResolver resolver) {
 		mResolver = resolver;
 	}
-	
+
 	protected ContentResolver getResolver() {
 		return mResolver;
 	}
-	
+
 	protected void copyAllPendingDataToRetrievedData() {
 		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? ) OR ( "
 				+ Wheelmap.POIs.UPDATE_TAG + " = ? )";
@@ -39,9 +39,9 @@ public class PrepareDatabaseHelper {
 
 		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClause, whereValues, null);
-		if ( c == null )
+		if (c == null)
 			return;
-		
+
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
@@ -73,10 +73,10 @@ public class PrepareDatabaseHelper {
 	private void copyPendingAllValues(Cursor c, ContentValues values) {
 		POIHelper.copyItemToValues(c, values);
 	}
-	
+
 	protected void copyNodeToValues(Node node, ContentValues values) {
 		values.clear();
-		values.put(Wheelmap.POIs.WM_ID, node.getId().longValue());		
+		values.put(Wheelmap.POIs.WM_ID, node.getId().longValue());
 		values.put(Wheelmap.POIs.NAME, node.getName());
 		values.put(Wheelmap.POIs.COORD_LAT,
 				Math.ceil(node.getLat().doubleValue() * 1E6));
@@ -102,7 +102,7 @@ public class PrepareDatabaseHelper {
 				.getIdentifier());
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
 	}
-	
+
 	protected void deleteAllOldPending() {
 		long now = System.currentTimeMillis();
 		String whereClause = "(( " + Wheelmap.POIs.UPDATE_TAG + " == ? ) OR ( "
@@ -113,18 +113,21 @@ public class PrepareDatabaseHelper {
 				Integer.toString(Wheelmap.UPDATE_PENDING_FIELDS_ALL),
 				Long.toString(now - TIME_TO_DELETE_FOR_PENDING) };
 
-		getResolver().delete(Wheelmap.POIs.CONTENT_URI, whereClause,
-				whereValues);
+		Uri uri = Wheelmap.POIs.CONTENT_URI.buildUpon()
+				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM, "false")
+				.build();
+
+		getResolver().delete(uri, whereClause, whereValues);
 	}
-	
+
 	protected void insertOrUpdateContentValues(Uri contentUri,
 			String[] projection, String whereClause, String[] whereValues,
 			ContentValues values) {
 		Cursor c = getResolver().query(contentUri, projection, whereClause,
 				whereValues, null);
-		if ( c == null )
+		if (c == null)
 			return;
-		
+
 		int cursorCount = c.getCount();
 		if (cursorCount == 0)
 			getResolver().insert(contentUri, values);
@@ -135,5 +138,5 @@ public class PrepareDatabaseHelper {
 		}
 		c.close();
 	}
-	
+
 }

@@ -171,10 +171,12 @@ public class POIsProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-
-		getContext().getContentResolver().notifyChange(uri, null);
-		getContext().getContentResolver().notifyChange(
+		
+		if ( uri.getBooleanQueryParameter( Wheelmap.QUERY_DELETE_NOTIFY_PARAM, true )) {
+			getContext().getContentResolver().notifyChange(uri, null);
+			getContext().getContentResolver().notifyChange(
 				POIs.CONTENT_URI_POI_SORTED, null);
+		}
 		return count;
 	}
 

@@ -79,9 +79,6 @@ public class POIsListActivity extends ListActivity implements
 	private boolean isInForeground;
 	private boolean isShowingDialog;
 
-	private ViewStub mEmptyNoPois;
-	private FrameLayout mReallyEmptyLayout;
-
 	GoogleAnalyticsTracker tracker;
 	PullToRefreshListView mPullToRefreshListView;
 	
@@ -123,9 +120,6 @@ public class POIsListActivity extends ListActivity implements
 		
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
 		mPullToRefreshListView.setOnRefreshListener( this );
-		mEmptyNoPois = (ViewStub) findViewById( R.id.empty );		
-		Log.d( TAG, "POISList: mEmptyNoPost = " + mEmptyNoPois );
-		mReallyEmptyLayout = new FrameLayout( this );
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -381,11 +375,7 @@ public class POIsListActivity extends ListActivity implements
 	private void updateRefreshStatus() {
 		if (mState.mSyncing) {
 			mPullToRefreshListView.setRefreshing();
-			mPullToRefreshListView.setEmptyView( mReallyEmptyLayout );
 		} else {
-			Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-			mEmptyNoPois.startAnimation(anim);
-			mPullToRefreshListView.setEmptyView(mEmptyNoPois);
 			mPullToRefreshListView.onRefreshComplete();
 		}
 	}
