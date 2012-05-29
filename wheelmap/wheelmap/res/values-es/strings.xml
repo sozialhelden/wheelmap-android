@@ -64,7 +64,7 @@
     <string name="title_legal_notice">Aviso Legal</string>
     <string name="legal_notice_mapsforge">Mapsforge</string>
     <string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3)</string>
-    <string name="legal_notice_pulltorefresh_copyright">© Johan Nilsson (Licencia Apache V2)</string>
+    <string name="legal_notice_pulltorefresh_copyright">© Chris Banes (Licencia Apache V2)</string>
     <string name="legal_notice_pulltorefresh">Widget ArrastarParaActualizar</string>
     <string name="legal_notice_springandroid">Spring Android</string>
     <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>

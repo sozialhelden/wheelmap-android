@@ -65,7 +65,7 @@
     <string name="title_legal_notice">법적고지</string>
     <string name="legal_notice_mapsforge">Mapsforge</string>
     <string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3)</string>
-    <string name="legal_notice_pulltorefresh_copyright">© Johan Nilsson (Apache License V2)</string>
+    <string name="legal_notice_pulltorefresh_copyright">© Chris Banes(Apache License V2)</string>
     <string name="legal_notice_pulltorefresh">잡아 당겨서 위젯을 새로고침</string>
     <string name="legal_notice_springandroid">Spring Android</string>
     <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
