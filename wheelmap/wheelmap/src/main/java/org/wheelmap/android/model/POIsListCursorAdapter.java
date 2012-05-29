@@ -56,6 +56,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		SupportManager manager = WheelmapApp.getSupportManager();
 		if ( manager == null ) {
 			Log.d( TAG, "SupportManager is null - how can that be?");
+			return;
 		}
 		
 		String name = POIHelper.getName(cursor);
@@ -69,11 +70,11 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		if ( name.length() > 0 )
 			pliv.setName( name );
 		else {
-			String nodeTypeName = nodeType.localizedName;
-			pliv.setName( nodeTypeName );
+			pliv.setName( nodeType.localizedName );
 		}
 		String category = manager.lookupCategory( categoryId ).localizedName;
-		pliv.setCategory( category + " - " + nodeType.localizedName );
+		pliv.setCategory( category );
+		pliv.setNodeType( nodeType.localizedName );
 
 		pliv.setDistance( mDistanceFormatter.format( distance ));
 		Drawable marker = manager.lookupWheelDrawable(state.getId());

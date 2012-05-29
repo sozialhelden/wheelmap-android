@@ -28,8 +28,9 @@ import android.widget.TextView;
 
 public class POIsListItemView extends RelativeLayout {
 
-	private  TextView poiCategory;
 	private TextView poiName;
+	private TextView poiCategory;
+	private TextView poiNodeType;
 	private TextView poiDistance;
 	private ImageView poiIcon;
 
@@ -47,6 +48,7 @@ public class POIsListItemView extends RelativeLayout {
 
 		poiName = (TextView) findViewById(R.id.list_item_place_name);
 		poiCategory = (TextView) findViewById(R.id.list_item_category);
+		poiNodeType = (TextView ) findViewById( R.id.list_item_nodetype);
 		poiDistance = (TextView) findViewById(R.id.list_item_distance);
 		poiIcon = (ImageView)findViewById(R.id.place_type_icon);
 	}
@@ -54,16 +56,20 @@ public class POIsListItemView extends RelativeLayout {
 	/**
 	 * Convenience method to set the properties of POI
 	 */
-	public void setName(String name) {
-		poiName.setText(name);
+	public void setName(String text) {
+		poiName.setText(text);
 	}
 
-	public void setCategory(String name) {
-		poiCategory.setText(name);
+	public void setCategory(String text) {
+		poiCategory.setText(text);
+	}
+	
+	public void setNodeType(String text) {
+		poiNodeType.setText(text);
 	}
 
-	public void setDistance(String name) {
-		poiDistance.setText(name);
+	public void setDistance(String text) {
+		poiDistance.setText(text);
 	}
 
 	public void setIcon(Drawable drawable) {

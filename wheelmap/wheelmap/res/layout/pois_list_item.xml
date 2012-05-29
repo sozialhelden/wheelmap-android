@@ -41,25 +41,72 @@ limitations under the License.
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:singleLine="true"
     />
-
-    <TextView android:id="@+id/list_item_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/list_item_place_name"
-        android:layout_alignLeft="@+id/list_item_place_name"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:singleLine="true"
-    />
+    <!--  
+	<LinearLayout android:id="@+id/list_item_specifier"
+        		  android:orientation="horizontal"
+        		  android:layout_width="fill_parent"
+        		  android:layout_height="wrap_content"
+        		  android:layout_alignLeft="@+id/list_item_place_name"
+        		  android:layout_below="@+id/list_item_place_name"
+        		  >
+        <TextView android:id="@+id/list_item_category"
+        	android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:singleLine="true"
+        	android:layout_weight="1.0"/>
+        <TextView
+            android:id="@+id/list_item_delimiter"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:text=" - "/>
+        <TextView android:id="@+id/list_item_nodetype"
+        	android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:singleLine="true"
+        	android:layout_weight="1.0"/>
+    </LinearLayout>
+    -->
+    <RelativeLayout android:id="@+id/list_item_specifier"
+        		  android:layout_width="wrap_content"
+        		  android:layout_height="wrap_content"
+        		  android:layout_alignLeft="@+id/list_item_place_name"
+        		  android:layout_below="@+id/list_item_place_name"
+        		  android:layout_toLeftOf="@+id/list_item_distance">
+        <TextView android:id="@+id/list_item_category"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_alignParentLeft="true"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:singleLine="true"/>
+        <TextView
+            android:id="@+id/list_item_delimiter"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@+id/list_item_category"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:text=" - "/>
+        <TextView android:id="@+id/list_item_nodetype"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@+id/list_item_delimiter"
+        	android:layout_alignParentRight="true"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:singleLine="true"/>
+    </RelativeLayout>
     
     <TextView android:id="@+id/list_item_distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/list_item_category"
+        android:layout_toLeftOf="@+id/list_item_arrow"
+        android:layout_below="@+id/list_item_place_name"
         android:layout_marginRight="8dip"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
         android:singleLine="true"
-        android:layout_toLeftOf="@+id/list_item_arrow" 
+         
     />
     <ImageView android:id="@+id/list_item_arrow" android:layout_width="wrap_content"
     android:layout_alignParentRight="true"
