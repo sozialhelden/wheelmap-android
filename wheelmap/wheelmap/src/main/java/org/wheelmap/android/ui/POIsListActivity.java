@@ -265,7 +265,7 @@ public class POIsListActivity extends ListActivity implements
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
-
+		
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor);
 		mPullToRefreshListView.getRefreshableView().setAdapter( adapter );
