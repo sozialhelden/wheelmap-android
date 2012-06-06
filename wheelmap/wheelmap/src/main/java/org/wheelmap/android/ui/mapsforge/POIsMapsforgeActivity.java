@@ -154,7 +154,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		listView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				Intent intent = new Intent(POIsMapsforgeActivity.this,
-						POIsListActivity.class);
+						org.wheelmap.android.activity.POIsListActivity.class);
 				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				startActivity(intent);

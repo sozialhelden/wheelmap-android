@@ -168,7 +168,7 @@ public class StartupActivity extends Activity implements
 
 	private void startupApp() {
 		Intent intent = new Intent(getApplicationContext(),
-				POIsListActivity.class);
+				org.wheelmap.android.activity.POIsListActivity.class);
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
