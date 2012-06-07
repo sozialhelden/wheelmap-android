@@ -10,7 +10,6 @@ import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.POIDetailActivity;
 import org.wheelmap.android.ui.POIDetailActivityEditable;
 import org.wheelmap.android.ui.SearchActivity;
-import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -188,7 +186,6 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onUpdateRefresh(boolean refresh) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -205,7 +202,7 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 
 			Intent intent = new Intent(POIsListActivity.this,
 					POIsMapsforgeActivity.class);
-			intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+			// intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 					| Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			startActivity(intent);
