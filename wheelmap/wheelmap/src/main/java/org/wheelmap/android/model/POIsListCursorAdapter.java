@@ -28,17 +28,19 @@ import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 
 public class POIsListCursorAdapter extends CursorAdapter {
 	private final static String TAG = "poislist";
 	private DistanceFormatter mDistanceFormatter;
 		
-	public POIsListCursorAdapter(Context context, Cursor cursor) {
-		super( context, cursor );
+	
+	
+	public POIsListCursorAdapter(Context context, Cursor cursor, boolean autorequery) {
+		super( context, cursor, autorequery );
 		if ( GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES )
 			mDistanceFormatter = new DistanceFormatterMetric();
 		else

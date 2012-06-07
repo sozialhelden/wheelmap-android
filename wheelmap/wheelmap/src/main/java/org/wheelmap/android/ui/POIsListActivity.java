@@ -261,7 +261,7 @@ public class POIsListActivity extends ListActivity implements
 		startManagingCursor(wrappingCursor);
 		
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
-				wrappingCursor);
+				wrappingCursor, true);
 		mPullToRefreshListView.getRefreshableView().setAdapter( adapter );
 		Log.d(TAG, "runQuery: mFirstVisible = " + mFirstVisiblePosition);
 		getListView().setSelection(mFirstVisiblePosition);
