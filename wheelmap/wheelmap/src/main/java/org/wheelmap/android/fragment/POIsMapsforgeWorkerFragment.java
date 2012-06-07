@@ -53,7 +53,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate");
 
 		setRetainInstance(true);
 
@@ -68,7 +67,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID_LIST, null, this);
-		Log.d( TAG, "isSearchMode = " + isSearchMode );
 		setPersistentValuesAtListener();
 		setPersistentValues();
 	}
@@ -208,7 +206,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 	public void setSearchMode(boolean isSearchMode) {
 		this.isSearchMode = isSearchMode;
-		Log.d( TAG, "worker isSearchMode = " + this.isSearchMode );
 	}
 
 	private void updateSearchStatus() {

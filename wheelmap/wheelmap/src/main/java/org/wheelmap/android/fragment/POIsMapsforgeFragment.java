@@ -84,9 +84,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d( TAG, "onCreate" );
-		
+		super.onCreate(savedInstanceState);		
 	}
 	
 	@Override
@@ -207,7 +205,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 	
 	private void executeRetrieval(Bundle extras) {
 		boolean retrieval = !extras.getBoolean(EXTRA_NO_RETRIEVAL, false);
-		Log.d(TAG, "retrieval = " + retrieval);
 		if (retrieval) {
 			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
 					new OnGlobalLayoutListener() {
