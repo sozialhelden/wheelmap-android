@@ -1,7 +1,6 @@
 package org.wheelmap.android.fragment;
 
 import org.mapsforge.android.maps.GeoPoint;
-import org.wheelmap.android.activity.POIsMapsforgeActivity;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -37,6 +36,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 	boolean mSyncing;
 	boolean isSearchMode;
+	private boolean mRefreshStatus;
 
 	public POIsMapsforgeWorkerFragment() {
 		super();
@@ -68,6 +68,9 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID_LIST, null, this);
+		Log.d( TAG, "isSearchMode = " + isSearchMode );
+		setPersistentValuesAtListener();
+		setPersistentValues();
 	}
 
 	@Override
@@ -127,7 +130,8 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
 		getActivity().startService(intent);
-		updateSearchStatus(true);
+		setSearchMode( true );
+		updateSearchStatus();
 	}
 
 	protected void requestUpdate( Bundle extras ) {
@@ -142,8 +146,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
 		getActivity().startService(intent);
 	}
-
-	
 
 	private GeoPoint calcGeoPoint(Location location) {
 		int lat = (int) (location.getLatitude() * 1E6);
@@ -189,28 +191,27 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		fragment.updateCurrentLocation( geoPoint, location );
 	}
 	
-	public void setPersistentValues() {
-		if (mListener != null) {
-			mListener.onSearchModeChange(isSearchMode);
-			mListener.onRefreshStatusChange(mSyncing);
-		}
+	private void setPersistentValuesAtListener() {
+		updateRefreshStatus( mRefreshStatus );
+		updateSearchStatus();
 	}
 	
-	public void updateRefreshStatus( boolean refreshStatus ) {
+	private void setPersistentValues() {
+		getLoaderManager().getLoader( LOADER_ID_LIST).forceLoad();
+	}
+	
+	private void updateRefreshStatus( boolean refreshStatus ) {
+		mRefreshStatus = refreshStatus;
 		if (mListener != null )
 			mListener.onRefreshStatusChange( refreshStatus );
 	}
 
 	public void setSearchMode(boolean isSearchMode) {
 		this.isSearchMode = isSearchMode;
-	}
-	
-	public boolean getSearchMode() {
-		return isSearchMode;
+		Log.d( TAG, "worker isSearchMode = " + this.isSearchMode );
 	}
 
-	public void updateSearchStatus(boolean isSearchMode) {
-		this.isSearchMode = isSearchMode;
+	private void updateSearchStatus() {
 		if (mListener != null)
 			mListener.onSearchModeChange(isSearchMode);
 	}
@@ -227,7 +228,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		
 		Log.d( TAG, "cursorloader - switching cursors in adapter - cursor size = " + cursor.getCount() );
 		((POIsMapsforgeFragment) getTargetFragment()).setCursor( cursor );
 	}

@@ -59,9 +59,11 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		if (mCursor != null)
 			mCursor.close();
 	}
-
-	public synchronized void setCursor(Cursor cursor) {
+	
+	public synchronized void setCursor(Cursor cursor ) {
 		if ( mCursor != null ) {
+			mCursor.unregisterContentObserver( mContentObserver );
+			mCursor.unregisterDataSetObserver( mCursorObserver );
 			mCursor.close();
 		}
 			
@@ -70,7 +72,8 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	
 		if (mCursor == null)
 			return;
-
+		
+		
 		mCursor.registerContentObserver( mContentObserver );
 		mCursor.registerDataSetObserver( mCursorObserver );
 		populate();

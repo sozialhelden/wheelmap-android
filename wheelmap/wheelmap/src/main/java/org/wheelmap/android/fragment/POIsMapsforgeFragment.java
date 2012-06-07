@@ -24,7 +24,6 @@ import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.overlay.CircleOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
-import org.wheelmap.android.activity.MapsforgeMapActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.online.R;
@@ -136,17 +135,15 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 			mWorkerFragment = (POIsMapsforgeWorkerFragment) fm.findFragmentByTag( POIsMapsforgeWorkerFragment.TAG);
 			if ( mWorkerFragment == null ) {
 				mWorkerFragment = new POIsMapsforgeWorkerFragment();
-				fm.beginTransaction().add( mWorkerFragment, POIsListWorkerFragment.TAG ).commit();
+				fm.beginTransaction().add( mWorkerFragment, POIsMapsforgeWorkerFragment.TAG ).commit();
 				mWorkerFragment.setTargetFragment( this, 0 );
 			} else {
-				mIsRecreated = true;
-				if ( savedInstanceState != null ) {
-					executeTargetCenterExtras( savedInstanceState );
-				}
+				mIsRecreated = true;	
 			}
+		}
 		
-			Log.d(TAG,  "fragment is recreated - requesting persistent data");
-			mWorkerFragment.setPersistentValues();
+		if ( savedInstanceState != null ) {
+			executeTargetCenterExtras( savedInstanceState );
 		}
 
 		if ( getArguments() != null ) {
@@ -192,9 +189,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 	}
 	
 	private void executeTargetCenterExtras(Bundle extras) {
-		if (extras == null) {
-			return;
-		}
 		if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
 			int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
 			int lon = extras.getInt(EXTRA_CENTER_AT_LON);
@@ -202,7 +196,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 
 			GeoPoint gp = new GeoPoint(lat, lon);
 			mMapController.setCenter(gp);
+			mMapView.setZoomListener(null);
 			mMapController.setZoom(zoom); // Zoon 1 is world view
+			mMapView.setZoomListener(this);
 			isCentered = true;
 			isZoomedEnough = true;
 			oldZoomLevel = zoom;
@@ -228,7 +224,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 					});
 		}
 	}
-
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -261,7 +256,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 
 	@Override
 	public void onZoom(byte zoomLevel) {
-		boolean isZoomedEnough = false;
+		boolean isZoomedEnough = true;
 		
 		if (zoomLevel < ZOOMLEVEL_MIN ) {
 			isZoomedEnough = false;

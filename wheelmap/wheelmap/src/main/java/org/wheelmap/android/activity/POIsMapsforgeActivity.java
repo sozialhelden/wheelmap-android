@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
         
-*/
+ */
 
 package org.wheelmap.android.activity;
 
@@ -43,8 +43,8 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	private ProgressBar mProgressBar;
 	private ImageButton mSearchButton;
 
-	private POIsMapsforgeFragment mapFragment;
-	private POIsMapsforgeWorkerFragment mapWorkerFragment;
+	private POIsMapsforgeFragment mFragment;
+	private POIsMapsforgeWorkerFragment mWorkerFragment;
 	private boolean isSearchMode;
 	private boolean isShowingDialog;
 	private boolean isInForeground;
@@ -52,7 +52,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d( TAG, "Activity onCreate" );
+		Log.d(TAG, "Activity onCreate");
 		setContentView(R.layout.activity_mapsforge_fragments);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
@@ -65,11 +65,12 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		super.onStart();
 		FragmentManager fm = getSupportFragmentManager();
 
-		mapFragment = (POIsMapsforgeFragment) fm
+		mFragment = (POIsMapsforgeFragment) fm
 				.findFragmentById(R.id.map_fragment);
-		mapWorkerFragment = (POIsMapsforgeWorkerFragment) fm
+		mWorkerFragment = (POIsMapsforgeWorkerFragment) fm
 				.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
-		Log.d( TAG, "Fragment: " + mapFragment + " WorkerFragment:" + mapWorkerFragment );
+
+		Log.d(TAG, "Fragment: " + mFragment);
 	}
 
 	@Override
@@ -77,6 +78,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		super.onResume();
 		isInForeground = true;
 		Log.d(TAG, "onResume isInForeground = " + isInForeground);
+		updateSearchStatus();
 	}
 
 	@Override
@@ -100,10 +102,9 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	public void onSearchClick(View v) {
 		isSearchMode = !isSearchMode;
 		updateSearchStatus();
-
+		sendSearchStatus();
+		
 		if (isSearchMode) {
-			updateSearchStatus();
-
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
 			intent.putExtra(SearchActivity.EXTRA_SHOW_MAP_HINT, true);
@@ -111,24 +112,24 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		}
 	}
 
-//	@Override
-//	public boolean onPrepareOptionsMenu(Menu menu) {
-//		startActivity(new Intent(this, NewSettingsActivity.class));
-//		return super.onPrepareOptionsMenu(menu);
-//	}
+	// @Override
+	// public boolean onPrepareOptionsMenu(Menu menu) {
+	// startActivity(new Intent(this, NewSettingsActivity.class));
+	// return super.onPrepareOptionsMenu(menu);
+	// }
 
-//	public void onListClick(View v) {
-//		Intent intent = new Intent(this, POIsListActivity.class);
-//		intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
-//		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-//				| Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//		startActivity(intent);
-//		overridePendingTransition(0, 0);
-//
-//	}
+	// public void onListClick(View v) {
+	// Intent intent = new Intent(this, POIsListActivity.class);
+	// intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
+	// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+	// | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+	// startActivity(intent);
+	// overridePendingTransition(0, 0);
+	//
+	// }
 
 	public void onCenterClick(View v) {
-		mapFragment.navigateToLocation();
+		mFragment.navigateToLocation();
 	}
 
 	public void onInfoClick(View v) {
@@ -145,22 +146,26 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onRefreshStatusChange(boolean refreshStatus) {
-		if ( refreshStatus )
-			mProgressBar.setVisibility( View.VISIBLE);
+		if (refreshStatus)
+			mProgressBar.setVisibility(View.VISIBLE);
 		else
-			mProgressBar.setVisibility( View.GONE );
+			mProgressBar.setVisibility(View.GONE);
 	}
 
 	private void updateSearchStatus() {
 		mSearchButton.setSelected(isSearchMode);
-		if (mapWorkerFragment != null)
-			mapWorkerFragment.setSearchMode(isSearchMode);
 	}
 
 	@Override
 	public void onSearchModeChange(boolean isSearchMode) {
+		Log.d(TAG, "activity isSearchMode = " + this.isSearchMode);
 		this.isSearchMode = isSearchMode;
-		mSearchButton.setSelected(isSearchMode);
+		updateSearchStatus();
+	}
+
+	private void sendSearchStatus() {
+		if ( mWorkerFragment != null )
+			mWorkerFragment.setSearchMode( isSearchMode );
 	}
 
 	/**
@@ -186,7 +191,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 			if (resultCode == RESULT_OK) {
 				if (data != null && data.getExtras() != null) {
 					Bundle bundle = data.getExtras();
-					mapFragment.startSearch( bundle );
+					mFragment.startSearch(bundle);
 				}
 			}
 		}
@@ -221,7 +226,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onError(SyncServiceException e) {
-		showErrorDialog( e );
+		showErrorDialog(e);
 	}
-	
+
 }
