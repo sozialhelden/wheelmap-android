@@ -1,6 +1,7 @@
 package org.wheelmap.android.fragment;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.activity.POIsMapsforgeActivity;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -36,7 +37,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 	boolean mSyncing;
 	boolean isSearchMode;
-
 
 	public POIsMapsforgeWorkerFragment() {
 		super();
@@ -189,15 +189,11 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		fragment.updateCurrentLocation( geoPoint, location );
 	}
 	
-	
 	public void setPersistentValues() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
-	public boolean getRefreshStatus() {
-		return mSyncing;
+		if (mListener != null) {
+			mListener.onSearchModeChange(isSearchMode);
+			mListener.onRefreshStatusChange(mSyncing);
+		}
 	}
 	
 	public void updateRefreshStatus( boolean refreshStatus ) {

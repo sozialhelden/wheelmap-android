@@ -23,7 +23,6 @@ import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforge
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.InfoActivity;
-import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.ui.SearchActivity;
 
 import android.app.AlertDialog;
@@ -38,9 +37,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
-public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
+public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		OnClickListener, OnPOIsMapsforgeWorkerFragmentListener {
 	private final static String TAG = "mapsforge";
 	private ProgressBar mProgressBar;
@@ -55,6 +52,7 @@ public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d( TAG, "Activity onCreate" );
 		setContentView(R.layout.activity_mapsforge_fragments);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
@@ -71,12 +69,11 @@ public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
 				.findFragmentById(R.id.map_fragment);
 		mapWorkerFragment = (POIsMapsforgeWorkerFragment) fm
 				.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
-		isSearchMode = mapWorkerFragment.getSearchMode();
-
+		Log.d( TAG, "Fragment: " + mapFragment + " WorkerFragment:" + mapWorkerFragment );
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		isInForeground = true;
 		Log.d(TAG, "onResume isInForeground = " + isInForeground);
@@ -120,15 +117,15 @@ public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
 //		return super.onPrepareOptionsMenu(menu);
 //	}
 
-	public void onListClick(View v) {
-		Intent intent = new Intent(this, POIsListActivity.class);
-		intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-				| Intent.FLAG_ACTIVITY_NO_ANIMATION);
-		startActivity(intent);
-		overridePendingTransition(0, 0);
-
-	}
+//	public void onListClick(View v) {
+//		Intent intent = new Intent(this, POIsListActivity.class);
+//		intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
+//		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+//				| Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//		startActivity(intent);
+//		overridePendingTransition(0, 0);
+//
+//	}
 
 	public void onCenterClick(View v) {
 		mapFragment.navigateToLocation();
@@ -146,8 +143,12 @@ public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
 		return true;
 	}
 
+	@Override
 	public void onRefreshStatusChange(boolean refreshStatus) {
-		mProgressBar.setEnabled(refreshStatus);
+		if ( refreshStatus )
+			mProgressBar.setVisibility( View.VISIBLE);
+		else
+			mProgressBar.setVisibility( View.GONE );
 	}
 
 	private void updateSearchStatus() {
@@ -156,6 +157,7 @@ public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
 			mapWorkerFragment.setSearchMode(isSearchMode);
 	}
 
+	@Override
 	public void onSearchModeChange(boolean isSearchMode) {
 		this.isSearchMode = isSearchMode;
 		mSearchButton.setSelected(isSearchMode);
@@ -221,4 +223,5 @@ public class POIsMapsforgeActivity extends SherlockFragmentActivity implements
 	public void onError(SyncServiceException e) {
 		showErrorDialog( e );
 	}
+	
 }

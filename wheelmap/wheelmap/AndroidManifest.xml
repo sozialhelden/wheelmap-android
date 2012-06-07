@@ -82,6 +82,21 @@ limitations under the License.
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_map" />
         </activity>
+        
+        <activity
+            android:label="@string/title_pois_map"
+            android:launchMode="singleTask"
+            android:name="org.wheelmap.android.activity.POIsMapsforgeActivity"
+            android:theme="@style/Theme.IOSched" >
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_map" />
+        </activity>
+        
         <activity
             android:label="@string/title_pois_detail_activity"
             android:name="org.wheelmap.android.ui.POIDetailActivity"

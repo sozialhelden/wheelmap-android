@@ -24,6 +24,7 @@ import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.overlay.CircleOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
+import org.wheelmap.android.activity.MapsforgeMapActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.online.R;
@@ -67,7 +68,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 	private boolean mIsRecreated;
 	private boolean isCentered;
 	private boolean isZoomedEnough;
-	private int oldZoomLevel;
+	private int oldZoomLevel = 18;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private GeoPoint mLastGeoPointE6;
@@ -119,9 +120,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements OnMoveLis
 		}
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
+		mMapController.setZoom(oldZoomLevel); // Zoon 1 is world view
 		mMapView.setMoveListener(this);
 		mMapView.setZoomListener(this);
-		mMapController.setZoom(18); // Zoon 1 is world view
 		
 		return v;
 	}
