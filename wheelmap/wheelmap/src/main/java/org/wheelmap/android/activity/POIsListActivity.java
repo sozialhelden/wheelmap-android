@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsListFragment.OnListFragmentListener;
 import org.wheelmap.android.fragment.POIsListWorkerFragment.OnListWorkerFragmentListener;
@@ -15,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,7 +58,7 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		isInForeground = false;
+		isInForeground = true;
 	}
 
 	@Override
@@ -156,32 +158,17 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 		startActivity(i);
 	}
 
-	private void showErrorDialog(SyncServiceException e) {
+	private void showErrorDialog(SyncServiceException e) {		
 		if (!isInForeground)
 			return;
-		if (isShowingDialog)
+		
+		FragmentManager fm = getSupportFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance( e );
+		if ( errorDialog == null )
 			return;
-
-		isShowingDialog = true;
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Log.d(TAG, "showErrorDialog: e.getCode = " + e.getErrorCode());
-		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
-			builder.setTitle(R.string.error_network_title);
-		else
-			builder.setTitle(R.string.error_occurred);
-		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setMessage(e.getRessourceString());
-		builder.setNeutralButton(R.string.okay,
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						isShowingDialog = false;
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
+		
+		errorDialog.show( fm, ErrorDialogFragment.TAG );
+	
 	}
 
 	@Override

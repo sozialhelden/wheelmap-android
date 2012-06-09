@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerFragmentListener;
@@ -77,7 +78,6 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	public void onResume() {
 		super.onResume();
 		isInForeground = true;
-		Log.d(TAG, "onResume isInForeground = " + isInForeground);
 		updateSearchStatus();
 	}
 
@@ -85,7 +85,6 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	public void onPause() {
 		super.onPause();
 		isInForeground = false;
-		Log.d(TAG, "onPause isInForeground = " + isInForeground);
 	}
 
 	public void onClick(View view) {
@@ -197,33 +196,19 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		}
 	}
 
-	private void showErrorDialog(SyncServiceException e) {
+	private void showErrorDialog(SyncServiceException e) {		
 		if (!isInForeground)
 			return;
-		if (isShowingDialog)
+		
+		FragmentManager fm = getSupportFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance( e );
+		if ( errorDialog == null )
 			return;
-
-		isShowingDialog = true;
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
-			builder.setTitle(R.string.error_network_title);
-		else
-			builder.setTitle(R.string.error_occurred);
-		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setMessage(e.getRessourceString());
-		builder.setNeutralButton(R.string.okay,
-				new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						isShowingDialog = false;
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
+		
+		errorDialog.show( fm, ErrorDialogFragment.TAG );
+	
 	}
-
+	
 	@Override
 	public void onError(SyncServiceException e) {
 		showErrorDialog(e);

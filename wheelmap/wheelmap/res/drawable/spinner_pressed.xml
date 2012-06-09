@@ -9,7 +9,7 @@
         <shape>
             <corners android:radius="1dp" />
 
-            <solid android:color="@color/button_green_light" />
+            <solid android:color="@color/green_light" />
 
             <stroke
                 android:width="2dip"

@@ -9,7 +9,7 @@
         <shape>
             <corners android:radius="3dp" />
 
-            <solid android:color="@color/button_green_light" />
+            <solid android:color="@color/green_light" />
         </shape>
     </item>
     <item>
@@ -18,7 +18,7 @@
 
             <stroke
                 android:width="3dp"
-                android:color="@color/button_green_dark" />
+                android:color="@color/green_dark" />
 
             <solid android:color="@android:color/transparent" />
 
