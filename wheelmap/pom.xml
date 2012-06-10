@@ -7,7 +7,7 @@
     <artifactId>wheelmap-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>wheelmap - Parent</name>
+    <name>Wheelmap - Parent</name>
 
     <modules>
         <module>wheelmap</module>
@@ -15,8 +15,10 @@
     </modules>
 
     <properties>
-        <platform.version> 4.0.1.2
-            </platform.version>
+        <platform.version> 4.0.1.2</platform.version>
+        <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
+        <project.inceptionYear>2011</project.inceptionYear>
+	<main.basedir>${project.basedir}</main.basedir>
     </properties>
 
     <dependencyManagement>
@@ -121,6 +123,35 @@
                         <proguardVersion>4.4</proguardVersion>
                     </configuration>
                 </plugin>
+                <plugin>
+		    		<groupId>org.codehaus.mojo</groupId>
+		    		<artifactId>license-maven-plugin</artifactId>
+		    		<version>1.1</version>
+		   			<configuration>
+						 <verbose>false</verbose>
+						 <addSvnKeyWords>false</addSvnKeyWords>
+						 <licenseName>our_license</licenseName>
+						 <licenseResolver>file://${main.basedir}/src/license</licenseResolver>
+						 <roots>
+				  		  	<root>src/main/java</root>
+				  		  	<root>src/test</root>
+				  		  	<root>res</root>
+						</roots>
+						<exludes>
+							<exclude>target/*</exclude>
+						</exludes>
+					</configuration>
+		    		<executions>
+						<execution>
+				    		<id>first</id> 
+				    		<goals>
+				      			<goal>update-file-header</goal>
+				    		</goals>
+				    		<phase>process-sources</phase>
+				    		
+			 			</execution>	
+			 		</executions>
+		 		</plugin>     
             </plugins>
         </pluginManagement>
     </build>

@@ -20,6 +20,12 @@ wheelmap/project.properties
 wheelmap-it/project.properties
 von Hand und importiere die Projekte nochmals
 
+// Ein update der Copyright Header erfolgt mit
+mvn license:update-file-header
+
+// Ein update der Third-Party License Header
+mvn license:add-third-party -DuseMissingFile
+
 // Maven commands:
 mvn compile, mvn install 
 - compiliert oder baut
@@ -35,4 +41,5 @@ mvn integration-test
 
 Ein unsigniertes APK findet sich unter
 wheelmap/target/wheelmap-1.0-SNAPSHOT.ap_
+
 
