@@ -77,6 +77,8 @@
 	<groupId>org.wheelmap.android</groupId>
 	<artifactId>mapsforge-map</artifactId>
 	<version>0.2.4</version>
+	<scope>system</scope>
+	<systemPath>${project.basedir}/../libs/mapsforge-map-0.2.4.jar</systemPath>    
     </dependency>
     <dependency>
 	<groupId>com.github.handmark.pulltorefresh</groupId>
