@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-
   <groupId>org.wheelmap.android</groupId>
   <artifactId>wheelmap</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>apk</packaging>
   <name>Wheelmap - App</name>
-
-   <properties>
-        <main.basedir>${project.parent.basedir}</main.basedir>
-   </properties>
-
+  <properties>
+    <main.basedir>${project.parent.basedir}</main.basedir>
+  </properties>
   <repositories>
     <repository>
-        <id>acra-releases</id>
-        <url>http://acra.googlecode.com/svn/repository/releases</url>
+      <id>acra-releases</id>
+      <url>http://acra.googlecode.com/svn/repository/releases</url>
     </repository>
     <repository>
-        <id>org.springframework.maven.milestone</id>
-        <name>Spring Maven Milestone Repository</name>
-        <url>http://maven.springframework.org/milestone</url>
-        <snapshots>
-	   <enabled>false</enabled>
-        </snapshots>
+      <id>org.springframework.maven.milestone</id>
+      <name>Spring Maven Milestone Repository</name>
+      <url>http://maven.springframework.org/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>michalharakal-snapshots</id>
+      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>michalharakal-releases</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/releases</url>
     </repository>
   </repositories>
-
   <dependencies>
     <dependency>
       <groupId>com.google.android</groupId>
@@ -44,56 +58,53 @@
       <artifactId>androlog</artifactId>
     </dependency>
     <dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-core-asl</artifactId>
-	<version>1.9.7</version>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.7</version>
     </dependency>
     <dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-mapper-asl</artifactId>
-	<version>1.9.7</version>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.7</version>
     </dependency>
     <dependency>
-	<groupId>org.acra</groupId>
-	<artifactId>acra</artifactId>
-	<version>4.2.3</version>
+      <groupId>org.acra</groupId>
+      <artifactId>acra</artifactId>
+      <version>4.2.3</version>
     </dependency>
     <dependency>
-        <groupId>org.springframework.android</groupId>
-        <artifactId>spring-android-rest-template</artifactId>
-        <version>1.0.0.RC1</version>
+      <groupId>org.springframework.android</groupId>
+      <artifactId>spring-android-rest-template</artifactId>
+      <version>1.0.0.RC1</version>
     </dependency>
     <dependency>
-        <groupId>org.springframework.android</groupId>
-        <artifactId>spring-android-core</artifactId>
-        <version>1.0.0.RC1</version>
+      <groupId>org.springframework.android</groupId>
+      <artifactId>spring-android-core</artifactId>
+      <version>1.0.0.RC1</version>
     </dependency>
     <dependency>
-	<groupId>org.wheelmap.android</groupId>
-	<artifactId>googleanalytics</artifactId>
-	<version>1.0-SNAPSHOT</version>
+      <groupId>org.wheelmap.android</groupId>
+      <artifactId>googleanalytics</artifactId>
+      <version>1.0</version>
     </dependency>
     <dependency>
-	<groupId>org.wheelmap.android</groupId>
-	<artifactId>mapsforge-map</artifactId>
-	<version>0.2.4</version>
-	<scope>system</scope>
-	<systemPath>${project.basedir}/../libs/mapsforge-map-0.2.4.jar</systemPath>    
+      <groupId>org.wheelmap.android</groupId>
+      <artifactId>mapsforge-map</artifactId>
+      <version>0.2.4</version>
     </dependency>
     <dependency>
-	<groupId>com.github.handmark.pulltorefresh</groupId>
-	<artifactId>pulltorefresh-library</artifactId>
-	<type>apklib</type>
-	<version>1.2.8</version>
+      <groupId>com.github.handmark.pulltorefresh</groupId>
+      <artifactId>pulltorefresh-library</artifactId>
+      <type>apklib</type>
+      <version>1.2.8</version>
     </dependency>
     <dependency>
-	<groupId>com.actionbarsherlock</groupId>
-	<artifactId>library</artifactId>
-	<version>4.1.0</version>
-	<type>apklib</type>
+      <groupId>com.actionbarsherlock</groupId>
+      <artifactId>library</artifactId>
+      <version>4.1.0</version>
+      <type>apklib</type>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -103,7 +114,6 @@
       </plugin>
     </plugins>
   </build>
-
   <profiles>
     <profile>
       <id>release</id>
@@ -204,5 +214,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
