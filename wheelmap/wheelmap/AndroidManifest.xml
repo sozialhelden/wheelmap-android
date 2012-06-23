@@ -32,21 +32,27 @@ limitations under the License.
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name="org.wheelmap.android.app.WheelmapApp" >
+        android:name="org.wheelmap.android.app.WheelmapApp"
+        android:theme="@style/Theme.Sherlock.Light"
+         >
         <activity
             android:label="@string/app_name"
-            android:name="org.wheelmap.android.ui.StartupActivity"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter >
+            android:name="org.wheelmap.android.ui.StartupActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name="org.wheelmap.android.activity.MainActivity">
+        </activity>
+        
+        
+        
         <activity
             android:label="@string/app_name"
-            android:name="org.wheelmap.android.ui.POIsListActivity"
-            android:theme="@style/Theme.IOSched" >
+            android:name="org.wheelmap.android.ui.POIsListActivity">
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -58,8 +64,7 @@ limitations under the License.
         
         <activity
             android:label="@string/app_name"
-            android:name="org.wheelmap.android.activity.POIsListActivity"
-            android:theme="@style/Theme.IOSched" >
+            android:name="org.wheelmap.android.activity.POIsListActivity">
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -72,8 +77,7 @@ limitations under the License.
         <activity
             android:label="@string/title_pois_map"
             android:launchMode="singleTask"
-            android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
-            android:theme="@style/Theme.IOSched" >
+            android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity">
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -86,8 +90,7 @@ limitations under the License.
         <activity
             android:label="@string/title_pois_map"
             android:launchMode="singleTask"
-            android:name="org.wheelmap.android.activity.POIsMapsforgeActivity"
-            android:theme="@style/Theme.IOSched" >
+            android:name="org.wheelmap.android.activity.POIsMapsforgeActivity">
             <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -99,43 +102,34 @@ limitations under the License.
         
         <activity
             android:label="@string/title_pois_detail_activity"
-            android:name="org.wheelmap.android.ui.POIDetailActivity"
-            android:theme="@style/Theme.IOSched" >
-            <!-- <intent-filter >
-                 // What does this intent filter?
-                 <action android:name="android.intent.action.SEND" />
-                 <category android:name="android.intent.category.DEFAULT" />
-                 <data android:mimeType="image/*" />
-                 </intent-filter>
-            -->
+            android:name="org.wheelmap.android.ui.POIDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
 				<category android:name="android.intent.category.BROWSABLE"></category>
 				<data android:scheme="http" android:host="*wheelmap.org" android:pathPrefix="/nodes"></data>
 			</intent-filter>
-  
         </activity>
         <activity
             android:label="@string/title_pois_map"
             android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:label="@string/title_pois_position_edit"
             android:name="org.wheelmap.android.ui.mapsforge.EditPositionActivity"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:label="@string/title_nodetype_edit"
             android:name="org.wheelmap.android.ui.NodeTypeSelectActivity"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:label="@string/title_pois_settings"
             android:name="org.wheelmap.android.ui.NewSettingsActivity"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:label="@string/title_wheelchair_state"
             android:name="org.wheelmap.android.ui.WheelchairStateActivity"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:label="@string/title_search"
             android:name="org.wheelmap.android.ui.SearchActivity"
@@ -155,12 +149,7 @@ limitations under the License.
         <activity
             android:label="@string/title_pois_detail"
             android:name="org.wheelmap.android.ui.POIDetailActivity"
-            android:theme="@style/Theme.IOSched" >
-
-            <!--
-                  This filter says that we can view or edit the data of
-                 a single note
-            -->
+            >
             <intent-filter android:label="@string/edit_poi" >
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -171,10 +160,6 @@ limitations under the License.
                 <data android:mimeType="vnd.android.cursor.item/vnd.wheelmap.pois" />
             </intent-filter>
 
-            <!--
-                 This filter says that we can create a new note inside
-                 of a directory of notes.
-            -->
             <intent-filter >
                 <action android:name="android.intent.action.INSERT" />
 
