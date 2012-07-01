@@ -90,6 +90,16 @@
 		<version>4.1.0</version>
 		<type>apklib</type>
     </dependency>
+    <dependency>
+        <groupId>org.roboguice</groupId>
+        <artifactId>roboguice</artifactId>
+    </dependency>
+    
+    <!-- For the optional Nullable annotation -->
+    <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
