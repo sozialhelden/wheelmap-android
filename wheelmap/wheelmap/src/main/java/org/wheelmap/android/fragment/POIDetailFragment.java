@@ -24,7 +24,6 @@ import org.wheelmap.android.utils.ViewTool;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -238,7 +237,7 @@ public class POIDetailFragment extends SherlockFragment implements
 	public WheelchairState getWheelchairState() {
 		return mWheelChairState;
 	}
-	
+
 	public long getPoiId() {
 		return poiID;
 	}
@@ -292,12 +291,12 @@ public class POIDetailFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onTap(OverlayItem item) {
+	public void onTap(OverlayItem item, long poiId) {
 		int lat = item.getPoint().getLatitudeE6();
 		int lon = item.getPoint().getLongitudeE6();
-		
-		if ( mListener != null) {
-			mListener.onShowLargeMapAt( this, lat, lon);
+
+		if (mListener != null) {
+			mListener.onShowLargeMapAt(this, lat, lon);
 		}
 	}
 
@@ -318,10 +317,7 @@ public class POIDetailFragment extends SherlockFragment implements
 			whereValues = null;
 		} else if (wmID != -1l) {
 			whereClause = "( " + POIs.WM_ID + " = ? )";
-			
-			
-			
-			
+
 			whereValues = new String[] { String.valueOf(wmID) };
 			uri = Wheelmap.POIs.CONTENT_URI;
 		}
