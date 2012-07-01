@@ -16,12 +16,14 @@ limitations under the License.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
     package="org.wheelmap.android.online"
+    android:installLocation="auto"
     android:versionCode="13"
     android:versionName="0.8" >
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="14"/>
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="14" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,37 +32,24 @@ limitations under the License.
     <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
+        android:name="org.wheelmap.android.app.WheelmapApp"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:name="org.wheelmap.android.app.WheelmapApp" >
+        android:label="@string/app_name" >
         <activity
-            android:label="@string/app_name"
             android:name="org.wheelmap.android.ui.StartupActivity"
+            android:label="@string/app_name"
             android:theme="@style/Theme.IOSched" >
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/app_name"
             android:name="org.wheelmap.android.ui.POIsListActivity"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter >
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_list" />
-        </activity>
-        
-        <activity
             android:label="@string/app_name"
-            android:name="org.wheelmap.android.activity.POIsListActivity"
             android:theme="@style/Theme.IOSched" >
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
@@ -68,130 +57,127 @@ limitations under the License.
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_list" />
         </activity>
-        
         <activity
-            android:label="@string/title_pois_map"
-            android:launchMode="singleTask"
-            android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
+            android:name="org.wheelmap.android.activity.POIsListActivity"
+            android:label="@string/app_name"
             android:theme="@style/Theme.IOSched" >
-            <intent-filter >
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_map" />
-        </activity>
-        
-        <activity
-            android:label="@string/title_pois_map"
-            android:launchMode="singleTask"
-            android:name="org.wheelmap.android.activity.POIsMapsforgeActivity"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter >
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_map" />
-        </activity>
-        
-        <activity
-            android:label="@string/title_pois_detail_activity"
-            android:name="org.wheelmap.android.ui.POIDetailActivity"
-            android:theme="@style/Theme.IOSched" >
-            <!-- <intent-filter >
-                 // What does this intent filter?
-                 <action android:name="android.intent.action.SEND" />
-                 <category android:name="android.intent.category.DEFAULT" />
-                 <data android:mimeType="image/*" />
-                 </intent-filter>
-            -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"></action>
-				<category android:name="android.intent.category.DEFAULT"></category>
-				<category android:name="android.intent.category.BROWSABLE"></category>
-				<data android:scheme="http" android:host="*wheelmap.org" android:pathPrefix="/nodes"></data>
-			</intent-filter>
-  
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_list" />
         </activity>
         <activity
+            android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
             android:label="@string/title_pois_map"
-            android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_pois_position_edit"
-            android:name="org.wheelmap.android.ui.mapsforge.EditPositionActivity"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_nodetype_edit"
-            android:name="org.wheelmap.android.ui.NodeTypeSelectActivity"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_pois_settings"
-            android:name="org.wheelmap.android.ui.NewSettingsActivity"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_wheelchair_state"
-            android:name="org.wheelmap.android.ui.WheelchairStateActivity"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_search"
-            android:name="org.wheelmap.android.ui.SearchActivity"
-            android:theme="@style/Theme.IOSched.Transparent" />
-        <activity
-            android:label="@string/title_login"
-            android:name="org.wheelmap.android.ui.LoginActivity"
-            android:theme="@style/Theme.IOSched.Transparent" />
-        <activity
-            android:label="@string/title_info"
-            android:name="org.wheelmap.android.ui.InfoActivity"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_legal_notice"
-            android:name="org.wheelmap.android.ui.LegalNoticeActivity"
-            android:theme="@style/Theme.IOSched" />
-        <activity
-            android:label="@string/title_pois_detail"
-            android:name="org.wheelmap.android.ui.POIDetailActivity"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.IOSched" >
-
-            <!--
-                  This filter says that we can view or edit the data of
-                 a single note
-            -->
-            <intent-filter android:label="@string/edit_poi" >
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.INSERT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.wheelmap.pois" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
-            <!--
-                 This filter says that we can create a new note inside
-                 of a directory of notes.
-            -->
-            <intent-filter >
-                <action android:name="android.intent.action.INSERT" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_map" />
+        </activity>
+        <activity
+            android:name="org.wheelmap.android.activity.POIsMapsforgeActivity"
+            android:label="@string/title_pois_map"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.IOSched" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
 
-                <category android:name="android.intent.category.DEFAULT" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_map" />
+        </activity>
+        <activity
+            android:name="org.wheelmap.android.ui.POIDetailActivity"
+            android:label="@string/title_pois_detail_activity"
+            android:theme="@style/Theme.IOSched" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" >
+                </action>
 
-                <data android:mimeType="vnd.android.cursor.dir/vnd.wheelmap.pois" />
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+                <category android:name="android.intent.category.BROWSABLE" >
+                </category>
+
+                <data
+                    android:host="*wheelmap.org"
+                    android:pathPrefix="/nodes"
+                    android:scheme="http" >
+                </data>
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="org.wheelmap.android.activity.POIDetailActivity"
+            android:label="@string/title_pois_detail_activity"
+            android:theme="@style/Theme.IOSched" >
+            >
+        </activity>
+        <activity
+            android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
+            android:label="@string/title_pois_map"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.ui.mapsforge.EditPositionActivity"
+            android:label="@string/title_pois_position_edit"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.ui.NodeTypeSelectActivity"
+            android:label="@string/title_nodetype_edit"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.ui.NewSettingsActivity"
+            android:label="@string/title_pois_settings"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.ui.WheelchairStateActivity"
+            android:label="@string/title_wheelchair_state"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.ui.SearchActivity"
+            android:label="@string/title_search"
+            android:theme="@style/Theme.IOSched.Transparent" />
+        <activity
+            android:name="org.wheelmap.android.ui.LoginActivity"
+            android:label="@string/title_login"
+            android:theme="@style/Theme.IOSched.Transparent" />
+        <activity
+            android:name="org.wheelmap.android.ui.InfoActivity"
+            android:label="@string/title_info"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.activity.InfoActivity"
+            android:label="@string/title_info"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.ui.LegalNoticeActivity"
+            android:label="@string/title_legal_notice"
+            android:theme="@style/Theme.IOSched" />
+        <activity
+            android:name="org.wheelmap.android.activity.LegalNoticeActivity"
+            android:label="@string/title_legal_notice"
+            android:theme="@style/Theme.IOSched" />
+        
         <service android:name="org.wheelmap.android.service.SyncService" />
 
         <provider
+            android:name="org.wheelmap.android.model.POIsProvider"
             android:authorities="org.wheelmap.android"
-            android:name="org.wheelmap.android.model.POIsProvider" />
+            android:readPermission="org.wheelmap.android.pois.Read"
+            android:writePermission="org.wheelmap.android.pois.Write" />
         <provider
+            android:name="org.wheelmap.android.model.SupportProvider"
             android:authorities="org.wheelmap.android.support"
-            android:name="org.wheelmap.android.model.SupportProvider" />
+            android:readPermission="org.wheelmap.android.support.Read"
+            android:writePermission="org.wheelmap.android.support.Write" />
     </application>
 
 </manifest>
