@@ -34,139 +34,147 @@ import android.content.SharedPreferences.Editor;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class MapsforgeMapActivity extends SherlockFragmentActivity implements MapContext {
+public class MapsforgeMapActivity extends SherlockFragmentActivity implements
+		MapContext {
 
 	/**
-     * Name of the file where the map position and other settings are stored.
-     */
-    private static final String PREFERENCES_FILE = "MapActivity";
+	 * Name of the file where the map position and other settings are stored.
+	 */
+	private static final String PREFERENCES_FILE = "MapActivity";
 
-    /**
-     * Counter to store the last ID given to a MapView.
-     */
-    private int lastMapViewId;
+	/**
+	 * Counter to store the last ID given to a MapView.
+	 */
+	private int lastMapViewId;
 
-    /**
-     * Internal list which contains references to all running MapView objects.
-     */
-    private List<MapView> mapViews = new ArrayList<MapView>(2);
+	/**
+	 * Internal list which contains references to all running MapView objects.
+	 */
+	private List<MapView> mapViews = new ArrayList<MapView>(2);
 
-    private void destroyMapViews() {
-            if (this.mapViews != null) {
-                    MapView currentMapView;
-                    while (!this.mapViews.isEmpty()) {
-                            currentMapView = this.mapViews.get(0);
-                            currentMapView.destroy();
-                    }
-                    currentMapView = null;
-                    this.mapViews.clear();
-                    this.mapViews = null;
-            }
-    }
+	private void destroyMapViews() {
+		if (this.mapViews != null) {
+			MapView currentMapView;
+			while (!this.mapViews.isEmpty()) {
+				currentMapView = this.mapViews.get(0);
+				currentMapView.destroy();
+			}
+			currentMapView = null;
+			this.mapViews.clear();
+			this.mapViews = null;
+		}
+	}
 
-    @Override
-	public void onDestroy() {
-            super.onDestroy();
-            destroyMapViews();
-    }
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Editor editor = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE)
+				.edit();
+		for (int i = 0, n = this.mapViews.size(); i < n; ++i) {
+			MapView currentMapView = this.mapViews.get(i);
+			currentMapView.onPause();
 
-    @Override
-	public void onPause() {
-            super.onPause();
-            Editor editor = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE).edit();
-            for (int i = 0, n = this.mapViews.size(); i < n; ++i) {
-                    MapView currentMapView = this.mapViews.get(i);
-                    currentMapView.onPause();
+			editor.clear();
+			if (currentMapView.hasValidCenter()) {
+				if (!currentMapView.getMapViewMode()
+						.requiresInternetConnection()
+						&& currentMapView.hasValidMapFile()) {
+					// save the map file
+					editor.putString("mapFile", currentMapView.getMapFile());
+				}
+				// save the map position and zoom level
+				GeoPoint mapCenter = currentMapView.getMapCenter();
+				editor.putInt("latitude", mapCenter.getLatitudeE6());
+				editor.putInt("longitude", mapCenter.getLongitudeE6());
+				editor.putInt("zoomLevel", currentMapView.getZoomLevel());
+			}
+			editor.commit();
+		}
+	}
 
-                    editor.clear();
-                    if (currentMapView.hasValidCenter()) {
-                            if (!currentMapView.getMapViewMode().requiresInternetConnection()
-                                            && currentMapView.hasValidMapFile()) {
-                                    // save the map file
-                                    editor.putString("mapFile", currentMapView.getMapFile());
-                            }
-                            // save the map position and zoom level
-                            GeoPoint mapCenter = currentMapView.getMapCenter();
-                            editor.putInt("latitude", mapCenter.getLatitudeE6());
-                            editor.putInt("longitude", mapCenter.getLongitudeE6());
-                            editor.putInt("zoomLevel", currentMapView.getZoomLevel());
-                    }
-                    editor.commit();
-            }
-    }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		for (int i = 0, n = this.mapViews.size(); i < n; ++i) {
+			this.mapViews.get(i).onResume();
+		}
+	}
 
-    @Override
-	public void onResume() {
-            super.onResume();
-            for (int i = 0, n = this.mapViews.size(); i < n; ++i) {
-                    this.mapViews.get(i).onResume();
-            }
-    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		destroyMapViews();
+	}
 
-    /**
-     * Returns a unique MapView ID on each call.
-     * 
-     * @return the new MapView ID.
-     */
-    @Override
-    public int getMapViewId() {
-            return ++this.lastMapViewId;
-    }
+	/**
+	 * Returns a unique MapView ID on each call.
+	 * 
+	 * @return the new MapView ID.
+	 */
+	@Override
+	public int getMapViewId() {
+		return ++this.lastMapViewId;
+	}
 
-    /**
-     * This method is called once by each MapView during its setup process.
-     * 
-     * @param mapView
-     *            the calling MapView.
-     */
-    @Override
-    public void registerMapView(MapView mapView) {
-            if (this.mapViews != null) {
-                    this.mapViews.add(mapView);
+	/**
+	 * This method is called once by each MapView during its setup process.
+	 * 
+	 * @param mapView
+	 *            the calling MapView.
+	 */
+	@Override
+	public void registerMapView(MapView mapView) {
+		if (this.mapViews != null) {
+			this.mapViews.add(mapView);
 
-                    SharedPreferences preferences = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE);
-                    // restore the position
-                    if (preferences.contains("latitude") && preferences.contains("longitude")
-                                    && preferences.contains("zoomLevel")) {
-                            if (!mapView.getMapViewMode().requiresInternetConnection()
-                                            && preferences.contains("mapFile")) {
-                                    // get and set the map file
-                                    mapView.setMapFileFromPreferences(preferences.getString("mapFile", null));
-                            }
+			SharedPreferences preferences = getSharedPreferences(
+					PREFERENCES_FILE, MODE_PRIVATE);
+			// restore the position
+			if (preferences.contains("latitude")
+					&& preferences.contains("longitude")
+					&& preferences.contains("zoomLevel")) {
+				if (!mapView.getMapViewMode().requiresInternetConnection()
+						&& preferences.contains("mapFile")) {
+					// get and set the map file
+					mapView.setMapFileFromPreferences(preferences.getString(
+							"mapFile", null));
+				}
 
-                            // get and set the map position and zoom level
-                            GeoPoint defaultStartPoint = mapView.getDefaultStartPoint();
-                            mapView.setCenterAndZoom(new GeoPoint(preferences.getInt("latitude",
-                                            defaultStartPoint.getLatitudeE6()), preferences.getInt("longitude",
-                                            defaultStartPoint.getLongitudeE6())), (byte) preferences.getInt(
-                                            "zoomLevel", mapView.getDefaultZoomLevel()));
-                    }
-            }
-    }
+				// get and set the map position and zoom level
+				GeoPoint defaultStartPoint = mapView.getDefaultStartPoint();
+				mapView.setCenterAndZoom(
+						new GeoPoint(preferences.getInt("latitude",
+								defaultStartPoint.getLatitudeE6()), preferences
+								.getInt("longitude",
+										defaultStartPoint.getLongitudeE6())),
+						(byte) preferences.getInt("zoomLevel",
+								mapView.getDefaultZoomLevel()));
+			}
+		}
+	}
 
-    /**
-     * This method is called once by each MapView when it gets destroyed.
-     * 
-     * @param mapView
-     *            the calling MapView.
-     */
-    @Override
-    public void unregisterMapView(MapView mapView) {
-            if (this.mapViews != null) {
-                    this.mapViews.remove(mapView);
-            }
-    }
+	/**
+	 * This method is called once by each MapView when it gets destroyed.
+	 * 
+	 * @param mapView
+	 *            the calling MapView.
+	 */
+	@Override
+	public void unregisterMapView(MapView mapView) {
+		if (this.mapViews != null) {
+			this.mapViews.remove(mapView);
+		}
+	}
 
-    /**
-     * This method sets the size of the shared RAM cache in TileRAMCache
-     * 
-     * @param capacity
-     *            number of tiles
-     */
+	/**
+	 * This method sets the size of the shared RAM cache in TileRAMCache
+	 * 
+	 * @param capacity
+	 *            number of tiles
+	 */
 
-    public static void setSharedRAMCacheCapacity(int capacity) {
-            TileRAMCache.SHARED_CAPACITY = capacity;
-    }
+	public static void setSharedRAMCacheCapacity(int capacity) {
+		TileRAMCache.SHARED_CAPACITY = capacity;
+	}
 
-	
 }
