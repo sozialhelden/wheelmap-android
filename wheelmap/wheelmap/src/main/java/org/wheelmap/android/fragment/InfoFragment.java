@@ -1,25 +1,4 @@
-/*
- * #%L
- * Wheelmap - App
- * %%
- * Copyright (C) 2011 - 2012 Michal Harakal - Michael Kroez - Sozialhelden e.V.
- * %%
- * Wheelmap App based on the Wheelmap Service by Sozialhelden e.V.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *         http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS-IS" BASIS
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
- */
-package org.wheelmap.android.ui;
+package org.wheelmap.android.fragment;
 
 import java.util.ArrayList;
 
@@ -29,24 +8,39 @@ import org.wheelmap.android.ui.info.InfoTypes;
 import org.wheelmap.android.ui.info.InfoWidgetsAdapter;
 
 import android.app.Activity;
-import android.app.ListActivity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class InfoActivity extends ListActivity {
+import com.actionbarsherlock.app.SherlockListFragment;
 
-	/** Called when the activity is first created. */
+public class InfoFragment extends SherlockListFragment {
+	ArrayList<Info> infoList = new ArrayList<Info>();
+
+	private OnInfoFragmentListener mListener;
+
+	public interface OnInfoFragmentListener {
+		public void onNextView(String view);
+
+		public void onViewUri(Uri uri);
+	}
+
 	@Override
-	public void onCreate(Bundle icicle) {
-		super.onCreate(icicle);
-		setContentView(R.layout.activity_info);
-		ArrayList<Info> infoList = new ArrayList<Info>();
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		if (activity instanceof OnInfoFragmentListener)
+			mListener = (OnInfoFragmentListener) activity;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
 		Info info = null;
-
 		// web version
 		info = new Info(R.string.info_web_version,
 				R.string.info_web_version_one, "http://www.wheelmap.org",
@@ -76,7 +70,7 @@ public class InfoActivity extends ListActivity {
 				"http://www.christophbuente.de", InfoTypes.SIMPLE_TEXT);
 		infoList.add(info);
 		// legal notice
-		info = new Info(R.string.btn_legal_notice, "LegalNotice",
+		info = new Info(R.string.btn_legal_notice, "LegalNoticeActivity",
 				InfoTypes.NEXT_ACTIVITY);
 		infoList.add(info);
 
@@ -90,30 +84,49 @@ public class InfoActivity extends ListActivity {
 				"http://www.fdst.de/", InfoTypes.WITH_IMAGE);
 		infoList.add(info);
 
-		InfoWidgetsAdapter infoAdapter = new InfoWidgetsAdapter(this, infoList);
-		setListAdapter(infoAdapter);
 	}
 
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.fragment_info, container, false);
+
+		InfoWidgetsAdapter infoAdapter = new InfoWidgetsAdapter(getActivity(),
+				infoList);
+		setListAdapter(infoAdapter);
+
+		return v;
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Info info = (Info) this.getListAdapter().getItem(position);
 		switch (info.getInfoType()) {
 		case NEXT_ACTIVITY:
-			Class<? extends Activity> clzz;
-			if (info.getNextView().equals("LegalNotice"))
-				clzz = LegalNoticeActivity.class;
-			else
-				return;
-
-			Intent intent = new Intent(this, clzz);
-			startActivity(intent);
+			if (mListener != null)
+				mListener.onNextView(info.getNextView());
 			break;
 		default:
-			intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info
-					.getUrl()));
-			startActivity(intent);
+
+			if (mListener != null)
+				mListener.onViewUri(Uri.parse(info.getUrl()));
 		}
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 	}
 
 }
