@@ -24,6 +24,7 @@ package org.wheelmap.android.fragment;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -40,7 +41,11 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements Dialo
 	private final static String ARGUMENT_EXCEPTION = "org.wheelmap.android.ARGUMENT_EXCEPTION";
 	public static final String TAG = "error_dialog";
 	static boolean isShowing;
+	private CloseListener mListener;
 	
+	public interface CloseListener {
+		public void onCloseDialog();
+	}
 	
 	public final static ErrorDialogFragment newInstance( SyncServiceException e ) {
 		if ( isShowing )
@@ -58,6 +63,15 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements Dialo
 	public ErrorDialogFragment() {
 		
 	}
+	
+	
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if ( activity instanceof CloseListener )
+			mListener = (CloseListener) activity;
+	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {	
@@ -69,6 +83,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements Dialo
 			builder.setTitle(R.string.error_network_title);
 		else
 			builder.setTitle(R.string.error_occurred);
+				
 		builder.setIcon(R.drawable.ic_dialog_alert_holo_light );
 		builder.setMessage(e.getRessourceString());
 		builder.setNeutralButton(R.string.okay, this );
@@ -77,6 +92,9 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements Dialo
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		isShowing = false;	
+		isShowing = false;
+		
+		if ( mListener != null )
+			mListener.onCloseDialog();
 	}
 }
