@@ -23,18 +23,15 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
+import org.wheelmap.android.fragment.POIsMapsforgeFragment.OnPOIsMapsforgeFragmentListener;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerFragmentListener;
+import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.SearchActivity;
 
-import com.actionbarsherlock.view.Menu;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -45,8 +42,11 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+
 public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
-		OnClickListener, OnPOIsMapsforgeWorkerFragmentListener {
+		OnClickListener, OnPOIsMapsforgeWorkerFragmentListener,
+		OnPOIsMapsforgeFragmentListener {
 	private final static String TAG = "mapsforge";
 	private ProgressBar mProgressBar;
 	private ImageButton mSearchButton;
@@ -109,7 +109,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		isSearchMode = !isSearchMode;
 		updateSearchStatus();
 		sendSearchStatus();
-		
+
 		if (isSearchMode) {
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
@@ -123,7 +123,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		startActivity(new Intent(this, NewSettingsActivity.class));
 		return true;
 	}
-	
+
 	// public void onListClick(View v) {
 	// Intent intent = new Intent(this, POIsListActivity.class);
 	// intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
@@ -170,8 +170,15 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	}
 
 	private void sendSearchStatus() {
-		if ( mWorkerFragment != null )
-			mWorkerFragment.setSearchMode( isSearchMode );
+		if (mWorkerFragment != null)
+			mWorkerFragment.setSearchMode(isSearchMode);
+	}
+
+	@Override
+	public void onShowDetail(long poiId) {
+		Intent i = new Intent(this, POIDetailActivity.class);
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		startActivity(i);
 	}
 
 	/**
@@ -203,19 +210,19 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		}
 	}
 
-	private void showErrorDialog(SyncServiceException e) {		
+	private void showErrorDialog(SyncServiceException e) {
 		if (!isInForeground)
 			return;
-		
+
 		FragmentManager fm = getSupportFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance( e );
-		if ( errorDialog == null )
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		if (errorDialog == null)
 			return;
-		
-		errorDialog.show( fm, ErrorDialogFragment.TAG );
-	
+
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
+
 	}
-	
+
 	@Override
 	public void onError(SyncServiceException e) {
 		showErrorDialog(e);
