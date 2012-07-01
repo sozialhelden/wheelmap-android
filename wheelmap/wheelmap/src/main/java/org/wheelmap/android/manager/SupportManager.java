@@ -77,6 +77,23 @@ public class SupportManager {
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 
+	public final static Map<WheelchairState, WheelchairAttributes> wsAttributes = new HashMap<WheelchairState, WheelchairAttributes>();
+	
+	public static class WheelchairAttributes {
+		public final int titleStringId;
+		public final int stringId;
+		public final int drawableId;
+		public final int colorId;
+
+		WheelchairAttributes(int titleStringId, int stringId, int drawableId,
+				int colorId) {
+			this.titleStringId = titleStringId;
+			this.stringId = stringId;
+			this.drawableId = drawableId;
+			this.colorId = colorId;
+		}
+	}
+
 	private AssetManager mAssetManager;
 
 	public static class NodeType {
@@ -289,7 +306,7 @@ public class SupportManager {
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(LocalesContent.CONTENT_URI,
 				LocalesContent.PROJECTION, null, null, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return false;
 
 		boolean dbEmpty = cursor.getCount() == 0;
@@ -315,9 +332,9 @@ public class SupportManager {
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
 				CategoriesContent.PROJECTION, null, null, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return false;
-		
+
 		boolean dbFull = cursor.getCount() != 0;
 		cursor.close();
 		return dbFull;
@@ -327,7 +344,7 @@ public class SupportManager {
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
 				NodeTypesContent.PROJECTION, null, null, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return false;
 
 		boolean dbFull = cursor.getCount() != 0;
@@ -346,9 +363,9 @@ public class SupportManager {
 
 		Cursor cursor = resolver.query(LocalesContent.CONTENT_URI,
 				LocalesContent.PROJECTION, whereClause, whereValues, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return;
-		
+
 		String serviceLocale = null;
 		if (cursor.getCount() == 1)
 			serviceLocale = locale;
@@ -373,9 +390,9 @@ public class SupportManager {
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
 				CategoriesContent.PROJECTION, null, null, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return;
-		
+
 		cursor.moveToFirst();
 		mCategoryLookup.clear();
 
@@ -397,9 +414,9 @@ public class SupportManager {
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
 				NodeTypesContent.PROJECTION, null, null, null);
-		if ( cursor == null )
+		if (cursor == null)
 			return;
-		
+
 		cursor.moveToFirst();
 		mNodeTypeLookup.clear();
 
@@ -575,9 +592,9 @@ public class SupportManager {
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor c = resolver.query(contentUri, projection, whereClause,
 				whereValues, null);
-		if ( c == null )
+		if (c == null)
 			return;
-		
+
 		int cursorCount = c.getCount();
 		c.close();
 		if (cursorCount == 0)
@@ -587,6 +604,22 @@ public class SupportManager {
 		else {
 			// do nothing, as more than one file would be updated
 		}
+	}
+
+	static {
+		wsAttributes.put(WheelchairState.YES, new WheelchairAttributes(
+				R.string.ws_enabled_title, R.string.ws_enabled,
+				R.drawable.wheelchair_state_enabled, R.color.wheel_enabled));
+		wsAttributes.put(WheelchairState.LIMITED, new WheelchairAttributes(
+				R.string.ws_limited_title, R.string.ws_limited,
+				R.drawable.wheelchair_state_limited, R.color.wheel_limited));
+		wsAttributes.put(WheelchairState.NO, new WheelchairAttributes(
+				R.string.ws_disabled_title, R.string.ws_disabled,
+				R.drawable.wheelchair_state_disabled, R.color.wheel_disabled));
+		wsAttributes.put(WheelchairState.UNKNOWN, new WheelchairAttributes(
+				R.string.ws_unknown_title, R.string.ws_unknown,
+				R.drawable.wheelchair_state_unknown, R.color.wheel_unknown));
+
 	}
 
 }

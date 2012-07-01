@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.ui;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
@@ -34,6 +34,7 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -76,8 +77,6 @@ public class POIDetailActivity extends MapActivity implements
 	private ImageView mStateIcon = null;
 	private TextView mWheelchairStateText = null;
 	private RelativeLayout mWheelchairStateLayout = null;
-	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
-	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
 
 	private MapController mapController;
 	private MapView mapView;
@@ -92,12 +91,14 @@ public class POIDetailActivity extends MapActivity implements
 	
 	private Button mMapButton;
 	private Capability mCap;
+	
+	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail);
-
 		mCap = WheelmapApp.getCapabilityLevel();
 
 		int stubId;
@@ -110,6 +111,7 @@ public class POIDetailActivity extends MapActivity implements
 		stub.inflate();
 
 		mSupportManager = WheelmapApp.getSupportManager();
+		mWSAttributes = mSupportManager.wsAttributes;
 		System.gc();
 
 		nameText = (TextView) findViewById(R.id.title_name);
@@ -124,23 +126,7 @@ public class POIDetailActivity extends MapActivity implements
 		mWheelchairStateText = (TextView) findViewById(R.id.wheelchair_state_text);
 		mWheelchairStateLayout = (RelativeLayout) findViewById(R.id.wheelchair_state_layout);
 
-		mWheelchairStateTextColorMap.put(WheelchairState.YES, new Integer(
-				R.color.wheel_enabled));
-		mWheelchairStateTextColorMap.put(WheelchairState.NO, new Integer(
-				R.color.wheel_disabled));
-		mWheelchairStateTextColorMap.put(WheelchairState.LIMITED, new Integer(
-				R.color.wheel_limited));
-		mWheelchairStateTextColorMap.put(WheelchairState.UNKNOWN, new Integer(
-				R.color.wheel_unknown));
-
-		mWheelchairStateTextsMap.put(WheelchairState.YES, new Integer(
-				R.string.ws_enabled_title));
-		mWheelchairStateTextsMap.put(WheelchairState.NO, new Integer(
-				R.string.ws_disabled_title));
-		mWheelchairStateTextsMap.put(WheelchairState.LIMITED, new Integer(
-				R.string.ws_limited_title));
-		mWheelchairStateTextsMap.put(WheelchairState.UNKNOWN, new Integer(
-				R.string.ws_unknown_title));
+		
 
 		mWheelchairStateLayout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -350,9 +336,8 @@ public class POIDetailActivity extends MapActivity implements
 		mWheelChairState = newState;
 		mStateIcon.setImageDrawable(mSupportManager
 				.lookupWheelDrawable(newState.getId()));
-		mWheelchairStateText.setTextColor(getResources().getColor(
-				mWheelchairStateTextColorMap.get(newState)));
-		mWheelchairStateText.setText(mWheelchairStateTextsMap.get(newState));
+		mWheelchairStateText.setTextColor(mWSAttributes.get(newState).colorId);
+		mWheelchairStateText.setText(mWSAttributes.get(newState).titleStringId);
 	}
 
 	private Cursor queryByLocalId( long id ) {

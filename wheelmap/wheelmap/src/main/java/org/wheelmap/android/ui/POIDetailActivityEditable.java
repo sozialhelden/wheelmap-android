@@ -21,12 +21,13 @@
  */
 package org.wheelmap.android.ui;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap;
@@ -44,7 +45,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -81,18 +81,16 @@ public class POIDetailActivityEditable extends Activity implements
 	private int mLatitude;
 	private int mLongitude;
 
-	private HashMap<WheelchairState, Integer> mWheelchairStateDrawablesMap = new HashMap<WheelchairState, Integer>();
-	private HashMap<WheelchairState, Integer> mWheelchairStateTextColorMap = new HashMap<WheelchairState, Integer>();
-	private HashMap<WheelchairState, Integer> mWheelchairStateTextsMap = new HashMap<WheelchairState, Integer>();
-
 	private int mNodeType;
+	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 
-	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_detail_editable);
+		
+		mWSAttributes = WheelmapApp.getSupportManager().wsAttributes;
+		
 
 		mEditWheelchairStateContainer = (RelativeLayout) findViewById(R.id.edit_wheelchairstate);
 		mEditWheelchairStateContainer.setOnClickListener(this);
@@ -110,33 +108,6 @@ public class POIDetailActivityEditable extends Activity implements
 		mStateIcon = (ImageView) findViewById(R.id.wheelchair_state_icon);
 		mWheelchairStateText = (TextView) findViewById(R.id.wheelchair_state_text);
 		mPositionText = (TextView) findViewById(R.id.edit_position_text);
-
-		mWheelchairStateDrawablesMap.put(WheelchairState.YES, new Integer(
-				R.drawable.wheelchair_state_enabled));
-		mWheelchairStateDrawablesMap.put(WheelchairState.NO, new Integer(
-				R.drawable.wheelchair_state_disabled));
-		mWheelchairStateDrawablesMap.put(WheelchairState.LIMITED, new Integer(
-				R.drawable.wheelchair_state_limited));
-		mWheelchairStateDrawablesMap.put(WheelchairState.UNKNOWN, new Integer(
-				R.drawable.wheelchair_state_unknown));
-
-		mWheelchairStateTextColorMap.put(WheelchairState.YES, new Integer(
-				R.color.wheel_enabled));
-		mWheelchairStateTextColorMap.put(WheelchairState.NO, new Integer(
-				R.color.wheel_disabled));
-		mWheelchairStateTextColorMap.put(WheelchairState.LIMITED, new Integer(
-				R.color.wheel_limited));
-		mWheelchairStateTextColorMap.put(WheelchairState.UNKNOWN, new Integer(
-				R.color.wheel_unknown));
-
-		mWheelchairStateTextsMap.put(WheelchairState.YES, new Integer(
-				R.string.ws_enabled_title));
-		mWheelchairStateTextsMap.put(WheelchairState.NO, new Integer(
-				R.string.ws_disabled_title));
-		mWheelchairStateTextsMap.put(WheelchairState.LIMITED, new Integer(
-				R.string.ws_limited_title));
-		mWheelchairStateTextsMap.put(WheelchairState.UNKNOWN, new Integer(
-				R.string.ws_unknown_title));
 
 		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
 
@@ -302,10 +273,9 @@ public class POIDetailActivityEditable extends Activity implements
 
 	private void setWheelchairState(WheelchairState newState) {
 		mWheelChairState = newState;
-		mStateIcon.setImageResource(mWheelchairStateDrawablesMap.get(newState));
-		mWheelchairStateText.setTextColor(getResources().getColor(
-				mWheelchairStateTextColorMap.get(newState)));
-		mWheelchairStateText.setText(mWheelchairStateTextsMap.get(newState));
+		mStateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
+		mWheelchairStateText.setTextColor(mWSAttributes.get(newState).colorId);
+		mWheelchairStateText.setText( mWSAttributes.get(newState).titleStringId);
 	}
 
 	/**
