@@ -48,7 +48,7 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public boolean onTap(int index) {
 		if (mListener != null) {
-			mListener.onTap(item);
+			mListener.onTap(item, -1l);
 			return true;
 		}
 

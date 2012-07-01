@@ -28,9 +28,6 @@ import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.overlays.OnTapListener;
-import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
@@ -39,6 +36,9 @@ import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.online.R;
+import org.wheelmap.android.overlays.OnTapListener;
+import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
@@ -64,7 +64,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver , OnTapListener {
+		DetachableResultReceiver.Receiver, OnTapListener {
 	private final static String TAG = "poidetail";
 
 	// private ImageView iconImage = null;
@@ -89,12 +89,11 @@ public class POIDetailActivity extends MapActivity implements
 	private Long poiID = -1l;
 	private Long wmID = -1l;
 	public DetachableResultReceiver mReceiver;
-	
+
 	private Button mMapButton;
 	private Capability mCap;
-	
-	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 
+	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -127,8 +126,6 @@ public class POIDetailActivity extends MapActivity implements
 		mWheelchairStateText = (TextView) findViewById(R.id.wheelchair_state_text);
 		mWheelchairStateLayout = (RelativeLayout) findViewById(R.id.wheelchair_state_layout);
 
-		
-
 		mWheelchairStateLayout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				onEditWheelchairState(v);
@@ -146,8 +143,8 @@ public class POIDetailActivity extends MapActivity implements
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri uri = intent.getData();
 			try {
-				wmID = Long.parseLong( uri.getLastPathSegment());
-			} catch ( NumberFormatException e ) {
+				wmID = Long.parseLong(uri.getLastPathSegment());
+			} catch (NumberFormatException e) {
 				// TODO: show a dialog with a meaningful message here
 				finish();
 			}
@@ -182,10 +179,10 @@ public class POIDetailActivity extends MapActivity implements
 	@Override
 	public void onResume() {
 		if (poiID != -1)
-			load( poiID, false);
+			load(poiID, false);
 		else
-			requestData( wmID );
-		
+			requestData(wmID);
+
 		super.onResume();
 		ViewTool.logMemory();
 	}
@@ -194,22 +191,22 @@ public class POIDetailActivity extends MapActivity implements
 	public void onDestroy() {
 		super.onDestroy();
 		mSupportManager.cleanReferences();
-		ViewTool.nullViewDrawables( mContentView );
+		ViewTool.nullViewDrawables(mContentView);
 		mapView = null;
 		mapController = null;
 		System.gc();
 		System.gc(); // to be sure ;-)
 	}
 
-	private void requestData( Long id ) {
+	private void requestData(Long id) {
 		mReceiver = new DetachableResultReceiver(new Handler());
-		mReceiver.setReceiver( this );
-		
+		mReceiver.setReceiver(this);
+
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
 		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODE);
-		intent.putExtra( SyncService.EXTRA_WHEELMAP_ID, id );
-		intent.putExtra( SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		intent.putExtra(SyncService.EXTRA_WHEELMAP_ID, id);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
 		startService(intent);
 	}
 
@@ -228,7 +225,7 @@ public class POIDetailActivity extends MapActivity implements
 
 		// Then query for this specific record:
 		Cursor cur = getContentResolver().query(poiUri, null, null, null, null);
-		if ( cur == null )
+		if (cur == null)
 			return;
 
 		if (cur.getCount() < 1) {
@@ -279,7 +276,7 @@ public class POIDetailActivity extends MapActivity implements
 
 		// Then query for this specific record:
 		Cursor cur = getContentResolver().query(poiUri, null, null, null, null);
-		if ( cur == null )
+		if (cur == null)
 			return;
 
 		if (cur.getCount() < 1) {
@@ -293,14 +290,15 @@ public class POIDetailActivity extends MapActivity implements
 		double lon = POIHelper.getLongitude(cur);
 		String street = POIHelper.getStreet(cur);
 		String houseNum = POIHelper.getHouseNumber(cur);
-		String postCode = POIHelper.getPostcode( cur );
-		String city = POIHelper.getCity( cur );		
+		String postCode = POIHelper.getPostcode(cur);
+		String city = POIHelper.getCity(cur);
 		cur.close();
 
 		Uri geoURI;
-		if ( street.length() > 0 && ( postCode.length() > 0 || city.length() > 0 )) {
-			String address = street + "+" + houseNum + "+" + postCode + "+" + city;
-			geoURI = Uri.parse("geo:0,0?q=" + address.replace( " " , "+" ));
+		if (street.length() > 0 && (postCode.length() > 0 || city.length() > 0)) {
+			String address = street + "+" + houseNum + "+" + postCode + "+"
+					+ city;
+			geoURI = Uri.parse("geo:0,0?q=" + address.replace(" ", "+"));
 		} else {
 			geoURI = Uri.parse("geo:" + String.valueOf(lat) + ","
 					+ String.valueOf(lon) + "?z=17");
@@ -341,7 +339,7 @@ public class POIDetailActivity extends MapActivity implements
 		mWheelchairStateText.setText(mWSAttributes.get(newState).titleStringId);
 	}
 
-	private Cursor queryByLocalId( long id ) {
+	private Cursor queryByLocalId(long id) {
 		// Use the ContentUris method to produce the base URI for the contact
 		// with _ID == 23.
 		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
@@ -352,31 +350,32 @@ public class POIDetailActivity extends MapActivity implements
 		startManagingCursor(cur);
 		return cur;
 	}
-	
-	private Cursor queryByWmId( long id ) {
+
+	private Cursor queryByWmId(long id) {
 		String whereClause = "( " + POIs.WM_ID + " = ? )";
-		String whereValues[] = { String.valueOf( id ) };
-		
-		Cursor cur = managedQuery(Wheelmap.POIs.CONTENT_URI, null, whereClause, whereValues, null );
-		
+		String whereValues[] = { String.valueOf(id) };
+
+		Cursor cur = managedQuery(Wheelmap.POIs.CONTENT_URI, null, whereClause,
+				whereValues, null);
+
 		return cur;
 	}
 
-	private void load(long id, boolean retrieveByWmId ) {
+	private void load(long id, boolean retrieveByWmId) {
 		Cursor cur;
-		if ( retrieveByWmId )
-			cur = queryByWmId( id );
+		if (retrieveByWmId)
+			cur = queryByWmId(id);
 		else
-			cur = queryByLocalId( id );
-		
-		if ( cur == null )
+			cur = queryByLocalId(id);
+
+		if (cur == null)
 			return;
-		
+
 		if (cur.getCount() < 1)
 			return;
 
 		cur.moveToFirst();
-		poiID = POIHelper.getId( cur );
+		poiID = POIHelper.getId(cur);
 		WheelchairState state = POIHelper.getWheelchair(cur);
 		String name = POIHelper.getName(cur);
 		String comment = POIHelper.getComment(cur);
@@ -482,7 +481,7 @@ public class POIDetailActivity extends MapActivity implements
 							SyncService.WHAT_UPDATE_SERVER);
 					startService(intent);
 
-					load( poiID, false);
+					load(poiID, false);
 				}
 			}
 		}
@@ -507,7 +506,7 @@ public class POIDetailActivity extends MapActivity implements
 	}
 
 	@Override
-	public void onTap(OverlayItem item) {
+	public void onTap(OverlayItem item, long poiId) {
 		finish();
 
 		int lat = item.getPoint().getLatitudeE6();
@@ -518,7 +517,7 @@ public class POIDetailActivity extends MapActivity implements
 		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
 		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
 
-		POIDetailActivity.this.startActivity(i);		
+		POIDetailActivity.this.startActivity(i);
 	}
 
 }

@@ -27,18 +27,21 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.overlays.MyLocationOverlay;
-import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
+import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.online.R;
+import org.wheelmap.android.overlays.MyLocationOverlay;
+import org.wheelmap.android.overlays.OnTapListener;
+import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.NewSettingsActivity;
+import org.wheelmap.android.ui.POIDetailActivity;
 import org.wheelmap.android.ui.POIsListActivity;
 import org.wheelmap.android.ui.SearchActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -63,7 +66,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class POIsMapsforgeActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver, OnMoveListener, OnZoomListener {
+		DetachableResultReceiver.Receiver, OnMoveListener, OnZoomListener,
+		OnTapListener {
 
 	private final static String TAG = "mapsforge";
 
@@ -114,7 +118,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController = mMapView.getController();
 
 		// overlays
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, this);
 		runQuery();
 		mCurrLocationOverlay = new MyLocationOverlay();
 
@@ -460,8 +464,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
 
 		if (mLastRequestedPosition != null
-				&&
-				(Math.abs(mLastRequestedPosition.getLatitudeE6()
+				&& (Math.abs(mLastRequestedPosition.getLatitudeE6()
 						- centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
 				&& (Math.abs(mLastRequestedPosition.getLongitudeE6()
 						- centerLocation.getLongitudeE6()) < minimalLongitudeSpan))
@@ -572,6 +575,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		int lat = (int) (location.getLatitude() * 1E6);
 		int lng = (int) (location.getLongitude() * 1E6);
 		return new GeoPoint(lat, lng);
+	}
+
+	@Override
+	public void onTap(OverlayItem item, long poiId) {
+		Intent i = new Intent(this, POIDetailActivity.class);
+		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		startActivity(i);
 	}
 
 }
