@@ -27,9 +27,10 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.overlays.OnTapListener;
+import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
@@ -42,12 +43,12 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.ViewTool;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,7 +64,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class POIDetailActivity extends MapActivity implements
-		DetachableResultReceiver.Receiver {
+		DetachableResultReceiver.Receiver , OnTapListener {
 	private final static String TAG = "poidetail";
 
 	// private ImageView iconImage = null;
@@ -186,14 +187,14 @@ public class POIDetailActivity extends MapActivity implements
 			requestData( wmID );
 		
 		super.onResume();
-		logMemory();
+		ViewTool.logMemory();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mSupportManager.cleanReferences();
-		nullViewDrawablesRecursive(mContentView);
+		ViewTool.nullViewDrawables( mContentView );
 		mapView = null;
 		mapController = null;
 		System.gc();
@@ -411,7 +412,7 @@ public class POIDetailActivity extends MapActivity implements
 				}
 			});
 		} else {
-			POIMapsforgeOverlay overlay = new POIMapsforgeOverlay();
+			SingleItemOverlay overlay = new SingleItemOverlay(this);
 			overlay.setItem(name, comment, nodeType, state, lat, lon);
 			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
@@ -490,60 +491,6 @@ public class POIDetailActivity extends MapActivity implements
 	// Definition of the one requestCode we use for receiving resuls.
 	static final private int SELECT_WHEELCHAIRSTATE = 0;
 
-	private class POIMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
-		private OverlayItem item;
-
-		private int items;
-
-		public POIMapsforgeOverlay() {
-			super(null);
-			items = 0;
-		}
-
-		public void setItem(String title, String snippet, NodeType nodeType,
-				WheelchairState state, int latitude, int longitude) {
-
-			Drawable marker = nodeType.stateDrawables.get(state);
-			item = new OverlayItem();
-			item.setTitle(title);
-			item.setSnippet(snippet);
-			item.setMarker(marker);
-			item.setPoint(new GeoPoint(latitude, longitude));
-			items = 1;
-
-			populate();
-		}
-
-		@Override
-		public int size() {
-			return items;
-		}
-
-		@Override
-		protected OverlayItem createItem(int index) {
-			if (index > 0)
-				return null;
-			return item;
-		}
-
-		@Override
-		public boolean onTap(int index) {
-			finish();
-
-			int lat = item.getPoint().getLatitudeE6();
-			int lon = item.getPoint().getLongitudeE6();
-
-			Intent i = new Intent(POIDetailActivity.this,
-					POIsMapsforgeActivity.class);
-			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
-			i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
-
-			POIDetailActivity.this.startActivity(i);
-			return true;
-		}
-
-	}
-
 	@Override
 	public void setContentView(int layoutResID) {
 		ViewGroup mainView = (ViewGroup) LayoutInflater.from(this).inflate(
@@ -559,43 +506,19 @@ public class POIDetailActivity extends MapActivity implements
 		mContentView = (ViewGroup) view;
 	}
 
-	private void nullViewDrawablesRecursive(View view) {
-		if (view != null) {
-			try {
-				ViewGroup viewGroup = (ViewGroup) view;
+	@Override
+	public void onTap(OverlayItem item) {
+		finish();
 
-				int childCount = viewGroup.getChildCount();
-				for (int index = 0; index < childCount; index++) {
-					View child = viewGroup.getChildAt(index);
-					nullViewDrawablesRecursive(child);
-				}
-			} catch (Exception e) {
-			}
+		int lat = item.getPoint().getLatitudeE6();
+		int lon = item.getPoint().getLongitudeE6();
 
-			nullViewDrawable(view);
-		}
-	}
+		Intent i = new Intent(POIDetailActivity.this,
+				POIsMapsforgeActivity.class);
+		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
+		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
 
-	private void nullViewDrawable(View view) {
-		try {
-			view.setBackgroundDrawable(null);
-		} catch (Exception e) {
-		}
-
-		try {
-			ImageView imageView = (ImageView) view;
-			imageView.setImageDrawable(null);
-			imageView.setBackgroundDrawable(null);
-		} catch (Exception e) {
-		}
-	}
-
-	private void logMemory() {
-		long totalMemory = Runtime.getRuntime().totalMemory();
-		long freeMemory = Runtime.getRuntime().freeMemory();
-		Log.d(TAG, "memory: totalMemory = " + totalMemory + " freeMemory = "
-				+ freeMemory);
-
+		POIDetailActivity.this.startActivity(i);		
 	}
 
 }
