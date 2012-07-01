@@ -32,14 +32,12 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
-import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -49,7 +47,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -161,7 +158,12 @@ public class POIDetailActivity extends MapActivity implements
 
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri uri = intent.getData();
-			wmID = Long.valueOf(uri.getLastPathSegment());
+			try {
+				wmID = Long.parseLong( uri.getLastPathSegment());
+			} catch ( NumberFormatException e ) {
+				// TODO: show a dialog with a meaningful message here
+				finish();
+			}
 			Log.d(TAG, "onCreate: wmId = " + wmID);
 		} else {
 			poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
