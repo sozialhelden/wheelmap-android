@@ -22,20 +22,16 @@
 package org.wheelmap.android.activity;
 
 import org.wheelmap.android.fragment.ErrorDialogFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsListFragment.OnListFragmentListener;
+import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsListWorkerFragment.OnListWorkerFragmentListener;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.ui.InfoActivity;
 import org.wheelmap.android.ui.NewSettingsActivity;
-import org.wheelmap.android.ui.POIDetailActivity;
 import org.wheelmap.android.ui.POIDetailActivityEditable;
 import org.wheelmap.android.ui.SearchActivity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -174,24 +170,24 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onWheelmapPOIClicked(long id) {
+	public void onPOIItemClicked(long id) {
 
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
 		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, id);
 		startActivity(i);
 	}
 
-	private void showErrorDialog(SyncServiceException e) {		
+	private void showErrorDialog(SyncServiceException e) {
 		if (!isInForeground)
 			return;
-		
+
 		FragmentManager fm = getSupportFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance( e );
-		if ( errorDialog == null )
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		if (errorDialog == null)
 			return;
-		
-		errorDialog.show( fm, ErrorDialogFragment.TAG );
-	
+
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
+
 	}
 
 	@Override
