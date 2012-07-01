@@ -29,6 +29,7 @@ import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.InfoActivity;
+import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.POIDetailActivity;
 import org.wheelmap.android.ui.POIDetailActivityEditable;
 import org.wheelmap.android.ui.SearchActivity;
@@ -44,6 +45,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class POIsListActivity extends SherlockFragmentActivity implements
@@ -58,7 +60,7 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		setContentView(R.layout.activity_list_fragments);
+		setContentView(R.layout.activity_fragment_list);
 
 		TextView mapButton = (TextView) findViewById(R.id.switch_maps);
 		mapButton.setOnClickListener(this);
@@ -133,11 +135,11 @@ public class POIsListActivity extends SherlockFragmentActivity implements
 		startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 	}
 
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// startActivity(new Intent(this, NewSettingsActivity.class));
-	// return super.onPrepareOptionsMenu(menu);
-	// }
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		startActivity(new Intent(this, NewSettingsActivity.class));
+		return true;
+	}
 
 	/**
 	 * This method is called when the sending activity has finished, with the

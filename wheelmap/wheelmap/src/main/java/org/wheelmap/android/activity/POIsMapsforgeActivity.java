@@ -28,7 +28,10 @@ import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforge
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.InfoActivity;
+import org.wheelmap.android.ui.NewSettingsActivity;
 import org.wheelmap.android.ui.SearchActivity;
+
+import com.actionbarsherlock.view.Menu;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -58,7 +61,7 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "Activity onCreate");
-		setContentView(R.layout.activity_mapsforge_fragments);
+		setContentView(R.layout.activity_fragment_mapsforge);
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar_map);
 		mSearchButton = (ImageButton) findViewById(R.id.btn_title_search);
 		TextView listView = (TextView) findViewById(R.id.switch_list);
@@ -79,14 +82,14 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onResume() {
+	protected void onResume() {
 		super.onResume();
 		isInForeground = true;
 		updateSearchStatus();
 	}
 
 	@Override
-	public void onPause() {
+	protected void onPause() {
 		super.onPause();
 		isInForeground = false;
 	}
@@ -115,12 +118,12 @@ public class POIsMapsforgeActivity extends MapsforgeMapActivity implements
 		}
 	}
 
-	// @Override
-	// public boolean onPrepareOptionsMenu(Menu menu) {
-	// startActivity(new Intent(this, NewSettingsActivity.class));
-	// return super.onPrepareOptionsMenu(menu);
-	// }
-
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		startActivity(new Intent(this, NewSettingsActivity.class));
+		return true;
+	}
+	
 	// public void onListClick(View v) {
 	// Intent intent = new Intent(this, POIsListActivity.class);
 	// intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
