@@ -32,10 +32,10 @@ import org.mapsforge.android.maps.TileRAMCache;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
-public class MapsforgeMapActivity extends SherlockFragmentActivity implements
-		MapContext {
+public class MapsforgeMapActivity extends RoboSherlockFragmentActivity
+		implements MapContext {
 
 	/**
 	 * Name of the file where the map position and other settings are stored.

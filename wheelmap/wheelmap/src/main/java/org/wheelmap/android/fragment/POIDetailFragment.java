@@ -44,9 +44,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 
-public class POIDetailFragment extends SherlockFragment implements
+public class POIDetailFragment extends RoboSherlockFragment implements
 		OnClickListener, OnTapListener, LoaderCallbacks<Cursor>,
 		DetachableResultReceiver.Receiver {
 
