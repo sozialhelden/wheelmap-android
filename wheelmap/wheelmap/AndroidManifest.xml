@@ -34,22 +34,27 @@ limitations under the License.
     <application
         android:name="org.wheelmap.android.app.WheelmapApp"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Sherlock.Light">
         <activity
-            android:name="org.wheelmap.android.ui.StartupActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.IOSched" >
+            android:name="org.wheelmap.android.ui.StartupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
-            android:name="org.wheelmap.android.ui.POIsListActivity"
+            android:name="org.wheelmap.android.activity.MainActivity">
+        </activity>
+        
+        
+        
+        <activity
             android:label="@string/app_name"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter>
+            android:name="org.wheelmap.android.ui.POIsListActivity">
+            <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
@@ -58,10 +63,9 @@ limitations under the License.
                 android:resource="@xml/searchable_list" />
         </activity>
         <activity
-            android:name="org.wheelmap.android.activity.POIsListActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter>
+            android:name="org.wheelmap.android.activity.POIsListActivity">
+            <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
@@ -72,9 +76,8 @@ limitations under the License.
         <activity
             android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
             android:label="@string/title_pois_map"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter>
+            android:launchMode="singleTask">
+            <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
@@ -85,9 +88,8 @@ limitations under the License.
         <activity
             android:name="org.wheelmap.android.activity.POIsMapsforgeActivity"
             android:label="@string/title_pois_map"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.IOSched" >
-            <intent-filter>
+            android:launchMode="singleTask">
+            <intent-filter >
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
@@ -97,8 +99,7 @@ limitations under the License.
         </activity>
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivity"
-            android:label="@string/title_pois_detail_activity"
-            android:theme="@style/Theme.IOSched" >
+            android:label="@string/title_pois_detail_activity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" >
                 </action>
@@ -117,55 +118,49 @@ limitations under the License.
         </activity>
         <activity
             android:name="org.wheelmap.android.activity.POIDetailActivity"
-            android:label="@string/title_pois_detail_activity"
-            android:theme="@style/Theme.IOSched" >
-            >
+            android:label="@string/title_pois_detail_activity">
         </activity>
         <activity
             android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
             android:label="@string/title_pois_map"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:name="org.wheelmap.android.ui.mapsforge.EditPositionActivity"
             android:label="@string/title_pois_position_edit"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:name="org.wheelmap.android.ui.NodeTypeSelectActivity"
             android:label="@string/title_nodetype_edit"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:name="org.wheelmap.android.ui.NewSettingsActivity"
             android:label="@string/title_pois_settings"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:name="org.wheelmap.android.ui.WheelchairStateActivity"
             android:label="@string/title_wheelchair_state"
-            android:theme="@style/Theme.IOSched" />
+            />
         <activity
             android:name="org.wheelmap.android.ui.SearchActivity"
             android:label="@string/title_search"
-            android:theme="@style/Theme.IOSched.Transparent" />
+            android:theme="@style/Theme.Sherlock.Light.Transparent" />
         <activity
             android:name="org.wheelmap.android.ui.LoginActivity"
             android:label="@string/title_login"
-            android:theme="@style/Theme.IOSched.Transparent" />
+            android:theme="@style/Theme.Sherlock.Light.Transparent" />
         <activity
             android:name="org.wheelmap.android.ui.InfoActivity"
-            android:label="@string/title_info"
-            android:theme="@style/Theme.IOSched" />
+            android:label="@string/title_info" />
         <activity
             android:name="org.wheelmap.android.activity.InfoActivity"
-            android:label="@string/title_info"
-            android:theme="@style/Theme.IOSched" />
+            android:label="@string/title_info" />
         <activity
             android:name="org.wheelmap.android.ui.LegalNoticeActivity"
-            android:label="@string/title_legal_notice"
-            android:theme="@style/Theme.IOSched" />
+            android:label="@string/title_legal_notice" />
         <activity
             android:name="org.wheelmap.android.activity.LegalNoticeActivity"
-            android:label="@string/title_legal_notice"
-            android:theme="@style/Theme.IOSched" />
-        
+            android:label="@string/title_legal_notice" />
+
         <service android:name="org.wheelmap.android.service.SyncService" />
 
         <provider
