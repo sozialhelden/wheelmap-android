@@ -52,12 +52,13 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class POIsMapsforgeFragment extends SherlockFragment implements
 		OnMoveListener, OnZoomListener, OnTapListener {
-	private final static String TAG = "mapsforge";
+	public final static String TAG = POIsMapsforgeFragment.class
+			.getSimpleName();
 	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
-	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LAT";
-	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LON";
-	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.ui.Mapsforge.CENTER_ZOOM";
-	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
+	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.Mapsforge.CENTER_AT_LAT";
+	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.Mapsforge.CENTER_AT_LON";
+	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.Mapsforge.CENTER_ZOOM";
+	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.Mapsforge.NO_RETRIEVAL";
 
 	private POIsMapsforgeWorkerFragment mWorkerFragment;
 
@@ -67,7 +68,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private MyLocationOverlay mCurrLocationOverlay;
 	private GeoPoint mLastRequestedPosition;
 
-	private boolean mIsRecreated;
 	private boolean isCentered;
 	private boolean isZoomedEnough;
 	private int oldZoomLevel = 18;
@@ -150,8 +150,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 						.add(mWorkerFragment, POIsMapsforgeWorkerFragment.TAG)
 						.commit();
 				mWorkerFragment.setTargetFragment(this, 0);
-			} else {
-				mIsRecreated = true;
 			}
 		}
 
