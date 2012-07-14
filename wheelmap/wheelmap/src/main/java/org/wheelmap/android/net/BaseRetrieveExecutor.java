@@ -37,7 +37,6 @@ import wheelmap.org.request.Paging;
 import wheelmap.org.request.RequestBuilder;
 import android.content.ContentResolver;
 import android.os.Bundle;
-import android.util.Log;
 
 public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		AbstractExecutor implements IExecutor {
@@ -64,21 +63,21 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 	protected void retrieveSinglePage(RequestBuilder requestBuilder)
 			throws SyncServiceException {
 		Meta m = executeSingleRequest(requestBuilder);
-//		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
+		// Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 	}
 
 	protected void retrieveMaxNPages(RequestBuilder requestBuilder, int n)
 			throws SyncServiceException {
 		// Server seems to count from 1...
 		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
-		if ( requestBuilder instanceof BaseNodesRequestBuilder)
-				((BaseNodesRequestBuilder)requestBuilder).paging( page );
-		
+		if (requestBuilder instanceof BaseNodesRequestBuilder)
+			((BaseNodesRequestBuilder) requestBuilder).paging(page);
+
 		Meta m = executeSingleRequest(requestBuilder);
-		if ( m == null )
+		if (m == null)
 			return;
-		
-//		Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
+
+		// Log.d(TAG, "totalItemsCount " + m.getItemCountTotal());
 
 		int numOfPages = m.getNumPages().intValue();
 
@@ -96,9 +95,9 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 		// Log.d(TAG, "getRequest " + getRequest);
 
 		T items = retrieveNumberOfHits(getRequest);
-		if ( items == null )
+		if (items == null)
 			return null;
-		
+
 		mTempStore.add(items);
 
 		return items.getMeta();
@@ -118,7 +117,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 
 		int retryCount = 0;
 
-		while ( retryCount < MAX_RETRY_COUNT) {
+		while (retryCount < MAX_RETRY_COUNT) {
 			try {
 				content = mRequestProcessor.get(new URI(request), mClazz);
 				break;
@@ -129,7 +128,7 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 				retryCount++;
 				if (retryCount < MAX_RETRY_COUNT) {
 					try {
-						Thread.sleep( 200 );
+						Thread.sleep(200);
 					} catch (InterruptedException e1) {
 						// do nothing, just continue and try again
 					}

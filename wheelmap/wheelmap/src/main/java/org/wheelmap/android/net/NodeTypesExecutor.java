@@ -34,10 +34,12 @@ import wheelmap.org.request.Paging;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 		implements IExecutor {
+	private final static String TAG = NodeTypesExecutor.class.getSimpleName();
+
 	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 	private Locale mLocale;
 
@@ -87,8 +89,7 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 		int i;
 		for (i = 0; i < size; i++) {
 			ContentValues values = new ContentValues();
-			copyNodeTypeToValues(nodeTypes.getNodeTypes().get(i),
-					values );
+			copyNodeTypeToValues(nodeTypes.getNodeTypes().get(i), values);
 			contentValuesArray[i] = values;
 		}
 
