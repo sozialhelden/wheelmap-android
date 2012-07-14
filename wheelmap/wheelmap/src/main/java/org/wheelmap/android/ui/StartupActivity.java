@@ -41,17 +41,17 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import de.akquinet.android.androlog.Log;
 
 public class StartupActivity extends Activity implements
 		DetachableResultReceiver.Receiver {
-	private final static String TAG = "startup";
+	private final static String TAG = StartupActivity.class.getSimpleName();
 
 	private State mState;
 	private SupportManager mSupportManager;
