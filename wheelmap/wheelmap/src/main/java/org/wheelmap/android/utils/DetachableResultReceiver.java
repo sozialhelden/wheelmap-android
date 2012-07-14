@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.utils;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -49,11 +50,11 @@ public class DetachableResultReceiver extends ResultReceiver {
 	public void setReceiver(Receiver receiver) {
 		mReceiver = receiver;
 	}
-	
-	public void setReceiver(Receiver receiver, boolean resendLast ) {
+
+	public void setReceiver(Receiver receiver, boolean resendLast) {
 		mReceiver = receiver;
-		if ( resendLast )
-			mReceiver.onReceiveResult( resultCode, resultData);
+		if (resendLast)
+			mReceiver.onReceiveResult(resultCode, resultData);
 	}
 
 	public interface Receiver {
