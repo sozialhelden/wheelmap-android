@@ -23,10 +23,10 @@ package org.wheelmap.android.ui;
 
 import java.util.List;
 
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -83,8 +83,8 @@ public class StartupActivity extends Activity implements
 			mState = new State();
 			mState.mReceiver.setReceiver(this);
 		}
-		
-		if ( WheelmapApp.getCapabilityLevel() == Capability.NOTWORKING) {
+
+		if (WheelmapApp.getCapabilityLevel() == Capability.NOTWORKING) {
 			showDialogNotWorking();
 			return;
 		}
@@ -95,10 +95,10 @@ public class StartupActivity extends Activity implements
 				startupAppDelayed();
 			else
 				finish();
-		} else if ( mSupportManager.needsReloading()) {
-			mSupportManager.reload( mState.mReceiver );
+		} else if (mSupportManager.needsReloading()) {
+			mSupportManager.reload(mState.mReceiver);
 		}
-		
+
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class StartupActivity extends Activity implements
 		Log.d(TAG, "onRestart");
 		finish();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -128,35 +128,37 @@ public class StartupActivity extends Activity implements
 		if (mSupportManager != null)
 			mSupportManager.releaseReceiver();
 	}
-	
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // this prevents StartupActivity recreation on Configuration changes
-        // (device orientation changes or hardware keyboard open/close).
-        // just do nothing on these changes:
-        super.onConfigurationChanged(null);
-    }
-    
-    private boolean needStartApp() {
-        final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        final List<RunningTaskInfo> tasksInfo = am.getRunningTasks(1024);
-        
-        if (!tasksInfo.isEmpty()) {
-            final String ourAppPackageName = getPackageName();
-            RunningTaskInfo taskInfo;
-            final int size = tasksInfo.size();
-            for (int i = 0; i < size; i++) {
-                taskInfo = tasksInfo.get(i);
-                if (ourAppPackageName.equals(taskInfo.baseActivity.getPackageName())) {
-                    // continue application start only if there is the only Activity in the task
-                    // (BTW in this case this is the StartupActivity)
-                    return taskInfo.numActivities == 1;
-                }
-            }
-        }
-        
-        return true;
-    }
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// this prevents StartupActivity recreation on Configuration changes
+		// (device orientation changes or hardware keyboard open/close).
+		// just do nothing on these changes:
+		super.onConfigurationChanged(null);
+	}
+
+	private boolean needStartApp() {
+		final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		final List<RunningTaskInfo> tasksInfo = am.getRunningTasks(1024);
+
+		if (!tasksInfo.isEmpty()) {
+			final String ourAppPackageName = getPackageName();
+			RunningTaskInfo taskInfo;
+			final int size = tasksInfo.size();
+			for (int i = 0; i < size; i++) {
+				taskInfo = tasksInfo.get(i);
+				if (ourAppPackageName.equals(taskInfo.baseActivity
+						.getPackageName())) {
+					// continue application start only if there is the only
+					// Activity in the task
+					// (BTW in this case this is the StartupActivity)
+					return taskInfo.numActivities == 1;
+				}
+			}
+		}
+
+		return true;
+	}
 
 	private void startupAppDelayed() {
 		Handler h = new Handler();
@@ -172,12 +174,14 @@ public class StartupActivity extends Activity implements
 
 	private void startupApp() {
 		Intent intent = new Intent(getApplicationContext(),
-				org.wheelmap.android.activity.MainActivity.class);
+				org.wheelmap.android.activity.MainSinglePaneActivity.class);
+		// Intent intent = new Intent(getApplicationContext(),
+		// POIsListActivity.class);
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		// Clear any strong references to this Activity, we'll reattach to
@@ -221,16 +225,17 @@ public class StartupActivity extends Activity implements
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
-	
+
 	private void showDialogNotWorking() {
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		builder.setTitle(R.string.error_occurred);
-		builder.setMessage(getResources().getString( R.string.error_not_enough_memory ));
-		builder.setPositiveButton( R.string.quit,
+		builder.setMessage(getResources().getString(
+				R.string.error_not_enough_memory));
+		builder.setPositiveButton(R.string.quit,
 				new DialogInterface.OnClickListener() {
-					
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						finish();
@@ -241,7 +246,7 @@ public class StartupActivity extends Activity implements
 	}
 
 	private void showErrorDialog(SyncServiceException e) {
-		if ( !mIsInForeground)
+		if (!mIsInForeground)
 			return;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -35,8 +35,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 public class MyLocationManager {
-	private final static String TAG = "mylocationmanager";
-
+	private static final String TAG = MyLocationManager.class.getSimpleName();
 	public final static int WHAT_LOCATION_MANAGER_UPDATE = 0x11;
 	public final static String EXTRA_LOCATION_MANAGER_LOCATION = "org.wheelmap.android.manager.mlm.LOCATION";
 
@@ -82,8 +81,8 @@ public class MyLocationManager {
 			mCurrentBestLocation.setAccuracy(1000 * 100);
 		}
 		wasBestLastKnownLocation = true;
-		
-		updateLocation( mCurrentBestLocation );
+
+		updateLocation(mCurrentBestLocation);
 		requestLocationUpdates();
 
 	}
@@ -117,6 +116,7 @@ public class MyLocationManager {
 		if (mReceiver.getReceiverCount() == 0) {
 			requestLocationUpdates();
 		}
+		Log.d(TAG, "addingReceiver " + receiver);
 		if (receiver != null) {
 			mReceiver.addReceiver(receiver, resendLast);
 		}
@@ -147,7 +147,7 @@ public class MyLocationManager {
 						LocationManager.GPS_PROVIDER, TIME_GPS_UPDATE_INTERVAL,
 						TIME_GPS_UPDATE_DISTANCE, mGPSLocationListener);
 			}
-			
+
 			if (networkExists) {
 				mLocationManager.requestLocationUpdates(
 						LocationManager.NETWORK_PROVIDER, 0, 0,
@@ -192,9 +192,11 @@ public class MyLocationManager {
 			Log.d(TAG, "MyGPSLocationListener: location received. Accuracy = "
 					+ location.getAccuracy());
 
-			if ( wasBestLastKnownLocation || isBetterLocation( location, mCurrentBestLocation )) {
-				Log.d( TAG, "gps location superseeds mCurrentBestLocation location" );
-				updateLocation( location );
+			if (wasBestLastKnownLocation
+					|| isBetterLocation(location, mCurrentBestLocation)) {
+				Log.d(TAG,
+						"gps location superseeds mCurrentBestLocation location");
+				updateLocation(location);
 				wasBestLastKnownLocation = false;
 			}
 		}
@@ -218,9 +220,11 @@ public class MyLocationManager {
 			Log.d(TAG,
 					"MyNetworkLocationListener: location received. Accuracy = "
 							+ location.getAccuracy());
-			if ( wasBestLastKnownLocation || isBetterLocation( location, mCurrentBestLocation )) {
-				Log.d( TAG, "network location superseeds mCurrentBestLocation location" );
-				updateLocation( location );
+			if (wasBestLastKnownLocation
+					|| isBetterLocation(location, mCurrentBestLocation)) {
+				Log.d(TAG,
+						"network location superseeds mCurrentBestLocation location");
+				updateLocation(location);
 				wasBestLastKnownLocation = false;
 			}
 		}
@@ -237,7 +241,7 @@ public class MyLocationManager {
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
 	}
-	
+
 	public interface LocationUpdate {
 		public void onNewLocation(Location location);
 	}
@@ -248,67 +252,80 @@ public class MyLocationManager {
 		b.putParcelable(EXTRA_LOCATION_MANAGER_LOCATION, location);
 		mReceiver.send(WHAT_LOCATION_MANAGER_UPDATE, b);
 	}
-	
+
 	private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-	/** Determines whether one Location reading is better than the current Location fix
-	  * @param location  The new Location that you want to evaluate
-	  * @param currentBestLocation  The current Location fix, to which you want to compare the new one
-	  */
-	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-	    if (currentBestLocation == null) {
-	        // A new location is always better than no location
-	        return true;
-	    }
+	/**
+	 * Determines whether one Location reading is better than the current
+	 * Location fix
+	 * 
+	 * @param location
+	 *            The new Location that you want to evaluate
+	 * @param currentBestLocation
+	 *            The current Location fix, to which you want to compare the new
+	 *            one
+	 */
+	protected boolean isBetterLocation(Location location,
+			Location currentBestLocation) {
+		if (currentBestLocation == null) {
+			// A new location is always better than no location
+			return true;
+		}
 
-	    // Check whether the new location fix is newer or older
-	    // Log.d( TAG, "location.getTime = " + location.getTime() + " currentBestLocation.getTime() = " + currentBestLocation.getTime());
-	    long timeDelta = location.getTime() - currentBestLocation.getTime();
-	    boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-	    boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-	    boolean isNewer = timeDelta > 0;
-	    
-	    // Log.d( TAG, "isSignificantlyNewer = " + isSignificantlyNewer + " isSignificantlyOlder = " + isSignificantlyOlder + " timeDelta = " + timeDelta );
+		// Check whether the new location fix is newer or older
+		// Log.d( TAG, "location.getTime = " + location.getTime() +
+		// " currentBestLocation.getTime() = " + currentBestLocation.getTime());
+		long timeDelta = location.getTime() - currentBestLocation.getTime();
+		boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+		boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+		boolean isNewer = timeDelta > 0;
 
-	    // If it's been more than two minutes since the current location, use the new location
-	    // because the user has likely moved
-	    if (isSignificantlyNewer) {
-	        return true;
-	    // If the new location is more than two minutes older, it must be worse
-	    }
-	    /*
-	    else if (isSignificantlyOlder) {
-	        return false;
-	    }
-	     */
+		// Log.d( TAG, "isSignificantlyNewer = " + isSignificantlyNewer +
+		// " isSignificantlyOlder = " + isSignificantlyOlder + " timeDelta = " +
+		// timeDelta );
 
-	    // Check whether the new location fix is more or less accurate
-	    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-	    boolean isLessAccurate = accuracyDelta > 0;
-	    boolean isMoreAccurate = accuracyDelta < 0;
-	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+		// If it's been more than two minutes since the current location, use
+		// the new location
+		// because the user has likely moved
+		if (isSignificantlyNewer) {
+			return true;
+			// If the new location is more than two minutes older, it must be
+			// worse
+		}
+		/*
+		 * else if (isSignificantlyOlder) { return false; }
+		 */
 
-	    // Check if the old and new location are from the same provider
-	    boolean isFromSameProvider = isSameProvider(location.getProvider(),
-	            currentBestLocation.getProvider());
+		// Check whether the new location fix is more or less accurate
+		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation
+				.getAccuracy());
+		boolean isLessAccurate = accuracyDelta > 0;
+		boolean isMoreAccurate = accuracyDelta < 0;
+		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-	    // Determine location quality using a combination of timeliness and accuracy
-	    if (isMoreAccurate) {
-	        return true;
-	    } else if (isNewer && !isLessAccurate) {
-	        return true;
-	    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-	        return true;
-	    }
-	    return false;
+		// Check if the old and new location are from the same provider
+		boolean isFromSameProvider = isSameProvider(location.getProvider(),
+				currentBestLocation.getProvider());
+
+		// Determine location quality using a combination of timeliness and
+		// accuracy
+		if (isMoreAccurate) {
+			return true;
+		} else if (isNewer && !isLessAccurate) {
+			return true;
+		} else if (isNewer && !isSignificantlyLessAccurate
+				&& isFromSameProvider) {
+			return true;
+		}
+		return false;
 	}
 
 	/** Checks whether two providers are the same */
 	private boolean isSameProvider(String provider1, String provider2) {
-	    if (provider1 == null) {
-	      return provider2 == null;
-	    }
-	    return provider1.equals(provider2);
+		if (provider1 == null) {
+			return provider2 == null;
+		}
+		return provider1.equals(provider2);
 	}
 
 }

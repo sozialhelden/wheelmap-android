@@ -32,17 +32,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import wheelmap.org.WheelchairState;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -59,7 +58,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class SupportManager {
-	private static final String TAG = "support";
+	private static final String TAG = SupportManager.class.getName();
 
 	private Context mContext;
 	private Map<Integer, NodeType> mNodeTypeLookup;
@@ -78,7 +77,7 @@ public class SupportManager {
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 
 	public final static Map<WheelchairState, WheelchairAttributes> wsAttributes = new HashMap<WheelchairState, WheelchairAttributes>();
-	
+
 	public static class WheelchairAttributes {
 		public final int titleStringId;
 		public final int stringId;
