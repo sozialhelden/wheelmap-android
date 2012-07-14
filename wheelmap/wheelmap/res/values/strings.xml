@@ -149,4 +149,5 @@
     <string name="menu_filter">Filter Settings</string>
     <string name="menu_about">About</string>
     <string name="menu_mylocation">Move Here</string>
+    <string name="menu_new_poi">Create New POI</string>
 </resources>
