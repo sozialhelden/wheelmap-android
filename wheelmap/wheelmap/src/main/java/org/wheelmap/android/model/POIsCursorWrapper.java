@@ -28,7 +28,6 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 
 public class POIsCursorWrapper extends CursorWrapper {
-	public static final String TAG = "poislist";
 
 	public final static String LOCATION_COLUMN_NAME = "location_column";
 	public int LOCATION_COLUMN_INDEX;
@@ -40,12 +39,12 @@ public class POIsCursorWrapper extends CursorWrapper {
 		mLocation = location;
 		LOCATION_COLUMN_INDEX = cursor.getColumnCount();
 	}
-	
+
 	public int getColumnCount() {
 		return super.getColumnCount() + 1;
 	}
-	
-	public void setLocation( Wgs84GeoCoordinates location ) {
+
+	public void setLocation(Wgs84GeoCoordinates location) {
 		mLocation = location;
 		super.requery();
 	}
@@ -64,8 +63,7 @@ public class POIsCursorWrapper extends CursorWrapper {
 			return GeocoordinatesMath.calculateDistance(mLocation,
 					new Wgs84GeoCoordinates(POIHelper.getLongitude(this),
 							POIHelper.getLatitude(this)));
-		}
-		else
+		} else
 			return super.getDouble(columnIndex);
 	}
 }

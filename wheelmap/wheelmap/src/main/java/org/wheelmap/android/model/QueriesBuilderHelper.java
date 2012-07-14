@@ -27,13 +27,11 @@ import java.util.List;
 import org.wheelmap.android.model.Support.CategoriesContent;
 
 import wheelmap.org.WheelchairState;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class QueriesBuilderHelper {
 
@@ -71,7 +69,7 @@ public class QueriesBuilderHelper {
 						categories.append(" OR category_id=");
 					else
 						categories.append(" category_id=");
-					categories.append(new Integer(id).toString());
+					categories.append(Integer.valueOf(id));
 
 				}
 
@@ -86,7 +84,7 @@ public class QueriesBuilderHelper {
 					else
 						categories.append(" NOT category_id=");
 
-					categories.append(new Integer(id).toString());
+					categories.append(Integer.valueOf(id));
 
 				} while (cursor.moveToNext());
 			}
@@ -138,7 +136,7 @@ public class QueriesBuilderHelper {
 				wheelchair.append(" OR wheelchair=");
 			else
 				wheelchair.append(" wheelchair=");
-			wheelchair.append(new Integer(state.getId()).toString());
+			wheelchair.append(Integer.valueOf(state.getId()));
 		}
 
 		if (wheelchair.toString().length() == 0) {
@@ -147,7 +145,7 @@ public class QueriesBuilderHelper {
 					wheelchair.append(" AND NOT wheelchair=");
 				else
 					wheelchair.append(" NOT wheelchair=");
-				wheelchair.append(new Integer(state.getId()).toString());
+				wheelchair.append(Integer.valueOf(state.getId()));
 			}
 		}
 

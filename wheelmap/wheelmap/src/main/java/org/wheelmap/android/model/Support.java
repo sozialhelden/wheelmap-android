@@ -30,8 +30,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class Support {
-
-	public static final String TAG = "wheelmapsupport";
 	public static final String AUTHORITY = "org.wheelmap.android.support";
 
 	// This class cannot be instantiated
@@ -163,8 +161,8 @@ public class Support {
 		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.nodetypes";
 
 		public static final String[] PROJECTION = new String[] { _ID,
-				NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME,
-				CATEGORY_ID, CATEGORY_IDENTIFIER };
+				NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME, CATEGORY_ID,
+				CATEGORY_IDENTIFIER };
 
 		public static int getNodeTypeId(Cursor c) {
 			return c.getInt(c.getColumnIndexOrThrow(NODETYPE_ID));
