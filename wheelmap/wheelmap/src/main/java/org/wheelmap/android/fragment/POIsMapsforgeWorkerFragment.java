@@ -60,6 +60,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	boolean mSyncing;
 	boolean isSearchMode;
 	private boolean mRefreshStatus;
+	private GeoPoint mGeoPoint;
 
 	public POIsMapsforgeWorkerFragment() {
 		super();
@@ -196,19 +197,21 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			Location location = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
-			GeoPoint geoPoint = calcGeoPoint(location);
-			updateTargetGeoLocation(geoPoint, location);
+			mGeoPoint = calcGeoPoint(location);
+			mLocation = location;
+
+			updateTargetGeoLocation(false);
 			break;
 		}
 
 		}
 	}
 
-	private void updateTargetGeoLocation(GeoPoint geoPoint, Location location) {
+	public void updateTargetGeoLocation(boolean force) {
 		POIsMapsforgeFragment fragment = (POIsMapsforgeFragment) getTargetFragment();
 
-		fragment.centerMap(geoPoint);
-		fragment.updateCurrentLocation(geoPoint, location);
+		fragment.centerMap(mGeoPoint, force);
+		fragment.updateCurrentLocation(mGeoPoint, mLocation);
 	}
 
 	private void updateListener() {

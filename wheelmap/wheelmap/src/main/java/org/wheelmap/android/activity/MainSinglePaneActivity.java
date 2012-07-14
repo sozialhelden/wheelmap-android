@@ -15,6 +15,8 @@ import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import de.akquinet.android.androlog.Log;
 
@@ -87,6 +89,28 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		outState.putBoolean(EXTRA_IS_RECREATED, true);
 		outState.putInt(EXTRA_SELECTED_TAB, mSelectedTab);
 		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.ab_main_activity, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		switch (id) {
+		case R.id.menu_filter:
+
+			return true;
+		case R.id.menu_about:
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	static {

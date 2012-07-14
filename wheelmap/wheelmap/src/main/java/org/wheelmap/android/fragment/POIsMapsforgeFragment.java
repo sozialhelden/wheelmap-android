@@ -49,6 +49,9 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class POIsMapsforgeFragment extends SherlockFragment implements
 		OnMoveListener, OnZoomListener, OnTapListener {
@@ -92,6 +95,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -245,6 +249,29 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.ab_map_fragment, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		switch (id) {
+		case R.id.menu_search:
+			//
+			return true;
+		case R.id.menu_location:
+			centerMap(mLastGeoPointE6, true);
+			break;
+		default:
+			// noop
+		}
+
+		return false;
+	}
+
+	@Override
 	public void onMove(float vertical, float horizontal) {
 		GeoPoint centerLocation = mMapView.getMapCenter();
 		int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
@@ -309,8 +336,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		return bundle;
 	}
 
-	protected void centerMap(GeoPoint geoPoint) {
-		if (!isCentered) {
+	protected void centerMap(GeoPoint geoPoint, boolean force) {
+		if (!isCentered || force) {
 			mMapController.setCenter(geoPoint);
 			isCentered = true;
 		}

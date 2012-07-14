@@ -36,6 +36,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -76,6 +79,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate " + hashCode());
+		setHasOptionsMenu(true);
 
 	}
 
@@ -170,6 +174,26 @@ public class POIsListFragment extends SherlockListFragment implements
 				.getFirstVisiblePosition();
 		outState.putInt(EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
 		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.ab_list_fragment, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		switch (id) {
+		case R.id.menu_search:
+			//
+			return true;
+		default:
+			// noop
+		}
+
+		return false;
 	}
 
 	@Override

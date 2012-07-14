@@ -20,7 +20,6 @@
   limitations under the License.
   #L%
   -->
-
 <resources>
     <string name="title_wheelchair_state">Rollstuhl Einstellungen</string>
     <string name="title_please_wait">Bitte warten</string>
@@ -114,4 +113,8 @@
     <string name="title_view_using">Ansehen mit</string>
     <string name="title_pois_detail_activity">Wheelmap Detail</string>
     <string name="search_pick_map">Gesucht wird nur im gewählten Kartenausschnitt.</string>
+    <string name="menu_search">Suche</string>
+    <string name="menu_filter">Filter Setzen</string>
+    <string name="menu_about">Über</string>
+    <string name="menu_mylocation">Hierher</string>
 </resources>
