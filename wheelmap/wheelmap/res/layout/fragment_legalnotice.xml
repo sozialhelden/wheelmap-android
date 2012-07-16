@@ -27,6 +27,15 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:id="@+id/title_bar_text"
+        style="@style/TitleBar" >
+
+        <TextView
+            style="@style/TitleBarText"
+            android:text="@string/title_legal_notice" />
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >

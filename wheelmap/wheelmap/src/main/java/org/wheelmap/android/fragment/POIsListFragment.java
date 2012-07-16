@@ -55,11 +55,11 @@ public class POIsListFragment extends SherlockListFragment implements
 	private PullToRefreshListView mPullToRefreshListView;
 	private int mFirstVisiblePosition = 0;
 
-	private OnListFragmentListener mListener;
+	private OnPOIsListListener mListener;
 	private POIsListCursorAdapter mAdapter;
 
-	public interface OnListFragmentListener {
-		public void onPOIItemClicked(long id);
+	public interface OnPOIsListListener {
+		public void onShowDetail(long id);
 	}
 
 	public POIsListFragment() {
@@ -71,8 +71,8 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnListFragmentListener)
-			mListener = (OnListFragmentListener) activity;
+		if (activity instanceof OnPOIsListListener)
+			mListener = (OnPOIsListListener) activity;
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 		switch (id) {
 		case R.id.menu_search:
-			//
+			showSearch();
 			return true;
 		default:
 			// noop
@@ -211,7 +211,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 		long poiId = POIHelper.getId(cursor);
 		if (mListener != null)
-			mListener.onPOIItemClicked(poiId);
+			mListener.onShowDetail(poiId);
 
 	}
 
@@ -234,6 +234,17 @@ public class POIsListFragment extends SherlockListFragment implements
 			mPullToRefreshListView.getRefreshableView().setSelection(
 					mFirstVisiblePosition);
 		}
+	}
+
+	private void showSearch() {
+		FragmentManager fm = getActivity().getSupportFragmentManager();
+		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
+				true, false);
+		if (searchDialog == null)
+			return;
+
+		searchDialog.setTargetFragment(mWorkerFragment, 0);
+		searchDialog.show(fm, SearchDialogFragment.TAG);
 	}
 
 }

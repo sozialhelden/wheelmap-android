@@ -29,6 +29,7 @@ import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
+import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.MyLocationOverlay;
 import org.wheelmap.android.overlays.OnTapListener;
@@ -54,7 +55,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class POIsMapsforgeFragment extends SherlockFragment implements
-		OnMoveListener, OnZoomListener, OnTapListener {
+		OnMoveListener, OnZoomListener, OnTapListener, OnSearchDialogListener {
 	public final static String TAG = POIsMapsforgeFragment.class
 			.getSimpleName();
 	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
@@ -78,18 +79,18 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private GeoPoint mLastGeoPointE6;
 
-	public interface OnPOIsMapsforgeFragmentListener {
-		public void onShowDetail(long poiId);
+	public interface OnPOIsMapsforgeListener {
+		public void onShowDetail(long id);
 	}
 
-	private OnPOIsMapsforgeFragmentListener mListener;
+	private OnPOIsMapsforgeListener mListener;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsMapsforgeFragmentListener)
-			mListener = (OnPOIsMapsforgeFragmentListener) activity;
+		if (activity instanceof OnPOIsMapsforgeListener)
+			mListener = (OnPOIsMapsforgeListener) activity;
 	}
 
 	@Override
@@ -259,7 +260,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 		switch (id) {
 		case R.id.menu_search:
-			//
+			showSearch();
 			return true;
 		case R.id.menu_location:
 			centerMap(mLastGeoPointE6, true);
@@ -364,17 +365,29 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		requestUpdate();
 	}
 
-	public void startSearch(Bundle extras) {
-		Bundle boundingBoxExtras = fillExtrasWithBoundingRect();
-		extras.putAll(boundingBoxExtras);
-
-		mWorkerFragment.executeSearch(extras);
-	}
-
 	@Override
 	public void onTap(OverlayItem item, long poiId) {
 		if (mListener != null)
 			mListener.onShowDetail(poiId);
+	}
+
+	private void showSearch() {
+		FragmentManager fm = getActivity().getSupportFragmentManager();
+		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
+				true, false);
+		if (searchDialog == null)
+			return;
+
+		searchDialog.setTargetFragment(mWorkerFragment, 0);
+		searchDialog.show(fm, SearchDialogFragment.TAG);
+	}
+
+	@Override
+	public void onSearch(Bundle bundle) {
+		Bundle boundingBoxExtras = fillExtrasWithBoundingRect();
+		bundle.putAll(boundingBoxExtras);
+
+		mWorkerFragment.executeSearch(bundle);
 	}
 
 }

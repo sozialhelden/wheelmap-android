@@ -21,7 +21,7 @@
   #L%
   -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme is the default theme. -->
     <style name="Theme" parent="@android:Theme"></style>
@@ -31,7 +31,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
-
+    
     <style name="Theme.Sherlock.Light.Transparent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -119,10 +119,10 @@
 
     <style name="TitleBarText">
         <item name="android:id">@id/title_text</item>
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:paddingLeft">6dip</item>
         <item name="android:paddingRight">12dip</item>
@@ -142,7 +142,10 @@
     </style>
 
     <style name="TitleBarSubtext">
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/title_text</item>

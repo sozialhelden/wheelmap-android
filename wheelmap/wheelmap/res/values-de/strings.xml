@@ -118,4 +118,9 @@
     <string name="menu_about">Über</string>
     <string name="menu_mylocation">Hierher</string>
     <string name="menu_new_poi">Neuen Ort anlegen</string>
+    <string name="menu_edit">Editieren</string>
+    <string name="menu_share">Teilen</string>
+    <string name="menu_directions">Navigation</string>
+    <string name="menu_save">Sichern</string>
+    <string name="error_login_failed">Einloggen fehlgeschlagen</string>
 </resources>

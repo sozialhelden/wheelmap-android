@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.QueriesBuilderHelper;
@@ -51,14 +52,15 @@ import com.actionbarsherlock.app.SherlockFragment;
 import de.akquinet.android.androlog.Log;
 
 public class POIsListWorkerFragment extends SherlockFragment implements
-		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor> {
+		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor>,
+		OnSearchDialogListener {
 	public static final String TAG = POIsListWorkerFragment.class
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 
-	private OnListWorkerFragmentListener mListener;
+	private OnPOIsListWorkerListener mListener;
 	private DetachableResultReceiver mReceiver;
 	private boolean mSyncing = false;
 
@@ -66,6 +68,12 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	private Location mLocation;
 	private float mDistance;
 	private Cursor mCursor;
+
+	public interface OnPOIsListWorkerListener {
+		public void onRefreshStatusChange(boolean refresh);
+
+		public void onError(SyncServiceException e);
+	}
 
 	public POIsListWorkerFragment() {
 		super();
@@ -75,8 +83,8 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnListWorkerFragmentListener)
-			mListener = (OnListWorkerFragmentListener) activity;
+		if (activity instanceof OnPOIsListWorkerListener)
+			mListener = (OnPOIsListWorkerListener) activity;
 	}
 
 	@Override
@@ -167,7 +175,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		((POIsListFragment) getTargetFragment()).updateRefreshStatus(mSyncing);
 
 		if (mListener != null)
-			mListener.onUpdateRefresh(mSyncing);
+			mListener.onRefreshStatusChange(mSyncing);
 	}
 
 	protected void requestData() {
@@ -180,7 +188,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		getActivity().startService(intent);
 	}
 
-	public void executeSearch(Bundle extras) {
+	private void executeSearch(Bundle extras) {
 		if (!extras.containsKey(SearchManager.QUERY)
 				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
 				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
@@ -278,10 +286,8 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		Log.d(TAG, "onLoaderReset - why is that?");
 	}
 
-	public interface OnListWorkerFragmentListener {
-		public void onUpdateRefresh(boolean refresh);
-
-		public void onError(SyncServiceException e);
+	@Override
+	public void onSearch(Bundle bundle) {
+		executeSearch(bundle);
 	}
-
 }

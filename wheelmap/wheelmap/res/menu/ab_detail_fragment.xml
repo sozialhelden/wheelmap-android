@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_menu_edit_wm_holo_light"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_edit" />
+    
+    <item 
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_menu_share_wm_holo_light"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_share" />
+    
+    <item
+        android:id="@+id/menu_directions"
+        android:icon="@drawable/ic_menu_directions_wm_holo_light"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_directions" />
+    
+</menu>

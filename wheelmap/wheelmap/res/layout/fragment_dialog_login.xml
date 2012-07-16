@@ -22,27 +22,39 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="12dip" >
 
-    <LinearLayout
-        android:id="@+id/title_bar_text"
-        style="@style/TitleBar" >
-
-        <TextView
-            style="@style/TitleBarText"
-            android:text="@string/title_info" />
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/android:list"
+    <EditText
+        android:id="@+id/login_email"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/textfield_background"
+        android:freezesText="true"
+        android:hint="@string/login_email"
+        android:inputType="textEmailAddress"
+        android:singleLine="true" />
 
-    <TextView
-        android:id="@+id/android:empty"
+    <EditText
+        android:id="@+id/login_password"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/textfield_background"
+        android:freezesText="true"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:singleLine="true" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="18dip"
+        android:layout_height="18dip"
+        android:layout_marginLeft="12dip"
+        android:layout_marginTop="12dip"
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
 </LinearLayout>

@@ -177,6 +177,9 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		long poiId = POIHelper.getId(mCursor);
 		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
 
+		if (mListener != null)
+			mListener.onTap(createItem(index), poiId);
+
 		return true;
 	}
 

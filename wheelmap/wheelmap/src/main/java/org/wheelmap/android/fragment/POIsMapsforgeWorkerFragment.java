@@ -40,9 +40,10 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragment;
+
+import de.akquinet.android.androlog.Log;
 
 public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor> {
@@ -50,7 +51,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 
-	OnPOIsMapsforgeWorkerFragmentListener mListener;
+	OnPOIsMapsforgeWorkerListener mListener;
 	private DetachableResultReceiver mReceiver;
 
 	private MyLocationManager mLocationManager;
@@ -62,6 +63,14 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	private boolean mRefreshStatus;
 	private GeoPoint mGeoPoint;
 
+	public interface OnPOIsMapsforgeWorkerListener {
+		void onError(SyncServiceException e);
+
+		void onSearchModeChange(boolean isSearchMode);
+
+		void onRefreshStatusChange(boolean refreshStatus);
+	}
+
 	public POIsMapsforgeWorkerFragment() {
 		super();
 	}
@@ -70,8 +79,8 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsMapsforgeWorkerFragmentListener)
-			mListener = (OnPOIsMapsforgeWorkerFragmentListener) activity;
+		if (activity instanceof OnPOIsMapsforgeWorkerListener)
+			mListener = (OnPOIsMapsforgeWorkerListener) activity;
 	}
 
 	@Override
@@ -261,14 +270,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		Log.d(TAG, "onLoaderReset - why is that?");
-	}
-
-	public interface OnPOIsMapsforgeWorkerFragmentListener {
-		void onError(SyncServiceException e);
-
-		void onSearchModeChange(boolean isSearchMode);
-
-		void onRefreshStatusChange(boolean refreshStatus);
 	}
 
 }

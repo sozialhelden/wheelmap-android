@@ -19,33 +19,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout style="@style/ActionBarCompat" >
-
-        <ImageView
-            style="@style/TitleBarLogo"
-            android:padding="3dip"
-            android:src="@drawable/title_logo" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/title_bar_text"
-        style="@style/ActionBarSwitcher" >
-
-        <TextView style="@style/ActionBarTitleText"
-            android:text="@string/title_legal_notice" />
-    </LinearLayout>
-
-    <fragment class="org.wheelmap.android.fragment.LegalNoticeFragment"
-        	android:id="@+id/list_fragment"
-        	android:layout_width="fill_parent"
-        	android:layout_height="fill_parent"/>
+    <fragment
+        android:id="@+id/fragment_legalnotice"
+        android:name="org.wheelmap.android.fragment.LegalNoticeFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

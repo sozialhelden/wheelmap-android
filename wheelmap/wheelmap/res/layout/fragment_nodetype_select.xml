@@ -19,18 +19,26 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/actionbar_map" />
+    <LinearLayout
+        android:id="@+id/title_bar_text"
+        style="@style/TitleBar" >
 
-    <fragment class="org.wheelmap.android.fragment.POIsMapsforgeFragment"
-        	android:id="@+id/map_fragment"
-        	android:layout_width="fill_parent"
-        	android:layout_height="fill_parent"/>
+        <TextView
+            style="@style/TitleBarText"
+            android:text="@string/title_nodetype_edit" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

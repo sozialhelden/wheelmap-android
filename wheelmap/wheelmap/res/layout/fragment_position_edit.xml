@@ -26,12 +26,19 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/actionbar_detail" />
+    <LinearLayout
+        android:id="@+id/title_bar_text"
+        style="@style/TitleBar" >
 
-    <FrameLayout
-        android:id="@+id/fragment_detail_frame"
+        <TextView
+            style="@style/TitleBarText"
+            android:text="@string/title_pois_position_edit" />
+    </LinearLayout>
+
+    <org.mapsforge.android.maps.MapView
+        android:id="@+id/map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </FrameLayout>
+        android:layout_height="fill_parent"
+        ramCacheSize="0" />
 
 </LinearLayout>

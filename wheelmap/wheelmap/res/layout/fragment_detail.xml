@@ -3,7 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
+    <LinearLayout
+        style="@style/TitleBar"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title_name"
+            style="@style/TitleBarText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/title_category"
+            style="@style/TitleBarSubtext"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+        </TextView>
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="0dip"
@@ -20,9 +41,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dip"
-                android:layout_marginTop="4dip"
-                android:layout_marginRight="4dip"
                 android:layout_marginLeft="8dip"
+                android:layout_marginRight="4dip"
+                android:layout_marginTop="4dip"
                 android:background="@drawable/list_item_background" >
 
                 <ImageView
@@ -51,8 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:onClick="onEditWheelchairState"
-                    android:src="@drawable/arrow">
+                    android:src="@drawable/arrow" >
                 </ImageView>
             </RelativeLayout>
 
@@ -106,18 +126,19 @@
                     android:background="#FF000000" />
             </LinearLayout>
 
-           <ViewStub android:id="@+id/stub_map"
-               android:inflatedId="@+id/sub_map"
-               android:layout="@layout/stub_detail_map"
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content" />
-           
-           <ViewStub android:id="@+id/stub_button"
-               android:inflatedId="@+id/sub_button"
-               android:layout="@layout/stub_detail_button"
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content" />
+            <ViewStub
+                android:id="@+id/stub_map"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@+id/sub_map"
+                android:layout="@layout/stub_detail_map" />
 
+            <ViewStub
+                android:id="@+id/stub_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@+id/sub_button"
+                android:layout="@layout/stub_detail_button" />
         </LinearLayout>
     </ScrollView>
 

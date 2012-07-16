@@ -26,30 +26,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout style="@style/ActionBarCompat" >
-
-        <ImageView
-            style="@style/TitleBarLogo"
-            android:padding="3dip"
-            android:src="@drawable/title_logo" />
-
-        <TextView
-            android:id="@+id/wheelchair_state_poi_name"
-            style="@style/TitleBarText"
-            android:layout_marginLeft="5dip" />
-    </LinearLayout>
-
     <LinearLayout
-        android:id="@+id/title_bar_text"
-        style="@style/ActionBarSwitcher" >
+        style="@style/TitleBar"
+        android:orientation="vertical" >
 
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:gravity="center"
-            android:text="@string/title_wheelchairstate"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
+            style="@style/TitleBarText"
+            android:text="@string/title_wheelchairstate" />
     </LinearLayout>
 
     <ScrollView
