@@ -30,7 +30,6 @@ import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
-import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
@@ -56,7 +55,8 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment_singleframe);
-		poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
+		poiID = getIntent().getLongExtra(
+				POIDetailEditableFragment.ARGUMENT_POI_ID, -1);
 
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 

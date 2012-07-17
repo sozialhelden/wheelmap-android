@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsListFragment.OnPOIsListListener;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
@@ -16,7 +17,6 @@ import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforge
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.ui.POIDetailActivityEditable;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -154,8 +154,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	private void createNewPoi() {
 		long poiId = 0; // = list worker fragment creates one
-		Intent i = new Intent(this, POIDetailActivityEditable.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		Intent i = new Intent(this, POIDetailEditableActivity.class);
+		i.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
 		startActivity(i);
 	}
 

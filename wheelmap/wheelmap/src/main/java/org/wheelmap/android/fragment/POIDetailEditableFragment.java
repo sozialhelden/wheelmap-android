@@ -73,7 +73,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.edit_nodetype)
 	private RelativeLayout mEditNodeTypeContainer;
 
-	private final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
+	public final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
 
 	private Long poiID;
 	private WheelchairState mWheelchairState;
