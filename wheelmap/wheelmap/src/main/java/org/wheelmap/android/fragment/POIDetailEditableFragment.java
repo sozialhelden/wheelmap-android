@@ -66,14 +66,14 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.edit_position_text)
 	private TextView mPositionText;
 
-	@InjectView(R.id.edit_wheelchairstate)
+	@InjectView(R.id.wheelchair_state_layout)
 	private RelativeLayout mEditWheelchairStateContainer;
 	@InjectView(R.id.edit_geolocation)
 	private RelativeLayout mEditGeolocationContainer;
 	@InjectView(R.id.edit_nodetype)
 	private RelativeLayout mEditNodeTypeContainer;
 
-	private final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
+	public final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
 
 	private Long poiID;
 	private WheelchairState mWheelchairState;
@@ -297,9 +297,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		nameText.setText(name);
 		String category = manager.lookupCategory(categoryId).localizedName;
 		nodetypeText.setText(nodeType.localizedName);
-		String positionText = String.format("%s: %f %s: %f", getResources()
-				.getString(R.string.position_latitude_short), mLatitude / 1E6,
-				getResources().getString(R.string.position_longitude_short),
+		String positionText = String.format("%s: (%f:%f)", getResources()
+				.getString(R.string.position_geopoint), mLatitude / 1E6,
 				mLongitude / 1E6);
 		mPositionText.setText(positionText);
 		commentText.setText(comment);

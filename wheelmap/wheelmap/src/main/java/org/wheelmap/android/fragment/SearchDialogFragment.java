@@ -53,6 +53,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		Bundle b = new Bundle();
 
 		b.putBoolean(ARGUMENT_SHOW_DISTANCE, showDistance);
+		b.putBoolean(ARGUMENT_SHOW_MAP_HINT, showMapHint);
 		dialog.setArguments(b);
 		return dialog;
 
@@ -81,11 +82,6 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 	private void bindViews(View v) {
 
-		LinearLayout mapHintContainer = (LinearLayout) v
-				.findViewById(R.id.search_map_hint);
-		if (getArguments().getBoolean(ARGUMENT_SHOW_MAP_HINT))
-			mapHintContainer.setVisibility(View.VISIBLE);
-
 		mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
 
 		Spinner categorySpinner = (Spinner) v
@@ -111,11 +107,21 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		distanceSpinner.setPromptId(R.string.search_distance);
 		distanceSpinner.setSelection(3);
 
-		LinearLayout distanceContainer = (LinearLayout) v
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		LinearLayout mapHintContainer = (LinearLayout) getDialog()
+				.findViewById(R.id.search_map_hint);
+		if (getArguments().getBoolean(ARGUMENT_SHOW_MAP_HINT))
+			mapHintContainer.setVisibility(View.VISIBLE);
+
+		LinearLayout distanceContainer = (LinearLayout) getDialog()
 				.findViewById(R.id.search_spinner_distance_container);
 		if (getArguments().getBoolean(ARGUMENT_SHOW_DISTANCE))
 			distanceContainer.setVisibility(View.VISIBLE);
-
 	}
 
 	public void onItemSelected(AdapterView<?> adapterView, View view,

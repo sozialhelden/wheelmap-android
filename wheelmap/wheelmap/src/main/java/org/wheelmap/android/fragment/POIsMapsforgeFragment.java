@@ -374,11 +374,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private void showSearch() {
 		FragmentManager fm = getActivity().getSupportFragmentManager();
 		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
-				true, false);
-		if (searchDialog == null)
-			return;
+				false, true);
 
-		searchDialog.setTargetFragment(mWorkerFragment, 0);
+		searchDialog.setTargetFragment(this, 0);
 		searchDialog.show(fm, SearchDialogFragment.TAG);
 	}
 

@@ -240,8 +240,6 @@ public class POIsListFragment extends SherlockListFragment implements
 		FragmentManager fm = getActivity().getSupportFragmentManager();
 		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
 				true, false);
-		if (searchDialog == null)
-			return;
 
 		searchDialog.setTargetFragment(mWorkerFragment, 0);
 		searchDialog.show(fm, SearchDialogFragment.TAG);

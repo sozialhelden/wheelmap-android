@@ -32,122 +32,79 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/Container.Content"
             android:orientation="vertical" >
 
             <EditText
                 android:id="@+id/name"
-                style="@style/DetailFont.Editable"
+                style="@style/DetailFontNew.Editable"
                 android:hint="@string/poi_property_name" />
 
             <include layout="@layout/seperator" />
 
             <RelativeLayout
                 android:id="@+id/edit_nodetype"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dip"
-                android:layout_marginTop="4dip"
-                android:background="@drawable/title_button" >
+                style="@style/Container.Pressable" >
 
                 <TextView
                     android:id="@+id/nodetype"
-                    style="@style/DetailFont"
+                    style="@style/DetailFontNew"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/edit_nodetype_icon"
                     android:hint="@string/poi_property_nodetype" />
 
                 <ImageView
-                    android:id="@+id/nodetype_further"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_nodetype_icon"
+                    style="@style/IconMedium"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/arrow" />
+                    android:src="@drawable/ic_menu_edit_wm_holo_light" />
             </RelativeLayout>
 
             <include layout="@layout/seperator" />
 
             <RelativeLayout
                 android:id="@+id/edit_geolocation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dip"
-                android:layout_marginTop="4dip"
-                android:background="@drawable/title_button" >
+                style="@style/Container.Pressable" >
 
                 <TextView
                     android:id="@+id/edit_position_text"
-                    style="@style/DetailFont"
+                    style="@style/DetailFontNew"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/edit_geolocation_icon"
                     android:hint="@string/poi_property_position" />
 
                 <ImageView
-                    android:id="@+id/position_further"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/edit_geolocation_icon"
+                    style="@style/IconMedium"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/arrow" />
+                    android:src="@drawable/ic_menu_edit_wm_holo_light" />
             </RelativeLayout>
 
             <include layout="@layout/seperator" />
 
-            <RelativeLayout
-                android:id="@+id/edit_wheelchairstate"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dip"
-                android:layout_marginLeft="4dip"
-                android:layout_marginTop="4dip"
-                android:background="@drawable/title_button" >
-
-                <ImageView
-                    android:id="@+id/wheelchair_state_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/wheelchair_state_enabled" >
-                </ImageView>
-
-                <TextView
-                    android:id="@+id/wheelchair_state_text"
-                    style="@style/WheelStateTitleEnabled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dip"
-                    android:layout_toLeftOf="@+id/wheelchair_state_further"
-                    android:layout_toRightOf="@+id/wheelchair_state_icon"
-                    android:text="@string/ws_enabled_title" >
-                </TextView>
-
-                <ImageView
-                    android:id="@+id/wheelchair_state_further"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/arrow" >
-                </ImageView>
-            </RelativeLayout>
+            <include layout="@layout/item_wheelchair_state" />
 
             <include layout="@layout/seperator" />
 
             <EditText
                 android:id="@+id/comment"
-                style="@style/DetailFont.Editable"
+                style="@style/DetailFontNew.Editable"
                 android:hint="@string/poi_property_comment" />
 
             <include layout="@layout/seperator" />
 
             <EditText
                 android:id="@+id/addr"
-                style="@style/DetailFont.Editable"
+                style="@style/DetailFontNew.Editable"
                 android:hint="@string/poi_property_address" />
 
             <include layout="@layout/seperator" />
 
             <EditText
                 android:id="@+id/phone"
-                style="@style/DetailFont.Editable"
+                style="@style/DetailFontNew.Editable"
                 android:autoLink="phone"
                 android:hint="@string/poi_property_phone" />
 
@@ -155,14 +112,14 @@
 
             <EditText
                 android:id="@+id/website"
-                style="@style/DetailFont.Editable"
+                style="@style/DetailFontNew.Editable"
                 android:autoLink="web"
                 android:hint="@string/poi_property_website" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="4dp"
-                android:background="#FF000000" />
+                android:layout_height="@dimen/seperator_large"
+                android:background="@android:color/black" />
         </LinearLayout>
     </ScrollView>
 

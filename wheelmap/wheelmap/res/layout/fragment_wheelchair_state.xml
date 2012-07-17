@@ -41,113 +41,84 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/Container.Content"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dip"
-                android:layout_marginTop="8dip" >
+            <RelativeLayout style="@style/Container.WheelStateSelect" >
 
                 <ImageView
                     android:id="@+id/wheelchair_state_enabled_icon"
-                    android:layout_width="@dimen/wheelchair_state_icon_width"
-                    android:layout_height="@dimen/wheelchair_state_icon_height"
+                    style="@style/IconLarge.WheelStateSelect"
                     android:layout_alignParentLeft="true"
                     android:src="@drawable/wheelchair_state_enabled" />
 
                 <TextView
-                    style="@style/WheelStateSelectFont"
+                    style="@style/FontWheelStateSelect"
                     android:layout_toLeftOf="@+id/radio_enabled"
                     android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
                     android:text="@string/ws_enabled" />
 
                 <RadioButton
                     android:id="@+id/radio_enabled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    style="@style/RadioButtonWheelStateSelect" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dip"
-                android:layout_marginTop="8dip" >
+            <RelativeLayout style="@style/Container.WheelStateSelect" >
 
                 <ImageView
                     android:id="@+id/wheelchair_state_limited_icon"
-                    android:layout_width="@dimen/wheelchair_state_icon_width"
-                    android:layout_height="@dimen/wheelchair_state_icon_height"
+                    style="@style/IconLarge.WheelStateSelect"
                     android:layout_alignParentLeft="true"
                     android:src="@drawable/wheelchair_state_limited" >
                 </ImageView>
 
                 <TextView
-                    style="@style/WheelStateSelectFont"
+                    style="@style/FontWheelStateSelect"
                     android:layout_toLeftOf="@+id/radio_limited"
                     android:layout_toRightOf="@+id/wheelchair_state_limited_icon"
                     android:text="@string/ws_limited" />
 
                 <RadioButton
                     android:id="@+id/radio_limited"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    style="@style/RadioButtonWheelStateSelect" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dip"
-                android:layout_marginTop="8dip" >
+            <RelativeLayout style="@style/Container.WheelStateSelect" >
 
                 <ImageView
                     android:id="@+id/wheelchair_state_disabled_icon"
-                    android:layout_width="@dimen/wheelchair_state_icon_width"
-                    android:layout_height="@dimen/wheelchair_state_icon_height"
+                    style="@style/IconLarge.WheelStateSelect"
                     android:layout_alignParentLeft="true"
                     android:src="@drawable/wheelchair_state_disabled" />
 
                 <TextView
-                    style="@style/WheelStateSelectFont"
+                    style="@style/FontWheelStateSelect"
                     android:layout_toLeftOf="@+id/radio_disabled"
                     android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
                     android:text="@string/ws_disabled" />
 
                 <RadioButton
                     android:id="@+id/radio_disabled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    style="@style/RadioButtonWheelStateSelect" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dip"
-                android:layout_marginTop="8dip" >
+            <RelativeLayout style="@style/Container.WheelStateSelect" >
 
                 <ImageView
                     android:id="@+id/wheelchair_state_unknown_icon"
-                    android:layout_width="@dimen/wheelchair_state_icon_width"
-                    android:layout_height="@dimen/wheelchair_state_icon_height"
+                    style="@style/IconLarge.WheelStateSelect"
                     android:layout_alignParentLeft="true"
                     android:src="@drawable/wheelchair_state_unknown" />
 
                 <TextView
-                    style="@style/WheelStateSelectFont"
+                    style="@style/FontWheelStateSelect"
                     android:layout_toLeftOf="@+id/radio_unknown"
                     android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
                     android:text="@string/ws_unknown" />
 
                 <RadioButton
                     android:id="@+id/radio_unknown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true" />
+                    style="@style/RadioButtonWheelStateSelect" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

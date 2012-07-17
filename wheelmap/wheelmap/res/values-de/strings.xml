@@ -123,4 +123,5 @@
     <string name="menu_directions">Navigation</string>
     <string name="menu_save">Sichern</string>
     <string name="error_login_failed">Einloggen fehlgeschlagen</string>
+    <string name="position_geopoint">Ort</string>
 </resources>

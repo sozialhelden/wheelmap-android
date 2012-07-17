@@ -19,13 +19,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="wrap_content">
-	<ImageView android:layout_width="fill_parent"
-		android:layout_height="@dimen/list_separator_height"
-		android:background="@color/black" />
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/list_separator_height"
+        android:background="@android:color/black" />
 
 </LinearLayout>

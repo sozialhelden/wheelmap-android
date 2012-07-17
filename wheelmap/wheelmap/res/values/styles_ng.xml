@@ -36,19 +36,20 @@
 
     <style name="TitleBarNew">
         <item name="android:id">@id/title_container</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@drawable/shape_green_plain</item>
-        <item name="android:paddingTop">@dimen/item_text_padding_small</item>
-        <item name="android:paddingBottom">@dimen/item_text_padding_small</item>
+        <item name="android:paddingTop">@dimen/padding_small</item>
+        <item name="android:paddingBottom">@dimen/padding_small</item>
     </style>
 
     <style name="TitleBarNew.SingleLine">
-        <item name="android:layout_height">@dimen/title_height_single</item>
+        <!-- item name="android:layout_height">@dimen/title_height_single</item -->
     </style>
 
     <style name="TitleBarNew.DualLine">
-        <item name="android:layout_height">@dimen/title_height_dual</item>
+        <!-- item name="android:layout_height">@dimen/title_height_dual</item -->
     </style>
 
     <style name="TitleBarTextNew">
@@ -71,6 +72,101 @@
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/secondary_text_dark</item>
+    </style>
+
+    <style name="IconMedium">
+        <item name="android:layout_width">@dimen/icon_size_medium</item>
+        <item name="android:layout_height">@dimen/icon_size_medium</item>
+    </style>
+
+    <style name="IconLarge">
+        <item name="android:layout_width">@dimen/icon_size_large</item>
+        <item name="android:layout_height">@dimen/icon_size_large</item>
+    </style>
+
+    <style name="DetailFontNew" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+    </style>
+
+    <style name="DetailFontNew.Editable">
+        <item name="android:background">@drawable/textfield_background</item>
+    </style>
+
+    <style name="List">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginLeft">@dimen/margin_medium</item>
+    </style>
+
+    <style name="ListItemContainer">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
+        <item name="android:paddingRight">@dimen/padding_large</item>
+        <item name="android:paddingLeft">@dimen/padding_small</item>
+    </style>
+
+    <style name="Container">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Container.Content">
+        <item name="android:layout_marginRight">@dimen/margin_huge</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_section</item>
+        <item name="android:layout_marginLeft">@dimen/margin_huge</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_section</item>
+    </style>
+
+    <style name="Container.WheelStateSelect">
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+    </style>
+
+    <style name="Container.Pressable">
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:background">@drawable/item_pressable_background</item>
+    </style>
+
+    <style name="IconLarge.WheelStateSelect">
+
+        <!-- item name="android:layout_marginRight">@dimen/margin_small</item -->
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="FontWheelStateSelect" parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!-- item name="android:layout_marginLeft">@dimen/margin_small</item -->
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">@dimen/margin_small</item>
+    </style>
+
+    <style name="RadioButtonWheelStateSelect">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginLeft">@dimen/margin_small</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="FontLegalNoticeTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+    </style>
+
+    <style name="FontLegalNoticeItem" parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
 </resources>

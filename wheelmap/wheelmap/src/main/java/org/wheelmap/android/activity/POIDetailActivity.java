@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
@@ -91,14 +92,6 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onEditWheelchairState(WheelchairState wState) {
-		// Sometimes, the poiId doesnt exists in the db, as the db got loaded
-		// again
-		// Actually it would be better to use the wmId in this activity, instead
-		// of the poiId, as the wmId is persistent during reload
-		// This is only a quick fix to take care of a npe here,
-		// as mWheelchairState is null in this case.
-		if (wState == null)
-			return;
 
 		// Start the activity whose result we want to retrieve. The
 		// result will come back with request code GET_CODE.
@@ -169,7 +162,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	public void onEdit(long poiId) {
 		Intent i = new Intent(POIDetailActivity.this,
 				POIDetailEditableActivity.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		i.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
 		startActivity(i);
 	}
 }

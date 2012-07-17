@@ -26,19 +26,16 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/title_bar_text"
-        style="@style/TitleBar" >
+    <LinearLayout style="@style/TitleBarNew.SingleLine" >
 
         <TextView
-            style="@style/TitleBarText"
-            android:text="@string/title_pois_settings" />
+            style="@style/TitleBarTextNew.Title"
+            android:text="@string/title_pois_settings" >
+        </TextView>
     </LinearLayout>
 
     <ListView
         android:id="@+id/android:list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="10dip" />
+        style="@style/List" />
 
 </LinearLayout>

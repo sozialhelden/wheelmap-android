@@ -155,4 +155,6 @@
     <string name="menu_directions">Navigation</string>
     <string name="menu_save">Save</string>
     <string name="error_login_failed">Login Failed</string>
+    <string name="helper_delim_dash"> - </string>
+    <string name="position_geopoint">Location</string>
 </resources>

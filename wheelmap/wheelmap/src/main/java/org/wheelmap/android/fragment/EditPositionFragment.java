@@ -84,7 +84,7 @@ public class EditPositionFragment extends SherlockFragment implements
 		mMapController.setCenter(new GeoPoint(mCrrLatitude, mCrrLongitude));
 		mMapOverlay = new POILocationEditableOverlay(mCrrLatitude,
 				mCrrLongitude, getResources().getDrawable(
-						R.drawable.position_pin));
+						R.drawable.location_pin_wm_holo_light));
 		mMapOverlay.enableLowDrawQuality(true);
 		mMapOverlay.enableUseOnlyOneBitmap(true);
 		mMapView.getOverlays().add(mMapOverlay);
