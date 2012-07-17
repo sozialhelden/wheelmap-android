@@ -59,9 +59,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private final static String EXTRA_POI_ID = "org.wheelmap.android.POI_ID";
 	private final static int LOADER_CONTENT = 0;
 
-	@InjectView(R.id.title_name)
+	@InjectView(R.id.titlebar_title)
 	TextView nameText;
-	@InjectView(R.id.title_category)
+	@InjectView(R.id.titlebar_subtitle)
 	TextView categoryText;
 	@InjectView(R.id.nodetype)
 	TextView nodetypeText;
@@ -390,7 +390,11 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		// iconImage.setImageDrawable(nodeType.iconDrawable);
 
 		setWheelchairState(state);
-		nameText.setText(name);
+		if (name.length() > 0)
+			nameText.setText(name);
+		else
+			nameText.setText(nodeType.localizedName);
+
 		String category = mSupportManager.lookupCategory(categoryId).localizedName;
 		categoryText.setText(category);
 		nodetypeText.setText(nodeType.localizedName);

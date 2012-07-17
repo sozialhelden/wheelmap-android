@@ -20,7 +20,7 @@
   limitations under the License.
   #L%
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Sherlock.Light.Transparent">
         <item name="android:windowIsTranslucent">true</item>
@@ -33,5 +33,44 @@
 
     <!-- Dialog Style -->
     <style name="Theme.Wheelmap.Dialog" parent="Theme.Wheelmap.Dialog.Impl" />
+
+    <style name="TitleBarNew">
+        <item name="android:id">@id/title_container</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/shape_green_plain</item>
+        <item name="android:paddingTop">@dimen/item_text_padding_small</item>
+        <item name="android:paddingBottom">@dimen/item_text_padding_small</item>
+    </style>
+
+    <style name="TitleBarNew.SingleLine">
+        <item name="android:layout_height">@dimen/title_height_single</item>
+    </style>
+
+    <style name="TitleBarNew.DualLine">
+        <item name="android:layout_height">@dimen/title_height_dual</item>
+    </style>
+
+    <style name="TitleBarTextNew">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TitleBarTextNew.Title">
+        <item name="android:id">@id/titlebar_title</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/primary_text_dark</item>
+    </style>
+
+    <style name="TitleBarTextNew.Subtitle">
+        <item name="android:id">@id/titlebar_subtitle</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
+    </style>
 
 </resources>

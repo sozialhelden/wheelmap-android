@@ -56,8 +56,8 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
-    
-        <style name="TitleBar">
+
+    <style name="TitleBar">
         <item name="android:id">@id/title_container</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/title_height</item>

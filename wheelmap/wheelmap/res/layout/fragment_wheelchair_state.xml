@@ -26,13 +26,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        style="@style/TitleBar"
-        android:orientation="vertical" >
+    <LinearLayout style="@style/TitleBarNew.SingleLine" >
 
         <TextView
-            style="@style/TitleBarText"
-            android:text="@string/title_wheelchairstate" />
+            style="@style/TitleBarTextNew.Title"
+            android:text="@string/title_wheelchairstate" >
+        </TextView>
     </LinearLayout>
 
     <ScrollView

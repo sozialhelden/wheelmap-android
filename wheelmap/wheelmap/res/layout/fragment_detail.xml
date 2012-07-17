@@ -4,24 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        style="@style/TitleBar"
-        android:orientation="vertical" >
+    <LinearLayout style="@style/TitleBarNew.DualLine" >
 
-        <TextView
-            android:id="@+id/title_name"
-            style="@style/TitleBarText"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
+        <TextView style="@style/TitleBarTextNew.Title" >
         </TextView>
 
-        <TextView
-            android:id="@+id/title_category"
-            style="@style/TitleBarSubtext"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
+        <TextView style="@style/TitleBarTextNew.Subtitle" >
         </TextView>
     </LinearLayout>
 
