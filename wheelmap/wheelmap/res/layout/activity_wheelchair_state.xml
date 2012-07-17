@@ -35,7 +35,7 @@
 
         <TextView
             android:id="@+id/wheelchair_state_poi_name"
-            style="@style/TitleBarText"
+            style="@style/ActionBarTitleText"
             android:layout_marginLeft="5dip" />
     </LinearLayout>
 
