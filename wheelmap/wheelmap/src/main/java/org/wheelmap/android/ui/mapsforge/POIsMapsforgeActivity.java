@@ -118,7 +118,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController = mMapView.getController();
 
 		// overlays
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, this);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, this, true);
 		runQuery();
 		mCurrLocationOverlay = new MyLocationOverlay();
 

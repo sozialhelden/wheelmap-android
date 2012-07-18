@@ -35,11 +35,12 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
+import de.akquinet.android.androlog.Log;
 
 public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
-	private final static String TAG = "mapsforge";
+	private final static String TAG = POIsCursorMapsforgeOverlay.class
+			.getSimpleName();
 
 	private final static String THREAD_NAME = "MapsforgeOverlay";
 
@@ -48,12 +49,15 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	private Handler mHandler;
 	private boolean mCursorInvalidated;
 	private OnTapListener mListener;
+	private boolean mAutoRequery;
 
-	public POIsCursorMapsforgeOverlay(Context context, OnTapListener listener) {
+	public POIsCursorMapsforgeOverlay(Context context, OnTapListener listener,
+			boolean autoRequery) {
 		super(null);
 		mContext = context;
 		mHandler = new Handler();
 		mListener = listener;
+		mAutoRequery = autoRequery;
 	}
 
 	@Override
@@ -63,6 +67,9 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	public synchronized void setCursor(Cursor cursor) {
+		if (cursor == mCursor)
+			return;
+
 		if (mCursor != null) {
 			mCursor.unregisterContentObserver(mContentObserver);
 			mCursor.unregisterDataSetObserver(mCursorObserver);
@@ -147,12 +154,15 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		@Override
 		public void onInvalidated() {
 			super.onInvalidated();
-			Log.d(TAG, "cursor invalidated");
+			Log.d(TAG, "cursor invalidated: " + mCursor.hashCode());
 			mCursorInvalidated = true;
 		}
 	};
 
 	private synchronized void reload() {
+		if (!mAutoRequery)
+			return;
+
 		Log.d(TAG, "reload - requery and populate");
 		mCursor.requery();
 		mCursorInvalidated = false;

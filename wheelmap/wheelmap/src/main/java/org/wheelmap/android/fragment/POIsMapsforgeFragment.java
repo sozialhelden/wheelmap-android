@@ -53,6 +53,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import de.akquinet.android.androlog.Log;
+
 public class POIsMapsforgeFragment extends SherlockFragment implements
 		OnMoveListener, OnZoomListener, OnTapListener, OnSearchDialogListener {
 	public final static String TAG = POIsMapsforgeFragment.class
@@ -119,7 +121,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 		// overlays
 		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(getActivity(),
-				this);
+				this, false);
 		mCurrLocationOverlay = new MyLocationOverlay();
 
 		Capability cap = WheelmapApp.getCapabilityLevel();
@@ -339,6 +341,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	protected void setCursor(Cursor cursor) {
+		Log.d(TAG, "setCursor cursor " + cursor.hashCode() + "count = "
+				+ cursor.getCount());
 		mPoisItemizedOverlay.setCursor(cursor);
 	}
 
