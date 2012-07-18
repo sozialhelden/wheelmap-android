@@ -28,6 +28,15 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+    
+    <style name="Theme.Sherlock.Light.Transparent" parent="@style/Theme.IOSched">
+         <item name="android:windowIsTranslucent">true</item>
+         <item name="android:windowBackground">@android:color/transparent</item>
+         <!-- <item name="android:windowContentOverlay">@null</item> -->
+         <item name="android:windowIsFloating">false</item>
+         <item name="android:backgroundDimEnabled">true</item>
+     </style>
+    
 
     <style name="ActionBarCompat">
         <item name="android:id">@id/actionbar_compat</item>

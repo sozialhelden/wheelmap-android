@@ -22,7 +22,7 @@
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Sherlock.Light.Transparent">
+    <style name="ThemeHoloEverywhereLight.Transparent" parent="@style/Theme.HoloEverywhereLight.Sherlock">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <!-- <item name="android:windowContentOverlay">@null</item> -->
@@ -30,10 +30,7 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-
-    <!-- Dialog Style -->
-    <style name="Theme.Wheelmap.Dialog" parent="Theme.Wheelmap.Dialog.Impl" />
-
+    
     <style name="TitleBarNew">
         <item name="android:id">@id/title_container</item>
         <item name="android:layout_height">wrap_content</item>
@@ -64,14 +61,14 @@
         <item name="android:id">@id/titlebar_title</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/primary_text_dark</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <style name="TitleBarTextNew.Subtitle">
         <item name="android:id">@id/titlebar_subtitle</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/secondary_text_dark</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
     <style name="IconMedium">
