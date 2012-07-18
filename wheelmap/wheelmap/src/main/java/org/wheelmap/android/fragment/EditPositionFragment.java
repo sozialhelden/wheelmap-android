@@ -9,6 +9,7 @@ import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +33,9 @@ public class EditPositionFragment extends SherlockFragment implements
 
 	private int mCrrLatitude;
 	private int mCrrLongitude;
+
+	private final static int VERTICAL_DELTA = 20;
+	private int mVerticalDelta;
 
 	private OnEditPositionListener mListener;
 
@@ -66,6 +70,10 @@ public class EditPositionFragment extends SherlockFragment implements
 
 		mCrrLatitude = getArguments().getInt(ARGUMENT_LATITUDE);
 		mCrrLongitude = getArguments().getInt(ARGUMENT_LONGITUDE);
+		mVerticalDelta = (int) TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
+				getResources().getDisplayMetrics());
+
 	}
 
 	@Override
@@ -84,7 +92,7 @@ public class EditPositionFragment extends SherlockFragment implements
 		mMapController.setCenter(new GeoPoint(mCrrLatitude, mCrrLongitude));
 		mMapOverlay = new POILocationEditableOverlay(mCrrLatitude,
 				mCrrLongitude, getResources().getDrawable(
-						R.drawable.location_pin_wm_holo_light));
+						R.drawable.ic_action_location_pin_wm));
 		mMapOverlay.enableLowDrawQuality(true);
 		mMapOverlay.enableUseOnlyOneBitmap(true);
 		mMapView.getOverlays().add(mMapOverlay);
@@ -120,7 +128,7 @@ public class EditPositionFragment extends SherlockFragment implements
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_MOVE:
 			GeoPoint geoPoint = mMapView.getProjection().fromPixels(
-					(int) event.getX(), (int) event.getY());
+					(int) event.getX(), (int) event.getY() + mVerticalDelta);
 			mCrrLatitude = geoPoint.getLatitudeE6();
 			mCrrLongitude = geoPoint.getLongitudeE6();
 			mMapOverlay.setPosition(geoPoint);
