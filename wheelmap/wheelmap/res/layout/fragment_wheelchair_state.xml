@@ -41,7 +41,7 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            style="@style/Container.Content"
+            style="@style/Container.ScrollviewContent"
             android:orientation="vertical" >
 
             <RelativeLayout style="@style/Container.WheelStateSelect" >

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            style="@style/Container.Content"
+            style="@style/Container.ScrollviewContent"
             android:orientation="vertical" >
 
             <include layout="@layout/item_wheelchair_state" />

@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/wheelchair_state_text"
-        style="@style/WheelStateTitleEnabled"
+        style="@style/WheelStateItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"

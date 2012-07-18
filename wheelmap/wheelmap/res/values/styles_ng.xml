@@ -98,8 +98,8 @@
     <style name="List">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_marginRight">@dimen/margin_medium</item>
-        <item name="android:layout_marginLeft">@dimen/margin_medium</item>
+        <item name="android:paddingRight">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
     </style>
 
     <style name="ListItemContainer">
@@ -119,6 +119,13 @@
         <item name="android:layout_marginBottom">@dimen/margin_vertical_section</item>
         <item name="android:layout_marginLeft">@dimen/margin_huge</item>
         <item name="android:layout_marginTop">@dimen/margin_vertical_section</item>
+    </style>
+
+    <style name="Container.ScrollviewContent">
+        <item name="android:paddingRight">@dimen/margin_huge</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_section</item>
+        <item name="android:paddingLeft">@dimen/margin_huge</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_section</item>
     </style>
 
     <style name="Container.WheelStateSelect">
@@ -168,5 +175,10 @@
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
-
+    
+    <style name="WheelStateItem">
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+    </style>
+        
 </resources>

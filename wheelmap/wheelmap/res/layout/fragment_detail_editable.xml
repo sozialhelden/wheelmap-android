@@ -22,17 +22,24 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <LinearLayout style="@style/TitleBarNew.SingleLine" >
+
+        <TextView
+            style="@style/TitleBarTextNew.Title"
+            android:text="@string/title_pois_detail_edit" >
+        </TextView>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            style="@style/Container.Content"
+            style="@style/Container.ScrollviewContent"
             android:orientation="vertical" >
 
             <EditText
