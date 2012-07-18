@@ -68,8 +68,11 @@ public class EditPositionFragment extends SherlockFragment implements
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 
-		mCrrLatitude = getArguments().getInt(ARGUMENT_LATITUDE);
-		mCrrLongitude = getArguments().getInt(ARGUMENT_LONGITUDE);
+		if (savedInstanceState != null)
+			executeState(savedInstanceState);
+		else if (getArguments() != null)
+			executeState(getArguments());
+
 		mVerticalDelta = (int) TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
 				getResources().getDisplayMetrics());
@@ -99,6 +102,19 @@ public class EditPositionFragment extends SherlockFragment implements
 		mMapView.setOnTouchListener(this);
 
 		return v;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(ARGUMENT_LATITUDE, mCrrLatitude);
+		outState.putInt(ARGUMENT_LONGITUDE, mCrrLongitude);
+
+		super.onSaveInstanceState(outState);
+	}
+
+	private void executeState(Bundle state) {
+		mCrrLatitude = state.getInt(ARGUMENT_LATITUDE);
+		mCrrLongitude = state.getInt(ARGUMENT_LONGITUDE);
 	}
 
 	@Override
