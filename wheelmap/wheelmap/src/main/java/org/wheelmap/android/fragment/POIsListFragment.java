@@ -123,7 +123,6 @@ public class POIsListFragment extends SherlockListFragment implements
 			}
 		}
 
-		Log.d(TAG, "onActivityCreated: done");
 	}
 
 	private void executeSavedInstanceState(Bundle savedInstanceState) {
@@ -198,6 +197,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	@Override
 	public void onRefresh() {
+		mFirstVisiblePosition = 0;
 		if (mWorkerFragment != null)
 			mWorkerFragment.requestData();
 	}

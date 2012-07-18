@@ -232,8 +232,9 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 			return;
 
 		Log.d(TAG, "setting stuff on target " + fragment.hashCode());
-		fragment.updateRefreshStatus(mSyncing);
 		fragment.setCursor(mCursor);
+
+		updateRefreshStatus(mSyncing);
 	}
 
 	public long createNewPOI() {
