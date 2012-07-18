@@ -310,7 +310,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private void updateWheelchairState(WheelchairState newState) {
 		mWheelchairState = newState;
 		mStateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-		mWheelchairStateText.setTextColor(mWSAttributes.get(newState).colorId);
+		mWheelchairStateText.setTextColor(getResources().getColor(
+				mWSAttributes.get(newState).colorId));
 		mWheelchairStateText.setText(mWSAttributes.get(newState).titleStringId);
 	}
 

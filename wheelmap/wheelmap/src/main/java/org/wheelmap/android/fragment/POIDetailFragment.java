@@ -426,7 +426,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		mWheelChairState = newState;
 		stateIcon.setImageDrawable(mSupportManager.lookupWheelDrawable(newState
 				.getId()));
-		stateText.setTextColor(mWSAttributes.get(newState).colorId);
+		stateText.setTextColor(getResources().getColor(
+				mWSAttributes.get(newState).colorId));
 		stateText.setText(mWSAttributes.get(newState).titleStringId);
 	}
 
