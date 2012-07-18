@@ -7,7 +7,6 @@ import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -25,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;
@@ -61,8 +61,8 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		// R.style.Theme_Wheelmap_Dialog
+		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
+				getActivity());
 		builder.setTitle(R.string.title_search);
 		builder.setIcon(R.drawable.ic_menu_search_wm_holo_light);
 		builder.setNeutralButton(R.string.search_execute, this);
@@ -73,10 +73,6 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		bindViews(view);
 
 		Dialog d = builder.create();
-
-		// Dialog dialog = new Dialog(getActivity());
-		// dialog.setTitle(R.string.title_search);
-
 		return d;
 	}
 

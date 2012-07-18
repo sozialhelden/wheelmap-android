@@ -25,11 +25,11 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ErrorDialogFragment extends SherlockDialogFragment implements
@@ -65,7 +65,8 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
+				getActivity());
 
 		SyncServiceException e = getArguments().getParcelable(
 				ARGUMENT_EXCEPTION);

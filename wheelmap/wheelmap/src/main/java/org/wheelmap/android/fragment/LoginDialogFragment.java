@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -62,7 +63,8 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
+				getActivity());
 		builder.setTitle(R.string.login_info);
 		builder.setIcon(R.drawable.ic_menu_search_wm_holo_light);
 		builder.setNeutralButton(R.string.login_submit, null);
@@ -72,10 +74,6 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 				R.layout.fragment_dialog_login, null);
 		builder.setView(view);
 
-		mEmailText = (EditText) view.findViewById(R.id.login_email);
-		mPasswordText = (EditText) view.findViewById(R.id.login_password);
-
-		load();
 		Dialog d = builder.create();
 		return d;
 	}
@@ -87,7 +85,9 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 		AlertDialog dialog = (AlertDialog) getDialog();
 		Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
 		button.setOnClickListener(this);
-
+		mEmailText = (EditText) dialog.findViewById(R.id.login_email);
+		mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
+		load();
 		mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 
 	}
