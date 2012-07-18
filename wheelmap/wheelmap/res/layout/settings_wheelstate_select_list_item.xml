@@ -19,24 +19,39 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:paddingLeft="12dip" android:paddingRight="5dip"
-	android:paddingTop="9dip" android:paddingBottom="5dip"
-	android:background="@drawable/list_item_background">
-	<ImageView android:id="@+id/list_item_wheelstate_icon"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true" android:layout_marginTop="5dip" />
-	<TextView android:id="@+id/list_item_wheelstate_text"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_toRightOf="@+id/list_item_wheelstate_icon"
-		android:layout_toLeftOf="@+id/list_item_select_wheelstate_checkbox"
-		android:textAppearance="?android:attr/textAppearanceLarge"
-		android:singleLine="true" android:layout_marginTop="9dip"
-		android:layout_marginLeft="5dip" />
-	<CheckBox android:id="@+id/list_item_wheelstate_checkbox"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_alignParentRight="true" />
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/list_item_background"
+    android:paddingBottom="5dip"
+    android:paddingLeft="12dip"
+    android:paddingRight="5dip"
+    android:paddingTop="9dip" >
+
+    <ImageView
+        android:id="@+id/list_item_wheelstate_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dip" />
+
+    <TextView
+        android:id="@+id/list_item_wheelstate_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="9dip"
+        android:layout_toLeftOf="@+id/list_item_select_wheelstate_checkbox"
+        android:layout_toRightOf="@+id/list_item_wheelstate_icon"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <CheckBox
+        android:id="@+id/list_item_wheelstate_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" />
+
 </RelativeLayout>
