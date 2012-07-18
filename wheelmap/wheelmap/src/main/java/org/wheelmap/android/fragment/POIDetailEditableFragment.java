@@ -86,7 +86,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private OnPOIDetailEditableListener mListener;
 
 	public interface OnPOIDetailEditableListener {
-		public void onClose();
+		public void onEditSave();
 
 		public void onEditWheelchairState(WheelchairState state);
 
@@ -249,7 +249,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		getActivity().startService(intent);
 
 		if (mListener != null) {
-			mListener.onClose();
+			mListener.onEditSave();
 		}
 	}
 

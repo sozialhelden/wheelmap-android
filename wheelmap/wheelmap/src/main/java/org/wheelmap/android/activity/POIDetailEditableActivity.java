@@ -49,7 +49,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	private static final int SELECT_WHEELCHAIRSTATE = 0;
 
 	private Long poiID;
-	private POIDetailEditableFragment mFragment;
+	private Fragment mFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,8 +61,8 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
-		mFragment = (POIDetailEditableFragment) fm
-				.findFragmentByTag(POIDetailEditableFragment.TAG);
+
+		mFragment = fm.findFragmentById(R.id.frame);
 		if (mFragment != null) {
 			return;
 		}
@@ -106,7 +106,8 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				if (data != null) {
 					WheelchairState newState = WheelchairState.valueOf(Integer
 							.parseInt(data.getAction()));
-					mFragment.setWheelchairState(newState);
+					((POIDetailEditableFragment) mFragment)
+							.setWheelchairState(newState);
 
 				}
 			}
@@ -114,7 +115,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onClose() {
+	public void onEditSave() {
 		finish();
 	}
 
@@ -129,35 +130,36 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onEditGeolocation(int latitude, int longitude) {
-		Fragment f = EditPositionFragment.newInstance(latitude, longitude);
+		mFragment = EditPositionFragment.newInstance(latitude, longitude);
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.frame, f, EditPositionFragment.TAG);
+		ft.replace(R.id.frame, mFragment, EditPositionFragment.TAG);
 		ft.addToBackStack(null);
 		ft.commit();
 	}
 
 	@Override
 	public void onEditPosition(int latitude, int longitude) {
-		mFragment.setGeolocation(latitude, longitude);
+		((POIDetailEditableFragment) mFragment).setGeolocation(latitude,
+				longitude);
 		getSupportFragmentManager().popBackStack();
 	}
 
 	@Override
 	public void onEditNodetype(int nodetype) {
-		Fragment f = NodetypeSelectFragment.newInstance(nodetype);
+		mFragment = NodetypeSelectFragment.newInstance(nodetype);
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.frame, f, NodetypeSelectFragment.TAG);
+		ft.replace(R.id.frame, mFragment, NodetypeSelectFragment.TAG);
 		ft.addToBackStack(null);
 		ft.commit();
 	}
 
 	@Override
 	public void onSelect(int nodetype) {
-		mFragment.setNodetype(nodetype);
+		((POIDetailEditableFragment) mFragment).setNodetype(nodetype);
 		getSupportFragmentManager().popBackStack();
 	}
 
