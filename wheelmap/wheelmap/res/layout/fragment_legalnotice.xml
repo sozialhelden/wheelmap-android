@@ -35,9 +35,7 @@
         </TextView>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    <ScrollView style="@style/Scrollable.View" >
 
         <LinearLayout
             style="@style/Container.ScrollviewContent"

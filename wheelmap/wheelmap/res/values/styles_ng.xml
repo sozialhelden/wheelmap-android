@@ -30,13 +30,13 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-    
+
     <style name="TitleBarNew">
         <item name="android:id">@id/title_container</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@drawable/shape_green_plain</item>
+        <item name="android:background">@drawable/shape_title_plain</item>
         <item name="android:paddingTop">@dimen/padding_small</item>
         <item name="android:paddingBottom">@dimen/padding_small</item>
     </style>
@@ -92,18 +92,29 @@
         <item name="android:background">@drawable/textfield_background</item>
     </style>
 
-    <style name="List">
+    <style name="Scrollable">
+        <item name="android:scrollbarStyle">outsideOverlay</item>
+    </style>
+
+    <style name="Scrollable.View">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingRight">@dimen/margin_huge</item>
+        <item name="android:paddingLeft">@dimen/margin_huge</item>
+    </style>
+
+    <style name="Scrollable.List">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:paddingRight">@dimen/margin_medium</item>
-        <item name="android:paddingLeft">@dimen/margin_medium</item>
+        <item name="android:paddingRight">@dimen/margin_huge</item>
+        <item name="android:paddingLeft">@dimen/margin_huge</item>
     </style>
 
     <style name="ListItemContainer">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
-        <item name="android:paddingRight">@dimen/padding_large</item>
-        <item name="android:paddingLeft">@dimen/padding_small</item>
+        <!-- item name="android:paddingRight">@dimen/padding_large</item -->
+        <!-- item name="android:paddingLeft">@dimen/padding_small</item -->
     </style>
 
     <style name="Container">
@@ -119,9 +130,7 @@
     </style>
 
     <style name="Container.ScrollviewContent">
-        <item name="android:paddingRight">@dimen/margin_huge</item>
         <item name="android:paddingBottom">@dimen/margin_vertical_section</item>
-        <item name="android:paddingLeft">@dimen/margin_huge</item>
         <item name="android:paddingTop">@dimen/margin_vertical_section</item>
     </style>
 
@@ -172,10 +181,14 @@
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
-    
+
     <style name="WheelStateItem">
         <item name="android:textSize">18sp</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
     </style>
-        
+    
+    <style name="FontSectionTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 </resources>

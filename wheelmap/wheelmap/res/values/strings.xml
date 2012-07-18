@@ -157,4 +157,5 @@
     <string name="error_login_failed">Login Failed</string>
     <string name="helper_delim_dash"> - </string>
     <string name="position_geopoint">Location</string>
+    <string name="settings_login_information">Login Information</string>
 </resources>

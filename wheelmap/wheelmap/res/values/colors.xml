@@ -53,6 +53,7 @@
     <color name="green_light">#5fbf0f</color>
     
     <color name="green_wheelmap_logo">#7fb63c</color>
+    <color name="color_base_ng">@color/green_wheelmap_logo</color>
     
     <color name="seperator_color_dark_a">#FFC6C6C6</color>
     <color name="seperator_color_dark_b">#FFE6E6E6</color>

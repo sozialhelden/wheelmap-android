@@ -29,7 +29,7 @@
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/pull_to_refresh_listview"
-        style="@style/List" />
+        style="@style/Scrollable.List" />
 
     <ViewStub
         android:id="@android:id/empty"

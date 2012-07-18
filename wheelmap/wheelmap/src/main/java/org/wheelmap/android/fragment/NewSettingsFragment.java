@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -57,22 +58,24 @@ public class NewSettingsFragment extends SherlockListFragment implements
 				getActivity());
 
 		mAdapter = new MergeAdapter();
-		mAdapter.addView(inflater.inflate(
-				R.layout.settings_wheelstate_item_title, null));
+		mAdapter.addView(createSectionTitle(inflater,
+				R.string.settings_wheelchair_state));
 		mAdapter.addAdapter(adapterWSList);
-		mAdapter.addView(createBlackBar(inflater));
-		mAdapter.addView(inflater.inflate(
-				R.layout.settings_category_item_title, null));
+		mAdapter.addView(createSectionTitle(inflater,
+				R.string.settings_category_filter));
 		mAdapter.addAdapter(mAdapterCatList);
-		mAdapter.addView(createBlackBar(inflater));
+		mAdapter.addView(createSectionTitle(inflater,
+				R.string.settings_login_information));
 		mAdapter.addAdapter(new DeleteLoginAdapter(inflater));
 
 		return v;
 	}
 
-	private View createBlackBar(LayoutInflater inflater) {
+	private View createSectionTitle(LayoutInflater inflater, int textId) {
 		LinearLayout layout = (LinearLayout) inflater.inflate(
-				R.layout.settings_black_item, null);
+				R.layout.item_list_sectiontitle, null);
+		TextView title = (TextView) layout.findViewById(R.id.title_section);
+		title.setText(getResources().getString(textId));
 		return layout;
 	}
 
