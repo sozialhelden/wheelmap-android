@@ -21,7 +21,6 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 	private final TabHolder mTag;
 	private final Class<T> mClass;
 	private final OnStateListener listener;
-	private Bundle mBundleArgs;
 
 	/**
 	 * Constructor used each time a new tab is created.
@@ -52,22 +51,18 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		Log.d(TAG, "onTabSelected tag = " + mTag.name);
-		mBundleArgs = mTag.bundle;
 		FragmentManager fm = mActivity.getSupportFragmentManager();
 
-		// Check if the fragment is already initialized
-
-		if (mFragment == null) {
+		Bundle executeBundle = mTag.getExecuteBundle();
+		if (mFragment == null || executeBundle != null) {
 			mFragment = SherlockFragment.instantiate(mActivity,
-					mClass.getName(), mBundleArgs);
+					mClass.getName(), executeBundle);
 			fm.beginTransaction()
 					.replace(R.id.root_layout, mFragment, mTag.name).commit();
 
 		} else {
 			Log.d(TAG, "Fragment mFragment = " + mFragment.toString());
 		}
-		mTag.bundle = null;
-		mBundleArgs = null;
 
 		if (listener != null)
 			listener.onStateChange(mTag.name);
@@ -99,11 +94,21 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 	public static class TabHolder {
 		public String name;
 		public String workerName;
-		public Bundle bundle;
+		private Bundle bundle;
 
 		public TabHolder(String name, String workerName) {
 			this.name = name;
 			this.workerName = workerName;
+		}
+
+		public void setExecuteBundle(Bundle extras) {
+			bundle = extras;
+		}
+
+		public Bundle getExecuteBundle() {
+			Bundle newBundle = bundle;
+			bundle = null;
+			return newBundle;
 		}
 	}
 

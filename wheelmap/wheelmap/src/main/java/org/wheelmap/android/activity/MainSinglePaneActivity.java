@@ -38,11 +38,14 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 			.getSimpleName();
 	private final static ArrayList<TabHolder> mIndexToTab;
 
-	private int mSelectedTab;
-	private final static String EXTRA_SELECTED_TAB = "org.wheelmap.android.SELECTED_TAB";
+	private int mSelectedTab = -1;
+	public final static String EXTRA_SELECTED_TAB = "org.wheelmap.android.SELECTED_TAB";
 	private boolean mIsRecreated;
 	private final static String EXTRA_IS_RECREATED = "org.wheelmap.android.IS_RECREATED";
 	private GoogleAnalyticsTracker tracker;
+
+	public final static int TAB_LIST = 0;
+	public final static int TAB_MAP = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		tracker.setAnonymizeIp(true);
 
 		if (savedInstanceState != null)
-			executeSavedInstanceState(savedInstanceState);
+			executeState(savedInstanceState);
 		else
 			executeDefaultInstanceState();
 
@@ -72,11 +75,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 				.setIcon(
 						getResources().getDrawable(
 								R.drawable.ic_location_list_wm_holo_light))
-				.setTag(mIndexToTab.get(0).name)
+				.setTag(mIndexToTab.get(TAB_LIST).name)
 				.setTabListener(
 						new MyTabListener<POIsListFragment>(this, mIndexToTab
-								.get(0), POIsListFragment.class));
-		actionBar.addTab(tab, 0, false);
+								.get(TAB_LIST), POIsListFragment.class));
+		actionBar.addTab(tab, TAB_LIST, false);
 
 		tab = actionBar
 				.newTab()
@@ -85,17 +88,46 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 						getResources().getDrawable(
 								R.drawable.ic_location_map_wm_holo_light))
 
-				.setTag(mIndexToTab.get(1).name)
+				.setTag(mIndexToTab.get(TAB_MAP).name)
 				.setTabListener(
 						new MyTabListener<POIsMapsforgeFragment>(this,
-								mIndexToTab.get(1), POIsMapsforgeFragment.class));
-		actionBar.addTab(tab, 1, false);
+								mIndexToTab.get(TAB_MAP),
+								POIsMapsforgeFragment.class));
+		actionBar.addTab(tab, TAB_MAP, false);
 
 		actionBar.setSelectedNavigationItem(mSelectedTab);
 
 	}
 
-	private void executeSavedInstanceState(Bundle state) {
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d(TAG, "onNewIntent");
+		setIntent(intent);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (getIntent() != null) {
+			executeIntent(getIntent());
+			setIntent(null);
+		}
+	}
+
+	private void executeIntent(Intent intent) {
+		Bundle extras = intent.getExtras();
+		if (extras == null)
+			return;
+
+		executeState(extras);
+		mIndexToTab.get(mSelectedTab).setExecuteBundle(extras);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setSelectedNavigationItem(mSelectedTab);
+	}
+
+	private void executeState(Bundle state) {
 		mIsRecreated = state.getBoolean(EXTRA_IS_RECREATED, false);
 		mSelectedTab = state.getInt(EXTRA_SELECTED_TAB);
 	}
@@ -190,9 +222,9 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onShowDetail(long id) {
-		Intent i = new Intent(this, POIDetailActivity.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, id);
-		startActivity(i);
+		Intent intent = new Intent(this, POIDetailActivity.class);
+		intent.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, id);
+		startActivity(intent);
 	}
 
 	static {

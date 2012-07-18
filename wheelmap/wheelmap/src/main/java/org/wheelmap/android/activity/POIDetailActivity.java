@@ -1,13 +1,14 @@
 package org.wheelmap.android.activity;
 
+import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
+import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 
 import roboguice.inject.ContentView;
 import wheelmap.org.WheelchairState;
@@ -150,19 +151,24 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onShowLargeMapAt(int lat, int lon) {
-		Intent i = new Intent(POIDetailActivity.this,
-				POIsMapsforgeActivity.class);
-		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
-		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
-		startActivity(i);
+	public void onShowLargeMapAt(GeoPoint point) {
+		Intent intent = new Intent(POIDetailActivity.this,
+				MainSinglePaneActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+		intent.putExtra(MainSinglePaneActivity.EXTRA_SELECTED_TAB,
+				MainSinglePaneActivity.TAB_MAP);
+		intent.putExtra(POIsMapsforgeFragment.EXTRA_CENTER_AT_LAT,
+				point.getLatitudeE6());
+		intent.putExtra(POIsMapsforgeFragment.EXTRA_CENTER_AT_LON,
+				point.getLongitudeE6());
+		startActivity(intent);
 	}
 
 	@Override
 	public void onEdit(long poiId) {
-		Intent i = new Intent(POIDetailActivity.this,
+		Intent intent = new Intent(POIDetailActivity.this,
 				POIDetailEditableActivity.class);
-		i.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
-		startActivity(i);
+		intent.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
+		startActivity(intent);
 	}
 }

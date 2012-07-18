@@ -93,7 +93,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		void onEditWheelchairState(WheelchairState wState);
 
-		void onShowLargeMapAt(int lat, int lon);
+		void onShowLargeMapAt(GeoPoint point);
 	}
 
 	private OnPOIDetailListener mListener;
@@ -325,11 +325,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onTap(OverlayItem item, long poiId) {
-		int lat = item.getPoint().getLatitudeE6();
-		int lon = item.getPoint().getLongitudeE6();
 
 		if (mListener != null) {
-			mListener.onShowLargeMapAt(lat, lon);
+			mListener.onShowLargeMapAt(item.getPoint());
 		}
 	}
 
@@ -408,7 +406,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 				@Override
 				public void onClick(View v) {
 					if (mListener != null)
-						mListener.onShowLargeMapAt(lat, lon);
+						mListener.onShowLargeMapAt(new GeoPoint(lat, lon));
 
 				}
 			});

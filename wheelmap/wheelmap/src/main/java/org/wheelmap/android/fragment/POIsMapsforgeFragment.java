@@ -46,7 +46,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -59,10 +58,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public final static String TAG = POIsMapsforgeFragment.class
 			.getSimpleName();
 	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
-	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.Mapsforge.CENTER_AT_LAT";
-	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.Mapsforge.CENTER_AT_LON";
-	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.Mapsforge.CENTER_ZOOM";
-	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.Mapsforge.NO_RETRIEVAL";
+	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.CENTER_AT_LAT";
+	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.CENTER_AT_LON";
+	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.CENTER_ZOOM";
+	public static final String EXTRA_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
 
 	private POIsMapsforgeWorkerFragment mWorkerFragment;
 
@@ -73,10 +72,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private GeoPoint mLastRequestedPosition;
 
 	private boolean isCentered;
-	private boolean isZoomedEnough;
 	private int oldZoomLevel = 18;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 	private static final byte ZOOMLEVEL_MIN = 16;
+	private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
 	private GeoPoint mLastGeoPointE6;
 
 	public interface OnPOIsMapsforgeListener {
@@ -132,7 +131,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		}
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
-		mMapController.setZoom(oldZoomLevel); // Zoon 1 is world view
+		mMapController.setZoom(oldZoomLevel);
 		mMapView.setMoveListener(this);
 		mMapView.setZoomListener(this);
 
@@ -158,13 +157,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			}
 		}
 
-		if (savedInstanceState != null) {
-			executeTargetCenterExtras(savedInstanceState);
-		}
-
-		if (getArguments() != null) {
-			executeRetrieval(getArguments());
-		}
+		if (savedInstanceState != null)
+			executeState(savedInstanceState);
+		else if (getArguments() != null)
+			executeState(getArguments());
 	}
 
 	@Override
@@ -204,39 +200,25 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		super.onDetach();
 	}
 
-	private void executeTargetCenterExtras(Bundle extras) {
-		if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
-			int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
-			int lon = extras.getInt(EXTRA_CENTER_AT_LON);
-			int zoom = extras.getInt(EXTRA_CENTER_ZOOM, 18);
+	private void executeState(Bundle state) {
+		if (state.containsKey(EXTRA_CENTER_AT_LAT)) {
+			int lat = state.getInt(EXTRA_CENTER_AT_LAT);
+			int lon = state.getInt(EXTRA_CENTER_AT_LON);
+			int zoom = state.getInt(EXTRA_CENTER_ZOOM, MAP_ZOOM_DEFAULT);
 
 			GeoPoint gp = new GeoPoint(lat, lon);
 			mMapController.setCenter(gp);
 			mMapView.setZoomListener(null);
-			mMapController.setZoom(zoom); // Zoon 1 is world view
+			mMapController.setZoom(zoom);
 			mMapView.setZoomListener(this);
 			isCentered = true;
-			isZoomedEnough = true;
 			oldZoomLevel = zoom;
 		}
-	}
 
-	private void executeRetrieval(Bundle extras) {
-		boolean retrieval = !extras.getBoolean(EXTRA_NO_RETRIEVAL, false);
-		if (retrieval) {
-			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
-
-						@Override
-						public void onGlobalLayout() {
-							mMapController.setZoom(18); // Zoon 1 is world view
-							isZoomedEnough = true;
-							oldZoomLevel = 18;
-							requestUpdate();
-							mMapView.getViewTreeObserver()
-									.removeGlobalOnLayoutListener(this);
-						}
-					});
+		if (state.getBoolean(EXTRA_RETRIEVAL, false)) {
+			mMapController.setZoom(MAP_ZOOM_DEFAULT);
+			oldZoomLevel = MAP_ZOOM_DEFAULT;
+			requestUpdate();
 		}
 	}
 
