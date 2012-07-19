@@ -19,24 +19,40 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/startup_frame" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:background="@android:color/white">
-	<LinearLayout android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:orientation="vertical"
-		android:layout_gravity="center_vertical|center_horizontal">
-		<ImageView android:layout_width="160dip"
-			android:layout_height="60dip" android:src="@drawable/title_logo"
-			android:layout_marginBottom="12dip" android:layout_gravity="center_horizontal" />
-		<ProgressBar android:id="@+id/progressbar"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal" android:indeterminate="true" />
-		<ImageView android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:src="@drawable/logo_sozialhelden_232x47"
-			android:layout_marginTop="12dip" android:layout_gravity="center_horizontal" />
-	</LinearLayout>
+    android:id="@+id/startup_frame"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="160dip"
+            android:layout_height="60dip"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dip"
+            android:src="@drawable/title_logo" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dip"
+            android:src="@drawable/logo_sozialhelden_232x47" />
+    </LinearLayout>
+
 </FrameLayout>
-
-

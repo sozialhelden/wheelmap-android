@@ -31,17 +31,17 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.os.Bundle;
-import android.util.Log;
-
 import wheelmap.org.domain.node.SingleNode;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeRequestBuilder;
 import wheelmap.org.request.RequestBuilder;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.os.Bundle;
+import de.akquinet.android.androlog.Log;
 
 public class NodeExecutor extends AbstractExecutor implements IExecutor {
+	private static final String TAG = NodeExecutor.class.getSimpleName();
 	private static final int MAX_RETRY_COUNT = 3;
 
 	long mNodeId = -1;
@@ -51,7 +51,7 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 
 	public NodeExecutor(ContentResolver resolver, Bundle bundle) {
 		super(resolver, bundle);
-		prepDbHelper = new PrepareDatabaseHelper( resolver );
+		prepDbHelper = new PrepareDatabaseHelper(resolver);
 	}
 
 	@Override
@@ -63,11 +63,12 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 	public void execute() throws SyncServiceException {
 		NodeRequestBuilder requestBuilder = null;
 		if (mNodeId != -1 && mNodeId != 0) {
-			requestBuilder = new NodeRequestBuilder( SERVER, getApiKey(), AcceptType.JSON, mNodeId );
+			requestBuilder = new NodeRequestBuilder(SERVER, getApiKey(),
+					AcceptType.JSON, mNodeId);
 		}
 		mTempStore = null;
-		
-		retrieveSingleNode( requestBuilder );
+
+		retrieveSingleNode(requestBuilder);
 	}
 
 	protected void retrieveSingleNode(RequestBuilder requestBuilder)
@@ -98,7 +99,8 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 
 		while (retryCount < MAX_RETRY_COUNT) {
 			try {
-				content = mRequestProcessor.get(new URI(request), SingleNode.class);
+				content = mRequestProcessor.get(new URI(request),
+						SingleNode.class);
 				break;
 			} catch (URISyntaxException e) {
 				throw new SyncServiceException(
@@ -125,17 +127,18 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 	public void prepareDatabase() throws SyncServiceException {
 		prepDbHelper.deleteAllOldPending();
 
-		insert( mTempStore );
+		insert(mTempStore);
 		prepDbHelper.copyAllPendingDataToRetrievedData();
 	}
-	
-	private void insert( SingleNode node ) {
+
+	private void insert(SingleNode node) {
 		ContentValues values = new ContentValues();
 		prepDbHelper.copyNodeToValues(node.getNode(), values);
 		String whereClause = "( " + POIs.WM_ID + " = ? )";
 		String whereValues[] = { node.getNode().getId().toString() };
-		
-		prepDbHelper.insertOrUpdateContentValues( Wheelmap.POIs.CONTENT_URI, Wheelmap.POIs.PROJECTION, whereClause, whereValues, values);
+
+		prepDbHelper.insertOrUpdateContentValues(Wheelmap.POIs.CONTENT_URI,
+				Wheelmap.POIs.PROJECTION, whereClause, whereValues, values);
 	}
 
 }

@@ -44,10 +44,11 @@ import android.content.ContentValues;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		IExecutor {
+	private static final String TAG = NodesExecutor.class.getSimpleName();
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
 	private BoundingBox mBoundingBox = null;
@@ -145,9 +146,10 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
 		String[] whereValues = new String[] { String
 				.valueOf(Wheelmap.UPDATE_NO) };
-		Uri uri = Wheelmap.POIs.CONTENT_URI.buildUpon()
-				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM, "false")
-				.build();
+		Uri uri = Wheelmap.POIs.CONTENT_URI
+				.buildUpon()
+				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM,
+						"false").build();
 		getResolver().delete(uri, whereClause, whereValues);
 	}
 

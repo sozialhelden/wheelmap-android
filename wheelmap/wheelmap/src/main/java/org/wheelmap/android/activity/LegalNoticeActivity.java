@@ -23,14 +23,16 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.online.R;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-public class LegalNoticeActivity extends Activity {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class LegalNoticeActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView( R.layout.activity_legalnotice );
+		setContentView(R.layout.activity_fragment_legalnotice);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 }

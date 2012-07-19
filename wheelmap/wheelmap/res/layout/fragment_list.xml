@@ -19,7 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_root"
@@ -29,8 +29,7 @@
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/pull_to_refresh_listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        style="@style/List" />
 
     <ViewStub
         android:id="@android:id/empty"

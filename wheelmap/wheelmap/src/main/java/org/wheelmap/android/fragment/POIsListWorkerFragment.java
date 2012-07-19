@@ -21,9 +21,9 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIsCursorWrapper;
-import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
@@ -31,10 +31,7 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -49,24 +46,35 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+
+import com.actionbarsherlock.app.SherlockFragment;
+
+import de.akquinet.android.androlog.Log;
 
 public class POIsListWorkerFragment extends SherlockFragment implements
-		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor> {
-	public final static String TAG = "poislistworker";
+		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor>,
+		OnSearchDialogListener {
+	public static final String TAG = POIsListWorkerFragment.class
+			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 
-	private OnListWorkerFragmentListener mListener;
+	private OnPOIsListWorkerListener mListener;
 	private DetachableResultReceiver mReceiver;
 	private boolean mSyncing = false;
 
 	private MyLocationManager mLocationManager;
 	private Location mLocation;
 	private float mDistance;
-	private POIsListCursorAdapter mAdapter;
-	
+	private Cursor mCursor;
+
+	public interface OnPOIsListWorkerListener {
+		public void onRefreshStatusChange(boolean refresh);
+
+		public void onError(SyncServiceException e);
+	}
+
 	public POIsListWorkerFragment() {
 		super();
 	}
@@ -75,14 +83,14 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnListWorkerFragmentListener)
-			mListener = (OnListWorkerFragmentListener) activity;
+		if (activity instanceof OnPOIsListWorkerListener)
+			mListener = (OnPOIsListWorkerListener) activity;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d( TAG, "onCreate" );
+		Log.d(TAG, "onCreate");
 
 		setRetainInstance(true);
 
@@ -91,14 +99,13 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		mLocationManager = MyLocationManager.get(mReceiver, true);
 		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
-		mAdapter = new POIsListCursorAdapter(getActivity(), null, false);
 		requestData();
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getLoaderManager().initLoader(LOADER_ID_LIST, null, this );
+		getLoaderManager().initLoader(LOADER_ID_LIST, null, this);
 	}
 
 	@Override
@@ -116,7 +123,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public void onPause() {
 		super.onPause();
 		mLocationManager.release(mReceiver);
-
 	}
 
 	@Override
@@ -169,7 +175,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		((POIsListFragment) getTargetFragment()).updateRefreshStatus(mSyncing);
 
 		if (mListener != null)
-			mListener.onUpdateRefresh(mSyncing);
+			mListener.onRefreshStatusChange(mSyncing);
 	}
 
 	protected void requestData() {
@@ -182,7 +188,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		getActivity().startService(intent);
 	}
 
-	public void executeSearch(Bundle extras) {
+	private void executeSearch(Bundle extras) {
 		if (!extras.containsKey(SearchManager.QUERY)
 				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
 				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
@@ -220,15 +226,15 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		return Float.valueOf(prefDist);
 	}
 
-	protected void setPersistentValues() {
-		Log.d( TAG, "fragment worker - setting persistent stuff" );
+	private void connectValues() {
 		POIsListFragment fragment = (POIsListFragment) getTargetFragment();
+		if (fragment == null)
+			return;
 
-		fragment.updateRefreshStatus(mSyncing);
-		if ( !mSyncing ) {
-			Log.d( TAG, "setting stored mAdapter = " + mAdapter );
-			fragment.setAdapter(mAdapter);
-		}
+		Log.d(TAG, "setting stuff on target " + fragment.hashCode());
+		fragment.setCursor(mCursor);
+
+		updateRefreshStatus(mSyncing);
 	}
 
 	public long createNewPOI() {
@@ -253,7 +259,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		Log.d( TAG, "onCreateLoader" );
+		Log.d(TAG, "onCreateLoader");
 		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
 		String query = QueriesBuilderHelper.userSettingsFilter(getActivity());
 		String whereValues[] = new String[] {
@@ -270,19 +276,19 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 				mLocation.getLongitude(), mLocation.getLatitude());
 
 		Cursor wrappingCursor = new POIsCursorWrapper(cursor, location);
-		Log.d( TAG, "cursorloader - switching cursors in adapter - cursor size = " + wrappingCursor.getCount() );
-		mAdapter.swapCursor( wrappingCursor );		
-		((POIsListFragment) getTargetFragment()).setAdapter( mAdapter );
+		Log.d(TAG, "cursorloader - new cursor - cursor size = "
+				+ wrappingCursor.getCount());
+		mCursor = wrappingCursor;
+		connectValues();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		Log.d( TAG, "onLoaderReset - why is that?" );
+		Log.d(TAG, "onLoaderReset - why is that?");
 	}
 
-	public interface OnListWorkerFragmentListener {
-		public void onUpdateRefresh(boolean refresh);
-		public void onError(SyncServiceException e);
+	@Override
+	public void onSearch(Bundle bundle) {
+		executeSearch(bundle);
 	}
-
 }

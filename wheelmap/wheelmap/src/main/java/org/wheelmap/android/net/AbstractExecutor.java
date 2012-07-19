@@ -28,8 +28,7 @@ import android.content.ContentResolver;
 import android.os.Bundle;
 
 public abstract class AbstractExecutor implements IExecutor {
-	protected static final String TAG = "executor";
-	
+
 	private final ContentResolver mResolver;
 	private final Bundle mBundle;
 	// Testserver
@@ -37,33 +36,34 @@ public abstract class AbstractExecutor implements IExecutor {
 	// Production Server
 	protected static final String SERVER = "wheelmap.org";
 	protected static final String SERVER_STAGING = "staging.wheelmap.org";
-	
+
 	protected final static int statusAuthRequired = 401;
 	protected final static int statusRequestForbidden = 403;
-	
+
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
-	
-	public AbstractExecutor( ContentResolver resolver, Bundle bundle ) {
+
+	public AbstractExecutor(ContentResolver resolver, Bundle bundle) {
 		mResolver = resolver;
 		mBundle = bundle;
 	}
-	
+
 	public String getApiKey() {
 		return API_KEY;
 	}
-	
+
 	protected ContentResolver getResolver() {
 		return mResolver;
 	}
-	
+
 	protected Bundle getBundle() {
 		return mBundle;
 	}
-	
+
 	public abstract void prepareContent();
+
 	public abstract void execute() throws SyncServiceException;
+
 	public abstract void prepareDatabase() throws SyncServiceException;
 
 }
-

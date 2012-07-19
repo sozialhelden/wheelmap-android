@@ -24,6 +24,7 @@ package org.wheelmap.android.utils;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -35,9 +36,9 @@ import android.util.Log;
  * activities {@link Activity} can get info about the state of a single service.
  */
 public class MultiResultReceiver extends ResultReceiver {
-	private static final String TAG = "ResultReceiver";
+	private static final String TAG = "MultiResultReceiver";
 	private Set<ResultReceiver> mReceivers;
-	
+
 	private int mResultCode;
 	private Bundle mResultData;
 
@@ -49,24 +50,24 @@ public class MultiResultReceiver extends ResultReceiver {
 	public void clearReceiver() {
 		mReceivers.clear();
 	}
-	
+
 	public int getReceiverCount() {
 		return mReceivers.size();
 	}
 
 	public boolean addReceiver(ResultReceiver receiver, boolean resentLast) {
 		boolean isAdded = false;
-		
-		if ( receiver == null )
+
+		if (receiver == null)
 			return false;
 		if (!mReceivers.contains(receiver)) {
 			mReceivers.add(receiver);
 			isAdded = true;
 		}
-		
-		if ( resentLast )
-			receiver.send( mResultCode, mResultData );
-		
+
+		if (resentLast)
+			receiver.send(mResultCode, mResultData);
+
 		return isAdded;
 	}
 
@@ -77,12 +78,12 @@ public class MultiResultReceiver extends ResultReceiver {
 	@Override
 	protected void onReceiveResult(int resultCode, Bundle resultData) {
 		boolean sentOnce = false;
-		
+
 		mResultCode = resultCode;
 		mResultData = resultData;
-		
+
 		for (ResultReceiver receiver : mReceivers) {
-			receiver.send( resultCode, resultData );
+			receiver.send(resultCode, resultData);
 			sentOnce = true;
 		}
 

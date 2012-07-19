@@ -118,7 +118,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		mMapController = mMapView.getController();
 
 		// overlays
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, this);
+		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(this, this, true);
 		runQuery();
 		mCurrLocationOverlay = new MyLocationOverlay();
 
@@ -160,7 +160,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		listView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				Intent intent = new Intent(POIsMapsforgeActivity.this,
-						org.wheelmap.android.activity.POIsListActivity.class);
+						POIsListActivity.class);
 				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				startActivity(intent);

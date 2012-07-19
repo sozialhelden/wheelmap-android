@@ -21,20 +21,20 @@
  */
 package wheelmap.org.request;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 
 import org.apache.http.client.methods.HttpUriRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Sends the {@link HttpUriRequest}s to the REST-Server (Testsystem, e.g. is http://staging.wheelmap.org/api/)
- * @see <a href="http://static.springsource.org/spring-android/docs/1.0.x/reference/html/rest-template.html">Spring android documentation</a>
+ * Sends the {@link HttpUriRequest}s to the REST-Server (Testsystem, e.g. is
+ * http://staging.wheelmap.org/api/)
+ * 
+ * @see <a
+ *      href="http://static.springsource.org/spring-android/docs/1.0.x/reference/html/rest-template.html">Spring
+ *      android documentation</a>
  * @author p.lipp@web.de
  */
 public class RequestProcessor {
@@ -42,18 +42,22 @@ public class RequestProcessor {
 
 	public RequestProcessor() {
 		restTemplate = new RestTemplate();
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		restTemplate
+				.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		restTemplate.getMessageConverters().add(
+				new MappingJacksonHttpMessageConverter());
+
 	}
 
-	public <T> T get (final URI uri, Class<T> clazz) {
-		return restTemplate.getForObject(uri,clazz);
+	public <T> T get(final URI uri, Class<T> clazz) {
+		return restTemplate.getForObject(uri, clazz);
 	}
-	
-	public <T> T post (final URI uri, final T postObject, Class<T> clazz) {
+
+	public <T> T post(final URI uri, final T postObject, Class<T> clazz) {
 		return restTemplate.postForObject(uri, postObject, clazz);
 	}
-	
-	public <T> void put( final URI uri, final T putObject) {
-		restTemplate.put( uri, putObject );
+
+	public <T> void put(final URI uri, final T putObject) {
+		restTemplate.put(uri, putObject);
 	}
 }

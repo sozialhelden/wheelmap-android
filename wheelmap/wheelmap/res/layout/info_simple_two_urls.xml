@@ -19,26 +19,42 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginLeft="@dimen/margin_small"
+    android:layout_marginRight="@dimen/margin_small"
+    android:orientation="vertical" >
 
-	<TextView android:id="@+id/info_activity_title"
-		android:layout_height="wrap_content" android:layout_marginTop="5dip"
-		android:layout_marginLeft="5dip" android:layout_width="fill_parent"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
-	<TextView android:id="@+id/info_activity_first_line"
-		android:layout_height="wrap_content" android:paddingTop="5dip"
-		android:paddingBottom="5dip" android:paddingLeft="5dip" android:paddingRight="5dip"
-		android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceMedium"
-		android:onClick="onFirstLinkClick" android:background="@drawable/list_item_background"
-		android:textStyle="bold" />
-	<TextView android:id="@+id/info_activity_second_line"
-		android:layout_height="wrap_content" android:paddingTop="3dip"
-		android:paddingBottom="5dip" android:paddingLeft="5dip" android:paddingRight="5dip"
-		android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceMedium"
-		android:onClick="onSecondLinkClick" android:background="@drawable/list_item_background"
-		android:textStyle="bold" />
+    <TextView
+        android:id="@+id/info_activity_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/info_activity_first_line"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/list_item_background"
+        android:onClick="onFirstLinkClick"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/info_activity_second_line"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/list_item_background"
+        android:onClick="onSecondLinkClick"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
 </LinearLayout>

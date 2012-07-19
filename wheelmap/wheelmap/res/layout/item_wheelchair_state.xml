@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wheelchair_state_layout"
+    style="@style/Container.Pressable" >
+
+    <ImageView
+        android:id="@+id/wheelchair_state_icon"
+        style="@style/IconLarge"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/wheelchair_state_enabled" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/wheelchair_state_text"
+        style="@style/WheelStateItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:layout_toLeftOf="@+id/edit_icon"
+        android:layout_toRightOf="@+id/wheelchair_state_icon"
+        android:text="@string/ws_enabled_title" >
+    </TextView>
+
+    <ImageView
+        android:id="@+id/edit_icon"
+        style="@style/IconMedium"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_menu_edit_wm_holo_light" />
+
+</RelativeLayout>

@@ -35,13 +35,14 @@ import org.wheelmap.android.service.SyncServiceException;
 import wheelmap.org.domain.apikey.AuthInfo;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.ApiKeyRequestBuilder;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 public class ApiKeyExecutor extends AbstractExecutor {
+	private final static String TAG = ApiKeyExecutor.class.getSimpleName();
+
 	private Context mContext;
 	private String mEmail;
 	private String mPassword;
@@ -65,8 +66,8 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	@Override
 	public void execute() throws SyncServiceException {
 
-		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(SERVER_STAGING,
-				AcceptType.JSON);
+		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(
+				SERVER_STAGING, AcceptType.JSON);
 		requestBuilder.setCredentials(mEmail, mPassword);
 		String request;
 		try {
@@ -84,11 +85,11 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.value() == statusAuthFailed) {
-				Log.d(TAG, "wrong email or password");
+				Log.e(TAG, "wrong email or password");
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_AUTHORIZATION_ERROR, e);
 			} else if (status.value() == statusOSMFailed) {
-				Log.d(TAG, "not osm connected");
+				Log.e(TAG, "not osm connected");
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_NOT_OSM_CONNECTED, e);
 			}

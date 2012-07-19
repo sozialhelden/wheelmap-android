@@ -29,14 +29,13 @@ public class UserCredentials {
 	// TODO refactor constants for preferencies into one class
 	public static final String PREFS_NAME = "credentials";
 
-
 	private String mLogin;
 	private String mPassword;
 	private String mApiKey;
 	private boolean mIsLoggenIn;
 	private Context mContext;
 
-	public UserCredentials(Context context){
+	public UserCredentials(Context context) {
 		mContext = context;
 		load();
 	}
@@ -49,18 +48,18 @@ public class UserCredentials {
 		mApiKey = apiKey;
 		save();
 	}
-	
+
 	public String getApiKey() {
 		return mApiKey;
 	};
-	
+
 	public void logout() {
 		mIsLoggenIn = false;
 		mLogin = null;
 		mPassword = null;
 		mApiKey = null;
 		save();
-	}	
+	}
 
 	public String getLogin() {
 		return mLogin;
@@ -68,15 +67,16 @@ public class UserCredentials {
 
 	public String getPassword() {
 		return mPassword;
-	}	
-
-	public boolean isLoggedIn() {
-		return mIsLoggenIn;		
 	}
 
-	private void save(){
+	public boolean isLoggedIn() {
+		return mIsLoggenIn;
+	}
+
+	private void save() {
 		// Restore preferences
-		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME,
+				0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("login", mLogin);
 		editor.putString("password", mPassword);
@@ -86,9 +86,10 @@ public class UserCredentials {
 		editor.commit();
 	}
 
-	private void load(){
+	private void load() {
 		// Restore preferences
-		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME,
+				0);
 		mLogin = settings.getString("login", "android_app@wheelmap.org");
 		mPassword = settings.getString("password", "");
 		mApiKey = settings.getString("apikey", "jWeAsb34CJq4yVAryjtc");

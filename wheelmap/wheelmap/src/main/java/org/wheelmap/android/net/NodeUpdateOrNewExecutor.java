@@ -37,14 +37,16 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeUpdateOrNewAllRequestBuilder;
 import wheelmap.org.request.RequestBuilder;
 import wheelmap.org.request.WheelchairUpdateRequestBuilder;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 public class NodeUpdateOrNewExecutor extends AbstractExecutor {
+	private final static String TAG = NodeUpdateOrNewExecutor.class
+			.getSimpleName();
+
 	private Context mContext;
 	private Cursor mCursor;
 	private static final String whereClauseToUpdate = "( "
@@ -65,9 +67,9 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		mCursor = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
 				whereValueToUpdate, null);
-		if ( mCursor == null )
+		if (mCursor == null)
 			return;
-		
+
 		mCursor.moveToFirst();
 	}
 
@@ -162,7 +164,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String id = POIHelper.getWMId(mCursor);
 
 		boolean update = false;
-		if ( id.equals( "0" ))
+		if (id.equals("0"))
 			update = true;
 
 		String name = POIHelper.getName(mCursor);
@@ -199,9 +201,9 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
 				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
 				whereValueToUpdate, null);
-		if ( c == null )
+		if (c == null)
 			return;
-		
+
 		c.moveToFirst();
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {

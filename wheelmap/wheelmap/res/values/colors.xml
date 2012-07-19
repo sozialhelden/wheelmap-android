@@ -49,6 +49,11 @@
     <color name="red_logo">#FFBF3F3F</color>
     <color name="grey_background_overlay">#AA949494</color>
     
-    <color name="green_dark">#FF548a04</color>
-    <color name="green_light">#5FBF0F</color>       
+    <color name="green_dark">#ff548a04</color>
+    <color name="green_light">#5fbf0f</color>
+    
+    <color name="green_wheelmap_logo">#7fb63c</color>
+    
+    <color name="seperator_color_dark_a">#FFC6C6C6</color>
+    <color name="seperator_color_dark_b">#FFE6E6E6</color>
 </resources>

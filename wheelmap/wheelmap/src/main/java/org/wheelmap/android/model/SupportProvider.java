@@ -41,11 +41,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 public class SupportProvider extends ContentProvider {
 
-	private static final String TAG = "support";
+	private static final String TAG = SupportProvider.class.getSimpleName();
 	private static final String DATABASE_NAME = "support.db";
 	private static final int DATABASE_VERSION = 6;
 
@@ -111,7 +111,7 @@ public class SupportProvider extends ContentProvider {
 			db.execSQL("DROP TABLE IF EXISTS " + LOCALES_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + CATEGORIES_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + NODETYPES_TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + LASTUPDATE_TABLE_NAME );
+			db.execSQL("DROP TABLE IF EXISTS " + LASTUPDATE_TABLE_NAME);
 			onCreate(db);
 		}
 	}
@@ -330,16 +330,20 @@ public class SupportProvider extends ContentProvider {
 		}
 		return count;
 	}
-	
-	private int bulkInsertCategories( ContentValues[] values) {
+
+	private int bulkInsertCategories(ContentValues[] values) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
 				db, CATEGORIES_TABLE_NAME);
-		
-		final int categoryIdColumn = inserter.getColumnIndex( CategoriesContent.CATEGORY_ID );
-		final int localizedNameColumn = inserter.getColumnIndex( CategoriesContent.LOCALIZED_NAME );
-		final int identifierColumn = inserter.getColumnIndex( CategoriesContent.IDENTIFIER );
-		final int selectedColumn = inserter.getColumnIndex( CategoriesContent.SELECTED );
+
+		final int categoryIdColumn = inserter
+				.getColumnIndex(CategoriesContent.CATEGORY_ID);
+		final int localizedNameColumn = inserter
+				.getColumnIndex(CategoriesContent.LOCALIZED_NAME);
+		final int identifierColumn = inserter
+				.getColumnIndex(CategoriesContent.IDENTIFIER);
+		final int selectedColumn = inserter
+				.getColumnIndex(CategoriesContent.SELECTED);
 
 		int count = 0;
 		db.beginTransaction();
@@ -347,18 +351,22 @@ public class SupportProvider extends ContentProvider {
 		try {
 			for (i = 0; i < values.length; i++) {
 				inserter.prepareForInsert();
-				
-				int categoryId = values[i].getAsInteger( CategoriesContent.CATEGORY_ID );
-				inserter.bind( categoryIdColumn, categoryId);
-				
-				String localizeName = values[i].getAsString( CategoriesContent.LOCALIZED_NAME );
-				inserter.bind( localizedNameColumn, localizeName );
-				
-				String identifier = values[i].getAsString( CategoriesContent.IDENTIFIER );
-				inserter.bind( identifierColumn, identifier );
-				
-				int selected = values[i].getAsInteger( CategoriesContent.SELECTED);
-				inserter.bind( selectedColumn, selected );
+
+				int categoryId = values[i]
+						.getAsInteger(CategoriesContent.CATEGORY_ID);
+				inserter.bind(categoryIdColumn, categoryId);
+
+				String localizeName = values[i]
+						.getAsString(CategoriesContent.LOCALIZED_NAME);
+				inserter.bind(localizedNameColumn, localizeName);
+
+				String identifier = values[i]
+						.getAsString(CategoriesContent.IDENTIFIER);
+				inserter.bind(identifierColumn, identifier);
+
+				int selected = values[i]
+						.getAsInteger(CategoriesContent.SELECTED);
+				inserter.bind(selectedColumn, selected);
 
 				long rowId = inserter.execute();
 
@@ -372,37 +380,49 @@ public class SupportProvider extends ContentProvider {
 		return count;
 	}
 
-	private int bulkInsertNodeTypes( ContentValues[] values) {
+	private int bulkInsertNodeTypes(ContentValues[] values) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
 				db, NODETYPES_TABLE_NAME);
 
-		final int nodeTypeIdColumn = inserter.getColumnIndex( NodeTypesContent.NODETYPE_ID );
-		final int identifierColumn = inserter.getColumnIndex( NodeTypesContent.IDENTIFIER );
-		final int iconUrlColumn = inserter.getColumnIndex( NodeTypesContent.ICON_URL );
-		final int localizedNameColumn = inserter.getColumnIndex( NodeTypesContent.LOCALIZED_NAME );
-		final int categoryIdColumn = inserter.getColumnIndex( NodeTypesContent.CATEGORY_ID );
-		final int categoryIdentifierColumn = inserter.getColumnIndex( NodeTypesContent.CATEGORY_IDENTIFIER  );
-		
+		final int nodeTypeIdColumn = inserter
+				.getColumnIndex(NodeTypesContent.NODETYPE_ID);
+		final int identifierColumn = inserter
+				.getColumnIndex(NodeTypesContent.IDENTIFIER);
+		final int iconUrlColumn = inserter
+				.getColumnIndex(NodeTypesContent.ICON_URL);
+		final int localizedNameColumn = inserter
+				.getColumnIndex(NodeTypesContent.LOCALIZED_NAME);
+		final int categoryIdColumn = inserter
+				.getColumnIndex(NodeTypesContent.CATEGORY_ID);
+		final int categoryIdentifierColumn = inserter
+				.getColumnIndex(NodeTypesContent.CATEGORY_IDENTIFIER);
+
 		int count = 0;
 		db.beginTransaction();
 		int i;
 		try {
 			for (i = 0; i < values.length; i++) {
 				inserter.prepareForInsert();
-				int nodeTypeId = values[i].getAsInteger( NodeTypesContent.NODETYPE_ID );
-				inserter.bind( nodeTypeIdColumn, nodeTypeId );
-				String identifier = values[i].getAsString( NodeTypesContent.IDENTIFIER );
-				inserter.bind( identifierColumn, identifier );
-				String iconUrl = values[i].getAsString( NodeTypesContent.ICON_URL );
-				inserter.bind( iconUrlColumn, iconUrl );
-				String localizedName = values[i].getAsString( NodeTypesContent.LOCALIZED_NAME );
-				inserter.bind( localizedNameColumn, localizedName );
-				int categoryId = values[i].getAsInteger( NodeTypesContent.CATEGORY_ID );
-				inserter.bind( categoryIdColumn, categoryId );
-				String categoryIdentifier = values[i].getAsString( NodeTypesContent.CATEGORY_IDENTIFIER );
-				inserter.bind( categoryIdentifierColumn, categoryIdentifier );
-				
+				int nodeTypeId = values[i]
+						.getAsInteger(NodeTypesContent.NODETYPE_ID);
+				inserter.bind(nodeTypeIdColumn, nodeTypeId);
+				String identifier = values[i]
+						.getAsString(NodeTypesContent.IDENTIFIER);
+				inserter.bind(identifierColumn, identifier);
+				String iconUrl = values[i]
+						.getAsString(NodeTypesContent.ICON_URL);
+				inserter.bind(iconUrlColumn, iconUrl);
+				String localizedName = values[i]
+						.getAsString(NodeTypesContent.LOCALIZED_NAME);
+				inserter.bind(localizedNameColumn, localizedName);
+				int categoryId = values[i]
+						.getAsInteger(NodeTypesContent.CATEGORY_ID);
+				inserter.bind(categoryIdColumn, categoryId);
+				String categoryIdentifier = values[i]
+						.getAsString(NodeTypesContent.CATEGORY_IDENTIFIER);
+				inserter.bind(categoryIdentifierColumn, categoryIdentifier);
+
 				long rowId = inserter.execute();
 
 				count++;
@@ -414,7 +434,6 @@ public class SupportProvider extends ContentProvider {
 		}
 		return count;
 	}
-
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

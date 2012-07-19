@@ -28,12 +28,12 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#FFC6C6C6" />
+        android:layout_height="@dimen/seperator_width"
+        android:background="@color/seperator_color_dark_a" />
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#FFE6E6E6" />
+        android:layout_height="@dimen/seperator_width"
+        android:background="@color/seperator_color_dark_b" />
 
 </LinearLayout>

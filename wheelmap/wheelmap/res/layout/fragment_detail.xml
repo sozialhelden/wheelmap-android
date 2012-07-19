@@ -3,121 +3,83 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
+    <LinearLayout style="@style/TitleBarNew.DualLine" >
+
+        <TextView style="@style/TitleBarTextNew.Title" >
+        </TextView>
+
+        <TextView style="@style/TitleBarTextNew.Subtitle" >
+        </TextView>
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/Container.ScrollviewContent"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:id="@+id/wheelchair_state_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dip"
-                android:layout_marginTop="4dip"
-                android:layout_marginRight="4dip"
-                android:layout_marginLeft="8dip"
-                android:background="@drawable/list_item_background" >
+            <include layout="@layout/item_wheelchair_state" />
 
-                <ImageView
-                    android:id="@+id/wheelchair_state_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginTop="4dip"
-                    android:src="@drawable/wheelchair_state_enabled" >
-                </ImageView>
+            <include layout="@layout/seperator" />
 
-                <TextView
-                    android:id="@+id/wheelchair_state_text"
-                    style="@style/WheelStateTitleEnabled"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dip"
-                    android:layout_toLeftOf="@+id/wheelchair_state_further"
-                    android:layout_toRightOf="@+id/wheelchair_state_icon"
-                    android:text="@string/ws_enabled_title" >
-                </TextView>
+            <TextView
+                android:id="@+id/nodetype"
+                style="@style/DetailFontNew"
+                android:hint="@string/poi_property_nodetype" />
 
-                <ImageView
-                    android:id="@+id/wheelchair_state_further"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:onClick="onEditWheelchairState"
-                    android:src="@drawable/arrow">
-                </ImageView>
-            </RelativeLayout>
+            <include layout="@layout/seperator" />
+
+            <TextView
+                android:id="@+id/comment"
+                style="@style/DetailFontNew"
+                android:hint="@string/poi_property_comment" />
+
+            <include layout="@layout/seperator" />
+
+            <TextView
+                android:id="@+id/addr"
+                style="@style/DetailFontNew"
+                android:hint="@string/poi_property_address" />
+
+            <include layout="@layout/seperator" />
+
+            <TextView
+                android:id="@+id/phone"
+                style="@style/DetailFontNew"
+                android:autoLink="phone"
+                android:hint="@string/poi_property_phone"
+                android:textColorLink="@color/black" />
+
+            <include layout="@layout/seperator" />
+
+            <TextView
+                android:id="@+id/website"
+                style="@style/DetailFontNew"
+                android:autoLink="web"
+                android:hint="@string/poi_property_website"
+                android:textColorLink="@color/black" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
+                android:layout_height="4dp"
+                android:background="@android:color/black" />
+
+            <ViewStub
+                android:id="@+id/stub_map"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:inflatedId="@+id/sub_map"
+                android:layout="@layout/stub_detail_map" />
 
-                <include layout="@layout/seperator" />
-
-                <TextView
-                    android:id="@+id/nodetype"
-                    style="@style/DetailFont"
-                    android:hint="@string/poi_property_nodetype" />
-
-                <include layout="@layout/seperator" />
-
-                <TextView
-                    android:id="@+id/comment"
-                    style="@style/DetailFont"
-                    android:hint="@string/poi_property_comment" />
-
-                <include layout="@layout/seperator" />
-
-                <TextView
-                    android:id="@+id/addr"
-                    style="@style/DetailFont"
-                    android:hint="@string/poi_property_address" />
-
-                <include layout="@layout/seperator" />
-
-                <TextView
-                    android:id="@+id/phone"
-                    style="@style/DetailFont"
-                    android:autoLink="phone"
-                    android:hint="@string/poi_property_phone"
-                    android:textColorLink="@color/black" />
-
-                <include layout="@layout/seperator" />
-
-                <TextView
-                    android:id="@+id/website"
-                    style="@style/DetailFont"
-                    android:autoLink="web"
-                    android:hint="@string/poi_property_website"
-                    android:textColorLink="@color/black" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="4dp"
-                    android:background="#FF000000" />
-            </LinearLayout>
-
-           <ViewStub android:id="@+id/stub_map"
-               android:inflatedId="@+id/sub_map"
-               android:layout="@layout/stub_detail_map"
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content" />
-           
-           <ViewStub android:id="@+id/stub_button"
-               android:inflatedId="@+id/sub_button"
-               android:layout="@layout/stub_detail_button"
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content" />
-
+            <ViewStub
+                android:id="@+id/stub_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@+id/sub_button"
+                android:layout="@layout/stub_detail_button" />
         </LinearLayout>
     </ScrollView>
 

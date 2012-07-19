@@ -20,9 +20,9 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class InfoFragment extends SherlockListFragment {
 	ArrayList<Info> infoList = new ArrayList<Info>();
 
-	private OnInfoFragmentListener mListener;
+	private OnInfoListener mListener;
 
-	public interface OnInfoFragmentListener {
+	public interface OnInfoListener {
 		public void onNextView(String view);
 
 		public void onViewUri(Uri uri);
@@ -32,8 +32,8 @@ public class InfoFragment extends SherlockListFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnInfoFragmentListener)
-			mListener = (OnInfoFragmentListener) activity;
+		if (activity instanceof OnInfoListener)
+			mListener = (OnInfoListener) activity;
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class InfoFragment extends SherlockListFragment {
 				"http://www.christophbuente.de", InfoTypes.SIMPLE_TEXT);
 		infoList.add(info);
 		// legal notice
-		info = new Info(R.string.btn_legal_notice, "LegalNoticeActivity",
+		info = new Info(R.string.btn_legal_notice, "LegalNotice",
 				InfoTypes.NEXT_ACTIVITY);
 		infoList.add(info);
 
@@ -91,32 +91,16 @@ public class InfoFragment extends SherlockListFragment {
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_info, container, false);
 
-		InfoWidgetsAdapter infoAdapter = new InfoWidgetsAdapter(getActivity(),
-				infoList);
-		setListAdapter(infoAdapter);
-
 		return v;
-	}
-
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Info info = (Info) this.getListAdapter().getItem(position);
-		switch (info.getInfoType()) {
-		case NEXT_ACTIVITY:
-			if (mListener != null)
-				mListener.onNextView(info.getNextView());
-			break;
-		default:
-
-			if (mListener != null)
-				mListener.onViewUri(Uri.parse(info.getUrl()));
-		}
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		InfoWidgetsAdapter infoAdapter = new InfoWidgetsAdapter(getActivity(),
+				infoList);
+		setListAdapter(infoAdapter);
 	}
 
 	@Override
@@ -127,6 +111,21 @@ public class InfoFragment extends SherlockListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		Info info = (Info) getListAdapter().getItem(position);
+		switch (info.getInfoType()) {
+		case NEXT_ACTIVITY:
+			if (mListener != null)
+				mListener.onNextView(info.getNextView());
+			break;
+		default:
+
+			if (mListener != null)
+				mListener.onViewUri(Uri.parse(info.getUrl()));
+		}
 	}
 
 }

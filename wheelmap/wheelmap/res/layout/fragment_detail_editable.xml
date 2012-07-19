@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  #%L
+  Wheelmap - App
+  %%
+  Copyright (C) 2011 - 2012 Michal Harakal - Michael Kroez - Sozialhelden e.V.
+  %%
+  Wheelmap App based on the Wheelmap Service by Sozialhelden e.V.
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS-IS" BASIS
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout style="@style/TitleBarNew.SingleLine" >
+
+        <TextView
+            style="@style/TitleBarTextNew.Title"
+            android:text="@string/title_pois_detail_edit" >
+        </TextView>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            style="@style/Container.ScrollviewContent"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/name"
+                style="@style/DetailFontNew.Editable"
+                android:hint="@string/poi_property_name" />
+
+            <include layout="@layout/seperator" />
+
+            <RelativeLayout
+                android:id="@+id/edit_nodetype"
+                style="@style/Container.Pressable" >
+
+                <TextView
+                    android:id="@+id/nodetype"
+                    style="@style/DetailFontNew"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/edit_nodetype_icon"
+                    android:hint="@string/poi_property_nodetype" />
+
+                <ImageView
+                    android:id="@+id/edit_nodetype_icon"
+                    style="@style/IconMedium"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_menu_edit_wm_holo_light" />
+            </RelativeLayout>
+
+            <include layout="@layout/seperator" />
+
+            <RelativeLayout
+                android:id="@+id/edit_geolocation"
+                style="@style/Container.Pressable" >
+
+                <TextView
+                    android:id="@+id/edit_position_text"
+                    style="@style/DetailFontNew"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/edit_geolocation_icon"
+                    android:hint="@string/poi_property_position" />
+
+                <ImageView
+                    android:id="@+id/edit_geolocation_icon"
+                    style="@style/IconMedium"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_menu_edit_wm_holo_light" />
+            </RelativeLayout>
+
+            <include layout="@layout/seperator" />
+
+            <include layout="@layout/item_wheelchair_state" />
+
+            <include layout="@layout/seperator" />
+
+            <EditText
+                android:id="@+id/comment"
+                style="@style/DetailFontNew.Editable"
+                android:hint="@string/poi_property_comment" />
+
+            <include layout="@layout/seperator" />
+
+            <EditText
+                android:id="@+id/addr"
+                style="@style/DetailFontNew.Editable"
+                android:hint="@string/poi_property_address" />
+
+            <include layout="@layout/seperator" />
+
+            <EditText
+                android:id="@+id/phone"
+                style="@style/DetailFontNew.Editable"
+                android:autoLink="phone"
+                android:hint="@string/poi_property_phone" />
+
+            <include layout="@layout/seperator" />
+
+            <EditText
+                android:id="@+id/website"
+                style="@style/DetailFontNew.Editable"
+                android:autoLink="web"
+                android:hint="@string/poi_property_website" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/seperator_large"
+                android:background="@android:color/black" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

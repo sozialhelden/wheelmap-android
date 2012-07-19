@@ -40,24 +40,36 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+import de.akquinet.android.androlog.Log;
+
 public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor> {
-	public final static String TAG = "mapsforgeworker";
+	public final static String TAG = POIsMapsforgeWorkerFragment.class
+			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 
-	OnPOIsMapsforgeWorkerFragmentListener mListener;
+	OnPOIsMapsforgeWorkerListener mListener;
 	private DetachableResultReceiver mReceiver;
 
 	private MyLocationManager mLocationManager;
 	private Location mLocation;
+	private Cursor mCursor;
 
 	boolean mSyncing;
 	boolean isSearchMode;
 	private boolean mRefreshStatus;
+	private GeoPoint mGeoPoint;
+
+	public interface OnPOIsMapsforgeWorkerListener {
+		void onError(SyncServiceException e);
+
+		void onSearchModeChange(boolean isSearchMode);
+
+		void onRefreshStatusChange(boolean refreshStatus);
+	}
 
 	public POIsMapsforgeWorkerFragment() {
 		super();
@@ -67,8 +79,8 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsMapsforgeWorkerFragmentListener)
-			mListener = (OnPOIsMapsforgeWorkerFragmentListener) activity;
+		if (activity instanceof OnPOIsMapsforgeWorkerListener)
+			mListener = (OnPOIsMapsforgeWorkerListener) activity;
 	}
 
 	@Override
@@ -88,8 +100,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID_LIST, null, this);
-		setPersistentValuesAtListener();
-		setPersistentValues();
+		updateListener();
 	}
 
 	@Override
@@ -149,11 +160,11 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
 		getActivity().startService(intent);
-		setSearchMode( true );
+		setSearchMode(true);
 		updateSearchStatus();
 	}
 
-	protected void requestUpdate( Bundle extras ) {
+	protected void requestUpdate(Bundle extras) {
 		if (isSearchMode)
 			return;
 
@@ -195,34 +206,36 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
 			Location location = (Location) resultData
 					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
-			GeoPoint geoPoint = calcGeoPoint(location);
-			updateTargetGeoLocation( geoPoint, location );
+			mGeoPoint = calcGeoPoint(location);
+			mLocation = location;
+
+			updateTargetGeoLocation(false);
 			break;
 		}
 
 		}
 	}
-	
-	private void updateTargetGeoLocation( GeoPoint geoPoint, Location location ) {
+
+	public void updateTargetGeoLocation(boolean force) {
 		POIsMapsforgeFragment fragment = (POIsMapsforgeFragment) getTargetFragment();
-		
-		fragment.centerMap( geoPoint );
-		fragment.updateCurrentLocation( geoPoint, location );
+
+		fragment.centerMap(mGeoPoint, force);
+		fragment.updateCurrentLocation(mGeoPoint, mLocation);
 	}
-	
-	private void setPersistentValuesAtListener() {
-		updateRefreshStatus( mRefreshStatus );
+
+	private void updateListener() {
+		updateRefreshStatus(mRefreshStatus);
 		updateSearchStatus();
 	}
-	
-	private void setPersistentValues() {
-		getLoaderManager().getLoader( LOADER_ID_LIST).forceLoad();
+
+	private void connectValues() {
+		((POIsMapsforgeFragment) getTargetFragment()).setCursor(mCursor);
 	}
-	
-	private void updateRefreshStatus( boolean refreshStatus ) {
+
+	private void updateRefreshStatus(boolean refreshStatus) {
 		mRefreshStatus = refreshStatus;
-		if (mListener != null )
-			mListener.onRefreshStatusChange( refreshStatus );
+		if (mListener != null)
+			mListener.onRefreshStatusChange(refreshStatus);
 	}
 
 	public void setSearchMode(boolean isSearchMode) {
@@ -233,32 +246,30 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		if (mListener != null)
 			mListener.onSearchModeChange(isSearchMode);
 	}
-	
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		Log.d( TAG, "onCreateLoader" );
-		
+		Log.d(TAG, "onCreateLoader");
+
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
-		return new CursorLoader( getActivity(), uri, Wheelmap.POIs.PROJECTION, QueriesBuilderHelper
-				.userSettingsFilter(getActivity().getApplicationContext()), null,
-		Wheelmap.POIs.DEFAULT_SORT_ORDER );
+		return new CursorLoader(getActivity(), uri, Wheelmap.POIs.PROJECTION,
+				QueriesBuilderHelper.userSettingsFilter(getActivity()
+						.getApplicationContext()), null,
+				Wheelmap.POIs.DEFAULT_SORT_ORDER);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		Log.d( TAG, "cursorloader - switching cursors in adapter - cursor size = " + cursor.getCount() );
-		((POIsMapsforgeFragment) getTargetFragment()).setCursor( cursor );
+		Log.d(TAG,
+				"cursorloader - switching cursors in adapter - cursor size = "
+						+ cursor.getCount());
+		mCursor = cursor;
+		connectValues();
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		Log.d( TAG, "onLoaderReset - why is that?" );
-	}
-
-	public interface OnPOIsMapsforgeWorkerFragmentListener {
-		void onError(SyncServiceException e);
-		void onSearchModeChange(boolean isSearchMode);
-		void onRefreshStatusChange( boolean refreshStatus );
+		Log.d(TAG, "onLoaderReset - why is that?");
 	}
 
 }

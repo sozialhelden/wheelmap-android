@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="title_height_single">48dp</dimen>
+    <dimen name="title_height_dual">60dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="item_text_padding_small">8dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_huge">16dp</dimen>
+    <dimen name="margin_vertical_section">16dp</dimen>
+    <dimen name="seperator_width">1dp</dimen>
+	<dimen name="seperator_large">4dp</dimen>
+	<dimen name="seperator_medium">2dp</dimen>
+    
+</resources>

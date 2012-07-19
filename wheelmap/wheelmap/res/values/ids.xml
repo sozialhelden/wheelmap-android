@@ -29,4 +29,8 @@
 	<item type="id" name="actionbar_compat_switcher" />
 	<item type="id" name="switch_list" />
 	<item type="id" name="switch_maps" />
+	
+	<!-- ids ng -->
+	<item type="id" name="titlebar_title" />
+	<item type="id" name="titlebar_subtitle" />
 </resources>

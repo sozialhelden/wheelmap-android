@@ -19,27 +19,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
+    android:orientation="vertical" >
     
-    <LinearLayout style="@style/ActionBarCompat">
-		<ImageView style="@style/TitleBarLogo" android:src="@drawable/title_logo"
-			android:padding="3dip" />
-	</LinearLayout>
-	<LinearLayout android:id="@+id/title_bar_text" style="@style/ActionBarSwitcher">
-		<TextView style="@style/ActionBarTitleText"
-			android:text="@string/title_info" />
-	</LinearLayout>
-
-    <fragment class="org.wheelmap.android.fragment.InfoFragment"
-        	android:id="@+id/list_fragment"
-        	android:layout_width="fill_parent"
-        	android:layout_height="fill_parent"/>
+    <fragment
+        android:id="@+id/fragment_info"
+        android:name="org.wheelmap.android.fragment.InfoFragment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>
-

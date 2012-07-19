@@ -26,15 +26,14 @@ import org.wheelmap.android.model.Wheelmap;
 
 import wheelmap.org.WheelchairState;
 import wheelmap.org.domain.node.Node;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 public class PrepareDatabaseHelper {
-	private static final String TAG = "PrepareDatabase";
+	private static final String TAG = PrepareDatabaseHelper.class
+			.getSimpleName();
 
 	private static final long TIME_TO_DELETE_FOR_PENDING = 10 * 60 * 1000;
 
@@ -134,9 +133,10 @@ public class PrepareDatabaseHelper {
 				Integer.toString(Wheelmap.UPDATE_PENDING_FIELDS_ALL),
 				Long.toString(now - TIME_TO_DELETE_FOR_PENDING) };
 
-		Uri uri = Wheelmap.POIs.CONTENT_URI.buildUpon()
-				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM, "false")
-				.build();
+		Uri uri = Wheelmap.POIs.CONTENT_URI
+				.buildUpon()
+				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM,
+						"false").build();
 
 		getResolver().delete(uri, whereClause, whereValues);
 	}

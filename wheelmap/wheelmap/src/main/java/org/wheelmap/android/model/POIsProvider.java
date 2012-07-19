@@ -39,10 +39,10 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-import android.util.Log;
+import de.akquinet.android.androlog.Log;
 
 public class POIsProvider extends ContentProvider {
-
+	private static final String TAG = POIsProvider.class.getSimpleName();
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sPOIsProjectionMap;
 
@@ -60,14 +60,13 @@ public class POIsProvider extends ContentProvider {
 	public static final String ID = BaseColumns._ID;
 	public static final String VALUE = "value";
 
-	private static final String TAG = "POIsProvider";
-
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 11;
 	private static final String POIS_TABLE_NAME = "pois";
 
 	private static class DistanceQueryBuilder {
-		public String buildRawQuery(double longitude, double latitude, String whereParams) {
+		public String buildRawQuery(double longitude, double latitude,
+				String whereParams) {
 			double sin_lat_rad = Math.sin(latitude * Math.PI / 180);
 			double sin_lon_rad = Math.sin(longitude * Math.PI / 180);
 			double cos_lat_rad = Math.cos(latitude * Math.PI / 180);
@@ -89,7 +88,10 @@ public class POIsProvider extends ContentProvider {
 			}
 			a.append(" ORDER BY \"distance_acos\" DESC");
 
-			//	SELECT *,(0.7934863768539137*"sin_lat_rad"+0.608588013147851*"cos_lat_rad"*(0.9726493751927453*"cos_lon_rad"+0.23227826617478065*"sin_lon_rad")) AS "distance_acos" FROM "pois" where category_id=8 OR category_id=10 ORDER BY "distance_acos" DESC
+			// SELECT
+			// *,(0.7934863768539137*"sin_lat_rad"+0.608588013147851*"cos_lat_rad"*(0.9726493751927453*"cos_lon_rad"+0.23227826617478065*"sin_lon_rad"))
+			// AS "distance_acos" FROM "pois" where category_id=8 OR
+			// category_id=10 ORDER BY "distance_acos" DESC
 			// TODO maybe is a Formatter better
 			// return 'SELECT *, (%(sin_lat_rad)f * "sin_lat_rad" +
 			// %(cos_lat_rad)f * "cos_lat_rad" * (%(cos_lon_rad)f *
@@ -127,13 +129,11 @@ public class POIsProvider extends ContentProvider {
 					+ POIs.HOUSE_NUM + " TEXT," + POIs.POSTCODE + " TEXT,"
 					+ POIs.CITY + " TEXT," + POIs.PHONE + " TEXT, "
 					+ POIs.WEBSITE + " TEXT, " + POIs.WHEELCHAIR + " NUMERIC, "
-					+ POIs.WHEELCHAIR_DESC + " TEXT,"
-					+ POIs.CATEGORY_ID + " INTEGER, "
-					+ POIs.CATEGORY_IDENTIFIER + " TEXT, "
+					+ POIs.WHEELCHAIR_DESC + " TEXT," + POIs.CATEGORY_ID
+					+ " INTEGER, " + POIs.CATEGORY_IDENTIFIER + " TEXT, "
 					+ POIs.NODETYPE_ID + " INTEGER, "
-					+ POIs.NODETYPE_IDENTIFIER + " TEXT, "
-					+ POIs.UPDATE_TAG + " NUMERIC, "
-					+ POIs.UPDATE_TIMESTAMP + " NUMERIC)");
+					+ POIs.NODETYPE_IDENTIFIER + " TEXT, " + POIs.UPDATE_TAG
+					+ " NUMERIC, " + POIs.UPDATE_TIMESTAMP + " NUMERIC)");
 
 		}
 
@@ -167,23 +167,21 @@ public class POIsProvider extends ContentProvider {
 
 			count = db.delete(POIS_TABLE_NAME,
 					POIs._ID
-					+ "="
-					+ placeId
-					+ (!TextUtils.isEmpty(where) ? " AND (" + where
-							+ ')' : ""), whereArgs);
+							+ "="
+							+ placeId
+							+ (!TextUtils.isEmpty(where) ? " AND (" + where
+									+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-		
-		/*
-		
-		if ( uri.getBooleanQueryParameter( Wheelmap.QUERY_DELETE_NOTIFY_PARAM, true )) {
+
+		if (uri.getBooleanQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM,
+				true)) {
 			getContext().getContentResolver().notifyChange(uri, null);
 			getContext().getContentResolver().notifyChange(
-				POIs.CONTENT_URI_POI_SORTED, null);
+					POIs.CONTENT_URI_POI_SORTED, null);
 		}
-		*/
 		return count;
 	}
 
@@ -216,10 +214,10 @@ public class POIsProvider extends ContentProvider {
 			// TODO recalculate sin, cos values
 			count = db.update(POIS_TABLE_NAME, values,
 					POIs._ID
-					+ "="
-					+ placeId
-					+ (!TextUtils.isEmpty(where) ? " AND (" + where
-							+ ')' : ""), whereArgs);
+							+ "="
+							+ placeId
+							+ (!TextUtils.isEmpty(where) ? " AND (" + where
+									+ ')' : ""), whereArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -331,7 +329,8 @@ public class POIsProvider extends ContentProvider {
 		case POIS_SORTED:
 			double longitude = Double.valueOf(selectionArgs[0]);
 			double latitude = Double.valueOf(selectionArgs[1]);
-			c = db.rawQuery(mQueryBuilder.buildRawQuery(longitude, latitude, selection),
+			c = db.rawQuery(
+					mQueryBuilder.buildRawQuery(longitude, latitude, selection),
 					null);
 			break;
 		default:
@@ -349,106 +348,144 @@ public class POIsProvider extends ContentProvider {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		int match = sUriMatcher.match(uri);
 
-		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper( db, POIS_TABLE_NAME);
+		DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
+				db, POIS_TABLE_NAME);
 
-		final int wmIdColumn = inserter.getColumnIndex( Wheelmap.POIs.WM_ID);
+		final int wmIdColumn = inserter.getColumnIndex(Wheelmap.POIs.WM_ID);
 		final int nameColumn = inserter.getColumnIndex(Wheelmap.POIs.NAME);
 		final int latColumn = inserter.getColumnIndex(Wheelmap.POIs.COORD_LAT);
 		final int lonColumn = inserter.getColumnIndex(Wheelmap.POIs.COORD_LON);
 		final int streetColumn = inserter.getColumnIndex(Wheelmap.POIs.STREET);
-		final int houseNumColumn = inserter.getColumnIndex(Wheelmap.POIs.HOUSE_NUM);
-		final int postcodeColumn = inserter.getColumnIndex(Wheelmap.POIs.POSTCODE);
+		final int houseNumColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.HOUSE_NUM);
+		final int postcodeColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.POSTCODE);
 		final int cityColumn = inserter.getColumnIndex(Wheelmap.POIs.CITY);
 		final int phoneColumn = inserter.getColumnIndex(Wheelmap.POIs.PHONE);
-		final int websiteColumn = inserter.getColumnIndex(Wheelmap.POIs.WEBSITE);
-		final int wheelchairColumn = inserter.getColumnIndex(Wheelmap.POIs.WHEELCHAIR);
-		final int wheelchairDescColumn = inserter.getColumnIndex( Wheelmap.POIs.WHEELCHAIR_DESC);
-		final int categoryIdColumn = inserter.getColumnIndex( Wheelmap.POIs.CATEGORY_ID );
-		final int categoryIdentifierColumn = inserter.getColumnIndex( Wheelmap.POIs.CATEGORY_IDENTIFIER);
-		final int nodetypeIdColumn = inserter.getColumnIndex( Wheelmap.POIs.NODETYPE_ID);
-		final int nodetypeIdentifierColumn = inserter.getColumnIndex( Wheelmap.POIs.NODETYPE_IDENTIFIER);
+		final int websiteColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.WEBSITE);
+		final int wheelchairColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.WHEELCHAIR);
+		final int wheelchairDescColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.WHEELCHAIR_DESC);
+		final int categoryIdColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.CATEGORY_ID);
+		final int categoryIdentifierColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.CATEGORY_IDENTIFIER);
+		final int nodetypeIdColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.NODETYPE_ID);
+		final int nodetypeIdentifierColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.NODETYPE_IDENTIFIER);
 
-		final int sinLatColumn = inserter.getColumnIndex(Wheelmap.POIs.SIN_LAT_RAD);
-		final int cosLatColumn = inserter.getColumnIndex(Wheelmap.POIs.COS_LAT_RAD);
-		final int sinLonColumn = inserter.getColumnIndex(Wheelmap.POIs.SIN_LON_RAD);
-		final int cosLonColumn = inserter.getColumnIndex(Wheelmap.POIs.COS_LON_RAD);
-		final int updateColumn = inserter.getColumnIndex(Wheelmap.POIs.UPDATE_TAG );
+		final int sinLatColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.SIN_LAT_RAD);
+		final int cosLatColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.COS_LAT_RAD);
+		final int sinLonColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.SIN_LON_RAD);
+		final int cosLonColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.COS_LON_RAD);
+		final int updateColumn = inserter
+				.getColumnIndex(Wheelmap.POIs.UPDATE_TAG);
 
 		switch (match) {
-		case POIS:{
+		case POIS: {
 			int count = 0;
 			db.beginTransaction();
 			int i;
 			try {
-				for( i = 0; i < valuesArray.length; i++ ) {
+				for (i = 0; i < valuesArray.length; i++) {
 					inserter.prepareForInsert();
 					preCalculateLatLon(valuesArray[i]);
 
-					long wmId = valuesArray[i].getAsLong( Wheelmap.POIs.WM_ID );
-					inserter.bind( wmIdColumn, wmId );
-					String name = valuesArray[i].getAsString( Wheelmap.POIs.NAME );
-					inserter.bind( nameColumn, name );
-					double lat = valuesArray[i].getAsDouble( Wheelmap.POIs.COORD_LAT );
-					inserter.bind( latColumn, lat );
-					double lon = valuesArray[i].getAsDouble( Wheelmap.POIs.COORD_LON );
-					inserter.bind( lonColumn, lon );
-					String street = valuesArray[i].getAsString( Wheelmap.POIs.STREET );
-					inserter.bind( streetColumn, street );
-					String houseNum = valuesArray[i].getAsString( Wheelmap.POIs.HOUSE_NUM );
-					inserter.bind( houseNumColumn, houseNum );
-					String postCode = valuesArray[i].getAsString( Wheelmap.POIs.POSTCODE );
-					inserter.bind( postcodeColumn, postCode );
-					String city = valuesArray[i].getAsString( Wheelmap.POIs.CITY );
-					inserter.bind( cityColumn, city );
-					String phone = valuesArray[i].getAsString( Wheelmap.POIs.PHONE );
-					inserter.bind( phoneColumn, phone );
-					String website = valuesArray[i].getAsString( Wheelmap.POIs.WEBSITE );
-					inserter.bind( websiteColumn, website );
-					int wheelchair = valuesArray[i].getAsInteger( Wheelmap.POIs.WHEELCHAIR );
-					inserter.bind( wheelchairColumn, wheelchair);
-					String wheelchairDesc = valuesArray[i].getAsString( Wheelmap.POIs.WHEELCHAIR_DESC);
-					inserter.bind( wheelchairDescColumn, wheelchairDesc );
-					int categoryId = valuesArray[i].getAsInteger( Wheelmap.POIs.CATEGORY_ID );
-					inserter.bind( categoryIdColumn, categoryId );
-					String categoryIdentifier = valuesArray[i].getAsString( Wheelmap.POIs.CATEGORY_IDENTIFIER);
-					inserter.bind( categoryIdentifierColumn, categoryIdentifier);
-					int nodetypeId = valuesArray[i].getAsInteger( Wheelmap.POIs.NODETYPE_ID );
-					inserter.bind( nodetypeIdColumn, nodetypeId );
-					String nodetypeIdentifier = valuesArray[i].getAsString( Wheelmap.POIs.NODETYPE_IDENTIFIER);
-					inserter.bind( nodetypeIdentifierColumn, nodetypeIdentifier );
-					double sinLat = valuesArray[i].getAsDouble( Wheelmap.POIs.SIN_LAT_RAD );
-					inserter.bind( sinLatColumn, sinLat );
-					double cosLat = valuesArray[i].getAsDouble( Wheelmap.POIs.COS_LAT_RAD );
-					inserter.bind( cosLatColumn, cosLat );
-					double sinLon = valuesArray[i].getAsDouble( Wheelmap.POIs.SIN_LON_RAD );
-					inserter.bind( sinLonColumn, sinLon );
-					double cosLon = valuesArray[i].getAsDouble( Wheelmap.POIs.COS_LON_RAD );
-					inserter.bind( cosLonColumn, cosLon );
-					int update = valuesArray[i].getAsInteger( Wheelmap.POIs.UPDATE_TAG );
-					inserter.bind( updateColumn, update );
+					long wmId = valuesArray[i].getAsLong(Wheelmap.POIs.WM_ID);
+					inserter.bind(wmIdColumn, wmId);
+					String name = valuesArray[i]
+							.getAsString(Wheelmap.POIs.NAME);
+					inserter.bind(nameColumn, name);
+					double lat = valuesArray[i]
+							.getAsDouble(Wheelmap.POIs.COORD_LAT);
+					inserter.bind(latColumn, lat);
+					double lon = valuesArray[i]
+							.getAsDouble(Wheelmap.POIs.COORD_LON);
+					inserter.bind(lonColumn, lon);
+					String street = valuesArray[i]
+							.getAsString(Wheelmap.POIs.STREET);
+					inserter.bind(streetColumn, street);
+					String houseNum = valuesArray[i]
+							.getAsString(Wheelmap.POIs.HOUSE_NUM);
+					inserter.bind(houseNumColumn, houseNum);
+					String postCode = valuesArray[i]
+							.getAsString(Wheelmap.POIs.POSTCODE);
+					inserter.bind(postcodeColumn, postCode);
+					String city = valuesArray[i]
+							.getAsString(Wheelmap.POIs.CITY);
+					inserter.bind(cityColumn, city);
+					String phone = valuesArray[i]
+							.getAsString(Wheelmap.POIs.PHONE);
+					inserter.bind(phoneColumn, phone);
+					String website = valuesArray[i]
+							.getAsString(Wheelmap.POIs.WEBSITE);
+					inserter.bind(websiteColumn, website);
+					int wheelchair = valuesArray[i]
+							.getAsInteger(Wheelmap.POIs.WHEELCHAIR);
+					inserter.bind(wheelchairColumn, wheelchair);
+					String wheelchairDesc = valuesArray[i]
+							.getAsString(Wheelmap.POIs.WHEELCHAIR_DESC);
+					inserter.bind(wheelchairDescColumn, wheelchairDesc);
+					int categoryId = valuesArray[i]
+							.getAsInteger(Wheelmap.POIs.CATEGORY_ID);
+					inserter.bind(categoryIdColumn, categoryId);
+					String categoryIdentifier = valuesArray[i]
+							.getAsString(Wheelmap.POIs.CATEGORY_IDENTIFIER);
+					inserter.bind(categoryIdentifierColumn, categoryIdentifier);
+					int nodetypeId = valuesArray[i]
+							.getAsInteger(Wheelmap.POIs.NODETYPE_ID);
+					inserter.bind(nodetypeIdColumn, nodetypeId);
+					String nodetypeIdentifier = valuesArray[i]
+							.getAsString(Wheelmap.POIs.NODETYPE_IDENTIFIER);
+					inserter.bind(nodetypeIdentifierColumn, nodetypeIdentifier);
+					double sinLat = valuesArray[i]
+							.getAsDouble(Wheelmap.POIs.SIN_LAT_RAD);
+					inserter.bind(sinLatColumn, sinLat);
+					double cosLat = valuesArray[i]
+							.getAsDouble(Wheelmap.POIs.COS_LAT_RAD);
+					inserter.bind(cosLatColumn, cosLat);
+					double sinLon = valuesArray[i]
+							.getAsDouble(Wheelmap.POIs.SIN_LON_RAD);
+					inserter.bind(sinLonColumn, sinLon);
+					double cosLon = valuesArray[i]
+							.getAsDouble(Wheelmap.POIs.COS_LON_RAD);
+					inserter.bind(cosLonColumn, cosLon);
+					int update = valuesArray[i]
+							.getAsInteger(Wheelmap.POIs.UPDATE_TAG);
+					inserter.bind(updateColumn, update);
 
 					long rowId = inserter.execute();
 
 					if (rowId > 0) {
 						Uri placeUri = ContentUris.withAppendedId(
 								Wheelmap.POIs.CONTENT_URI_POI_ID, rowId);
-						getContext().getContentResolver().notifyChange(placeUri, null);
+						getContext().getContentResolver().notifyChange(
+								placeUri, null);
 					}
-					count++;	
+					count++;
 				}
 				db.setTransactionSuccessful();
-			}
-			finally {
+			} finally {
 				db.endTransaction();
 				inserter.close();
 			}
-			getContext().getContentResolver().notifyChange( POIs.CONTENT_URI_POI_SORTED, null );
-			getContext().getContentResolver().notifyChange( POIs.CONTENT_URI, null );
+			getContext().getContentResolver().notifyChange(
+					POIs.CONTENT_URI_POI_SORTED, null);
+			getContext().getContentResolver().notifyChange(POIs.CONTENT_URI,
+					null);
 			return count;
 
 		}
-		default:{
-			throw new IllegalArgumentException( "Unknown URI - POIS supported. " + uri );
+		default: {
+			throw new IllegalArgumentException("Unknown URI - POIS supported. "
+					+ uri);
 		}
 
 		}
@@ -476,11 +513,13 @@ public class POIsProvider extends ContentProvider {
 		sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR);
 		sPOIsProjectionMap.put(POIs.WHEELCHAIR_DESC, POIs.WHEELCHAIR_DESC);
 		sPOIsProjectionMap.put(POIs.CATEGORY_ID, POIs.CATEGORY_ID);
-		sPOIsProjectionMap.put(POIs.CATEGORY_IDENTIFIER, POIs.CATEGORY_IDENTIFIER);
+		sPOIsProjectionMap.put(POIs.CATEGORY_IDENTIFIER,
+				POIs.CATEGORY_IDENTIFIER);
 		sPOIsProjectionMap.put(POIs.NODETYPE_ID, POIs.NODETYPE_ID);
-		sPOIsProjectionMap.put(POIs.NODETYPE_IDENTIFIER, POIs.NODETYPE_IDENTIFIER);
-		sPOIsProjectionMap.put(POIs.UPDATE_TAG, POIs.UPDATE_TAG );
-		sPOIsProjectionMap.put(POIs.UPDATE_TIMESTAMP, POIs.UPDATE_TIMESTAMP );
+		sPOIsProjectionMap.put(POIs.NODETYPE_IDENTIFIER,
+				POIs.NODETYPE_IDENTIFIER);
+		sPOIsProjectionMap.put(POIs.UPDATE_TAG, POIs.UPDATE_TAG);
+		sPOIsProjectionMap.put(POIs.UPDATE_TIMESTAMP, POIs.UPDATE_TIMESTAMP);
 
 	}
 }

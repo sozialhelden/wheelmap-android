@@ -40,21 +40,22 @@ public class POIsListItemView extends RelativeLayout {
 
 	/**
 	 * constructor creates a new line item of list
-	 * @param context 
+	 * 
+	 * @param context
 	 */
 	public POIsListItemView(Context context) {
 		super(context);
 		// inflate rating
 		LayoutInflater inflater = (LayoutInflater) context
-		.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		inflater.inflate(R.layout.pois_list_item, this, true);
+		inflater.inflate(R.layout.item_list_pois, this, true);
 
 		poiName = (TextView) findViewById(R.id.list_item_place_name);
 		poiCategory = (TextView) findViewById(R.id.list_item_category);
-		poiNodeType = (TextView ) findViewById( R.id.list_item_nodetype);
+		poiNodeType = (TextView) findViewById(R.id.list_item_nodetype);
 		poiDistance = (TextView) findViewById(R.id.list_item_distance);
-		poiIcon = (ImageView)findViewById(R.id.place_type_icon);
+		poiIcon = (ImageView) findViewById(R.id.place_type_icon);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class POIsListItemView extends RelativeLayout {
 	public void setCategory(String text) {
 		poiCategory.setText(text);
 	}
-	
+
 	public void setNodeType(String text) {
 		poiNodeType.setText(text);
 	}
@@ -77,6 +78,6 @@ public class POIsListItemView extends RelativeLayout {
 	}
 
 	public void setIcon(Drawable drawable) {
-		poiIcon.setImageDrawable( drawable );
+		poiIcon.setImageDrawable(drawable);
 	}
 }
