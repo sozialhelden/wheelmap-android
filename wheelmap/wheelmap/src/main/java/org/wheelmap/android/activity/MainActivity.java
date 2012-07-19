@@ -31,30 +31,26 @@ public class MainActivity extends RoboSherlockFragmentActivity  {
 
         
         bar.addTab(bar.newTab()
-                .setText("List")
+                .setText(R.string.title_pois_list)
+                .setTag(new Integer(R.string.title_pois_list))
+                .setTabListener(new TabListener()));
+        
+        bar.addTab(bar.newTab()
+                .setText(R.string.title_pois_map)
+                .setTag(new Integer(R.string.title_pois_map))
                 .setTabListener(new TabListener()));
     }
     
-    /**
-     * A TabListener receives event callbacks from the action bar as tabs
-     * are deselected, selected, and reselected. A FragmentTransaction
-     * is provided to each of these callbacks; if any operations are added
-     * to it, it will be committed at the end of the full tab switch operation.
-     * This lets tab switches be atomic without the app needing to track
-     * the interactions between different tabs.
-     *
-     * NOTE: This is a very simple implementation that does not retain
-     * fragment state of the non-visible tabs across activity instances.
-     * Look at the FragmentTabs example for how to do a more complete
-     * implementation.
-     */
-    private class TabListener implements ActionBar.TabListener {
+   private class TabListener implements ActionBar.TabListener {
 
     	private Fragment fragment; 
 
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-    		final Fragment fragment = Fragment.instantiate(MainActivity.this, POIsListFragment.class.getName());
-            ft.add(android.R.id.content, fragment, "map");
+        	final int tabId = (Integer)tab.getTag();
+        	tabId.intValue();
+        	//case t
+    		fragment = Fragment.instantiate(MainActivity.this, POIsListFragment.class.getName());
+            ft.add(android.R.id.content, fragment, POIsListFragment.class.getName());
         }
 
         public void onTabUnselected(Tab tab, FragmentTransaction ft) {
