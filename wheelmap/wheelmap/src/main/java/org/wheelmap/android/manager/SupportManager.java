@@ -449,13 +449,7 @@ public class SupportManager {
 			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage());
 			return null;
 		}
-		Bitmap croppedBitmap = Bitmap.createBitmap(bitmap, 0, 15,
-				bitmap.getWidth(), bitmap.getHeight() - 15);
-		Bitmap scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, 80, 65,
-				true);
-		bitmap.recycle();
-		croppedBitmap.recycle();
-		return new BitmapDrawable(scaledBitmap);
+		return new BitmapDrawable(bitmap);
 
 	}
 

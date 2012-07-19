@@ -13,9 +13,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -23,6 +25,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -30,7 +33,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import de.akquinet.android.androlog.Log;
 
 public class SearchDialogFragment extends SherlockDialogFragment implements
-		OnItemSelectedListener, OnClickListener {
+		OnItemSelectedListener, OnClickListener, OnEditorActionListener {
 	public final static String TAG = SearchDialogFragment.class.getSimpleName();
 	public final static String ARGUMENT_SHOW_DISTANCE = "org.wheelmap.android.ARGUMENT_SHOW_DISTANCE";
 	public final static String ARGUMENT_SHOW_MAP_HINT = "org.wheelmap.android.ARGUMENT_SHOW_MAP_HINT";
@@ -79,6 +82,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	private void bindViews(View v) {
 
 		mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
+		mKeywordText.setOnEditorActionListener(this);
 
 		Spinner categorySpinner = (Spinner) v
 				.findViewById(R.id.search_spinner_categorie_nodetype);
@@ -206,6 +210,8 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 			bundle.putInt(SyncService.EXTRA_CATEGORY, mCategorySelected);
 		else if (mNodeTypeSelected != -1)
 			bundle.putInt(SyncService.EXTRA_NODETYPE, mNodeTypeSelected);
+		else
+			bundle.putInt(SyncService.EXTRA_CATEGORY, -1);
 
 		if (mDistance != -1)
 			bundle.putFloat(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
@@ -218,6 +224,17 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	public void onClick(DialogInterface dialog, int which) {
 		sendSearchInstructions();
 		dismiss();
+	}
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		if (EditorInfo.IME_ACTION_DONE == actionId) {
+			sendSearchInstructions();
+			dismiss();
+			return true;
+		}
+
+		return false;
 	}
 
 }

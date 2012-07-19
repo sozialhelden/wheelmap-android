@@ -66,11 +66,12 @@
                     android:src="@drawable/ic_menu_edit_wm_holo_light" />
             </RelativeLayout>
 
-            <include layout="@layout/seperator" />
+            <!-- include layout="@layout/seperator" / -->
 
             <RelativeLayout
                 android:id="@+id/edit_geolocation"
-                style="@style/Container.Pressable" >
+                style="@style/Container.Pressable"
+                android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/edit_position_text"

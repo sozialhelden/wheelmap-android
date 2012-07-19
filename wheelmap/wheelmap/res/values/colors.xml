@@ -33,9 +33,9 @@
     <color name="title_separator">#400d0d0d</color> 
    
     <color name="wheel_enabled">#ff78b13e</color> 
-    <color name="wheel_limited">#fff29436</color> 
-    <color name="wheel_disabled">#ffE30127</color>
-    <color name="wheel_unknown">#ff656565</color>
+    <color name="wheel_limited">#ffF6AA4F</color> 
+    <color name="wheel_disabled">#ffEF2F24</color>
+    <color name="wheel_unknown">#ff8F8F8F</color>
     
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

@@ -26,6 +26,7 @@ public class Info {
 	// resources ids
 	private int title;
 	private int text;
+	private String text_dynamic;
 	private int second_text;
 
 	private String url;
@@ -37,6 +38,14 @@ public class Info {
 	public Info(int title, int text, String url, InfoTypes infotype) {
 		this.title = title;
 		this.text = text;
+		this.second_text = -1;
+		this.url = url;
+		this.infotype = infotype;
+	}
+
+	public Info(int title, String text_dynamic, String url, InfoTypes infotype) {
+		this.title = title;
+		this.text_dynamic = text_dynamic;
 		this.second_text = -1;
 		this.url = url;
 		this.infotype = infotype;
@@ -77,6 +86,10 @@ public class Info {
 
 	public int getText() {
 		return text;
+	}
+
+	public String getTextDynamic() {
+		return text_dynamic;
 	}
 
 	public int getSecondText() {

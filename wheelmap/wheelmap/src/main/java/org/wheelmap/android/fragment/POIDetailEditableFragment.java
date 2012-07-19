@@ -16,6 +16,7 @@ import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,8 +29,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,6 +50,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private final static int LOADER_CONTENT = 0;
 
+	@InjectView(R.id.title_container)
+	private LinearLayout title_container;
 	@InjectView(R.id.name)
 	private EditText nameText;
 	@InjectView(R.id.nodetype)
@@ -60,18 +65,18 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.phone)
 	private EditText phoneText;
 	@InjectView(R.id.wheelchair_state_icon)
-	private ImageView mStateIcon;
+	private ImageView state_icon;
 	@InjectView(R.id.wheelchair_state_text)
-	private TextView mWheelchairStateText;
+	private TextView state_text;
 	@InjectView(R.id.edit_position_text)
-	private TextView mPositionText;
+	private TextView position_text;
 
 	@InjectView(R.id.wheelchair_state_layout)
-	private RelativeLayout mEditWheelchairStateContainer;
+	private RelativeLayout edit_state_container;
 	@InjectView(R.id.edit_geolocation)
-	private RelativeLayout mEditGeolocationContainer;
+	private RelativeLayout edit_geolocation_container;
 	@InjectView(R.id.edit_nodetype)
-	private RelativeLayout mEditNodeTypeContainer;
+	private RelativeLayout edit_nodetype_container;
 
 	public final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
 
@@ -117,7 +122,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mWSAttributes = WheelmapApp.getSupportManager().wsAttributes;
+		mWSAttributes = SupportManager.wsAttributes;
 		setHasOptionsMenu(true);
 		poiID = getArguments().getLong(ARGUMENT_POI_ID);
 
@@ -134,9 +139,9 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mEditWheelchairStateContainer.setOnClickListener(this);
-		mEditGeolocationContainer.setOnClickListener(this);
-		mEditNodeTypeContainer.setOnClickListener(this);
+		edit_state_container.setOnClickListener(this);
+		edit_geolocation_container.setOnClickListener(this);
+		edit_nodetype_container.setOnClickListener(this);
 
 	}
 
@@ -212,9 +217,11 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onClick(View v) {
+		closeKeyboard();
+
 		int id = v.getId();
 		switch (id) {
-		case R.id.edit_wheelchairstate: {
+		case R.id.wheelchair_state_layout: {
 			if (mListener != null)
 				mListener.onEditWheelchairState(mWheelchairState);
 			break;
@@ -289,18 +296,15 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		mLatitude = POIHelper.getLatitudeAsInt(cursor);
 		mLongitude = POIHelper.getLongitudeAsInt(cursor);
 		int nodeTypeId = POIHelper.getNodeTypeId(cursor);
-		int categoryId = POIHelper.getCategoryId(cursor);
 
 		NodeType nodeType = manager.lookupNodeType(nodeTypeId);
-
 		updateWheelchairState(state);
 		nameText.setText(name);
-		String category = manager.lookupCategory(categoryId).localizedName;
 		nodetypeText.setText(nodeType.localizedName);
 		String positionText = String.format("%s: (%f:%f)", getResources()
 				.getString(R.string.position_geopoint), mLatitude / 1E6,
 				mLongitude / 1E6);
-		mPositionText.setText(positionText);
+		position_text.setText(positionText);
 		commentText.setText(comment);
 		addressText.setText(POIHelper.getAddress(cursor));
 		websiteText.setText(POIHelper.getWebsite(cursor));
@@ -309,10 +313,15 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private void updateWheelchairState(WheelchairState newState) {
 		mWheelchairState = newState;
-		mStateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-		mWheelchairStateText.setTextColor(getResources().getColor(
-				mWSAttributes.get(newState).colorId));
-		mWheelchairStateText.setText(mWSAttributes.get(newState).titleStringId);
+
+		int stateColor = getResources().getColor(
+				mWSAttributes.get(newState).colorId);
+
+		title_container.setBackgroundColor(stateColor);
+		state_icon.setImageResource(mWSAttributes.get(newState).drawableId);
+		state_text.setTextColor(stateColor);
+		state_text.setText(mWSAttributes.get(newState).titleStringId);
+
 	}
 
 	private void saveChanges() {
@@ -398,4 +407,14 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 				null);
 	}
 
+	public void closeKeyboard() {
+		View view = getView().findFocus();
+		if (view == null || !(view instanceof EditText))
+			return;
+
+		InputMethodManager imm = (InputMethodManager) getActivity()
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+	}
 }

@@ -40,11 +40,13 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.ShareActionProvider;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 
 import de.akquinet.android.androlog.Log;
@@ -59,34 +61,36 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private final static String EXTRA_POI_ID = "org.wheelmap.android.POI_ID";
 	private final static int LOADER_CONTENT = 0;
 
+	@InjectView(R.id.title_container)
+	private RelativeLayout title_container;
 	@InjectView(R.id.titlebar_title)
-	TextView nameText;
+	private TextView nameText;
 	@InjectView(R.id.titlebar_subtitle)
-	TextView categoryText;
+	private TextView categoryText;
+	@InjectView(R.id.titlebar_icon)
+	private ImageView nodetypeIcon;
 	@InjectView(R.id.nodetype)
-	TextView nodetypeText;
+	private TextView nodetypeText;
 	@InjectView(R.id.phone)
-	TextView phoneText;
+	private TextView phoneText;
 	@InjectView(R.id.addr)
-	TextView addressText;
+	private TextView addressText;
 	@InjectView(R.id.comment)
-	TextView commentText;
+	private TextView commentText;
 	@InjectView(R.id.website)
-	TextView websiteText;
+	private TextView websiteText;
 	@InjectView(R.id.wheelchair_state_icon)
-	ImageView stateIcon;
+	private ImageView stateIcon;
 	@InjectView(R.id.wheelchair_state_text)
-	TextView stateText;
+	private TextView stateText;
 	@InjectView(R.id.wheelchair_state_layout)
-	ViewGroup stateLayout;
+	private ViewGroup stateLayout;
 
 	private Button mMapButton;
 	private Capability mCap;
 
-	private SupportManager mSupportManager;
 	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
-
-	private WheelchairState mWheelChairState;
+	private WheelchairState mWheelchairState;
 
 	public interface OnPOIDetailListener {
 		void onEdit(long poiId);
@@ -104,6 +108,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private long wmID;
 
 	private DetachableResultReceiver mReceiver;
+
+	private ShareActionProvider mShareActionProvider;
+	private ShareActionProvider mDirectionsActionProvider;
 
 	public static POIDetailFragment newInstanceWithWMID(Long wmID) {
 		Bundle b = new Bundle();
@@ -142,9 +149,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		setHasOptionsMenu(true);
 
 		mCap = WheelmapApp.getCapabilityLevel();
-		mSupportManager = WheelmapApp.getSupportManager();
-		mWSAttributes = mSupportManager.wsAttributes;
-
+		mWSAttributes = SupportManager.wsAttributes;
 	}
 
 	@Override
@@ -222,7 +227,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		mSupportManager.cleanReferences();
+		WheelmapApp.getSupportManager().cleanReferences();
 		ViewTool.nullViewDrawables(getView());
 		mapView = null;
 		mapController = null;
@@ -243,6 +248,20 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.ab_detail_fragment, menu);
+		createShareActionProvider(menu);
+	}
+
+	private void createShareActionProvider(Menu menu) {
+		MenuItem menuItemShare = menu.findItem(R.id.menu_share);
+		mShareActionProvider = (ShareActionProvider) menuItemShare
+				.getActionProvider();
+		mShareActionProvider
+				.setShareHistoryFileName("ab_provider_share_history.xml");
+		MenuItem menuItemDirection = menu.findItem(R.id.menu_directions);
+		mDirectionsActionProvider = (ShareActionProvider) menuItemDirection
+				.getActionProvider();
+		mDirectionsActionProvider
+				.setShareHistoryFileName("ab_provider_directions_history.xml");
 	}
 
 	@Override
@@ -254,12 +273,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			if (mListener != null)
 				mListener.onEdit(poiID);
 			return true;
-		case R.id.menu_share:
-			shareItem();
-			return true;
-		case R.id.menu_directions:
-			directionsItem();
-			return true;
 		default:
 			// noop
 		}
@@ -268,7 +281,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	public WheelchairState getWheelchairState() {
-		return mWheelChairState;
+		return mWheelchairState;
 	}
 
 	public long getPoiId() {
@@ -294,7 +307,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		switch (id) {
 		case R.id.wheelchair_state_layout:
 			if (mListener != null) {
-				mListener.onEditWheelchairState(mWheelChairState);
+				mListener.onEditWheelchairState(mWheelchairState);
 				return;
 			}
 			break;
@@ -375,31 +388,48 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			return;
 
 		c.moveToFirst();
+		String wmIdString = POIHelper.getWMId(c);
 		poiID = POIHelper.getId(c);
 		WheelchairState state = POIHelper.getWheelchair(c);
 		String name = POIHelper.getName(c);
 		String comment = POIHelper.getComment(c);
-		final int lat = (int) (POIHelper.getLatitude(c) * 1E6);
-		final int lon = (int) (POIHelper.getLongitude(c) * 1E6);
+		final double lat = POIHelper.getLatitude(c);
+		int latE6 = (int) (lat * 1E6);
+		final double lon = POIHelper.getLongitude(c);
+		int lonE6 = (int) (lon * 1E6);
+
 		int nodeTypeId = POIHelper.getNodeTypeId(c);
 		int categoryId = POIHelper.getCategoryId(c);
 
-		NodeType nodeType = mSupportManager.lookupNodeType(nodeTypeId);
-		// iconImage.setImageDrawable(nodeType.iconDrawable);
+		SupportManager sm = WheelmapApp.getSupportManager();
 
+		NodeType nodeType = sm.lookupNodeType(nodeTypeId);
 		setWheelchairState(state);
 		if (name.length() > 0)
 			nameText.setText(name);
 		else
 			nameText.setText(nodeType.localizedName);
 
-		String category = mSupportManager.lookupCategory(categoryId).localizedName;
+		String category = sm.lookupCategory(categoryId).localizedName;
 		categoryText.setText(category);
 		nodetypeText.setText(nodeType.localizedName);
+		nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
 		commentText.setText(comment);
-		addressText.setText(POIHelper.getAddress(c));
-		websiteText.setText(POIHelper.getWebsite(c));
+
+		String address = POIHelper.getAddress(c);
+		addressText.setText(address);
+
+		String website = POIHelper.getWebsite(c);
+		websiteText.setText(website);
 		phoneText.setText(POIHelper.getPhone(c));
+
+		String street = POIHelper.getStreet(c);
+		String houseNum = POIHelper.getHouseNumber(c);
+		String postCode = POIHelper.getPostcode(c);
+		String city = POIHelper.getCity(c);
+
+		fillDirectionsActionProvider(lat, lon, street, houseNum, postCode, city);
+		fillShareActionProvider(wmIdString, name, comment, address, website);
 
 		if (mCap == Capability.DEGRADED_MAX) {
 			mMapButton.setOnClickListener(new OnClickListener() {
@@ -412,7 +442,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			});
 		} else {
 			SingleItemOverlay overlay = new SingleItemOverlay(this);
-			overlay.setItem(name, comment, nodeType, state, lat, lon);
+			overlay.setItem(name, comment, nodeType, state, latE6, lonE6);
 			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
 			mapView.getOverlays().add(overlay);
@@ -421,81 +451,47 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	private void setWheelchairState(WheelchairState newState) {
-		mWheelChairState = newState;
-		stateIcon.setImageDrawable(mSupportManager.lookupWheelDrawable(newState
-				.getId()));
-		stateText.setTextColor(getResources().getColor(
-				mWSAttributes.get(newState).colorId));
+		mWheelchairState = newState;
+
+		int stateColor = getResources().getColor(
+				mWSAttributes.get(newState).colorId);
+
+		title_container.setBackgroundColor(stateColor);
+		stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
+		stateText.setTextColor(stateColor);
 		stateText.setText(mWSAttributes.get(newState).titleStringId);
+
 	}
 
-	private void directionsItem() {
+	private Intent createExternIntent(String action) {
+		Intent intent = new Intent(action);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		return intent;
+	}
 
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-				String.valueOf(poiID));
-
-		// Then query for this specific record:
-		Cursor cur = getActivity().getContentResolver().query(poiUri, null,
-				null, null, null);
-		if (cur == null)
-			return;
-
-		if (cur.getCount() < 1) {
-			cur.close();
-			return;
-		}
-
-		cur.moveToFirst();
-		String name = POIHelper.getName(cur);
-		double lat = POIHelper.getLatitude(cur);
-		double lon = POIHelper.getLongitude(cur);
-		String street = POIHelper.getStreet(cur);
-		String houseNum = POIHelper.getHouseNumber(cur);
-		String postCode = POIHelper.getPostcode(cur);
-		String city = POIHelper.getCity(cur);
-		cur.close();
+	private void fillDirectionsActionProvider(double lat, double lon,
+			String street, String houseNum, String postCode, String city) {
 
 		Uri geoURI;
+
 		if (street.length() > 0 && (postCode.length() > 0 || city.length() > 0)) {
-			String address = street + "+" + houseNum + "+" + postCode + "+"
-					+ city;
-			geoURI = Uri.parse("geo:0,0?q=" + address.replace(" ", "+"));
+			StringBuilder sb = new StringBuilder();
+			sb.append(street).append("+").append(houseNum).append("+")
+					.append(postCode).append(city);
+			geoURI = Uri.parse("geo:0,0?q=" + sb.toString().replace(" ", "+"));
 		} else {
 			geoURI = Uri.parse("geo:" + String.valueOf(lat) + ","
 					+ String.valueOf(lon) + "?z=17");
 		}
 
 		Log.d(TAG, "geoURI = " + geoURI.toString());
-
-		Intent sharingIntent = new Intent(Intent.ACTION_VIEW);
-		sharingIntent.setData(geoURI);
-		startActivity(Intent.createChooser(sharingIntent, getResources()
-				.getString(R.string.title_view_using)));
+		Intent intent = createExternIntent(Intent.ACTION_VIEW);
+		intent.setData(geoURI);
+		mDirectionsActionProvider.setShareIntent(intent);
 	}
 
-	private void shareItem() {
-
-		Uri poiUri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-				String.valueOf(poiID));
-
-		// Then query for this specific record:
-		Cursor cur = getActivity().getContentResolver().query(poiUri, null,
-				null, null, null);
-		if (cur == null)
-			return;
-
-		if (cur.getCount() < 1) {
-			cur.close();
-			return;
-		}
-
-		cur.moveToFirst();
-		String wmId = POIHelper.getWMId(cur);
-		String name = POIHelper.getName(cur);
-		String comment = POIHelper.getComment(cur);
-		String address = POIHelper.getAddress(cur);
-		String website = POIHelper.getWebsite(cur);
-		cur.close();
+	private void fillShareActionProvider(String wmId, String name,
+			String comment, String address, String website) {
 
 		StringBuilder sb = new StringBuilder(name);
 
@@ -516,13 +512,10 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		sb.append(", ");
 		sb.append("http://wheelmap.org/nodes/" + String.valueOf(wmId));
-
-		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-		sharingIntent.setType("text/plain");
-		sharingIntent
-				.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
-		startActivity(Intent.createChooser(sharingIntent, getResources()
-				.getString(R.string.title_share_using)));
+		Intent intent = createExternIntent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
+		mShareActionProvider.setShareIntent(intent);
 	}
 
 }

@@ -8,6 +8,8 @@ import org.wheelmap.android.ui.info.InfoTypes;
 import org.wheelmap.android.ui.info.InfoWidgetsAdapter;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,6 +43,10 @@ public class InfoFragment extends SherlockListFragment {
 		super.onCreate(savedInstanceState);
 
 		Info info = null;
+		info = new Info(R.string.info_wheelmap_android_one,
+				createVersionString(), "", InfoTypes.SIMPLE_TEXT);
+		infoList.add(info);
+
 		// web version
 		info = new Info(R.string.info_web_version,
 				R.string.info_web_version_one, "http://www.wheelmap.org",
@@ -128,4 +134,18 @@ public class InfoFragment extends SherlockListFragment {
 		}
 	}
 
+	private String createVersionString() {
+		PackageInfo packageInfo;
+		String version;
+		try {
+			packageInfo = getActivity().getPackageManager().getPackageInfo(
+					getActivity().getPackageName(), 0);
+			version = packageInfo.versionName;
+		} catch (NameNotFoundException e) {
+			version = "Unknown";
+		}
+		return String.format("%s: %s",
+				getResources().getString(R.string.info_wheelmap_android_two),
+				version);
+	}
 }

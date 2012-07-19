@@ -4,14 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout style="@style/TitleBarNew.DualLine" >
+    <RelativeLayout style="@style/TitleBarNew.DualLine.WithIcon" >
 
-        <TextView style="@style/TitleBarTextNew.Title" >
-        </TextView>
+        <LinearLayout
+            android:id="@+id/title_text_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical" >
 
-        <TextView style="@style/TitleBarTextNew.Subtitle" >
-        </TextView>
-    </LinearLayout>
+            <TextView style="@style/TitleBarTextNew.Title" />
+            <TextView style="@style/TitleBarTextNew.Subtitle" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/titlebar_icon"
+            style="@style/IconMedium"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_large" />
+    </RelativeLayout>
 
     <ScrollView style="@style/Scrollable.View" >
 

@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,14 +38,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 class InfoSimpleView extends LinearLayout {
 
 	private TextView title;
 	protected TextView first;
 	protected Info info;
 
-	public InfoSimpleView(Context context, Info info ) {
+	public InfoSimpleView(Context context, Info info) {
 		super(context);
 		this.info = info;
 		this.initComponent(context);
@@ -61,22 +59,30 @@ class InfoSimpleView extends LinearLayout {
 		this.initComponent(context);
 	}
 
-
 	protected void initComponent(Context context) {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		// inflating of partial layout ignores layout_widht and layout_height attributes
-		LinearLayout.LayoutParams parametri = new  LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		// inflating of partial layout ignores layout_widht and layout_height
+		// attributes
+		LinearLayout.LayoutParams parametri = new LinearLayout.LayoutParams(
+				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		View v = inflater.inflate(getLayout(), null, false);
 		this.addView(v, parametri);
-		setBackgroundDrawable( getResources().getDrawable( R.drawable.list_item_background ));
+		setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.list_item_background));
 
 		title = (TextView) findViewById(R.id.info_activity_title);
 		first = (TextView) findViewById(R.id.info_activity_first_line);
 
 		if (title != null)
 			title.setText(info.getTitle());
-		if (first != null)
-			first.setText(info.getText());
+
+		if (first != null) {
+			if (info.getTextDynamic() != null)
+				first.setText(info.getTextDynamic());
+			else
+				first.setText(info.getText());
+
+		}
 
 	}
 }
@@ -85,11 +91,11 @@ class InfoSimpleViewTwoLines extends InfoSimpleView {
 
 	protected TextView second;
 
-	public InfoSimpleViewTwoLines(Context context, Info info ) {
+	public InfoSimpleViewTwoLines(Context context, Info info) {
 		super(context, info);
 	}
 
-	@Override	
+	@Override
 	protected int getLayout() {
 		return R.layout.info_simple_two_lines;
 	}
@@ -103,38 +109,37 @@ class InfoSimpleViewTwoLines extends InfoSimpleView {
 	}
 }
 
-
-
 class InfoSimpleViewTwoUrls extends InfoSimpleViewTwoLines {
 
-	public InfoSimpleViewTwoUrls(Context context, Info info ) {
+	public InfoSimpleViewTwoUrls(Context context, Info info) {
 		super(context, info);
 	}
 
-	@Override	
+	@Override
 	protected int getLayout() {
 		return R.layout.info_simple_two_urls;
 	}
 
 	public void onFirstLinkClick(View V) {
-		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://fiwio.com"));
+		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+				.parse("http://fiwio.com"));
 		getContext().startActivity(intent);
 	}
 
 	public void onSecondLinkClick(View V) {
-		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://harakalovci.net"));
+		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+				.parse("http://harakalovci.net"));
 		getContext().startActivity(intent);
 	}
 }
 
-
 class InfoSimpleViewActivity extends InfoSimpleView {
 
-	public InfoSimpleViewActivity(Context context, Info info ) {
+	public InfoSimpleViewActivity(Context context, Info info) {
 		super(context, info);
 	}
 
-	@Override	
+	@Override
 	protected int getLayout() {
 		return R.layout.info_simple_activity;
 	}
@@ -144,11 +149,11 @@ class InfoSimpleViewImage extends InfoSimpleView {
 
 	private ImageView image;
 
-	public InfoSimpleViewImage(Context context, Info info ) {
+	public InfoSimpleViewImage(Context context, Info info) {
 		super(context, info);
 	}
 
-	@Override	
+	@Override
 	protected int getLayout() {
 		return R.layout.info_simple_image;
 	}
@@ -162,13 +167,12 @@ class InfoSimpleViewImage extends InfoSimpleView {
 	}
 }
 
-
 public class InfoWidgetsAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<Info> infoList;
 
-	public InfoWidgetsAdapter(Context context, List<Info> infoList ) { 
+	public InfoWidgetsAdapter(Context context, List<Info> infoList) {
 		this.infoList = infoList;
 		this.context = context;
 	}
@@ -190,53 +194,56 @@ public class InfoWidgetsAdapter extends BaseAdapter {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS ||
-				( infoList.get(position).getUrl() != null &&
-				infoList.get(position).getUrl().length() == 0))
+		if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS
+				|| (infoList.get(position).getUrl() != null && infoList
+						.get(position).getUrl().length() == 0))
 			return false;
 		else
 			return true;
 	}
 
 	private OnClickListener mOnFirstClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-           	Info info = (Info) v.getTag();
-            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info.getUrl()));
+		@Override
+		public void onClick(View v) {
+			Info info = (Info) v.getTag();
+			Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+					.parse(info.getUrl()));
 			context.startActivity(intent);
-            }
-    };
+		}
+	};
 
-    private OnClickListener mOnSecondClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-         	Info info = (Info) v.getTag();
-            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(info.getSecondUrl()));
+	private OnClickListener mOnSecondClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Info info = (Info) v.getTag();
+			Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+					.parse(info.getSecondUrl()));
 			context.startActivity(intent);
-       }
-    };
+		}
+	};
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Info info = infoList.get(position);
 		switch (info.getInfoType()) {
 		case SIMPLE_TEXT:
-			return new InfoSimpleView(this.context, info );
+			return new InfoSimpleView(this.context, info);
 		case DOUBLE_TEXT:
-			return new InfoSimpleViewTwoLines(this.context, info );
+			return new InfoSimpleViewTwoLines(this.context, info);
 		case WITH_TWO_LINKS:
-			InfoSimpleViewTwoUrls result = new InfoSimpleViewTwoUrls(this.context, info );
+			InfoSimpleViewTwoUrls result = new InfoSimpleViewTwoUrls(
+					this.context, info);
 			result.first.setOnClickListener(mOnFirstClickListener);
 			result.second.setOnClickListener(mOnSecondClickListener);
 			result.first.setTag(info);
 			result.second.setTag(info);
 			return result;
 		case NEXT_ACTIVITY:
-			return new InfoSimpleViewActivity(this.context, info );
+			return new InfoSimpleViewActivity(this.context, info);
 		case WITH_IMAGE:
-			return new InfoSimpleViewImage(this.context, info );
+			return new InfoSimpleViewImage(this.context, info);
 		default:
-			return new InfoSimpleView(this.context, info );
+			return new InfoSimpleView(this.context, info);
 		}
 	}
 }

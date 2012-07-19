@@ -143,10 +143,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
 			return;
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-
-		intent.putExtras(extras);
 		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
 			int what;
 			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
@@ -155,10 +151,14 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 			else
 				what = SyncService.WHAT_SEARCH_NODES_IN_BOX;
 
-			intent.putExtra(SyncService.EXTRA_WHAT, what);
+			extras.putInt(SyncService.EXTRA_WHAT, what);
 		}
 
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		extras.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				getActivity(), SyncService.class);
+		intent.putExtras(extras);
 		getActivity().startService(intent);
 		setSearchMode(true);
 		updateSearchStatus();

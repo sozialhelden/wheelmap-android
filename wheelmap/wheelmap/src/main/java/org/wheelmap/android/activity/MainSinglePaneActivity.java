@@ -14,11 +14,15 @@ import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment.OnPOIsMapsforgeListener;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerListener;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
@@ -191,8 +195,30 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		startActivity(intent);
 	}
 
+	private long insertNewPoi() {
+		Location location = MyLocationManager.get(null, false)
+				.getLastLocation();
+
+		// create new POI and start editing
+		ContentValues cv = new ContentValues();
+		cv.put(Wheelmap.POIs.NAME, getString(R.string.new_default_name));
+		cv.put(Wheelmap.POIs.COORD_LAT, Math.ceil(location.getLatitude() * 1E6));
+		cv.put(Wheelmap.POIs.COORD_LON,
+				Math.ceil(location.getLongitude() * 1E6));
+		cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
+		cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
+
+		Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI,
+				cv);
+
+		// edit activity
+		Log.i(TAG, new_pois.toString());
+		long poiId = Long.parseLong(new_pois.getLastPathSegment());
+		return poiId;
+	}
+
 	private void createNewPoi() {
-		long poiId = 0; // = list worker fragment creates one
+		long poiId = insertNewPoi();
 		Intent i = new Intent(this, POIDetailEditableActivity.class);
 		i.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
 		startActivity(i);

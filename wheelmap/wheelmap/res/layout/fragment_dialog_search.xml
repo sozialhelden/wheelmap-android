@@ -63,7 +63,8 @@
             android:freezesText="true"
             android:hint="@string/search_hint_list"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:imeOptions="actionDone" />
 
         <TextView
             android:layout_width="wrap_content"

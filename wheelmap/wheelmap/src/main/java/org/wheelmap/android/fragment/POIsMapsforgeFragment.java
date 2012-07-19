@@ -248,6 +248,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			return true;
 		case R.id.menu_location:
 			centerMap(mLastGeoPointE6, true);
+			requestUpdate();
 			break;
 		default:
 			// noop

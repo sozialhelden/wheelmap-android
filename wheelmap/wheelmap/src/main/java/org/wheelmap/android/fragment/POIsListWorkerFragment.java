@@ -26,7 +26,6 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -34,7 +33,6 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -195,9 +193,9 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
 			return;
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(extras);
+		if (extras.getInt(SyncService.EXTRA_CATEGORY) == -1)
+			extras.remove(SyncService.EXTRA_CATEGORY);
+
 		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
 			int what;
 			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
@@ -206,13 +204,17 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 			else
 				what = SyncService.WHAT_SEARCH_NODES;
 
-			intent.putExtra(SyncService.EXTRA_WHAT, what);
+			extras.putInt(SyncService.EXTRA_WHAT, what);
 		}
 
 		if (extras.containsKey(SyncService.EXTRA_DISTANCE_LIMIT))
-			intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
+			extras.putParcelable(SyncService.EXTRA_LOCATION, mLocation);
 
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		extras.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				getActivity(), SyncService.class);
+		intent.putExtras(extras);
 		getActivity().startService(intent);
 	}
 
@@ -235,26 +237,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		fragment.setCursor(mCursor);
 
 		updateRefreshStatus(mSyncing);
-	}
-
-	public long createNewPOI() {
-		// create new POI and start editing
-		ContentValues cv = new ContentValues();
-		cv.put(Wheelmap.POIs.NAME, getString(R.string.new_default_name));
-		cv.put(Wheelmap.POIs.COORD_LAT,
-				Math.ceil(mLocation.getLatitude() * 1E6));
-		cv.put(Wheelmap.POIs.COORD_LON,
-				Math.ceil(mLocation.getLongitude() * 1E6));
-		cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
-		cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
-
-		Uri new_pois = getActivity().getContentResolver().insert(
-				Wheelmap.POIs.CONTENT_URI, cv);
-
-		// edit activity
-		Log.i(TAG, new_pois.toString());
-		long poiId = Long.parseLong(new_pois.getLastPathSegment());
-		return poiId;
 	}
 
 	@Override
