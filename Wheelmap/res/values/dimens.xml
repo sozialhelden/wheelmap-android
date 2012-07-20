@@ -34,4 +34,6 @@ limitations under the License.
 	<dimen name="login_window_width">240dip</dimen>
 	<dimen name="search_window_width_land">430dip</dimen>
 	<dimen name="search_window_width_port">280dip</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+ 
 </resources>

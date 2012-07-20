@@ -221,5 +221,12 @@ limitations under the License.
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textColor">@color/wheel_unknown</item>
     </style>
+    
+     <style name="List">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:paddingRight">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
+    </style>
 
 </resources>

@@ -55,9 +55,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
+
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.markupartist.android.widget.PullToRefreshListView;
-import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class POIsListActivity extends ListActivity implements
 		DetachableResultReceiver.Receiver, OnRefreshListener {
@@ -78,6 +80,8 @@ public class POIsListActivity extends ListActivity implements
 	private boolean isShowingDialog;
 
 	private ViewStub mEmptyNoPois;
+	
+	private PullToRefreshListView mPullToRefreshListView;
 
 	GoogleAnalyticsTracker tracker;
 
@@ -95,6 +99,10 @@ public class POIsListActivity extends ListActivity implements
 
 		setContentView(R.layout.activity_list);
 		mEmptyNoPois = (ViewStub) getListView().getEmptyView();
+		
+		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
+		mPullToRefreshListView.setOnRefreshListener( this );
+
 
 		TextView mapView = (TextView) findViewById(R.id.switch_maps);
 
@@ -135,8 +143,7 @@ public class POIsListActivity extends ListActivity implements
 
 		getListView().setTextFilterEnabled(true);
 
-		((PullToRefreshListView) getListView()).setOnRefreshListener(this);
-
+	
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {
@@ -245,6 +252,7 @@ public class POIsListActivity extends ListActivity implements
 		Log.d(TAG, "runQueryOnCreation: mIsRecreated = " + mState.mIsRecreated);
 		if (!mState.mIsRecreated) {
 			mFirstVisiblePosition = 0;
+			mPullToRefreshListView.setRefreshing();
 			getListView().setSelection(mFirstVisiblePosition);
 		}
 		runQuery(!mState.mIsRecreated);
@@ -374,13 +382,9 @@ public class POIsListActivity extends ListActivity implements
 
 	private void updateRefreshStatus() {
 		if (mState.mSyncing) {
-			getListView().setEmptyView(null);
-			((PullToRefreshListView) getListView()).prepareForRefresh();
+			mPullToRefreshListView.setRefreshing();
 		} else {
-			Animation anim = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-			mEmptyNoPois.startAnimation(anim);
-			getListView().setEmptyView(mEmptyNoPois);
-			((PullToRefreshListView) getListView()).onRefreshComplete();
+			mPullToRefreshListView.onRefreshComplete();
 		}
 	}
 
