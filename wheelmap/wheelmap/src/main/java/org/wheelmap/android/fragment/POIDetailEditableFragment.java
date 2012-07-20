@@ -2,6 +2,7 @@ package org.wheelmap.android.fragment;
 
 import java.util.Map;
 
+import org.wheelmap.android.activity.POIDetailEditableActivity.ExternalEditableState;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
@@ -102,6 +103,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		public void onEditGeolocation(int latitude, int longitude);
 
 		public void onEditNodetype(int nodetype);
+
+		public ExternalEditableState getExternalEditedState();
 	}
 
 	public static POIDetailEditableFragment newInstance(long poiId) {
@@ -172,6 +175,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		storeExternalEditedState();
 	}
 
 	@Override
@@ -197,6 +201,18 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onDetach() {
 		super.onDetach();
+	}
+
+	private void storeExternalEditedState() {
+		ExternalEditableState state = mListener.getExternalEditedState();
+		if (state.state != null)
+			setWheelchairState(state.state);
+		if (state.nodetype != Extra.UNKNOWN)
+			setNodetype(state.nodetype);
+		if (state.latitude != Extra.UNKNOWN && state.longitude != Extra.UNKNOWN)
+			setGeolocation(state.latitude, state.longitude);
+
+		state.clear();
 	}
 
 	@Override

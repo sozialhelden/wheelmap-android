@@ -80,14 +80,34 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				.commit();
 	}
 
-	private void setExternalEditableState(Bundle savedInstanceState) {
-		mExternalEditableState = new ExternalEditableState();
-
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
+	}
+
+	private void setExternalEditableState(Bundle state) {
+		mExternalEditableState = new ExternalEditableState();
+		if (state != null)
+			mExternalEditableState.restoreState(state);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		mExternalEditableState.saveState(outState);
+	}
+
+	@Override
+	public ExternalEditableState getExternalEditedState() {
+		return mExternalEditableState;
+	}
+
+	@Override
+	public void onEditWheelchairState(WheelchairState state) {
+		Intent intent = new Intent(POIDetailEditableActivity.this,
+				WheelchairStateActivity.class);
+		intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
+		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
 	}
 
 	/**
@@ -124,14 +144,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onEditSave() {
 		finish();
-	}
-
-	@Override
-	public void onEditWheelchairState(WheelchairState state) {
-		Intent intent = new Intent(POIDetailEditableActivity.this,
-				WheelchairStateActivity.class);
-		intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
-		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
 	}
 
 	@Override
@@ -186,10 +198,35 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	public static class ExternalEditableState {
-		WheelchairState state = null;
-		int nodetype = -1;
-		int latitude = -1;
-		int longitude = -1;
+		public WheelchairState state = null;
+		public int nodetype = Extra.UNKNOWN;
+		public int latitude = Extra.UNKNOWN;
+		public int longitude = Extra.UNKNOWN;
+
+		void saveState(Bundle bundle) {
+			if (state != null)
+				bundle.putInt(Extra.WHEELCHAIR_STATE, state.getId());
+			bundle.putInt(Extra.NODETYPE, nodetype);
+			bundle.putInt(Extra.LATITUDE, latitude);
+			bundle.putInt(Extra.LONGITUDE, longitude);
+		}
+
+		void restoreState(Bundle bundle) {
+			int stateId = bundle.getInt(Extra.WHEELCHAIR_STATE, Extra.UNKNOWN);
+			if (stateId != Extra.UNKNOWN)
+				state = WheelchairState.valueOf(stateId);
+
+			nodetype = bundle.getInt(Extra.NODETYPE, Extra.UNKNOWN);
+			latitude = bundle.getInt(Extra.LATITUDE);
+			longitude = bundle.getInt(Extra.LONGITUDE);
+		}
+
+		public void clear() {
+			state = null;
+			nodetype = Extra.UNKNOWN;
+			latitude = Extra.UNKNOWN;
+			longitude = Extra.UNKNOWN;
+		}
 	}
 
 }
