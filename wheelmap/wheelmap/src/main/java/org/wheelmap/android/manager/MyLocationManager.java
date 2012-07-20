@@ -23,6 +23,8 @@ package org.wheelmap.android.manager;
 
 import java.util.List;
 
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.utils.MultiResultReceiver;
 
 import android.content.Context;
@@ -36,9 +38,6 @@ import de.akquinet.android.androlog.Log;
 
 public class MyLocationManager {
 	private static final String TAG = MyLocationManager.class.getSimpleName();
-	public final static int WHAT_LOCATION_MANAGER_UPDATE = 0x11;
-	public final static String EXTRA_LOCATION_MANAGER_LOCATION = "org.wheelmap.android.manager.mlm.LOCATION";
-
 	private static MyLocationManager INSTANCE;
 	private LocationManager mLocationManager;
 
@@ -249,8 +248,8 @@ public class MyLocationManager {
 	public void updateLocation(Location location) {
 		mCurrentBestLocation = location;
 		Bundle b = new Bundle();
-		b.putParcelable(EXTRA_LOCATION_MANAGER_LOCATION, location);
-		mReceiver.send(WHAT_LOCATION_MANAGER_UPDATE, b);
+		b.putParcelable(Extra.LOCATION, location);
+		mReceiver.send(What.LOCATION_MANAGER_UPDATE, b);
 	}
 
 	private static final int TWO_MINUTES = 1000 * 60 * 2;

@@ -23,6 +23,7 @@ package org.wheelmap.android.fragment;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.online.R;
@@ -52,11 +53,7 @@ public class POIsListFragment extends SherlockListFragment implements
 		DisplayFragment, OnSearchDialogListener, OnRefreshListener,
 		OnExecuteBundle {
 	public static final String TAG = POIsListFragment.class.getSimpleName();
-	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
-	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
-
 	private WorkerFragment mWorkerFragment;
-
 	private PullToRefreshListView mPullToRefreshListView;
 	private int mFirstVisiblePosition = 0;
 
@@ -116,8 +113,8 @@ public class POIsListFragment extends SherlockListFragment implements
 			executeSavedInstanceState(savedInstanceState);
 
 		if (getArguments() == null
-				|| getArguments()
-						.getBoolean(EXTRA_CREATE_WORKER_FRAGMENT, true)) {
+				|| getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+						true)) {
 			Log.d(TAG, "onActivityCreated: checking workerfragment");
 			FragmentManager fm = getFragmentManager();
 			Fragment fragment = (POIsListWorkerFragment) fm
@@ -137,7 +134,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	private void executeSavedInstanceState(Bundle savedInstanceState) {
 		mFirstVisiblePosition = savedInstanceState.getInt(
-				EXTRA_FIRST_VISIBLE_POSITION, 0);
+				Extra.FIRST_VISIBLE_POSITION, 0);
 	}
 
 	@Override
@@ -182,7 +179,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onSaveInstanceState(Bundle outState) {
 		mFirstVisiblePosition = mPullToRefreshListView.getRefreshableView()
 				.getFirstVisiblePosition();
-		outState.putInt(EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
+		outState.putInt(Extra.FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
 		super.onSaveInstanceState(outState);
 	}
 

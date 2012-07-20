@@ -31,11 +31,11 @@ import org.wheelmap.android.activity.MapsforgeMapActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.MyLocationOverlay;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
-import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
@@ -63,12 +63,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		OnSearchDialogListener, OnExecuteBundle {
 	public final static String TAG = POIsMapsforgeFragment.class
 			.getSimpleName();
-	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
-	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.CENTER_AT_LAT";
-	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.CENTER_AT_LON";
-	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.CENTER_ZOOM";
-	public static final String EXTRA_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
-	public static final String EXTRA_DIRECT_RETRIEVAL = "org.wheelmap.android.DIRECT_RETRIEVAL";
 
 	private WorkerFragment mWorkerFragment;
 
@@ -155,8 +149,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		super.onActivityCreated(savedInstanceState);
 
 		if (getArguments() == null
-				|| getArguments()
-						.getBoolean(EXTRA_CREATE_WORKER_FRAGMENT, true)) {
+				|| getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+						true)) {
 			FragmentManager fm = getFragmentManager();
 			Fragment fragment = (POIsMapsforgeWorkerFragment) fm
 					.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
@@ -218,7 +212,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void executeBundle(Bundle bundle) {
-		bundle.putBoolean(EXTRA_DIRECT_RETRIEVAL, true);
+		bundle.putBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, true);
 		executeState(bundle);
 	}
 
@@ -228,10 +222,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 		boolean doRequest = false;
 
-		if (bundle.containsKey(EXTRA_CENTER_AT_LAT)) {
-			int lat = bundle.getInt(EXTRA_CENTER_AT_LAT);
-			int lon = bundle.getInt(EXTRA_CENTER_AT_LON);
-			int zoom = bundle.getInt(EXTRA_CENTER_ZOOM, MAP_ZOOM_DEFAULT);
+		if (bundle.containsKey(Extra.CENTER_MAP)) {
+			int lat = bundle.getInt(Extra.LATITUDE);
+			int lon = bundle.getInt(Extra.LONGITUDE);
+			int zoom = bundle.getInt(Extra.ZOOM_MAP, MAP_ZOOM_DEFAULT);
 
 			GeoPoint gp = new GeoPoint(lat, lon);
 			mMapController.setCenter(gp);
@@ -243,13 +237,14 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			doRequest = true;
 		}
 
-		if (bundle.getBoolean(EXTRA_RETRIEVAL, false)) {
+		if (bundle.getBoolean(Extra.EXPLICIT_RETRIEVAL, false)) {
 			mMapController.setZoom(MAP_ZOOM_DEFAULT);
 			oldZoomLevel = MAP_ZOOM_DEFAULT;
 			doRequest = true;
 		}
 
-		if (doRequest && bundle.getBoolean(EXTRA_DIRECT_RETRIEVAL, false)) {
+		if (doRequest
+				&& bundle.getBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, false)) {
 			requestUpdate();
 			return;
 		}
@@ -271,9 +266,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		GeoPoint gp = mMapView.getMapCenter();
-		outState.putInt(EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
-		outState.putInt(EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
-		outState.putInt(EXTRA_CENTER_ZOOM, mMapView.getZoomLevel());
+		outState.putBoolean(Extra.CENTER_MAP, true);
+		outState.putInt(Extra.LATITUDE, gp.getLatitudeE6());
+		outState.putInt(Extra.LONGITUDE, gp.getLongitudeE6());
+		outState.putInt(Extra.ZOOM_MAP, mMapView.getZoomLevel());
 	}
 
 	@Override
@@ -360,7 +356,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 						+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
 						- (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX, boundingBox);
+		bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
 
 		return bundle;
 	}

@@ -2,6 +2,7 @@ package org.wheelmap.android.fragment;
 
 import java.util.HashMap;
 
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
@@ -20,7 +21,6 @@ public class WheelchairStateFragment extends SherlockFragment implements
 	public static final String TAG = WheelchairStateFragment.class
 			.getSimpleName();
 
-	public static final String EXTRA_WHEELCHAIR_STATE = "org.wheelmap.android.EXTRA_WHEELCHAIR_STATE";
 	private HashMap<WheelchairState, RadioButton> mRadioButtonsMap = new HashMap<WheelchairState, RadioButton>();
 	private OnWheelchairState mListener;
 
@@ -30,7 +30,7 @@ public class WheelchairStateFragment extends SherlockFragment implements
 
 	public static WheelchairStateFragment newInstance(WheelchairState state) {
 		Bundle b = new Bundle();
-		b.putInt(EXTRA_WHEELCHAIR_STATE, state.getId());
+		b.putInt(Extra.WHEELCHAIR_STATE, state.getId());
 		WheelchairStateFragment f = new WheelchairStateFragment();
 		f.setArguments(b);
 		return f;
@@ -75,7 +75,8 @@ public class WheelchairStateFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		int newStateInt = getArguments().getInt(EXTRA_WHEELCHAIR_STATE, -1);
+		int newStateInt = getArguments().getInt(Extra.WHEELCHAIR_STATE,
+				Extra.UNKNOWN);
 		WheelchairState newState = WheelchairState.valueOf(newStateInt);
 		setWheelchairState(newState);
 

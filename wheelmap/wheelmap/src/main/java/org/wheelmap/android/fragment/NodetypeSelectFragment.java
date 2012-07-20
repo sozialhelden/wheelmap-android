@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.model.CategoryNodeTypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.app.Activity;
@@ -21,7 +22,6 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class NodetypeSelectFragment extends SherlockListFragment {
 	public static final String TAG = NodetypeSelectFragment.class
 			.getSimpleName();
-	public final static String ARGUMENT_NODETYPE = "org.wheelmap.android.ui.mapsforge.NODETYPE";
 	private int mNodeTypeSelected;
 	private CheckedTextView oldCheckedView;
 
@@ -33,7 +33,7 @@ public class NodetypeSelectFragment extends SherlockListFragment {
 
 	public static NodetypeSelectFragment newInstance(int nodetype) {
 		Bundle b = new Bundle();
-		b.putInt(ARGUMENT_NODETYPE, nodetype);
+		b.putInt(Extra.NODETYPE, nodetype);
 
 		NodetypeSelectFragment f = new NodetypeSelectFragment();
 		f.setArguments(b);
@@ -53,7 +53,7 @@ public class NodetypeSelectFragment extends SherlockListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mNodeTypeSelected = getArguments().getInt(ARGUMENT_NODETYPE);
+		mNodeTypeSelected = getArguments().getInt(Extra.NODETYPE);
 	}
 
 	@Override

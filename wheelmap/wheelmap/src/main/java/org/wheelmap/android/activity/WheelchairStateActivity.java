@@ -2,6 +2,7 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
@@ -34,8 +35,8 @@ public class WheelchairStateActivity extends SherlockFragmentActivity implements
 			return;
 		}
 
-		int stateId = getIntent().getIntExtra(
-				WheelchairStateFragment.EXTRA_WHEELCHAIR_STATE, 0);
+		int stateId = getIntent().getIntExtra(Extra.WHEELCHAIR_STATE,
+				Extra.UNKNOWN);
 		mFragment = WheelchairStateFragment.newInstance(WheelchairState
 				.valueOf(stateId));
 

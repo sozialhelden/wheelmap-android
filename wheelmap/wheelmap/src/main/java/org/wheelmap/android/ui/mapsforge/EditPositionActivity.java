@@ -25,6 +25,7 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.POILocationEditableOverlay;
 
@@ -46,16 +47,13 @@ public class EditPositionActivity extends MapActivity implements
 	private int mCrrLatitude;
 	private int mCrrLongitude;
 
-	public final static String EXTRA_LATITUDE = "org.wheelmap.android.ui.mapsforge.LATITUDE";
-	public final static String EXTRA_LONGITUDE = "org.wheelmap.android.ui.mapsforge.LONGITUDE";
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_position_edit);
 
-		mCrrLatitude = getIntent().getIntExtra(EXTRA_LATITUDE, -1);
-		mCrrLongitude = getIntent().getIntExtra(EXTRA_LONGITUDE, -1);
+		mCrrLatitude = getIntent().getIntExtra(Extra.LATITUDE, -1);
+		mCrrLongitude = getIntent().getIntExtra(Extra.LONGITUDE, -1);
 		Log.d(TAG, "mCrrLatitude = " + mCrrLatitude + " mCrrLongitude = "
 				+ mCrrLongitude);
 
@@ -77,8 +75,8 @@ public class EditPositionActivity extends MapActivity implements
 
 	public void onSaveClick(View v) {
 		Intent intent = new Intent();
-		intent.putExtra(EXTRA_LATITUDE, mCrrLatitude);
-		intent.putExtra(EXTRA_LONGITUDE, mCrrLongitude);
+		intent.putExtra(Extra.LATITUDE, mCrrLatitude);
+		intent.putExtra(Extra.LONGITUDE, mCrrLongitude);
 		setResult(RESULT_OK, intent);
 		finish();
 	}

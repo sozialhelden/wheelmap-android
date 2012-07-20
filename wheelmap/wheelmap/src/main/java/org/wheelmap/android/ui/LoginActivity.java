@@ -21,12 +21,13 @@
  */
 package org.wheelmap.android.ui;
 
-import org.wheelmap.android.online.R;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.UserCredentials;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,7 +53,7 @@ public class LoginActivity extends Activity implements
 	private EditText mEmailText;
 	private EditText mPasswordText;
 	private ProgressBar mProgressBar;
-	
+
 	private boolean isInForeground;
 	private boolean isShowingDialog;
 
@@ -85,28 +86,27 @@ public class LoginActivity extends Activity implements
 
 		load();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		isInForeground = true;
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		isInForeground = false;
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-	    	setResult( RESULT_CANCELED );
-	        finish();
-	    }
-	    return super.onKeyDown(keyCode, event);
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			setResult(RESULT_CANCELED);
+			finish();
+		}
+		return super.onKeyDown(keyCode, event);
 	}
-
 
 	public void onSubmit(View v) {
 		String email = mEmailText.getText().toString();
@@ -117,11 +117,10 @@ public class LoginActivity extends Activity implements
 	private void login(String email, String password) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT,
-				SyncService.WHAT_RETRIEVE_APIKEY);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-		intent.putExtra(SyncService.EXTRA_EMAIL, email);
-		intent.putExtra(SyncService.EXTRA_PASSWORD, password);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_APIKEY);
+		intent.putExtra(Extra.STATUS_RECEIVER, mState.mReceiver);
+		intent.putExtra(Extra.EMAIL, email);
+		intent.putExtra(Extra.PASSWORD, password);
 
 		startService(intent);
 	}
@@ -132,10 +131,10 @@ public class LoginActivity extends Activity implements
 		// get user credentials form LoginManager
 		String login = userCredentials.getLogin();
 		String password = userCredentials.getPassword();
-		
-		if ( userCredentials.isLoggedIn()) {
-			mEmailText.setText( login );
-			mPasswordText.setText( password );
+
+		if (userCredentials.isLoggedIn()) {
+			mEmailText.setText(login);
+			mPasswordText.setText(password);
 		}
 	}
 
@@ -159,7 +158,7 @@ public class LoginActivity extends Activity implements
 		case SyncService.STATUS_FINISHED: {
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			setResult(RESULT_OK, null );
+			setResult(RESULT_OK, null);
 			finish();
 			break;
 		}
@@ -168,7 +167,7 @@ public class LoginActivity extends Activity implements
 			mState.mSyncing = false;
 			updateRefreshStatus();
 			final SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
+					.getParcelable(Extra.EXCEPTION);
 			showErrorDialog(e);
 			break;
 		}
@@ -184,13 +183,13 @@ public class LoginActivity extends Activity implements
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}
-	
+
 	private void showErrorDialog(SyncServiceException e) {
 		if (!isInForeground)
 			return;
 		if (isShowingDialog)
 			return;
-		
+
 		isShowingDialog = true;
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

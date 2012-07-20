@@ -23,6 +23,8 @@ package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -155,14 +157,13 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		case SyncService.STATUS_ERROR: {
 			setRefreshStatus(false);
 			final SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
+					.getParcelable(Extra.EXCEPTION);
 			if (mListener != null)
 				mListener.onError(e);
 			break;
 		}
-		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
-			mLocation = (Location) resultData
-					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+		case What.LOCATION_MANAGER_UPDATE: {
+			mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
 			break;
 		}
 		}
@@ -237,39 +238,39 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public void requestUpdate(Bundle bundle) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				getActivity(), SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
-		intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
-		intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
+		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
+		intent.putExtra(Extra.LOCATION, mLocation);
+		intent.putExtra(Extra.DISTANCE_LIMIT, mDistance);
 		getActivity().startService(intent);
 	}
 
 	@Override
 	public void requestSearch(Bundle bundle) {
 		if (!bundle.containsKey(SearchManager.QUERY)
-				&& !bundle.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !bundle.containsKey(SyncService.EXTRA_NODETYPE)
-				&& !bundle.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+				&& !bundle.containsKey(Extra.CATEGORY)
+				&& !bundle.containsKey(Extra.NODETYPE)
+				&& !bundle.containsKey(Extra.WHEELCHAIR_STATE))
 			return;
 
-		if (bundle.getInt(SyncService.EXTRA_CATEGORY) == -1)
-			bundle.remove(SyncService.EXTRA_CATEGORY);
+		if (bundle.getInt(Extra.CATEGORY) == -1)
+			bundle.remove(Extra.CATEGORY);
 
-		if (!bundle.containsKey(SyncService.EXTRA_WHAT)) {
+		if (!bundle.containsKey(Extra.WHAT)) {
 			int what;
-			if (bundle.containsKey(SyncService.EXTRA_CATEGORY)
-					|| bundle.containsKey(SyncService.EXTRA_NODETYPE))
-				what = SyncService.WHAT_RETRIEVE_NODES;
+			if (bundle.containsKey(Extra.CATEGORY)
+					|| bundle.containsKey(Extra.NODETYPE))
+				what = What.RETRIEVE_NODES;
 			else
-				what = SyncService.WHAT_SEARCH_NODES;
+				what = What.SEARCH_NODES;
 
-			bundle.putInt(SyncService.EXTRA_WHAT, what);
+			bundle.putInt(Extra.WHAT, what);
 		}
 
-		if (bundle.containsKey(SyncService.EXTRA_DISTANCE_LIMIT))
-			bundle.putParcelable(SyncService.EXTRA_LOCATION, mLocation);
+		if (bundle.containsKey(Extra.DISTANCE_LIMIT))
+			bundle.putParcelable(Extra.LOCATION, mLocation);
 
-		bundle.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				getActivity(), SyncService.class);

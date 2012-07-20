@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
-import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsListFragment.OnPOIsListListener;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
@@ -16,6 +15,7 @@ import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
@@ -44,9 +44,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private final static ArrayList<TabHolder> mIndexToTab;
 
 	private int mSelectedTab = -1;
-	public final static String EXTRA_SELECTED_TAB = "org.wheelmap.android.SELECTED_TAB";
 	private boolean mIsRecreated;
-	private final static String EXTRA_IS_RECREATED = "org.wheelmap.android.IS_RECREATED";
 	private GoogleAnalyticsTracker tracker;
 
 	public final static int TAB_LIST = 0;
@@ -135,8 +133,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	private void executeState(Bundle state) {
-		mIsRecreated = state.getBoolean(EXTRA_IS_RECREATED, false);
-		mSelectedTab = state.getInt(EXTRA_SELECTED_TAB);
+		mIsRecreated = state.getBoolean(Extra.IS_RECREATED, false);
+		mSelectedTab = state.getInt(Extra.SELECTED_TAB);
 	}
 
 	private void executeDefaultInstanceState() {
@@ -158,8 +156,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean(EXTRA_IS_RECREATED, true);
-		outState.putInt(EXTRA_SELECTED_TAB, mSelectedTab);
+		outState.putBoolean(Extra.IS_RECREATED, true);
+		outState.putInt(Extra.SELECTED_TAB, mSelectedTab);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -223,7 +221,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private void createNewPoi() {
 		long poiId = insertNewPoi();
 		Intent i = new Intent(this, POIDetailEditableActivity.class);
-		i.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
+		i.putExtra(Extra.POI_ID, poiId);
 		startActivity(i);
 	}
 
@@ -241,7 +239,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onShowDetail(long id) {
 		Intent intent = new Intent(this, POIDetailActivity.class);
-		intent.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, id);
+		intent.putExtra(Extra.POI_ID, id);
 		startActivity(intent);
 	}
 

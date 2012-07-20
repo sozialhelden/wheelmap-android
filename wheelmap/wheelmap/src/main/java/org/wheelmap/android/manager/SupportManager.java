@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
@@ -197,10 +199,8 @@ public class SupportManager {
 		mStatusSender = receiver;
 		Intent localesIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
 				SyncService.class);
-		localesIntent.putExtra(SyncService.EXTRA_WHAT,
-				SyncService.WHAT_RETRIEVE_LOCALES);
-		localesIntent
-				.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mStatusSender);
+		localesIntent.putExtra(Extra.WHAT, What.RETRIEVE_LOCALES);
+		localesIntent.putExtra(Extra.STATUS_RECEIVER, mStatusSender);
 		mContext.startService(localesIntent);
 	}
 
@@ -229,11 +229,9 @@ public class SupportManager {
 
 		Intent categoriesIntent = new Intent(Intent.ACTION_SYNC, null,
 				mContext, SyncService.class);
-		categoriesIntent.putExtra(SyncService.EXTRA_WHAT,
-				SyncService.WHAT_RETRIEVE_CATEGORIES);
-		categoriesIntent.putExtra(SyncService.EXTRA_LOCALE, locale);
-		categoriesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
-				mStatusSender);
+		categoriesIntent.putExtra(Extra.WHAT, What.RETRIEVE_CATEGORIES);
+		categoriesIntent.putExtra(Extra.LOCALE, locale);
+		categoriesIntent.putExtra(Extra.STATUS_RECEIVER, mStatusSender);
 		mContext.startService(categoriesIntent);
 	}
 
@@ -244,12 +242,10 @@ public class SupportManager {
 
 		Intent nodeTypesIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
 				SyncService.class);
-		nodeTypesIntent.putExtra(SyncService.EXTRA_WHAT,
-				SyncService.WHAT_RETRIEVE_NODETYPES);
-		nodeTypesIntent.putExtra(SyncService.EXTRA_LOCALE, locale);
+		nodeTypesIntent.putExtra(Extra.WHAT, What.RETRIEVE_NODETYPES);
+		nodeTypesIntent.putExtra(Extra.LOCALE, locale);
 
-		nodeTypesIntent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
-				mStatusSender);
+		nodeTypesIntent.putExtra(Extra.STATUS_RECEIVER, mStatusSender);
 		mContext.startService(nodeTypesIntent);
 
 	}

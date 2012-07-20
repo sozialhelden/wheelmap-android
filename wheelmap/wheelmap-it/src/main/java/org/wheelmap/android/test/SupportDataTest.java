@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.test;
 
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
@@ -50,7 +52,7 @@ public class SupportDataTest extends AndroidTestCase {
 //		Log.d( TAG, "locales cursor count = " + cursor.getCount());
 		
 		Intent intent = new Intent(Intent.ACTION_SYNC, null, mContext, SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_CATEGORIES );
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_CATEGORIES );
 		mContext.startService(intent);
 		
 		Thread.sleep( 3000 );
@@ -59,7 +61,7 @@ public class SupportDataTest extends AndroidTestCase {
 		Log.d( TAG, "categories cursor count = " + cursor.getCount());
 	
 		intent = new Intent(Intent.ACTION_SYNC, null, mContext, SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODETYPES );
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODETYPES );
 		mContext.startService(intent);
 		
 		Thread.sleep( 25000 );

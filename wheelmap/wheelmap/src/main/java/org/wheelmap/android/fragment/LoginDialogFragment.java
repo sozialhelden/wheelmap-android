@@ -1,5 +1,7 @@
 package org.wheelmap.android.fragment;
 
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
@@ -129,7 +131,7 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 			mSyncing = false;
 			updateRefreshStatus();
 			final SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
+					.getParcelable(Extra.EXCEPTION);
 			showErrorDialog(e);
 			break;
 		default: // noop
@@ -170,11 +172,10 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 	private void login(String email, String password) {
 		Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(),
 				SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT,
-				SyncService.WHAT_RETRIEVE_APIKEY);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
-		intent.putExtra(SyncService.EXTRA_EMAIL, email);
-		intent.putExtra(SyncService.EXTRA_PASSWORD, password);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_APIKEY);
+		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
+		intent.putExtra(Extra.EMAIL, email);
+		intent.putExtra(Extra.PASSWORD, password);
 
 		getActivity().startService(intent);
 	}

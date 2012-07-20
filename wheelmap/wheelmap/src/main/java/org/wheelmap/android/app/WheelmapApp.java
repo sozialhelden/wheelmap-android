@@ -105,6 +105,10 @@ public class WheelmapApp extends Application {
 		Log.d("lowmemory", "wheelmap app - onLowMemory");
 	}
 
+	public static Context get() {
+		return INSTANCE.getApplicationContext();
+	}
+
 	public static int getMemoryClass() {
 		return INSTANCE.mMemoryClass;
 	}

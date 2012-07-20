@@ -6,6 +6,9 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.model.CursorLoaderHelper;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap;
@@ -23,7 +26,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,8 +84,6 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.edit_geolocation_container)
 	private FrameLayout edit_geolocation_container;
 
-	public final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
-
 	private Long poiID;
 	private WheelchairState mWheelchairState;
 	private int mLatitude;
@@ -104,9 +104,9 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		public void onEditNodetype(int nodetype);
 	}
 
-	public static POIDetailEditableFragment newInstance(long poiid) {
+	public static POIDetailEditableFragment newInstance(long poiId) {
 		Bundle b = new Bundle();
-		b.putLong(ARGUMENT_POI_ID, poiid);
+		b.putLong(Extra.POI_ID, poiId);
 
 		POIDetailEditableFragment fragment = new POIDetailEditableFragment();
 		fragment.setArguments(b);
@@ -128,7 +128,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		super.onCreate(savedInstanceState);
 		mWSAttributes = SupportManager.wsAttributes;
 		setHasOptionsMenu(true);
-		poiID = getArguments().getLong(ARGUMENT_POI_ID);
+		poiID = getArguments().getLong(Extra.POI_ID);
 
 	}
 
@@ -256,7 +256,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				getActivity(), SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_UPDATE_SERVER);
+		intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
 		getActivity().startService(intent);
 
 		if (mListener != null) {
@@ -271,9 +271,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
-
-		return new CursorLoader(getActivity(), getUriForPoiID(), null, null,
-				null, null);
+		return CursorLoaderHelper.createPOIIdLoader(poiID);
 	}
 
 	@Override
@@ -378,8 +376,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		// final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 		// SyncService.class);
-		// intent.putExtra(SyncService.EXTRA_WHAT,
-		// SyncService.WHAT_UPDATE_SERVER );
+		// intent.putExtra(Extras.WHAT, Extras.What.UPDATE_SERVER);
 		// startService(intent);
 		// } else
 		// {

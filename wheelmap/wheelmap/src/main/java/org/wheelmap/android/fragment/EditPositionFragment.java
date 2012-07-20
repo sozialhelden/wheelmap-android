@@ -3,6 +3,7 @@ package org.wheelmap.android.fragment;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.POILocationEditableOverlay;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
@@ -24,8 +25,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class EditPositionFragment extends SherlockFragment implements
 		OnTouchListener {
 	public static final String TAG = EditPositionFragment.class.getSimpleName();
-	public final static String ARGUMENT_LATITUDE = "org.wheelmap.android.ui.mapsforge.LATITUDE";
-	public final static String ARGUMENT_LONGITUDE = "org.wheelmap.android.ui.mapsforge.LONGITUDE";
 
 	private MapController mMapController;
 	private MapView mMapView;
@@ -45,8 +44,8 @@ public class EditPositionFragment extends SherlockFragment implements
 
 	public static EditPositionFragment newInstance(int latitude, int longitude) {
 		Bundle b = new Bundle();
-		b.putInt(ARGUMENT_LATITUDE, latitude);
-		b.putInt(ARGUMENT_LONGITUDE, longitude);
+		b.putInt(Extra.LATITUDE, latitude);
+		b.putInt(Extra.LONGITUDE, longitude);
 
 		EditPositionFragment f = new EditPositionFragment();
 		f.setArguments(b);
@@ -106,15 +105,18 @@ public class EditPositionFragment extends SherlockFragment implements
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt(ARGUMENT_LATITUDE, mCrrLatitude);
-		outState.putInt(ARGUMENT_LONGITUDE, mCrrLongitude);
+		outState.putInt(Extra.LATITUDE, mCrrLatitude);
+		outState.putInt(Extra.LONGITUDE, mCrrLongitude);
 
 		super.onSaveInstanceState(outState);
 	}
 
 	private void executeState(Bundle state) {
-		mCrrLatitude = state.getInt(ARGUMENT_LATITUDE);
-		mCrrLongitude = state.getInt(ARGUMENT_LONGITUDE);
+		if (state == null)
+			return;
+
+		mCrrLatitude = state.getInt(Extra.LATITUDE);
+		mCrrLongitude = state.getInt(Extra.LONGITUDE);
 	}
 
 	@Override

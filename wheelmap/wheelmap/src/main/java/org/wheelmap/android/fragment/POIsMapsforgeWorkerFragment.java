@@ -23,6 +23,8 @@ package org.wheelmap.android.fragment;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
@@ -154,15 +156,14 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		}
 		case SyncService.STATUS_ERROR: {
 			setRefreshStatus(false);
-			SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
+			SyncServiceException e = resultData.getParcelable(Extra.EXCEPTION);
 			if (mListener != null)
 				mListener.onError(e);
 			break;
 		}
-		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
+		case What.LOCATION_MANAGER_UPDATE: {
 			Location location = (Location) resultData
-					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+					.getParcelable(Extra.LOCATION);
 			mGeoPoint = calcGeoPoint(location);
 			mLocation = location;
 
@@ -221,23 +222,23 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	@Override
 	public void requestSearch(Bundle bundle) {
 		if (!bundle.containsKey(SearchManager.QUERY)
-				&& !bundle.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !bundle.containsKey(SyncService.EXTRA_NODETYPE)
-				&& !bundle.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+				&& !bundle.containsKey(Extra.CATEGORY)
+				&& !bundle.containsKey(Extra.NODETYPE)
+				&& !bundle.containsKey(Extra.WHEELCHAIR_STATE))
 			return;
 
-		if (!bundle.containsKey(SyncService.EXTRA_WHAT)) {
+		if (!bundle.containsKey(Extra.WHAT)) {
 			int what;
-			if (bundle.containsKey(SyncService.EXTRA_CATEGORY)
-					|| bundle.containsKey(SyncService.EXTRA_NODETYPE))
-				what = SyncService.WHAT_RETRIEVE_NODES;
+			if (bundle.containsKey(Extra.CATEGORY)
+					|| bundle.containsKey(Extra.NODETYPE))
+				what = What.RETRIEVE_NODES;
 			else
-				what = SyncService.WHAT_SEARCH_NODES_IN_BOX;
+				what = What.SEARCH_NODES_IN_BOX;
 
-			bundle.putInt(SyncService.EXTRA_WHAT, what);
+			bundle.putInt(Extra.WHAT, what);
 		}
 
-		bundle.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				getActivity(), SyncService.class);
@@ -254,8 +255,8 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				getActivity(), SyncService.class);
 		intent.putExtras(bundle);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
+		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
 		getActivity().startService(intent);
 	}
 

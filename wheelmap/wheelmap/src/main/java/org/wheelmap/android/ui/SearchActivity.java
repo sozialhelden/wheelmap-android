@@ -23,10 +23,10 @@ package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.model.CategoryNodeTypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
-import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.online.R;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -52,8 +52,6 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 	private final static String TAG = "search";
 
 	public final static int PERFORM_SEARCH = 1;
-	public final static String EXTRA_SHOW_DISTANCE = "org.wheelmap.android.ui.EXTRA_SHOW_DISTANCE";
-	public final static String EXTRA_SHOW_MAP_HINT = "org.wheelmap.android.ui.EXTRA_SHOW_MAP_HINT";
 
 	private EditText mKeywordText;
 
@@ -65,20 +63,21 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-		
-		LinearLayout mapHintContainer = (LinearLayout) findViewById( R.id.search_map_hint);
+
+		LinearLayout mapHintContainer = (LinearLayout) findViewById(R.id.search_map_hint);
 		if (getIntent() != null && getIntent().getExtras() != null) {
-			if (getIntent().getExtras().containsKey(EXTRA_SHOW_MAP_HINT))
+			if (getIntent().getExtras().containsKey(Extra.SHOW_MAP_HINT))
 				mapHintContainer.setVisibility(View.VISIBLE);
 		}
-		
 
 		mKeywordText = (EditText) findViewById(R.id.search_keyword);
 
 		Spinner categorySpinner = (Spinner) findViewById(R.id.search_spinner_categorie_nodetype);
-		
-		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType.createTypesList(this, true);
-		categorySpinner.setAdapter(new CategoryNodeTypesAdapter(this, searchTypes, CategoryNodeTypesAdapter.SEARCH_MODE));
+
+		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
+				.createTypesList(this, true);
+		categorySpinner.setAdapter(new CategoryNodeTypesAdapter(this,
+				searchTypes, CategoryNodeTypesAdapter.SEARCH_MODE));
 		categorySpinner.setOnItemSelectedListener(this);
 
 		Spinner distanceSpinner = (Spinner) findViewById(R.id.search_spinner_distance);
@@ -96,7 +95,7 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 		LinearLayout distanceContainer = (LinearLayout) findViewById(R.id.search_spinner_distance_container);
 		if (getIntent() != null && getIntent().getExtras() != null) {
-			if (getIntent().getExtras().containsKey(EXTRA_SHOW_DISTANCE))
+			if (getIntent().getExtras().containsKey(Extra.SHOW_DISTANCE))
 				distanceContainer.setVisibility(View.VISIBLE);
 		}
 
@@ -118,12 +117,12 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 		Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
 				+ mNodeTypeSelected);
 		if (mCategorySelected != -1)
-			intent.putExtra(SyncService.EXTRA_CATEGORY, mCategorySelected);
+			intent.putExtra(Extra.CATEGORY, mCategorySelected);
 		else if (mNodeTypeSelected != -1)
-			intent.putExtra(SyncService.EXTRA_NODETYPE, mNodeTypeSelected);
+			intent.putExtra(Extra.NODETYPE, mNodeTypeSelected);
 
 		if (mDistance != -1)
-			intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
+			intent.putExtra(Extra.DISTANCE_LIMIT, mDistance);
 
 		setResult(Activity.RESULT_OK, intent);
 		Log.d(TAG, "onSearch: setResult");
@@ -136,7 +135,8 @@ public class SearchActivity extends Activity implements OnItemSelectedListener {
 
 		switch (viewId) {
 		case R.id.search_spinner_categorie_nodetype: {
-			CategoryOrNodeType search = (CategoryOrNodeType) adapterView.getAdapter().getItem(position);
+			CategoryOrNodeType search = (CategoryOrNodeType) adapterView
+					.getAdapter().getItem(position);
 			switch (search.type) {
 			case CATEGORY:
 				mCategorySelected = search.id;

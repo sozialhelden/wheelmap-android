@@ -29,7 +29,7 @@ import org.wheelmap.android.fragment.NodetypeSelectFragment.OnNodetypeSelectList
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
-import org.wheelmap.android.fragment.WheelchairStateFragment;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
@@ -58,8 +58,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment_singleframe);
-		poiID = getIntent().getLongExtra(
-				POIDetailEditableFragment.ARGUMENT_POI_ID, -1);
+		poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 
 		setExternalEditableState(savedInstanceState);
 
@@ -79,7 +78,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 		fm.beginTransaction().add(R.id.frame, mFragment, POIDetailFragment.TAG)
 				.commit();
-
 	}
 
 	private void setExternalEditableState(Bundle savedInstanceState) {
@@ -117,7 +115,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				if (data != null) {
 					WheelchairState newState = WheelchairState.valueOf(Integer
 							.parseInt(data.getAction()));
-					mEditorFragment.setWheelchairState(newState);
+					mExternalEditableState.state = newState;
 				}
 			}
 		}
@@ -132,8 +130,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	public void onEditWheelchairState(WheelchairState state) {
 		Intent intent = new Intent(POIDetailEditableActivity.this,
 				WheelchairStateActivity.class);
-		intent.putExtra(WheelchairStateFragment.EXTRA_WHEELCHAIR_STATE,
-				state.getId());
+		intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
 		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
 	}
 
@@ -150,7 +147,8 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onEditPosition(int latitude, int longitude) {
-		mEditorFragment.setGeolocation(latitude, longitude);
+		mExternalEditableState.latitude = latitude;
+		mExternalEditableState.longitude = longitude;
 		getSupportFragmentManager().popBackStack();
 	}
 
@@ -188,7 +186,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	public static class ExternalEditableState {
-
 		WheelchairState state = null;
 		int nodetype = -1;
 		int latitude = -1;

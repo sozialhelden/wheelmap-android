@@ -23,9 +23,10 @@ package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.model.CategoryNodeTypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.online.R;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -37,24 +38,23 @@ import android.widget.ListView;
 
 public class NodeTypeSelectActivity extends ListActivity {
 
-	public static final String EXTRA_NODETYPE = "org.wheelmap.android.EXTRA_NODETYPE";
 	private int mNodeTypeSelected = -1;
-	
+
 	private CheckedTextView oldCheckedView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView( R.layout.activity_nodetype_select);
+		setContentView(R.layout.activity_nodetype_select);
 
 		ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
 				.createTypesList(this, false);
 		setListAdapter(new PickOnlyNodeTypesAdapter(this, types));
-		
+
 		// Dont know how to set a checkbox to selected
 		int nodeType;
-		if ( getIntent().getExtras() != null)
-			nodeType = getIntent().getExtras().getInt( EXTRA_NODETYPE );
+		if (getIntent().getExtras() != null)
+			nodeType = getIntent().getExtras().getInt(Extra.NODETYPE);
 	}
 
 	@Override
@@ -64,14 +64,15 @@ public class NodeTypeSelectActivity extends ListActivity {
 		switch (item.type) {
 		case NODETYPE:
 			mNodeTypeSelected = item.id;
-			if ( oldCheckedView != null )
-				oldCheckedView.setChecked( false );
-			CheckedTextView view = (CheckedTextView) v.findViewById( R.id.search_type );
-			view.setChecked( true );
+			if (oldCheckedView != null)
+				oldCheckedView.setChecked(false);
+			CheckedTextView view = (CheckedTextView) v
+					.findViewById(R.id.search_type);
+			view.setChecked(true);
 			oldCheckedView = view;
-			
+
 			Intent intent = new Intent();
-			intent.putExtra(EXTRA_NODETYPE, mNodeTypeSelected);
+			intent.putExtra(Extra.NODETYPE, mNodeTypeSelected);
 			setResult(RESULT_OK, intent);
 			finish();
 			break;

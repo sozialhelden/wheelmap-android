@@ -26,6 +26,8 @@ import java.util.List;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -194,15 +196,15 @@ public class StartupActivity extends Activity implements
 	public void onReceiveResult(int resultCode, Bundle resultData) {
 
 		if (resultCode == SyncService.STATUS_FINISHED) {
-			int what = resultData.getInt(SyncService.EXTRA_WHAT);
+			int what = resultData.getInt(Extra.WHAT);
 			switch (what) {
-			case SyncService.WHAT_RETRIEVE_LOCALES:
+			case What.RETRIEVE_LOCALES:
 				mSupportManager.reloadStageTwo();
 				break;
-			case SyncService.WHAT_RETRIEVE_CATEGORIES:
+			case What.RETRIEVE_CATEGORIES:
 				mSupportManager.reloadStageThree();
 				break;
-			case SyncService.WHAT_RETRIEVE_NODETYPES:
+			case What.RETRIEVE_NODETYPES:
 				mSupportManager.reloadStageFour();
 				startupAppDelayed();
 				break;
@@ -211,8 +213,8 @@ public class StartupActivity extends Activity implements
 			}
 		} else if (resultCode == SyncService.STATUS_ERROR) {
 			final SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
-			// Log.w(TAG, e.getCause());
+					.getParcelable(Extra.EXCEPTION);
+			Log.w(TAG, e);
 			mProgressBar.setVisibility(View.GONE);
 			showErrorDialog(e);
 		}

@@ -21,8 +21,8 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -65,18 +65,17 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 	@Override
 	public void prepareContent() {
-		if (getBundle().containsKey(SyncService.EXTRA_BOUNDING_BOX)) {
+		if (getBundle().containsKey(Extra.BOUNDING_BOX)) {
 			ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) getBundle()
-					.getSerializable(SyncService.EXTRA_BOUNDING_BOX);
+					.getSerializable(Extra.BOUNDING_BOX);
 			mBoundingBox = parcBoundingBox.toBoundingBox();
 			// Log.d(TAG,
 			// "retrieving with bounding box: "
 			// + parcBoundingBox.toString());
-		} else if (getBundle().containsKey(SyncService.EXTRA_LOCATION)) {
-			float distance = getBundle().getFloat(
-					SyncService.EXTRA_DISTANCE_LIMIT);
+		} else if (getBundle().containsKey(Extra.LOCATION)) {
+			float distance = getBundle().getFloat(Extra.DISTANCE_LIMIT);
 			Location location = (Location) getBundle().getParcelable(
-					SyncService.EXTRA_LOCATION);
+					Extra.LOCATION);
 			mBoundingBox = GeocoordinatesMath.calculateBoundingBox(
 					new Wgs84GeoCoordinates(location.getLongitude(), location
 							.getLatitude()), distance);
@@ -87,19 +86,19 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 			// + distance);
 		}
 
-		if (getBundle().containsKey(SyncService.EXTRA_CATEGORY)) {
-			mCategory = getBundle().getInt(SyncService.EXTRA_CATEGORY);
-		} else if (getBundle().containsKey(SyncService.EXTRA_NODETYPE)) {
-			mNodeType = getBundle().getInt(SyncService.EXTRA_NODETYPE);
+		if (getBundle().containsKey(Extra.CATEGORY)) {
+			mCategory = getBundle().getInt(Extra.CATEGORY);
+		} else if (getBundle().containsKey(Extra.NODETYPE)) {
+			mNodeType = getBundle().getInt(Extra.NODETYPE);
 		}
 
 		if (getBundle().containsKey(SearchManager.QUERY)) {
 			mSearchTerm = getBundle().getString(SearchManager.QUERY);
 		}
 
-		if (getBundle().containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+		if (getBundle().containsKey(Extra.WHEELCHAIR_STATE))
 			mWheelchairState = WheelchairState.valueOf(getBundle().getInt(
-					SyncService.EXTRA_WHEELCHAIR_STATE));
+					Extra.WHEELCHAIR_STATE));
 	}
 
 	@Override

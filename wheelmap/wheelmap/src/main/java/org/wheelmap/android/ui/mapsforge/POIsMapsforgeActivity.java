@@ -31,6 +31,8 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
@@ -70,11 +72,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		OnTapListener {
 
 	private final static String TAG = "mapsforge";
-
-	public static final String EXTRA_NO_RETRIEVAL = "org.wheelmap.android.ui.Mapsforge.NO_RETRIEVAL";
-	public static final String EXTRA_CENTER_AT_LAT = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LAT";
-	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.ui.Mapsforge.CENTER_AT_LON";
-	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.ui.Mapsforge.CENTER_ZOOM";
 
 	/** State held between configuration changes. */
 	private State mState;
@@ -161,7 +158,6 @@ public class POIsMapsforgeActivity extends MapActivity implements
 			public void onClick(View view) {
 				Intent intent = new Intent(POIsMapsforgeActivity.this,
 						POIsListActivity.class);
-				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				startActivity(intent);
 				overridePendingTransition(0, 0);
@@ -228,19 +224,20 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		GeoPoint gp = mMapView.getMapCenter();
-		outState.putInt(EXTRA_CENTER_AT_LAT, gp.getLatitudeE6());
-		outState.putInt(EXTRA_CENTER_AT_LON, gp.getLongitudeE6());
-		outState.putInt(EXTRA_CENTER_ZOOM, mMapView.getZoomLevel());
+		outState.putBoolean(Extra.CENTER_MAP, true);
+		outState.putInt(Extra.LATITUDE, gp.getLatitudeE6());
+		outState.putInt(Extra.LONGITUDE, gp.getLongitudeE6());
+		outState.putInt(Extra.ZOOM_MAP, mMapView.getZoomLevel());
 	}
 
 	private void executeTargetCenterExtras(Bundle extras) {
 		if (extras == null) {
 			return;
 		}
-		if (extras.containsKey(EXTRA_CENTER_AT_LAT)) {
-			int lat = extras.getInt(EXTRA_CENTER_AT_LAT);
-			int lon = extras.getInt(EXTRA_CENTER_AT_LON);
-			int zoom = extras.getInt(EXTRA_CENTER_ZOOM, 18);
+		if (extras.containsKey(Extra.CENTER_MAP)) {
+			int lat = extras.getInt(Extra.LATITUDE);
+			int lon = extras.getInt(Extra.LONGITUDE);
+			int zoom = extras.getInt(Extra.ZOOM_MAP, 18);
 
 			GeoPoint gp = new GeoPoint(lat, lon);
 			mMapController.setCenter(gp);
@@ -252,7 +249,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	}
 
 	private void executeRetrieval(Bundle extras) {
-		boolean retrieval = !extras.getBoolean(EXTRA_NO_RETRIEVAL, false);
+		boolean retrieval = extras.getBoolean(Extra.EXPLICIT_RETRIEVAL, false);
 		Log.d(TAG, "retrieval = " + retrieval);
 		if (retrieval) {
 			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -273,29 +270,29 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	private void executeSearch(Bundle extras) {
 		if (!extras.containsKey(SearchManager.QUERY)
-				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
-				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+				&& !extras.containsKey(Extra.CATEGORY)
+				&& !extras.containsKey(Extra.NODETYPE)
+				&& !extras.containsKey(Extra.WHEELCHAIR_STATE))
 			return;
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
 
 		intent.putExtras(extras);
-		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
+		if (!extras.containsKey(Extra.WHAT)) {
 			int what;
-			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
-					|| extras.containsKey(SyncService.EXTRA_NODETYPE))
-				what = SyncService.WHAT_RETRIEVE_NODES;
+			if (extras.containsKey(Extra.CATEGORY)
+					|| extras.containsKey(Extra.NODETYPE))
+				what = What.RETRIEVE_NODES;
 			else
-				what = SyncService.WHAT_SEARCH_NODES_IN_BOX;
+				what = What.SEARCH_NODES_IN_BOX;
 
-			intent.putExtra(SyncService.EXTRA_WHAT, what);
+			intent.putExtra(Extra.WHAT, what);
 		}
 
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+		intent.putExtra(Extra.STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
-		extras.putBoolean(EXTRA_NO_RETRIEVAL, true);
+		extras.putBoolean(Extra.EXPLICIT_RETRIEVAL, false);
 		mState.isSearchMode = true;
 		updateSearchStatus();
 	}
@@ -330,14 +327,13 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		case SyncService.STATUS_ERROR: {
 			mState.mSyncing = false;
 			updateRefreshStatus();
-			SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
+			SyncServiceException e = resultData.getParcelable(Extra.EXCEPTION);
 			showErrorDialog(e);
 			break;
 		}
-		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
+		case What.LOCATION_MANAGER_UPDATE: {
 			Location location = (Location) resultData
-					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+					.getParcelable(Extra.LOCATION);
 			GeoPoint geoPoint = calcGeoPoint(location);
 			if (!isCentered) {
 				mMapController.setCenter(geoPoint);
@@ -385,7 +381,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 	public void onListClick(View v) {
 		Intent intent = new Intent(this, POIsListActivity.class);
-		intent.putExtra(POIsListActivity.EXTRA_IS_RECREATED, false);
+		intent.putExtra(Extra.IS_RECREATED, false);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(intent);
@@ -410,7 +406,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 						+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
 						- (lonSpan / 2));
-		bundle.putSerializable(SyncService.EXTRA_BOUNDING_BOX, boundingBox);
+		bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
 	}
 
 	private void requestUpdate() {
@@ -425,8 +421,8 @@ public class POIsMapsforgeActivity extends MapActivity implements
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
 		intent.putExtras(extras);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
+		intent.putExtra(Extra.STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 	}
 
@@ -439,7 +435,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 
 			final Intent intent = new Intent(POIsMapsforgeActivity.this,
 					SearchActivity.class);
-			intent.putExtra(SearchActivity.EXTRA_SHOW_MAP_HINT, true);
+			intent.putExtra(Extra.SHOW_MAP_HINT, true);
 			startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 		}
 	}
@@ -580,7 +576,7 @@ public class POIsMapsforgeActivity extends MapActivity implements
 	@Override
 	public void onTap(OverlayItem item, long poiId) {
 		Intent i = new Intent(this, POIDetailActivity.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		i.putExtra(Extra.POI_ID, poiId);
 		startActivity(i);
 	}
 

@@ -1,11 +1,10 @@
 package org.wheelmap.android.activity;
 
 import org.mapsforge.android.maps.GeoPoint;
-import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.WheelchairStateFragment;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
@@ -56,8 +55,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 			Log.d(TAG, "onCreate: wmId = " + wmID);
 			mFragment = POIDetailFragment.newInstanceWithWMID(wmID);
 		} else {
-			long poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID,
-					-1);
+			long poiID = getIntent().getLongExtra(Extra.POI_ID, -1);
 			Log.d(TAG, "onCreate: poiID = " + poiID);
 			mFragment = POIDetailFragment.newInstanceWithPOIID(poiID);
 		}
@@ -98,8 +96,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		// result will come back with request code GET_CODE.
 		Intent intent = new Intent(POIDetailActivity.this,
 				WheelchairStateActivity.class);
-		intent.putExtra(WheelchairStateFragment.EXTRA_WHEELCHAIR_STATE,
-				wState.getId());
+		intent.putExtra(Extra.WHEELCHAIR_STATE, wState.getId());
 		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
 
 	}
@@ -142,8 +139,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 
 					final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 							POIDetailActivity.this, SyncService.class);
-					intent.putExtra(SyncService.EXTRA_WHAT,
-							SyncService.WHAT_UPDATE_SERVER);
+					intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
 					startService(intent);
 				}
 			}
@@ -155,12 +151,10 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		Intent intent = new Intent(POIDetailActivity.this,
 				MainSinglePaneActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		intent.putExtra(MainSinglePaneActivity.EXTRA_SELECTED_TAB,
-				MainSinglePaneActivity.TAB_MAP);
-		intent.putExtra(POIsMapsforgeFragment.EXTRA_CENTER_AT_LAT,
-				point.getLatitudeE6());
-		intent.putExtra(POIsMapsforgeFragment.EXTRA_CENTER_AT_LON,
-				point.getLongitudeE6());
+		intent.putExtra(Extra.SELECTED_TAB, MainSinglePaneActivity.TAB_MAP);
+		intent.putExtra(Extra.CENTER_MAP, true);
+		intent.putExtra(Extra.LATITUDE, point.getLatitudeE6());
+		intent.putExtra(Extra.LONGITUDE, point.getLongitudeE6());
 		startActivity(intent);
 	}
 
@@ -168,7 +162,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	public void onEdit(long poiId) {
 		Intent intent = new Intent(POIDetailActivity.this,
 				POIDetailEditableActivity.class);
-		intent.putExtra(POIDetailEditableFragment.ARGUMENT_POI_ID, poiId);
+		intent.putExtra(Extra.POI_ID, poiId);
 		startActivity(intent);
 	}
 }

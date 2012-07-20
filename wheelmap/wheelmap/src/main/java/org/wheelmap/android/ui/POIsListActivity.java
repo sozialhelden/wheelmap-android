@@ -21,20 +21,21 @@
  */
 package org.wheelmap.android.ui;
 
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -68,8 +69,6 @@ public class POIsListActivity extends ListActivity implements
 
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
-	public final static String EXTRA_IS_RECREATED = "org.wheelmap.android.ORIENTATION_CHANGE";
-	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
 
 	private State mState;
 	private float mDistance;
@@ -79,7 +78,6 @@ public class POIsListActivity extends ListActivity implements
 
 	GoogleAnalyticsTracker tracker;
 	PullToRefreshListView mPullToRefreshListView;
-	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -102,7 +100,7 @@ public class POIsListActivity extends ListActivity implements
 			public void onClick(View view) {
 				Intent intent = new Intent(POIsListActivity.this,
 						POIsMapsforgeActivity.class);
-				intent.putExtra(POIsMapsforgeActivity.EXTRA_NO_RETRIEVAL, false);
+				intent.putExtra(Extra.EXPLICIT_RETRIEVAL, true);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 						| Intent.FLAG_ACTIVITY_NO_ANIMATION);
 				startActivity(intent);
@@ -115,9 +113,9 @@ public class POIsListActivity extends ListActivity implements
 			}
 
 		});
-		
+
 		mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_to_refresh_listview);
-		mPullToRefreshListView.setOnRefreshListener( this );
+		mPullToRefreshListView.setOnRefreshListener(this);
 
 		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
@@ -134,7 +132,7 @@ public class POIsListActivity extends ListActivity implements
 		mLocationManager = MyLocationManager.get(mState.mReceiver, true);
 		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
-		
+
 		if (getIntent() != null) {
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {
@@ -182,29 +180,29 @@ public class POIsListActivity extends ListActivity implements
 
 	private void executeSearch(Bundle extras) {
 		if (!extras.containsKey(SearchManager.QUERY)
-				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
-				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+				&& !extras.containsKey(Extra.CATEGORY)
+				&& !extras.containsKey(Extra.NODETYPE)
+				&& !extras.containsKey(Extra.WHEELCHAIR_STATE))
 			return;
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
 		intent.putExtras(extras);
-		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
+		if (!extras.containsKey(Extra.WHAT)) {
 			int what;
-			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
-					|| extras.containsKey(SyncService.EXTRA_NODETYPE))
-				what = SyncService.WHAT_RETRIEVE_NODES;
+			if (extras.containsKey(Extra.CATEGORY)
+					|| extras.containsKey(Extra.NODETYPE))
+				what = What.RETRIEVE_NODES;
 			else
-				what = SyncService.WHAT_SEARCH_NODES;
+				what = What.SEARCH_NODES;
 
-			intent.putExtra(SyncService.EXTRA_WHAT, what);
+			intent.putExtra(Extra.WHAT, what);
 		}
 
-		if (extras.containsKey(SyncService.EXTRA_DISTANCE_LIMIT))
-			intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
+		if (extras.containsKey(Extra.DISTANCE_LIMIT))
+			intent.putExtra(Extra.LOCATION, mLocation);
 
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
+		intent.putExtra(Extra.STATUS_RECEIVER, mState.mReceiver);
 		startService(intent);
 		setIsRecreated(true);
 	}
@@ -213,24 +211,24 @@ public class POIsListActivity extends ListActivity implements
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
 		isRecreated(state);
-		mFirstVisiblePosition = state.getInt(EXTRA_FIRST_VISIBLE_POSITION, 1);
+		mFirstVisiblePosition = state.getInt(Extra.FIRST_VISIBLE_POSITION, 1);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean(EXTRA_IS_RECREATED, true);
+		outState.putBoolean(Extra.IS_RECREATED, true);
 		saveListPosition();
-		outState.putInt(EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
+		outState.putInt(Extra.FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
 		super.onSaveInstanceState(outState);
 	}
 
 	private void isRecreated(Bundle state) {
 		boolean isRecreated;
 
-		if (!state.containsKey(EXTRA_IS_RECREATED))
+		if (!state.containsKey(Extra.IS_RECREATED))
 			isRecreated = false;
 		else
-			isRecreated = state.getBoolean(EXTRA_IS_RECREATED);
+			isRecreated = state.getBoolean(Extra.IS_RECREATED);
 
 		setIsRecreated(isRecreated);
 	}
@@ -263,10 +261,10 @@ public class POIsListActivity extends ListActivity implements
 				createWhereValues(), "");
 		Cursor wrappingCursor = createCursorWrapper(cursor);
 		startManagingCursor(wrappingCursor);
-		
+
 		POIsListCursorAdapter adapter = new POIsListCursorAdapter(this,
 				wrappingCursor, true);
-		mPullToRefreshListView.getRefreshableView().setAdapter( adapter );
+		mPullToRefreshListView.getRefreshableView().setAdapter(adapter);
 		Log.d(TAG, "runQuery: mFirstVisible = " + mFirstVisiblePosition);
 		getListView().setSelection(mFirstVisiblePosition);
 
@@ -329,7 +327,7 @@ public class POIsListActivity extends ListActivity implements
 		long poiId = Long.parseLong(new_pois.getLastPathSegment());
 		Intent i = new Intent(POIsListActivity.this,
 				POIDetailActivityEditable.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		i.putExtra(Extra.POI_ID, poiId);
 		startActivity(i);
 
 	}
@@ -337,7 +335,7 @@ public class POIsListActivity extends ListActivity implements
 	public void onSearchClick(View v) {
 		final Intent intent = new Intent(POIsListActivity.this,
 				SearchActivity.class);
-		intent.putExtra(SearchActivity.EXTRA_SHOW_DISTANCE, true);
+		intent.putExtra(Extra.SHOW_DISTANCE, true);
 		startActivityForResult(intent, SearchActivity.PERFORM_SEARCH);
 	}
 
@@ -366,7 +364,7 @@ public class POIsListActivity extends ListActivity implements
 
 		long poiId = POIHelper.getId(cursor);
 		Intent i = new Intent(POIsListActivity.this, POIDetailActivity.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiId);
+		i.putExtra(Extra.POI_ID, poiId);
 		startActivity(i);
 	}
 
@@ -397,13 +395,12 @@ public class POIsListActivity extends ListActivity implements
 			mState.mSyncing = false;
 			updateRefreshStatus();
 			final SyncServiceException e = resultData
-					.getParcelable(SyncService.EXTRA_ERROR);
+					.getParcelable(Extra.EXCEPTION);
 			showErrorDialog(e);
 			break;
 		}
-		case MyLocationManager.WHAT_LOCATION_MANAGER_UPDATE: {
-			mLocation = (Location) resultData
-					.getParcelable(MyLocationManager.EXTRA_LOCATION_MANAGER_LOCATION);
+		case What.LOCATION_MANAGER_UPDATE: {
+			mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
 			break;
 		}
 		}
@@ -457,10 +454,10 @@ public class POIsListActivity extends ListActivity implements
 	private void requestData() {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				POIsListActivity.this, SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mState.mReceiver);
-		intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
-		intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
+		intent.putExtra(Extra.STATUS_RECEIVER, mState.mReceiver);
+		intent.putExtra(Extra.LOCATION, mLocation);
+		intent.putExtra(Extra.DISTANCE_LIMIT, mDistance);
 		startService(intent);
 		mLastQueryLocation = mLocation;
 	}

@@ -33,6 +33,8 @@ import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -150,7 +152,7 @@ public class POIDetailActivity extends MapActivity implements
 			}
 			Log.d(TAG, "onCreate: wmId = " + wmID);
 		} else {
-			poiID = getIntent().getLongExtra(Wheelmap.POIs.EXTRAS_POI_ID, -1);
+			poiID = getIntent().getLongExtra(Extra.POI_ID, -1);
 			Log.d(TAG, "onCreate: poiID = " + poiID);
 		}
 	}
@@ -204,9 +206,9 @@ public class POIDetailActivity extends MapActivity implements
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, this,
 				SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODE);
-		intent.putExtra(SyncService.EXTRA_WHEELMAP_ID, id);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODE);
+		intent.putExtra(Extra.WM_ID, id);
+		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
 		startService(intent);
 	}
 
@@ -214,7 +216,7 @@ public class POIDetailActivity extends MapActivity implements
 		// Launch overall conference schedule
 		Intent i = new Intent(POIDetailActivity.this,
 				POIDetailActivityEditable.class);
-		i.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, poiID);
+		i.putExtra(Extra.POI_ID, poiID);
 		startActivity(i);
 	}
 
@@ -263,8 +265,7 @@ public class POIDetailActivity extends MapActivity implements
 
 		Intent sharingIntent = new Intent(Intent.ACTION_SEND);
 		sharingIntent.setType("text/plain");
-		sharingIntent
-				.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
+		sharingIntent.putExtra(Intent.EXTRA_TEXT, sb.toString());
 		startActivity(Intent.createChooser(sharingIntent, getResources()
 				.getString(R.string.title_share_using)));
 	}
@@ -404,8 +405,9 @@ public class POIDetailActivity extends MapActivity implements
 				public void onClick(View v) {
 					Intent i = new Intent(POIDetailActivity.this,
 							POIsMapsforgeActivity.class);
-					i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
-					i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
+					i.putExtra(Extra.CENTER_MAP, true);
+					i.putExtra(Extra.LATITUDE, lat);
+					i.putExtra(Extra.LONGITUDE, lon);
 					startActivity(i);
 
 				}
@@ -477,8 +479,7 @@ public class POIDetailActivity extends MapActivity implements
 
 					final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 							POIDetailActivity.this, SyncService.class);
-					intent.putExtra(SyncService.EXTRA_WHAT,
-							SyncService.WHAT_UPDATE_SERVER);
+					intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
 					startService(intent);
 
 					load(poiID, false);
@@ -514,8 +515,9 @@ public class POIDetailActivity extends MapActivity implements
 
 		Intent i = new Intent(POIDetailActivity.this,
 				POIsMapsforgeActivity.class);
-		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LAT, lat);
-		i.putExtra(POIsMapsforgeActivity.EXTRA_CENTER_AT_LON, lon);
+		i.putExtra(Extra.CENTER_MAP, true);
+		i.putExtra(Extra.LATITUDE, lat);
+		i.putExtra(Extra.LONGITUDE, lon);
 
 		POIDetailActivity.this.startActivity(i);
 	}

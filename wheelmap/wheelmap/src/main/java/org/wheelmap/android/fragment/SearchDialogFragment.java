@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.wheelmap.android.model.CategoryNodeTypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.service.SyncService;
 
 import android.app.Dialog;
 import android.app.SearchManager;
@@ -35,8 +35,6 @@ import de.akquinet.android.androlog.Log;
 public class SearchDialogFragment extends SherlockDialogFragment implements
 		OnItemSelectedListener, OnClickListener, OnEditorActionListener {
 	public final static String TAG = SearchDialogFragment.class.getSimpleName();
-	public final static String ARGUMENT_SHOW_DISTANCE = "org.wheelmap.android.ARGUMENT_SHOW_DISTANCE";
-	public final static String ARGUMENT_SHOW_MAP_HINT = "org.wheelmap.android.ARGUMENT_SHOW_MAP_HINT";
 
 	public final static int PERFORM_SEARCH = 1;
 
@@ -55,8 +53,8 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		SearchDialogFragment dialog = new SearchDialogFragment();
 		Bundle b = new Bundle();
 
-		b.putBoolean(ARGUMENT_SHOW_DISTANCE, showDistance);
-		b.putBoolean(ARGUMENT_SHOW_MAP_HINT, showMapHint);
+		b.putBoolean(Extra.SHOW_DISTANCE, showDistance);
+		b.putBoolean(Extra.SHOW_MAP_HINT, showMapHint);
 		dialog.setArguments(b);
 		return dialog;
 
@@ -115,12 +113,12 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 		LinearLayout mapHintContainer = (LinearLayout) getDialog()
 				.findViewById(R.id.search_map_hint);
-		if (getArguments().getBoolean(ARGUMENT_SHOW_MAP_HINT))
+		if (getArguments().getBoolean(Extra.SHOW_MAP_HINT))
 			mapHintContainer.setVisibility(View.VISIBLE);
 
 		LinearLayout distanceContainer = (LinearLayout) getDialog()
 				.findViewById(R.id.search_spinner_distance_container);
-		if (getArguments().getBoolean(ARGUMENT_SHOW_DISTANCE))
+		if (getArguments().getBoolean(Extra.SHOW_DISTANCE))
 			distanceContainer.setVisibility(View.VISIBLE);
 	}
 
@@ -207,14 +205,14 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
 				+ mNodeTypeSelected);
 		if (mCategorySelected != -1)
-			bundle.putInt(SyncService.EXTRA_CATEGORY, mCategorySelected);
+			bundle.putInt(Extra.CATEGORY, mCategorySelected);
 		else if (mNodeTypeSelected != -1)
-			bundle.putInt(SyncService.EXTRA_NODETYPE, mNodeTypeSelected);
+			bundle.putInt(Extra.NODETYPE, mNodeTypeSelected);
 		else
-			bundle.putInt(SyncService.EXTRA_CATEGORY, -1);
+			bundle.putInt(Extra.CATEGORY, -1);
 
 		if (mDistance != -1)
-			bundle.putFloat(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
+			bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
 
 		OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
 		listener.onSearch(bundle);

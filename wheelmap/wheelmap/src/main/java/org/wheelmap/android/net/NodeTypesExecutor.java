@@ -21,8 +21,8 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support.NodeTypesContent;
-import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.Locale;
@@ -49,7 +49,7 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 
 	@Override
 	public void prepareContent() {
-		String locale = getBundle().getString(SyncService.EXTRA_LOCALE);
+		String locale = getBundle().getString(Extra.LOCALE);
 		if (locale != null && !locale.equals("de")) {
 			mLocale = new Locale(locale);
 		}

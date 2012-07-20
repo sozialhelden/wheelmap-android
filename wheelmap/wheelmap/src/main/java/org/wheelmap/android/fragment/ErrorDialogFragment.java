@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 
@@ -34,7 +35,6 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ErrorDialogFragment extends SherlockDialogFragment implements
 		DialogInterface.OnClickListener {
-	private final static String ARGUMENT_EXCEPTION = "org.wheelmap.android.ARGUMENT_EXCEPTION";
 	public static final String TAG = ErrorDialogFragment.class.getSimpleName();
 	static boolean isShowing;
 	private OnErrorDialogListener mListener;
@@ -51,7 +51,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		ErrorDialogFragment dialog = new ErrorDialogFragment();
 		Bundle b = new Bundle();
 
-		b.putParcelable(ARGUMENT_EXCEPTION, e);
+		b.putParcelable(Extra.EXCEPTION, e);
 		dialog.setArguments(b);
 		return dialog;
 	}
@@ -68,8 +68,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
 				getActivity());
 
-		SyncServiceException e = getArguments().getParcelable(
-				ARGUMENT_EXCEPTION);
+		SyncServiceException e = getArguments().getParcelable(Extra.EXCEPTION);
 
 		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
 			builder.setTitle(R.string.error_network_title);

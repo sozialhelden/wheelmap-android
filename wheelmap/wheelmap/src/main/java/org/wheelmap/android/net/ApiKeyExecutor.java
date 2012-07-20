@@ -28,8 +28,8 @@ import java.net.URISyntaxException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.UserCredentials;
-import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.apikey.AuthInfo;
@@ -59,8 +59,8 @@ public class ApiKeyExecutor extends AbstractExecutor {
 
 	@Override
 	public void prepareContent() {
-		mEmail = getBundle().getString(SyncService.EXTRA_EMAIL);
-		mPassword = getBundle().getString(SyncService.EXTRA_PASSWORD);
+		mEmail = getBundle().getString(Extra.EMAIL);
+		mPassword = getBundle().getString(Extra.PASSWORD);
 	}
 
 	@Override

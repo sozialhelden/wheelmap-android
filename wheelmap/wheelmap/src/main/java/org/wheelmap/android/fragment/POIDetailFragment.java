@@ -11,9 +11,10 @@ import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.model.CursorLoaderHelper;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
@@ -31,7 +32,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,10 +55,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		OnClickListener, OnTapListener, LoaderCallbacks<Cursor>,
 		DetachableResultReceiver.Receiver {
 
-	public final static String TAG = "poidetail";
-
-	private final static String EXTRA_WM_ID = "org.wheelmap.android.WM_ID";
-	private final static String EXTRA_POI_ID = "org.wheelmap.android.POI_ID";
+	public final static String TAG = POIDetailFragment.class.getSimpleName();
 	private final static int LOADER_CONTENT = 0;
 
 	@InjectView(R.id.title_container)
@@ -114,7 +111,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	public static POIDetailFragment newInstanceWithWMID(Long wmID) {
 		Bundle b = new Bundle();
-		b.putLong(EXTRA_WM_ID, wmID);
+		b.putLong(Extra.WM_ID, wmID);
 		POIDetailFragment f = new POIDetailFragment();
 		f.setArguments(b);
 		return f;
@@ -122,7 +119,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	public static POIDetailFragment newInstanceWithPOIID(Long poiID) {
 		Bundle b = new Bundle();
-		b.putLong(EXTRA_POI_ID, poiID);
+		b.putLong(Extra.POI_ID, poiID);
 		POIDetailFragment f = new POIDetailFragment();
 		f.setArguments(b);
 		return f;
@@ -139,12 +136,11 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (getArguments() != null) {
-			wmID = getArguments().getLong(EXTRA_WM_ID, -1);
-			if (wmID != -1) {
-				requestData(wmID);
-			}
-		}
+
+		if (savedInstanceState != null)
+			executeState(savedInstanceState);
+		else
+			executeState(getArguments());
 
 		setHasOptionsMenu(true);
 
@@ -224,6 +220,17 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		super.onStop();
 	}
 
+	public void executeState(Bundle bundle) {
+		if (bundle == null)
+			return;
+
+		poiID = bundle.getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
+		wmID = bundle.getLong(Extra.WM_ID, Extra.ID_UNKNOWN);
+
+		if (poiID == Extra.ID_UNKNOWN && wmID != Extra.ID_UNKNOWN)
+			requestData(wmID);
+	}
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -243,6 +250,12 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public void onDetach() {
 		super.onDetach();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putLong(Extra.POI_ID, poiID);
 	}
 
 	@Override
@@ -294,9 +307,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
 				getActivity(), SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODE);
-		intent.putExtra(SyncService.EXTRA_WHEELMAP_ID, wmID);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODE);
+		intent.putExtra(Extra.WM_ID, wmID);
+		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
 		getActivity().startService(intent);
 	}
 
@@ -346,28 +359,10 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
-		if (arguments != null) {
-			poiID = arguments.getLong(EXTRA_POI_ID, -1);
-			wmID = arguments.getLong(EXTRA_WM_ID, -1);
-		}
-
-		String whereClause = null;
-		String whereValues[] = null;
-
-		Uri uri = null;
-		if (poiID != -1l) {
-			uri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-					String.valueOf(poiID));
-			whereValues = null;
-		} else if (wmID != -1l) {
-			whereClause = "( " + POIs.WM_ID + " = ? )";
-
-			whereValues = new String[] { String.valueOf(wmID) };
-			uri = Wheelmap.POIs.CONTENT_URI;
-		}
-
-		return new CursorLoader(getActivity(), uri, null, whereClause,
-				whereValues, null);
+		if (poiID != Extra.ID_UNKNOWN)
+			return CursorLoaderHelper.createPOIIdLoader(poiID);
+		else
+			return CursorLoaderHelper.createWMIdLoader(wmID);
 	}
 
 	@Override
@@ -381,10 +376,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	private void load(Cursor c) {
-		if (c == null)
-			return;
-
-		if (c.getCount() < 1)
+		if (c == null || c.getCount() < 1)
 			return;
 
 		c.moveToFirst();
@@ -514,7 +506,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		sb.append("http://wheelmap.org/nodes/" + String.valueOf(wmId));
 		Intent intent = createExternIntent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
-		intent.putExtra(android.content.Intent.EXTRA_TEXT, sb.toString());
+		intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
 		mShareActionProvider.setShareIntent(intent);
 	}
 

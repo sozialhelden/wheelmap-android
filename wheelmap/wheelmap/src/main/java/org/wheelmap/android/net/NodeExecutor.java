@@ -26,9 +26,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.node.SingleNode;
@@ -56,7 +56,7 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 
 	@Override
 	public void prepareContent() {
-		mNodeId = getBundle().getLong(SyncService.EXTRA_WHEELMAP_ID);
+		mNodeId = getBundle().getLong(Extra.WM_ID);
 	}
 
 	@Override
