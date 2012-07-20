@@ -85,28 +85,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <include layout="@layout/seperator" />
+                <include layout="@layout/separator" />
 
                 <TextView
                     android:id="@+id/nodetype"
                     style="@style/DetailFont"
                     android:hint="@string/poi_property_nodetype" />
 
-                <include layout="@layout/seperator" />
+                <include layout="@layout/separator" />
 
                 <TextView
                     android:id="@+id/comment"
                     style="@style/DetailFont"
                     android:hint="@string/poi_property_comment" />
 
-                <include layout="@layout/seperator" />
+                <include layout="@layout/separator" />
 
                 <TextView
                     android:id="@+id/addr"
                     style="@style/DetailFont"
                     android:hint="@string/poi_property_address" />
 
-                <include layout="@layout/seperator" />
+                <include layout="@layout/separator" />
 
                 <TextView
                     android:id="@+id/phone"
@@ -115,7 +115,7 @@
                     android:hint="@string/poi_property_phone"
                     android:textColorLink="@color/black" />
 
-                <include layout="@layout/seperator" />
+                <include layout="@layout/separator" />
 
                 <TextView
                     android:id="@+id/website"

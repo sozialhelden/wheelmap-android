@@ -46,19 +46,20 @@ import com.actionbarsherlock.app.SherlockFragment;
 import de.akquinet.android.androlog.Log;
 
 public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
-		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor> {
+		WorkerFragment, DetachableResultReceiver.Receiver,
+		LoaderCallbacks<Cursor> {
 	public final static String TAG = POIsMapsforgeWorkerFragment.class
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 
-	OnPOIsMapsforgeWorkerListener mListener;
+	private DisplayFragment mDisplayFragment;
+	private OnPOIsMapsforgeWorkerListener mListener;
 	private DetachableResultReceiver mReceiver;
 
 	private MyLocationManager mLocationManager;
 	private Location mLocation;
 	private Cursor mCursor;
 
-	boolean mSyncing;
 	boolean isSearchMode;
 	private boolean mRefreshStatus;
 	private GeoPoint mGeoPoint;
@@ -67,8 +68,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		void onError(SyncServiceException e);
 
 		void onSearchModeChange(boolean isSearchMode);
-
-		void onRefreshStatusChange(boolean refreshStatus);
 	}
 
 	public POIsMapsforgeWorkerFragment() {
@@ -100,7 +99,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_ID_LIST, null, this);
-		updateListener();
 	}
 
 	@Override
@@ -136,47 +134,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		super.onDetach();
 	}
 
-	public void executeSearch(Bundle extras) {
-		if (!extras.containsKey(SearchManager.QUERY)
-				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
-				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
-			return;
-
-		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
-			int what;
-			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
-					|| extras.containsKey(SyncService.EXTRA_NODETYPE))
-				what = SyncService.WHAT_RETRIEVE_NODES;
-			else
-				what = SyncService.WHAT_SEARCH_NODES_IN_BOX;
-
-			extras.putInt(SyncService.EXTRA_WHAT, what);
-		}
-
-		extras.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
-
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(extras);
-		getActivity().startService(intent);
-		setSearchMode(true);
-		updateSearchStatus();
-	}
-
-	protected void requestUpdate(Bundle extras) {
-		if (isSearchMode)
-			return;
-
-		// trigger off background sync
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(extras);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
-		getActivity().startService(intent);
-	}
-
 	private GeoPoint calcGeoPoint(Location location) {
 		int lat = (int) (location.getLatitude() * 1E6);
 		int lng = (int) (location.getLongitude() * 1E6);
@@ -188,15 +145,15 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		Log.d(TAG, "onReceiveResult in mapsforge resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
-			updateRefreshStatus(true);
+			setRefreshStatus(true);
 			break;
 		}
 		case SyncService.STATUS_FINISHED: {
-			updateRefreshStatus(false);
+			setRefreshStatus(false);
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
-			updateRefreshStatus(false);
+			setRefreshStatus(false);
 			SyncServiceException e = resultData
 					.getParcelable(SyncService.EXTRA_ERROR);
 			if (mListener != null)
@@ -209,42 +166,31 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 			mGeoPoint = calcGeoPoint(location);
 			mLocation = location;
 
-			updateTargetGeoLocation(false);
+			updateDisplayLocation();
 			break;
 		}
 
 		}
 	}
 
-	public void updateTargetGeoLocation(boolean force) {
-		POIsMapsforgeFragment fragment = (POIsMapsforgeFragment) getTargetFragment();
-
-		fragment.centerMap(mGeoPoint, force);
-		fragment.updateCurrentLocation(mGeoPoint, mLocation);
+	private void updateDisplayLocation() {
+		if (mDisplayFragment != null)
+			mDisplayFragment.setCurrentLocation(mGeoPoint, mLocation);
 	}
 
-	private void updateListener() {
-		updateRefreshStatus(mRefreshStatus);
-		updateSearchStatus();
-	}
-
-	private void connectValues() {
-		((POIsMapsforgeFragment) getTargetFragment()).setCursor(mCursor);
-	}
-
-	private void updateRefreshStatus(boolean refreshStatus) {
-		mRefreshStatus = refreshStatus;
-		if (mListener != null)
-			mListener.onRefreshStatusChange(refreshStatus);
-	}
-
-	public void setSearchMode(boolean isSearchMode) {
+	private void setSearchModeInternal(boolean isSearchMode) {
 		this.isSearchMode = isSearchMode;
+		update();
 	}
 
-	private void updateSearchStatus() {
-		if (mListener != null)
-			mListener.onSearchModeChange(isSearchMode);
+	private void setRefreshStatus(boolean refreshState) {
+		mRefreshStatus = refreshState;
+		update();
+	}
+
+	private void update() {
+		if (mDisplayFragment != null)
+			mDisplayFragment.onUpdate(this);
 	}
 
 	@Override
@@ -264,7 +210,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 				"cursorloader - switching cursors in adapter - cursor size = "
 						+ cursor.getCount());
 		mCursor = cursor;
-		connectValues();
+		update();
 	}
 
 	@Override
@@ -272,4 +218,74 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		Log.d(TAG, "onLoaderReset - why is that?");
 	}
 
+	@Override
+	public void requestSearch(Bundle bundle) {
+		if (!bundle.containsKey(SearchManager.QUERY)
+				&& !bundle.containsKey(SyncService.EXTRA_CATEGORY)
+				&& !bundle.containsKey(SyncService.EXTRA_NODETYPE)
+				&& !bundle.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+			return;
+
+		if (!bundle.containsKey(SyncService.EXTRA_WHAT)) {
+			int what;
+			if (bundle.containsKey(SyncService.EXTRA_CATEGORY)
+					|| bundle.containsKey(SyncService.EXTRA_NODETYPE))
+				what = SyncService.WHAT_RETRIEVE_NODES;
+			else
+				what = SyncService.WHAT_SEARCH_NODES_IN_BOX;
+
+			bundle.putInt(SyncService.EXTRA_WHAT, what);
+		}
+
+		bundle.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				getActivity(), SyncService.class);
+		intent.putExtras(bundle);
+		getActivity().startService(intent);
+		setSearchMode(true);
+	}
+
+	@Override
+	public void requestUpdate(Bundle bundle) {
+		if (isSearchMode)
+			return;
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				getActivity(), SyncService.class);
+		intent.putExtras(bundle);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		getActivity().startService(intent);
+	}
+
+	@Override
+	public void registerDisplayFragment(DisplayFragment fragment) {
+		mDisplayFragment = fragment;
+	}
+
+	@Override
+	public void unregisterDisplayFragment(DisplayFragment fragment) {
+		mDisplayFragment = null;
+	}
+
+	@Override
+	public Cursor getCursor() {
+		return mCursor;
+	}
+
+	@Override
+	public boolean isRefreshing() {
+		return mRefreshStatus;
+	}
+
+	@Override
+	public boolean isSearchMode() {
+		return isSearchMode;
+	}
+
+	@Override
+	public void setSearchMode(boolean isSearchMode) {
+		this.isSearchMode = isSearchMode;
+	}
 }

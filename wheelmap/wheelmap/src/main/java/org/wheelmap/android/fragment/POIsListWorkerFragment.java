@@ -50,17 +50,19 @@ import com.actionbarsherlock.app.SherlockFragment;
 import de.akquinet.android.androlog.Log;
 
 public class POIsListWorkerFragment extends SherlockFragment implements
-		DetachableResultReceiver.Receiver, LoaderCallbacks<Cursor>,
-		OnSearchDialogListener {
+		WorkerFragment, DetachableResultReceiver.Receiver,
+		LoaderCallbacks<Cursor>, OnSearchDialogListener {
 	public static final String TAG = POIsListWorkerFragment.class
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
 	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
 
+	private DisplayFragment mDisplayFragment;
+
 	private OnPOIsListWorkerListener mListener;
 	private DetachableResultReceiver mReceiver;
-	private boolean mSyncing = false;
+	private boolean mRefreshStatus = false;
 
 	private MyLocationManager mLocationManager;
 	private Location mLocation;
@@ -68,7 +70,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	private Cursor mCursor;
 
 	public interface OnPOIsListWorkerListener {
-		public void onRefreshStatusChange(boolean refresh);
 
 		public void onError(SyncServiceException e);
 	}
@@ -97,7 +98,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		mLocationManager = MyLocationManager.get(mReceiver, true);
 		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
-		requestData();
+		requestUpdate(null);
 	}
 
 	@Override
@@ -144,16 +145,15 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
-			updateRefreshStatus(true);
+			setRefreshStatus(true);
 			break;
 		}
 		case SyncService.STATUS_FINISHED: {
-			updateRefreshStatus(false);
+			setRefreshStatus(false);
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
-			// Error happened down in SyncService, show as toast.
-			updateRefreshStatus(false);
+			setRefreshStatus(false);
 			final SyncServiceException e = resultData
 					.getParcelable(SyncService.EXTRA_ERROR);
 			if (mListener != null)
@@ -168,54 +168,9 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		}
 	}
 
-	private void updateRefreshStatus(boolean syncing) {
-		mSyncing = syncing;
-		((POIsListFragment) getTargetFragment()).updateRefreshStatus(mSyncing);
-
-		if (mListener != null)
-			mListener.onRefreshStatusChange(mSyncing);
-	}
-
-	protected void requestData() {
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
-		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
-		intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
-		intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
-		getActivity().startService(intent);
-	}
-
-	private void executeSearch(Bundle extras) {
-		if (!extras.containsKey(SearchManager.QUERY)
-				&& !extras.containsKey(SyncService.EXTRA_CATEGORY)
-				&& !extras.containsKey(SyncService.EXTRA_NODETYPE)
-				&& !extras.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
-			return;
-
-		if (extras.getInt(SyncService.EXTRA_CATEGORY) == -1)
-			extras.remove(SyncService.EXTRA_CATEGORY);
-
-		if (!extras.containsKey(SyncService.EXTRA_WHAT)) {
-			int what;
-			if (extras.containsKey(SyncService.EXTRA_CATEGORY)
-					|| extras.containsKey(SyncService.EXTRA_NODETYPE))
-				what = SyncService.WHAT_RETRIEVE_NODES;
-			else
-				what = SyncService.WHAT_SEARCH_NODES;
-
-			extras.putInt(SyncService.EXTRA_WHAT, what);
-		}
-
-		if (extras.containsKey(SyncService.EXTRA_DISTANCE_LIMIT))
-			extras.putParcelable(SyncService.EXTRA_LOCATION, mLocation);
-
-		extras.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
-
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(extras);
-		getActivity().startService(intent);
+	private void setRefreshStatus(boolean refreshState) {
+		mRefreshStatus = refreshState;
+		update();
 	}
 
 	private float getDistanceFromPreferences() {
@@ -226,17 +181,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE,
 				String.valueOf(QUERY_DISTANCE_DEFAULT));
 		return Float.valueOf(prefDist);
-	}
-
-	private void connectValues() {
-		POIsListFragment fragment = (POIsListFragment) getTargetFragment();
-		if (fragment == null)
-			return;
-
-		Log.d(TAG, "setting stuff on target " + fragment.hashCode());
-		fragment.setCursor(mCursor);
-
-		updateRefreshStatus(mSyncing);
 	}
 
 	@Override
@@ -261,7 +205,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		Log.d(TAG, "cursorloader - new cursor - cursor size = "
 				+ wrappingCursor.getCount());
 		mCursor = wrappingCursor;
-		connectValues();
+		update();
 	}
 
 	@Override
@@ -271,6 +215,84 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public void onSearch(Bundle bundle) {
-		executeSearch(bundle);
+		requestSearch(bundle);
+	}
+
+	public void update() {
+		if (mDisplayFragment != null)
+			mDisplayFragment.onUpdate(this);
+	}
+
+	@Override
+	public void registerDisplayFragment(DisplayFragment fragment) {
+		mDisplayFragment = fragment;
+	}
+
+	@Override
+	public void unregisterDisplayFragment(DisplayFragment fragment) {
+		mDisplayFragment = null;
+	}
+
+	@Override
+	public void requestUpdate(Bundle bundle) {
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				getActivity(), SyncService.class);
+		intent.putExtra(SyncService.EXTRA_WHAT, SyncService.WHAT_RETRIEVE_NODES);
+		intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+		intent.putExtra(SyncService.EXTRA_LOCATION, mLocation);
+		intent.putExtra(SyncService.EXTRA_DISTANCE_LIMIT, mDistance);
+		getActivity().startService(intent);
+	}
+
+	@Override
+	public void requestSearch(Bundle bundle) {
+		if (!bundle.containsKey(SearchManager.QUERY)
+				&& !bundle.containsKey(SyncService.EXTRA_CATEGORY)
+				&& !bundle.containsKey(SyncService.EXTRA_NODETYPE)
+				&& !bundle.containsKey(SyncService.EXTRA_WHEELCHAIR_STATE))
+			return;
+
+		if (bundle.getInt(SyncService.EXTRA_CATEGORY) == -1)
+			bundle.remove(SyncService.EXTRA_CATEGORY);
+
+		if (!bundle.containsKey(SyncService.EXTRA_WHAT)) {
+			int what;
+			if (bundle.containsKey(SyncService.EXTRA_CATEGORY)
+					|| bundle.containsKey(SyncService.EXTRA_NODETYPE))
+				what = SyncService.WHAT_RETRIEVE_NODES;
+			else
+				what = SyncService.WHAT_SEARCH_NODES;
+
+			bundle.putInt(SyncService.EXTRA_WHAT, what);
+		}
+
+		if (bundle.containsKey(SyncService.EXTRA_DISTANCE_LIMIT))
+			bundle.putParcelable(SyncService.EXTRA_LOCATION, mLocation);
+
+		bundle.putParcelable(SyncService.EXTRA_STATUS_RECEIVER, mReceiver);
+
+		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+				getActivity(), SyncService.class);
+		intent.putExtras(bundle);
+		getActivity().startService(intent);
+	}
+
+	@Override
+	public Cursor getCursor() {
+		return mCursor;
+	}
+
+	@Override
+	public boolean isRefreshing() {
+		return mRefreshStatus;
+	}
+
+	@Override
+	public boolean isSearchMode() {
+		return false;
+	}
+
+	@Override
+	public void setSearchMode(boolean isSearchMode) {
 	}
 }

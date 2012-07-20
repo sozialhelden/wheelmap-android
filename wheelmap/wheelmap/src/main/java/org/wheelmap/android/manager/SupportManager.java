@@ -76,6 +76,8 @@ public class SupportManager {
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 
+	public final static int UNKNOWN_TYPE = 0;
+
 	public final static Map<WheelchairState, WheelchairAttributes> wsAttributes = new HashMap<WheelchairState, WheelchairAttributes>();
 
 	public static class WheelchairAttributes {
@@ -144,9 +146,9 @@ public class SupportManager {
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
 		mAssetManager = mContext.getAssets();
 
-		mDefaultCategory = new Category(0, "unknown",
+		mDefaultCategory = new Category(UNKNOWN_TYPE, "unknown",
 				mContext.getString(R.string.support_category_unknown));
-		mDefaultNodeType = new NodeType(0, "unknown",
+		mDefaultNodeType = new NodeType(UNKNOWN_TYPE, "unknown",
 				mContext.getString(R.string.support_nodetype_unknown), 0);
 		mDefaultNodeType.stateDrawables = createDefaultDrawables();
 

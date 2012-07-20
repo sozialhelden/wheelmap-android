@@ -14,8 +14,8 @@
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_huge">16dp</dimen>
     <dimen name="margin_vertical_section">16dp</dimen>
-    <dimen name="seperator_small">1dp</dimen>
-	<dimen name="seperator_large">4dp</dimen>
-	<dimen name="seperator_medium">2dp</dimen>
+    <dimen name="separator_small">1dp</dimen>
+	<dimen name="separator_large">4dp</dimen>
+	<dimen name="separator_medium">2dp</dimen>
     
 </resources>

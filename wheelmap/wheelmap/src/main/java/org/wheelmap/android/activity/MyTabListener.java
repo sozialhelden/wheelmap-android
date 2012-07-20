@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.fragment.OnExecuteBundle;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
@@ -51,17 +52,21 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		Log.d(TAG, "onTabSelected tag = " + mTag.name);
-		FragmentManager fm = mActivity.getSupportFragmentManager();
 
-		Bundle executeBundle = mTag.getExecuteBundle();
-		if (mFragment == null || executeBundle != null) {
+		if (mFragment == null) {
 			mFragment = SherlockFragment.instantiate(mActivity,
-					mClass.getName(), executeBundle);
+					mClass.getName(), null);
+			FragmentManager fm = mActivity.getSupportFragmentManager();
 			fm.beginTransaction()
 					.replace(R.id.root_layout, mFragment, mTag.name).commit();
 
 		} else {
 			Log.d(TAG, "Fragment mFragment = " + mFragment.toString());
+		}
+
+		Bundle executeBundle = mTag.getExecuteBundle();
+		if (executeBundle != null && mFragment instanceof OnExecuteBundle) {
+			((OnExecuteBundle) mFragment).executeBundle(executeBundle);
 		}
 
 		if (listener != null)
@@ -85,6 +90,11 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		Log.d(TAG, "onTabReselected: tag = " + mTag.name);
+
+		Bundle executeBundle = mTag.getExecuteBundle();
+		if (executeBundle != null && mFragment instanceof OnExecuteBundle) {
+			((OnExecuteBundle) mFragment).executeBundle(executeBundle);
+		}
 	}
 
 	public interface OnStateListener {

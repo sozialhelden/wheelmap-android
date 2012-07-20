@@ -15,6 +15,7 @@ import org.wheelmap.android.fragment.POIsMapsforgeFragment.OnPOIsMapsforgeListen
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerListener;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
@@ -58,6 +59,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_main_singlepane);
 		setSupportProgressBarIndeterminateVisibility(false);
+
+		getSupportFragmentManager().enableDebugLogging(true);
 
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
@@ -205,8 +208,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		cv.put(Wheelmap.POIs.COORD_LAT, Math.ceil(location.getLatitude() * 1E6));
 		cv.put(Wheelmap.POIs.COORD_LON,
 				Math.ceil(location.getLongitude() * 1E6));
-		cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
-		cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
+		cv.put(Wheelmap.POIs.CATEGORY_ID, SupportManager.UNKNOWN_TYPE);
+		cv.put(Wheelmap.POIs.NODETYPE_ID, SupportManager.UNKNOWN_TYPE);
 
 		Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI,
 				cv);
@@ -236,21 +239,21 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onSearchModeChange(boolean isSearchMode) {
-
-	}
-
-	@Override
-	public void onRefreshStatusChange(boolean refreshStatus) {
-		Log.d(TAG, "onRefreshStatusChange refreshStatus = " + refreshStatus);
-		setSupportProgressBarIndeterminateVisibility(refreshStatus);
-	}
-
-	@Override
 	public void onShowDetail(long id) {
 		Intent intent = new Intent(this, POIDetailActivity.class);
 		intent.putExtra(Wheelmap.POIs.EXTRAS_POI_ID, id);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onRefreshing(boolean isRefreshing) {
+		Log.d(TAG, "onRefreshStatusChange isRefreshing = " + isRefreshing);
+		setSupportProgressBarIndeterminateVisibility(isRefreshing);
+	}
+
+	@Override
+	public void onSearchModeChange(boolean isSearchMode) {
+
 	}
 
 	static {

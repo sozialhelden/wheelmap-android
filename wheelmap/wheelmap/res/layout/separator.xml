@@ -28,12 +28,12 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/seperator_small"
+        android:layout_height="@dimen/separator_small"
         android:background="@color/seperator_color_dark_a" />
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/seperator_small"
+        android:layout_height="@dimen/separator_small"
         android:background="@color/seperator_color_dark_b" />
 
 </LinearLayout>

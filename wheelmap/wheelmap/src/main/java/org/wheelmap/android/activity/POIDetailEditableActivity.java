@@ -37,11 +37,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 
 public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		OnPOIDetailEditableListener, OnLoginDialogListener,
-		OnEditPositionListener, OnNodetypeSelectListener {
+		OnEditPositionListener, OnNodetypeSelectListener,
+		OnBackStackChangedListener {
 	private final static String TAG = POIDetailEditableActivity.class
 			.getSimpleName();
 
@@ -50,6 +52,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	private Long poiID;
 	private Fragment mFragment;
+	private ExternalEditableState mExternalEditableState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +61,12 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		poiID = getIntent().getLongExtra(
 				POIDetailEditableFragment.ARGUMENT_POI_ID, -1);
 
+		setExternalEditableState(savedInstanceState);
+
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
+		fm.addOnBackStackChangedListener(this);
 
 		mFragment = fm.findFragmentById(R.id.frame);
 		if (mFragment != null) {
@@ -73,6 +79,11 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 		fm.beginTransaction().add(R.id.frame, mFragment, POIDetailFragment.TAG)
 				.commit();
+
+	}
+
+	private void setExternalEditableState(Bundle savedInstanceState) {
+		mExternalEditableState = new ExternalEditableState();
 
 	}
 
@@ -106,9 +117,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				if (data != null) {
 					WheelchairState newState = WheelchairState.valueOf(Integer
 							.parseInt(data.getAction()));
-					((POIDetailEditableFragment) mFragment)
-							.setWheelchairState(newState);
-
+					mEditorFragment.setWheelchairState(newState);
 				}
 			}
 		}
@@ -141,8 +150,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onEditPosition(int latitude, int longitude) {
-		((POIDetailEditableFragment) mFragment).setGeolocation(latitude,
-				longitude);
+		mEditorFragment.setGeolocation(latitude, longitude);
 		getSupportFragmentManager().popBackStack();
 	}
 
@@ -159,7 +167,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onSelect(int nodetype) {
-		((POIDetailEditableFragment) mFragment).setNodetype(nodetype);
+		mExternalEditableState.nodetype = nodetype;
 		getSupportFragmentManager().popBackStack();
 	}
 
@@ -171,6 +179,20 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onLoginCancelled() {
 		finish();
+	}
+
+	@Override
+	public void onBackStackChanged() {
+		FragmentManager fm = getSupportFragmentManager();
+		mFragment = fm.findFragmentById(R.id.frame);
+	}
+
+	public static class ExternalEditableState {
+
+		WheelchairState state = null;
+		int nodetype = -1;
+		int latitude = -1;
+		int longitude = -1;
 	}
 
 }

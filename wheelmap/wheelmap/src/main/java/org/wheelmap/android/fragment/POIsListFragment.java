@@ -21,13 +21,17 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.online.R;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,21 +49,25 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import de.akquinet.android.androlog.Log;
 
 public class POIsListFragment extends SherlockListFragment implements
-		OnRefreshListener {
+		DisplayFragment, OnSearchDialogListener, OnRefreshListener,
+		OnExecuteBundle {
 	public static final String TAG = POIsListFragment.class.getSimpleName();
 	public final static String EXTRA_FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
 	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
 
-	private POIsListWorkerFragment mWorkerFragment;
+	private WorkerFragment mWorkerFragment;
 
 	private PullToRefreshListView mPullToRefreshListView;
 	private int mFirstVisiblePosition = 0;
 
 	private OnPOIsListListener mListener;
 	private POIsListCursorAdapter mAdapter;
+	private Cursor mCursor;
 
 	public interface OnPOIsListListener {
 		public void onShowDetail(long id);
+
+		public void onRefreshing(boolean isRefreshing);
 	}
 
 	public POIsListFragment() {
@@ -112,15 +120,17 @@ public class POIsListFragment extends SherlockListFragment implements
 						.getBoolean(EXTRA_CREATE_WORKER_FRAGMENT, true)) {
 			Log.d(TAG, "onActivityCreated: checking workerfragment");
 			FragmentManager fm = getFragmentManager();
-			mWorkerFragment = (POIsListWorkerFragment) fm
+			Fragment fragment = (POIsListWorkerFragment) fm
 					.findFragmentByTag(POIsListWorkerFragment.TAG);
-			if (mWorkerFragment == null) {
-				mWorkerFragment = new POIsListWorkerFragment();
-				fm.beginTransaction()
-						.add(mWorkerFragment, POIsListWorkerFragment.TAG)
+			if (fragment == null) {
+				fragment = new POIsListWorkerFragment();
+				fm.beginTransaction().add(fragment, POIsListWorkerFragment.TAG)
 						.commit();
-				mWorkerFragment.setTargetFragment(this, 0);
+				fragment.setTargetFragment(this, 0);
 			}
+
+			mWorkerFragment = (WorkerFragment) fragment;
+			mWorkerFragment.registerDisplayFragment(this);
 		}
 
 	}
@@ -153,6 +163,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		mWorkerFragment.unregisterDisplayFragment(this);
 	}
 
 	@Override
@@ -173,6 +184,11 @@ public class POIsListFragment extends SherlockListFragment implements
 				.getFirstVisiblePosition();
 		outState.putInt(EXTRA_FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
 		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void executeBundle(Bundle bundle) {
+
 	}
 
 	@Override
@@ -199,7 +215,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onRefresh() {
 		mFirstVisiblePosition = 0;
 		if (mWorkerFragment != null)
-			mWorkerFragment.requestData();
+			mWorkerFragment.requestUpdate(null);
 	}
 
 	@Override
@@ -215,16 +231,27 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	}
 
-	public void setCursor(Cursor cursor) {
+	private void setCursor(Cursor cursor) {
+		Log.d(TAG, "setCursor cursor "
+				+ ((cursor != null) ? cursor.hashCode() : "null") + " count = "
+				+ ((cursor != null) ? cursor.getCount() : "null")
+				+ " isNewCursor = " + (cursor != mCursor));
+		if (cursor == mCursor)
+			return;
+
+		mCursor = cursor;
 		mAdapter.swapCursor(cursor);
 		refreshListPosition();
 	}
 
-	public void updateRefreshStatus(boolean status) {
-		if (status)
+	private void setRefreshStatus(boolean isRefreshing) {
+		if (isRefreshing)
 			mPullToRefreshListView.setRefreshing();
 		else
 			mPullToRefreshListView.onRefreshComplete();
+
+		if (mListener != null)
+			mListener.onRefreshing(isRefreshing);
 	}
 
 	private void refreshListPosition() {
@@ -241,8 +268,24 @@ public class POIsListFragment extends SherlockListFragment implements
 		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
 				true, false);
 
-		searchDialog.setTargetFragment(mWorkerFragment, 0);
+		searchDialog.setTargetFragment(this, 0);
 		searchDialog.show(fm, SearchDialogFragment.TAG);
+	}
+
+	@Override
+	public void onSearch(Bundle bundle) {
+		mWorkerFragment.requestSearch(bundle);
+	}
+
+	@Override
+	public void onUpdate(WorkerFragment fragment) {
+		setCursor(fragment.getCursor());
+		setRefreshStatus(fragment.isRefreshing());
+	}
+
+	@Override
+	public void setCurrentLocation(GeoPoint point, Location location) {
+
 	}
 
 }

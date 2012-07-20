@@ -43,7 +43,7 @@
                 style="@style/DetailFont.Editable"
                 android:hint="@string/poi_property_name" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <RelativeLayout
                 android:id="@+id/edit_nodetype"
@@ -67,7 +67,7 @@
                     android:src="@drawable/arrow" />
             </RelativeLayout>
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <RelativeLayout
                 android:id="@+id/edit_geolocation"
@@ -91,7 +91,7 @@
                     android:src="@drawable/arrow" />
             </RelativeLayout>
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <RelativeLayout
                 android:id="@+id/edit_wheelchairstate"
@@ -131,21 +131,21 @@
                 </ImageView>
             </RelativeLayout>
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/comment"
                 style="@style/DetailFont.Editable"
                 android:hint="@string/poi_property_comment" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/addr"
                 style="@style/DetailFont.Editable"
                 android:hint="@string/poi_property_address" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/phone"
@@ -153,7 +153,7 @@
                 android:autoLink="phone"
                 android:hint="@string/poi_property_phone" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/website"

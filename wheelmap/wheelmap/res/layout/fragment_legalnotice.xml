@@ -51,7 +51,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView
@@ -67,7 +67,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView
@@ -80,7 +80,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView
@@ -103,7 +103,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView
@@ -116,7 +116,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView
@@ -133,7 +133,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView
@@ -152,7 +152,7 @@
 
             <ImageView
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_medium"
+                android:layout_height="@dimen/separator_medium"
                 android:background="@color/light_grey_two" />
 
             <TextView

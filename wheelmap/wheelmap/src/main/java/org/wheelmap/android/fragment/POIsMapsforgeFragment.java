@@ -27,6 +27,7 @@ import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.overlay.OverlayItem;
+import org.wheelmap.android.activity.MapsforgeMapActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
@@ -42,10 +43,12 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -56,7 +59,8 @@ import com.actionbarsherlock.view.MenuItem;
 import de.akquinet.android.androlog.Log;
 
 public class POIsMapsforgeFragment extends SherlockFragment implements
-		OnMoveListener, OnZoomListener, OnTapListener, OnSearchDialogListener {
+		DisplayFragment, OnMoveListener, OnZoomListener, OnTapListener,
+		OnSearchDialogListener, OnExecuteBundle {
 	public final static String TAG = POIsMapsforgeFragment.class
 			.getSimpleName();
 	public final static String EXTRA_CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
@@ -64,14 +68,17 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public static final String EXTRA_CENTER_AT_LON = "org.wheelmap.android.CENTER_AT_LON";
 	public static final String EXTRA_CENTER_ZOOM = "org.wheelmap.android.CENTER_ZOOM";
 	public static final String EXTRA_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
+	public static final String EXTRA_DIRECT_RETRIEVAL = "org.wheelmap.android.DIRECT_RETRIEVAL";
 
-	private POIsMapsforgeWorkerFragment mWorkerFragment;
+	private WorkerFragment mWorkerFragment;
 
 	private MapView mMapView;
 	private MapController mMapController;
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 	private GeoPoint mLastRequestedPosition;
+
+	private Cursor mCursor;
 
 	private boolean isCentered;
 	private int oldZoomLevel = 18;
@@ -82,6 +89,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	public interface OnPOIsMapsforgeListener {
 		public void onShowDetail(long id);
+
+		public void onRefreshing(boolean isRefreshing);
+
 	}
 
 	private OnPOIsMapsforgeListener mListener;
@@ -148,15 +158,17 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 				|| getArguments()
 						.getBoolean(EXTRA_CREATE_WORKER_FRAGMENT, true)) {
 			FragmentManager fm = getFragmentManager();
-			mWorkerFragment = (POIsMapsforgeWorkerFragment) fm
+			Fragment fragment = (POIsMapsforgeWorkerFragment) fm
 					.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
-			if (mWorkerFragment == null) {
-				mWorkerFragment = new POIsMapsforgeWorkerFragment();
+			if (fragment == null) {
+				fragment = new POIsMapsforgeWorkerFragment();
 				fm.beginTransaction()
-						.add(mWorkerFragment, POIsMapsforgeWorkerFragment.TAG)
+						.add(fragment, POIsMapsforgeWorkerFragment.TAG)
 						.commit();
-				mWorkerFragment.setTargetFragment(this, 0);
+
 			}
+			mWorkerFragment = (WorkerFragment) fragment;
+			mWorkerFragment.registerDisplayFragment(this);
 		}
 
 		if (savedInstanceState != null)
@@ -188,6 +200,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		((MapsforgeMapActivity) getActivity()).destroyMapView(mMapView);
+		mWorkerFragment.unregisterDisplayFragment(this);
 		WheelmapApp.getSupportManager().cleanReferences();
 		System.gc();
 	}
@@ -202,11 +216,22 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		super.onDetach();
 	}
 
-	private void executeState(Bundle state) {
-		if (state.containsKey(EXTRA_CENTER_AT_LAT)) {
-			int lat = state.getInt(EXTRA_CENTER_AT_LAT);
-			int lon = state.getInt(EXTRA_CENTER_AT_LON);
-			int zoom = state.getInt(EXTRA_CENTER_ZOOM, MAP_ZOOM_DEFAULT);
+	@Override
+	public void executeBundle(Bundle bundle) {
+		bundle.putBoolean(EXTRA_DIRECT_RETRIEVAL, true);
+		executeState(bundle);
+	}
+
+	private void executeState(Bundle bundle) {
+		if (bundle == null)
+			return;
+
+		boolean doRequest = false;
+
+		if (bundle.containsKey(EXTRA_CENTER_AT_LAT)) {
+			int lat = bundle.getInt(EXTRA_CENTER_AT_LAT);
+			int lon = bundle.getInt(EXTRA_CENTER_AT_LON);
+			int zoom = bundle.getInt(EXTRA_CENTER_ZOOM, MAP_ZOOM_DEFAULT);
 
 			GeoPoint gp = new GeoPoint(lat, lon);
 			mMapController.setCenter(gp);
@@ -215,13 +240,31 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			mMapView.setZoomListener(this);
 			isCentered = true;
 			oldZoomLevel = zoom;
+			doRequest = true;
 		}
 
-		if (state.getBoolean(EXTRA_RETRIEVAL, false)) {
+		if (bundle.getBoolean(EXTRA_RETRIEVAL, false)) {
 			mMapController.setZoom(MAP_ZOOM_DEFAULT);
 			oldZoomLevel = MAP_ZOOM_DEFAULT;
-			requestUpdate();
+			doRequest = true;
 		}
+
+		if (doRequest && bundle.getBoolean(EXTRA_DIRECT_RETRIEVAL, false)) {
+			requestUpdate();
+			return;
+		}
+
+		if (doRequest)
+			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
+					new OnGlobalLayoutListener() {
+
+						@Override
+						public void onGlobalLayout() {
+							requestUpdate();
+							mMapView.getViewTreeObserver()
+									.removeGlobalOnLayoutListener(this);
+						}
+					});
 	}
 
 	@Override
@@ -322,7 +365,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		return bundle;
 	}
 
-	protected void centerMap(GeoPoint geoPoint, boolean force) {
+	private void centerMap(GeoPoint geoPoint, boolean force) {
 		if (!isCentered || force) {
 			mMapController.setCenter(geoPoint);
 			isCentered = true;
@@ -335,21 +378,16 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		}
 	}
 
-	protected void updateCurrentLocation(GeoPoint geoPoint, Location location) {
-		mLastGeoPointE6 = geoPoint;
-		mCurrLocationOverlay.setLocation(mLastGeoPointE6,
-				location.getAccuracy());
-	}
+	private void setCursor(Cursor cursor) {
+		Log.d(TAG, "setCursor cursor "
+				+ ((cursor != null) ? cursor.hashCode() : "null") + " count = "
+				+ ((cursor != null) ? cursor.getCount() : "null")
+				+ " isNewCursor = " + (cursor != mCursor));
+		if (cursor == mCursor)
+			return;
 
-	protected void setCursor(Cursor cursor) {
-		Log.d(TAG, "setCursor cursor " + cursor.hashCode() + "count = "
-				+ cursor.getCount());
+		mCursor = cursor;
 		mPoisItemizedOverlay.setCursor(cursor);
-	}
-
-	public void navigateToLocation() {
-		mMapController.setCenter(mLastGeoPointE6);
-		requestUpdate();
 	}
 
 	@Override
@@ -372,7 +410,23 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		Bundle boundingBoxExtras = fillExtrasWithBoundingRect();
 		bundle.putAll(boundingBoxExtras);
 
-		mWorkerFragment.executeSearch(bundle);
+		mWorkerFragment.requestSearch(bundle);
+	}
+
+	@Override
+	public void onUpdate(WorkerFragment fragment) {
+		setCursor(fragment.getCursor());
+
+		if (mListener != null)
+			mListener.onRefreshing(fragment.isRefreshing());
+	}
+
+	@Override
+	public void setCurrentLocation(GeoPoint point, Location location) {
+		mLastGeoPointE6 = point;
+		mCurrLocationOverlay.setLocation(mLastGeoPointE6,
+				location.getAccuracy());
+		centerMap(point, false);
 	}
 
 }

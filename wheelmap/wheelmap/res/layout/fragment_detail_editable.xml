@@ -45,7 +45,7 @@
                 style="@style/DetailFontNew.Editable"
                 android:hint="@string/poi_property_name" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <RelativeLayout
                 android:id="@+id/edit_nodetype"
@@ -66,47 +66,53 @@
                     android:src="@drawable/ic_menu_edit_wm_holo_light" />
             </RelativeLayout>
 
-            <!-- include layout="@layout/seperator" / -->
-
-            <RelativeLayout
-                android:id="@+id/edit_geolocation"
-                style="@style/Container.Pressable"
+            <FrameLayout
+                android:id="@+id/edit_geolocation_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:visibility="gone" >
 
-                <TextView
-                    android:id="@+id/edit_position_text"
-                    style="@style/DetailFontNew"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/edit_geolocation_icon"
-                    android:hint="@string/poi_property_position" />
+                <include layout="@layout/separator" />
 
-                <ImageView
-                    android:id="@+id/edit_geolocation_icon"
-                    style="@style/IconMedium"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_menu_edit_wm_holo_light" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/edit_geolocation"
+                    style="@style/Container.Pressable" >
 
-            <include layout="@layout/seperator" />
+                    <TextView
+                        android:id="@+id/edit_position_text"
+                        style="@style/DetailFontNew"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/edit_geolocation_icon"
+                        android:hint="@string/poi_property_position" />
+
+                    <ImageView
+                        android:id="@+id/edit_geolocation_icon"
+                        style="@style/IconMedium"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_menu_edit_wm_holo_light" />
+                </RelativeLayout>
+            </FrameLayout>
+
+            <include layout="@layout/separator" />
 
             <include layout="@layout/item_wheelchair_state" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/comment"
                 style="@style/DetailFontNew.Editable"
                 android:hint="@string/poi_property_comment" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/addr"
                 style="@style/DetailFontNew.Editable"
                 android:hint="@string/poi_property_address" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/phone"
@@ -114,7 +120,7 @@
                 android:autoLink="phone"
                 android:hint="@string/poi_property_phone" />
 
-            <include layout="@layout/seperator" />
+            <include layout="@layout/separator" />
 
             <EditText
                 android:id="@+id/website"
@@ -124,7 +130,7 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperator_large"
+                android:layout_height="@dimen/separator_large"
                 android:background="@android:color/black" />
         </LinearLayout>
     </ScrollView>

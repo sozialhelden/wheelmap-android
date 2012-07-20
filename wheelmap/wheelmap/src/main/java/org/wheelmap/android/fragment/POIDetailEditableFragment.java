@@ -31,6 +31,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -74,9 +75,12 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@InjectView(R.id.wheelchair_state_layout)
 	private RelativeLayout edit_state_container;
 	@InjectView(R.id.edit_geolocation)
-	private RelativeLayout edit_geolocation_container;
+	private RelativeLayout edit_geolocation_touchable_container;
 	@InjectView(R.id.edit_nodetype)
 	private RelativeLayout edit_nodetype_container;
+
+	@InjectView(R.id.edit_geolocation_container)
+	private FrameLayout edit_geolocation_container;
 
 	public final static String ARGUMENT_POI_ID = "org.wheelmap.android.ARGUMENT_POI_ID";
 
@@ -140,7 +144,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		edit_state_container.setOnClickListener(this);
-		edit_geolocation_container.setOnClickListener(this);
+		edit_geolocation_touchable_container.setOnClickListener(this);
 		edit_nodetype_container.setOnClickListener(this);
 
 	}
@@ -309,6 +313,9 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		addressText.setText(POIHelper.getAddress(cursor));
 		websiteText.setText(POIHelper.getWebsite(cursor));
 		phoneText.setText(POIHelper.getPhone(cursor));
+
+		if (nodeTypeId == SupportManager.UNKNOWN_TYPE)
+			showGeolocationEditor(true);
 	}
 
 	private void updateWheelchairState(WheelchairState newState) {
@@ -321,6 +328,13 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		state_icon.setImageResource(mWSAttributes.get(newState).drawableId);
 		state_text.setTextColor(stateColor);
 		state_text.setText(mWSAttributes.get(newState).titleStringId);
+	}
+
+	private void showGeolocationEditor(boolean show) {
+		if (show)
+			edit_geolocation_container.setVisibility(View.VISIBLE);
+		else
+			edit_geolocation_container.setVisibility(View.GONE);
 
 	}
 
