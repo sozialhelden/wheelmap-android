@@ -53,7 +53,7 @@ class InfoSimpleView extends LinearLayout {
 	}
 
 	protected int getLayout() {
-		return R.layout.info_simple;
+		return R.layout.item_info_simple;
 	}
 
 	public InfoSimpleView(Context context, AttributeSet attrs) {
@@ -97,7 +97,7 @@ class InfoSimpleViewTwoLines extends InfoSimpleView {
 
 	@Override
 	protected int getLayout() {
-		return R.layout.info_simple_two_lines;
+		return R.layout.item_info_simple_two_lines;
 	}
 
 	@Override
@@ -117,7 +117,7 @@ class InfoSimpleViewTwoUrls extends InfoSimpleViewTwoLines {
 
 	@Override
 	protected int getLayout() {
-		return R.layout.info_simple_two_urls;
+		return R.layout.item_info_simple_two_urls;
 	}
 
 	public void onFirstLinkClick(View V) {
@@ -141,7 +141,7 @@ class InfoSimpleViewActivity extends InfoSimpleView {
 
 	@Override
 	protected int getLayout() {
-		return R.layout.info_simple_activity;
+		return R.layout.item_info_simple_activity;
 	}
 }
 
@@ -155,7 +155,7 @@ class InfoSimpleViewImage extends InfoSimpleView {
 
 	@Override
 	protected int getLayout() {
-		return R.layout.info_simple_image;
+		return R.layout.item_info_simple_image;
 	}
 
 	@Override
