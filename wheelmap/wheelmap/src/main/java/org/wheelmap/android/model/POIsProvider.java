@@ -175,14 +175,23 @@ public class POIsProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-
-		if (uri.getBooleanQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM,
+		if (getBooleanQueryParameter(uri, Wheelmap.QUERY_DELETE_NOTIFY_PARAM,
 				true)) {
 			getContext().getContentResolver().notifyChange(uri, null);
 			getContext().getContentResolver().notifyChange(
 					POIs.CONTENT_URI_POI_SORTED, null);
 		}
 		return count;
+	}
+
+	public boolean getBooleanQueryParameter(Uri uri, String key,
+			boolean defaultValue) {
+		String flag = uri.getQueryParameter(key);
+		if (flag == null) {
+			return defaultValue;
+		}
+		flag = flag.toLowerCase();
+		return (!"false".equals(flag) && !"0".equals(flag));
 	}
 
 	@Override

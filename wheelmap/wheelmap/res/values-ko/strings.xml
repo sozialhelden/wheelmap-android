@@ -20,7 +20,6 @@
   limitations under the License.
   #L%
   -->
-
 <resources>
     <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
@@ -35,7 +34,6 @@
     <string name="title_pois_detail">안내</string>
     <string name="title_pois_detail_edit">관심 지점 수정</string>
     <string name="title_wheelchair_state">휠체어 세팅</string>
-    <string name="edit_poi">수정</string>
     <string name="btn_list">목록</string>
     <string name="no_pois">당신이 정렬한 기준에 따른 장소를 찾을 수 없습니다</string>
     <string name="settings_wheelchair_state">휠체어 상태</string>
@@ -50,16 +48,12 @@
     <string name="title_please_wait">기다려 주세요</string>
     <string name="title_category_select">표시할 분류를 선택해주세요</string>
     <string name="settings_category_filter">분류 정렬</string>
-    <string name="settings_wheelchair_no_accessible">아니오</string>
-    <string name="settings_wheelchair_limited_accessible">제한됨</string>
-    <string name="settings_wheelchair_full_accessible">네</string>
     <string name="title_info">Credits</string>
     <string name="info_a_project_of">프로젝트</string>
     <string name="info_web_version">PC버전</string>
     <string name="stiftung_text_one">Fürst Donnersmarck 재단에 감사드립니다</string>
     <string name="info_kartendaten">지도데이터:</string>
     <string name="info_android_development">안드로이드 개발:</string>
-    <string name="info_icons">아이콘:</string>
     <string name="info_webdevelopment">웹개발:</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
@@ -75,12 +69,10 @@
     <string name="pull_to_refresh_pull_label">잡아 당기면 새로고침 진행…</string>
     <string name="pull_to_refresh_release_label">새로고침 실행…</string>
     <string name="pull_to_refresh_refreshing_label">새로고침 진행중…</string>
-    <string name="pull_to_refresh_tap_label">새로고침을 누르세요…</string>
     <string name="okay">OK</string>
     <string name="error_network_title">네트워크 문제</string>
     <string name="btn_legal_notice">법적고지</string>
     <string name="btn_cancel">취소</string>
-    <string name="btn_save">저장</string>
     <string name="support_nodetype_unknown">알 수 없는 유형</string>
     <string name="quit">종료</string>
     <string name="support_category_unknown">알 수 없는 분류</string>
@@ -113,5 +105,10 @@
     <string name="ws_limited_title">휠체어가 부분적으로 접근 가능</string>
     <string name="ws_disabled_title">휠체어 접근불가능</string>
     <string name="ws_enabled_title">휠체어 접근가능</string>
-    <string name="settings_wheelchair_unknown_accessible">알 수 없음</string>
+    <string name="menu_save">저장</string>
+    <string name="menu_edit">수정</string>
+    <string name="settings_wheelchair_unknown">알 수 없음</string>
+    <string name="settings_wheelchair_yes">네</string>
+    <string name="settings_wheelchair_limited">제한됨</string>
+    <string name="settings_wheelchair_no">아니오</string>
 </resources>

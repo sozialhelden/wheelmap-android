@@ -35,7 +35,7 @@
     </style>
 
     <style name="DetailFont.Editable">
-        <item name="android:background">@drawable/textfield_background</item>
+
     </style>
 
     <style name="WheelStateSelectFont" parent="@android:style/TextAppearance.Small">

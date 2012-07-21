@@ -107,7 +107,7 @@ public abstract class AbstractExecutor implements IExecutor {
 			return null; // noop no instruction, no operation;
 		}
 
-		return null;
+		return executor;
 	}
 
 }

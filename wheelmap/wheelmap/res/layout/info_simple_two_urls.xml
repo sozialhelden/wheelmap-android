@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:background="@drawable/list_item_background"
+        android:background="@drawable/item_pressable_background"
         android:onClick="onFirstLinkClick"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold" />
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginTop="@dimen/margin_small"
-        android:background="@drawable/list_item_background"
+        android:background="@drawable/item_pressable_background"
         android:onClick="onSecondLinkClick"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold" />

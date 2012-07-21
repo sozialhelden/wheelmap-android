@@ -24,7 +24,6 @@ package org.wheelmap.android.adapter;
 import java.util.ArrayList;
 
 import org.wheelmap.android.model.CategoryOrNodeType;
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.view.CategoryItemView;
 import org.wheelmap.android.view.NodeTypeItemView;
 import org.wheelmap.android.view.TypeItemView;
@@ -37,8 +36,7 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-public class TypesAdapter extends BaseAdapter implements
-		SpinnerAdapter {
+public class TypesAdapter extends BaseAdapter implements SpinnerAdapter {
 	public static final int SEARCH_MODE = 0;
 	public static final int SELECT_MODE = 1;
 
@@ -47,8 +45,8 @@ public class TypesAdapter extends BaseAdapter implements
 	private Context mContext;
 	private ArrayList<CategoryOrNodeType> items;
 
-	public TypesAdapter(Context context,
-			ArrayList<CategoryOrNodeType> items, int type) {
+	public TypesAdapter(Context context, ArrayList<CategoryOrNodeType> items,
+			int type) {
 		mContext = context;
 		this.items = items;
 		mType = type;
@@ -95,8 +93,8 @@ public class TypesAdapter extends BaseAdapter implements
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.simple_my_spinner_item, parent,
-					false);
+			view = inflater.inflate(android.R.layout.simple_spinner_item,
+					parent, false);
 		} else {
 			view = convertView;
 		}

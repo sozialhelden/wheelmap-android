@@ -9,14 +9,11 @@ import org.wheelmap.android.online.R;
 
 import android.app.Dialog;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -87,17 +84,16 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
 				.createTypesList(getActivity(), true);
-		categorySpinner.setAdapter(new TypesAdapter(getActivity(),
-				searchTypes, TypesAdapter.SEARCH_MODE));
+		categorySpinner.setAdapter(new TypesAdapter(getActivity(), searchTypes,
+				TypesAdapter.SEARCH_MODE));
 		categorySpinner.setOnItemSelectedListener(this);
 
 		Spinner distanceSpinner = (Spinner) v
 				.findViewById(R.id.search_spinner_distance);
 
-		MyCustomSpinnerAdapter distanceSpinnerAdapter = MyCustomSpinnerAdapter
+		ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
 				.createFromResource(getActivity(), R.array.distance_array,
-						R.layout.simple_my_spinner_item);
-
+						android.R.layout.simple_spinner_item);
 		distanceSpinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		distanceSpinner.setAdapter(distanceSpinnerAdapter);
@@ -156,42 +152,6 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	}
 
 	public void onNothingSelected(AdapterView<?> parent) {
-
-	}
-
-	private static class MyCustomSpinnerAdapter extends
-			ArrayAdapter<CharSequence> {
-
-		public MyCustomSpinnerAdapter(Context context, int textViewResourceId,
-				CharSequence[] strings) {
-			super(context, textViewResourceId, strings);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view;
-			TextView text;
-
-			if (convertView == null) {
-				LayoutInflater inflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = inflater.inflate(R.layout.simple_my_spinner_item,
-						parent, false);
-			} else {
-				view = convertView;
-			}
-
-			text = (TextView) view.findViewById(android.R.id.text1);
-			text.setText(getItem(position));
-			return view;
-		}
-
-		public static MyCustomSpinnerAdapter createFromResource(
-				Context context, int textArrayResId, int textViewResId) {
-			CharSequence[] strings = context.getResources().getTextArray(
-					textArrayResId);
-			return new MyCustomSpinnerAdapter(context, textViewResId, strings);
-		}
 
 	}
 

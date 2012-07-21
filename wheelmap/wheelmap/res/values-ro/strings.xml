@@ -20,7 +20,6 @@
   limitations under the License.
   #L%
   -->
-
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
@@ -35,7 +34,6 @@
     <string name="title_pois_detail">Informatii</string>
     <string name="title_pois_detail_edit">Editare POI</string>
     <string name="title_wheelchair_state">Setari Wheelchair</string>
-    <string name="edit_poi">Editare</string>
     <string name="btn_list">Lista</string>
     <string name="no_pois">nu au fost gasite locatii conforme filtrului dumneavoastra</string>
     <string name="settings_wheelchair_state">Status Wheelchair</string>
@@ -51,16 +49,12 @@
     <string name="title_please_wait">Asteptati!</string>
     <string name="title_category_select">Selectati categoriile de afisat</string>
     <string name="settings_category_filter">Filtru Categorii</string>
-    <string name="settings_wheelchair_no_accessible">Nu</string>
-    <string name="settings_wheelchair_limited_accessible">Limitat</string>
-    <string name="settings_wheelchair_full_accessible">Da</string>
     <string name="title_info">Credits</string>
     <string name="info_a_project_of">un proiect</string>
     <string name="info_web_version">Versiune Web:</string>
     <string name="stiftung_text_one">Multumiri Fundatiei Fürst Donnersmarck</string>
     <string name="info_kartendaten">Mapdata:</string>
     <string name="info_android_development">Dezvoltare Android</string>
-    <string name="info_icons">Icons:</string>
     <string name="info_webdevelopment">Dezvoltare Web:</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakal</string>
@@ -73,15 +67,13 @@
     <string name="info_kartendaten_two">© Contributii OpenStreetMap, CC-BY-SA</string>
     <string name="info_web_version_one">www.wheelmap.org</string>
     <string name="title_wheelchairstate">Accessibil cu scaunul rulant?</string>
-    <string name="pull_to_refresh_pull_label">Trageti pentru re-actualizare...</string>
-    <string name="pull_to_refresh_release_label">Eliberati pentru re-actualizare...</string>
-    <string name="pull_to_refresh_refreshing_label">Re-actualizare...</string>
-    <string name="pull_to_refresh_tap_label">Apasati pentru re-actualizare...</string>
+    <string name="pull_to_refresh_pull_label">Trageti pentru re-actualizare&#8230;</string>
+    <string name="pull_to_refresh_release_label">Eliberati pentru re-actualizare&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Re-actualizare&#8230;</string>
     <string name="okay">Okay</string>
     <string name="error_network_title">Problema de retea</string>
     <string name="btn_legal_notice">Aviz</string>
     <string name="btn_cancel">Anulare</string>
-    <string name="btn_save">Salvare</string>
     <string name="support_nodetype_unknown">Tip Necunoscut</string>
     <string name="quit">Iesire</string>
     <string name="support_category_unknown">Categorie Necunoscuta</string>
@@ -114,5 +106,10 @@
     <string name="ws_limited_title">Partial accesibil cu scaunul rulant</string>
     <string name="ws_disabled_title">Inaccesibil cu scaunul rulant</string>
     <string name="ws_enabled_title">Accesibil cu scaunul rulant</string>
-    <string name="settings_wheelchair_unknown_accessible">Necunoscut</string>
+    <string name="menu_save">Salvare</string>
+    <string name="menu_edit">Editare</string>
+    <string name="settings_wheelchair_unknown">Necunoscut</string>
+    <string name="settings_wheelchair_yes">Da</string>
+    <string name="settings_wheelchair_limited">Limitat</string>
+    <string name="settings_wheelchair_no">Nu</string>
 </resources>

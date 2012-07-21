@@ -57,7 +57,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.activity_main_singlepane);
+		setContentView(R.layout.activity_fragment_singleframe);
 		setSupportProgressBarIndeterminateVisibility(false);
 
 		getSupportFragmentManager().enableDebugLogging(true);

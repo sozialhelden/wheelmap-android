@@ -49,10 +49,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -63,12 +60,9 @@
                 android:autoLink="web"
                 android:gravity="center_horizontal"
                 android:text="@string/legal_notice_mapsforge_copyright"
-                android:textColorLink="@color/dark_grey_one" />
+                android:textColorLink="@color/text_link" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -78,10 +72,7 @@
                 style="@style/FontLegalNoticeItem"
                 android:text="@string/legal_notice_pulltorefresh_copyright" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -99,12 +90,9 @@
                 style="@style/FontLegalNoticeItem"
                 android:autoLink="web"
                 android:text="@string/legal_notice_springandroid_copyright_three"
-                android:textColorLink="@color/dark_grey_one" />
+                android:textColorLink="@color/text_link" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -114,10 +102,7 @@
                 style="@style/FontLegalNoticeItem"
                 android:text="@string/legal_notice_jackson_copyright" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -131,10 +116,7 @@
                 style="@style/FontLegalNoticeItem"
                 android:text="@string/legal_notice_commonsware_copyright_two" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -144,16 +126,13 @@
                 style="@style/FontLegalNoticeItem"
                 android:autoLink="web"
                 android:text="@string/legal_notice_iconscollection_copyright"
-                android:textColorLink="@color/dark_grey_one" />
+                android:textColorLink="@color/text_link" />
 
             <TextView
                 style="@style/FontLegalNoticeItem"
                 android:text="@string/legal_notice_iconscollection_copyright_two" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_medium"
-                android:background="@color/light_grey_two" />
+            <include layout="@layout/separator" />
 
             <TextView
                 style="@style/FontLegalNoticeTitle"
@@ -163,7 +142,7 @@
                 style="@style/FontLegalNoticeItem"
                 android:autoLink="web"
                 android:text="@string/legal_notice_opensource_copyright"
-                android:textColorLink="@color/dark_grey_one" />
+                android:textColorLink="@color/text_link" />
 
             <TextView
                 style="@style/FontLegalNoticeItem"

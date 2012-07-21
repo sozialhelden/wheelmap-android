@@ -21,24 +21,10 @@
   #L%
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_root"
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/text"
+    style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <include layout="@layout/actionbar_list" />
-
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/pull_to_refresh_listview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
-    <ViewStub
-        android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout="@layout/empty" />
-
-</LinearLayout>
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@drawable/item_pressable_background"
+    android:textStyle="bold" />

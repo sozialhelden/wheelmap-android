@@ -60,7 +60,7 @@
                 style="@style/DetailFontNew"
                 android:autoLink="phone"
                 android:hint="@string/poi_property_phone"
-                android:textColorLink="@color/black" />
+                android:textColorLink="@android:color/black" />
 
             <include layout="@layout/separator" />
 
@@ -69,7 +69,7 @@
                 style="@style/DetailFontNew"
                 android:autoLink="web"
                 android:hint="@string/poi_property_website"
-                android:textColorLink="@color/black" />
+                android:textColorLink="@android:color/black" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

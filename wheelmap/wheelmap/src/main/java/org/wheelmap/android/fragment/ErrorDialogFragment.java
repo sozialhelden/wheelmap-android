@@ -75,7 +75,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		else
 			builder.setTitle(R.string.error_occurred);
 
-		builder.setIcon(R.drawable.ic_dialog_alert_holo_light);
+		builder.setIcon(R.drawable.ic_dialog_alert_wm_holo_light);
 		builder.setMessage(e.getRessourceString());
 		builder.setNeutralButton(R.string.okay, this);
 		return builder.create();

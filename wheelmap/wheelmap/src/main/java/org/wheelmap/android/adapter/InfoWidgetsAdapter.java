@@ -69,8 +69,6 @@ class InfoSimpleView extends LinearLayout {
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		View v = inflater.inflate(getLayout(), null, false);
 		this.addView(v, parametri);
-		setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.list_item_background));
 
 		title = (TextView) findViewById(R.id.info_activity_title);
 		first = (TextView) findViewById(R.id.info_activity_first_line);

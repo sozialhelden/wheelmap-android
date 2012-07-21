@@ -183,7 +183,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout layout = (LinearLayout) mInflater.inflate(
-					R.layout.settings_item_delete_logindata, null);
+					R.layout.item_settings_delete_logindata, null);
 
 			return layout;
 		}

@@ -28,83 +28,65 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/title_bar_text"
-        android:layout_width="@dimen/search_window_width_port"
+        android:id="@+id/search_map_hint"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="12dip"
-        android:paddingLeft="12dip"
-        android:paddingRight="12dip" >
-
-        <LinearLayout
-            android:id="@+id/search_map_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dip"
-                android:layout_marginTop="8dip"
-                android:text="@string/search_pick_map"
-                android:textAppearance="?android:attr/textAppearanceMediumInverse"
-                android:textColor="@color/light_grey_one" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/search_keyword"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dip"
-            android:background="@drawable/textfield_background"
-            android:freezesText="true"
-            android:hint="@string/search_hint_list"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            android:imeOptions="actionDone" />
+        android:visibility="gone" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dip"
             android:layout_marginTop="8dip"
-            android:text="@string/search_pick_category"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            android:textColor="@color/light_grey_one" />
+            android:text="@string/search_pick_map"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+    </LinearLayout>
 
-        <Spinner
-            android:id="@+id/search_spinner_categorie_nodetype"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/spinner_background"
-            android:prompt="@string/search_pick_category" />
+    <EditText
+        android:id="@+id/search_keyword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dip"
+        android:freezesText="true"
+        android:hint="@string/search_hint_list"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse" />
 
-        <LinearLayout
-            android:id="@+id/search_spinner_distance_container"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dip"
+        android:layout_marginTop="8dip"
+        android:text="@string/search_pick_category"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+
+    <Spinner
+        android:id="@+id/search_spinner_categorie_nodetype"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/search_pick_category" />
+
+    <LinearLayout
+        android:id="@+id/search_spinner_distance_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dip"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dip"
-            android:orientation="vertical"
-            android:visibility="gone" >
+            android:layout_marginLeft="8dip"
+            android:text="@string/search_distance"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dip"
-                android:text="@string/search_distance"
-                android:textAppearance="?android:attr/textAppearanceMediumInverse"
-                android:textColor="@color/light_grey_one" />
-
-            <Spinner
-                android:id="@+id/search_spinner_distance"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/spinner_background"
-                android:text="@string/search_distance" />
-        </LinearLayout>
+        <Spinner
+            android:id="@+id/search_spinner_distance"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_distance" />
     </LinearLayout>
 
 </LinearLayout>

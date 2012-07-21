@@ -76,12 +76,12 @@ public class NodetypeSelectFragment extends SherlockListFragment {
 		switch (item.type) {
 		case NODETYPE:
 			mNodeTypeSelected = item.id;
-			if (oldCheckedView != null)
-				oldCheckedView.setChecked(false);
-			CheckedTextView view = (CheckedTextView) v
-					.findViewById(R.id.search_type);
-			view.setChecked(true);
-			oldCheckedView = view;
+			// if (oldCheckedView != null)
+			// oldCheckedView.setChecked(false);
+			// CheckedTextView view = (CheckedTextView) v
+			// .findViewById(R.id.search_type);
+			// view.setChecked(true);
+			// oldCheckedView = view;
 
 			if (mListener != null) {
 				mListener.onSelect(mNodeTypeSelected);
@@ -92,8 +92,7 @@ public class NodetypeSelectFragment extends SherlockListFragment {
 		}
 	}
 
-	private static class PickOnlyNodeTypesAdapter extends
-			TypesAdapter {
+	private static class PickOnlyNodeTypesAdapter extends TypesAdapter {
 		public PickOnlyNodeTypesAdapter(Context context,
 				ArrayList<CategoryOrNodeType> items) {
 			super(context, items, TypesAdapter.SELECT_MODE);

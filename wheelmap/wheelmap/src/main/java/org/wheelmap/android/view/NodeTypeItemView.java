@@ -13,7 +13,7 @@ public class NodeTypeItemView extends FrameLayout implements TypeItemView {
 	public NodeTypeItemView(Context context) {
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
-		inflater.inflate(R.layout.search_nodetype, this, true);
+		inflater.inflate(R.layout.item_search_nodetype, this, true);
 		mText = (CheckedTextView) findViewById(R.id.text);
 	}
 

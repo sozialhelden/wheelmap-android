@@ -19,9 +19,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <resources>
+
     <string-array name="distance_array">
         <item>@string/search_distance_unspecified</item>
         <item>1</item>
@@ -32,11 +33,5 @@
         <item>20</item>
         <item>30</item>
     </string-array>
-    <string-array name="wheelchair_state">
-        <item>@string/settings_wheelchair_unknown_accessible</item>
-		<item>@string/settings_wheelchair_full_accessible</item>
-     	<item>@string/settings_wheelchair_limited_accessible</item>
-     	<item>@string/settings_wheelchair_no_accessible</item>
-		<item>@string/settings_wheelchair_unspecified_accessible</item>    
-   </string-array>
+
 </resources>

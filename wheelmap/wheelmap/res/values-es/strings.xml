@@ -20,7 +20,6 @@
   limitations under the License.
   #L%
   -->
-
 <resources>
     <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
@@ -34,7 +33,6 @@
     <string name="title_pois_settings">Ajustes de filtro</string>
     <string name="title_pois_detail">Información</string>
     <string name="title_wheelchair_state">Ajustes de Silla de Ruedas</string>
-    <string name="edit_poi">Editar</string>
     <string name="btn_list">Lista</string>
     <string name="no_pois">No se encontraron lugares de acuerdo a sus ajustes de filtro</string>
     <string name="settings_wheelchair_state">Estado de Silla de Ruedas</string>
@@ -49,16 +47,12 @@
     <string name="title_please_wait">Por favor espere</string>
     <string name="title_category_select">Seleccione las categorías a mostrar</string>
     <string name="settings_category_filter">Filtrar categorías</string>
-    <string name="settings_wheelchair_no_accessible">No</string>
-    <string name="settings_wheelchair_limited_accessible">Limitado</string>
-    <string name="settings_wheelchair_full_accessible">Si</string>
     <string name="title_info">Créditos</string>
     <string name="info_a_project_of">un proyecto de</string>
     <string name="info_web_version">Versión web</string>
     <string name="stiftung_text_one">Gracias a Fürst Donnersmarck-Stiftung</string>
     <string name="info_kartendaten">Datos de mapa:</string>
     <string name="info_android_development">Desarrollo Android:</string>
-    <string name="info_icons">Íconos:</string>
     <string name="info_webdevelopment">Desarrollo Web:</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
@@ -71,15 +65,13 @@
     <string name="info_kartendaten_two">Colaboradores © OpenStreetMap, CC-BY-SA</string>
     <string name="info_web_version_one">www.wheelmap.org</string>
     <string name="title_wheelchairstate">¿Accesible a sillas de ruedas?</string>
-    <string name="pull_to_refresh_pull_label">Arrastre para actualizar...</string>
-    <string name="pull_to_refresh_release_label">Suelte para actualizar...</string>
-    <string name="pull_to_refresh_refreshing_label">Actualizando...</string>
-    <string name="pull_to_refresh_tap_label">Presione para actualizar...</string>
+    <string name="pull_to_refresh_pull_label">Arrastre para actualizar&#8230;</string>
+    <string name="pull_to_refresh_release_label">Suelte para actualizar&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Actualizando&#8230;</string>
     <string name="okay">Aceptar</string>
     <string name="error_network_title">Problema de red</string>
     <string name="btn_legal_notice">Aviso Legal</string>
     <string name="btn_cancel">Cancelar</string>
-    <string name="btn_save">Guardar</string>
     <string name="support_nodetype_unknown">Tipo desconocido</string>
     <string name="quit">Salir</string>
     <string name="support_category_unknown">Categoría desconocida</string>
@@ -113,5 +105,10 @@
     <string name="ws_disabled_title">No accesible a sillas de ruedas</string>
     <string name="ws_enabled_title">Accesible a sillas de ruedas</string>
     <string name="title_pois_detail_edit">Editar el punto de interés</string>
-    <string name="settings_wheelchair_unknown_accessible">Desconocido</string>
+    <string name="menu_save">Guardar</string>
+    <string name="menu_edit">Editar</string>
+    <string name="settings_wheelchair_unknown">Desconocido</string>
+    <string name="settings_wheelchair_yes">Si</string>
+    <string name="settings_wheelchair_limited">Limitado</string>
+    <string name="settings_wheelchair_no">No</string>
 </resources>

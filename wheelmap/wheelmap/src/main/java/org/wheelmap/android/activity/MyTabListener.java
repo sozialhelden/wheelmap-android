@@ -57,8 +57,8 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 			mFragment = SherlockFragment.instantiate(mActivity,
 					mClass.getName(), null);
 			FragmentManager fm = mActivity.getSupportFragmentManager();
-			fm.beginTransaction()
-					.replace(R.id.root_layout, mFragment, mTag.name).commit();
+			fm.beginTransaction().replace(R.id.frame, mFragment, mTag.name)
+					.commit();
 
 		} else {
 			Log.d(TAG, "Fragment mFragment = " + mFragment.toString());

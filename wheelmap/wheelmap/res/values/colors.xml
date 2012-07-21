@@ -19,42 +19,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <resources>
-    <color name="title_background">#FFFFFFFF</color>
-    <color name="title_text">#ffFFFFFF</color>
-    <color name="title_text_alt">#ffFFFFFF</color>
+
     <color name="foreground1">#ff355689</color>
-    <color name="foreground2">#ff7081a3</color>
-    <color name="background1">#ffffffff</color>
-    <color name="background2">#ffd5ddeb</color>
-    <color name="background3">#ffe3e8f1</color>
-    <color name="title_separator">#400d0d0d</color> 
-   
-    <color name="wheel_enabled">#ff78b13e</color> 
-    <color name="wheel_limited">#ffF6AA4F</color> 
+    <color name="wheel_enabled">#ff78b13e</color>
+    <color name="wheel_limited">#ffF6AA4F</color>
     <color name="wheel_disabled">#ffEF2F24</color>
     <color name="wheel_unknown">#ff8F8F8F</color>
-    
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    
-    <color name="dark_grey_one">#FF3F3F3F</color>
     <color name="dark_grey_two">#FF9F9F9F</color>
-    
-    <color name="light_grey_one">#FF949494</color>
-    <color name="light_grey_two">#FFDFDFDF</color>
-    
-    <color name="red_logo">#FFBF3F3F</color>
-    <color name="grey_background_overlay">#AA949494</color>
-    
-    <color name="green_dark">#ff548a04</color>
-    <color name="green_light">#5fbf0f</color>
-    
     <color name="green_wheelmap_logo">#7fb63c</color>
     <color name="color_base_ng">@color/green_wheelmap_logo</color>
-    
     <color name="seperator_color_dark_a">#FFC6C6C6</color>
     <color name="seperator_color_dark_b">#FFE6E6E6</color>
+    <color name="text_link">#FF3F3F3F</color>
+
 </resources>

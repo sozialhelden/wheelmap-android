@@ -80,7 +80,7 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
 
 		WheelchairAttributes attributes = mItems.get(position);
 		itemView.setIcon(attributes.drawableId);
-		itemView.setText(mContext.getString(attributes.stringId));
+		itemView.setText(mContext.getString(attributes.settingsStringId));
 		itemView.setTextColor(mContext.getResources().getColor(
 				attributes.colorId));
 		itemView.setCheckboxChecked(mPrefs

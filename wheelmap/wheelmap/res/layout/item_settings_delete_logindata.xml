@@ -19,17 +19,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/item_pressable_background"
+    android:orientation="horizontal"
+    android:paddingBottom="5dip"
+    android:paddingLeft="12dip"
+    android:paddingRight="5dip"
+    android:paddingTop="9dip" >
 
     <TextView
-        android:id="@+id/error_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="@string/settings_delete_logindata"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>

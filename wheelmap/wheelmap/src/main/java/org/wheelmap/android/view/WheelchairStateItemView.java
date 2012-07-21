@@ -17,7 +17,7 @@ public class WheelchairStateItemView extends FrameLayout {
 	public WheelchairStateItemView(Context context) {
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
-		inflater.inflate(R.layout.settings_item_wheelchair, this, true);
+		inflater.inflate(R.layout.item_settings_wheelchair, this, true);
 
 		mWheelStateIcon = (ImageView) findViewById(R.id.image);
 		mWheelStateText = (TextView) findViewById(R.id.text);

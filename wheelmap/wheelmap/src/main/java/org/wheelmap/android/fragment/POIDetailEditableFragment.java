@@ -67,9 +67,9 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private EditText websiteText;
 	@InjectView(R.id.phone)
 	private EditText phoneText;
-	@InjectView(R.id.wheelchair_state_icon)
+	@InjectView(R.id.state_icon)
 	private ImageView state_icon;
-	@InjectView(R.id.wheelchair_state_text)
+	@InjectView(R.id.state_text)
 	private TextView state_text;
 	@InjectView(R.id.edit_position_text)
 	private TextView position_text;

@@ -4,20 +4,20 @@
     style="@style/Container.Pressable" >
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/state_icon"
         style="@style/IconLarge"
         android:layout_alignParentLeft="true"
         android:src="@drawable/wheelchair_state_enabled" >
     </ImageView>
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/state_text"
         style="@style/WheelStateItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
         android:layout_toLeftOf="@+id/edit_icon"
-        android:layout_toRightOf="@+id/image"
+        android:layout_toRightOf="@+id/state_icon"
         android:text="@string/ws_enabled_title" >
     </TextView>
 

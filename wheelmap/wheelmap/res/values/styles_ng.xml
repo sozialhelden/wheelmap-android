@@ -95,7 +95,7 @@
     </style>
 
     <style name="DetailFontNew.Editable">
-        <item name="android:background">@drawable/textfield_background</item>
+
     </style>
 
     <style name="Scrollable">

@@ -20,7 +20,6 @@
   limitations under the License.
   #L%
   -->
-
 <resources>
     <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
@@ -35,7 +34,6 @@
     <string name="title_pois_detail">情報</string>
     <string name="title_pois_detail_edit">興味ある場所(POI)を編集</string>
     <string name="title_wheelchair_state">Wheelchair 設定</string>
-    <string name="edit_poi">編集</string>
     <string name="btn_list">リスト</string>
     <string name="no_pois">フィルタ設定に従った結果、場所が見つかりません</string>
     <string name="settings_wheelchair_state">Wheelchair 状態</string>
@@ -50,16 +48,12 @@
     <string name="title_please_wait">お待ちください</string>
     <string name="title_category_select">表示するカテゴリを選択</string>
     <string name="settings_category_filter">カテゴリフィルタ</string>
-    <string name="settings_wheelchair_no_accessible">利用不可</string>
-    <string name="settings_wheelchair_limited_accessible">一部可</string>
-    <string name="settings_wheelchair_full_accessible">利用可</string>
     <string name="title_info">クレジット</string>
     <string name="info_a_project_of">プロジェクト推進：</string>
     <string name="info_web_version">ウェブ-バージョン</string>
     <string name="stiftung_text_one">Fürst Donnersmarck-Stiftung に謝意を表します</string>
     <string name="info_kartendaten">マップデータ：</string>
     <string name="info_android_development">Android開発：</string>
-    <string name="info_icons">アイコン：</string>
     <string name="info_webdevelopment">Web開発：</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
@@ -72,15 +66,13 @@
     <string name="info_kartendaten_two">© OpenStreetMap contributors, CC-BY-SA</string>
     <string name="info_web_version_one">www.wheelmap.org</string>
     <string name="title_wheelchairstate">車椅子で行けますか？</string>
-    <string name="pull_to_refresh_pull_label">引っ張ってリフレッシュ...</string>
-    <string name="pull_to_refresh_release_label">リリースしてリフレッシュ...</string>
-    <string name="pull_to_refresh_refreshing_label">リフレッシュ中...</string>
-    <string name="pull_to_refresh_tap_label">タップしてリフレッシュ...</string>
+    <string name="pull_to_refresh_pull_label">引っ張ってリフレッシュ&#8230;</string>
+    <string name="pull_to_refresh_release_label">リリースしてリフレッシュ&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">リフレッシュ中&#8230;</string>
     <string name="okay">OK</string>
     <string name="error_network_title">ネットワークの問題</string>
     <string name="btn_legal_notice">法に基づく表記</string>
     <string name="btn_cancel">キャンセル</string>
-    <string name="btn_save">保存</string>
     <string name="support_nodetype_unknown">不明な種別</string>
     <string name="quit">終了</string>
     <string name="support_category_unknown">不明なカテゴリ</string>
@@ -113,5 +105,10 @@
     <string name="ws_limited_title">一部車椅子通行可</string>
     <string name="ws_disabled_title">車椅子通行不可</string>
     <string name="ws_enabled_title">車椅子通行可</string>
-    <string name="settings_wheelchair_unknown_accessible">不明</string>
+    <string name="menu_save">保存</string>
+    <string name="menu_edit">編集</string>
+    <string name="settings_wheelchair_unknown">不明</string>
+    <string name="settings_wheelchair_yes">利用可</string>
+    <string name="settings_wheelchair_limited">一部可</string>
+    <string name="settings_wheelchair_no">利用不可</string>
 </resources>

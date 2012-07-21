@@ -66,7 +66,7 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
 				getActivity());
-		builder.setTitle(R.string.login_info);
+		builder.setTitle(R.string.title_login);
 		builder.setIcon(R.drawable.ic_menu_search_wm_holo_light);
 		builder.setNeutralButton(R.string.login_submit, null);
 		builder.setOnCancelListener(this);

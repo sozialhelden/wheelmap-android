@@ -77,9 +77,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private TextView commentText;
 	@InjectView(R.id.website)
 	private TextView websiteText;
-	@InjectView(R.id.wheelchair_state_icon)
+	@InjectView(R.id.state_icon)
 	private ImageView stateIcon;
-	@InjectView(R.id.wheelchair_state_text)
+	@InjectView(R.id.state_text)
 	private TextView stateText;
 	@InjectView(R.id.wheelchair_state_layout)
 	private ViewGroup stateLayout;
