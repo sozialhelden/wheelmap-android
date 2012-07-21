@@ -22,8 +22,8 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
-import org.wheelmap.android.adapter.WheelchairStateAdapter;
-import org.wheelmap.android.adapter.WheelchairStateAdapter.WheelchairStateItem;
+import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
+import org.wheelmap.android.adapter.WheelchairStateSelectAdapter.WheelchairStateItem;
 import org.wheelmap.android.model.MergeAdapter;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserCredentials;
@@ -79,7 +79,7 @@ public class NewSettingsActivity extends ListActivity implements
 
 		CategorySelectCursorAdapter adapterCatList = new CategorySelectCursorAdapter(
 				this, cursor, true);
-		WheelchairStateAdapter adapterWSList = new WheelchairStateAdapter(this);
+		WheelchairStateSelectAdapter adapterWSList = new WheelchairStateSelectAdapter(this);
 
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(createWheelStateTitle());

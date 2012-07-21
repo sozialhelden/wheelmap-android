@@ -39,8 +39,6 @@ import de.akquinet.android.androlog.Log;
 public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 		implements IExecutor {
 	private final static String TAG = NodeTypesExecutor.class.getSimpleName();
-
-	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 	private Locale mLocale;
 
 	public NodeTypesExecutor(Context context, Bundle bundle) {

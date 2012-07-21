@@ -35,17 +35,8 @@ import android.preference.PreferenceManager;
 
 public class QueriesBuilderHelper {
 
-	public static final String PREF_KEY_WHEELCHAIR_STATE_FULL = "showFull";
-	public static final String PREF_KEY_WHEELCHAIR_STATE_LIMITED = "showLimited";
-	public static final String PREF_KEY_WHEELCHAIR_STATE_NO = "showNo";
-	public static final String PREF_KEY_WHEELCHAIR_STATE_UNKNOWN = "showUnknown";
-
-	private static final String ENTRY_NOT_UPDATE_PENDING = " ("
-			+ Wheelmap.POIs.UPDATE_TAG + "!="
-			+ Wheelmap.UPDATE_PENDING_STATE_ONLY + " ) AND ( "
-			+ Wheelmap.POIs.UPDATE_TAG + "!=" + Wheelmap.UPDATE_ALL_FIELDS
-			+ ") AND ( " + Wheelmap.POIs.UPDATE_TAG + "!="
-			+ Wheelmap.UPDATE_WHEELCHAIR_STATE + ")";
+	private static final String WHERECLAUSE_ACTIVE = " ("
+			+ Wheelmap.POIs.UPDATE_TAG + "=" + Wheelmap.UPDATE_NO + " ) ";
 
 	static private String categoriesFilter(Context context) {
 		// categories id
@@ -103,13 +94,13 @@ public class QueriesBuilderHelper {
 				.getDefaultSharedPreferences(context);
 
 		boolean prefStateFull = prefs.getBoolean(
-				PREF_KEY_WHEELCHAIR_STATE_FULL, true);
+				PrefKey.WHEELCHAIR_STATE_YES, true);
 		boolean prefStateLimited = prefs.getBoolean(
-				PREF_KEY_WHEELCHAIR_STATE_LIMITED, true);
-		boolean prefStateNo = prefs.getBoolean(PREF_KEY_WHEELCHAIR_STATE_NO,
-				true);
+				PrefKey.WHEELCHAIR_STATE_LIMITED, true);
+		boolean prefStateNo = prefs.getBoolean(
+				PrefKey.WHEELCHAIR_STATE_NO, true);
 		boolean prefStateUnknown = prefs.getBoolean(
-				PREF_KEY_WHEELCHAIR_STATE_UNKNOWN, true);
+				PrefKey.WHEELCHAIR_STATE_UNKNOWN, true);
 
 		ArrayList<WheelchairState> list = new ArrayList<WheelchairState>();
 		if (prefStateFull)
@@ -151,10 +142,10 @@ public class QueriesBuilderHelper {
 
 		if (result.length() > 0)
 			result = "(" + result + ") AND  (" + wheelchair.toString()
-					+ ") AND (" + ENTRY_NOT_UPDATE_PENDING + ")";
+					+ ") AND (" + WHERECLAUSE_ACTIVE + ")";
 		else
 			result = "(" + wheelchair.toString() + ") AND "
-					+ ENTRY_NOT_UPDATE_PENDING;
+					+ WHERECLAUSE_ACTIVE;
 
 		// Log.d("QueriesBuilderHelper userSettingsFilter", result);
 		return result;

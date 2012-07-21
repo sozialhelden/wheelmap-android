@@ -36,7 +36,6 @@ import de.akquinet.android.androlog.Log;
 public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
 		implements IExecutor {
 	private final static String TAG = CategoriesExecutor.class.getSimpleName();
-	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 	private Locale mLocale;
 
 	public CategoriesExecutor(Context context, Bundle bundle) {

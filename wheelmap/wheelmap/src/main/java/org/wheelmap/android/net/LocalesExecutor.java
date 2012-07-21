@@ -34,7 +34,6 @@ import de.akquinet.android.androlog.Log;
 public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements
 		IExecutor {
 	private final static String TAG = LocalesExecutor.class.getSimpleName();
-	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 
 	public LocalesExecutor(Context context, Bundle bundle) {
 		super(context, bundle, Locales.class);

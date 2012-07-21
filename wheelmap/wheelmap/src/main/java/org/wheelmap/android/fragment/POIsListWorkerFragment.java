@@ -26,6 +26,7 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
+import org.wheelmap.android.model.PrefKey;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
@@ -58,8 +59,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
-	private final static String PREF_KEY_LIST_DISTANCE = "listDistance";
-
 	private DisplayFragment mDisplayFragment;
 
 	private OnPOIsListWorkerListener mListener;
@@ -179,7 +178,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 				.getDefaultSharedPreferences(getActivity()
 						.getApplicationContext());
 
-		String prefDist = prefs.getString(PREF_KEY_LIST_DISTANCE,
+		String prefDist = prefs.getString(PrefKey.LIST_DISTANCE,
 				String.valueOf(QUERY_DISTANCE_DEFAULT));
 		return Float.valueOf(prefDist);
 	}

@@ -1,8 +1,8 @@
 package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
-import org.wheelmap.android.adapter.WheelchairStateAdapter;
-import org.wheelmap.android.adapter.WheelchairStateAdapter.WheelchairStateItem;
+import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
+import org.wheelmap.android.adapter.WheelchairStateSelectAdapter.WheelchairStateItem;
 import org.wheelmap.android.model.MergeAdapter;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserCredentials;
@@ -54,7 +54,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		View v = inflater.inflate(R.layout.fragment_settings_select, container,
 				false);
 
-		WheelchairStateAdapter adapterWSList = new WheelchairStateAdapter(
+		WheelchairStateSelectAdapter adapterWSList = new WheelchairStateSelectAdapter(
 				getActivity());
 
 		mAdapter = new MergeAdapter();

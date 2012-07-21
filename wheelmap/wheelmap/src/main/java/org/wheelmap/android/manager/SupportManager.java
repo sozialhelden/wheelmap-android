@@ -34,6 +34,7 @@ import java.util.Set;
 
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
+import org.wheelmap.android.model.PrefKey;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
@@ -87,13 +88,15 @@ public class SupportManager {
 		public final int stringId;
 		public final int drawableId;
 		public final int colorId;
+		public final String prefsKey;
 
 		WheelchairAttributes(int titleStringId, int stringId, int drawableId,
-				int colorId) {
+				int colorId, String prefsKey) {
 			this.titleStringId = titleStringId;
 			this.stringId = stringId;
 			this.drawableId = drawableId;
 			this.colorId = colorId;
+			this.prefsKey = prefsKey;
 		}
 	}
 
@@ -600,16 +603,20 @@ public class SupportManager {
 	static {
 		wsAttributes.put(WheelchairState.YES, new WheelchairAttributes(
 				R.string.ws_enabled_title, R.string.ws_enabled,
-				R.drawable.wheelchair_state_enabled, R.color.wheel_enabled));
+				R.drawable.wheelchair_state_enabled, R.color.wheel_enabled,
+				PrefKey.WHEELCHAIR_STATE_YES));
 		wsAttributes.put(WheelchairState.LIMITED, new WheelchairAttributes(
 				R.string.ws_limited_title, R.string.ws_limited,
-				R.drawable.wheelchair_state_limited, R.color.wheel_limited));
+				R.drawable.wheelchair_state_limited, R.color.wheel_limited,
+				PrefKey.WHEELCHAIR_STATE_LIMITED));
 		wsAttributes.put(WheelchairState.NO, new WheelchairAttributes(
 				R.string.ws_disabled_title, R.string.ws_disabled,
-				R.drawable.wheelchair_state_disabled, R.color.wheel_disabled));
+				R.drawable.wheelchair_state_disabled, R.color.wheel_disabled,
+				PrefKey.WHEELCHAIR_STATE_NO));
 		wsAttributes.put(WheelchairState.UNKNOWN, new WheelchairAttributes(
 				R.string.ws_unknown_title, R.string.ws_unknown,
-				R.drawable.wheelchair_state_unknown, R.color.wheel_unknown));
+				R.drawable.wheelchair_state_unknown, R.color.wheel_unknown,
+				PrefKey.WHEELCHAIR_STATE_UNKNOWN));
 
 	}
 
