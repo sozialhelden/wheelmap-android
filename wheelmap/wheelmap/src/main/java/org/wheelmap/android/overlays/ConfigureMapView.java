@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.ui.mapsforge;
+package org.wheelmap.android.overlays;
 
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.MapViewMode;

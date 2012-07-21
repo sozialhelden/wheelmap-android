@@ -36,6 +36,7 @@ import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.MyLocationOverlay;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;

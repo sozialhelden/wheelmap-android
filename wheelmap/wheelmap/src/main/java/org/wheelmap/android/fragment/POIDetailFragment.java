@@ -15,12 +15,12 @@ import org.wheelmap.android.model.CursorLoaderHelper;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
-import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ViewTool;
 

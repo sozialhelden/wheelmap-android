@@ -5,8 +5,8 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.POILocationEditableOverlay;
-import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 
 import android.app.Activity;
 import android.os.Bundle;
