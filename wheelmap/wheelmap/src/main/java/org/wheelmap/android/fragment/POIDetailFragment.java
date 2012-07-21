@@ -293,10 +293,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		return false;
 	}
 
-	public WheelchairState getWheelchairState() {
-		return mWheelchairState;
-	}
-
 	public long getPoiId() {
 		return poiID;
 	}
