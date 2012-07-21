@@ -4,10 +4,10 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.SyncServiceHelper;
 
 import roboguice.inject.ContentView;
 import wheelmap.org.WheelchairState;
@@ -31,7 +31,6 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
@@ -138,10 +137,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 							Wheelmap.UPDATE_WHEELCHAIR_STATE);
 					this.getContentResolver().update(poiUri, values, "", null);
 
-					final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-							POIDetailActivity.this, SyncService.class);
-					intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
-					startService(intent);
+					SyncServiceHelper.executeUpdateServer(this);
 				}
 			}
 		}
@@ -165,5 +161,17 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 				POIDetailEditableActivity.class);
 		intent.putExtra(Extra.POI_ID, poiId);
 		startActivity(intent);
+	}
+
+	@Override
+	public void onLoadStatus(boolean loading) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onError(SyncServiceException e) {
+		// TODO Auto-generated method stub
+
 	}
 }

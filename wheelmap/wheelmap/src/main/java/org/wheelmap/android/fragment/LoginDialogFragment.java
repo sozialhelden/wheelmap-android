@@ -1,18 +1,17 @@
 package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -170,14 +169,8 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 	}
 
 	private void login(String email, String password) {
-		Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(),
-				SyncService.class);
-		intent.putExtra(Extra.WHAT, What.RETRIEVE_APIKEY);
-		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
-		intent.putExtra(Extra.EMAIL, email);
-		intent.putExtra(Extra.PASSWORD, password);
-
-		getActivity().startService(intent);
+		SyncServiceHelper.executeRetrieveApiKey(getActivity(), email, password,
+				mReceiver);
 	}
 
 }

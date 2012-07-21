@@ -35,7 +35,6 @@ import org.wheelmap.android.net.NodesExecutor;
 
 import android.app.IntentService;
 import android.app.Service;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
@@ -46,13 +45,11 @@ import android.util.Log;
  * {@link POIsProvider}. Reads data from remote source
  */
 public class SyncService extends IntentService {
-	private static final String TAG = "SyncService";
+	private static final String TAG = SyncService.class.getSimpleName();
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
 	public static final int STATUS_FINISHED = 0x3;
-
-	private ContentResolver mResolver;
 
 	public SyncService() {
 		super(TAG);
@@ -61,7 +58,6 @@ public class SyncService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mResolver = getContentResolver();
 	}
 
 	@Override
@@ -75,35 +71,35 @@ public class SyncService extends IntentService {
 		if (receiver != null)
 			receiver.send(STATUS_RUNNING, Bundle.EMPTY);
 
-		final Bundle bundle = intent.getExtras();
+		final Bundle arguments = intent.getExtras();
 
-		int what = bundle.getInt(Extra.WHAT);
+		int what = arguments.getInt(Extra.WHAT);
 		IExecutor executor = null;
 		switch (what) {
 		case What.RETRIEVE_NODE:
-			executor = new NodeExecutor(mResolver, bundle);
+			executor = new NodeExecutor(getContentResolver(), arguments);
 			break;
 		case What.RETRIEVE_NODES:
 		case What.SEARCH_NODES:
 		case What.SEARCH_NODES_IN_BOX:
-			executor = new NodesExecutor(mResolver, bundle);
+			executor = new NodesExecutor(getContentResolver(), arguments);
 			break;
 		case What.RETRIEVE_LOCALES:
-			executor = new LocalesExecutor(mResolver, bundle);
+			executor = new LocalesExecutor(getContentResolver(), arguments);
 			break;
 		case What.RETRIEVE_CATEGORIES:
-			executor = new CategoriesExecutor(mResolver, bundle);
+			executor = new CategoriesExecutor(getContentResolver(), arguments);
 			break;
 		case What.RETRIEVE_NODETYPES:
-			executor = new NodeTypesExecutor(mResolver, bundle);
+			executor = new NodeTypesExecutor(getContentResolver(), arguments);
 			break;
 		case What.UPDATE_SERVER:
 			executor = new NodeUpdateOrNewExecutor(getApplicationContext(),
-					mResolver);
+					getContentResolver());
 			break;
 		case What.RETRIEVE_APIKEY:
-			executor = new ApiKeyExecutor(getApplicationContext(), mResolver,
-					bundle);
+			executor = new ApiKeyExecutor(getApplicationContext(),
+					getContentResolver(), arguments);
 			break;
 		default:
 			return; // noop no instruction, no operation;
@@ -118,10 +114,10 @@ public class SyncService extends IntentService {
 			Log.e(TAG, "Problem while executing", e);
 			if (receiver != null) {
 				// Pass back error to surface listener
-				final Bundle responsebundle = new Bundle();
-				responsebundle.putParcelable(Extra.EXCEPTION, e);
-				responsebundle.putInt(Extra.WHAT, what);
-				receiver.send(STATUS_ERROR, responsebundle);
+				final Bundle bundle = new Bundle();
+				bundle.putParcelable(Extra.EXCEPTION, e);
+				bundle.putInt(Extra.WHAT, what);
+				receiver.send(STATUS_ERROR, bundle);
 				return;
 			}
 		}
@@ -129,10 +125,9 @@ public class SyncService extends IntentService {
 		// Log.d(TAG, "sync finished");
 		if (receiver != null) {
 			Log.d(TAG, "sending STATUS_FINISHED");
-			final Bundle responsebundle = new Bundle();
-			responsebundle.putInt(Extra.WHAT, what);
-			receiver.send(STATUS_FINISHED, responsebundle);
+			final Bundle bundle = new Bundle();
+			bundle.putInt(Extra.WHAT, what);
+			receiver.send(STATUS_FINISHED, bundle);
 		}
 	}
-
 }

@@ -30,12 +30,12 @@ import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
@@ -236,13 +236,8 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public void requestUpdate(Bundle bundle) {
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
-		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
-		intent.putExtra(Extra.LOCATION, mLocation);
-		intent.putExtra(Extra.DISTANCE_LIMIT, mDistance);
-		getActivity().startService(intent);
+		SyncServiceHelper.retrieveNodesByDistance(getActivity(), mLocation,
+				mDistance, mReceiver);
 	}
 
 	@Override
@@ -271,11 +266,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 			bundle.putParcelable(Extra.LOCATION, mLocation);
 
 		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(bundle);
-		getActivity().startService(intent);
+		SyncServiceHelper.executeRequest(getActivity(), bundle);
 	}
 
 	@Override

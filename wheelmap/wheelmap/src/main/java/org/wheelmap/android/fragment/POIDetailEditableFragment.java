@@ -8,20 +8,18 @@ import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.CursorLoaderHelper;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.net.PrepareDatabaseHelper;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceHelper;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -280,10 +278,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		getActivity().getContentResolver().update(getUriForPoiID(), values, "",
 				null);
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
-		getActivity().startService(intent);
+		SyncServiceHelper.executeUpdateServer(getActivity());
 
 		if (mListener != null) {
 			mListener.onEditSave();

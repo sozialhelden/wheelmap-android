@@ -13,12 +13,13 @@ import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.CursorLoaderHelper;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.ui.mapsforge.ConfigureMapView;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ViewTool;
@@ -95,6 +96,10 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		void onEditWheelchairState(WheelchairState wState);
 
 		void onShowLargeMapAt(GeoPoint point);
+
+		void onLoadStatus(boolean loading);
+
+		void onError(SyncServiceException e);
 	}
 
 	private OnPOIDetailListener mListener;
@@ -300,13 +305,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private void requestData(Long wmID) {
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODE);
-		intent.putExtra(Extra.WM_ID, wmID);
-		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
-		getActivity().startService(intent);
+		SyncServiceHelper.retrieveNode(getActivity(), wmID, mReceiver);
 	}
 
 	@Override
@@ -331,12 +330,22 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
+			if (mListener != null)
+				mListener.onLoadStatus(true);
 			break;
 		}
 		case SyncService.STATUS_FINISHED: {
+			if (mListener != null)
+				mListener.onLoadStatus(false);
 			break;
 		}
 		case SyncService.STATUS_ERROR: {
+			if (mListener != null)
+				mListener.onLoadStatus(false);
+			final SyncServiceException e = resultData
+					.getParcelable(Extra.EXCEPTION);
+			if (mListener != null)
+				mListener.onError(e);
 			break;
 		}
 		default: {

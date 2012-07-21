@@ -29,11 +29,11 @@ import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
@@ -242,11 +242,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		}
 
 		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(bundle);
-		getActivity().startService(intent);
+		SyncServiceHelper.executeRequest(getActivity(), bundle);
 		setSearchMode(true);
 	}
 
@@ -255,12 +251,9 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		if (isSearchMode)
 			return;
 
-		final Intent intent = new Intent(Intent.ACTION_SYNC, null,
-				getActivity(), SyncService.class);
-		intent.putExtras(bundle);
-		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
-		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
-		getActivity().startService(intent);
+		bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
+		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
+		SyncServiceHelper.executeRequest(getActivity(), bundle);
 	}
 
 	@Override
