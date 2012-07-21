@@ -48,77 +48,8 @@ limitations under the License.
             </intent-filter>
         </activity>
         <activity
-            android:name="org.wheelmap.android.ui.POIsListActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_list" />
-        </activity>
-        <activity
-            android:name="org.wheelmap.android.ui.mapsforge.POIsMapsforgeActivity"
-            android:label="@string/title_pois_map"
-            android:launchMode="singleTask" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable_map" />
-        </activity>
-        <activity
-            android:name="org.wheelmap.android.ui.POIDetailActivity"
-            android:label="@string/title_pois_detail_activity" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" >
-                </action>
-
-                <category android:name="android.intent.category.DEFAULT" >
-                </category>
-                <category android:name="android.intent.category.BROWSABLE" >
-                </category>
-
-                <data
-                    android:host="*wheelmap.org"
-                    android:pathPrefix="/nodes/"
-                    android:scheme="http" >
-                </data>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="org.wheelmap.android.ui.POIDetailActivityEditable"
-            android:label="@string/title_pois_map" />
-        <activity
-            android:name="org.wheelmap.android.ui.mapsforge.EditPositionActivity"
-            android:label="@string/title_pois_position_edit" />
-        <activity
-            android:name="org.wheelmap.android.ui.NodeTypeSelectActivity"
-            android:label="@string/title_nodetype_edit" />
-        <activity
-            android:name="org.wheelmap.android.ui.NewSettingsActivity"
-            android:label="@string/title_pois_settings" />
-        <activity
-            android:name="org.wheelmap.android.ui.WheelchairStateActivity"
-            android:label="@string/title_wheelchair_state" />
-        <activity
-            android:name="org.wheelmap.android.ui.SearchActivity"
-            android:label="@string/title_search"
-            android:theme="@style/Theme.Sherlock.Light.Transparent" />
-        <activity
-            android:name="org.wheelmap.android.ui.LoginActivity"
-            android:label="@string/title_login"
-            android:theme="@style/Theme.Sherlock.Light.Transparent" />
-        <activity
-            android:name="org.wheelmap.android.ui.InfoActivity"
-            android:label="@string/title_info" />
-        <activity
-            android:name="org.wheelmap.android.ui.LegalNoticeActivity"
-            android:label="@string/title_legal_notice" />
-        <activity android:name="org.wheelmap.android.activity.MainSinglePaneActivity" >
+            android:name="org.wheelmap.android.activity.MainSinglePaneActivity"
+            android:label="" >
         </activity>
         <activity
             android:name="org.wheelmap.android.activity.POIDetailActivity"
