@@ -4,15 +4,13 @@ import java.util.ArrayList;
 
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsListFragment.OnPOIsListListener;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment.OnPOIsListWorkerListener;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment.OnPOIsMapsforgeListener;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerListener;
+import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
@@ -38,8 +36,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import de.akquinet.android.androlog.Log;
 
 public class MainSinglePaneActivity extends MapsforgeMapActivity implements
-		OnStateListener, OnPOIsListListener, OnPOIsListWorkerListener,
-		OnPOIsMapsforgeListener, OnPOIsMapsforgeWorkerListener {
+		DisplayFragmentListener, WorkerFragmentListener, OnStateListener {
 	private static final String TAG = MainSinglePaneActivity.class
 			.getSimpleName();
 	private final static ArrayList<TabHolder> mIndexToTab;
@@ -57,10 +54,9 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.activity_fragment_singleframe);
 		setSupportProgressBarIndeterminateVisibility(false);
 
-		getSupportFragmentManager().enableDebugLogging(true);
+		// FragmentManager.enableDebugLogging(true);
 
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
@@ -242,9 +238,10 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onShowDetail(long id) {
+	public void onShowDetail(long id, String wmId) {
 		Intent intent = new Intent(this, POIDetailActivity.class);
 		intent.putExtra(Extra.POI_ID, id);
+		intent.putExtra(Extra.WM_ID, wmId);
 		startActivity(intent);
 	}
 

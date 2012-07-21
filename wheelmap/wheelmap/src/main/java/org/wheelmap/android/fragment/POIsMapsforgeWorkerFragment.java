@@ -55,7 +55,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	private final static int LOADER_ID_LIST = 0;
 
 	private DisplayFragment mDisplayFragment;
-	private OnPOIsMapsforgeWorkerListener mListener;
+	private WorkerFragmentListener mListener;
 	private DetachableResultReceiver mReceiver;
 
 	private MyLocationManager mLocationManager;
@@ -66,22 +66,12 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	private boolean mRefreshStatus;
 	private GeoPoint mGeoPoint;
 
-	public interface OnPOIsMapsforgeWorkerListener {
-		void onError(SyncServiceException e);
-
-		void onSearchModeChange(boolean isSearchMode);
-	}
-
-	public POIsMapsforgeWorkerFragment() {
-		super();
-	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsMapsforgeWorkerListener)
-			mListener = (OnPOIsMapsforgeWorkerListener) activity;
+		if (activity instanceof WorkerFragmentListener)
+			mListener = (WorkerFragmentListener) activity;
 	}
 
 	@Override

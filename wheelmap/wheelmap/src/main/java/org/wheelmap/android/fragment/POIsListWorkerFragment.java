@@ -61,7 +61,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	private final static double QUERY_DISTANCE_DEFAULT = 0.8;
 	private DisplayFragment mDisplayFragment;
 
-	private OnPOIsListWorkerListener mListener;
+	private WorkerFragmentListener mListener;
 	private DetachableResultReceiver mReceiver;
 	private boolean mRefreshStatus = false;
 
@@ -70,21 +70,12 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	private float mDistance;
 	private Cursor mCursor;
 
-	public interface OnPOIsListWorkerListener {
-
-		public void onError(SyncServiceException e);
-	}
-
-	public POIsListWorkerFragment() {
-		super();
-	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsListWorkerListener)
-			mListener = (OnPOIsListWorkerListener) activity;
+		if (activity instanceof WorkerFragmentListener)
+			mListener = (WorkerFragmentListener) activity;
 	}
 
 	@Override

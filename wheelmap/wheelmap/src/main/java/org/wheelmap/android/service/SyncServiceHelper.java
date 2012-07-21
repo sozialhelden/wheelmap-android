@@ -18,7 +18,7 @@ public class SyncServiceHelper {
 		context.startService(intent);
 	}
 
-	public static void retrieveNode(Context context, Long id,
+	public static void retrieveNode(Context context, String id,
 			DetachableResultReceiver mReceiver) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);

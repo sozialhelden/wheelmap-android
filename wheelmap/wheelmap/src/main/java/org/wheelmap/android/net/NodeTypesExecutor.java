@@ -36,9 +36,8 @@ import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
-public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
-		implements IExecutor {
-	private final static String TAG = NodeTypesExecutor.class.getSimpleName();
+public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
+		IExecutor {
 	private Locale mLocale;
 
 	public NodeTypesExecutor(Context context, Bundle bundle) {
@@ -57,7 +56,6 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 
 	@Override
 	public void execute() throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
 		NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder(
 				SERVER, getApiKey(), AcceptType.JSON);
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE));
@@ -66,8 +64,7 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 		}
 		clearTempStore();
 		retrieveSinglePage(requestBuilder);
-		Log.d(TAG, "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
+
 	}
 
 	@Override
@@ -77,7 +74,7 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 			bulkInsert(nodeTypes);
 		}
 		long insertEnd = System.currentTimeMillis();
-		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
+		Log.d(getTag(), "insertTime = " + (insertEnd - insertStart) / 1000f);
 		clearTempStore();
 	}
 

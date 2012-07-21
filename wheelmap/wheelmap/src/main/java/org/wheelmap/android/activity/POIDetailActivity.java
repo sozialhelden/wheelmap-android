@@ -1,24 +1,25 @@
 package org.wheelmap.android.activity;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 
-import roboguice.inject.ContentView;
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+
+import com.actionbarsherlock.view.Window;
+
 import de.akquinet.android.androlog.Log;
 
-@ContentView(R.layout.activity_fragment_singleframe)
 public class POIDetailActivity extends MapsforgeMapActivity implements
 		OnPOIDetailListener {
 	private final static String TAG = POIDetailActivity.class.getSimpleName();
@@ -31,6 +32,8 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setSupportProgressBarIndeterminateVisibility(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
@@ -41,26 +44,33 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		}
 
 		Intent intent = getIntent();
+		Long id;
+		String wmId;
 		// check if this intent is started via custom scheme link
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri uri = intent.getData();
-			long wmID = Extra.ID_UNKNOWN;
-			try {
-				wmID = Long.parseLong(uri.getLastPathSegment());
-			} catch (NumberFormatException e) {
-				// TODO: show a dialog with a meaningful message here
+			String uriArg = uri.getLastPathSegment();
+			if (uriArg.length() == 0) {
+				Log.e(TAG, "wmID is empty - cant start fragment");
+				// do something meaningful here
 				finish();
 			}
-			Log.d(TAG, "onCreate: wmId = " + wmID);
-			mFragment = POIDetailFragment.newInstanceWithWMID(wmID);
+
+			wmId = uriArg;
+			id = Extra.ID_UNKNOWN;
 		} else {
-			long poiID = getIntent().getLongExtra(Extra.POI_ID,
-					Extra.ID_UNKNOWN);
-			Log.d(TAG, "onCreate: poiID = " + poiID);
-			mFragment = POIDetailFragment.newInstanceWithPOIID(poiID);
+			Bundle extras = intent.getExtras();
+			if (extras == null)
+				return;
+
+			id = extras.getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
+			wmId = extras.getString(Extra.WM_ID);
 		}
 
-		fm.beginTransaction().add(R.id.frame, mFragment, POIDetailFragment.TAG)
+		mFragment = POIDetailFragment.newInstance(id, wmId);
+
+		fm.beginTransaction()
+				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
 				.commit();
 	}
 
@@ -126,21 +136,26 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 				if (data != null) {
 					long poiID = mFragment.getPoiId();
 
-					WheelchairState newState = WheelchairState.valueOf(Integer
-							.parseInt(data.getAction()));
-					Uri poiUri = Uri.withAppendedPath(
-							Wheelmap.POIs.CONTENT_URI_POI_ID,
-							String.valueOf(poiID));
-					ContentValues values = new ContentValues();
-					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
-					values.put(Wheelmap.POIs.UPDATE_TAG,
-							Wheelmap.UPDATE_WHEELCHAIR_STATE);
-					this.getContentResolver().update(poiUri, values, "", null);
-
+					WheelchairState state = WheelchairState
+							.valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
+									Extra.UNKNOWN));
+					writeNewStateToDB(poiID, state);
 					SyncServiceHelper.executeUpdateServer(this);
 				}
 			}
 		}
+	}
+
+	private void writeNewStateToDB(long id, WheelchairState state) {
+		if (id == Extra.ID_UNKNOWN || state == null)
+			return;
+
+		Uri uri = Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
+				String.valueOf(id));
+		ContentValues values = new ContentValues();
+		values.put(Wheelmap.POIs.WHEELCHAIR, state.getId());
+		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_WHEELCHAIR_STATE);
+		getContentResolver().update(uri, values, null, null);
 	}
 
 	@Override
@@ -165,13 +180,16 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onLoadStatus(boolean loading) {
-		// TODO Auto-generated method stub
-
+		setSupportProgressBarIndeterminateVisibility(loading);
 	}
 
 	@Override
 	public void onError(SyncServiceException e) {
-		// TODO Auto-generated method stub
+		FragmentManager fm = getSupportFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		if (errorDialog == null)
+			return;
 
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
 	}
 }

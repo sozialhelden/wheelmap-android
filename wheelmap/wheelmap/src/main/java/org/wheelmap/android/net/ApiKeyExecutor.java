@@ -40,7 +40,6 @@ import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
 public class ApiKeyExecutor extends AbstractExecutor {
-	private final static String TAG = ApiKeyExecutor.class.getSimpleName();
 
 	private String mEmail;
 	private String mPassword;
@@ -81,11 +80,11 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.value() == statusAuthFailed) {
-				Log.e(TAG, "wrong email or password");
+				Log.e(getTag(), "wrong email or password");
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_AUTHORIZATION_ERROR, e);
 			} else if (status.value() == statusOSMFailed) {
-				Log.e(TAG, "not osm connected");
+				Log.e(getTag(), "not osm connected");
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_NOT_OSM_CONNECTED, e);
 			}

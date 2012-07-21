@@ -33,9 +33,8 @@ import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
-public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
+public class CategoriesExecutor extends MultiPageExecutor<Categories>
 		implements IExecutor {
-	private final static String TAG = CategoriesExecutor.class.getSimpleName();
 	private Locale mLocale;
 
 	public CategoriesExecutor(Context context, Bundle bundle) {
@@ -54,18 +53,13 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
 
 	@Override
 	public void execute() throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
 		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder(
 				SERVER, getApiKey(), AcceptType.JSON);
-		// requestBuilder.paging( new Paging( DEFAULT_TEST_PAGE_SIZE ));
 		if (mLocale != null)
 			requestBuilder.locale(mLocale);
 
 		clearTempStore();
 		retrieveSinglePage(requestBuilder);
-
-		Log.d(TAG, "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
@@ -75,7 +69,7 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
 			PrepareDatabaseHelper.bulkInsert(getResolver(), categories);
 		}
 		long insertEnd = System.currentTimeMillis();
-		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
+		Log.d(getTag(), "insertTime = " + (insertEnd - insertStart) / 1000f);
 		clearTempStore();
 	}
 

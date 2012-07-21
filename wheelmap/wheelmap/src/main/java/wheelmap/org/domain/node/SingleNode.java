@@ -23,33 +23,32 @@ package wheelmap.org.domain.node;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 
+import wheelmap.org.domain.Base;
+
 @JsonAutoDetect
-public class SingleNode {
+public class SingleNode extends Base {
 
 	protected Node node;
-	
-	/**
-     * Gets the value of the node property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Node }
-     *     
-     */
-    public Node getNode() {
-        return node;
-    }
 
-    /**
-     * Sets the value of the node property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Node }
-     *     
-     */
-    public void setNode(Node value) {
-        this.node = value;
-    }
-	
+	/**
+	 * Gets the value of the node property.
+	 * 
+	 * @return possible object is {@link Node }
+	 * 
+	 */
+	public Node getNode() {
+		return node;
+	}
+
+	/**
+	 * Sets the value of the node property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Node }
+	 * 
+	 */
+	public void setNode(Node value) {
+		this.node = value;
+	}
+
 }

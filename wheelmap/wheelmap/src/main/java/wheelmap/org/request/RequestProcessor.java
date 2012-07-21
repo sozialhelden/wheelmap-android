@@ -28,6 +28,8 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import de.akquinet.android.androlog.Log;
+
 /**
  * Sends the {@link HttpUriRequest}s to the REST-Server (Testsystem, e.g. is
  * http://staging.wheelmap.org/api/)
@@ -38,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
  * @author p.lipp@web.de
  */
 public class RequestProcessor {
+	private final static String TAG = RequestProcessor.class.getSimpleName();
 	private final RestTemplate restTemplate;
 
 	public RequestProcessor() {
@@ -50,14 +53,17 @@ public class RequestProcessor {
 	}
 
 	public <T> T get(final URI uri, Class<T> clazz) {
+		Log.d(TAG, uri.getQuery());
 		return restTemplate.getForObject(uri, clazz);
 	}
 
 	public <T> T post(final URI uri, final T postObject, Class<T> clazz) {
+		Log.d(TAG, uri.getQuery());
 		return restTemplate.postForObject(uri, postObject, clazz);
 	}
 
 	public <T> void put(final URI uri, final T putObject) {
+		Log.d(TAG, uri.getQuery());
 		restTemplate.put(uri, putObject);
 	}
 }

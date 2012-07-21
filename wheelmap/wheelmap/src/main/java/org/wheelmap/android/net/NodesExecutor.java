@@ -41,11 +41,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import de.akquinet.android.androlog.Log;
 
-public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
+public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 		IExecutor {
-	private static final String TAG = NodesExecutor.class.getSimpleName();
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
 	private BoundingBox mBoundingBox = null;
@@ -98,7 +96,6 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 	@Override
 	public void execute() throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
 		BaseNodesRequestBuilder requestBuilder;
 		if (mCategory != Extra.UNKNOWN) {
 			requestBuilder = new CategoryNodesRequestBuilder(SERVER,
@@ -119,9 +116,6 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		requestBuilder.wheelchairState(mWheelchairState);
 		clearTempStore();
 		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
-
-		Log.d(TAG, "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override

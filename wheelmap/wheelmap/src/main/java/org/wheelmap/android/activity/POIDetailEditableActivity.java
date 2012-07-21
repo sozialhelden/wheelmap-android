@@ -30,7 +30,6 @@ import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
 import android.content.Intent;
@@ -56,7 +55,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_fragment_singleframe);
 		poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 
 		setExternalEditableState(savedInstanceState);
@@ -66,7 +64,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 
-		mFragment = fm.findFragmentById(R.id.frame);
+		mFragment = fm.findFragmentById(android.R.id.content);
 		if (mFragment != null) {
 			return;
 		}
@@ -75,7 +73,8 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			mFragment = POIDetailEditableFragment.newInstance(poiID);
 		}
 
-		fm.beginTransaction().add(R.id.frame, mFragment, POIDetailFragment.TAG)
+		fm.beginTransaction()
+				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
 				.commit();
 	}
 
@@ -147,7 +146,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.frame, mFragment, EditPositionFragment.TAG);
+		ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
 		ft.addToBackStack(null);
 		ft.commit();
 	}
@@ -165,7 +164,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.frame, mFragment, NodetypeSelectFragment.TAG);
+		ft.replace(android.R.id.content, mFragment, NodetypeSelectFragment.TAG);
 		ft.addToBackStack(null);
 		ft.commit();
 	}
@@ -189,7 +188,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onBackStackChanged() {
 		FragmentManager fm = getSupportFragmentManager();
-		mFragment = fm.findFragmentById(R.id.frame);
+		mFragment = fm.findFragmentById(android.R.id.content);
 	}
 
 	public static class ExternalEditableState {

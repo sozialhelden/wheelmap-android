@@ -81,21 +81,14 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
 	private GeoPoint mLastGeoPointE6;
 
-	public interface OnPOIsMapsforgeListener {
-		public void onShowDetail(long id);
-
-		public void onRefreshing(boolean isRefreshing);
-
-	}
-
-	private OnPOIsMapsforgeListener mListener;
+	private DisplayFragmentListener mListener;
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsMapsforgeListener)
-			mListener = (OnPOIsMapsforgeListener) activity;
+		if (activity instanceof DisplayFragmentListener)
+			mListener = (DisplayFragmentListener) activity;
 	}
 
 	@Override
@@ -149,8 +142,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		super.onActivityCreated(savedInstanceState);
 
 		if (getArguments() == null
-				|| getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-						true)) {
+				|| getArguments()
+						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
 			FragmentManager fm = getFragmentManager();
 			Fragment fragment = (POIsMapsforgeWorkerFragment) fm
 					.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
@@ -387,9 +380,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onTap(OverlayItem item, long poiId) {
+	public void onTap(OverlayItem item, long poiId, String wmId) {
 		if (mListener != null)
-			mListener.onShowDetail(poiId);
+			mListener.onShowDetail(poiId, wmId);
 	}
 
 	private void showSearch() {

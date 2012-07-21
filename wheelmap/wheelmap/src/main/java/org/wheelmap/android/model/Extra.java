@@ -2,6 +2,7 @@ package org.wheelmap.android.model;
 
 public interface Extra {
 	public final static long ID_UNKNOWN = -1l;
+	public final static String WM_ID_UNKNOWN = null;
 	public final static int UNKNOWN = -1;
 
 	public final static String POI_ID = "org.wheelmap.android.POI_ID";

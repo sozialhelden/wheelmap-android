@@ -17,10 +17,10 @@ public class CursorLoaderHelper {
 		return new CursorLoader(WheelmapApp.get(), uri, null, null, null, null);
 	}
 
-	public static CursorLoader createWMIdLoader(long id) {
+	public static CursorLoader createWMIdLoader(String id) {
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		String whereClause = "( " + POIs.WM_ID + " = ? )";
-		String whereValues[] = new String[] { Long.toString(id) };
+		String whereValues[] = new String[] { id };
 
 		return new CursorLoader(WheelmapApp.get(), uri, null, whereClause,
 				whereValues, null);

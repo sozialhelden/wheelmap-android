@@ -57,7 +57,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		DetachableResultReceiver.Receiver {
 
 	public final static String TAG = POIDetailFragment.class.getSimpleName();
-	private final static int LOADER_CONTENT = 0;
+	private final static int LOADER_POIID = 0;
+	private final static int LOADER_WMID = 1;
 
 	@InjectView(R.id.title_container)
 	private RelativeLayout title_container;
@@ -107,26 +108,22 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private MapController mapController;
 
 	private long poiID;
-	private long wmID;
+	private String wmID;
 
 	private DetachableResultReceiver mReceiver;
 
 	private ShareActionProvider mShareActionProvider;
 	private ShareActionProvider mDirectionsActionProvider;
 
-	public static POIDetailFragment newInstanceWithWMID(Long wmID) {
-		Bundle b = new Bundle();
-		b.putLong(Extra.WM_ID, wmID);
-		POIDetailFragment f = new POIDetailFragment();
-		f.setArguments(b);
-		return f;
-	}
+	public static POIDetailFragment newInstance(long id, String wmId) {
+		if (id == Extra.ID_UNKNOWN && wmId == Extra.WM_ID_UNKNOWN)
+			return null;
 
-	public static POIDetailFragment newInstanceWithPOIID(Long poiID) {
-		Bundle b = new Bundle();
-		b.putLong(Extra.POI_ID, poiID);
+		Bundle bundle = new Bundle();
+		bundle.putLong(Extra.POI_ID, id);
+		bundle.putString(Extra.WM_ID, wmId);
 		POIDetailFragment f = new POIDetailFragment();
-		f.setArguments(b);
+		f.setArguments(bundle);
 		return f;
 	}
 
@@ -200,7 +197,12 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getLoaderManager().initLoader(LOADER_CONTENT, getArguments(), this);
+		int loaderId;
+		if (poiID != Extra.ID_UNKNOWN)
+			loaderId = LOADER_POIID;
+		else
+			loaderId = LOADER_WMID;
+		getLoaderManager().initLoader(loaderId, getArguments(), this);
 
 	}
 
@@ -230,10 +232,13 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			return;
 
 		poiID = bundle.getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
-		wmID = bundle.getLong(Extra.WM_ID, Extra.ID_UNKNOWN);
+		wmID = bundle.getString(Extra.WM_ID);
 
-		if (poiID == Extra.ID_UNKNOWN && wmID != Extra.ID_UNKNOWN)
+		Log.d(TAG, "poiID = " + poiID + " wmID = " + wmID);
+
+		if (poiID == Extra.ID_UNKNOWN && wmID != Extra.WM_ID_UNKNOWN) {
 			requestData(wmID);
+		}
 	}
 
 	@Override
@@ -265,6 +270,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		Log.d(TAG, "onCreateOptionsMenu");
 		inflater.inflate(R.menu.ab_detail_fragment, menu);
 		createShareActionProvider(menu);
 	}
@@ -302,7 +308,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		return poiID;
 	}
 
-	private void requestData(Long wmID) {
+	private void requestData(String wmID) {
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 		SyncServiceHelper.retrieveNode(getActivity(), wmID, mReceiver);
@@ -355,7 +361,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	@Override
-	public void onTap(OverlayItem item, long poiId) {
+	public void onTap(OverlayItem item, long poiId, String wmId) {
 
 		if (mListener != null) {
 			mListener.onShowLargeMapAt(item.getPoint());
@@ -364,7 +370,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
-		if (poiID != Extra.ID_UNKNOWN)
+		if (id == LOADER_POIID)
 			return CursorLoaderHelper.createPOIIdLoader(poiID);
 		else
 			return CursorLoaderHelper.createWMIdLoader(wmID);
@@ -372,6 +378,11 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.d(TAG, "onLoadFinished id = " + loader.getId());
+		if (loader.getId() == LOADER_POIID
+				&& (cursor == null || cursor.getCount() == 0))
+			requestData(wmID);
+
 		load(cursor);
 	}
 

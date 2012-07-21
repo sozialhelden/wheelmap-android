@@ -110,4 +110,8 @@ public abstract class AbstractExecutor implements IExecutor {
 		return executor;
 	}
 
+	protected String getTag() {
+		return this.getClass().getSimpleName();
+	}
+
 }
