@@ -38,7 +38,6 @@ import wheelmap.org.request.NodeUpdateOrNewAllRequestBuilder;
 import wheelmap.org.request.RequestBuilder;
 import wheelmap.org.request.WheelchairUpdateRequestBuilder;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import de.akquinet.android.androlog.Log;
@@ -49,14 +48,6 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 
 	private Context mContext;
 	private Cursor mCursor;
-	private static final String whereClauseToUpdate = "( "
-			+ Wheelmap.POIs.UPDATE_TAG + " != ? ) AND ( "
-			+ Wheelmap.POIs.UPDATE_TAG + " != ? ) AND ( "
-			+ Wheelmap.POIs.UPDATE_TAG + " != ? )";
-	private static final String[] whereValueToUpdate = new String[] {
-			Integer.toString(Wheelmap.UPDATE_NO),
-			Integer.toString(Wheelmap.UPDATE_PENDING_STATE_ONLY),
-			Integer.toString(Wheelmap.UPDATE_PENDING_FIELDS_ALL) };
 
 	public NodeUpdateOrNewExecutor(Context context, ContentResolver resolver) {
 		super(resolver, null);
@@ -64,9 +55,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareContent() {
-		mCursor = getResolver().query(Wheelmap.POIs.CONTENT_URI,
-				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
-				whereValueToUpdate, null);
+		mCursor = PrepareDatabaseHelper.queryToUpdate(getResolver());
+
 		if (mCursor == null)
 			return;
 
@@ -144,12 +134,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareDatabase() {
-		copyAllUpdatedToPending();
-		ContentValues values = new ContentValues();
-		values.clear();
-		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
-		getResolver().update(Wheelmap.POIs.CONTENT_URI, values,
-				whereClauseToUpdate, whereValueToUpdate);
+		PrepareDatabaseHelper.copyAllUpdatedToPending(getResolver());
+		PrepareDatabaseHelper.resetUpdateTagOfPending(getResolver());
 
 	}
 
@@ -190,64 +176,6 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	private String getEditApiKey() {
 		UserCredentials credentials = new UserCredentials(mContext);
 		return credentials.getApiKey();
-	}
-
-	private void copyAllUpdatedToPending() {
-		long now = System.currentTimeMillis();
-
-		PrepareDatabaseHelper prebDbHelp = new PrepareDatabaseHelper(
-				getResolver());
-
-		Cursor c = getResolver().query(Wheelmap.POIs.CONTENT_URI,
-				Wheelmap.POIs.PROJECTION, whereClauseToUpdate,
-				whereValueToUpdate, null);
-		if (c == null)
-			return;
-
-		c.moveToFirst();
-		ContentValues values = new ContentValues();
-		while (!c.isAfterLast()) {
-			String wmId = POIHelper.getWMId(c);
-			String whereClauseDest = " ( " + Wheelmap.POIs.UPDATE_TAG
-					+ " = ? ) AND ( " + Wheelmap.POIs.WM_ID + " = ? )";
-			String[] whereValuesDest = new String[2];
-			whereValuesDest[1] = wmId;
-
-			int updateTag = POIHelper.getUpdateTag(c);
-			values.clear();
-
-			if (updateTag == Wheelmap.UPDATE_WHEELCHAIR_STATE) {
-				preparePendingWheelchairUpdate(c, values, whereValuesDest);
-			} else if (updateTag == Wheelmap.UPDATE_ALL_FIELDS) {
-				preparePendingAllUpdate(c, values, whereValuesDest);
-			}
-
-			values.put(Wheelmap.POIs.UPDATE_TIMESTAMP, now);
-			prebDbHelp.insertOrUpdateContentValues(Wheelmap.POIs.CONTENT_URI,
-					Wheelmap.POIs.PROJECTION, whereClauseDest, whereValuesDest,
-					values);
-
-			c.moveToNext();
-		}
-
-		c.close();
-	}
-
-	private void preparePendingWheelchairUpdate(Cursor c, ContentValues values,
-			String[] whereValues) {
-		whereValues[0] = Integer.toString(Wheelmap.UPDATE_PENDING_STATE_ONLY);
-		values.put(Wheelmap.POIs.WM_ID, POIHelper.getWMId(c));
-		values.put(Wheelmap.POIs.WHEELCHAIR, POIHelper.getWheelchair(c).getId());
-		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_PENDING_STATE_ONLY);
-	}
-
-	private void preparePendingAllUpdate(Cursor c, ContentValues values,
-			String[] whereValues) {
-		whereValues[0] = Integer.toString(Wheelmap.UPDATE_PENDING_FIELDS_ALL);
-
-		POIHelper.copyItemToValues(c, values);
-
-		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_FIELDS);
 	}
 
 }

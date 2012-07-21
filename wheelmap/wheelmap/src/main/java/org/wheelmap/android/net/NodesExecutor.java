@@ -22,7 +22,6 @@
 package org.wheelmap.android.net;
 
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -40,9 +39,7 @@ import wheelmap.org.request.Paging;
 import wheelmap.org.request.SearchNodesRequestBuilder;
 import android.app.SearchManager;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
@@ -52,15 +49,13 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
 	private BoundingBox mBoundingBox = null;
-	private int mCategory = -1;
-	private int mNodeType = -1;
+	private int mCategory = Extra.UNKNOWN;
+	private int mNodeType = Extra.UNKNOWN;
 	private String mSearchTerm = null;
 	private WheelchairState mWheelchairState = null;
-	private PrepareDatabaseHelper prepDbHelper;
 
 	public NodesExecutor(ContentResolver resolver, Bundle bundle) {
 		super(resolver, bundle, Nodes.class);
-		prepDbHelper = new PrepareDatabaseHelper(resolver);
 	}
 
 	@Override
@@ -105,10 +100,10 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	public void execute() throws SyncServiceException {
 		final long startRemote = System.currentTimeMillis();
 		BaseNodesRequestBuilder requestBuilder;
-		if (mCategory != -1) {
+		if (mCategory != Extra.UNKNOWN) {
 			requestBuilder = new CategoryNodesRequestBuilder(SERVER,
 					getApiKey(), AcceptType.JSON, mCategory, mSearchTerm);
-		} else if (mNodeType != -1) {
+		} else if (mNodeType != Extra.UNKNOWN) {
 			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER,
 					getApiKey(), AcceptType.JSON, mNodeType, mSearchTerm);
 		} else if (mSearchTerm != null) {
@@ -131,38 +126,13 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 	@Override
 	public void prepareDatabase() {
-		deleteRetrievedData();
-
-		prepDbHelper.deleteAllOldPending();
+		PrepareDatabaseHelper.deleteRetrievedData(getResolver());
+		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
 		for (Nodes nodes : getTempStore()) {
-			bulkInsert(nodes);
+			PrepareDatabaseHelper.bulkInsert(getResolver(), nodes);
 		}
-		prepDbHelper.copyAllPendingDataToRetrievedData();
+		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
 		clearTempStore();
 	}
 
-	private void deleteRetrievedData() {
-		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
-		String[] whereValues = new String[] { String
-				.valueOf(Wheelmap.UPDATE_NO) };
-		Uri uri = Wheelmap.POIs.CONTENT_URI
-				.buildUpon()
-				.appendQueryParameter(Wheelmap.QUERY_DELETE_NOTIFY_PARAM,
-						"false").build();
-		getResolver().delete(uri, whereClause, whereValues);
-	}
-
-	private void bulkInsert(Nodes nodes) {
-		int size = nodes.getMeta().getItemCount().intValue();
-		ContentValues[] contentValuesArray = new ContentValues[size];
-		for (int i = 0; i < size; i++) {
-			ContentValues values = new ContentValues();
-			prepDbHelper.copyNodeToValues(nodes.getNodes().get(i), values);
-
-			contentValuesArray[i] = values;
-		}
-		int count = getResolver().bulkInsert(Wheelmap.POIs.CONTENT_URI,
-				contentValuesArray);
-		Log.d(TAG, "Inserted records count = " + count);
-	}
 }

@@ -27,8 +27,6 @@ import java.net.URISyntaxException;
 
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.node.SingleNode;
@@ -36,7 +34,6 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeRequestBuilder;
 import wheelmap.org.request.RequestBuilder;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
@@ -44,25 +41,23 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 	private static final String TAG = NodeExecutor.class.getSimpleName();
 	private static final int MAX_RETRY_COUNT = 3;
 
-	long mNodeId = -1;
+	long mNodeId = Extra.ID_UNKNOWN;
 
 	private SingleNode mTempStore = new SingleNode();
-	private PrepareDatabaseHelper prepDbHelper;
 
 	public NodeExecutor(ContentResolver resolver, Bundle bundle) {
 		super(resolver, bundle);
-		prepDbHelper = new PrepareDatabaseHelper(resolver);
 	}
 
 	@Override
 	public void prepareContent() {
-		mNodeId = getBundle().getLong(Extra.WM_ID);
+		mNodeId = getBundle().getLong(Extra.WM_ID, Extra.ID_UNKNOWN);
 	}
 
 	@Override
 	public void execute() throws SyncServiceException {
 		NodeRequestBuilder requestBuilder = null;
-		if (mNodeId != -1 && mNodeId != 0) {
+		if (mNodeId != Extra.ID_UNKNOWN) {
 			requestBuilder = new NodeRequestBuilder(SERVER, getApiKey(),
 					AcceptType.JSON, mNodeId);
 		}
@@ -125,20 +120,8 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		prepDbHelper.deleteAllOldPending();
-
-		insert(mTempStore);
-		prepDbHelper.copyAllPendingDataToRetrievedData();
+		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
+		PrepareDatabaseHelper.insert(getResolver(), mTempStore);
+		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
 	}
-
-	private void insert(SingleNode node) {
-		ContentValues values = new ContentValues();
-		prepDbHelper.copyNodeToValues(node.getNode(), values);
-		String whereClause = "( " + POIs.WM_ID + " = ? )";
-		String whereValues[] = { node.getNode().getId().toString() };
-
-		prepDbHelper.insertOrUpdateContentValues(Wheelmap.POIs.CONTENT_URI,
-				Wheelmap.POIs.PROJECTION, whereClause, whereValues, values);
-	}
-
 }
