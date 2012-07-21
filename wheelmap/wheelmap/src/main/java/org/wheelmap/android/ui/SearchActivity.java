@@ -23,7 +23,7 @@ package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.model.CategoryNodeTypesAdapter;
+import org.wheelmap.android.adapter.CategoryNodeTypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
