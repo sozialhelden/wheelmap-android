@@ -1,9 +1,9 @@
 package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
+import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
-import org.wheelmap.android.adapter.WheelchairStateSelectAdapter.WheelchairStateItem;
-import org.wheelmap.android.model.MergeAdapter;
+import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.online.R;
@@ -74,7 +74,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 	private View createSectionTitle(LayoutInflater inflater, int textId) {
 		LinearLayout layout = (LinearLayout) inflater.inflate(
 				R.layout.item_list_sectiontitle, null);
-		TextView title = (TextView) layout.findViewById(R.id.title_section);
+		TextView title = (TextView) layout.findViewById(R.id.text);
 		title.setText(getResources().getString(textId));
 		return layout;
 	}
@@ -102,8 +102,8 @@ public class NewSettingsFragment extends SherlockListFragment implements
 
 		MergeAdapter adapter = (MergeAdapter) l.getAdapter();
 		Object item = l.getItemAtPosition(position);
-		if (item instanceof WheelchairStateItem) {
-			clickWheelStateItem((WheelchairStateItem) item, adapter);
+		if (item instanceof WheelchairAttributes) {
+			clickWheelStateItem((WheelchairAttributes) item, adapter);
 		} else if (item instanceof Cursor) {
 			clickCategorieItem((Cursor) item);
 		} else if (item instanceof String
@@ -112,12 +112,11 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		}
 	}
 
-	private void clickWheelStateItem(WheelchairStateItem item,
+	private void clickWheelStateItem(WheelchairAttributes item,
 			MergeAdapter adapter) {
 		boolean isSet = mPrefs.getBoolean(item.prefsKey, true);
 		boolean toggleSet = !isSet;
 		mPrefs.edit().putBoolean(item.prefsKey, toggleSet).commit();
-
 		adapter.notifyDataSetChanged();
 	}
 
@@ -184,7 +183,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout layout = (LinearLayout) mInflater.inflate(
-					R.layout.settings_delete_logindata, null);
+					R.layout.settings_item_delete_logindata, null);
 
 			return layout;
 		}

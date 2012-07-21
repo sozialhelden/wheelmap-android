@@ -17,12 +17,11 @@ public class WheelchairStateItemView extends FrameLayout {
 	public WheelchairStateItemView(Context context) {
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
-		inflater.inflate(R.layout.settings_wheelstate_select_list_item,
-				this, true);
+		inflater.inflate(R.layout.settings_item_wheelchair, this, true);
 
-		mWheelStateIcon = (ImageView) findViewById(R.id.list_item_wheelstate_icon);
-		mWheelStateText = (TextView) findViewById(R.id.list_item_wheelstate_text);
-		mWheelStateCheckBox = (CheckBox) findViewById(R.id.list_item_wheelstate_checkbox);
+		mWheelStateIcon = (ImageView) findViewById(R.id.image);
+		mWheelStateText = (TextView) findViewById(R.id.text);
+		mWheelStateCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
 		mWheelStateCheckBox.setClickable(false);
 		mWheelStateCheckBox.setFocusable(false);

@@ -22,35 +22,26 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/list_item_background"
-    android:paddingBottom="5dip"
-    android:paddingLeft="12dip"
-    android:paddingRight="5dip"
-    android:paddingTop="9dip" >
+    style="@style/ListItemContainer" >
 
     <ImageView
-        android:id="@+id/list_item_category_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true" />
+        android:id="@id/image"
+        style="@style/IconLarge.WheelStateSelect"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="@dimen/margin_medium" />
 
     <TextView
-        android:id="@+id/list_item_category_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dip"
-        android:layout_toLeftOf="@+id/list_item_select_category_checkbox"
-        android:layout_toRightOf="@+id/list_item_category_icon"
+        android:id="@id/text"
+        style="@style/WheelStateCheckableText"
+        android:layout_toLeftOf="@id/checkbox"
+        android:layout_toRightOf="@id/image"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <CheckBox
-        android:id="@+id/list_item_category_checkbox"
+        android:id="@id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

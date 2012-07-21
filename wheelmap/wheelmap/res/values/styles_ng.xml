@@ -76,11 +76,13 @@
     </style>
 
     <style name="IconMedium">
+        <item name="android:id">@id/image</item>
         <item name="android:layout_width">@dimen/icon_size_medium</item>
         <item name="android:layout_height">@dimen/icon_size_medium</item>
     </style>
 
     <style name="IconLarge">
+        <item name="android:id">@id/image</item>
         <item name="android:layout_width">@dimen/icon_size_large</item>
         <item name="android:layout_height">@dimen/icon_size_large</item>
     </style>
@@ -194,5 +196,15 @@
     <style name="FontSectionTitle" parent="@android:style/TextAppearance.Medium">
         <item name="android:textAllCaps">true</item>
     </style>
+    
+    <style name="WheelStateCheckableText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/margin_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+    
 
 </resources>

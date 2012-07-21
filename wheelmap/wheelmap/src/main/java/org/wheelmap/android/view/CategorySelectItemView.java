@@ -41,25 +41,25 @@ public class CategorySelectItemView extends FrameLayout {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		inflater.inflate(R.layout.settings_category_select_list_item, this, true);
-		
-		mCategoryIcon = (ImageView) findViewById( R.id.list_item_category_icon );
-		mCategoryText = (TextView) findViewById( R.id.list_item_category_text );
-		mCategoryCheckBox = (CheckBox) findViewById( R.id.list_item_category_checkbox);
-		
-		mCategoryCheckBox.setClickable( false );
-		mCategoryCheckBox.setFocusable( false );
+		inflater.inflate(R.layout.settings_item_category, this, true);
+
+		mCategoryIcon = (ImageView) findViewById(R.id.image);
+		mCategoryText = (TextView) findViewById(R.id.text);
+		mCategoryCheckBox = (CheckBox) findViewById(R.id.checkbox);
+
+		mCategoryCheckBox.setClickable(false);
+		mCategoryCheckBox.setFocusable(false);
 	}
-	
-	public void setIcon( Drawable icon ) {
-		mCategoryIcon.setImageDrawable( icon );
+
+	public void setIcon(Drawable icon) {
+		mCategoryIcon.setImageDrawable(icon);
 	}
-	
-	public void setName( String name ) {
-		mCategoryText.setText( name );
+
+	public void setName(String name) {
+		mCategoryText.setText(name);
 	}
-	
-	public void setCheckboxChecked( boolean checked ) {
-		mCategoryCheckBox.setChecked( checked );
+
+	public void setCheckboxChecked(boolean checked) {
+		mCategoryCheckBox.setChecked(checked);
 	}
 }

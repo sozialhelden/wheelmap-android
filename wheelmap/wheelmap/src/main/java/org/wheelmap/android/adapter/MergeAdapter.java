@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.model;
+package org.wheelmap.android.adapter;
 
 /***
  Copyright (c) 2008-2009 CommonsWare, LLC
@@ -35,17 +35,15 @@ package org.wheelmap.android.model;
  limitations under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.SectionIndexer;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.wheelmap.android.adapter.SackOfViewsAdapter;
-
 
 /**
  * Adapter that merges multiple child adapters and views into a single

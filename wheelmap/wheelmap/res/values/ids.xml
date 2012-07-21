@@ -21,7 +21,7 @@
   #L%
   -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<item type="id" name="title_container" />
 	<item type="id" name="title_logo" />
 	<item type="id" name="title_text" />
@@ -33,4 +33,7 @@
 	<!-- ids ng -->
 	<item type="id" name="titlebar_title" />
 	<item type="id" name="titlebar_subtitle" />
+	<item type="id" name="text" />
+	<item type="id" name="image" />
+	<item type="id" name="checkbox" />
 </resources>

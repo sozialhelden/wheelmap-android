@@ -22,9 +22,9 @@
 package org.wheelmap.android.ui;
 
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
+import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
-import org.wheelmap.android.adapter.WheelchairStateSelectAdapter.WheelchairStateItem;
-import org.wheelmap.android.model.MergeAdapter;
+import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.online.R;
@@ -79,7 +79,8 @@ public class NewSettingsActivity extends ListActivity implements
 
 		CategorySelectCursorAdapter adapterCatList = new CategorySelectCursorAdapter(
 				this, cursor, true);
-		WheelchairStateSelectAdapter adapterWSList = new WheelchairStateSelectAdapter(this);
+		WheelchairStateSelectAdapter adapterWSList = new WheelchairStateSelectAdapter(
+				this);
 
 		MergeAdapter adapter = new MergeAdapter();
 		adapter.addView(createWheelStateTitle());
@@ -96,20 +97,20 @@ public class NewSettingsActivity extends ListActivity implements
 
 	private View createWheelStateTitle() {
 		LinearLayout layout = (LinearLayout) mInflater.inflate(
-				R.layout.settings_wheelstate_item_title, null);
+				R.layout.settings_item_wheelstate_title, null);
 		return layout;
 	}
 
 	private View createCatTitle() {
 
 		LinearLayout layout = (LinearLayout) mInflater.inflate(
-				R.layout.settings_category_item_title, null);
+				R.layout.settings_item_category_title, null);
 		return layout;
 	}
 
 	private View createBlackBar() {
 		LinearLayout layout = (LinearLayout) mInflater.inflate(
-				R.layout.settings_black_item, null);
+				R.layout.item_black, null);
 		return layout;
 	}
 
@@ -129,8 +130,8 @@ public class NewSettingsActivity extends ListActivity implements
 
 		MergeAdapter adapter = (MergeAdapter) l.getAdapter();
 		Object item = l.getItemAtPosition(position);
-		if (item instanceof WheelchairStateItem) {
-			clickWheelStateItem((WheelchairStateItem) item, adapter);
+		if (item instanceof WheelchairAttributes) {
+			clickWheelStateItem((WheelchairAttributes) item, adapter);
 		} else if (item instanceof Cursor) {
 			clickCategorieItem((Cursor) item);
 		} else if (item instanceof String
@@ -155,7 +156,7 @@ public class NewSettingsActivity extends ListActivity implements
 		startActivity(intent);
 	}
 
-	private void clickWheelStateItem(WheelchairStateItem item,
+	private void clickWheelStateItem(WheelchairAttributes item,
 			MergeAdapter adapter) {
 		boolean isSet = mPrefs.getBoolean(item.prefsKey, true);
 		boolean toggleSet = !isSet;
@@ -222,7 +223,7 @@ public class NewSettingsActivity extends ListActivity implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LinearLayout layout = (LinearLayout) mInflater.inflate(
-					R.layout.settings_delete_logindata, null);
+					R.layout.settings_item_delete_logindata, null);
 
 			return layout;
 		}

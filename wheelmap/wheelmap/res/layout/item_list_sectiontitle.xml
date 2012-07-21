@@ -6,7 +6,7 @@
     android:paddingTop="@dimen/padding_large" >
 
     <TextView
-        android:id="@+id/title_section"
+        android:id="@id/text"
         style="@style/FontSectionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

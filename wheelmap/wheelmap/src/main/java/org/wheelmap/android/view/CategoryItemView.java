@@ -21,7 +21,7 @@ public class CategoryItemView extends FrameLayout implements TypeItemView {
 			resource = R.layout.search_category_noselect;
 
 		inflater.inflate(resource, this, true);
-		mText = (TextView) findViewById(R.id.search_type);
+		mText = (TextView) findViewById(R.id.text);
 	}
 
 	public void setText(String text) {

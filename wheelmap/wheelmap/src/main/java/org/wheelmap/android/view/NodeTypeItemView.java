@@ -14,7 +14,7 @@ public class NodeTypeItemView extends FrameLayout implements TypeItemView {
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
 		inflater.inflate(R.layout.search_nodetype, this, true);
-		mText = (CheckedTextView) findViewById(R.id.search_type);
+		mText = (CheckedTextView) findViewById(R.id.text);
 	}
 
 	public void setText(String text) {
