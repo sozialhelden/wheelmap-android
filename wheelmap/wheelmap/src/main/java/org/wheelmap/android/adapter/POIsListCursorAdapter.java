@@ -26,9 +26,9 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
-import org.wheelmap.android.ui.POIsListItemView;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
+import org.wheelmap.android.view.POIsListItemView;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;

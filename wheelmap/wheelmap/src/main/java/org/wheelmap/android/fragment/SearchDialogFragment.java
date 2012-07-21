@@ -2,7 +2,7 @@ package org.wheelmap.android.fragment;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.adapter.CategoryNodeTypesAdapter;
+import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
@@ -87,8 +87,8 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
 				.createTypesList(getActivity(), true);
-		categorySpinner.setAdapter(new CategoryNodeTypesAdapter(getActivity(),
-				searchTypes, CategoryNodeTypesAdapter.SEARCH_MODE));
+		categorySpinner.setAdapter(new TypesAdapter(getActivity(),
+				searchTypes, TypesAdapter.SEARCH_MODE));
 		categorySpinner.setOnItemSelectedListener(this);
 
 		Spinner distanceSpinner = (Spinner) v

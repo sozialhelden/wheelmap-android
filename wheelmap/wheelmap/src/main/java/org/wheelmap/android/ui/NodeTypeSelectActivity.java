@@ -23,7 +23,7 @@ package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
 
-import org.wheelmap.android.adapter.CategoryNodeTypesAdapter;
+import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
@@ -82,10 +82,10 @@ public class NodeTypeSelectActivity extends ListActivity {
 	}
 
 	private static class PickOnlyNodeTypesAdapter extends
-			CategoryNodeTypesAdapter {
+			TypesAdapter {
 		public PickOnlyNodeTypesAdapter(Context context,
 				ArrayList<CategoryOrNodeType> items) {
-			super(context, items, CategoryNodeTypesAdapter.SELECT_MODE);
+			super(context, items, TypesAdapter.SELECT_MODE);
 		}
 
 		@Override

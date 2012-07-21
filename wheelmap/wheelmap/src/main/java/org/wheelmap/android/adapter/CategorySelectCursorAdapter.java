@@ -23,7 +23,7 @@ package org.wheelmap.android.adapter;
 
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
-import org.wheelmap.android.ui.CategorySelectItemView;
+import org.wheelmap.android.view.CategorySelectItemView;
 
 import android.content.Context;
 import android.database.Cursor;
