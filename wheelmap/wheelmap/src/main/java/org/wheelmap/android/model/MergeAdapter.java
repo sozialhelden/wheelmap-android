@@ -44,6 +44,8 @@ import android.widget.SectionIndexer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wheelmap.android.adapter.SackOfViewsAdapter;
+
 
 /**
  * Adapter that merges multiple child adapters and views into a single

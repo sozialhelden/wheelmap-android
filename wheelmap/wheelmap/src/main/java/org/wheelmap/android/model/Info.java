@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.ui.info;
+package org.wheelmap.android.model;
 
 // titel with one clickable text
 public class Info {

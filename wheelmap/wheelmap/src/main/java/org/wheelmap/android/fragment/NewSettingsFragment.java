@@ -1,11 +1,11 @@
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.model.CategorySelectCursorAdapter;
+import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
+import org.wheelmap.android.adapter.WheelchairStateAdapter;
+import org.wheelmap.android.adapter.WheelchairStateAdapter.WheelchairStateItem;
 import org.wheelmap.android.model.MergeAdapter;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserCredentials;
-import org.wheelmap.android.model.WheelchairStateAdapter;
-import org.wheelmap.android.model.WheelchairStateAdapter.WheelchairStateItem;
 import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;

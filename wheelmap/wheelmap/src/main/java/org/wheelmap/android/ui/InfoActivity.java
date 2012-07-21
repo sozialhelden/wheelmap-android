@@ -23,10 +23,10 @@ package org.wheelmap.android.ui;
 
 import java.util.ArrayList;
 
+import org.wheelmap.android.adapter.InfoWidgetsAdapter;
+import org.wheelmap.android.model.Info;
+import org.wheelmap.android.model.InfoTypes;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.ui.info.Info;
-import org.wheelmap.android.ui.info.InfoTypes;
-import org.wheelmap.android.ui.info.InfoWidgetsAdapter;
 
 import android.app.Activity;
 import android.app.ListActivity;

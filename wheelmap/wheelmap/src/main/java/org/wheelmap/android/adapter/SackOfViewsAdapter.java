@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.model;
+package org.wheelmap.android.adapter;
 
 /***
  Copyright (c) 2008-2009 CommonsWare, LLC

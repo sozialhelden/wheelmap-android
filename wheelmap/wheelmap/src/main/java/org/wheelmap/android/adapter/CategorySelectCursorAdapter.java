@@ -19,8 +19,9 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.model;
+package org.wheelmap.android.adapter;
 
+import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.ui.CategorySelectItemView;
 

@@ -21,12 +21,12 @@
  */
 package org.wheelmap.android.ui;
 
+import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
-import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;

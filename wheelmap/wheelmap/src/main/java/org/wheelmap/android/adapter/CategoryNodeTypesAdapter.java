@@ -19,10 +19,12 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.model;
+package org.wheelmap.android.adapter;
 
 import java.util.ArrayList;
 
+import org.wheelmap.android.model.CategoryOrNodeType;
+import org.wheelmap.android.model.CategoryOrNodeType.Types;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;

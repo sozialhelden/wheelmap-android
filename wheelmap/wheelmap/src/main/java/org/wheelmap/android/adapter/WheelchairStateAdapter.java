@@ -19,11 +19,12 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.model;
+package org.wheelmap.android.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.wheelmap.android.model.QueriesBuilderHelper;
 import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;

@@ -22,10 +22,10 @@
 package org.wheelmap.android.fragment;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.POIsListCursorAdapter;
 import org.wheelmap.android.online.R;
 
 import android.app.Activity;
