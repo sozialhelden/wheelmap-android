@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.ui;
+package org.wheelmap.android.activity;
 
 import java.util.List;
 

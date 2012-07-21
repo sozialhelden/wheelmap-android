@@ -38,7 +38,7 @@ limitations under the License.
         android:logo="@drawable/title_logo"
         android:theme="@style/Theme.wheelmap" >
         <activity
-            android:name="org.wheelmap.android.ui.StartupActivity"
+            android:name="org.wheelmap.android.activity.StartupActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar" >
             <intent-filter>
