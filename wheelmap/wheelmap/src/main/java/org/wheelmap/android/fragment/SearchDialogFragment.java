@@ -40,9 +40,9 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 	private EditText mKeywordText;
 
-	private int mCategorySelected = -1;
-	private int mNodeTypeSelected = -1;
-	private float mDistance = -1;
+	private int mCategorySelected = Extra.UNKNOWN;
+	private int mNodeTypeSelected = Extra.UNKNOWN;
+	private float mDistance = Extra.UNKNOWN;
 
 	public interface OnSearchDialogListener {
 		public void onSearch(Bundle bundle);
@@ -204,14 +204,14 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 		Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
 				+ mNodeTypeSelected);
-		if (mCategorySelected != -1)
+		if (mCategorySelected != Extra.UNKNOWN)
 			bundle.putInt(Extra.CATEGORY, mCategorySelected);
-		else if (mNodeTypeSelected != -1)
+		else if (mNodeTypeSelected != Extra.UNKNOWN)
 			bundle.putInt(Extra.NODETYPE, mNodeTypeSelected);
 		else
-			bundle.putInt(Extra.CATEGORY, -1);
+			bundle.putInt(Extra.CATEGORY, Extra.UNKNOWN);
 
-		if (mDistance != -1)
+		if (mDistance != Extra.UNKNOWN)
 			bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
 
 		OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();

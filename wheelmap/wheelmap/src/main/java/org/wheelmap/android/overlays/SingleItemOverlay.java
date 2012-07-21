@@ -4,6 +4,7 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.model.Extra;
 
 import wheelmap.org.WheelchairState;
 import android.graphics.drawable.Drawable;
@@ -48,7 +49,7 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public boolean onTap(int index) {
 		if (mListener != null) {
-			mListener.onTap(item, -1l);
+			mListener.onTap(item, Extra.ID_UNKNOWN);
 			return true;
 		}
 

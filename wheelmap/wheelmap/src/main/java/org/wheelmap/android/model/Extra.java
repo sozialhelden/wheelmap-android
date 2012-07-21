@@ -26,6 +26,8 @@ public interface Extra {
 	public final static String SHOW_DISTANCE = "org.wheelmap.android.SHOW_DISTANCE";
 	public final static String SHOW_MAP_HINT = "org.wheelmap.android.SHOW_MAP_HINT";
 
+	public static final String EDITABLE_TEMPORARY_STORE = "org.wheelmap.android.EDITABLE_TEMPORARY_STORE";
+
 	public final static String EXCEPTION = "org.wheelmap.android.EXCEPTION";
 	public static final String STATUS_RECEIVER = "org.wheelmap.android.STATUS_RECEIVER";
 	public static final String BOUNDING_BOX = "org.wheelmap.android.BOUNDING_BOX";
@@ -47,7 +49,7 @@ public interface Extra {
 		public static final int RETRIEVE_APIKEY = 0x7;
 		public static final int SEARCH_NODES_IN_BOX = 0x8;
 		public static final int SEARCH_NODES = 0x9;
-		public final static int LOCATION_MANAGER_UPDATE = 0x11;
+		public static final int LOCATION_MANAGER_UPDATE = 0x11;
 
 	}
 }

@@ -48,7 +48,7 @@ public class WheelchairStateActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onWheelchairStateSelect(WheelchairState state) {
 		Intent intent = new Intent();
-		intent.setAction(Integer.toString(state.getId()));
+		intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
 		setResult(RESULT_OK, intent);
 		finish();
 	}

@@ -45,7 +45,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		// check if this intent is started via custom scheme link
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 			Uri uri = intent.getData();
-			long wmID = -1l;
+			long wmID = Extra.ID_UNKNOWN;
 			try {
 				wmID = Long.parseLong(uri.getLastPathSegment());
 			} catch (NumberFormatException e) {
@@ -55,7 +55,8 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 			Log.d(TAG, "onCreate: wmId = " + wmID);
 			mFragment = POIDetailFragment.newInstanceWithWMID(wmID);
 		} else {
-			long poiID = getIntent().getLongExtra(Extra.POI_ID, -1);
+			long poiID = getIntent().getLongExtra(Extra.POI_ID,
+					Extra.ID_UNKNOWN);
 			Log.d(TAG, "onCreate: poiID = " + poiID);
 			mFragment = POIDetailFragment.newInstanceWithPOIID(poiID);
 		}

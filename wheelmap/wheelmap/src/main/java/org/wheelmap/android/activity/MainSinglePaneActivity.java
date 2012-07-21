@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -43,12 +44,13 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 			.getSimpleName();
 	private final static ArrayList<TabHolder> mIndexToTab;
 
-	private int mSelectedTab = -1;
+	private final static int DEFAULT_SELECTED_TAB = 0;
+	private int mSelectedTab = DEFAULT_SELECTED_TAB;
 	private boolean mIsRecreated;
 	private GoogleAnalyticsTracker tracker;
 
-	public final static int TAB_LIST = 0;
-	public final static int TAB_MAP = 1;
+	final static int TAB_LIST = 0;
+	final static int TAB_MAP = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,15 +136,18 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	private void executeState(Bundle state) {
 		mIsRecreated = state.getBoolean(Extra.IS_RECREATED, false);
-		mSelectedTab = state.getInt(Extra.SELECTED_TAB);
+		mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
 	}
 
 	private void executeDefaultInstanceState() {
 		mIsRecreated = false;
-		mSelectedTab = 0;
+		mSelectedTab = DEFAULT_SELECTED_TAB;
 	}
 
 	public void onStateChange(String tag) {
+		if (tag == null)
+			return;
+
 		Log.d(TAG, "onStateChange " + tag);
 
 		mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
@@ -162,7 +167,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.ab_main_activity, menu);
 		return true;
@@ -209,12 +214,12 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		cv.put(Wheelmap.POIs.CATEGORY_ID, SupportManager.UNKNOWN_TYPE);
 		cv.put(Wheelmap.POIs.NODETYPE_ID, SupportManager.UNKNOWN_TYPE);
 
-		Uri new_pois = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI,
+		Uri newPoiUri = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI,
 				cv);
 
 		// edit activity
-		Log.i(TAG, new_pois.toString());
-		long poiId = Long.parseLong(new_pois.getLastPathSegment());
+		Log.i(TAG, newPoiUri.toString());
+		long poiId = Long.parseLong(newPoiUri.getLastPathSegment());
 		return poiId;
 	}
 

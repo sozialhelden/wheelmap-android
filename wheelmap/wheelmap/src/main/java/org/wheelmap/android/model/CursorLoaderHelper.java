@@ -18,9 +18,19 @@ public class CursorLoaderHelper {
 	}
 
 	public static CursorLoader createWMIdLoader(long id) {
+		Uri uri = Wheelmap.POIs.CONTENT_URI;
 		String whereClause = "( " + POIs.WM_ID + " = ? )";
 		String whereValues[] = new String[] { Long.toString(id) };
+
+		return new CursorLoader(WheelmapApp.get(), uri, null, whereClause,
+				whereValues, null);
+	}
+
+	public static CursorLoader createTemporaryPOILoader() {
 		Uri uri = Wheelmap.POIs.CONTENT_URI;
+		String whereClause = "( " + Wheelmap.POIs.UPDATE_TAG + " = ? )";
+		String[] whereValues = new String[] { Integer
+				.toString(Wheelmap.UPDATE_TEMPORARY_STORE) };
 
 		return new CursorLoader(WheelmapApp.get(), uri, null, whereClause,
 				whereValues, null);

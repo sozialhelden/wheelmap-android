@@ -36,6 +36,7 @@ public class Wheelmap {
 	public static final int UPDATE_ALL_FIELDS = 0x2;
 	public static final int UPDATE_PENDING_STATE_ONLY = 0x3;
 	public static final int UPDATE_PENDING_FIELDS_ALL = 0x4;
+	public static final int UPDATE_TEMPORARY_STORE = 0x5;
 
 	public static final String QUERY_DELETE_NOTIFY_PARAM = "delete";
 
@@ -124,10 +125,7 @@ public class Wheelmap {
 		 */
 		public static final String DEFAULT_SORT_ORDER = NAME + " DESC";
 
-		/**
-		 * The default sort order for this table - categories
-		 */
-		public static final String EXTRAS_POI_ID = NAME + "_ID";
+		public static final String POI_ID = _ID;
 
 		/**
 		 * The columns we are interested in from the database

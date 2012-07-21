@@ -67,8 +67,8 @@ public class SyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG,
-				"onHandleIntent(intent=" + intent.getIntExtra(Extra.WHAT, -1)
-						+ ")");
+				"onHandleIntent(intent="
+						+ intent.getIntExtra(Extra.WHAT, Extra.UNKNOWN) + ")");
 
 		final ResultReceiver receiver = intent
 				.getParcelableExtra(Extra.STATUS_RECEIVER);

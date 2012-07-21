@@ -47,7 +47,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	private final static String TAG = POIDetailEditableActivity.class
 			.getSimpleName();
 
-	// Definition of the one requestCode we use for receiving resuls.
 	private static final int SELECT_WHEELCHAIRSTATE = 0;
 
 	private Long poiID;
@@ -72,7 +71,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			return;
 		}
 
-		if (poiID != -1) {
+		if (poiID != Extra.ID_UNKNOWN) {
 			mFragment = POIDetailEditableFragment.newInstance(poiID);
 		}
 
@@ -95,11 +94,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		mExternalEditableState.saveState(outState);
-	}
-
-	@Override
-	public ExternalEditableState getExternalEditedState() {
-		return mExternalEditableState;
 	}
 
 	@Override
@@ -133,9 +127,10 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			if (resultCode == RESULT_OK) {
 				// newly selected wheelchair state as action data
 				if (data != null) {
-					WheelchairState newState = WheelchairState.valueOf(Integer
-							.parseInt(data.getAction()));
-					mExternalEditableState.state = newState;
+					WheelchairState state = WheelchairState
+							.valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
+									Extra.UNKNOWN));
+					mExternalEditableState.state = state;
 				}
 			}
 		}
@@ -198,10 +193,10 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	public static class ExternalEditableState {
-		public WheelchairState state = null;
-		public int nodetype = Extra.UNKNOWN;
-		public int latitude = Extra.UNKNOWN;
-		public int longitude = Extra.UNKNOWN;
+		WheelchairState state = null;
+		int nodetype = Extra.UNKNOWN;
+		int latitude = Extra.UNKNOWN;
+		int longitude = Extra.UNKNOWN;
 
 		void saveState(Bundle bundle) {
 			if (state != null)
@@ -217,16 +212,29 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				state = WheelchairState.valueOf(stateId);
 
 			nodetype = bundle.getInt(Extra.NODETYPE, Extra.UNKNOWN);
-			latitude = bundle.getInt(Extra.LATITUDE);
-			longitude = bundle.getInt(Extra.LONGITUDE);
+			latitude = bundle.getInt(Extra.LATITUDE, Extra.UNKNOWN);
+			longitude = bundle.getInt(Extra.LONGITUDE, Extra.UNKNOWN);
 		}
 
-		public void clear() {
+		void clear() {
 			state = null;
 			nodetype = Extra.UNKNOWN;
 			latitude = Extra.UNKNOWN;
 			longitude = Extra.UNKNOWN;
 		}
+
+		void setInFragment(POIDetailEditableFragment fragment) {
+			fragment.setWheelchairState(state);
+			fragment.setNodetype(nodetype);
+			fragment.setGeolocation(latitude, longitude);
+
+			clear();
+		}
+	}
+
+	@Override
+	public void requestExternalEditedState(POIDetailEditableFragment fragment) {
+		mExternalEditableState.setInFragment(fragment);
 	}
 
 }

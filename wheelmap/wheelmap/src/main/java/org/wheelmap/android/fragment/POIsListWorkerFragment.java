@@ -253,7 +253,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 				&& !bundle.containsKey(Extra.WHEELCHAIR_STATE))
 			return;
 
-		if (bundle.getInt(Extra.CATEGORY) == -1)
+		if (bundle.getInt(Extra.CATEGORY) == Extra.UNKNOWN)
 			bundle.remove(Extra.CATEGORY);
 
 		if (!bundle.containsKey(Extra.WHAT)) {
