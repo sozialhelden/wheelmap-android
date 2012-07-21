@@ -33,7 +33,7 @@ import wheelmap.org.domain.node.SingleNode;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeRequestBuilder;
 import wheelmap.org.request.RequestBuilder;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
@@ -45,8 +45,8 @@ public class NodeExecutor extends AbstractExecutor implements IExecutor {
 
 	private SingleNode mTempStore = new SingleNode();
 
-	public NodeExecutor(ContentResolver resolver, Bundle bundle) {
-		super(resolver, bundle);
+	public NodeExecutor(Context context, Bundle bundle) {
+		super(context, bundle);
 	}
 
 	@Override

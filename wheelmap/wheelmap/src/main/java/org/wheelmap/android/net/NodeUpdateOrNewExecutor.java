@@ -37,7 +37,6 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeUpdateOrNewAllRequestBuilder;
 import wheelmap.org.request.RequestBuilder;
 import wheelmap.org.request.WheelchairUpdateRequestBuilder;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import de.akquinet.android.androlog.Log;
@@ -46,12 +45,10 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	private final static String TAG = NodeUpdateOrNewExecutor.class
 			.getSimpleName();
 
-	private Context mContext;
 	private Cursor mCursor;
 
-	public NodeUpdateOrNewExecutor(Context context, ContentResolver resolver) {
-		super(resolver, null);
-		mContext = context;
+	public NodeUpdateOrNewExecutor(Context context) {
+		super(context, null);
 	}
 
 	public void prepareContent() {
@@ -174,7 +171,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	private String getEditApiKey() {
-		UserCredentials credentials = new UserCredentials(mContext);
+		UserCredentials credentials = new UserCredentials(getContext());
 		return credentials.getApiKey();
 	}
 

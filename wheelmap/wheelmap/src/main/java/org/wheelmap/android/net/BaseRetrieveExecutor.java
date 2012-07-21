@@ -35,7 +35,7 @@ import wheelmap.org.domain.Meta;
 import wheelmap.org.request.BaseNodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import wheelmap.org.request.RequestBuilder;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 
 public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
@@ -46,9 +46,8 @@ public abstract class BaseRetrieveExecutor<T extends BaseDomain> extends
 	private final Class<T> mClazz;
 	private List<T> mTempStore = new ArrayList<T>();
 
-	public BaseRetrieveExecutor(ContentResolver resolver, Bundle bundle,
-			Class<T> clazz) {
-		super(resolver, bundle);
+	public BaseRetrieveExecutor(Context context, Bundle bundle, Class<T> clazz) {
+		super(context, bundle);
 		mClazz = clazz;
 	}
 

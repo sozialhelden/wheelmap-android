@@ -21,15 +21,18 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.request.RequestProcessor;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 
 public abstract class AbstractExecutor implements IExecutor {
 
-	private final ContentResolver mResolver;
+	private final Context mContext;
 	private final Bundle mBundle;
 	// Testserver
 	// protected static final String SERVER = "staging.wheelmap.org";
@@ -43,8 +46,8 @@ public abstract class AbstractExecutor implements IExecutor {
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
 
-	public AbstractExecutor(ContentResolver resolver, Bundle bundle) {
-		mResolver = resolver;
+	public AbstractExecutor(Context context, Bundle bundle) {
+		mContext = context;
 		mBundle = bundle;
 	}
 
@@ -52,8 +55,12 @@ public abstract class AbstractExecutor implements IExecutor {
 		return API_KEY;
 	}
 
+	protected Context getContext() {
+		return mContext;
+	}
+
 	protected ContentResolver getResolver() {
-		return mResolver;
+		return mContext.getContentResolver();
 	}
 
 	protected Bundle getBundle() {
@@ -65,5 +72,42 @@ public abstract class AbstractExecutor implements IExecutor {
 	public abstract void execute() throws SyncServiceException;
 
 	public abstract void prepareDatabase() throws SyncServiceException;
+
+	public static IExecutor create(Context context, Bundle bundle) {
+		if (bundle == null || !bundle.containsKey(Extra.WHAT))
+			return null;
+
+		int what = bundle.getInt(Extra.WHAT);
+		IExecutor executor;
+		switch (what) {
+		case What.RETRIEVE_NODE:
+			executor = new NodeExecutor(context, bundle);
+			break;
+		case What.RETRIEVE_NODES:
+		case What.SEARCH_NODES:
+		case What.SEARCH_NODES_IN_BOX:
+			executor = new NodesExecutor(context, bundle);
+			break;
+		case What.RETRIEVE_LOCALES:
+			executor = new LocalesExecutor(context, bundle);
+			break;
+		case What.RETRIEVE_CATEGORIES:
+			executor = new CategoriesExecutor(context, bundle);
+			break;
+		case What.RETRIEVE_NODETYPES:
+			executor = new NodeTypesExecutor(context, bundle);
+			break;
+		case What.UPDATE_SERVER:
+			executor = new NodeUpdateOrNewExecutor(context);
+			break;
+		case What.RETRIEVE_APIKEY:
+			executor = new ApiKeyExecutor(context, bundle);
+			break;
+		default:
+			return null; // noop no instruction, no operation;
+		}
+
+		return null;
+	}
 
 }

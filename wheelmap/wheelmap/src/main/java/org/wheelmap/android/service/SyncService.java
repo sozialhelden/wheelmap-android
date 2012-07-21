@@ -22,16 +22,9 @@
 package org.wheelmap.android.service;
 
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsProvider;
-import org.wheelmap.android.net.ApiKeyExecutor;
-import org.wheelmap.android.net.CategoriesExecutor;
+import org.wheelmap.android.net.AbstractExecutor;
 import org.wheelmap.android.net.IExecutor;
-import org.wheelmap.android.net.LocalesExecutor;
-import org.wheelmap.android.net.NodeExecutor;
-import org.wheelmap.android.net.NodeTypesExecutor;
-import org.wheelmap.android.net.NodeUpdateOrNewExecutor;
-import org.wheelmap.android.net.NodesExecutor;
 
 import android.app.IntentService;
 import android.app.Service;
@@ -65,46 +58,18 @@ public class SyncService extends IntentService {
 		Log.d(TAG,
 				"onHandleIntent(intent="
 						+ intent.getIntExtra(Extra.WHAT, Extra.UNKNOWN) + ")");
+		final Bundle extras = intent.getExtras();
+		if (extras == null)
+			return;
 
-		final ResultReceiver receiver = intent
-				.getParcelableExtra(Extra.STATUS_RECEIVER);
+		int what = extras.getInt(Extra.WHAT);
+		final ResultReceiver receiver = extras
+				.getParcelable(Extra.STATUS_RECEIVER);
 		if (receiver != null)
 			receiver.send(STATUS_RUNNING, Bundle.EMPTY);
 
-		final Bundle arguments = intent.getExtras();
-
-		int what = arguments.getInt(Extra.WHAT);
-		IExecutor executor = null;
-		switch (what) {
-		case What.RETRIEVE_NODE:
-			executor = new NodeExecutor(getContentResolver(), arguments);
-			break;
-		case What.RETRIEVE_NODES:
-		case What.SEARCH_NODES:
-		case What.SEARCH_NODES_IN_BOX:
-			executor = new NodesExecutor(getContentResolver(), arguments);
-			break;
-		case What.RETRIEVE_LOCALES:
-			executor = new LocalesExecutor(getContentResolver(), arguments);
-			break;
-		case What.RETRIEVE_CATEGORIES:
-			executor = new CategoriesExecutor(getContentResolver(), arguments);
-			break;
-		case What.RETRIEVE_NODETYPES:
-			executor = new NodeTypesExecutor(getContentResolver(), arguments);
-			break;
-		case What.UPDATE_SERVER:
-			executor = new NodeUpdateOrNewExecutor(getApplicationContext(),
-					getContentResolver());
-			break;
-		case What.RETRIEVE_APIKEY:
-			executor = new ApiKeyExecutor(getApplicationContext(),
-					getContentResolver(), arguments);
-			break;
-		default:
-			return; // noop no instruction, no operation;
-		}
-
+		IExecutor executor = AbstractExecutor.create(getApplicationContext(),
+				extras);
 		executor.prepareContent();
 		try {
 			executor.execute();

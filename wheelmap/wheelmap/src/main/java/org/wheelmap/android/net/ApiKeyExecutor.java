@@ -35,7 +35,6 @@ import org.wheelmap.android.service.SyncServiceException;
 import wheelmap.org.domain.apikey.AuthInfo;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.ApiKeyRequestBuilder;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
@@ -43,7 +42,6 @@ import de.akquinet.android.androlog.Log;
 public class ApiKeyExecutor extends AbstractExecutor {
 	private final static String TAG = ApiKeyExecutor.class.getSimpleName();
 
-	private Context mContext;
 	private String mEmail;
 	private String mPassword;
 	private String mApiKey;
@@ -51,10 +49,8 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	private final static int statusAuthFailed = 400;
 	private final static int statusOSMFailed = 403;
 
-	public ApiKeyExecutor(Context context, ContentResolver resolver,
-			Bundle bundle) {
-		super(resolver, bundle);
-		mContext = context;
+	public ApiKeyExecutor(Context context, Bundle bundle) {
+		super(context, bundle);
 	}
 
 	@Override
@@ -103,7 +99,7 @@ public class ApiKeyExecutor extends AbstractExecutor {
 
 	@Override
 	public void prepareDatabase() {
-		UserCredentials credentials = new UserCredentials(mContext);
+		UserCredentials credentials = new UserCredentials(getContext());
 		credentials.login(mEmail, mPassword, mApiKey);
 	}
 

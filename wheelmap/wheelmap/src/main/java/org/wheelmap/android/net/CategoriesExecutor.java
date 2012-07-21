@@ -29,7 +29,7 @@ import wheelmap.org.Locale;
 import wheelmap.org.domain.categories.Categories;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.CategoriesRequestBuilder;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
@@ -39,8 +39,8 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
 	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 	private Locale mLocale;
 
-	public CategoriesExecutor(ContentResolver resolver, Bundle bundle) {
-		super(resolver, bundle, Categories.class);
+	public CategoriesExecutor(Context context, Bundle bundle) {
+		super(context, bundle, Categories.class);
 	}
 
 	@Override

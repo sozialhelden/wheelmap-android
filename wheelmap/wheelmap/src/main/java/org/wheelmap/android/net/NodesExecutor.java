@@ -38,7 +38,7 @@ import wheelmap.org.request.NodesRequestBuilder;
 import wheelmap.org.request.Paging;
 import wheelmap.org.request.SearchNodesRequestBuilder;
 import android.app.SearchManager;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
@@ -54,8 +54,8 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 	private String mSearchTerm = null;
 	private WheelchairState mWheelchairState = null;
 
-	public NodesExecutor(ContentResolver resolver, Bundle bundle) {
-		super(resolver, bundle, Nodes.class);
+	public NodesExecutor(Context context, Bundle bundle) {
+		super(context, bundle, Nodes.class);
 	}
 
 	@Override

@@ -27,7 +27,7 @@ import org.wheelmap.android.service.SyncServiceException;
 import wheelmap.org.domain.locale.Locales;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.LocalesRequestBuilder;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
@@ -36,8 +36,8 @@ public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements
 	private final static String TAG = LocalesExecutor.class.getSimpleName();
 	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 
-	public LocalesExecutor(ContentResolver resolver, Bundle bundle) {
-		super(resolver, bundle, Locales.class);
+	public LocalesExecutor(Context context, Bundle bundle) {
+		super(context, bundle, Locales.class);
 	}
 
 	@Override

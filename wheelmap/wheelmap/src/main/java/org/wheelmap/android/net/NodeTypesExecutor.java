@@ -31,8 +31,8 @@ import wheelmap.org.domain.nodetype.NodeTypes;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeTypesRequestBuilder;
 import wheelmap.org.request.Paging;
-import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
@@ -43,8 +43,8 @@ public class NodeTypesExecutor extends BaseRetrieveExecutor<NodeTypes>
 	public static final String PREF_KEY_WHEELCHAIR_STATE = "wheelchairState";
 	private Locale mLocale;
 
-	public NodeTypesExecutor(ContentResolver resolver, Bundle bundle) {
-		super(resolver, bundle, NodeTypes.class);
+	public NodeTypesExecutor(Context context, Bundle bundle) {
+		super(context, bundle, NodeTypes.class);
 	}
 
 	@Override
