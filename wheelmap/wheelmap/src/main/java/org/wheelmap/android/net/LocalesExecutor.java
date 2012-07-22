@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.DataOperationsLocales;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.service.SyncServiceException;
 
@@ -29,7 +30,6 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.LocalesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
-import de.akquinet.android.androlog.Log;
 
 public class LocalesExecutor extends MultiPageExecutor<Locales> implements
 		IExecutor {
@@ -54,12 +54,8 @@ public class LocalesExecutor extends MultiPageExecutor<Locales> implements
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		long insertStart = System.currentTimeMillis();
-		for (Locales locales : getTempStore()) {
-			PrepareDatabaseHelper.bulkInsert(getResolver(), locales);
-		}
-		long insertEnd = System.currentTimeMillis();
-		Log.d(getTag(), "insertTime = " + (insertEnd - insertStart) / 1000f);
+		DataOperationsLocales dol = new DataOperationsLocales(getResolver());
+		dol.insert(getTempStore());
 		clearTempStore();
 	}
 

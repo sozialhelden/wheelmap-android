@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.DataOperationsNodes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.GeocoordinatesMath;
@@ -41,6 +42,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import de.akquinet.android.androlog.Log;
 
 public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 		IExecutor {
@@ -120,11 +122,11 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 
 	@Override
 	public void prepareDatabase() {
+		Log.d(getTag(), "prepareDatabase");
 		PrepareDatabaseHelper.deleteRetrievedData(getResolver());
 		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
-		for (Nodes nodes : getTempStore()) {
-			PrepareDatabaseHelper.bulkInsert(getResolver(), nodes);
-		}
+		DataOperationsNodes don = new DataOperationsNodes(getResolver());
+		don.insert(getTempStore());
 		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
 		clearTempStore();
 	}

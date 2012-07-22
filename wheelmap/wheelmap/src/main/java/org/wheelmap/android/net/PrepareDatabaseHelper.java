@@ -21,24 +21,16 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.DataOperationsNodes;
 import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.Support.CategoriesContent;
-import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
-import wheelmap.org.WheelchairState;
-import wheelmap.org.domain.categories.Categories;
-import wheelmap.org.domain.categories.Category;
-import wheelmap.org.domain.locale.Locales;
-import wheelmap.org.domain.node.Node;
-import wheelmap.org.domain.node.Nodes;
 import wheelmap.org.domain.node.SingleNode;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import de.akquinet.android.androlog.Log;
 
 public class PrepareDatabaseHelper {
 	private static final String TAG = PrepareDatabaseHelper.class
@@ -91,35 +83,6 @@ public class PrepareDatabaseHelper {
 		c.close();
 	}
 
-	protected static void copyNodeToValues(Node node, ContentValues values) {
-		values.clear();
-		values.put(Wheelmap.POIs.WM_ID, node.getId().longValue());
-		values.put(Wheelmap.POIs.NAME, node.getName());
-		values.put(Wheelmap.POIs.COORD_LAT,
-				Math.ceil(node.getLat().doubleValue() * 1E6));
-		values.put(Wheelmap.POIs.COORD_LON,
-				Math.ceil(node.getLon().doubleValue() * 1E6));
-		values.put(Wheelmap.POIs.STREET, node.getStreet());
-		values.put(Wheelmap.POIs.HOUSE_NUM, node.getHousenumber());
-		values.put(Wheelmap.POIs.POSTCODE, node.getPostcode());
-		values.put(Wheelmap.POIs.CITY, node.getCity());
-		values.put(Wheelmap.POIs.PHONE, node.getPhone());
-		values.put(Wheelmap.POIs.WEBSITE, node.getWebsite());
-		values.put(Wheelmap.POIs.WHEELCHAIR,
-				WheelchairState.myValueOf(node.getWheelchair()).getId());
-		values.put(Wheelmap.POIs.WHEELCHAIR_DESC,
-				node.getWheelchairDescription());
-		values.put(Wheelmap.POIs.CATEGORY_ID, node.getCategory().getId()
-				.intValue());
-		values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, node.getCategory()
-				.getIdentifier());
-		values.put(Wheelmap.POIs.NODETYPE_ID, node.getNodeType().getId()
-				.intValue());
-		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, node.getNodeType()
-				.getIdentifier());
-		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
-	}
-
 	protected static void deleteAllOldPending(ContentResolver resolver) {
 		long now = System.currentTimeMillis();
 		String whereClause = "(( " + Wheelmap.POIs.UPDATE_TAG + " == ? ) OR ( "
@@ -170,74 +133,13 @@ public class PrepareDatabaseHelper {
 
 	protected static void insert(ContentResolver resolver, SingleNode node) {
 		ContentValues values = new ContentValues();
-		PrepareDatabaseHelper.copyNodeToValues(node.getNode(), values);
+		DataOperationsNodes don = new DataOperationsNodes(null);
+		don.copyToValues(node.getNode(), values);
 		String whereClause = "( " + POIs.WM_ID + " = ? )";
 		String whereValues[] = { node.getNode().getId().toString() };
 
-		PrepareDatabaseHelper.insertOrUpdateContentValues(resolver,
-				Wheelmap.POIs.CONTENT_URI, Wheelmap.POIs.PROJECTION,
-				whereClause, whereValues, values);
-	}
-
-	protected static void bulkInsert(ContentResolver resolver, Nodes nodes) {
-		int size = nodes.getMeta().getItemCount().intValue();
-		ContentValues[] contentValuesArray = new ContentValues[size];
-		for (int i = 0; i < size; i++) {
-			ContentValues values = new ContentValues();
-			copyNodeToValues(nodes.getNodes().get(i), values);
-
-			contentValuesArray[i] = values;
-		}
-		int count = resolver.bulkInsert(Wheelmap.POIs.CONTENT_URI,
-				contentValuesArray);
-		Log.d(TAG, "Inserted records count = " + count);
-	}
-
-	protected static void bulkInsert(ContentResolver resolver,
-			Categories categories) {
-		int size = categories.getCategories().size();
-		ContentValues[] contentValuesArray = new ContentValues[size];
-		int i;
-		for (i = 0; i < size; i++) {
-			ContentValues values = new ContentValues();
-			copyCategoryToValues(categories.getCategories().get(i), values);
-			contentValuesArray[i] = values;
-		}
-
-		resolver.bulkInsert(CategoriesContent.CONTENT_URI, contentValuesArray);
-	}
-
-	private static void copyCategoryToValues(Category category,
-			ContentValues values) {
-		values.clear();
-		values.put(CategoriesContent.CATEGORY_ID, category.getId().intValue());
-		values.put(CategoriesContent.LOCALIZED_NAME,
-				category.getLocalizedName());
-		values.put(CategoriesContent.IDENTIFIER, category.getIdentifier());
-		values.put(CategoriesContent.SELECTED, CategoriesContent.SELECTED_YES);
-	}
-
-	protected static void bulkInsert(ContentResolver resolver, Locales locales) {
-		int size = locales.getLocales().size();
-
-		ContentValues[] contentValuesArray = new ContentValues[size];
-		int i = 0;
-		for (String localeId : locales.getLocales().keySet()) {
-			ContentValues values = new ContentValues();
-			copyLocaleToValues(localeId, locales.getLocales().get(localeId),
-					values);
-			contentValuesArray[i] = values;
-			i++;
-		}
-
-		resolver.bulkInsert(LocalesContent.CONTENT_URI, contentValuesArray);
-	}
-
-	private static void copyLocaleToValues(String localeId, String localeName,
-			ContentValues values) {
-		values.clear();
-		values.put(LocalesContent.LOCALE_ID, localeId);
-		values.put(LocalesContent.LOCALIZED_NAME, localeName);
+		insertOrUpdateContentValues(resolver, Wheelmap.POIs.CONTENT_URI,
+				Wheelmap.POIs.PROJECTION, whereClause, whereValues, values);
 	}
 
 	private static final String whereClauseToUpdate = "( "
