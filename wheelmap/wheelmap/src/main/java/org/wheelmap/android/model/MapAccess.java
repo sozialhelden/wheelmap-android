@@ -28,7 +28,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.BaseColumns;
 
-public class Map implements BaseColumns {
+public class MapAccess implements BaseColumns {
 	
 	private static String LOCAL_BASE_PATH_DIR;
 

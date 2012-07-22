@@ -23,7 +23,7 @@ package org.wheelmap.android.overlays;
 
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.MapViewMode;
-import org.wheelmap.android.model.Map;
+import org.wheelmap.android.model.MapAccess;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -48,7 +48,7 @@ public class ConfigureMapView {
 		mapView.setMemoryCardCachePersistence( true );
 		
 		ProviderInfo info = context.getPackageManager().resolveContentProvider(
-				Map.AUTHORITY, 0);
+				MapAccess.AUTHORITY, 0);
 		
 		if (info == null) {
 			mapView.setMapViewMode(defaultViewMode);
@@ -58,8 +58,8 @@ public class ConfigureMapView {
 		ContentResolver resolver = context.getContentResolver();
 		Cursor c;
 		try {
-			 c = resolver.query(Map.CONTENT_URI_SELECTED,
-					Map.selectedPROJECTION, null, null, null);
+			 c = resolver.query(MapAccess.CONTENT_URI_SELECTED,
+					MapAccess.selectedPROJECTION, null, null, null);
 		} catch (RuntimeException e) {
 			mapView.setMapViewMode(defaultViewMode);
 			return;
@@ -72,7 +72,7 @@ public class ConfigureMapView {
 		String mapFile;
 		if (c.getCount() == 1) {
 			c.moveToFirst();
-			mapFile = Map.createPath(Map.getParentName(c), Map.getName(c));
+			mapFile = MapAccess.createPath(MapAccess.getParentName(c), MapAccess.getName(c));
 			mapView.setMapFile(mapFile);
 			if (mapView.hasValidMapFile())
 				mapView.setMapViewMode(MapViewMode.CANVAS_RENDERER);
