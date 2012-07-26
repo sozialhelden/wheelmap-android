@@ -27,7 +27,6 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import de.akquinet.android.androlog.Log;
 
@@ -153,8 +152,7 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 	}
 
 	private void showErrorDialog(SyncServiceException e) {
-		SherlockFragmentActivity activity = getSherlockActivity();
-		FragmentManager fm = activity.getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
 		if (errorDialog == null)
 			return;

@@ -83,6 +83,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	private DisplayFragmentListener mListener;
 
+	private Bundle mDeferredExecuteBundle;
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -162,6 +164,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			executeState(savedInstanceState);
 		else if (getArguments() != null)
 			executeState(getArguments());
+		else {
+			Bundle storedExecute = getExecuteBundle();
+			executeState(storedExecute);
+		}
 	}
 
 	@Override
@@ -205,8 +211,11 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void executeBundle(Bundle bundle) {
-		bundle.putBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, true);
-		executeState(bundle);
+		if (isAdded()) {
+			bundle.putBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, true);
+			executeState(bundle);
+		} else
+			storeExecuteBundle(bundle);
 	}
 
 	private void executeState(Bundle bundle) {
@@ -216,8 +225,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		boolean doRequest = false;
 
 		if (bundle.containsKey(Extra.CENTER_MAP)) {
-			int lat = bundle.getInt(Extra.LATITUDE);
-			int lon = bundle.getInt(Extra.LONGITUDE);
+			double lat = bundle.getDouble(Extra.LATITUDE);
+			double lon = bundle.getDouble(Extra.LONGITUDE);
 			int zoom = bundle.getInt(Extra.ZOOM_MAP, MAP_ZOOM_DEFAULT);
 
 			GeoPoint gp = new GeoPoint(lat, lon);
@@ -227,6 +236,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			mMapView.setZoomListener(this);
 			isCentered = true;
 			oldZoomLevel = zoom;
+
 			doRequest = true;
 		}
 
@@ -255,13 +265,23 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 					});
 	}
 
+	private void storeExecuteBundle(Bundle bundle) {
+		mDeferredExecuteBundle = bundle;
+	}
+
+	private Bundle getExecuteBundle() {
+		Bundle result = mDeferredExecuteBundle;
+		mDeferredExecuteBundle = null;
+		return result;
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		GeoPoint gp = mMapView.getMapCenter();
 		outState.putBoolean(Extra.CENTER_MAP, true);
-		outState.putInt(Extra.LATITUDE, gp.getLatitudeE6());
-		outState.putInt(Extra.LONGITUDE, gp.getLongitudeE6());
+		outState.putDouble(Extra.LATITUDE, gp.getLatitude());
+		outState.putDouble(Extra.LONGITUDE, gp.getLongitude());
 		outState.putInt(Extra.ZOOM_MAP, mMapView.getZoomLevel());
 	}
 
@@ -386,7 +406,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	private void showSearch() {
-		FragmentManager fm = getActivity().getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
 				false, true);
 
