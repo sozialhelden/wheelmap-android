@@ -113,4 +113,6 @@
     <string name="settings_wheelchair_limited">Teilweise</string>
     <string name="settings_wheelchair_no">Nein</string>
     <string name="error_category_missing_message">Der neue Ort kann nur mit Angabe einer Kategorie gesichert werden.</string>
+    <string name="poi_property_street">Straße</string>
+    <string name="poi_property_housenum">Nr</string>
 </resources>
