@@ -2,11 +2,13 @@ package org.wheelmap.android.activity;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
@@ -26,7 +28,7 @@ import com.actionbarsherlock.view.Window;
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailActivity extends MapsforgeMapActivity implements
-		OnPOIDetailListener, Receiver {
+		OnPOIDetailListener, OnErrorDialogListener, Receiver {
 	private final static String TAG = POIDetailActivity.class.getSimpleName();
 
 	// Definition of the one requestCode we use for receiving resuls.
@@ -88,7 +90,8 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 			Uri uri = intent.getData();
 			if (uri == null) {
 				Log.d(TAG, "uri has no data - cant extract wmID");
-				finish();
+				showErrorMessage(getString(R.string.error_noid_title),
+						getString(R.string.error_noid_message));
 				return;
 			}
 
@@ -107,6 +110,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 
 		Long poiId = intent.getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 		showDetailFragment(poiId);
+		setIntent(null);
 	}
 
 	private void showDetailForWmId(String wmId) {
@@ -125,6 +129,9 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	}
 
 	private void showDetailFragment(long id) {
+		if (id == Extra.ID_UNKNOWN)
+			return;
+
 		FragmentManager fm = getSupportFragmentManager();
 		mFragment = POIDetailFragment.newInstance(id);
 
@@ -197,9 +204,10 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		intent.putExtra(Extra.SELECTED_TAB, MainSinglePaneActivity.TAB_MAP);
 		intent.putExtra(Extra.CENTER_MAP, true);
-		intent.putExtra(Extra.LATITUDE, point.getLatitudeE6());
-		intent.putExtra(Extra.LONGITUDE, point.getLongitudeE6());
+		intent.putExtra(Extra.LATITUDE, point.getLatitude());
+		intent.putExtra(Extra.LONGITUDE, point.getLongitude());
 		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -207,6 +215,16 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		Intent intent = new Intent(this, POIDetailEditableActivity.class);
 		intent.putExtra(Extra.POI_ID, poiId);
 		startActivity(intent);
+	}
+
+	public void showErrorMessage(String title, String message) {
+		FragmentManager fm = getSupportFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
+				title, message);
+		if (errorDialog == null)
+			return;
+
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
 	}
 
 	public void showErrorDialog(SyncServiceException e) {
@@ -244,5 +262,10 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 			// noop
 		}
 		}
+	}
+
+	@Override
+	public void onErrorDialogClose() {
+		finish();
 	}
 }
