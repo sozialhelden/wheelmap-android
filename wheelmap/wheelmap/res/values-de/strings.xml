@@ -115,4 +115,5 @@
     <string name="error_category_missing_message">Der neue Ort kann nur mit Angabe einer Kategorie gesichert werden.</string>
     <string name="poi_property_street">Straße</string>
     <string name="poi_property_housenum">Nr</string>
+    <string name="error_category_missing_title">Kategorie fehlt!</string>
 </resources>
