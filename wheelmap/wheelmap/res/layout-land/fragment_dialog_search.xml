@@ -25,7 +25,9 @@
     android:id="@+id/search_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/padding_medium"
+    android:paddingRight="@dimen/padding_medium" >
 
     <LinearLayout
         android:id="@+id/search_map_hint"
@@ -36,10 +38,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dip"
-            android:layout_marginTop="8dip"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/search_pick_map"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
     <EditText
@@ -51,10 +53,10 @@
         android:hint="@string/search_hint_list"
         android:imeOptions="actionDone"
         android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
@@ -63,20 +65,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/search_pick_category"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse" >
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <Spinner
-                android:id="@+id/search_spinner_categorie_nodetype"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dip"
-                android:prompt="@string/search_pick_category" />
-        </TextView>
+        <Spinner
+            android:id="@+id/search_spinner_categorie_nodetype"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:prompt="@string/search_pick_category" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/search_spinner_distance_container"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone" >
@@ -86,13 +87,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/search_distance"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Spinner
             android:id="@+id/search_spinner_distance"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dip"
+            android:layout_marginLeft="@dimen/margin_medium"
             android:text="@string/search_distance" />
     </LinearLayout>
 
