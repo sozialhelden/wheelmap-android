@@ -27,9 +27,12 @@ import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.UserCredentials;
-import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.WheelchairState;
@@ -52,7 +55,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareContent() {
-		mCursor = PrepareDatabaseHelper.queryToUpdate(getResolver());
+		mCursor = PrepareDatabaseHelper.queryDirty(getResolver());
 
 		if (mCursor == null)
 			return;
@@ -67,7 +70,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 					new NullPointerException("Cursor is null"));
 
 		while (!mCursor.isAfterLast()) {
-			int updateWay = POIHelper.getUpdateTag(mCursor);
+
 			String editApiKey = getEditApiKey();
 			if (editApiKey.length() == 0)
 				throw new SyncServiceException(
@@ -75,13 +78,17 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 						new RuntimeException("No apikey to edit available"));
 
 			RequestBuilder requestBuilder = null;
-			switch (updateWay) {
-			case Wheelmap.UPDATE_WHEELCHAIR_STATE:
+
+			int dirtyTag = POIHelper.getDirtyTag(mCursor);
+			switch (dirtyTag) {
+			case POIs.DIRTY_STATE:
 				requestBuilder = wheelchairUpdateRequestBuilder(editApiKey);
 				break;
-			case Wheelmap.UPDATE_ALL_FIELDS:
+			case POIs.DIRTY_ALL:
 				requestBuilder = updateOrNewRequestBuilder(editApiKey);
-				break;
+				mCursor.moveToNext();
+				continue;
+				// break;
 			default:
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_INTERNAL_ERROR,
@@ -89,40 +96,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 								"Cant find matching RequestBuilder for update request"));
 			}
 
-			String request;
-			try {
-				request = UriUtils.encodeQuery(
-						requestBuilder.buildRequestUri(), "utf-8");
-			} catch (UnsupportedEncodingException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_INTERNAL_ERROR, e);
-			}
-			try {
-				if (requestBuilder.getRequestType() == RequestBuilder.REQUEST_POST) {
-					Log.d(TAG, "postRequest = *" + request + "*");
-					mRequestProcessor
-							.post(new URI(request), null, String.class);
-				} else {
-					Log.d(TAG, "putRequest = *" + request + "*");
-					mRequestProcessor.put(new URI(request), null);
-				}
-			} catch (HttpClientErrorException e) {
-				HttpStatus status = e.getStatusCode();
-				if (status.value() == statusAuthRequired) {
-					Log.d(TAG, "authorization required");
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_AUTHORIZATION_REQUIRED,
-							e);
-				} else if (status.value() == statusRequestForbidden) {
-					Log.d(TAG, "request forbidden");
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_REQUEST_FORBIDDEN, e);
-				}
-			} catch (Exception e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_NETWORK_FAILURE, e);
-			}
-
+			executeRequest(requestBuilder);
 			mCursor.moveToNext();
 		}
 
@@ -131,8 +105,43 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	}
 
 	public void prepareDatabase() {
-		PrepareDatabaseHelper.copyAllUpdatedToPending(getResolver());
-		PrepareDatabaseHelper.resetUpdateTagOfPending(getResolver());
+		PrepareDatabaseHelper.markDirtyAsClean(getResolver());
+		PrepareDatabaseHelper.replayChangedCopies(getResolver());
+	}
+
+	private void executeRequest(RequestBuilder requestBuilder) {
+
+		String request;
+		try {
+			request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
+					"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_INTERNAL_ERROR, e);
+		}
+		try {
+			if (requestBuilder.getRequestType() == RequestBuilder.REQUEST_POST) {
+				Log.d(TAG, "postRequest = *" + request + "*");
+				mRequestProcessor.post(new URI(request), null, String.class);
+			} else {
+				Log.d(TAG, "putRequest = *" + request + "*");
+				mRequestProcessor.put(new URI(request), null);
+			}
+		} catch (HttpClientErrorException e) {
+			HttpStatus status = e.getStatusCode();
+			if (status.value() == statusAuthRequired) {
+				Log.d(TAG, "authorization required");
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_AUTHORIZATION_REQUIRED, e);
+			} else if (status.value() == statusRequestForbidden) {
+				Log.d(TAG, "request forbidden");
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_REQUEST_FORBIDDEN, e);
+			}
+		} catch (Exception e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_FAILURE, e);
+		}
 
 	}
 
@@ -145,29 +154,38 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 
 	private RequestBuilder updateOrNewRequestBuilder(String apiKey) {
 		String id = POIHelper.getWMId(mCursor);
-
-		boolean update = false;
-		if (id.equals("0"))
-			update = true;
+		if (id != null)
+			Log.d(TAG, "updateOrNewRequestBuilder: doing an update of id = "
+					+ id);
+		else
+			Log.d(TAG, "updateOrNewRequestBuilder: creating a new poi");
 
 		String name = POIHelper.getName(mCursor);
-		String category = POIHelper.getCategoryIdentifier(mCursor);
-		String type = POIHelper.getNodeTypeIdentifier(mCursor);
+		SupportManager sm = WheelmapApp.getSupportManager();
+
+		int categoryId = POIHelper.getCategoryId(mCursor);
+		String category = sm.lookupCategory(categoryId).identifier;
+		int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
+		String nodeType = sm.lookupNodeType(nodeTypeId).identifier;
+
 		double latitude = POIHelper.getLatitude(mCursor);
 		double longitude = POIHelper.getLongitude(mCursor);
+
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
 		String comment = POIHelper.getComment(mCursor);
+
 		String street = POIHelper.getStreet(mCursor);
 		String housenumber = POIHelper.getHouseNumber(mCursor);
 		String city = POIHelper.getCity(mCursor);
 		String postcode = POIHelper.getPostcode(mCursor);
+
 		String website = POIHelper.getWebsite(mCursor);
 		String phone = POIHelper.getPhone(mCursor);
 
 		return new NodeUpdateOrNewAllRequestBuilder(SERVER_STAGING, apiKey,
-				AcceptType.JSON, id, name, category, type, latitude, longitude,
-				state, comment, street, housenumber, city, postcode, website,
-				phone, update);
+				AcceptType.JSON, id, name, category, nodeType, latitude,
+				longitude, state, comment, street, housenumber, city, postcode,
+				website, phone);
 	}
 
 	private String getEditApiKey() {

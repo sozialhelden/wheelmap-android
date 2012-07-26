@@ -23,6 +23,7 @@ package org.wheelmap.android.net;
 
 import org.wheelmap.android.model.DataOperationsNodes;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -123,11 +124,11 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 	@Override
 	public void prepareDatabase() {
 		Log.d(getTag(), "prepareDatabase");
+		PrepareDatabaseHelper.cleanupOldCopies(getResolver());
 		PrepareDatabaseHelper.deleteRetrievedData(getResolver());
-		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
 		DataOperationsNodes don = new DataOperationsNodes(getResolver());
 		don.insert(getTempStore());
-		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
+		PrepareDatabaseHelper.replayChangedCopies(getResolver());
 		clearTempStore();
 	}
 

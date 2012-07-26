@@ -31,7 +31,7 @@ import wheelmap.org.request.LocalesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
 
-public class LocalesExecutor extends MultiPageExecutor<Locales> implements
+public class LocalesExecutor extends SinglePageExecutor<Locales> implements
 		IExecutor {
 
 	public LocalesExecutor(Context context, Bundle bundle) {

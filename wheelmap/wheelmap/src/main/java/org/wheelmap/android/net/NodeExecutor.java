@@ -22,6 +22,7 @@
 package org.wheelmap.android.net;
 
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.node.SingleNode;
@@ -63,8 +64,8 @@ public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
+		PrepareDatabaseHelper.cleanupOldCopies(getResolver());
 		PrepareDatabaseHelper.insert(getResolver(), getTempStore().get(0));
-		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
+		PrepareDatabaseHelper.replayChangedCopies(getResolver());
 	}
 }

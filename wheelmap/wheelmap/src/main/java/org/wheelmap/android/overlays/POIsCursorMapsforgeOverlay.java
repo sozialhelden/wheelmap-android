@@ -35,6 +35,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.widget.Toast;
 import de.akquinet.android.androlog.Log;
 
@@ -185,12 +186,10 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 		mCursor.moveToPosition(index);
 		long poiId = POIHelper.getId(mCursor);
-		String wmId = POIHelper.getWMId(mCursor);
-		Log.d(TAG, "onTap index = " + index + " id = " + poiId + " wmId = "
-				+ wmId);
+		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
 
 		if (mListener != null)
-			mListener.onTap(createItem(index), poiId, wmId);
+			mListener.onTap(createItem(index), poiId);
 
 		return true;
 	}
@@ -213,12 +212,12 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		String address = POIHelper.getAddress(mCursor);
 
 		StringBuilder builder = new StringBuilder();
-		if (name.length() > 0)
+		if (!TextUtils.isEmpty(name))
 			builder.append(name);
 		else
 			builder.append(nodeTypeName);
 
-		if (address.length() > 0) {
+		if (!TextUtils.isEmpty(address)) {
 			builder.append(", ");
 			builder.append(address);
 		}

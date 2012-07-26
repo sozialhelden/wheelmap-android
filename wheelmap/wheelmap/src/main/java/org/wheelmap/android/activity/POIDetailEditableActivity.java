@@ -48,14 +48,12 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	private static final int SELECT_WHEELCHAIRSTATE = 0;
 
-	private Long poiID;
 	private Fragment mFragment;
 	private ExternalEditableState mExternalEditableState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 
 		setExternalEditableState(savedInstanceState);
 
@@ -69,6 +67,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			return;
 		}
 
+		Long poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 		if (poiID != Extra.ID_UNKNOWN) {
 			mFragment = POIDetailEditableFragment.newInstance(poiID);
 		}

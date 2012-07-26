@@ -6,18 +6,19 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.model.CursorLoaderHelper;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.net.PrepareDatabaseHelper;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceHelper;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,6 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 			.getSimpleName();
 
 	private final static int LOADER_CONTENT = 0;
-	private final static int LOADER_TEMPORARY = 1;
 
 	@InjectView(R.id.title_container)
 	private LinearLayout title_container;
@@ -128,10 +129,10 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mWSAttributes = SupportManager.wsAttributes;
 		setHasOptionsMenu(true);
-		poiID = getArguments().getLong(Extra.POI_ID);
 
+		mWSAttributes = SupportManager.wsAttributes;
+		poiID = getArguments().getLong(Extra.POI_ID);
 	}
 
 	@Override
@@ -167,12 +168,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	}
 
 	private void retrieve(Bundle bundle) {
-		boolean isTemporaryStore = bundle != null
-				&& bundle.containsKey(Extra.EDITABLE_TEMPORARY_STORE);
-		if (isTemporaryStore)
-			getLoaderManager().initLoader(LOADER_TEMPORARY, null, this);
-		else
-			getLoaderManager().initLoader(LOADER_CONTENT, getArguments(), this);
+		getLoaderManager().initLoader(LOADER_CONTENT, getArguments(), this);
 	}
 
 	@Override
@@ -274,29 +270,21 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		ContentValues values = new ContentValues();
 		values.putAll(retrieveContentValues());
-		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_FIELDS);
-		getActivity().getContentResolver().update(getUriForPoiID(), values, "",
-				null);
+		values.put(POIs.DIRTY, POIs.DIRTY_ALL);
 
-		SyncServiceHelper.executeUpdateServer(getActivity());
+		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
+				poiID, values);
+		SyncServiceHelper.executeUpdateServer(getActivity(), null);
 
 		if (mListener != null) {
 			mListener.onEditSave();
 		}
 	}
 
-	private Uri getUriForPoiID() {
-		return Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-				String.valueOf(poiID));
-	}
-
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
-		if (id == LOADER_CONTENT)
-			return CursorLoaderHelper.createPOIIdLoader(poiID);
-		else
-			return CursorLoaderHelper.createTemporaryPOILoader();
-
+		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiID);
+		return new CursorLoader(WheelmapApp.get(), uri, null, null, null, null);
 	}
 
 	@Override
@@ -315,8 +303,6 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 			return;
 
 		cursor.moveToFirst();
-
-		setPOIIdIfFromTemporary(cursor);
 
 		WheelchairState state = POIHelper.getWheelchair(cursor);
 		String name = POIHelper.getName(cursor);
@@ -339,13 +325,6 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 			showGeolocationEditor(true);
 	}
 
-	private void setPOIIdIfFromTemporary(Cursor cursor) {
-		int updateTag = POIHelper.getUpdateTag(cursor);
-		if (updateTag == Wheelmap.UPDATE_TEMPORARY_STORE) {
-			poiID = POIHelper.getId(cursor);
-		}
-	}
-
 	private void showGeolocationEditor(boolean show) {
 		if (show)
 			edit_geolocation_container.setVisibility(View.VISIBLE);
@@ -360,18 +339,12 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		SupportManager sm = WheelmapApp.getSupportManager();
 		int categoryId = sm.lookupNodeType(mNodeType).categoryId;
-		String categoryIdentifier = sm.lookupCategory(categoryId).identifier;
 		values.put(Wheelmap.POIs.CATEGORY_ID, categoryId);
-		values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, categoryIdentifier);
-
-		String nodeTypeIdentifier = sm.lookupNodeType(mNodeType).identifier;
 		values.put(Wheelmap.POIs.NODETYPE_ID, mNodeType);
-		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, nodeTypeIdentifier);
-		values.put(Wheelmap.POIs.COORD_LAT, mLatitude);
-		values.put(Wheelmap.POIs.COORD_LON, mLongitude);
-		values.put(Wheelmap.POIs.WHEELCHAIR, mWheelchairState.name());
-		values.put(Wheelmap.POIs.WHEELCHAIR_DESC, commentText.getText()
-				.toString());
+		values.put(Wheelmap.POIs.LATITUDE, mLatitude);
+		values.put(Wheelmap.POIs.LONGITUDE, mLongitude);
+		values.put(Wheelmap.POIs.WHEELCHAIR, mWheelchairState.getId());
+		values.put(Wheelmap.POIs.DESCRIPTION, commentText.getText().toString());
 		// street, housenum, postcode, city
 		// still missing
 		values.put(Wheelmap.POIs.WEBSITE, websiteText.getText().toString());
@@ -382,8 +355,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private void storeTemporary() {
 		ContentValues values = retrieveContentValues();
-		PrepareDatabaseHelper.storeTemporary(
-				getActivity().getContentResolver(), values);
+		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
+				poiID, values);
 	}
 
 	public void setWheelchairState(WheelchairState state) {

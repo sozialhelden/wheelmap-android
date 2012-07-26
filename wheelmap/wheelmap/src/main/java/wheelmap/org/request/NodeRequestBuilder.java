@@ -46,7 +46,7 @@ public class NodeRequestBuilder extends RequestBuilder {
 
 	@Override
 	protected String resourcePath() {
-		return String.format("%s/%", RESOURCE, id);
+		return String.format("%s/%s", RESOURCE, id);
 	}
 
 	@Override

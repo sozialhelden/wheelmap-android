@@ -27,19 +27,20 @@ import android.test.InstrumentationTestRunner;
 public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 
 	public TestSuite getAllTests() {
-		TestSuite suite = new TestSuite(MyInstrumentationTestRunner.class.getName());
+
+		TestSuite suite = new TestSuite(
+				MyInstrumentationTestRunner.class.getName());
 		// $JUnit-BEGIN$
-//		suite.addTestSuite( GeocoordinatesMathTest.class );
-//		suite.addTestSuite( ModelTest.class );
-//		suite.addTestSuite( MapFileInfoProviderTest.class );
-//		suite.addTestSuite( MapFileServiceTest.class );
-//		suite.addTestSuite( TestPOIContentProvider.class );
-//		suite.addTestSuite( SupportDataTest.class );
-//		suite.addTestSuite( LoginTest.class );
-		
+		// suite.addTestSuite( GeocoordinatesMathTest.class );
+		suite.addTestSuite(POIContentProviderTest.class);
+		// suite.addTestSuite(SupportDataTest.class);
+		suite.addTestSuite(POIServiceDatabaseTest.class);
+
+		// suite.addTestSuite( POIDatabaseTest.class );
+		// suite.addTestSuite( LoginTest.class );
+
 		// $JUnit-END$
 		return suite;
 	}
 
-	
 }

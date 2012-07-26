@@ -12,17 +12,15 @@ import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.FragmentManager;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -53,8 +51,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
+		Debug.startMethodTracing("wheelmap");
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminateVisibility(false);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		// FragmentManager.enableDebugLogging(true);
 
@@ -117,6 +118,12 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 			executeIntent(getIntent());
 			setIntent(null);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Debug.stopMethodTracing();
 	}
 
 	private void executeIntent(Intent intent) {
@@ -201,22 +208,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		Location location = MyLocationManager.get(null, false)
 				.getLastLocation();
 
-		// create new POI and start editing
-		ContentValues cv = new ContentValues();
-		cv.put(Wheelmap.POIs.NAME, getString(R.string.new_default_name));
-		cv.put(Wheelmap.POIs.COORD_LAT, Math.ceil(location.getLatitude() * 1E6));
-		cv.put(Wheelmap.POIs.COORD_LON,
-				Math.ceil(location.getLongitude() * 1E6));
-		cv.put(Wheelmap.POIs.CATEGORY_ID, SupportManager.UNKNOWN_TYPE);
-		cv.put(Wheelmap.POIs.NODETYPE_ID, SupportManager.UNKNOWN_TYPE);
+		String name = getString(R.string.new_default_name);
+		long id = PrepareDatabaseHelper.insertNew(getContentResolver(), name,
+				location.getLatitude(), location.getLongitude());
 
-		Uri newPoiUri = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI,
-				cv);
-
-		// edit activity
-		Log.i(TAG, newPoiUri.toString());
-		long poiId = Long.parseLong(newPoiUri.getLastPathSegment());
-		return poiId;
+		return id;
 	}
 
 	private void createNewPoi() {
@@ -238,10 +234,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onShowDetail(long id, String wmId) {
+	public void onShowDetail(long id) {
+		long copyId = PrepareDatabaseHelper.createCopyIfNotExists(
+				getContentResolver(), id);
 		Intent intent = new Intent(this, POIDetailActivity.class);
-		intent.putExtra(Extra.POI_ID, id);
-		intent.putExtra(Extra.WM_ID, wmId);
+		intent.putExtra(Extra.POI_ID, copyId);
 		startActivity(intent);
 	}
 

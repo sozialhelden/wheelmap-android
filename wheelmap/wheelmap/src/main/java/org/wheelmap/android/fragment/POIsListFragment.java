@@ -217,9 +217,8 @@ public class POIsListFragment extends SherlockListFragment implements
 			return;
 
 		long poiId = POIHelper.getId(cursor);
-		String wmId = POIHelper.getWMId(cursor);
 		if (mListener != null)
-			mListener.onShowDetail(poiId, wmId);
+			mListener.onShowDetail(poiId);
 
 	}
 

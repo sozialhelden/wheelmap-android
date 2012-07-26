@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.model;
 
+import android.content.ContentResolver;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -30,15 +32,6 @@ public class Wheelmap {
 	// This class cannot be instantiated
 	private Wheelmap() {
 	}
-
-	public static final int UPDATE_NO = 0x0;
-	public static final int UPDATE_WHEELCHAIR_STATE = 0x1;
-	public static final int UPDATE_ALL_FIELDS = 0x2;
-	public static final int UPDATE_PENDING_STATE_ONLY = 0x3;
-	public static final int UPDATE_PENDING_FIELDS_ALL = 0x4;
-	public static final int UPDATE_TEMPORARY_STORE = 0x5;
-
-	public static final String QUERY_DELETE_NOTIFY_PARAM = "delete";
 
 	/**
 	 * Columns from the Places table that other columns join into themselves.
@@ -52,36 +45,24 @@ public class Wheelmap {
 		 * </P>
 		 */
 		public static final String WM_ID = "wm_id";
-
 		public static final String NAME = "name";
 
-		public static final String COORD_LAT = "lat";
+		public static final String CATEGORY_ID = "category_id";
+		public static final String NODETYPE_ID = "nodetype_id";
 
-		public static final String COORD_LON = "lon";
+		public static final String LATITUDE = "latitude";
+		public static final String LONGITUDE = "longitude";
 
 		public static final String STREET = "street";
-
 		public static final String HOUSE_NUM = "house_num";
-
 		public static final String POSTCODE = "postcode";
-
 		public static final String CITY = "city";
 
 		public static final String PHONE = "phone";
-
 		public static final String WEBSITE = "website";
 
 		public static final String WHEELCHAIR = "wheelchair";
-
-		public static final String WHEELCHAIR_DESC = "wheelchair_desc";
-
-		public static final String CATEGORY_ID = "category_id";
-
-		public static final String CATEGORY_IDENTIFIER = "category_identifier";
-
-		public static final String NODETYPE_ID = "nodetype_id";
-
-		public static final String NODETYPE_IDENTIFIER = "nodetype_identifier";
+		public static final String DESCRIPTION = "description";
 
 		// auxiliry pre calculated sin and cos values of lat/lon (in radians)
 		public static final String SIN_LAT_RAD = "sin_lat_rad";
@@ -89,9 +70,20 @@ public class Wheelmap {
 		public static final String SIN_LON_RAD = "sin_lon_rad";
 		public static final String COS_LON_RAD = "cos_lon_rad";
 
-		public static final String UPDATE_TAG = "update_tag";
-		public static final String UPDATE_TIMESTAMP = "update_timestamp";
+		public static final String TAG = "tag";
+		public static final int TAG_RETRIEVED = 0x0;
+		public static final int TAG_COPY = 0x1;
 
+		public static final String STATE = "state";
+		public static final int STATE_UNCHANGED = 0x0;
+		public static final int STATE_CHANGED = 0x1;
+
+		public static final String DIRTY = "dirty";
+		public static final int CLEAN = 0x0;
+		public static final int DIRTY_STATE = 0x1;
+		public static final int DIRTY_ALL = 0x2;
+
+		public static final String STORE_TIMESTAMP = "store_timestamp";
 	}
 
 	public static final class POIs implements BaseColumns, POIsColumns {
@@ -102,23 +94,50 @@ public class Wheelmap {
 		/**
 		 * The content:// style URL for this table
 		 */
-		public static final Uri CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + "/pois");
-		public static final Uri CONTENT_URI_POI_ID = Uri.parse("content://"
-				+ AUTHORITY + "/poi_id");
-		public static final Uri CONTENT_URI_POI_SORTED = Uri.parse("content://"
-				+ AUTHORITY + "/poissorted");
+		static final String PATH_ALL = "all";
+		static final String PATH_RETRIEVED = "retrieved";
+		static final String PATH_COPY = "copy";
+
+		private static final Uri CONTENT_URI_BASE = Uri
+				.parse(ContentResolver.SCHEME_CONTENT + "://" + AUTHORITY);
+		public static final Uri CONTENT_URI_ALL = CONTENT_URI_BASE.buildUpon()
+				.appendPath(PATH_ALL).build();
+		public static final Uri CONTENT_URI_RETRIEVED = CONTENT_URI_BASE
+				.buildUpon().appendPath(PATH_RETRIEVED).build();
+		public static final Uri CONTENT_URI_COPY = CONTENT_URI_BASE.buildUpon()
+				.appendPath(PATH_COPY).build();
+
+		public static final String PARAMETER_LONGITUDE = "longitude";
+		public static final String PARAMETER_LATITUDE = "latitude";
+		public static final String PARAMETER_SORTED = "sorted";
+		public static final String PARAMETER_NONOTIFY = "no_notify";
+
+		public static Uri createUriSorted(Location location) {
+			Uri uri = CONTENT_URI_RETRIEVED;
+			return uri
+					.buildUpon()
+					.appendQueryParameter(PARAMETER_LATITUDE,
+							Double.toString(location.getLatitude()))
+					.appendQueryParameter(PARAMETER_LONGITUDE,
+							Double.toString(location.getLongitude()))
+					.appendQueryParameter(PARAMETER_SORTED,
+							String.valueOf(true)).build();
+		}
+
+		public static Uri createNoNotify(Uri uri) {
+			return uri.buildUpon()
+					.appendQueryParameter(PARAMETER_NONOTIFY, "false").build();
+		}
 
 		/**
 		 * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
 		 */
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.pois";
-		public static final String CONTENT_TYPE_SORTED = "vnd.android.cursor.dir/vnd.wheelmap.poissorted";
+		public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir/vnd.wheelmap.pois";
 		/**
 		 * The MIME type of a {@link #CONTENT_URI} sub-directory of a single
 		 * note.
 		 */
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.poi_id";
+		public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item/vnd.wheelmap.poi_id";
 
 		/**
 		 * The default sort order for this table - categories
@@ -131,9 +150,8 @@ public class Wheelmap {
 		 * The columns we are interested in from the database
 		 */
 		public static final String[] PROJECTION = new String[] { _ID, WM_ID,
-				NAME, COORD_LAT, COORD_LON, STREET, HOUSE_NUM, POSTCODE, CITY,
-				PHONE, WEBSITE, WHEELCHAIR, WHEELCHAIR_DESC, CATEGORY_ID,
-				CATEGORY_IDENTIFIER, NODETYPE_ID, NODETYPE_IDENTIFIER,
-				UPDATE_TAG, UPDATE_TIMESTAMP };
+				NAME, LATITUDE, LONGITUDE, STREET, HOUSE_NUM, POSTCODE, CITY,
+				PHONE, WEBSITE, WHEELCHAIR, DESCRIPTION, CATEGORY_ID,
+				NODETYPE_ID, TAG, STATE, DIRTY, STORE_TIMESTAMP };
 	}
 }

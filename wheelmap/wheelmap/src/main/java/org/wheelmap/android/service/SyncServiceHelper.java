@@ -2,12 +2,12 @@ package org.wheelmap.android.service;
 
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
-import org.wheelmap.android.utils.DetachableResultReceiver;
 
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 
 public class SyncServiceHelper {
 
@@ -19,17 +19,17 @@ public class SyncServiceHelper {
 	}
 
 	public static void retrieveNode(Context context, String id,
-			DetachableResultReceiver mReceiver) {
+			ResultReceiver receiver) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);
 		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODE);
 		intent.putExtra(Extra.WM_ID, id);
-		intent.putExtra(Extra.STATUS_RECEIVER, mReceiver);
+		intent.putExtra(Extra.STATUS_RECEIVER, receiver);
 		context.startService(intent);
 	}
 
 	public static void retrieveNodesByDistance(Context context,
-			Location location, float distance, DetachableResultReceiver receiver) {
+			Location location, float distance, ResultReceiver receiver) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);
 		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
@@ -39,7 +39,8 @@ public class SyncServiceHelper {
 		context.startService(intent);
 	}
 
-	public static void executeUpdateServer(Context context) {
+	public static void executeUpdateServer(Context context,
+			ResultReceiver receiver) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);
 		intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
@@ -47,7 +48,7 @@ public class SyncServiceHelper {
 	}
 
 	public static void executeRetrieveApiKey(Context context, String email,
-			String password, DetachableResultReceiver receiver) {
+			String password, ResultReceiver receiver) {
 
 		Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);

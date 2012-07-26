@@ -46,12 +46,15 @@ public abstract class SinglePageExecutor<T extends Base> extends
 
 	protected int executeSingleRequest(RequestBuilder requestBuilder)
 			throws SyncServiceException {
+
 		String getRequest = requestBuilder.buildRequestUri();
 		// Log.d(TAG, "getRequest " + getRequest);
 
 		T items = retrieveNumberOfHits(getRequest);
-		if (items == null)
+		if (items == null) {
+			Log.e(getTag(), "retrieved no items - tempstore is empty");
 			return 0;
+		}
 
 		mTempStore.add(items);
 

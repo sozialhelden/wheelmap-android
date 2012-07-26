@@ -22,13 +22,8 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/item_pressable_background"
-    android:paddingBottom="5dip"
-    android:paddingLeft="12dip"
-    android:paddingRight="5dip"
-    android:paddingTop="9dip" >
+    style="@style/ListItemContainer"
+    android:background="@drawable/item_pressable_background" >
 
     <ImageView
         android:id="@id/image"

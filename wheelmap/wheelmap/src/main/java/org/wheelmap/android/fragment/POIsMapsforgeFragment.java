@@ -380,9 +380,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onTap(OverlayItem item, long poiId, String wmId) {
+	public void onTap(OverlayItem item, long poiId) {
 		if (mListener != null)
-			mListener.onShowDetail(poiId, wmId);
+			mListener.onShowDetail(poiId);
 	}
 
 	private void showSearch() {

@@ -22,15 +22,18 @@
 package org.wheelmap.android.fragment;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
-import org.wheelmap.android.model.QueriesBuilderHelper;
+import org.wheelmap.android.model.UserQueryHelper;
+import org.wheelmap.android.model.UserQueryUpdateEvent;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -44,12 +47,13 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
 public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
-		WorkerFragment, DetachableResultReceiver.Receiver,
-		LoaderCallbacks<Cursor> {
+		WorkerFragment, Receiver, LoaderCallbacks<Cursor> {
 	public final static String TAG = POIsMapsforgeWorkerFragment.class
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
@@ -65,6 +69,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	boolean isSearchMode;
 	private boolean mRefreshStatus;
 	private GeoPoint mGeoPoint;
+	private Bus mBus;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -77,8 +82,10 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setRetainInstance(true);
+
+		mBus = WheelmapApp.getBus();
+		mBus.register(this);
 
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
@@ -188,10 +195,9 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		Log.d(TAG, "onCreateLoader");
 
-		Uri uri = Wheelmap.POIs.CONTENT_URI;
+		Uri uri = Wheelmap.POIs.CONTENT_URI_RETRIEVED;
 		return new CursorLoader(getActivity(), uri, Wheelmap.POIs.PROJECTION,
-				QueriesBuilderHelper.userSettingsFilter(getActivity()
-						.getApplicationContext()), null,
+				UserQueryHelper.getUserQuery(), null,
 				Wheelmap.POIs.DEFAULT_SORT_ORDER);
 	}
 
@@ -274,5 +280,11 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	@Override
 	public void setSearchMode(boolean isSearchMode) {
 		this.isSearchMode = isSearchMode;
+	}
+
+	@Subscribe
+	public void onUserQueryChange(UserQueryUpdateEvent e) {
+		Log.d(TAG, "onUserQueryChanged: received event");
+		getLoaderManager().restartLoader(LOADER_ID_LIST, null, this);
 	}
 }

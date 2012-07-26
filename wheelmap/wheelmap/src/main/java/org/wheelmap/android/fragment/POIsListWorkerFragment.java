@@ -21,18 +21,21 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.PrefKey;
-import org.wheelmap.android.model.QueriesBuilderHelper;
-import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.UserQueryHelper;
+import org.wheelmap.android.model.UserQueryUpdateEvent;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
@@ -40,7 +43,6 @@ import android.app.SearchManager;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -49,12 +51,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
 public class POIsListWorkerFragment extends SherlockFragment implements
-		WorkerFragment, DetachableResultReceiver.Receiver,
-		LoaderCallbacks<Cursor>, OnSearchDialogListener {
+		WorkerFragment, Receiver, LoaderCallbacks<Cursor>,
+		OnSearchDialogListener {
 	public static final String TAG = POIsListWorkerFragment.class
 			.getSimpleName();
 	private final static int LOADER_ID_LIST = 0;
@@ -69,6 +73,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	private Location mLocation;
 	private float mDistance;
 	private Cursor mCursor;
+	private Bus mBus;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -82,9 +87,10 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-
 		setRetainInstance(true);
 
+		mBus = WheelmapApp.getBus();
+		mBus.register(this);
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 		mLocationManager = MyLocationManager.get(mReceiver, true);
@@ -125,6 +131,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public void onDestroy() {
 		super.onDestroy();
 		mReceiver.clearReceiver();
+		mBus.unregister(this);
 	}
 
 	@Override
@@ -177,14 +184,9 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		Log.d(TAG, "onCreateLoader");
-		Uri uri = Wheelmap.POIs.CONTENT_URI_POI_SORTED;
-		String query = QueriesBuilderHelper.userSettingsFilter(getActivity());
-		String whereValues[] = new String[] {
-				String.valueOf(mLocation.getLongitude()),
-				String.valueOf(mLocation.getLatitude()) };
-
-		return new CursorLoader(getActivity(), uri, Wheelmap.POIs.PROJECTION,
-				query, whereValues, null);
+		String query = UserQueryHelper.getUserQuery();
+		return new CursorLoader(getActivity(), POIs.createUriSorted(mLocation),
+				POIs.PROJECTION, query, null, null);
 	}
 
 	@Override
@@ -276,5 +278,11 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public void setSearchMode(boolean isSearchMode) {
+	}
+
+	@Subscribe
+	public void onUserQueryChanged(UserQueryUpdateEvent e) {
+		Log.d(TAG, "onUserQueryChanged: received event");
+		getLoaderManager().restartLoader(LOADER_ID_LIST, null, this);
 	}
 }

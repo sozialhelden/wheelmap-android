@@ -150,6 +150,7 @@ public class SupportManager {
 
 	public SupportManager(Context ctx) {
 		mContext = ctx;
+
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
 		mAssetManager = mContext.getAssets();
@@ -615,9 +616,10 @@ public class SupportManager {
 				R.drawable.wheelchair_state_limited, R.color.wheel_limited,
 				PrefKey.WHEELCHAIR_STATE_LIMITED));
 		wsAttributes.put(WheelchairState.NO, new WheelchairAttributes(
-				R.string.ws_disabled_title, R.string.settings_wheelchair_no,
-				R.string.ws_disabled, R.drawable.wheelchair_state_disabled,
-				R.color.wheel_disabled, PrefKey.WHEELCHAIR_STATE_NO));
+				R.string.ws_disabled_title, R.string.ws_disabled,
+				R.string.settings_wheelchair_no,
+				R.drawable.wheelchair_state_disabled, R.color.wheel_disabled,
+				PrefKey.WHEELCHAIR_STATE_NO));
 		wsAttributes.put(WheelchairState.UNKNOWN, new WheelchairAttributes(
 				R.string.ws_unknown_title, R.string.ws_unknown,
 				R.string.settings_wheelchair_unknown,
