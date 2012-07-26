@@ -26,6 +26,7 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 public class POIHelper {
 
@@ -66,31 +67,34 @@ public class POIHelper {
 	public static String getAddress(Cursor c) {
 		StringBuilder address = new StringBuilder();
 		// street
-		String street = c.getString(c.getColumnIndexOrThrow(POIs.STREET));
-		if (street != null) {
+		String street = getStreet(c);
+		if (!TextUtils.isEmpty(street)) {
 			address.append(street);
 			address.append(' ');
 		}
 		// house number
-		String nr = c.getString(c.getColumnIndexOrThrow(POIs.HOUSE_NUM));
-		if (nr != null) {
+		String nr = getHouseNumber(c);
+		if (!TextUtils.isEmpty(nr)) {
 			address.append(nr);
 		}
+
 		// post code & city
-		String postcode = c.getString(c.getColumnIndexOrThrow(POIs.POSTCODE));
-		String city = c.getString(c.getColumnIndexOrThrow(POIs.CITY));
-		if ((street != null || nr != null)
-				&& (postcode != null || city != null))
+		String postcode = getPostcode(c);
+		String city = getCity(c);
+
+		if ((!TextUtils.isEmpty(street) || !TextUtils.isEmpty(nr))
+				&& (!TextUtils.isEmpty(postcode) || !TextUtils.isEmpty(city)))
 			address.append(", ");
 
-		if (postcode != null) {
+		if (!TextUtils.isEmpty(postcode)) {
 			address.append(postcode);
 			address.append(' ');
 		}
-		if (city != null) {
-			address.append(city);
 
+		if (!TextUtils.isEmpty(city)) {
+			address.append(city);
 		}
+
 		return address.toString();
 	}
 
