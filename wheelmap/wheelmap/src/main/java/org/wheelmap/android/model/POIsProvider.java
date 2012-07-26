@@ -121,12 +121,6 @@ public class POIsProvider extends ContentProvider {
 	}
 
 	@Override
-	public void shutdown() {
-		super.shutdown();
-		mOpenHelper.close();
-	}
-
-	@Override
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
 		case POIS_ALL:
@@ -472,6 +466,7 @@ public class POIsProvider extends ContentProvider {
 		if (getBooleanQueryParameter(uri, POIs.PARAMETER_NONOTIFY, false))
 			return;
 
+		Log.v(TAG, "notifyCheck: sending notification to uri = " + uri);
 		getContext().getContentResolver().notifyChange(uri, null);
 	}
 

@@ -43,7 +43,8 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 
 	@Override
 	protected Uri getUri() {
-		return POIs.CONTENT_URI_RETRIEVED;
+		return POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED);
+		// return POIs.CONTENT_URI_RETRIEVED;
 	}
 
 }

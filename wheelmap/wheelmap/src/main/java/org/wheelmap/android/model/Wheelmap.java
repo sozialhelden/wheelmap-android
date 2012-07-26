@@ -126,7 +126,7 @@ public class Wheelmap {
 
 		public static Uri createNoNotify(Uri uri) {
 			return uri.buildUpon()
-					.appendQueryParameter(PARAMETER_NONOTIFY, "false").build();
+					.appendQueryParameter(PARAMETER_NONOTIFY, "true").build();
 		}
 
 		/**

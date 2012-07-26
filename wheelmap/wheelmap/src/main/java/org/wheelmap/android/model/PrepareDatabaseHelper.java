@@ -142,13 +142,12 @@ public class PrepareDatabaseHelper {
 		String[] whereValuesTarget = new String[] { new String() };
 
 		c.moveToFirst();
+		Uri uri = POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED);
 		ContentValues values = new ContentValues();
 		while (!c.isAfterLast()) {
 			values.clear();
 			whereValuesTarget[0] = POIHelper.getWMId(c);
 			POIHelper.copyItemToValues(c, values);
-
-			Uri uri = POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED);
 			resolver.update(uri, values, whereClauseTarget, whereValuesTarget);
 			c.moveToNext();
 		}
@@ -226,11 +225,9 @@ public class PrepareDatabaseHelper {
 		Log.v(TAG, "insertNew");
 		ContentValues values = new ContentValues();
 		values.put(POIs.NAME, name);
-		int latitudeE6 = (int) Math.ceil(longitude * 1E6);
-		int longitudeE6 = (int) Math.ceil(latitude * 1E6);
 
-		values.put(POIs.LATITUDE, latitudeE6);
-		values.put(POIs.LONGITUDE, longitudeE6);
+		values.put(POIs.LATITUDE, latitude);
+		values.put(POIs.LONGITUDE, longitude);
 
 		values.put(POIs.CATEGORY_ID, SupportManager.UNKNOWN_TYPE);
 		values.put(POIs.NODETYPE_ID, SupportManager.UNKNOWN_TYPE);

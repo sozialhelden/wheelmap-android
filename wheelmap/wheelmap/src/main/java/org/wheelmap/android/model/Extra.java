@@ -38,6 +38,8 @@ public interface Extra {
 	public static final String EMAIL = "org.wheelmap.android.EMAIL";
 	public static final String PASSWORD = "org.wheelmap.android.PASSWORD";
 	public static final String WHAT = "org.wheelmap.android.WHAT";
+	public static final String ALERT_TITLE = "org.wheelmap.android.ALERT_TITLE";
+	public static final String ALERT_MESSAGE = "org.wheelmap.android.ALERT_MESSAGE";
 
 	public interface What {
 
