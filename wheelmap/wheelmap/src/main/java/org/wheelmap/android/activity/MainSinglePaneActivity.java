@@ -20,7 +20,6 @@ import org.wheelmap.android.service.SyncServiceException;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.FragmentManager;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -51,7 +50,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		Debug.startMethodTracing("wheelmap");
+		// Debug.startMethodTracing("wheelmap");
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminateVisibility(false);
@@ -123,7 +122,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Debug.stopMethodTracing();
+		// Debug.stopMethodTracing();
 	}
 
 	private void executeIntent(Intent intent) {
