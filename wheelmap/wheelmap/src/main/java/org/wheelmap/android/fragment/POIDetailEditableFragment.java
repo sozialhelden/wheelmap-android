@@ -353,7 +353,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		SupportManager sm = WheelmapApp.getSupportManager();
 
-		if (mNodeType != Extra.UNKNOWN) {
+		if (mNodeType != SupportManager.UNKNOWN_TYPE) {
 			int categoryId = sm.lookupNodeType(mNodeType).categoryId;
 			values.put(POIs.CATEGORY_ID, categoryId);
 			values.put(POIs.NODETYPE_ID, mNodeType);

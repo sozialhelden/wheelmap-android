@@ -148,8 +148,8 @@ public class EditPositionFragment extends SherlockFragment implements
 		case MotionEvent.ACTION_MOVE:
 			GeoPoint geoPoint = mMapView.getProjection().fromPixels(
 					(int) event.getX(), (int) event.getY() + mVerticalDelta);
-			mCrrLatitude = geoPoint.getLatitudeE6();
-			mCrrLongitude = geoPoint.getLongitudeE6();
+			mCrrLatitude = geoPoint.getLatitude();
+			mCrrLongitude = geoPoint.getLongitude();
 			mMapOverlay.setPosition(geoPoint);
 			return true;
 		}
