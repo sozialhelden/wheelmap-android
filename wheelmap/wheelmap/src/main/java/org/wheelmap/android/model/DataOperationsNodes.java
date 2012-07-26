@@ -25,8 +25,8 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 		values.clear();
 		values.put(POIs.WM_ID, node.getId().longValue());
 		values.put(POIs.NAME, node.getName());
-		values.put(POIs.LATITUDE, Math.ceil(node.getLat().doubleValue() * 1E6));
-		values.put(POIs.LONGITUDE, Math.ceil(node.getLon().doubleValue() * 1E6));
+		values.put(POIs.LATITUDE, node.getLat().doubleValue());
+		values.put(POIs.LONGITUDE, node.getLon().doubleValue());
 		values.put(POIs.STREET, node.getStreet());
 		values.put(POIs.HOUSE_NUM, node.getHousenumber());
 		values.put(POIs.POSTCODE, node.getPostcode());

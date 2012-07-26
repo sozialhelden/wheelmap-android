@@ -140,7 +140,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onEditGeolocation(int latitude, int longitude) {
+	public void onEditGeolocation(double latitude, double longitude) {
 		mFragment = EditPositionFragment.newInstance(latitude, longitude);
 
 		FragmentManager fm = getSupportFragmentManager();
@@ -151,7 +151,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onEditPosition(int latitude, int longitude) {
+	public void onEditPosition(double latitude, double longitude) {
 		mExternalEditableState.latitude = latitude;
 		mExternalEditableState.longitude = longitude;
 		getSupportFragmentManager().popBackStack();
@@ -193,15 +193,15 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	public static class ExternalEditableState {
 		WheelchairState state = null;
 		int nodetype = Extra.UNKNOWN;
-		int latitude = Extra.UNKNOWN;
-		int longitude = Extra.UNKNOWN;
+		double latitude = Extra.UNKNOWN;
+		double longitude = Extra.UNKNOWN;
 
 		void saveState(Bundle bundle) {
 			if (state != null)
 				bundle.putInt(Extra.WHEELCHAIR_STATE, state.getId());
 			bundle.putInt(Extra.NODETYPE, nodetype);
-			bundle.putInt(Extra.LATITUDE, latitude);
-			bundle.putInt(Extra.LONGITUDE, longitude);
+			bundle.putDouble(Extra.LATITUDE, latitude);
+			bundle.putDouble(Extra.LONGITUDE, longitude);
 		}
 
 		void restoreState(Bundle bundle) {
@@ -210,8 +210,8 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				state = WheelchairState.valueOf(stateId);
 
 			nodetype = bundle.getInt(Extra.NODETYPE, Extra.UNKNOWN);
-			latitude = bundle.getInt(Extra.LATITUDE, Extra.UNKNOWN);
-			longitude = bundle.getInt(Extra.LONGITUDE, Extra.UNKNOWN);
+			latitude = bundle.getDouble(Extra.LATITUDE, Extra.UNKNOWN);
+			longitude = bundle.getDouble(Extra.LONGITUDE, Extra.UNKNOWN);
 		}
 
 		void clear() {

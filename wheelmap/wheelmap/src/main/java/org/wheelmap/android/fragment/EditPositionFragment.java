@@ -30,8 +30,8 @@ public class EditPositionFragment extends SherlockFragment implements
 	private MapView mMapView;
 	private POILocationEditableOverlay mMapOverlay;
 
-	private int mCrrLatitude;
-	private int mCrrLongitude;
+	private double mCrrLatitude;
+	private double mCrrLongitude;
 
 	private final static int VERTICAL_DELTA = 20;
 	private int mVerticalDelta;
@@ -39,13 +39,14 @@ public class EditPositionFragment extends SherlockFragment implements
 	private OnEditPositionListener mListener;
 
 	public interface OnEditPositionListener {
-		public void onEditPosition(int latitude, int longitude);
+		public void onEditPosition(double latitude, double longitude);
 	}
 
-	public static EditPositionFragment newInstance(int latitude, int longitude) {
+	public static EditPositionFragment newInstance(double latitude,
+			double longitude) {
 		Bundle b = new Bundle();
-		b.putInt(Extra.LATITUDE, latitude);
-		b.putInt(Extra.LONGITUDE, longitude);
+		b.putDouble(Extra.LATITUDE, latitude);
+		b.putDouble(Extra.LONGITUDE, longitude);
 
 		EditPositionFragment f = new EditPositionFragment();
 		f.setArguments(b);
@@ -105,8 +106,8 @@ public class EditPositionFragment extends SherlockFragment implements
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt(Extra.LATITUDE, mCrrLatitude);
-		outState.putInt(Extra.LONGITUDE, mCrrLongitude);
+		outState.putDouble(Extra.LATITUDE, mCrrLatitude);
+		outState.putDouble(Extra.LONGITUDE, mCrrLongitude);
 
 		super.onSaveInstanceState(outState);
 	}
@@ -115,8 +116,8 @@ public class EditPositionFragment extends SherlockFragment implements
 		if (state == null)
 			return;
 
-		mCrrLatitude = state.getInt(Extra.LATITUDE);
-		mCrrLongitude = state.getInt(Extra.LONGITUDE);
+		mCrrLatitude = state.getDouble(Extra.LATITUDE);
+		mCrrLongitude = state.getDouble(Extra.LONGITUDE);
 	}
 
 	@Override

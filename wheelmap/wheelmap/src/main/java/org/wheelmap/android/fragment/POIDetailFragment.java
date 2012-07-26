@@ -327,10 +327,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		WheelchairState state = POIHelper.getWheelchair(c);
 		String name = POIHelper.getName(c);
 		String comment = POIHelper.getComment(c);
-		final double lat = POIHelper.getLatitude(c);
-		int latE6 = (int) (lat * 1E6);
-		final double lon = POIHelper.getLongitude(c);
-		int lonE6 = (int) (lon * 1E6);
+		final double latitude = POIHelper.getLatitude(c);
+		final double longitude = POIHelper.getLongitude(c);
 
 		int nodeTypeId = POIHelper.getNodeTypeId(c);
 		int categoryId = POIHelper.getCategoryId(c);
@@ -362,7 +360,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		String postCode = POIHelper.getPostcode(c);
 		String city = POIHelper.getCity(c);
 
-		fillDirectionsActionProvider(lat, lon, street, houseNum, postCode, city);
+		fillDirectionsActionProvider(latitude, longitude, street, houseNum,
+				postCode, city);
 		fillShareActionProvider(wmIdString, name, nodeType.localizedName,
 				comment, address, website);
 
@@ -371,17 +370,18 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 				@Override
 				public void onClick(View v) {
 					if (mListener != null)
-						mListener.onShowLargeMapAt(new GeoPoint(lat, lon));
+						mListener.onShowLargeMapAt(new GeoPoint(latitude,
+								longitude));
 
 				}
 			});
 		} else {
 			SingleItemOverlay overlay = new SingleItemOverlay(this);
-			overlay.setItem(name, comment, nodeType, state, latE6, lonE6);
+			overlay.setItem(name, comment, nodeType, state, latitude, longitude);
 			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
 			mapView.getOverlays().add(overlay);
-			mapController.setCenter(new GeoPoint(lat, lon));
+			mapController.setCenter(new GeoPoint(latitude, longitude));
 		}
 	}
 

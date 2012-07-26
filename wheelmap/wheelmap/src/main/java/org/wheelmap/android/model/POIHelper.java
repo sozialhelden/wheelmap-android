@@ -56,19 +56,11 @@ public class POIHelper {
 	}
 
 	public static double getLatitude(Cursor c) {
-		return (c.getDouble(c.getColumnIndexOrThrow(POIs.LATITUDE)) / 1E6);
+		return c.getDouble(c.getColumnIndexOrThrow(POIs.LATITUDE));
 	}
 
 	public static double getLongitude(Cursor c) {
-		return (c.getDouble(c.getColumnIndexOrThrow(POIs.LONGITUDE)) / 1E6);
-	}
-
-	public static int getLatitudeAsInt(Cursor c) {
-		return (c.getInt(c.getColumnIndexOrThrow(POIs.LATITUDE)));
-	}
-
-	public static int getLongitudeAsInt(Cursor c) {
-		return (c.getInt(c.getColumnIndexOrThrow(POIs.LONGITUDE)));
+		return c.getDouble(c.getColumnIndexOrThrow(POIs.LONGITUDE));
 	}
 
 	public static String getAddress(Cursor c) {
@@ -147,8 +139,8 @@ public class POIHelper {
 		values.put(POIs.CATEGORY_ID, getCategoryId(c));
 		values.put(POIs.NODETYPE_ID, getNodeTypeId(c));
 
-		values.put(POIs.LATITUDE, getLatitudeAsInt(c));
-		values.put(POIs.LONGITUDE, getLongitudeAsInt(c));
+		values.put(POIs.LATITUDE, getLatitude(c));
+		values.put(POIs.LONGITUDE, getLongitude(c));
 
 		values.put(POIs.STREET, getStreet(c));
 		values.put(POIs.HOUSE_NUM, getHouseNumber(c));

@@ -21,7 +21,7 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	public void setItem(String title, String snippet, NodeType nodeType,
-			WheelchairState state, int latitude, int longitude) {
+			WheelchairState state, double latitude, double longitude) {
 
 		Drawable marker = nodeType.stateDrawables.get(state);
 		item = new OverlayItem();

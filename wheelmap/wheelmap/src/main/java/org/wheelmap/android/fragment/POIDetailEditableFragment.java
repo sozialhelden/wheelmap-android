@@ -87,8 +87,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private Long poiID = Extra.ID_UNKNOWN;
 	private WheelchairState mWheelchairState;
-	private int mLatitude;
-	private int mLongitude;
+	private double mLatitude;
+	private double mLongitude;
 	private int mNodeType;
 
 	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
@@ -99,7 +99,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		public void onEditWheelchairState(WheelchairState state);
 
-		public void onEditGeolocation(int latitude, int longitude);
+		public void onEditGeolocation(double latitude, double longitude);
 
 		public void onEditNodetype(int nodetype);
 
@@ -307,8 +307,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		WheelchairState state = POIHelper.getWheelchair(cursor);
 		String name = POIHelper.getName(cursor);
 		String comment = POIHelper.getComment(cursor);
-		int latitude = POIHelper.getLatitudeAsInt(cursor);
-		int longitude = POIHelper.getLongitudeAsInt(cursor);
+		double latitude = POIHelper.getLatitude(cursor);
+		double longitude = POIHelper.getLongitude(cursor);
 		int nodeType = POIHelper.getNodeTypeId(cursor);
 
 		setGeolocation(latitude, longitude);
@@ -374,7 +374,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		state_text.setText(mWSAttributes.get(state).titleStringId);
 	}
 
-	public void setGeolocation(int latitude, int longitude) {
+	public void setGeolocation(double latitude, double longitude) {
 		if (latitude == Extra.UNKNOWN || longitude == Extra.UNKNOWN)
 			return;
 
@@ -384,8 +384,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		mLongitude = longitude;
 
 		String positionText = String.format("%s: (%f:%f)", getResources()
-				.getString(R.string.position_geopoint), mLatitude / 1E6,
-				mLongitude / 1E6);
+				.getString(R.string.position_geopoint), mLatitude, mLongitude);
 		position_text.setText(positionText);
 	}
 

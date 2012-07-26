@@ -201,7 +201,7 @@ public class POIsProvider extends ContentProvider {
 		// see wikipage
 		// https://github.com/sozialhelden/wheelmap-android/wiki/Sqlite,-Distance-calculations
 		if (values.containsKey(POIs.LATITUDE)) {
-			double lat = values.getAsDouble(POIs.LATITUDE) / (double) 1E6;
+			double lat = values.getAsDouble(POIs.LATITUDE);
 			double sin_lat_rad = Math.sin(Math.toRadians(lat));
 			double cos_lat_rad = Math.cos(Math.toRadians(lat));
 			values.put(POIs.COS_LAT_RAD, cos_lat_rad);
@@ -209,7 +209,7 @@ public class POIsProvider extends ContentProvider {
 		}
 
 		if (values.containsKey(POIs.LONGITUDE)) {
-			double lon = values.getAsDouble(POIs.LONGITUDE) / (double) 1E6;
+			double lon = values.getAsDouble(POIs.LONGITUDE);
 			double sin_lon_rad = Math.sin(Math.toRadians(lon));
 			double cos_lon_rad = Math.cos(Math.toRadians(lon));
 			values.put(POIs.COS_LON_RAD, cos_lon_rad);
