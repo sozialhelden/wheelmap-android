@@ -10,7 +10,6 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.UserCredentials;
-import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceHelper;
@@ -28,13 +27,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -62,8 +61,14 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private TextView nodetypeText;
 	@InjectView(R.id.comment)
 	private EditText commentText;
-	@InjectView(R.id.addr)
-	private EditText addressText;
+	@InjectView(R.id.street)
+	private EditText streetText;
+	@InjectView(R.id.housenum)
+	private EditText housenumText;
+	@InjectView(R.id.postcode)
+	private EditText postcodeText;
+	@InjectView(R.id.city)
+	private EditText cityText;
 	@InjectView(R.id.website)
 	private EditText websiteText;
 	@InjectView(R.id.phone)
@@ -83,7 +88,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private RelativeLayout edit_nodetype_container;
 
 	@InjectView(R.id.edit_geolocation_container)
-	private FrameLayout edit_geolocation_container;
+	private LinearLayout edit_geolocation_container;
 
 	private Long poiID = Extra.ID_UNKNOWN;
 	private WheelchairState mWheelchairState;
@@ -160,7 +165,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		UserCredentials credentials = new UserCredentials(getActivity()
 				.getApplicationContext());
 		if (!credentials.isLoggedIn()) {
-			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentManager fm = getFragmentManager();
 			LoginDialogFragment loginDialog = new LoginDialogFragment();
 			loginDialog.show(fm, LoginDialogFragment.TAG);
 		}
@@ -268,8 +273,13 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	public void save() {
 
-		ContentValues values = new ContentValues();
-		values.putAll(retrieveContentValues());
+		ContentValues values = retrieveContentValues();
+
+		if (!values.containsKey(POIs.NODETYPE_ID)) {
+			showErrorMessage(getString(R.string.error_category_missing_title),
+					getString(R.string.error_category_missing_message));
+			return;
+		}
 		values.put(POIs.DIRTY, POIs.DIRTY_ALL);
 
 		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
@@ -315,9 +325,13 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		setNodetype(nodeType);
 		setWheelchairState(state);
 		nameText.setText(name);
-
 		commentText.setText(comment);
-		addressText.setText(POIHelper.getAddress(cursor));
+
+		streetText.setText(POIHelper.getStreet(cursor));
+		housenumText.setText(POIHelper.getHouseNumber(cursor));
+		postcodeText.setText(POIHelper.getPostcode(cursor));
+		cityText.setText(POIHelper.getCity(cursor));
+
 		websiteText.setText(POIHelper.getWebsite(cursor));
 		phoneText.setText(POIHelper.getPhone(cursor));
 
@@ -335,21 +349,43 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private ContentValues retrieveContentValues() {
 		ContentValues values = new ContentValues();
-		values.put(Wheelmap.POIs.NAME, nameText.getText().toString());
+		values.put(POIs.NAME, nameText.getText().toString());
 
 		SupportManager sm = WheelmapApp.getSupportManager();
-		int categoryId = sm.lookupNodeType(mNodeType).categoryId;
-		values.put(Wheelmap.POIs.CATEGORY_ID, categoryId);
-		values.put(Wheelmap.POIs.NODETYPE_ID, mNodeType);
-		values.put(Wheelmap.POIs.LATITUDE, mLatitude);
-		values.put(Wheelmap.POIs.LONGITUDE, mLongitude);
-		values.put(Wheelmap.POIs.WHEELCHAIR, mWheelchairState.getId());
-		values.put(Wheelmap.POIs.DESCRIPTION, commentText.getText().toString());
-		// street, housenum, postcode, city
-		// still missing
-		values.put(Wheelmap.POIs.WEBSITE, websiteText.getText().toString());
-		values.put(Wheelmap.POIs.PHONE, phoneText.getText().toString());
 
+		if (mNodeType != Extra.UNKNOWN) {
+			int categoryId = sm.lookupNodeType(mNodeType).categoryId;
+			values.put(POIs.CATEGORY_ID, categoryId);
+			values.put(POIs.NODETYPE_ID, mNodeType);
+		}
+
+		values.put(POIs.LATITUDE, mLatitude);
+		values.put(POIs.LONGITUDE, mLongitude);
+
+		values.put(POIs.WHEELCHAIR, mWheelchairState.getId());
+		String description = commentText.getText().toString();
+		if (!TextUtils.isEmpty(description))
+			values.put(POIs.DESCRIPTION, description);
+
+		String street = streetText.getText().toString();
+		if (!TextUtils.isEmpty(street))
+			values.put(POIs.STREET, street);
+		String housenum = housenumText.getText().toString();
+		if (!TextUtils.isEmpty(housenum))
+			values.put(POIs.HOUSE_NUM, housenum);
+		String postcode = postcodeText.getText().toString();
+		if (!TextUtils.isEmpty(postcode))
+			values.put(POIs.POSTCODE, postcode);
+		String city = cityText.getText().toString();
+		if (!TextUtils.isEmpty(city))
+			values.put(POIs.CITY, city);
+
+		String website = websiteText.getText().toString();
+		if (!TextUtils.isEmpty(website))
+			values.put(POIs.WEBSITE, website);
+		String phone = phoneText.getText().toString();
+		if (!TextUtils.isEmpty(phone))
+			values.put(POIs.PHONE, phone);
 		return values;
 	}
 
@@ -383,7 +419,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		mLatitude = latitude;
 		mLongitude = longitude;
 
-		String positionText = String.format("%s: (%f:%f)", getResources()
+		String positionText = String.format("%s: (%.6f:%.6f)", getResources()
 				.getString(R.string.position_geopoint), mLatitude, mLongitude);
 		position_text.setText(positionText);
 	}
@@ -396,6 +432,16 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		SupportManager manager = WheelmapApp.getSupportManager();
 		NodeType nodeType = manager.lookupNodeType(nodetype);
 		nodetypeText.setText(nodeType.localizedName);
+	}
+
+	public void showErrorMessage(String title, String message) {
+		FragmentManager fm = getFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
+				title, message);
+		if (errorDialog == null)
+			return;
+
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
 	}
 
 	public void closeKeyboard() {

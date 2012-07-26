@@ -147,4 +147,8 @@
     <string name="settings_wheelchair_yes">Yes</string>
     <string name="settings_wheelchair_limited">Limited</string>
     <string name="settings_wheelchair_no">No</string>
+    <string name="error_noid_title"/>
+    <string name="error_noid_message">Sorry, this link contains no identification to retrieve from the Wheelmap servers. Unable to find the location</string>
+    <string name="error_category_missing_title">No category set!</string>
+    <string name="error_category_missing_message">Cannot store without a category for the location.</string>
 </resources>
