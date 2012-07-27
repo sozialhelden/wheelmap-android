@@ -46,7 +46,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context mContext;
 	private Cursor mCursor;
 	private Handler mHandler;
-	private boolean mCursorInvalidated;
 	private OnTapListener mListener;
 
 	public POIsCursorMapsforgeOverlay(Context context, OnTapListener listener) {
@@ -56,22 +55,11 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		mListener = listener;
 	}
 
-	@Override
-	public synchronized void finalize() {
-		if (mCursor != null)
-			mCursor.close();
-	}
-
 	public synchronized void setCursor(Cursor cursor) {
 		if (cursor == mCursor)
 			return;
 
-		if (mCursor != null) {
-			mCursor.close();
-		}
-
 		mCursor = cursor;
-		mCursorInvalidated = false;
 
 		if (mCursor == null)
 			return;
@@ -88,7 +76,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected synchronized OverlayItem createItem(int i) {
-		if (mCursor == null || mCursor.isClosed() || mCursorInvalidated)
+		if (mCursor == null || mCursor.isClosed())
 			return null;
 
 		int count = mCursor.getCount();
