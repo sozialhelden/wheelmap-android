@@ -11,7 +11,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/titlebar_icon"
+            android:layout_alignParentRight="true"
+            android:gravity="center_horizontal" >
 
             <TextView style="@style/TitleBarTextNew.Title" />
             <TextView style="@style/TitleBarTextNew.Subtitle" />
