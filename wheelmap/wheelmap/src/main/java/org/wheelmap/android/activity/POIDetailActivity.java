@@ -220,7 +220,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	public void showErrorMessage(String title, String message) {
 		FragmentManager fm = getSupportFragmentManager();
 		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
-				title, message);
+				title, message, Extra.UNKNOWN);
 		if (errorDialog == null)
 			return;
 
@@ -229,7 +229,8 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 
 	public void showErrorDialog(SyncServiceException e) {
 		FragmentManager fm = getSupportFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+				Extra.UNKNOWN);
 		if (errorDialog == null)
 			return;
 
@@ -265,7 +266,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onErrorDialogClose() {
+	public void onErrorDialogClose(int id) {
 		finish();
 	}
 }

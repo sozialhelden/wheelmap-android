@@ -153,6 +153,10 @@
     <string name="error_category_missing_message">Cannot store without a category for the location.</string>
     <string name="poi_property_street">Street</string>
     <string name="poi_property_housenum">No</string>
-    <string name="poi_property_postcode">Postcode</string>
+    <string name="poi_property_postcode">Code</string>
     <string name="poi_property_city">City</string>
+    <string name="error_wheelchairstate_missing_title">No Wheelchair State given!</string>
+    <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.</string>
+    <string name="error_newpoi_title">New Location created!</string>
+    <string name="error_newpoi_message">The new location will be verified before it shows up in the database. This will take some time.</string>
 </resources>

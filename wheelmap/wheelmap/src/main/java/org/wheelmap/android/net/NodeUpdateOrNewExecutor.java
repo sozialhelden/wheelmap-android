@@ -86,9 +86,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				break;
 			case POIs.DIRTY_ALL:
 				requestBuilder = updateOrNewRequestBuilder(editApiKey);
-				mCursor.moveToNext();
-				continue;
-				// break;
+				break;
 			default:
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_INTERNAL_ERROR,

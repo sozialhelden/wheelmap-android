@@ -116,4 +116,9 @@
     <string name="poi_property_street">Straße</string>
     <string name="poi_property_housenum">Nr</string>
     <string name="error_category_missing_title">Kategorie fehlt!</string>
+    <string name="poi_property_postcode">PLZ</string>
+    <string name="error_wheelchairstate_missing_title">Keine Rolltauglichkeit angegeben!</string>
+    <string name="error_wheelchairstate_missing_message">Bitte eine Rollstuhleignung angeben.</string>
+    <string name="error_newpoi_message">Der neue Ort wird überprüft, bevor er in die Datenbank aufgenommen wird. Dies dauert eine gewisse Zeit.</string>
+    <string name="error_newpoi_title">Neuer Ort angelegt!</string>
 </resources>

@@ -51,6 +51,7 @@ public class POIsProvider extends ContentProvider {
 	private static final int POIS_RETRIEVED_ID = 2;
 	private static final int POIS_COPY = 3;
 	private static final int POIS_COPY_ID = 4;
+	private static final int POIS_TMP = 5;
 
 	private static final String DATABASE_NAME = "wheelmap.db";
 	private static final int DATABASE_VERSION = 12;
@@ -126,6 +127,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS_ALL:
 		case POIS_RETRIEVED:
 		case POIS_COPY:
+		case POIS_TMP:
 			return POIs.CONTENT_TYPE_DIR;
 		case POIS_RETRIEVED_ID:
 		case POIS_COPY_ID:
@@ -151,6 +153,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS_RETRIEVED_ID:
 		case POIS_COPY:
 		case POIS_COPY_ID:
+		case POIS_TMP:
 			whereClause = concatenateWhere(whereClause, where);
 			count = db.delete(POIS_TABLE_NAME, whereClause, whereArgs);
 			break;
@@ -179,6 +182,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS_RETRIEVED_ID:
 		case POIS_COPY:
 		case POIS_COPY_ID:
+		case POIS_TMP:
 			whereClause = concatenateWhere(whereClause, where);
 			count = db.update(POIS_TABLE_NAME, values, whereClause, whereArgs);
 			break;
@@ -226,6 +230,9 @@ public class POIsProvider extends ContentProvider {
 		case POIS_COPY:
 			values.put(POIs.TAG, POIs.TAG_COPY);
 			break;
+		case POIS_TMP:
+			values.put(POIs.TAG, POIs.TAG_TMP);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -270,6 +277,7 @@ public class POIsProvider extends ContentProvider {
 			case POIS_RETRIEVED_ID:
 			case POIS_COPY:
 			case POIS_COPY_ID:
+			case POIS_TMP:
 				String whereClause = calcWhereClause(uri);
 				if (whereClause != null)
 					qb.appendWhere(whereClause);
@@ -454,6 +462,8 @@ public class POIsProvider extends ContentProvider {
 				tagWhere = POIs.TAG + "=" + POIs.TAG_RETRIEVED;
 			else if (tag.equals(POIs.PATH_COPY))
 				tagWhere = POIs.TAG + "=" + POIs.TAG_COPY;
+			else if (tag.equals(POIs.PATH_TMP))
+				tagWhere = POIs.TAG + "=" + POIs.TAG_TMP;
 		}
 
 		String result = concatenateWhere(tagWhere, idWhere);
@@ -558,6 +568,7 @@ public class POIsProvider extends ContentProvider {
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_COPY, POIS_COPY);
 		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_COPY + "/#",
 				POIS_COPY_ID);
+		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_TMP, POIS_TMP);
 
 		// POIs
 		sPOIsProjectionMap = new HashMap<String, String>();

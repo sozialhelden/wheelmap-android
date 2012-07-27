@@ -73,6 +73,7 @@ public class Wheelmap {
 		public static final String TAG = "tag";
 		public static final int TAG_RETRIEVED = 0x0;
 		public static final int TAG_COPY = 0x1;
+		public static final int TAG_TMP = 0x2;
 
 		public static final String STATE = "state";
 		public static final int STATE_UNCHANGED = 0x0;
@@ -97,6 +98,7 @@ public class Wheelmap {
 		static final String PATH_ALL = "all";
 		static final String PATH_RETRIEVED = "retrieved";
 		static final String PATH_COPY = "copy";
+		static final String PATH_TMP = "tmp";
 
 		private static final Uri CONTENT_URI_BASE = Uri
 				.parse(ContentResolver.SCHEME_CONTENT + "://" + AUTHORITY);
@@ -106,6 +108,8 @@ public class Wheelmap {
 				.buildUpon().appendPath(PATH_RETRIEVED).build();
 		public static final Uri CONTENT_URI_COPY = CONTENT_URI_BASE.buildUpon()
 				.appendPath(PATH_COPY).build();
+		public static final Uri CONTENT_URI_TMP = CONTENT_URI_BASE.buildUpon()
+				.appendPath(PATH_TMP).build();
 
 		public static final String PARAMETER_LONGITUDE = "longitude";
 		public static final String PARAMETER_LATITUDE = "latitude";

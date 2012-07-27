@@ -38,13 +38,14 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 	public static final String TAG = ErrorDialogFragment.class.getSimpleName();
 	static boolean isShowing;
 	private OnErrorDialogListener mListener;
+	private int id;
 
 	public interface OnErrorDialogListener {
-		public void onErrorDialogClose();
+		public void onErrorDialogClose(int id);
 	}
 
 	public final static ErrorDialogFragment newInstance(String title,
-			String message) {
+			String message, int id) {
 		if (isShowing)
 			return null;
 
@@ -54,11 +55,13 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		Bundle b = new Bundle();
 		b.putString(Extra.ALERT_TITLE, title);
 		b.putString(Extra.ALERT_MESSAGE, message);
+		b.putInt(Extra.ID, id);
 		dialog.setArguments(b);
 		return dialog;
 	}
 
-	public final static ErrorDialogFragment newInstance(SyncServiceException e) {
+	public final static ErrorDialogFragment newInstance(SyncServiceException e,
+			int id) {
 		if (isShowing)
 			return null;
 
@@ -66,6 +69,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		ErrorDialogFragment dialog = new ErrorDialogFragment();
 		Bundle b = new Bundle();
 		b.putParcelable(Extra.EXCEPTION, e);
+		b.putInt(Extra.ID, id);
 		dialog.setArguments(b);
 		return dialog;
 	}
@@ -81,7 +85,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
 				getActivity());
-
+		id = getArguments().getInt(Extra.ID);
 		String title;
 		String msg;
 		if (getArguments().containsKey(Extra.ALERT_TITLE)) {
@@ -108,6 +112,6 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		isShowing = false;
 
 		if (mListener != null)
-			mListener.onErrorDialogClose();
+			mListener.onErrorDialogClose(id);
 	}
 }

@@ -225,7 +225,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public void onError(SyncServiceException e) {
 
 		FragmentManager fm = getSupportFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+				Extra.UNKNOWN);
 		if (errorDialog == null)
 			return;
 

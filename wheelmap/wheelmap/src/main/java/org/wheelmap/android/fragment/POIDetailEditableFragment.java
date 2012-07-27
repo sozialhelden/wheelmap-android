@@ -3,6 +3,7 @@ package org.wheelmap.android.fragment;
 import java.util.Map;
 
 import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
@@ -13,6 +14,7 @@ import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
@@ -47,11 +49,14 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableFragment extends RoboSherlockFragment implements
-		OnClickListener, LoaderCallbacks<Cursor> {
+		OnErrorDialogListener, OnClickListener, LoaderCallbacks<Cursor> {
 	public final static String TAG = POIDetailEditableFragment.class
 			.getSimpleName();
 
 	private final static int LOADER_CONTENT = 0;
+	private final static int LOADER_TMP = 1;
+
+	private static final int DIALOG_ID_NEWPOI = 1;
 
 	@InjectView(R.id.title_container)
 	private LinearLayout title_container;
@@ -91,6 +96,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private LinearLayout edit_geolocation_container;
 
 	private Long poiID = Extra.ID_UNKNOWN;
+	private String wmID;
 	private WheelchairState mWheelchairState;
 	private double mLatitude;
 	private double mLongitude;
@@ -98,6 +104,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 	private OnPOIDetailEditableListener mListener;
+
+	private boolean mTemporaryStored;
 
 	public interface OnPOIDetailEditableListener {
 		public void onEditSave();
@@ -122,6 +130,10 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		return fragment;
 	}
 
+	public POIDetailEditableFragment() {
+		Log.d(TAG, "constructor called ");
+	}
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -134,8 +146,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 		setHasOptionsMenu(true);
-
 		mWSAttributes = SupportManager.wsAttributes;
 		poiID = getArguments().getLong(Extra.POI_ID);
 	}
@@ -160,6 +172,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
 
 		retrieve(savedInstanceState);
 		UserCredentials credentials = new UserCredentials(getActivity()
@@ -173,7 +186,17 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	}
 
 	private void retrieve(Bundle bundle) {
-		getLoaderManager().initLoader(LOADER_CONTENT, getArguments(), this);
+		boolean loadTempStore = mTemporaryStored
+				|| (bundle != null && bundle
+						.containsKey(Extra.TEMPORARY_STORED));
+		int loaderId;
+		if (loadTempStore)
+			loaderId = LOADER_TMP;
+		else
+			loaderId = LOADER_CONTENT;
+
+		Log.d(TAG, "retrieve: init loader id = " + loaderId);
+		getLoaderManager().initLoader(loaderId, null, this);
 	}
 
 	@Override
@@ -184,12 +207,12 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		storeExternalEditedState();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+		storeTemporary();
 	}
 
 	@Override
@@ -212,16 +235,11 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		super.onDetach();
 	}
 
-	private void storeExternalEditedState() {
-		if (mListener != null)
-			mListener.requestExternalEditedState(this);
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
-		outState.putBoolean(Extra.EDITABLE_TEMPORARY_STORE, true);
-		storeTemporary();
+		outState.putBoolean(Extra.TEMPORARY_STORED, true);
 	}
 
 	@Override
@@ -273,32 +291,63 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	public void save() {
 
+		boolean dontQuit = false;
 		ContentValues values = retrieveContentValues();
-
 		if (!values.containsKey(POIs.NODETYPE_ID)) {
 			showErrorMessage(getString(R.string.error_category_missing_title),
-					getString(R.string.error_category_missing_message));
+					getString(R.string.error_category_missing_message),
+					Extra.UNKNOWN);
 			return;
+		} else if (mWheelchairState == WheelchairState.UNKNOWN) {
+			showErrorMessage(
+					getString(R.string.error_wheelchairstate_missing_title),
+					getString(R.string.error_wheelchairstate_missing_message),
+					Extra.UNKNOWN);
+			return;
+		} else if (TextUtils.isEmpty(wmID)) {
+			showErrorMessage(getString(R.string.error_newpoi_title),
+					getString(R.string.error_newpoi_message), DIALOG_ID_NEWPOI);
+			dontQuit = true;
 		}
+
 		values.put(POIs.DIRTY, POIs.DIRTY_ALL);
 
 		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
 				poiID, values);
 		SyncServiceHelper.executeUpdateServer(getActivity(), null);
 
+		if (!dontQuit)
+			quit();
+	}
+
+	private void quit() {
 		if (mListener != null) {
 			mListener.onEditSave();
 		}
 	}
 
 	@Override
+	public void onErrorDialogClose(int id) {
+		if (id == DIALOG_ID_NEWPOI)
+			quit();
+	}
+
+	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
-		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiID);
-		return new CursorLoader(WheelmapApp.get(), uri, null, null, null, null);
+		Log.d(TAG, "onCreateLoader: id = " + id);
+		Uri uri = null;
+		if (id == LOADER_CONTENT)
+			uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiID);
+		else
+			uri = POIs.CONTENT_URI_TMP;
+
+		Log.d(TAG, "onCreateLoader: uri = " + uri);
+		return new CursorLoader(getActivity(), uri, null, null, null, null);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.d(TAG, "onLoadFinished loader id = " + loader.getId());
 		load(cursor);
 	}
 
@@ -312,6 +361,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		if (cursor == null || cursor.getCount() < 1)
 			return;
 
+		UtilsMisc.dumpCursorToLog(TAG, cursor);
 		cursor.moveToFirst();
 
 		WheelchairState state = POIHelper.getWheelchair(cursor);
@@ -335,8 +385,11 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		websiteText.setText(POIHelper.getWebsite(cursor));
 		phoneText.setText(POIHelper.getPhone(cursor));
 
-		if (nodeType == SupportManager.UNKNOWN_TYPE)
+		wmID = POIHelper.getWMId(cursor);
+		if (TextUtils.isEmpty(wmID))
 			showGeolocationEditor(true);
+
+		retrieveExternalEditedState();
 	}
 
 	private void showGeolocationEditor(boolean show) {
@@ -344,12 +397,20 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 			edit_geolocation_container.setVisibility(View.VISIBLE);
 		else
 			edit_geolocation_container.setVisibility(View.GONE);
+	}
 
+	private void retrieveExternalEditedState() {
+		Log.d(TAG, "retrieveExternalEditedState");
+		if (mListener != null)
+			mListener.requestExternalEditedState(this);
 	}
 
 	private ContentValues retrieveContentValues() {
 		ContentValues values = new ContentValues();
-		values.put(POIs.NAME, nameText.getText().toString());
+
+		String name = nameText.getText().toString();
+		if (!TextUtils.isEmpty(name))
+			values.put(POIs.NAME, name);
 
 		SupportManager sm = WheelmapApp.getSupportManager();
 
@@ -389,16 +450,11 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		return values;
 	}
 
-	private void storeTemporary() {
-		ContentValues values = retrieveContentValues();
-		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
-				poiID, values);
-	}
-
 	public void setWheelchairState(WheelchairState state) {
 		if (state == null)
 			return;
 
+		// Log.d(TAG, "setWheelchairState state = " + state.name());
 		mWheelchairState = state;
 
 		int stateColor = getResources().getColor(
@@ -414,8 +470,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		if (latitude == Extra.UNKNOWN || longitude == Extra.UNKNOWN)
 			return;
 
-		Log.d(TAG, "onResult: mLatitude = " + mLatitude + " mLongitude = "
-				+ mLongitude);
+		// Log.d(TAG, "setGeolocation: latitude = " + latitude + " longitude = "
+		// + longitude);
 		mLatitude = latitude;
 		mLongitude = longitude;
 
@@ -425,19 +481,20 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	}
 
 	public void setNodetype(int nodetype) {
-		if (nodetype == Extra.UNKNOWN)
+		if (nodetype == SupportManager.UNKNOWN_TYPE)
 			return;
 
+		// Log.d(TAG, "setNodetype: nodetype = " + nodetype);
 		mNodeType = nodetype;
 		SupportManager manager = WheelmapApp.getSupportManager();
 		NodeType nodeType = manager.lookupNodeType(nodetype);
 		nodetypeText.setText(nodeType.localizedName);
 	}
 
-	public void showErrorMessage(String title, String message) {
+	public void showErrorMessage(String title, String message, int id) {
 		FragmentManager fm = getFragmentManager();
 		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
-				title, message);
+				title, message, id);
 		if (errorDialog == null)
 			return;
 
@@ -453,5 +510,17 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
+	}
+
+	private void storeTemporary() {
+		ContentValues values = retrieveContentValues();
+		if (!TextUtils.isEmpty(wmID))
+			values.put(POIs.WM_ID, wmID);
+
+		long id = PrepareDatabaseHelper.storeTemporary(getActivity()
+				.getContentResolver(), values);
+		Log.d(TAG, "storeTemporary wmId = " + wmID + " id = " + id);
+		getLoaderManager().destroyLoader(LOADER_CONTENT);
+		mTemporaryStored = true;
 	}
 }

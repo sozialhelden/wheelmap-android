@@ -153,7 +153,8 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 
 	private void showErrorDialog(SyncServiceException e) {
 		FragmentManager fm = getFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+				Extra.UNKNOWN);
 		if (errorDialog == null)
 			return;
 

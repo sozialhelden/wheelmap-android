@@ -160,11 +160,13 @@ public class PrepareDatabaseHelper {
 	public static void cleanupOldCopies(ContentResolver resolver) {
 		Log.v(TAG, "cleanupOldCopies");
 		long now = System.currentTimeMillis();
-		String whereClause = "( " + POIs.STATE + " = ? ) OR (( " + POIs.STATE
-				+ " = ? ) AND ( " + POIs.STORE_TIMESTAMP + " < ?))";
+		String whereClause = "( " + POIs.STATE + " = ? ) OR " + "( " + POIs.TAG
+				+ " = ? ) OR (( " + POIs.STATE + " = ? ) AND ( "
+				+ POIs.STORE_TIMESTAMP + " < ?))";
 
 		String[] whereValues = new String[] {
 				Integer.toString(POIs.STATE_UNCHANGED),
+				Integer.toString(POIs.TAG_TMP),
 				Integer.toString(POIs.STATE_CHANGED),
 				Long.toString(now - TIME_TO_DELETE_FOR_PENDING) };
 
@@ -186,6 +188,7 @@ public class PrepareDatabaseHelper {
 		if (cursorCount == 0)
 			id = ContentUris.parseId(resolver.insert(contentUri, values));
 		else if (cursorCount == 1) {
+			c.moveToFirst();
 			id = POIHelper.getId(c);
 			resolver.update(contentUri, values, whereClause, whereValues);
 		} else {
@@ -254,4 +257,11 @@ public class PrepareDatabaseHelper {
 		return c;
 	}
 
+	public static long storeTemporary(ContentResolver resolver,
+			ContentValues values) {
+		Uri uri = POIs.createNoNotify(POIs.CONTENT_URI_TMP);
+		resolver.delete(uri, null, null);
+		return ContentUris.parseId(resolver.insert(uri, values));
+
+	}
 }
