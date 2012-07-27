@@ -431,11 +431,12 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void setCurrentLocation(GeoPoint point, Location location) {
-		mLastGeoPointE6 = point;
+	public void setCurrentLocation(Location location) {
+		mLastGeoPointE6 = new GeoPoint(location.getLatitude(),
+				location.getLongitude());
 		mCurrLocationOverlay.setLocation(mLastGeoPointE6,
 				location.getAccuracy());
-		centerMap(point, false);
+		centerMap(mLastGeoPointE6, false);
 	}
 
 }

@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
@@ -275,7 +274,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void setCurrentLocation(GeoPoint point, Location location) {
+	public void setCurrentLocation(Location location) {
 
 	}
 
