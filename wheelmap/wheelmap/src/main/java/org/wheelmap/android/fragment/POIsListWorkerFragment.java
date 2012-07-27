@@ -161,6 +161,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		}
 		case What.LOCATION_MANAGER_UPDATE: {
 			mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
+			resetCursorLoaderUri();
 			break;
 		}
 		}
@@ -171,6 +172,15 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		update();
 	}
 
+	private void resetCursorLoaderUri() {
+		Loader<Cursor> loader = getLoaderManager().getLoader(LOADER_ID_LIST);
+		if (loader == null)
+			return;
+
+		CursorLoader cl = (CursorLoader) loader;
+		cl.setUri(POIs.createUriSorted(mLocation));
+	}
+
 	private float getDistanceFromPreferences() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity()
@@ -179,10 +189,11 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		String prefDist = prefs.getString(PrefKey.LIST_DISTANCE,
 				String.valueOf(QUERY_DISTANCE_DEFAULT));
 		return Float.valueOf(prefDist);
+
 	}
 
 	@Override
-	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		Log.d(TAG, "onCreateLoader");
 		String query = UserQueryHelper.getUserQuery();
 		return new CursorLoader(getActivity(), POIs.createUriSorted(mLocation),
