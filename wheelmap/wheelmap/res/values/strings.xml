@@ -109,7 +109,7 @@
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
     <string name="login_submit">Login</string>
-    <string name="title_login">Please Login</string>
+    <string name="title_login">Please Login!</string>
     <string name="error_authorization_required">Authorization required</string>
     <string name="error_request_forbidden">Request forbidden</string>
     <string name="search_hint_list">Keyword (optional)</string>
