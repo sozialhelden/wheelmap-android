@@ -82,6 +82,12 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 	}
 
 	@Override
+	public void onDetach() {
+		super.onDetach();
+		isShowing = false;
+	}
+
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
 				getActivity());
@@ -109,7 +115,6 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-		isShowing = false;
 
 		if (mListener != null)
 			mListener.onErrorDialogClose(id);
