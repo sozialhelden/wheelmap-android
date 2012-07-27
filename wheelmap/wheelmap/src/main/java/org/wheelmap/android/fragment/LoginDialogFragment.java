@@ -177,20 +177,38 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 		String password = mPasswordText.getText().toString();
 
 		if (email.length() == 0 || password.length() == 0)
-			return; // TODO: display a dialog requesting for a password
+			return;
 
 		SyncServiceHelper.executeRetrieveApiKey(getActivity(), email, password,
 				mReceiver);
 	}
 
+	private boolean checkInputFields(TextView v) {
+		if (v.getText().toString().length() == 0)
+			return false;
+
+		EditText otherText;
+		if (v == mEmailText)
+			otherText = mPasswordText;
+		else
+			otherText = mEmailText;
+
+		if (otherText.getText().toString().length() == 0) {
+			otherText.requestFocus();
+			return false;
+		}
+
+		return true;
+	}
+
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if (EditorInfo.IME_ACTION_DONE == actionId) {
-			login();
+			if (checkInputFields(v))
+				login();
 			return true;
 		}
 
 		return false;
 	}
-
 }
