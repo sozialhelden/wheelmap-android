@@ -61,7 +61,7 @@ import android.preference.PreferenceManager;
 import de.akquinet.android.androlog.Log;
 
 public class SupportManager {
-	private static final String TAG = SupportManager.class.getName();
+	private static final String TAG = SupportManager.class.getSimpleName();
 
 	private Context mContext;
 	private Map<Integer, NodeType> mNodeTypeLookup;
@@ -451,7 +451,7 @@ public class SupportManager {
 			bitmap = BitmapFactory.decodeStream(is);
 			is.close();
 		} catch (IOException e) {
-			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage());
+			Log.w(TAG, "Warning in createIconDrawable ", e);
 			return null;
 		}
 		return new BitmapDrawable(bitmap);
@@ -472,10 +472,11 @@ public class SupportManager {
 				drawable = Drawable.createFromStream(is, null);
 				is.close();
 			} catch (IOException e) {
-				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage());
+				Log.w(TAG, "Error in createDefaultDrawables", e);
 			}
 			// drawable.setBounds(-32, -64, 32, 0);
-			drawable.setBounds(-24, -48, 24, 0);
+			if (drawable != null)
+				drawable.setBounds(-24, -48, 24, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
@@ -498,8 +499,7 @@ public class SupportManager {
 				is.close();
 			} catch (IOException e) {
 				Log.w(TAG,
-						"Error in createDrawableLookup. Assigning fallback. "
-								+ e.getMessage());
+						"Error in createDrawableLookup. Assigning fallback.", e);
 				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
 						.valueOf(idx));
 			}
