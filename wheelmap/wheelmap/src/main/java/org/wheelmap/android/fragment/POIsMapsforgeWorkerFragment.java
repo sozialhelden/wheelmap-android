@@ -164,11 +164,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 			mDisplayFragment.setCurrentLocation(mLocation);
 	}
 
-	private void setSearchModeInternal(boolean isSearchMode) {
-		this.isSearchMode = isSearchMode;
-		update();
-	}
-
 	private void setRefreshStatus(boolean refreshState) {
 		mRefreshStatus = refreshState;
 		update();
@@ -226,7 +221,7 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
 		SyncServiceHelper.executeRequest(getActivity(), bundle);
-		setSearchMode(true);
+		setSearchModeInt(true);
 	}
 
 	@Override
@@ -264,9 +259,17 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		return isSearchMode;
 	}
 
+	private void setSearchModeInt(boolean searchMode) {
+		Log.d(TAG, "setSearchMode: " + searchMode);
+		isSearchMode = searchMode;
+		if (mListener != null)
+			mListener.onSearchModeChange(isSearchMode);
+	}
+
 	@Override
-	public void setSearchMode(boolean isSearchMode) {
-		this.isSearchMode = isSearchMode;
+	public void setSearchMode(boolean searchMode) {
+		Log.d(TAG, "setSearchMode: " + isSearchMode);
+		isSearchMode = searchMode;
 	}
 
 	@Subscribe

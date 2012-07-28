@@ -20,9 +20,15 @@ import org.wheelmap.android.service.SyncServiceException;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.LayoutParams;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -71,6 +77,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
+		createSearchModeCustomView(actionBar);
 
 		Tab tab = actionBar
 				.newTab()
@@ -193,6 +200,29 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		}
 	}
 
+	private void createSearchModeCustomView(final ActionBar bar) {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
+				null);
+		ImageButton button = (ImageButton) customView.findViewById(R.id.image);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Fragment f = getSupportFragmentManager().findFragmentByTag(
+						POIsMapsforgeWorkerFragment.TAG);
+				if (f == null)
+					return;
+
+				((POIsMapsforgeWorkerFragment) f).setSearchMode(false);
+				bar.setDisplayShowCustomEnabled(false);
+			}
+		});
+
+		bar.setCustomView(customView, new ActionBar.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+	}
+
 	private void showInfo() {
 		Intent intent = new Intent(this, InfoActivity.class);
 		startActivity(intent);
@@ -244,13 +274,14 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onRefreshing(boolean isRefreshing) {
-		Log.d(TAG, "onRefreshStatusChange isRefreshing = " + isRefreshing);
+		Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
 		setSupportProgressBarIndeterminateVisibility(isRefreshing);
 	}
 
 	@Override
 	public void onSearchModeChange(boolean isSearchMode) {
-
+		Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
 	}
 
 	static {
