@@ -30,12 +30,15 @@ import junit.framework.Assert;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.Support.CategoriesContent;
+import org.wheelmap.android.model.Support.LocalesContent;
+import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.test.AndroidTestCase;
@@ -50,6 +53,39 @@ public class SupportDataTest extends AndroidTestCase {
 
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
+	public void testAAA() {
+		Log.d(TAG, "testAAA - clearing database");
+		final ContentResolver cr = getContext().getContentResolver();
+		cr.delete(LocalesContent.CONTENT_URI, null, null);
+		cr.delete(CategoriesContent.CONTENT_URI, null, null);
+		cr.delete(NodeTypesContent.CONTENT_URI, null, null);
+
+	}
+
+	public Uri getUriForWhat(int what) {
+		if (what == What.RETRIEVE_LOCALES)
+			return LocalesContent.CONTENT_URI;
+		else if (what == What.RETRIEVE_CATEGORIES)
+			return CategoriesContent.CONTENT_URI;
+		else if (what == What.RETRIEVE_NODETYPES)
+			return NodeTypesContent.CONTENT_URI;
+		else
+			throw new IllegalArgumentException("No such what: " + what
+					+ " - no such uri.");
+	}
+
+	public String[] getProjectionForWhat(int what) {
+		if (what == What.RETRIEVE_LOCALES)
+			return LocalesContent.PROJECTION;
+		else if (what == What.RETRIEVE_CATEGORIES)
+			return CategoriesContent.PROJECTION;
+		else if (what == What.RETRIEVE_NODETYPES)
+			return NodeTypesContent.PROJECTION;
+		else
+			throw new IllegalArgumentException("No such what: " + what
+					+ " - no such projection.");
+	}
+
 	public void testSupportData() throws Exception {
 		Log.d(TAG, "testSupportData starting");
 
@@ -60,7 +96,9 @@ public class SupportDataTest extends AndroidTestCase {
 		ResultReceiver receiver = new ResultReceiver(null) {
 			@Override
 			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
+				int what = resultData.getInt(Extra.WHAT);
+				Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode
+						+ " for what = " + what);
 				switch (resultCode) {
 				case SyncService.STATUS_RUNNING: {
 					Log.d(TAG, "retrieval running");
@@ -68,13 +106,13 @@ public class SupportDataTest extends AndroidTestCase {
 				}
 				case SyncService.STATUS_FINISHED: {
 					Log.d(TAG, "retrieval finished");
-					Cursor cursor = cr.query(CategoriesContent.CONTENT_URI,
-							CategoriesContent.PROJECTION, null, null, null);
+					Cursor cursor = cr.query(getUriForWhat(what),
+							getProjectionForWhat(what), null, null, null);
 					Log.d(TAG, "cursor count = " + cursor.getCount());
 					Assert.assertFalse(cursor.getCount() == 0);
 					// Util.dumpCursorToLog(TAG, cursor);
 					cursor.close();
-					testDone.set(resultData.getInt(Extra.WHAT) == What.RETRIEVE_NODETYPES);
+					testDone.set(what == What.RETRIEVE_NODETYPES);
 					break;
 				}
 				case SyncService.STATUS_ERROR: {
@@ -83,7 +121,7 @@ public class SupportDataTest extends AndroidTestCase {
 							.getParcelable(Extra.EXCEPTION);
 
 					Log.e(TAG, "error: ", e);
-					testDone.set(resultData.getInt(Extra.WHAT) == What.RETRIEVE_NODETYPES);
+					testDone.set(what == What.RETRIEVE_NODETYPES);
 
 					break;
 				}
@@ -119,5 +157,4 @@ public class SupportDataTest extends AndroidTestCase {
 
 		Log.d(TAG, "testSupportData done");
 	}
-
 }

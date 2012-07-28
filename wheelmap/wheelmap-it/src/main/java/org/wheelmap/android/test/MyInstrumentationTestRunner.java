@@ -31,12 +31,11 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 		TestSuite suite = new TestSuite(
 				MyInstrumentationTestRunner.class.getName());
 		// $JUnit-BEGIN$
-		// suite.addTestSuite( GeocoordinatesMathTest.class );
-		suite.addTestSuite(POIContentProviderTest.class);
-		// suite.addTestSuite(SupportDataTest.class);
+		suite.addTestSuite( GeocoordinatesMathTest.class );
 		suite.addTestSuite(POIServiceDatabaseTest.class);
+		suite.addTestSuite(POIContentProviderTest.class);
+		suite.addTestSuite(SupportDataTest.class);
 
-		// suite.addTestSuite( POIDatabaseTest.class );
 		// suite.addTestSuite( LoginTest.class );
 
 		// $JUnit-END$
