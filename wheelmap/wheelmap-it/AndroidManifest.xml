@@ -13,17 +13,29 @@ distributed under the License is distributed on an "AS-IS" BASIS
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-        
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.wheelmap.android.test"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="14"/>
-    <instrumentation android:name=".MyInstrumentationTestRunner" android:targetPackage="org.wheelmap.android.online"></instrumentation>
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        
-    <uses-library android:name="android.test.runner" />
+    package="org.wheelmap.android.test"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="org.wheelmap.android.pois.Write" />
+    <uses-permission android:name="org.wheelmap.android.pois.Read" />
+
+    <instrumentation
+        android:name=".MyInstrumentationTestRunner"
+        android:targetPackage="org.wheelmap.android.online" >
+    </instrumentation>
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <uses-library android:name="android.test.runner" />
     </application>
+
 </manifest>
