@@ -166,6 +166,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 				"Button", // Action
 				"SwitchMaps", // Label
 				0); // Value
+
+		getSupportActionBar().setDisplayShowCustomEnabled(false);
 	}
 
 	@Override
