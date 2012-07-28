@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:freezesText="true"
         android:hint="@string/login_email"
+        android:imeOptions="actionDone"
         android:inputType="textEmailAddress"
         android:singleLine="true" />
 
@@ -43,6 +44,7 @@
         android:layout_height="wrap_content"
         android:freezesText="true"
         android:hint="@string/login_password"
+        android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:singleLine="true" />
 

@@ -27,7 +27,6 @@ import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
-import org.wheelmap.android.model.Wheelmap.POIs;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -292,7 +291,7 @@ public class SupportProvider extends ContentProvider {
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
-		getContext().getContentResolver().notifyChange(POIs.CONTENT_URI, null);
+		getContext().getContentResolver().notifyChange(uri, null);
 		return result;
 	}
 

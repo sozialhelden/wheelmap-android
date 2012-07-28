@@ -21,7 +21,9 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.DataOperationsNodes;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -43,9 +45,8 @@ import android.location.Location;
 import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
-public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
+public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 		IExecutor {
-	private static final String TAG = NodesExecutor.class.getSimpleName();
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
 	private BoundingBox mBoundingBox = null;
@@ -98,7 +99,6 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 
 	@Override
 	public void execute() throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
 		BaseNodesRequestBuilder requestBuilder;
 		if (mCategory != Extra.UNKNOWN) {
 			requestBuilder = new CategoryNodesRequestBuilder(SERVER,
@@ -119,19 +119,16 @@ public class NodesExecutor extends BaseRetrieveExecutor<Nodes> implements
 		requestBuilder.wheelchairState(mWheelchairState);
 		clearTempStore();
 		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
-
-		Log.d(TAG, "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
 	public void prepareDatabase() {
+		Log.d(getTag(), "prepareDatabase");
+		PrepareDatabaseHelper.cleanupOldCopies(getResolver());
 		PrepareDatabaseHelper.deleteRetrievedData(getResolver());
-		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
-		for (Nodes nodes : getTempStore()) {
-			PrepareDatabaseHelper.bulkInsert(getResolver(), nodes);
-		}
-		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
+		DataOperationsNodes don = new DataOperationsNodes(getResolver());
+		don.insert(getTempStore());
+		PrepareDatabaseHelper.replayChangedCopies(getResolver());
 		clearTempStore();
 	}
 

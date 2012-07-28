@@ -109,7 +109,7 @@
     <string name="login_email">Email</string>
     <string name="login_password">Password</string>
     <string name="login_submit">Login</string>
-    <string name="title_login">Please Login</string>
+    <string name="title_login">Please Login!</string>
     <string name="error_authorization_required">Authorization required</string>
     <string name="error_request_forbidden">Request forbidden</string>
     <string name="search_hint_list">Keyword (optional)</string>
@@ -147,4 +147,16 @@
     <string name="settings_wheelchair_yes">Yes</string>
     <string name="settings_wheelchair_limited">Limited</string>
     <string name="settings_wheelchair_no">No</string>
+    <string name="error_noid_title">Link lacks node id!</string>
+    <string name="error_noid_message">Sorry, this link contains no identification to retrieve from the Wheelmap servers. Unable to find the location</string>
+    <string name="error_category_missing_title">No category set!</string>
+    <string name="error_category_missing_message">Cannot store without a category for the location.</string>
+    <string name="poi_property_street">Street</string>
+    <string name="poi_property_housenum">No</string>
+    <string name="poi_property_postcode">Code</string>
+    <string name="poi_property_city">City</string>
+    <string name="error_wheelchairstate_missing_title">No Wheelchair State given!</string>
+    <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.</string>
+    <string name="error_newpoi_title">New Location created!</string>
+    <string name="error_newpoi_message">The new location will be verified before it shows up in the database. This will take some time.</string>
 </resources>

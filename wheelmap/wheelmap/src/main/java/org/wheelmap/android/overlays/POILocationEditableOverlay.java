@@ -11,7 +11,7 @@ public class POILocationEditableOverlay extends ItemizedOverlay<OverlayItem> {
 	private OverlayItem mItem;
 	private int mItemCount;
 
-	public POILocationEditableOverlay(int latitude, int longitude,
+	public POILocationEditableOverlay(double latitude, double longitude,
 			Drawable marker) {
 		super(null);
 		ItemizedOverlay.boundCenterBottom(marker);

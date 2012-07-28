@@ -29,53 +29,50 @@ import org.wheelmap.android.fragment.NodetypeSelectFragment.OnNodetypeSelectList
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
+import org.wheelmap.android.fragment.WheelchairStateFragment;
+import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		OnPOIDetailEditableListener, OnLoginDialogListener,
 		OnEditPositionListener, OnNodetypeSelectListener,
-		OnBackStackChangedListener {
+		OnBackStackChangedListener, OnWheelchairState {
 	private final static String TAG = POIDetailEditableActivity.class
 			.getSimpleName();
 
-	private static final int SELECT_WHEELCHAIRSTATE = 0;
-
-	private Long poiID;
 	private Fragment mFragment;
 	private ExternalEditableState mExternalEditableState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_fragment_singleframe);
-		poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 
 		setExternalEditableState(savedInstanceState);
-
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 
-		mFragment = fm.findFragmentById(R.id.frame);
+		mFragment = fm.findFragmentById(android.R.id.content);
 		if (mFragment != null) {
 			return;
 		}
 
+		Long poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 		if (poiID != Extra.ID_UNKNOWN) {
 			mFragment = POIDetailEditableFragment.newInstance(poiID);
 		}
 
-		fm.beginTransaction().add(R.id.frame, mFragment, POIDetailFragment.TAG)
+		fm.beginTransaction()
+				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
 				.commit();
 	}
 
@@ -98,42 +95,19 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onEditWheelchairState(WheelchairState state) {
-		Intent intent = new Intent(POIDetailEditableActivity.this,
-				WheelchairStateActivity.class);
-		intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
-		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
+		mFragment = WheelchairStateFragment.newInstance(state);
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
+		ft.addToBackStack(null);
+		ft.commit();
 	}
 
-	/**
-	 * This method is called when the sending activity has finished, with the
-	 * result it supplied.
-	 * 
-	 * @param requestCode
-	 *            The original request code as given to startActivity().
-	 * @param resultCode
-	 *            From sending activity as per setResult().
-	 * @param data
-	 *            From sending activity as per setResult().
-	 */
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// You can use the requestCode to select between multiple child
-		// activities you may have started. Here there is only one thing
-		// we launch.
-		if (requestCode == SELECT_WHEELCHAIRSTATE) {
-			// This is a standard resultCode that is sent back if the
-			// activity doesn't supply an explicit result. It will also
-			// be returned if the activity failed to launch.
-			if (resultCode == RESULT_OK) {
-				// newly selected wheelchair state as action data
-				if (data != null) {
-					WheelchairState state = WheelchairState
-							.valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
-									Extra.UNKNOWN));
-					mExternalEditableState.state = state;
-				}
-			}
-		}
+	public void onWheelchairStateSelect(WheelchairState state) {
+		Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
+		mExternalEditableState.state = state;
+		getSupportFragmentManager().popBackStack();
 	}
 
 	@Override
@@ -142,18 +116,18 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	}
 
 	@Override
-	public void onEditGeolocation(int latitude, int longitude) {
+	public void onEditGeolocation(double latitude, double longitude) {
 		mFragment = EditPositionFragment.newInstance(latitude, longitude);
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.frame, mFragment, EditPositionFragment.TAG);
+		ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
 		ft.addToBackStack(null);
 		ft.commit();
 	}
 
 	@Override
-	public void onEditPosition(int latitude, int longitude) {
+	public void onEditPosition(double latitude, double longitude) {
 		mExternalEditableState.latitude = latitude;
 		mExternalEditableState.longitude = longitude;
 		getSupportFragmentManager().popBackStack();
@@ -165,7 +139,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(R.id.frame, mFragment, NodetypeSelectFragment.TAG);
+		ft.replace(android.R.id.content, mFragment, NodetypeSelectFragment.TAG);
 		ft.addToBackStack(null);
 		ft.commit();
 	}
@@ -189,21 +163,21 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onBackStackChanged() {
 		FragmentManager fm = getSupportFragmentManager();
-		mFragment = fm.findFragmentById(R.id.frame);
+		mFragment = fm.findFragmentById(android.R.id.content);
 	}
 
 	public static class ExternalEditableState {
 		WheelchairState state = null;
-		int nodetype = Extra.UNKNOWN;
-		int latitude = Extra.UNKNOWN;
-		int longitude = Extra.UNKNOWN;
+		int nodetype = SupportManager.UNKNOWN_TYPE;
+		double latitude = Extra.UNKNOWN;
+		double longitude = Extra.UNKNOWN;
 
 		void saveState(Bundle bundle) {
 			if (state != null)
 				bundle.putInt(Extra.WHEELCHAIR_STATE, state.getId());
 			bundle.putInt(Extra.NODETYPE, nodetype);
-			bundle.putInt(Extra.LATITUDE, latitude);
-			bundle.putInt(Extra.LONGITUDE, longitude);
+			bundle.putDouble(Extra.LATITUDE, latitude);
+			bundle.putDouble(Extra.LONGITUDE, longitude);
 		}
 
 		void restoreState(Bundle bundle) {
@@ -211,14 +185,15 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			if (stateId != Extra.UNKNOWN)
 				state = WheelchairState.valueOf(stateId);
 
-			nodetype = bundle.getInt(Extra.NODETYPE, Extra.UNKNOWN);
-			latitude = bundle.getInt(Extra.LATITUDE, Extra.UNKNOWN);
-			longitude = bundle.getInt(Extra.LONGITUDE, Extra.UNKNOWN);
+			nodetype = bundle.getInt(Extra.NODETYPE,
+					SupportManager.UNKNOWN_TYPE);
+			latitude = bundle.getDouble(Extra.LATITUDE, Extra.UNKNOWN);
+			longitude = bundle.getDouble(Extra.LONGITUDE, Extra.UNKNOWN);
 		}
 
 		void clear() {
 			state = null;
-			nodetype = Extra.UNKNOWN;
+			nodetype = SupportManager.UNKNOWN_TYPE;
 			latitude = Extra.UNKNOWN;
 			longitude = Extra.UNKNOWN;
 		}
@@ -227,8 +202,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			fragment.setWheelchairState(state);
 			fragment.setNodetype(nodetype);
 			fragment.setGeolocation(latitude, longitude);
-
-			clear();
 		}
 	}
 

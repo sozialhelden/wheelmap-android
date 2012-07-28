@@ -27,10 +27,14 @@ import org.acra.annotation.ReportsCrashes;
 import org.mapsforge.android.maps.MapActivity;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.model.UserQueryHelper;
 
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+
+import com.squareup.otto.Bus;
+
 import de.akquinet.android.androlog.Log;
 
 // Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
@@ -41,13 +45,14 @@ import de.akquinet.android.androlog.Log;
 // the second market version @ReportsCrashes( formKey = "dEFLbUtHV1VlNEp2MHc0UXg3M0VyUnc6MQ")
 // v0.8: @ReportsCrashes( formKey = "dGEyal90UGZ2Mk0tSmROYnBsVk02THc6MQ")
 
-@ReportsCrashes(formKey = "dEVwRGFTQlJIQk85YWVZR3pXekhHSVE6MQ")
+@ReportsCrashes(formKey = "dEl3ZHFJUkxYZnplcDRoN0RUZGNCUXc6MQ")
 public class WheelmapApp extends Application {
 	private final static String TAG = WheelmapApp.class.getSimpleName();
 
 	private static WheelmapApp INSTANCE;
 	private MyLocationManager mLocationManager;
 	private SupportManager mSupportManager;
+	private Bus mBus;
 	private int mMemoryClass;
 
 	private int mMaxMemoryMB;
@@ -68,8 +73,11 @@ public class WheelmapApp extends Application {
 
 	@Override
 	public void onCreate() {
+		INSTANCE = this;
+
 		ACRA.init(this);
 		Log.init(this);
+		mBus = new Bus();
 
 		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		mMemoryClass = am.getMemoryClass();
@@ -86,10 +94,10 @@ public class WheelmapApp extends Application {
 		Log.d(TAG, "onCreate");
 		mLocationManager = MyLocationManager.initOnce(this);
 		mSupportManager = new SupportManager(this);
+		UserQueryHelper.init(this);
 
 		calcCapabilityLevel();
 		setMapsforgeSharedMemcacheSize();
-		INSTANCE = this;
 	}
 
 	@Override
@@ -107,6 +115,10 @@ public class WheelmapApp extends Application {
 
 	public static Context get() {
 		return INSTANCE.getApplicationContext();
+	}
+
+	public static Bus getBus() {
+		return INSTANCE.mBus;
 	}
 
 	public static int getMemoryClass() {

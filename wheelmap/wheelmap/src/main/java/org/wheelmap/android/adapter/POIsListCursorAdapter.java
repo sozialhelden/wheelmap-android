@@ -75,7 +75,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		int nodeTypeId = POIHelper.getNodeTypeId(cursor);
 		NodeType nodeType = manager.lookupNodeType(nodeTypeId);
 
-		if (name.length() > 0)
+		if (name != null && name.length() > 0)
 			pliv.setName(name);
 		else {
 			pliv.setName(nodeType.localizedName);

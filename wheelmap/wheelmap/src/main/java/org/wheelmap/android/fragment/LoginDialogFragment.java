@@ -15,20 +15,24 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import de.akquinet.android.androlog.Log;
 
 public class LoginDialogFragment extends SherlockDialogFragment implements
-		OnClickListener, DetachableResultReceiver.Receiver {
+		OnClickListener, DetachableResultReceiver.Receiver,
+		OnEditorActionListener {
 	public final static String TAG = LoginDialogFragment.class.getSimpleName();
 
 	private EditText mEmailText;
@@ -87,7 +91,9 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 		Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
 		button.setOnClickListener(this);
 		mEmailText = (EditText) dialog.findViewById(R.id.login_email);
+		mEmailText.setOnEditorActionListener(this);
 		mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
+		mPasswordText.setOnEditorActionListener(this);
 		load();
 		mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 
@@ -146,9 +152,9 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 	}
 
 	private void showErrorDialog(SyncServiceException e) {
-		SherlockFragmentActivity activity = getSherlockActivity();
-		FragmentManager fm = activity.getSupportFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		FragmentManager fm = getFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+				Extra.UNKNOWN);
 		if (errorDialog == null)
 			return;
 
@@ -163,14 +169,46 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public void onClick(View v) {
-		String email = mEmailText.getText().toString();
-		String password = mPasswordText.getText().toString();
-		login(email, password);
+		login();
 	}
 
-	private void login(String email, String password) {
+	private void login() {
+		String email = mEmailText.getText().toString();
+		String password = mPasswordText.getText().toString();
+
+		if (email.length() == 0 || password.length() == 0)
+			return;
+
 		SyncServiceHelper.executeRetrieveApiKey(getActivity(), email, password,
 				mReceiver);
 	}
 
+	private boolean checkInputFields(TextView v) {
+		if (v.getText().toString().length() == 0)
+			return false;
+
+		EditText otherText;
+		if (v == mEmailText)
+			otherText = mPasswordText;
+		else
+			otherText = mEmailText;
+
+		if (otherText.getText().toString().length() == 0) {
+			otherText.requestFocus();
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		if (EditorInfo.IME_ACTION_DONE == actionId) {
+			if (checkInputFields(v))
+				login();
+			return true;
+		}
+
+		return false;
+	}
 }

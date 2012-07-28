@@ -48,14 +48,15 @@ public class WheelchairUpdateRequestBuilder extends RequestBuilder {
 		requestAsStringBuffer.append("&wheelchair=");
 		requestAsStringBuffer.append(state.asRequestParameter());
 
-		return requestAsStringBuffer.toString();
+		String request = requestAsStringBuffer.toString();
+		return request;
 	}
 
 	@Override
 	protected String resourcePath() {
 		return RESOURCE + "/" + id + "/update_wheelchair";
 	}
-	
+
 	@Override
 	public int getRequestType() {
 		return RequestBuilder.REQUEST_PUT;

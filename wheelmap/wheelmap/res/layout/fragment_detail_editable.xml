@@ -66,10 +66,11 @@
                     android:src="@drawable/ic_menu_edit_wm_holo_light" />
             </RelativeLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/edit_geolocation_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:visibility="gone" >
 
                 <include layout="@layout/separator" />
@@ -92,7 +93,7 @@
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_menu_edit_wm_holo_light" />
                 </RelativeLayout>
-            </FrameLayout>
+            </LinearLayout>
 
             <include layout="@layout/separator" />
 
@@ -107,10 +108,49 @@
 
             <include layout="@layout/separator" />
 
-            <EditText
-                android:id="@+id/addr"
-                style="@style/DetailFontNew.Editable"
-                android:hint="@string/poi_property_address" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/street"
+                    style="@style/DetailFontNew.Editable"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:hint="@string/poi_property_street" />
+
+                <EditText
+                    android:id="@+id/housenum"
+                    style="@style/DetailFontNew.Editable"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+					android:hint="@string/poi_property_housenum" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/postcode"
+                    style="@style/DetailFontNew.Editable"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:hint="@string/poi_property_postcode" />
+
+                <EditText
+                    android:id="@+id/city"
+                    style="@style/DetailFontNew.Editable"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:hint="@string/poi_property_city" />
+            </LinearLayout>
 
             <include layout="@layout/separator" />
 

@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.DataOperationsLocales;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.service.SyncServiceException;
 
@@ -29,11 +30,9 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.LocalesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
-import de.akquinet.android.androlog.Log;
 
-public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements
+public class LocalesExecutor extends SinglePageExecutor<Locales> implements
 		IExecutor {
-	private final static String TAG = LocalesExecutor.class.getSimpleName();
 
 	public LocalesExecutor(Context context, Bundle bundle) {
 		super(context, bundle, Locales.class);
@@ -46,24 +45,17 @@ public class LocalesExecutor extends BaseRetrieveExecutor<Locales> implements
 
 	@Override
 	public void execute() throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
 		final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder(
 				SERVER, getApiKey(), AcceptType.JSON);
 
 		clearTempStore();
 		retrieveSinglePage(requestBuilder);
-		Log.d(TAG, "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		long insertStart = System.currentTimeMillis();
-		for (Locales locales : getTempStore()) {
-			PrepareDatabaseHelper.bulkInsert(getResolver(), locales);
-		}
-		long insertEnd = System.currentTimeMillis();
-		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
+		DataOperationsLocales dol = new DataOperationsLocales(getResolver());
+		dol.insert(getTempStore());
 		clearTempStore();
 	}
 

@@ -21,107 +21,51 @@
  */
 package org.wheelmap.android.net;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.node.SingleNode;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.NodeRequestBuilder;
-import wheelmap.org.request.RequestBuilder;
+import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
-import de.akquinet.android.androlog.Log;
 
-public class NodeExecutor extends AbstractExecutor implements IExecutor {
-	private static final String TAG = NodeExecutor.class.getSimpleName();
-	private static final int MAX_RETRY_COUNT = 3;
-
-	long mNodeId = Extra.ID_UNKNOWN;
-
-	private SingleNode mTempStore = new SingleNode();
+public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
+		IExecutor {
+	private String mWMId = Extra.WM_ID_UNKNOWN;
 
 	public NodeExecutor(Context context, Bundle bundle) {
-		super(context, bundle);
+		super(context, bundle, SingleNode.class);
 	}
 
 	@Override
 	public void prepareContent() {
-		mNodeId = getBundle().getLong(Extra.WM_ID, Extra.ID_UNKNOWN);
+		mWMId = getBundle().getString(Extra.WM_ID);
 	}
 
 	@Override
 	public void execute() throws SyncServiceException {
 		NodeRequestBuilder requestBuilder = null;
-		if (mNodeId != Extra.ID_UNKNOWN) {
-			requestBuilder = new NodeRequestBuilder(SERVER, getApiKey(),
-					AcceptType.JSON, mNodeId);
-		}
-		mTempStore = null;
-
-		retrieveSingleNode(requestBuilder);
-	}
-
-	protected void retrieveSingleNode(RequestBuilder requestBuilder)
-			throws SyncServiceException {
-		String getRequest = requestBuilder.buildRequestUri();
-		Log.d(TAG, "getRequest " + getRequest);
-
-		SingleNode item = retrieveNumberOfHits(getRequest);
-		if (item == null)
-			return;
-
-		mTempStore = item;
-	}
-
-	private SingleNode retrieveNumberOfHits(String getRequest)
-			throws SyncServiceException {
-		SingleNode content = null;
-
-		String request;
-		try {
-			request = UriUtils.encodeQuery(getRequest, "utf-8");
-		} catch (UnsupportedEncodingException e) {
+		if (mWMId == Extra.WM_ID_UNKNOWN)
 			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR, e);
-		}
+					SyncServiceException.ERROR_INTERNAL_ERROR,
+					new IllegalArgumentException());
 
-		int retryCount = 0;
-
-		while (retryCount < MAX_RETRY_COUNT) {
-			try {
-				content = mRequestProcessor.get(new URI(request),
-						SingleNode.class);
-				break;
-			} catch (URISyntaxException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_INTERNAL_ERROR, e);
-			} catch (Exception e) {
-				retryCount++;
-				if (retryCount < MAX_RETRY_COUNT) {
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException e1) {
-						// do nothing, just continue and try again
-					}
-					continue;
-				} else
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_NETWORK_FAILURE, e);
-			}
-		}
-
-		return content;
+		requestBuilder = new NodeRequestBuilder(SERVER, getApiKey(),
+				AcceptType.JSON, mWMId);
+		int count = executeSingleRequest(requestBuilder);
+		if (count == 0)
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_FAILURE,
+					new NetworkErrorException());
 	}
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		PrepareDatabaseHelper.deleteAllOldPending(getResolver());
-		PrepareDatabaseHelper.insert(getResolver(), mTempStore);
-		PrepareDatabaseHelper.copyAllPendingDataToRetrievedData(getResolver());
+		PrepareDatabaseHelper.cleanupOldCopies(getResolver());
+		PrepareDatabaseHelper.insert(getResolver(), getTempStore().get(0));
+		PrepareDatabaseHelper.replayChangedCopies(getResolver());
 	}
 }

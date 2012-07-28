@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
@@ -57,15 +56,9 @@ public class POIsListFragment extends SherlockListFragment implements
 	private PullToRefreshListView mPullToRefreshListView;
 	private int mFirstVisiblePosition = 0;
 
-	private OnPOIsListListener mListener;
+	private DisplayFragmentListener mListener;
 	private POIsListCursorAdapter mAdapter;
 	private Cursor mCursor;
-
-	public interface OnPOIsListListener {
-		public void onShowDetail(long id);
-
-		public void onRefreshing(boolean isRefreshing);
-	}
 
 	public POIsListFragment() {
 		super();
@@ -76,8 +69,8 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		if (activity instanceof OnPOIsListListener)
-			mListener = (OnPOIsListListener) activity;
+		if (activity instanceof DisplayFragmentListener)
+			mListener = (DisplayFragmentListener) activity;
 	}
 
 	@Override
@@ -113,8 +106,8 @@ public class POIsListFragment extends SherlockListFragment implements
 			executeSavedInstanceState(savedInstanceState);
 
 		if (getArguments() == null
-				|| getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-						true)) {
+				|| getArguments()
+						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
 			Log.d(TAG, "onActivityCreated: checking workerfragment");
 			FragmentManager fm = getFragmentManager();
 			Fragment fragment = (POIsListWorkerFragment) fm
@@ -261,7 +254,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	private void showSearch() {
-		FragmentManager fm = getActivity().getSupportFragmentManager();
+		FragmentManager fm = getFragmentManager();
 		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
 				true, false);
 
@@ -281,7 +274,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void setCurrentLocation(GeoPoint point, Location location) {
+	public void setCurrentLocation(Location location) {
 
 	}
 

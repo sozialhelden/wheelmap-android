@@ -28,26 +28,27 @@ package wheelmap.org.request;
 public class NodeRequestBuilder extends RequestBuilder {
 
 	private static final String RESOURCE = "nodes";
-	private long id;
+	private String id;
 
-	public NodeRequestBuilder(final String server, final String apiKey, final AcceptType acceptType, long id) {
+	public NodeRequestBuilder(final String server, final String apiKey,
+			final AcceptType acceptType, String id) {
 		super(server, apiKey, acceptType);
-		this.id=id;
-	}	
+		this.id = id;
+	}
 
 	@Override
 	public String buildRequestUri() {
-	    final StringBuilder requestAsStringBuffer = new StringBuilder(200);
-	    requestAsStringBuffer.append(String.format(baseUrl()));  
-	    
-	    return requestAsStringBuffer.toString();
+		final StringBuilder requestAsStringBuffer = new StringBuilder(200);
+		requestAsStringBuffer.append(String.format(baseUrl()));
+
+		return requestAsStringBuffer.toString();
 	}
-	
+
 	@Override
-	protected  String resourcePath() {
-		return RESOURCE+"/"+id;
+	protected String resourcePath() {
+		return String.format("%s/%s", RESOURCE, id);
 	}
-	
+
 	@Override
 	public int getRequestType() {
 		return RequestBuilder.REQUEST_GET;

@@ -1,37 +1,50 @@
 package org.wheelmap.android.activity;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
-import roboguice.inject.ContentView;
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+
+import com.actionbarsherlock.view.Window;
+
 import de.akquinet.android.androlog.Log;
 
-@ContentView(R.layout.activity_fragment_singleframe)
 public class POIDetailActivity extends MapsforgeMapActivity implements
-		OnPOIDetailListener {
+		OnPOIDetailListener, OnErrorDialogListener, Receiver {
 	private final static String TAG = POIDetailActivity.class.getSimpleName();
 
 	// Definition of the one requestCode we use for receiving resuls.
 	static final private int SELECT_WHEELCHAIRSTATE = 0;
 	POIDetailFragment mFragment;
 
+	private DetachableResultReceiver mReceiver;
+	private String wmID;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		setSupportProgressBarIndeterminateVisibility(false);
 
 		FragmentManager fm = getSupportFragmentManager();
 		mFragment = (POIDetailFragment) fm
@@ -40,28 +53,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 			return;
 		}
 
-		Intent intent = getIntent();
-		// check if this intent is started via custom scheme link
-		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-			Uri uri = intent.getData();
-			long wmID = Extra.ID_UNKNOWN;
-			try {
-				wmID = Long.parseLong(uri.getLastPathSegment());
-			} catch (NumberFormatException e) {
-				// TODO: show a dialog with a meaningful message here
-				finish();
-			}
-			Log.d(TAG, "onCreate: wmId = " + wmID);
-			mFragment = POIDetailFragment.newInstanceWithWMID(wmID);
-		} else {
-			long poiID = getIntent().getLongExtra(Extra.POI_ID,
-					Extra.ID_UNKNOWN);
-			Log.d(TAG, "onCreate: poiID = " + poiID);
-			mFragment = POIDetailFragment.newInstanceWithPOIID(poiID);
-		}
-
-		fm.beginTransaction().add(R.id.frame, mFragment, POIDetailFragment.TAG)
-				.commit();
+		executeIntent(getIntent());
 	}
 
 	@Override
@@ -87,6 +79,65 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+	}
+
+	private void executeIntent(Intent intent) {
+		if (intent == null)
+			return;
+
+		// check if this intent is started via custom scheme link
+		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+			Uri uri = intent.getData();
+			if (uri == null) {
+				Log.d(TAG, "uri has no data - cant extract wmID");
+				showErrorMessage(getString(R.string.error_noid_title),
+						getString(R.string.error_noid_message));
+				return;
+			}
+
+			wmID = uri.getLastPathSegment();
+			try {
+				Long.parseLong(wmID);
+			} catch (NumberFormatException e) {
+				Log.e(TAG, " wmID = " + wmID, e);
+				finish();
+				return;
+			}
+
+			showDetailForWmId(wmID);
+			return;
+		}
+
+		Long poiId = intent.getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
+		showDetailFragment(poiId);
+		setIntent(null);
+	}
+
+	private void showDetailForWmId(String wmId) {
+		long poiId = PrepareDatabaseHelper.getRowIdForWMId(
+				getContentResolver(), wmId, POIs.TAG_RETRIEVED);
+		if (poiId != Extra.ID_UNKNOWN) {
+			long copyPoiId = PrepareDatabaseHelper.createCopyIfNotExists(
+					getContentResolver(), poiId);
+			showDetailFragment(copyPoiId);
+			return;
+		}
+
+		mReceiver = new DetachableResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
+		SyncServiceHelper.retrieveNode(this, wmId, mReceiver);
+	}
+
+	private void showDetailFragment(long id) {
+		if (id == Extra.ID_UNKNOWN)
+			return;
+
+		FragmentManager fm = getSupportFragmentManager();
+		mFragment = POIDetailFragment.newInstance(id);
+
+		fm.beginTransaction()
+				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
+				.commit();
 	}
 
 	@Override
@@ -126,52 +177,96 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 				if (data != null) {
 					long poiID = mFragment.getPoiId();
 
-					WheelchairState newState = WheelchairState.valueOf(Integer
-							.parseInt(data.getAction()));
-					Uri poiUri = Uri.withAppendedPath(
-							Wheelmap.POIs.CONTENT_URI_POI_ID,
-							String.valueOf(poiID));
-					ContentValues values = new ContentValues();
-					values.put(Wheelmap.POIs.WHEELCHAIR, newState.getId());
-					values.put(Wheelmap.POIs.UPDATE_TAG,
-							Wheelmap.UPDATE_WHEELCHAIR_STATE);
-					this.getContentResolver().update(poiUri, values, "", null);
-
-					SyncServiceHelper.executeUpdateServer(this);
+					WheelchairState state = WheelchairState
+							.valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
+									Extra.UNKNOWN));
+					updateDatabase(poiID, state);
+					SyncServiceHelper.executeUpdateServer(this, null);
 				}
 			}
 		}
 	}
 
+	private void updateDatabase(long id, WheelchairState state) {
+		if (id == Extra.ID_UNKNOWN || state == null)
+			return;
+
+		ContentValues values = new ContentValues();
+		values.put(POIs.WHEELCHAIR, state.getId());
+		values.put(POIs.DIRTY, POIs.DIRTY_STATE);
+
+		PrepareDatabaseHelper.editCopy(getContentResolver(), id, values);
+	}
+
 	@Override
 	public void onShowLargeMapAt(GeoPoint point) {
-		Intent intent = new Intent(POIDetailActivity.this,
-				MainSinglePaneActivity.class);
+		Intent intent = new Intent(this, MainSinglePaneActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		intent.putExtra(Extra.SELECTED_TAB, MainSinglePaneActivity.TAB_MAP);
 		intent.putExtra(Extra.CENTER_MAP, true);
-		intent.putExtra(Extra.LATITUDE, point.getLatitudeE6());
-		intent.putExtra(Extra.LONGITUDE, point.getLongitudeE6());
+		intent.putExtra(Extra.LATITUDE, point.getLatitude());
+		intent.putExtra(Extra.LONGITUDE, point.getLongitude());
 		startActivity(intent);
+		finish();
 	}
 
 	@Override
 	public void onEdit(long poiId) {
-		Intent intent = new Intent(POIDetailActivity.this,
-				POIDetailEditableActivity.class);
+		Intent intent = new Intent(this, POIDetailEditableActivity.class);
 		intent.putExtra(Extra.POI_ID, poiId);
 		startActivity(intent);
 	}
 
-	@Override
-	public void onLoadStatus(boolean loading) {
-		// TODO Auto-generated method stub
+	public void showErrorMessage(String title, String message) {
+		FragmentManager fm = getSupportFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
+				title, message, Extra.UNKNOWN);
+		if (errorDialog == null)
+			return;
 
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
+	}
+
+	public void showErrorDialog(SyncServiceException e) {
+		FragmentManager fm = getSupportFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+				Extra.UNKNOWN);
+		if (errorDialog == null)
+			return;
+
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
+	}
+
+	/** {@inheritDoc} */
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
+		switch (resultCode) {
+		case SyncService.STATUS_RUNNING: {
+			setSupportProgressBarIndeterminateVisibility(true);
+			break;
+		}
+		case SyncService.STATUS_FINISHED: {
+			long id = PrepareDatabaseHelper.getRowIdForWMId(
+					getContentResolver(), wmID, POIs.TAG_COPY);
+			setSupportProgressBarIndeterminateVisibility(false);
+			showDetailFragment(id);
+			break;
+		}
+		case SyncService.STATUS_ERROR: {
+			setSupportProgressBarIndeterminateVisibility(false);
+			final SyncServiceException e = resultData
+					.getParcelable(Extra.EXCEPTION);
+			showErrorDialog(e);
+			break;
+		}
+		default: {
+			// noop
+		}
+		}
 	}
 
 	@Override
-	public void onError(SyncServiceException e) {
-		// TODO Auto-generated method stub
-
+	public void onErrorDialogClose(int id) {
+		finish();
 	}
 }

@@ -2,6 +2,7 @@ package org.wheelmap.android.model;
 
 public interface Extra {
 	public final static long ID_UNKNOWN = -1l;
+	public final static String WM_ID_UNKNOWN = null;
 	public final static int UNKNOWN = -1;
 
 	public final static String POI_ID = "org.wheelmap.android.POI_ID";
@@ -26,7 +27,7 @@ public interface Extra {
 	public final static String SHOW_DISTANCE = "org.wheelmap.android.SHOW_DISTANCE";
 	public final static String SHOW_MAP_HINT = "org.wheelmap.android.SHOW_MAP_HINT";
 
-	public static final String EDITABLE_TEMPORARY_STORE = "org.wheelmap.android.EDITABLE_TEMPORARY_STORE";
+	public static final String TEMPORARY_STORED = "org.wheelmap.android.TEMPORARY_STORED";
 
 	public final static String EXCEPTION = "org.wheelmap.android.EXCEPTION";
 	public static final String STATUS_RECEIVER = "org.wheelmap.android.STATUS_RECEIVER";
@@ -37,6 +38,9 @@ public interface Extra {
 	public static final String EMAIL = "org.wheelmap.android.EMAIL";
 	public static final String PASSWORD = "org.wheelmap.android.PASSWORD";
 	public static final String WHAT = "org.wheelmap.android.WHAT";
+	public static final String ALERT_TITLE = "org.wheelmap.android.ALERT_TITLE";
+	public static final String ALERT_MESSAGE = "org.wheelmap.android.ALERT_MESSAGE";
+	public static final String ID = "org.wheelmap.android.ID";
 
 	public interface What {
 

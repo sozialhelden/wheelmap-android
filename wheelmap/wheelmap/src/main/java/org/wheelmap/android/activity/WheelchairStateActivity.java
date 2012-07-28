@@ -3,7 +3,6 @@ package org.wheelmap.android.activity;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.online.R;
 
 import wheelmap.org.WheelchairState;
 import android.content.Intent;
@@ -25,7 +24,6 @@ public class WheelchairStateActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		setContentView(R.layout.activity_fragment_singleframe);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
@@ -41,8 +39,8 @@ public class WheelchairStateActivity extends SherlockFragmentActivity implements
 				.valueOf(stateId));
 
 		fm.beginTransaction()
-				.add(R.id.frame, mFragment, WheelchairStateFragment.TAG)
-				.commit();
+				.add(android.R.id.content, mFragment,
+						WheelchairStateFragment.TAG).commit();
 	}
 
 	@Override

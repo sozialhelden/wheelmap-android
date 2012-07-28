@@ -30,11 +30,10 @@ import org.wheelmap.android.model.POIHelper;
 
 import wheelmap.org.WheelchairState;
 import android.content.Context;
-import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.widget.Toast;
 import de.akquinet.android.androlog.Log;
 
@@ -47,43 +46,24 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context mContext;
 	private Cursor mCursor;
 	private Handler mHandler;
-	private boolean mCursorInvalidated;
 	private OnTapListener mListener;
-	private boolean mAutoRequery;
 
-	public POIsCursorMapsforgeOverlay(Context context, OnTapListener listener,
-			boolean autoRequery) {
+	public POIsCursorMapsforgeOverlay(Context context, OnTapListener listener) {
 		super(null);
 		mContext = context;
 		mHandler = new Handler();
 		mListener = listener;
-		mAutoRequery = autoRequery;
-	}
-
-	@Override
-	public synchronized void finalize() {
-		if (mCursor != null)
-			mCursor.close();
 	}
 
 	public synchronized void setCursor(Cursor cursor) {
 		if (cursor == mCursor)
 			return;
 
-		if (mCursor != null) {
-			mCursor.unregisterContentObserver(mContentObserver);
-			mCursor.unregisterDataSetObserver(mCursorObserver);
-			mCursor.close();
-		}
-
 		mCursor = cursor;
-		mCursorInvalidated = false;
 
 		if (mCursor == null)
 			return;
 
-		mCursor.registerContentObserver(mContentObserver);
-		mCursor.registerDataSetObserver(mCursorObserver);
 		populate();
 	}
 
@@ -96,7 +76,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	protected synchronized OverlayItem createItem(int i) {
-		if (mCursor == null || mCursor.isClosed() || mCursorInvalidated)
+		if (mCursor == null || mCursor.isClosed())
 			return null;
 
 		int count = mCursor.getCount();
@@ -108,8 +88,8 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		String name = POIHelper.getName(mCursor);
 		SupportManager manager = WheelmapApp.getSupportManager();
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
-		int lat = POIHelper.getLatitudeAsInt(mCursor);
-		int lng = POIHelper.getLongitudeAsInt(mCursor);
+		double lat = POIHelper.getLatitude(mCursor);
+		double lng = POIHelper.getLongitude(mCursor);
 		int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
 		Drawable marker = null;
 		if (nodeTypeId != 0)
@@ -127,51 +107,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected String getThreadName() {
 		return THREAD_NAME;
-	}
-
-	private ContentObserver mContentObserver = new ContentObserver(
-			new Handler()) {
-
-		@Override
-		public boolean deliverSelfNotifications() {
-			return false;
-		}
-
-		@Override
-		public void onChange(boolean selfChange) {
-			reload();
-		}
-
-	};
-
-	private DataSetObserver mCursorObserver = new DataSetObserver() {
-		@Override
-		public void onChanged() {
-			super.onChanged();
-			Log.d(TAG, "cursor changed");
-		}
-
-		@Override
-		public void onInvalidated() {
-			super.onInvalidated();
-			Log.d(TAG, "cursor invalidated: " + mCursor.hashCode());
-			mCursorInvalidated = true;
-		}
-	};
-
-	private synchronized void reload() {
-		if (!mAutoRequery)
-			return;
-
-		Log.d(TAG, "reload - requery and populate");
-		mCursor.requery();
-		mCursorInvalidated = false;
-		populate();
-	}
-
-	public synchronized void deactivateCursor() {
-		Log.d(TAG, "deactivate");
-		mCursor.deactivate();
 	}
 
 	@Override
@@ -211,12 +146,12 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		String address = POIHelper.getAddress(mCursor);
 
 		StringBuilder builder = new StringBuilder();
-		if (name.length() > 0)
+		if (!TextUtils.isEmpty(name))
 			builder.append(name);
 		else
 			builder.append(nodeTypeName);
 
-		if (address.length() > 0) {
+		if (!TextUtils.isEmpty(address)) {
 			builder.append(", ");
 			builder.append(address);
 		}

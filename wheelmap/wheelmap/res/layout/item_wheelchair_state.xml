@@ -6,8 +6,7 @@
     <ImageView
         android:id="@+id/state_icon"
         style="@style/IconLarge"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/wheelchair_state_enabled" >
+        android:layout_alignParentLeft="true" >
     </ImageView>
 
     <TextView
@@ -15,10 +14,9 @@
         style="@style/WheelStateItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/edit_icon"
-        android:layout_toRightOf="@+id/state_icon"
-        android:text="@string/ws_enabled_title" >
+        android:layout_toRightOf="@+id/state_icon" >
     </TextView>
 
     <ImageView

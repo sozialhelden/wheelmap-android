@@ -22,6 +22,7 @@
 package wheelmap.org.request;
 
 import wheelmap.org.WheelchairState;
+import android.text.TextUtils;
 
 /**
  * Constructs the Uri of a <code>/api/nodes/{node_id}</code> update/put and
@@ -37,7 +38,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 	private double latitude;
 	private double longitude;
 	private WheelchairState state;
-	private String wheelchair_desc;
+	private String description;
 	private String street;
 	private String housenumber;
 	private String city;
@@ -49,10 +50,10 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 
 	public NodeUpdateOrNewAllRequestBuilder(final String server,
 			final String apiKey, final AcceptType acceptType, String id,
-			String name, String category, String type, double latitude, double longitude,
-			WheelchairState state, String wheelchair_desc, String street,
-			String housenumber, String city, String postcode, String website,
-			String phone, boolean update) {
+			String name, String category, String type, double latitude,
+			double longitude, WheelchairState state, String description,
+			String street, String housenumber, String city, String postcode,
+			String website, String phone) {
 		super(server, apiKey, acceptType);
 		this.id = id;
 		this.name = name;
@@ -61,69 +62,85 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.state = state;
-		this.wheelchair_desc = wheelchair_desc;
+		this.description = description;
 		this.street = street;
 		this.housenumber = housenumber;
 		this.city = city;
 		this.postcode = postcode;
 		this.website = website;
 		this.phone = phone;
-
-		this.update = update;
 	}
 
 	@Override
 	public String buildRequestUri() {
+		if (id != null)
+			update = true;
+
 		final StringBuilder requestAsStringBuffer = new StringBuilder(1024);
 		requestAsStringBuffer.append(String.format(baseUrl()));
-		requestAsStringBuffer.append("&name=");
-		requestAsStringBuffer.append(name);		
-		requestAsStringBuffer.append("&type=");
-		requestAsStringBuffer.append(type);
-		requestAsStringBuffer.append("&lat=");
-		requestAsStringBuffer.append(latitude);
-		requestAsStringBuffer.append("&lon=");
-		requestAsStringBuffer.append(longitude);
-		requestAsStringBuffer.append("&wheelchair=");
-		requestAsStringBuffer.append(state.asRequestParameter());
+		if (!TextUtils.isEmpty(name)) {
+			requestAsStringBuffer.append("&name=");
+			requestAsStringBuffer.append(name);
+		}
 
-		if (category != null && !(category.length() == 0)) {
+		if (!TextUtils.isEmpty(type)) {
+			requestAsStringBuffer.append("&type=");
+			requestAsStringBuffer.append(type);
+		}
+
+		if (latitude != 0) {
+			requestAsStringBuffer.append("&lat=");
+			requestAsStringBuffer.append(latitude);
+		}
+
+		if (longitude != 0) {
+			requestAsStringBuffer.append("&lon=");
+			requestAsStringBuffer.append(longitude);
+		}
+
+		if (state != null) {
+			requestAsStringBuffer.append("&wheelchair=");
+			requestAsStringBuffer.append(state.asRequestParameter());
+		}
+
+		if (!TextUtils.isEmpty(category)) {
 			requestAsStringBuffer.append("&category=");
 			requestAsStringBuffer.append(category);
 		}
-		
-		if (wheelchair_desc != null && !(wheelchair_desc.length() == 0)) {
-			String tmpString = wheelchair_desc.length() > 255 ? wheelchair_desc.substring(0, 254) : wheelchair_desc;
+
+		if (!TextUtils.isEmpty(description)) {
+			String tmpString = description.length() > 255 ? description
+					.substring(0, 254) : description;
 			requestAsStringBuffer.append("&wheelchair_description=");
 			requestAsStringBuffer.append(tmpString);
 		}
 
-		if (street != null && !(street.length() == 0)) {
+		if (!TextUtils.isEmpty(street)) {
 			requestAsStringBuffer.append("&street=");
 			requestAsStringBuffer.append(street);
 		}
 
-		if (housenumber != null && !(housenumber.length() == 0)) {
+		if (!TextUtils.isEmpty(housenumber)) {
 			requestAsStringBuffer.append("&housenumber=");
 			requestAsStringBuffer.append(housenumber);
 		}
 
-		if (city != null && !(city.length() == 0)) {
+		if (!TextUtils.isEmpty(city)) {
 			requestAsStringBuffer.append("&city=");
 			requestAsStringBuffer.append(city);
 		}
 
-		if (postcode != null && !(postcode.length() == 0)) {
+		if (!TextUtils.isEmpty(postcode)) {
 			requestAsStringBuffer.append("&postcode=");
 			requestAsStringBuffer.append(postcode);
 		}
 
-		if (website != null && !(website.length() == 0)) {
+		if (!TextUtils.isEmpty(website)) {
 			requestAsStringBuffer.append("&website=");
 			requestAsStringBuffer.append(website);
 		}
 
-		if (phone != null && !(phone.length() == 0)) {
+		if (!TextUtils.isEmpty(phone)) {
 			requestAsStringBuffer.append("&phone=");
 			requestAsStringBuffer.append(phone);
 		}
@@ -138,10 +155,10 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 		else
 			return RESOURCE;
 	}
-	
+
 	@Override
 	public int getRequestType() {
-		if ( update )
+		if (update)
 			return RequestBuilder.REQUEST_PUT;
 		else
 			return RequestBuilder.REQUEST_POST;

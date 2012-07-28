@@ -4,30 +4,31 @@ import java.util.ArrayList;
 
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsListFragment.OnPOIsListListener;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment.OnPOIsListWorkerListener;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment.OnPOIsMapsforgeListener;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment.OnPOIsMapsforgeWorkerListener;
+import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.LayoutParams;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -38,8 +39,7 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import de.akquinet.android.androlog.Log;
 
 public class MainSinglePaneActivity extends MapsforgeMapActivity implements
-		OnStateListener, OnPOIsListListener, OnPOIsListWorkerListener,
-		OnPOIsMapsforgeListener, OnPOIsMapsforgeWorkerListener {
+		DisplayFragmentListener, WorkerFragmentListener, OnStateListener {
 	private static final String TAG = MainSinglePaneActivity.class
 			.getSimpleName();
 	private final static ArrayList<TabHolder> mIndexToTab;
@@ -56,11 +56,13 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.activity_fragment_singleframe);
-		setSupportProgressBarIndeterminateVisibility(false);
+		// Debug.startMethodTracing("wheelmap");
 
-		getSupportFragmentManager().enableDebugLogging(true);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setSupportProgressBarIndeterminateVisibility(false);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+		// FragmentManager.enableDebugLogging(true);
 
 		// GA
 		tracker = GoogleAnalyticsTracker.getInstance();
@@ -75,6 +77,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
+		createSearchModeCustomView(actionBar);
 
 		Tab tab = actionBar
 				.newTab()
@@ -121,6 +124,12 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 			executeIntent(getIntent());
 			setIntent(null);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// Debug.stopMethodTracing();
 	}
 
 	private void executeIntent(Intent intent) {
@@ -191,6 +200,29 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		}
 	}
 
+	private void createSearchModeCustomView(final ActionBar bar) {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
+				null);
+		ImageButton button = (ImageButton) customView.findViewById(R.id.image);
+		button.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Fragment f = getSupportFragmentManager().findFragmentByTag(
+						POIsMapsforgeWorkerFragment.TAG);
+				if (f == null)
+					return;
+
+				((POIsMapsforgeWorkerFragment) f).setSearchMode(false);
+				bar.setDisplayShowCustomEnabled(false);
+			}
+		});
+
+		bar.setCustomView(customView, new ActionBar.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+	}
+
 	private void showInfo() {
 		Intent intent = new Intent(this, InfoActivity.class);
 		startActivity(intent);
@@ -205,22 +237,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		Location location = MyLocationManager.get(null, false)
 				.getLastLocation();
 
-		// create new POI and start editing
-		ContentValues cv = new ContentValues();
-		cv.put(Wheelmap.POIs.NAME, getString(R.string.new_default_name));
-		cv.put(Wheelmap.POIs.COORD_LAT, Math.ceil(location.getLatitude() * 1E6));
-		cv.put(Wheelmap.POIs.COORD_LON,
-				Math.ceil(location.getLongitude() * 1E6));
-		cv.put(Wheelmap.POIs.CATEGORY_ID, SupportManager.UNKNOWN_TYPE);
-		cv.put(Wheelmap.POIs.NODETYPE_ID, SupportManager.UNKNOWN_TYPE);
+		String name = getString(R.string.new_default_name);
+		long id = PrepareDatabaseHelper.insertNew(getContentResolver(), name,
+				location.getLatitude(), location.getLongitude());
 
-		Uri newPoiUri = getContentResolver().insert(Wheelmap.POIs.CONTENT_URI,
-				cv);
-
-		// edit activity
-		Log.i(TAG, newPoiUri.toString());
-		long poiId = Long.parseLong(newPoiUri.getLastPathSegment());
-		return poiId;
+		return id;
 	}
 
 	private void createNewPoi() {
@@ -234,7 +255,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public void onError(SyncServiceException e) {
 
 		FragmentManager fm = getSupportFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e);
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+				Extra.UNKNOWN);
 		if (errorDialog == null)
 			return;
 
@@ -243,20 +265,23 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onShowDetail(long id) {
+		long copyId = PrepareDatabaseHelper.createCopyIfNotExists(
+				getContentResolver(), id);
 		Intent intent = new Intent(this, POIDetailActivity.class);
-		intent.putExtra(Extra.POI_ID, id);
+		intent.putExtra(Extra.POI_ID, copyId);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onRefreshing(boolean isRefreshing) {
-		Log.d(TAG, "onRefreshStatusChange isRefreshing = " + isRefreshing);
+		Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
 		setSupportProgressBarIndeterminateVisibility(isRefreshing);
 	}
 
 	@Override
 	public void onSearchModeChange(boolean isSearchMode) {
-
+		Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
 	}
 
 	static {

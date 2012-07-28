@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.model.DataOperationsCategories;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.service.SyncServiceException;
@@ -31,11 +32,9 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.CategoriesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
-import de.akquinet.android.androlog.Log;
 
-public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
-		implements IExecutor {
-	private final static String TAG = CategoriesExecutor.class.getSimpleName();
+public class CategoriesExecutor extends MultiPageExecutor<Categories> implements
+		IExecutor {
 	private Locale mLocale;
 
 	public CategoriesExecutor(Context context, Bundle bundle) {
@@ -54,28 +53,20 @@ public class CategoriesExecutor extends BaseRetrieveExecutor<Categories>
 
 	@Override
 	public void execute() throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
 		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder(
 				SERVER, getApiKey(), AcceptType.JSON);
-		// requestBuilder.paging( new Paging( DEFAULT_TEST_PAGE_SIZE ));
 		if (mLocale != null)
 			requestBuilder.locale(mLocale);
 
 		clearTempStore();
 		retrieveSinglePage(requestBuilder);
-
-		Log.d(TAG, "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
 	}
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		long insertStart = System.currentTimeMillis();
-		for (Categories categories : getTempStore()) {
-			PrepareDatabaseHelper.bulkInsert(getResolver(), categories);
-		}
-		long insertEnd = System.currentTimeMillis();
-		Log.d(TAG, "insertTime = " + (insertEnd - insertStart) / 1000f);
+		DataOperationsCategories doc = new DataOperationsCategories(
+				getResolver());
+		doc.insert(getTempStore());
 		clearTempStore();
 	}
 

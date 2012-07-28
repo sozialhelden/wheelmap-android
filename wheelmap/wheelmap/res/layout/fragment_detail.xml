@@ -8,12 +8,14 @@
 
         <LinearLayout
             android:id="@+id/title_text_container"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
             android:orientation="vertical" >
 
             <TextView style="@style/TitleBarTextNew.Title" />
+
             <TextView style="@style/TitleBarTextNew.Subtitle" />
         </LinearLayout>
 

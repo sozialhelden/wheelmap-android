@@ -1,7 +1,6 @@
 package org.wheelmap.android.activity;
 
 import org.wheelmap.android.fragment.OnExecuteBundle;
-import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,7 +56,8 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 			mFragment = SherlockFragment.instantiate(mActivity,
 					mClass.getName(), null);
 			FragmentManager fm = mActivity.getSupportFragmentManager();
-			fm.beginTransaction().replace(R.id.frame, mFragment, mTag.name)
+			fm.beginTransaction()
+					.replace(android.R.id.content, mFragment, mTag.name)
 					.commit();
 
 		} else {

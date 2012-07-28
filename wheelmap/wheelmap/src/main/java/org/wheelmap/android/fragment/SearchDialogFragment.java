@@ -133,6 +133,8 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 			case NODETYPE:
 				mNodeTypeSelected = search.id;
 				break;
+			default:
+				// noop
 			}
 			break;
 		}

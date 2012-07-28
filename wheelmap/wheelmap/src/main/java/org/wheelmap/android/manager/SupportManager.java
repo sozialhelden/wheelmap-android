@@ -61,7 +61,7 @@ import android.preference.PreferenceManager;
 import de.akquinet.android.androlog.Log;
 
 public class SupportManager {
-	private static final String TAG = SupportManager.class.getName();
+	private static final String TAG = SupportManager.class.getSimpleName();
 
 	private Context mContext;
 	private Map<Integer, NodeType> mNodeTypeLookup;
@@ -150,6 +150,7 @@ public class SupportManager {
 
 	public SupportManager(Context ctx) {
 		mContext = ctx;
+
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
 		mAssetManager = mContext.getAssets();
@@ -450,7 +451,7 @@ public class SupportManager {
 			bitmap = BitmapFactory.decodeStream(is);
 			is.close();
 		} catch (IOException e) {
-			Log.w(TAG, "Warning in createIconDrawable." + e.getMessage());
+			Log.w(TAG, "Warning in createIconDrawable ", e);
 			return null;
 		}
 		return new BitmapDrawable(bitmap);
@@ -471,10 +472,11 @@ public class SupportManager {
 				drawable = Drawable.createFromStream(is, null);
 				is.close();
 			} catch (IOException e) {
-				Log.w(TAG, "Error in createDefaultDrawables:" + e.getMessage());
+				Log.w(TAG, "Error in createDefaultDrawables", e);
 			}
 			// drawable.setBounds(-32, -64, 32, 0);
-			drawable.setBounds(-24, -48, 24, 0);
+			if (drawable != null)
+				drawable.setBounds(-24, -48, 24, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
@@ -497,8 +499,7 @@ public class SupportManager {
 				is.close();
 			} catch (IOException e) {
 				Log.w(TAG,
-						"Error in createDrawableLookup. Assigning fallback. "
-								+ e.getMessage());
+						"Error in createDrawableLookup. Assigning fallback.", e);
 				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
 						.valueOf(idx));
 			}
@@ -615,9 +616,10 @@ public class SupportManager {
 				R.drawable.wheelchair_state_limited, R.color.wheel_limited,
 				PrefKey.WHEELCHAIR_STATE_LIMITED));
 		wsAttributes.put(WheelchairState.NO, new WheelchairAttributes(
-				R.string.ws_disabled_title, R.string.settings_wheelchair_no,
-				R.string.ws_disabled, R.drawable.wheelchair_state_disabled,
-				R.color.wheel_disabled, PrefKey.WHEELCHAIR_STATE_NO));
+				R.string.ws_disabled_title, R.string.ws_disabled,
+				R.string.settings_wheelchair_no,
+				R.drawable.wheelchair_state_disabled, R.color.wheel_disabled,
+				PrefKey.WHEELCHAIR_STATE_NO));
 		wsAttributes.put(WheelchairState.UNKNOWN, new WheelchairAttributes(
 				R.string.ws_unknown_title, R.string.ws_unknown,
 				R.string.settings_wheelchair_unknown,

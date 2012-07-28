@@ -1,5 +1,6 @@
 package org.wheelmap.android.fragment;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.mapsforge.android.maps.GeoPoint;
@@ -11,29 +12,27 @@ import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.model.CursorLoaderHelper;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
-import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.service.SyncServiceHelper;
-import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.ViewTool;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,8 +52,7 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailFragment extends RoboSherlockFragment implements
-		OnClickListener, OnTapListener, LoaderCallbacks<Cursor>,
-		DetachableResultReceiver.Receiver {
+		OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {
 
 	public final static String TAG = POIDetailFragment.class.getSimpleName();
 	private final static int LOADER_CONTENT = 0;
@@ -96,37 +94,29 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		void onEditWheelchairState(WheelchairState wState);
 
 		void onShowLargeMapAt(GeoPoint point);
-
-		void onLoadStatus(boolean loading);
-
-		void onError(SyncServiceException e);
 	}
 
 	private OnPOIDetailListener mListener;
 	private MapView mapView;
 	private MapController mapController;
 
-	private long poiID;
-	private long wmID;
+	private long poiId;
 
-	private DetachableResultReceiver mReceiver;
-
+	private final static int ACTION_PROVIDER_DIRECTIONS = 0;
+	private final static int ACTION_PROVIDER_SHARE = 1;
 	private ShareActionProvider mShareActionProvider;
 	private ShareActionProvider mDirectionsActionProvider;
 
-	public static POIDetailFragment newInstanceWithWMID(Long wmID) {
-		Bundle b = new Bundle();
-		b.putLong(Extra.WM_ID, wmID);
-		POIDetailFragment f = new POIDetailFragment();
-		f.setArguments(b);
-		return f;
-	}
+	private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
 
-	public static POIDetailFragment newInstanceWithPOIID(Long poiID) {
-		Bundle b = new Bundle();
-		b.putLong(Extra.POI_ID, poiID);
+	public static POIDetailFragment newInstance(long id) {
+		if (id == Extra.ID_UNKNOWN)
+			return null;
+
+		Bundle bundle = new Bundle();
+		bundle.putLong(Extra.POI_ID, id);
 		POIDetailFragment f = new POIDetailFragment();
-		f.setArguments(b);
+		f.setArguments(bundle);
 		return f;
 	}
 
@@ -142,15 +132,11 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (savedInstanceState != null)
-			executeState(savedInstanceState);
-		else
-			executeState(getArguments());
-
 		setHasOptionsMenu(true);
 
 		mCap = WheelmapApp.getCapabilityLevel();
 		mWSAttributes = SupportManager.wsAttributes;
+		poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
 	}
 
 	@Override
@@ -225,17 +211,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		super.onStop();
 	}
 
-	public void executeState(Bundle bundle) {
-		if (bundle == null)
-			return;
-
-		poiID = bundle.getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
-		wmID = bundle.getLong(Extra.WM_ID, Extra.ID_UNKNOWN);
-
-		if (poiID == Extra.ID_UNKNOWN && wmID != Extra.ID_UNKNOWN)
-			requestData(wmID);
-	}
-
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -258,13 +233,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putLong(Extra.POI_ID, poiID);
-	}
-
-	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		Log.d(TAG, "onCreateOptionsMenu");
 		inflater.inflate(R.menu.ab_detail_fragment, menu);
 		createShareActionProvider(menu);
 	}
@@ -275,11 +245,15 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 				.getActionProvider();
 		mShareActionProvider
 				.setShareHistoryFileName("ab_provider_share_history.xml");
+		setIntentOnActionProvider(ACTION_PROVIDER_SHARE, mShareActionProvider);
 		MenuItem menuItemDirection = menu.findItem(R.id.menu_directions);
 		mDirectionsActionProvider = (ShareActionProvider) menuItemDirection
 				.getActionProvider();
 		mDirectionsActionProvider
 				.setShareHistoryFileName("ab_provider_directions_history.xml");
+		setIntentOnActionProvider(ACTION_PROVIDER_DIRECTIONS,
+				mDirectionsActionProvider);
+
 	}
 
 	@Override
@@ -289,7 +263,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		switch (id) {
 		case R.id.menu_edit:
 			if (mListener != null)
-				mListener.onEdit(poiID);
+				mListener.onEdit(poiId);
 			return true;
 		default:
 			// noop
@@ -299,13 +273,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	public long getPoiId() {
-		return poiID;
-	}
-
-	private void requestData(Long wmID) {
-		mReceiver = new DetachableResultReceiver(new Handler());
-		mReceiver.setReceiver(this);
-		SyncServiceHelper.retrieveNode(getActivity(), wmID, mReceiver);
+		return poiId;
 	}
 
 	@Override
@@ -325,37 +293,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	}
 
-	/** {@inheritDoc} */
-	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
-		switch (resultCode) {
-		case SyncService.STATUS_RUNNING: {
-			if (mListener != null)
-				mListener.onLoadStatus(true);
-			break;
-		}
-		case SyncService.STATUS_FINISHED: {
-			if (mListener != null)
-				mListener.onLoadStatus(false);
-			break;
-		}
-		case SyncService.STATUS_ERROR: {
-			if (mListener != null)
-				mListener.onLoadStatus(false);
-			final SyncServiceException e = resultData
-					.getParcelable(Extra.EXCEPTION);
-			if (mListener != null)
-				mListener.onError(e);
-			break;
-		}
-		default: {
-			// noop
-		}
-		}
-	}
-
 	@Override
-	public void onTap(OverlayItem item, long poiId) {
+	public void onTap(OverlayItem item, long id) {
 
 		if (mListener != null) {
 			mListener.onShowLargeMapAt(item.getPoint());
@@ -364,14 +303,13 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
-		if (poiID != Extra.ID_UNKNOWN)
-			return CursorLoaderHelper.createPOIIdLoader(poiID);
-		else
-			return CursorLoaderHelper.createWMIdLoader(wmID);
+		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiId);
+		return new CursorLoader(getActivity(), uri, null, null, null, null);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.d(TAG, "onLoadFinished: poiid = " + poiId);
 		load(cursor);
 	}
 
@@ -386,14 +324,11 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		c.moveToFirst();
 		String wmIdString = POIHelper.getWMId(c);
-		poiID = POIHelper.getId(c);
 		WheelchairState state = POIHelper.getWheelchair(c);
 		String name = POIHelper.getName(c);
 		String comment = POIHelper.getComment(c);
-		final double lat = POIHelper.getLatitude(c);
-		int latE6 = (int) (lat * 1E6);
-		final double lon = POIHelper.getLongitude(c);
-		int lonE6 = (int) (lon * 1E6);
+		final double latitude = POIHelper.getLatitude(c);
+		final double longitude = POIHelper.getLongitude(c);
 
 		int nodeTypeId = POIHelper.getNodeTypeId(c);
 		int categoryId = POIHelper.getCategoryId(c);
@@ -402,7 +337,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		NodeType nodeType = sm.lookupNodeType(nodeTypeId);
 		setWheelchairState(state);
-		if (name.length() > 0)
+		if (name != null && name.length() > 0)
 			nameText.setText(name);
 		else
 			nameText.setText(nodeType.localizedName);
@@ -425,25 +360,28 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		String postCode = POIHelper.getPostcode(c);
 		String city = POIHelper.getCity(c);
 
-		fillDirectionsActionProvider(lat, lon, street, houseNum, postCode, city);
-		fillShareActionProvider(wmIdString, name, comment, address, website);
+		fillDirectionsActionProvider(latitude, longitude, street, houseNum,
+				postCode, city);
+		fillShareActionProvider(wmIdString, name, nodeType.localizedName,
+				comment, address, website);
 
 		if (mCap == Capability.DEGRADED_MAX) {
 			mMapButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if (mListener != null)
-						mListener.onShowLargeMapAt(new GeoPoint(lat, lon));
+						mListener.onShowLargeMapAt(new GeoPoint(latitude,
+								longitude));
 
 				}
 			});
 		} else {
 			SingleItemOverlay overlay = new SingleItemOverlay(this);
-			overlay.setItem(name, comment, nodeType, state, latE6, lonE6);
+			overlay.setItem(name, comment, nodeType, state, latitude, longitude);
 			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
 			mapView.getOverlays().add(overlay);
-			mapController.setCenter(new GeoPoint(lat, lon));
+			mapController.setCenter(new GeoPoint(latitude, longitude));
 		}
 	}
 
@@ -471,48 +409,74 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		Uri geoURI;
 
-		if (street.length() > 0 && (postCode.length() > 0 || city.length() > 0)) {
+		String latitude = Double.toString(lat);
+		String longitude = Double.toString(lon);
+
+		if (!TextUtils.isEmpty(street) && !TextUtils.isEmpty(houseNum)
+				&& !TextUtils.isEmpty(postCode) && !TextUtils.isEmpty(city)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(street).append("+").append(houseNum).append("+")
 					.append(postCode).append(city);
-			geoURI = Uri.parse("geo:0,0?q=" + sb.toString().replace(" ", "+"));
+			geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?q="
+					+ sb.toString().replace(" ", "+"));
 		} else {
-			geoURI = Uri.parse("geo:" + String.valueOf(lat) + ","
-					+ String.valueOf(lon) + "?z=17");
+			geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?z=17");
 		}
 
 		Log.d(TAG, "geoURI = " + geoURI.toString());
 		Intent intent = createExternIntent(Intent.ACTION_VIEW);
 		intent.setData(geoURI);
-		mDirectionsActionProvider.setShareIntent(intent);
+
+		setIntentOrStore(ACTION_PROVIDER_DIRECTIONS, intent,
+				mDirectionsActionProvider);
 	}
 
-	private void fillShareActionProvider(String wmId, String name,
+	private void fillShareActionProvider(String wmId, String name, String type,
 			String comment, String address, String website) {
 
-		StringBuilder sb = new StringBuilder(name);
+		StringBuilder sb = new StringBuilder();
+		if (!TextUtils.isEmpty(name)) {
+			sb.append(name);
+		} else
+			sb.append(type);
 
-		if (comment.length() > 0) {
+		if (!TextUtils.isEmpty(comment)) {
 			sb.append(", ");
 			sb.append(comment);
 		}
 
-		if (address.length() > 0) {
+		if (!TextUtils.isEmpty(address)) {
 			sb.append(", ");
 			sb.append(address);
 		}
 
-		if (website.length() > 0) {
+		if (!TextUtils.isEmpty(website)) {
 			sb.append(", ");
 			sb.append(website);
 		}
 
-		sb.append(", ");
-		sb.append("http://wheelmap.org/nodes/" + String.valueOf(wmId));
+		if (sb.length() > 0)
+			sb.append(", ");
+
+		sb.append("http://wheelmap.org/nodes/" + wmId);
 		Intent intent = createExternIntent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
-		mShareActionProvider.setShareIntent(intent);
+		setIntentOrStore(ACTION_PROVIDER_SHARE, intent, mShareActionProvider);
+	}
+
+	private void setIntentOrStore(int apKey, Intent intent,
+			ShareActionProvider provider) {
+		if (provider == null)
+			intentSaved.put(apKey, intent);
+		else
+			provider.setShareIntent(intent);
+	}
+
+	private void setIntentOnActionProvider(int apKey,
+			ShareActionProvider provider) {
+		if (intentSaved.containsKey(apKey))
+			provider.setShareIntent(intentSaved.get(apKey));
 	}
 
 }

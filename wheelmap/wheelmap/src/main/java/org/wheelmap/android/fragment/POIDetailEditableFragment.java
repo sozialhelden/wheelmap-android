@@ -3,21 +3,23 @@ package org.wheelmap.android.fragment;
 import java.util.Map;
 
 import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.model.CursorLoaderHelper;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.UserCredentials;
-import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.net.PrepareDatabaseHelper;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,14 +27,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,12 +49,14 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableFragment extends RoboSherlockFragment implements
-		OnClickListener, LoaderCallbacks<Cursor> {
+		OnErrorDialogListener, OnClickListener, LoaderCallbacks<Cursor> {
 	public final static String TAG = POIDetailEditableFragment.class
 			.getSimpleName();
 
 	private final static int LOADER_CONTENT = 0;
-	private final static int LOADER_TEMPORARY = 1;
+	private final static int LOADER_TMP = 1;
+
+	private static final int DIALOG_ID_NEWPOI = 1;
 
 	@InjectView(R.id.title_container)
 	private LinearLayout title_container;
@@ -61,8 +66,14 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private TextView nodetypeText;
 	@InjectView(R.id.comment)
 	private EditText commentText;
-	@InjectView(R.id.addr)
-	private EditText addressText;
+	@InjectView(R.id.street)
+	private EditText streetText;
+	@InjectView(R.id.housenum)
+	private EditText housenumText;
+	@InjectView(R.id.postcode)
+	private EditText postcodeText;
+	@InjectView(R.id.city)
+	private EditText cityText;
 	@InjectView(R.id.website)
 	private EditText websiteText;
 	@InjectView(R.id.phone)
@@ -82,23 +93,26 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private RelativeLayout edit_nodetype_container;
 
 	@InjectView(R.id.edit_geolocation_container)
-	private FrameLayout edit_geolocation_container;
+	private LinearLayout edit_geolocation_container;
 
 	private Long poiID = Extra.ID_UNKNOWN;
+	private String wmID;
 	private WheelchairState mWheelchairState;
-	private int mLatitude;
-	private int mLongitude;
+	private double mLatitude;
+	private double mLongitude;
 	private int mNodeType;
 
 	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 	private OnPOIDetailEditableListener mListener;
+
+	private boolean mTemporaryStored;
 
 	public interface OnPOIDetailEditableListener {
 		public void onEditSave();
 
 		public void onEditWheelchairState(WheelchairState state);
 
-		public void onEditGeolocation(int latitude, int longitude);
+		public void onEditGeolocation(double latitude, double longitude);
 
 		public void onEditNodetype(int nodetype);
 
@@ -116,6 +130,10 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		return fragment;
 	}
 
+	public POIDetailEditableFragment() {
+		Log.d(TAG, "constructor called ");
+	}
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -128,10 +146,10 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mWSAttributes = SupportManager.wsAttributes;
+		Log.d(TAG, "onCreate");
 		setHasOptionsMenu(true);
+		mWSAttributes = SupportManager.wsAttributes;
 		poiID = getArguments().getLong(Extra.POI_ID);
-
 	}
 
 	@Override
@@ -154,12 +172,13 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "onActivityCreated");
 
 		retrieve(savedInstanceState);
 		UserCredentials credentials = new UserCredentials(getActivity()
 				.getApplicationContext());
 		if (!credentials.isLoggedIn()) {
-			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentManager fm = getFragmentManager();
 			LoginDialogFragment loginDialog = new LoginDialogFragment();
 			loginDialog.show(fm, LoginDialogFragment.TAG);
 		}
@@ -167,12 +186,17 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	}
 
 	private void retrieve(Bundle bundle) {
-		boolean isTemporaryStore = bundle != null
-				&& bundle.containsKey(Extra.EDITABLE_TEMPORARY_STORE);
-		if (isTemporaryStore)
-			getLoaderManager().initLoader(LOADER_TEMPORARY, null, this);
+		boolean loadTempStore = mTemporaryStored
+				|| (bundle != null && bundle
+						.containsKey(Extra.TEMPORARY_STORED));
+		int loaderId;
+		if (loadTempStore)
+			loaderId = LOADER_TMP;
 		else
-			getLoaderManager().initLoader(LOADER_CONTENT, getArguments(), this);
+			loaderId = LOADER_CONTENT;
+
+		Log.d(TAG, "retrieve: init loader id = " + loaderId);
+		getLoaderManager().initLoader(loaderId, null, this);
 	}
 
 	@Override
@@ -183,12 +207,12 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		storeExternalEditedState();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+		storeTemporary();
 	}
 
 	@Override
@@ -211,16 +235,11 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		super.onDetach();
 	}
 
-	private void storeExternalEditedState() {
-		if (mListener != null)
-			mListener.requestExternalEditedState(this);
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
-		outState.putBoolean(Extra.EDITABLE_TEMPORARY_STORE, true);
-		storeTemporary();
+		outState.putBoolean(Extra.TEMPORARY_STORED, true);
 	}
 
 	@Override
@@ -272,35 +291,63 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	public void save() {
 
-		ContentValues values = new ContentValues();
-		values.putAll(retrieveContentValues());
-		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_ALL_FIELDS);
-		getActivity().getContentResolver().update(getUriForPoiID(), values, "",
-				null);
+		boolean dontQuit = false;
+		ContentValues values = retrieveContentValues();
+		if (!values.containsKey(POIs.NODETYPE_ID)) {
+			showErrorMessage(getString(R.string.error_category_missing_title),
+					getString(R.string.error_category_missing_message),
+					Extra.UNKNOWN);
+			return;
+		} else if (mWheelchairState == WheelchairState.UNKNOWN) {
+			showErrorMessage(
+					getString(R.string.error_wheelchairstate_missing_title),
+					getString(R.string.error_wheelchairstate_missing_message),
+					Extra.UNKNOWN);
+			return;
+		} else if (TextUtils.isEmpty(wmID)) {
+			showErrorMessage(getString(R.string.error_newpoi_title),
+					getString(R.string.error_newpoi_message), DIALOG_ID_NEWPOI);
+			dontQuit = true;
+		}
 
-		SyncServiceHelper.executeUpdateServer(getActivity());
+		values.put(POIs.DIRTY, POIs.DIRTY_ALL);
 
+		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
+				poiID, values);
+		SyncServiceHelper.executeUpdateServer(getActivity(), null);
+
+		if (!dontQuit)
+			quit();
+	}
+
+	private void quit() {
 		if (mListener != null) {
 			mListener.onEditSave();
 		}
 	}
 
-	private Uri getUriForPoiID() {
-		return Uri.withAppendedPath(Wheelmap.POIs.CONTENT_URI_POI_ID,
-				String.valueOf(poiID));
+	@Override
+	public void onErrorDialogClose(int id) {
+		if (id == DIALOG_ID_NEWPOI)
+			quit();
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
+		Log.d(TAG, "onCreateLoader: id = " + id);
+		Uri uri = null;
 		if (id == LOADER_CONTENT)
-			return CursorLoaderHelper.createPOIIdLoader(poiID);
+			uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiID);
 		else
-			return CursorLoaderHelper.createTemporaryPOILoader();
+			uri = POIs.CONTENT_URI_TMP;
 
+		Log.d(TAG, "onCreateLoader: uri = " + uri);
+		return new CursorLoader(getActivity(), uri, null, null, null, null);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		Log.d(TAG, "onLoadFinished loader id = " + loader.getId());
 		load(cursor);
 	}
 
@@ -314,36 +361,35 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		if (cursor == null || cursor.getCount() < 1)
 			return;
 
+		UtilsMisc.dumpCursorToLog(TAG, cursor);
 		cursor.moveToFirst();
-
-		setPOIIdIfFromTemporary(cursor);
 
 		WheelchairState state = POIHelper.getWheelchair(cursor);
 		String name = POIHelper.getName(cursor);
 		String comment = POIHelper.getComment(cursor);
-		int latitude = POIHelper.getLatitudeAsInt(cursor);
-		int longitude = POIHelper.getLongitudeAsInt(cursor);
+		double latitude = POIHelper.getLatitude(cursor);
+		double longitude = POIHelper.getLongitude(cursor);
 		int nodeType = POIHelper.getNodeTypeId(cursor);
 
 		setGeolocation(latitude, longitude);
 		setNodetype(nodeType);
 		setWheelchairState(state);
 		nameText.setText(name);
-
 		commentText.setText(comment);
-		addressText.setText(POIHelper.getAddress(cursor));
+
+		streetText.setText(POIHelper.getStreet(cursor));
+		housenumText.setText(POIHelper.getHouseNumber(cursor));
+		postcodeText.setText(POIHelper.getPostcode(cursor));
+		cityText.setText(POIHelper.getCity(cursor));
+
 		websiteText.setText(POIHelper.getWebsite(cursor));
 		phoneText.setText(POIHelper.getPhone(cursor));
 
-		if (nodeType == SupportManager.UNKNOWN_TYPE)
+		wmID = POIHelper.getWMId(cursor);
+		if (TextUtils.isEmpty(wmID))
 			showGeolocationEditor(true);
-	}
 
-	private void setPOIIdIfFromTemporary(Cursor cursor) {
-		int updateTag = POIHelper.getUpdateTag(cursor);
-		if (updateTag == Wheelmap.UPDATE_TEMPORARY_STORE) {
-			poiID = POIHelper.getId(cursor);
-		}
+		retrieveExternalEditedState();
 	}
 
 	private void showGeolocationEditor(boolean show) {
@@ -351,45 +397,64 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 			edit_geolocation_container.setVisibility(View.VISIBLE);
 		else
 			edit_geolocation_container.setVisibility(View.GONE);
+	}
 
+	private void retrieveExternalEditedState() {
+		Log.d(TAG, "retrieveExternalEditedState");
+		if (mListener != null)
+			mListener.requestExternalEditedState(this);
 	}
 
 	private ContentValues retrieveContentValues() {
 		ContentValues values = new ContentValues();
-		values.put(Wheelmap.POIs.NAME, nameText.getText().toString());
+
+		String name = nameText.getText().toString();
+		if (!TextUtils.isEmpty(name))
+			values.put(POIs.NAME, name);
 
 		SupportManager sm = WheelmapApp.getSupportManager();
-		int categoryId = sm.lookupNodeType(mNodeType).categoryId;
-		String categoryIdentifier = sm.lookupCategory(categoryId).identifier;
-		values.put(Wheelmap.POIs.CATEGORY_ID, categoryId);
-		values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, categoryIdentifier);
 
-		String nodeTypeIdentifier = sm.lookupNodeType(mNodeType).identifier;
-		values.put(Wheelmap.POIs.NODETYPE_ID, mNodeType);
-		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, nodeTypeIdentifier);
-		values.put(Wheelmap.POIs.COORD_LAT, mLatitude);
-		values.put(Wheelmap.POIs.COORD_LON, mLongitude);
-		values.put(Wheelmap.POIs.WHEELCHAIR, mWheelchairState.name());
-		values.put(Wheelmap.POIs.WHEELCHAIR_DESC, commentText.getText()
-				.toString());
-		// street, housenum, postcode, city
-		// still missing
-		values.put(Wheelmap.POIs.WEBSITE, websiteText.getText().toString());
-		values.put(Wheelmap.POIs.PHONE, phoneText.getText().toString());
+		if (mNodeType != SupportManager.UNKNOWN_TYPE) {
+			int categoryId = sm.lookupNodeType(mNodeType).categoryId;
+			values.put(POIs.CATEGORY_ID, categoryId);
+			values.put(POIs.NODETYPE_ID, mNodeType);
+		}
 
+		values.put(POIs.LATITUDE, mLatitude);
+		values.put(POIs.LONGITUDE, mLongitude);
+
+		values.put(POIs.WHEELCHAIR, mWheelchairState.getId());
+		String description = commentText.getText().toString();
+		if (!TextUtils.isEmpty(description))
+			values.put(POIs.DESCRIPTION, description);
+
+		String street = streetText.getText().toString();
+		if (!TextUtils.isEmpty(street))
+			values.put(POIs.STREET, street);
+		String housenum = housenumText.getText().toString();
+		if (!TextUtils.isEmpty(housenum))
+			values.put(POIs.HOUSE_NUM, housenum);
+		String postcode = postcodeText.getText().toString();
+		if (!TextUtils.isEmpty(postcode))
+			values.put(POIs.POSTCODE, postcode);
+		String city = cityText.getText().toString();
+		if (!TextUtils.isEmpty(city))
+			values.put(POIs.CITY, city);
+
+		String website = websiteText.getText().toString();
+		if (!TextUtils.isEmpty(website))
+			values.put(POIs.WEBSITE, website);
+		String phone = phoneText.getText().toString();
+		if (!TextUtils.isEmpty(phone))
+			values.put(POIs.PHONE, phone);
 		return values;
-	}
-
-	private void storeTemporary() {
-		ContentValues values = retrieveContentValues();
-		PrepareDatabaseHelper.storeTemporary(
-				getActivity().getContentResolver(), values);
 	}
 
 	public void setWheelchairState(WheelchairState state) {
 		if (state == null)
 			return;
 
+		// Log.d(TAG, "setWheelchairState state = " + state.name());
 		mWheelchairState = state;
 
 		int stateColor = getResources().getColor(
@@ -401,29 +466,39 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		state_text.setText(mWSAttributes.get(state).titleStringId);
 	}
 
-	public void setGeolocation(int latitude, int longitude) {
+	public void setGeolocation(double latitude, double longitude) {
 		if (latitude == Extra.UNKNOWN || longitude == Extra.UNKNOWN)
 			return;
 
-		Log.d(TAG, "onResult: mLatitude = " + mLatitude + " mLongitude = "
-				+ mLongitude);
+		// Log.d(TAG, "setGeolocation: latitude = " + latitude + " longitude = "
+		// + longitude);
 		mLatitude = latitude;
 		mLongitude = longitude;
 
-		String positionText = String.format("%s: (%f:%f)", getResources()
-				.getString(R.string.position_geopoint), mLatitude / 1E6,
-				mLongitude / 1E6);
+		String positionText = String.format("%s: (%.6f:%.6f)", getResources()
+				.getString(R.string.position_geopoint), mLatitude, mLongitude);
 		position_text.setText(positionText);
 	}
 
 	public void setNodetype(int nodetype) {
-		if (nodetype == Extra.UNKNOWN)
+		if (nodetype == SupportManager.UNKNOWN_TYPE)
 			return;
 
+		// Log.d(TAG, "setNodetype: nodetype = " + nodetype);
 		mNodeType = nodetype;
 		SupportManager manager = WheelmapApp.getSupportManager();
 		NodeType nodeType = manager.lookupNodeType(nodetype);
 		nodetypeText.setText(nodeType.localizedName);
+	}
+
+	public void showErrorMessage(String title, String message, int id) {
+		FragmentManager fm = getFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
+				title, message, id);
+		if (errorDialog == null)
+			return;
+
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
 	}
 
 	public void closeKeyboard() {
@@ -435,5 +510,17 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
+	}
+
+	private void storeTemporary() {
+		ContentValues values = retrieveContentValues();
+		if (!TextUtils.isEmpty(wmID))
+			values.put(POIs.WM_ID, wmID);
+
+		long id = PrepareDatabaseHelper.storeTemporary(getActivity()
+				.getContentResolver(), values);
+		Log.d(TAG, "storeTemporary wmId = " + wmID + " id = " + id);
+		getLoaderManager().destroyLoader(LOADER_CONTENT);
+		mTemporaryStored = true;
 	}
 }
