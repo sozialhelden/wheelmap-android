@@ -114,7 +114,7 @@
     </dependency>
     <dependency>
         <groupId>com.WazaBe.HoloEverywhere</groupId>
-        <artifactId>holoeverywhere-library</artifactId>
+        <artifactId>library</artifactId>
         <version>1.0.0</version>
         <type>apklib</type>
     </dependency>
