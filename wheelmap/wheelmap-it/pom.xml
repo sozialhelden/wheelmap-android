@@ -63,13 +63,7 @@
       <type>apk</type>
       <version>1.0-SNAPSHOT</version>
       <classifier>${zipaligned-classifier}</classifier> <!--  classifier set according to the ran profile -->
-	  <scope>provided</scope>
-	  <exclusions>
-	   <exclusion>
-        <groupId>*</groupId>
-        <artifactId>*</artifactId>
-       </exclusion>   
-	  </exclusions>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.wheelmap.android</groupId>
