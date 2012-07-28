@@ -79,7 +79,7 @@
     <string name="login_email">Email</string>
     <string name="login_password">Passwort</string>
     <string name="login_submit">Login</string>
-    <string name="title_login">Melde dich an</string>
+    <string name="title_login">Melde dich an!</string>
     <string name="error_authorization_required">Authorisierung erforderlich</string>
     <string name="error_request_forbidden">Anfrage nicht erlaubt</string>
     <string name="search_hint_list">Suchbegriff (optional)</string>
