@@ -65,8 +65,11 @@ public class SyncService extends IntentService {
 		int what = extras.getInt(Extra.WHAT);
 		final ResultReceiver receiver = extras
 				.getParcelable(Extra.STATUS_RECEIVER);
-		if (receiver != null)
-			receiver.send(STATUS_RUNNING, Bundle.EMPTY);
+		if (receiver != null) {
+			final Bundle bundle = new Bundle();
+			bundle.putInt(Extra.WHAT, what);
+			receiver.send(STATUS_RUNNING, bundle);
+		}
 
 		IExecutor executor = AbstractExecutor.create(getApplicationContext(),
 				extras);
