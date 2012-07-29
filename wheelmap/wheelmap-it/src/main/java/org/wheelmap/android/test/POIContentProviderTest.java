@@ -55,7 +55,7 @@ public class POIContentProviderTest extends ProviderTestCase2<POIsProvider> {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		// Berlin, Andreasstra�e 10
+		// Berlin, AndreasstraÔøΩe 10
 		mLocation = new Location("");
 		mLocation.setLongitude(13.431240);
 		mLocation.setLatitude(52.512523);
@@ -204,7 +204,7 @@ public class POIContentProviderTest extends ProviderTestCase2<POIsProvider> {
 		Assert.assertEquals(1, updated);
 		done.set(false);
 
-		String newDescription = "sch�n sch�n sch�n";
+		String newDescription = "schön schön schön";
 
 		values.put(POIs.DESCRIPTION, newDescription);
 		c.moveToFirst();
