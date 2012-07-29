@@ -1,44 +1,53 @@
 // Preliminaries:
-Das android-maven Modul benötigt unbedingt die Maven-Version > 3.0.3
+The android maven plugin needs at least maven version >= 3.0.3
 
+Android apklib maven dependencies cant be automatically included into Eclipse, and
+Eclipse shows errors. Therefore its need to manually include apklib sources as
+regular Android Library Projects. 
 
-APKLib-Dependencies können nicht automatisch von Eclipse eingebunden werden, sodass
-Eclipse rote Fehler anzeigt. Deshalb ist es nötig, diese Projekte manuell aus Git 
-auszuchecken und im Eclipse wheelmap Subprojekt diese Libs manuell in ADT einzutragen .
-
-APKLib Dependencies sind
+The need Projects are:
 https://github.com/JakeWharton/ActionBarSherlock.git
 https://github.com/chrisbanes/Android-PullToRefresh.git
 https://github.com/ChristopheVersieux/HoloEverywhere.git
 
-Und als Maven-Project in Eclipse zu importieren und in der Projektkonfiguration von 
-wheelmap im Android-Tab diese Projekte als Library-Projekte einzutragen.
+In the top level directory
+--------------------------
+mvn install
+    - compiles and builds in the wheelmap subdir
+    - builds and executes integration tests in the wheelmap-it subdir
 
-Wenn es einen Fehler beim Importieren des Maven Projekts in Eclipse gibt, erzeuge die Files
-wheelmap/project.properties
-wheelmap-it/project.properties
-von Hand und importiere die Projekte nochmals
 
-// Ein update der Copyright Header erfolgt mit
-mvn license:update-file-header
+A release can be made with 
+mvn -Prelease install \
+    -Dsign.keystore=<keystore-file> \
+    -Dsign.alias=<alias> \
+    -Dsign.storepass=<storepass> \
+    -Dsign.keypass=<keypass>
 
-// Ein update der Third-Party License Header
-mvn license:add-third-party -DuseMissingFile
+Proguard (but only little tested) can be enabled during release with
+    -Dproguard.disable=false
+Proguard issues a lot of warnings because of "duplicate definition" of actionbarsherlock stuff. They can be ignored. Instrumentation-Tests in wheelmap-it will fail, as related classes in the wheelmap app are obfuscated by proguard. A release can be also build in the wheelmap subdirectory.
 
-// Maven commands:
-mvn compile, mvn install 
-- compiliert oder baut
+GoogleAnalytics can be disabled (and no dependency to it - so no related code is left)
+with the profile switch
+    -Pwithout-googleanalytics
 
-mvn android:deploy 
-- im wheelmap Subprojekt installiert auf einem verfügbaren Gerät
+
+In the subdirectory (module) wheelmap
+-----------------------------
+mvn install
+  - compiles and builds
+
+mvn android:deploy
+  - the apk is installed on the available device
 
 mvn android:run
-- im wheelmap Subprojekt führt das Projekt auf einem verfügbaren Gerät aus
+  - the (installed) apk is executed on the available device
 
+mvn license:update-file-header
+  - an update of the copyright headers is done 
+
+In the subdirectory (module) wheelmap-it
+-------------------------------
 mvn integration-test
-- im wheelmap-it fuehrt die Instrumentation-Tests aus
-
-Ein unsigniertes APK findet sich unter
-wheelmap/target/wheelmap-1.0-SNAPSHOT.ap_
-
-
+- executes the instrumentation tests, the wheelmap.apk needs to be installed for that 

@@ -16,6 +16,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.tracker.TrackerWrapper;
 
 import android.content.Intent;
 import android.location.Location;
@@ -34,7 +35,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import de.akquinet.android.androlog.Log;
 
@@ -47,7 +47,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private final static int DEFAULT_SELECTED_TAB = 0;
 	private int mSelectedTab = DEFAULT_SELECTED_TAB;
 	private boolean mIsRecreated;
-	private GoogleAnalyticsTracker tracker;
+	private TrackerWrapper mTrackerWrapper;
 
 	final static int TAB_LIST = 0;
 	final static int TAB_MAP = 1;
@@ -64,10 +64,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 		// FragmentManager.enableDebugLogging(true);
 
-		// GA
-		tracker = GoogleAnalyticsTracker.getInstance();
-		tracker.startNewSession("UA-25843648-1", 20, this);
-		tracker.setAnonymizeIp(true);
+		mTrackerWrapper = new TrackerWrapper(this);
 
 		if (savedInstanceState != null)
 			executeState(savedInstanceState);
@@ -161,11 +158,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 		mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
 		String readableName = tag.replaceAll("Fragment", "");
-		tracker.trackPageView(readableName);
-		tracker.trackEvent("Clicks", // Category
-				"Button", // Action
-				"SwitchMaps", // Label
-				0); // Value
+		mTrackerWrapper.track(readableName);
 
 		getSupportActionBar().setDisplayShowCustomEnabled(false);
 	}
