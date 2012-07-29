@@ -18,8 +18,8 @@
         <platform.version> 4.0.1.2</platform.version>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
         <project.inceptionYear>2011</project.inceptionYear>
-	  	<main.basedir>${project.basedir}</main.basedir>
-	    <project.extractDuplicates>false</project.extractDuplicates>
+	<main.basedir>${project.basedir}</main.basedir>
+	<project.extractDuplicates>false</project.extractDuplicates>
     </properties>
 
     <dependencyManagement>

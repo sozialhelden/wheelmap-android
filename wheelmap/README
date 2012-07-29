@@ -1,16 +1,15 @@
 // Preliminaries:
 Das android-maven Modul benötigt unbedingt die Maven-Version > 3.0.3
 
-Im Verzeichnis libs/ mit "sh add_jars_to_local_repository.sh" alle nicht gehosteten
-Libraries in das locale Maven-Repository aufnehmen
 
-Leider können die APKLib-Dependencies in wheelmap/pom.xml nicht automatisch von Eclipse
-eingebunden werden, sodass Eclipse rote Fehler anzeigt. Deshalb ist es nötig, diese
-Projekte manuell aus Git auszuchecken.
+APKLib-Dependencies können nicht automatisch von Eclipse eingebunden werden, sodass
+Eclipse rote Fehler anzeigt. Deshalb ist es nötig, diese Projekte manuell aus Git 
+auszuchecken und im Eclipse wheelmap Subprojekt diese Libs manuell in ADT einzutragen .
 
-git clone https://github.com/JakeWharton/ActionBarSherlock.git
-und
-git clone https://github.com/chrisbanes/Android-PullToRefresh.git
+APKLib Dependencies sind
+https://github.com/JakeWharton/ActionBarSherlock.git
+https://github.com/chrisbanes/Android-PullToRefresh.git
+https://github.com/ChristopheVersieux/HoloEverywhere.git
 
 Und als Maven-Project in Eclipse zu importieren und in der Projektkonfiguration von 
 wheelmap im Android-Tab diese Projekte als Library-Projekte einzutragen.
@@ -30,14 +29,14 @@ mvn license:add-third-party -DuseMissingFile
 mvn compile, mvn install 
 - compiliert oder baut
 
-mvn android:deploy
-- installiert auf einem verfügbaren Gerät
+mvn android:deploy 
+- im wheelmap Subprojekt installiert auf einem verfügbaren Gerät
 
 mvn android:run
-- führt das Projekt auf einem verfügbaren Gerät aus
+- im wheelmap Subprojekt führt das Projekt auf einem verfügbaren Gerät aus
 
 mvn integration-test
-- fuehrt die Instrumentation-Tests aus
+- im wheelmap-it fuehrt die Instrumentation-Tests aus
 
 Ein unsigniertes APK findet sich unter
 wheelmap/target/wheelmap-1.0-SNAPSHOT.ap_
