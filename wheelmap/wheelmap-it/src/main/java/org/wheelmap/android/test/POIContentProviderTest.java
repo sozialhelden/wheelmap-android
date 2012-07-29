@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.test;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeUnit; 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import junit.framework.Assert;
