@@ -193,7 +193,8 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
     </style>
 
-    <style name="FontSectionTitle" parent="@android:style/TextAppearance.Medium">
+    <style name="FontSectionTitle" parent="@android:style/TextAppearance.Small">
+        <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
     </style>
     
