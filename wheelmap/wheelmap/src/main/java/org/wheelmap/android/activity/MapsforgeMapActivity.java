@@ -66,12 +66,7 @@ public class MapsforgeMapActivity extends RoboSherlockFragmentActivity
 	}
 
 	public void destroyMapView(MapView mapView) {
-		for (MapView crrMapView : this.mapViews) {
-			if (crrMapView == mapView) {
-				mapView.destroy();
-				crrMapView = null;
-			}
-		}
+		mapView.destroy();
 		mapView = null;
 	}
 
