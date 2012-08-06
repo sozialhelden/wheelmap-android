@@ -24,6 +24,7 @@ package wheelmap.org.request;
 import java.net.URI;
 
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.params.CoreProtocolPNames;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -45,8 +46,11 @@ public class RequestProcessor {
 
 	public RequestProcessor() {
 		restTemplate = new RestTemplate();
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+		requestFactory.getHttpClient().getParams().setParameter(CoreProtocolPNames.USER_AGENT, "AndroidWheelmap/0.9.0");
+		
 		restTemplate
-				.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+				.setRequestFactory(requestFactory);
 		restTemplate.getMessageConverters().add(
 				new MappingJacksonHttpMessageConverter());
 
