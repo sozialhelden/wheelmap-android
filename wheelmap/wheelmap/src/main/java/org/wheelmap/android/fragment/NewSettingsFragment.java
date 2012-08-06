@@ -108,7 +108,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 			clickCategorieItem((Cursor) item);
 		} else if (item instanceof String
 				&& ((String) item).equals("deletelogin")) {
-			clickDeleteLoginData();
+			clickDeleteLoginData(adapter);
 		}
 	}
 
@@ -143,16 +143,20 @@ public class NewSettingsFragment extends SherlockListFragment implements
 				"Name = " + Support.CategoriesContent.getLocalizedName(cursor));
 	}
 
-	private void clickDeleteLoginData() {
+	private void clickDeleteLoginData(MergeAdapter adapter) {
 		UserCredentials credentials = new UserCredentials(getActivity());
 		credentials.logout();
+		adapter.notifyDataSetChanged();
 	}
 
 	private class DeleteLoginAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
+		UserCredentials credentials;
 
 		public DeleteLoginAdapter(LayoutInflater inflater) {
 			mInflater = inflater;
+			credentials = new UserCredentials(getActivity()
+					.getApplicationContext());
 		}
 
 		@Override
@@ -171,23 +175,29 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		}
 
 		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout layout = (LinearLayout) mInflater.inflate(
+					R.layout.item_settings_delete_logindata, null);
+
+			if (!credentials.isLoggedIn()) {
+				layout.setEnabled(false);
+			}
+
+			return layout;
+		}
+
+		@Override
+		public boolean areAllItemsEnabled() {
+			return false;
+		}
+
+		@Override
 		public boolean isEnabled(int position) {
-			UserCredentials credentials = new UserCredentials(getActivity()
-					.getApplicationContext());
 			if (credentials.isLoggedIn())
 				return true;
 			else
 				return false;
 		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout layout = (LinearLayout) mInflater.inflate(
-					R.layout.item_settings_delete_logindata, null);
-
-			return layout;
-		}
-
 	}
 
 	@Override
