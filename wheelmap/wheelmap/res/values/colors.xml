@@ -23,11 +23,10 @@
 
 <resources>
 
-    <color name="foreground1">#ff355689</color>
-    <color name="wheel_enabled">#ff78b13e</color>
-    <color name="wheel_limited">#ffF6AA4F</color>
-    <color name="wheel_disabled">#ffEF2F24</color>
-    <color name="wheel_unknown">#ff8F8F8F</color>
+    <color name="wheel_enabled">#FF6CB035</color>
+    <color name="wheel_limited">#FFE1B43E</color>
+    <color name="wheel_disabled">#ffC80026</color>
+    <color name="wheel_unknown">#FF737476</color>
     <color name="dark_grey_two">#FF9F9F9F</color>
     <color name="green_wheelmap_logo">#7fb63c</color>
     <color name="color_base_ng">@color/green_wheelmap_logo</color>

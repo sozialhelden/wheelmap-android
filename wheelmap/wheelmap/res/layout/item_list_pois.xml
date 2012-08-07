@@ -63,14 +63,14 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/secondary_text_light" />
+                android:textColor="?android:attr/textColorSecondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/helper_delim_dash"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/secondary_text_light" />
+                android:textColor="?android:attr/textColorSecondary" />
 
             <TextView
                 android:id="@+id/poi_nodetype"
@@ -80,7 +80,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/secondary_text_light" />
+                android:textColor="?android:attr/textColorSecondary" />
         </LinearLayout>
 
         <View
@@ -97,6 +97,6 @@
         android:layout_below="@+id/poi_name"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/secondary_text_light" />
+        android:textColor="?android:attr/textColorSecondary" />
 
 </RelativeLayout>
