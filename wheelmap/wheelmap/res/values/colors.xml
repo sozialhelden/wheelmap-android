@@ -23,12 +23,12 @@
 
 <resources>
 
-    <color name="wheel_enabled">#FF6CB035</color>
-    <color name="wheel_limited">#FFE1B43E</color>
-    <color name="wheel_disabled">#ffC80026</color>
-    <color name="wheel_unknown">#FF737476</color>
+    <color name="wheel_enabled">#FF86AF4d</color>
+    <color name="wheel_limited">#FFF19D46</color>
+    <color name="wheel_disabled">#FFD6382F</color>
+    <color name="wheel_unknown">#FF8D8D8E</color>
     <color name="dark_grey_two">#FF9F9F9F</color>
-    <color name="green_wheelmap_logo">#7fb63c</color>
+    <color name="green_wheelmap_logo">#FF6DB135</color>
     <color name="color_base_ng">@color/green_wheelmap_logo</color>
     <color name="seperator_color_dark_a">#FFC6C6C6</color>
     <color name="seperator_color_dark_b">#FFE6E6E6</color>
