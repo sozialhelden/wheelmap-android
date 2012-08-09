@@ -25,7 +25,7 @@
     style="@style/ListItemContainer"
     android:background="@drawable/item_pressable_background"
     android:paddingTop="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_medium" >
+    android:paddingBottom="@dimen/padding_large" >
 
     <TextView
         android:layout_width="wrap_content"
