@@ -159,4 +159,7 @@
     <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.</string>
     <string name="error_newpoi_title">New Location created!</string>
     <string name="error_newpoi_message">The new location will be verified before it shows up in the database. This will take some time.</string>
+    <string name="settings_unit_preference">Distance Unit</string>
+    <string name="settings_unit_imperial">Imperial</string>
+    <string name="settings_unit_metric">Metric</string>
 </resources>

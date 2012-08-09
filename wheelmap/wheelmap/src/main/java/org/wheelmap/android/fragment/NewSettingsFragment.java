@@ -3,6 +3,7 @@ package org.wheelmap.android.fragment;
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
 import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserCredentials;
@@ -36,6 +37,8 @@ public class NewSettingsFragment extends SherlockListFragment implements
 	private static final int LOADER_ID_LIST = 0;
 	private Uri mUri = Support.CategoriesContent.CONTENT_URI;
 	private SharedPreferences mPrefs;
+	private final static Object ADAPTER_ITEM_UNIT_PREFERENCE = new Object();
+	private final static Object ADAPTER_ITEM_DELETE_LOGIN = new Object();
 
 	private CategorySelectCursorAdapter mAdapterCatList;
 	private MergeAdapter mAdapter;
@@ -64,6 +67,10 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		mAdapter.addView(createSectionTitle(inflater,
 				R.string.settings_category_filter));
 		mAdapter.addAdapter(mAdapterCatList);
+
+		mAdapter.addView(createSectionTitle(inflater,
+				R.string.settings_unit_preference));
+		mAdapter.addAdapter(new UnitAdapter(inflater));
 		mAdapter.addView(createSectionTitle(inflater,
 				R.string.settings_login_information));
 		mAdapter.addAdapter(new DeleteLoginAdapter(inflater));
@@ -106,8 +113,10 @@ public class NewSettingsFragment extends SherlockListFragment implements
 			clickWheelStateItem((WheelchairAttributes) item, adapter);
 		} else if (item instanceof Cursor) {
 			clickCategorieItem((Cursor) item);
-		} else if (item instanceof String
-				&& ((String) item).equals("deletelogin")) {
+		} else if (item == ADAPTER_ITEM_UNIT_PREFERENCE) {
+
+			clickUnitAdapter(adapter);
+		} else if (item == ADAPTER_ITEM_DELETE_LOGIN) {
 			clickDeleteLoginData(adapter);
 		}
 	}
@@ -149,6 +158,54 @@ public class NewSettingsFragment extends SherlockListFragment implements
 		adapter.notifyDataSetChanged();
 	}
 
+	private void clickUnitAdapter(MergeAdapter adapter) {
+		boolean isAnglo = mPrefs.getBoolean(
+				SupportManager.PREFS_KEY_UNIT_PREFERENCE, false);
+		mPrefs.edit()
+				.putBoolean(SupportManager.PREFS_KEY_UNIT_PREFERENCE, !isAnglo)
+				.commit();
+		adapter.notifyDataSetChanged();
+	}
+
+	private class UnitAdapter extends BaseAdapter {
+		private LayoutInflater mInflater;
+
+		public UnitAdapter(LayoutInflater inflater) {
+			mInflater = inflater;
+		}
+
+		@Override
+		public int getCount() {
+			return 1;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			return ADAPTER_ITEM_UNIT_PREFERENCE;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LinearLayout layout = (LinearLayout) mInflater.inflate(
+					R.layout.item_settings_unitpreference, null);
+
+			TextView textView = (TextView) layout.findViewById(R.id.text);
+			boolean isAnglo = mPrefs.getBoolean(
+					SupportManager.PREFS_KEY_UNIT_PREFERENCE, false);
+			if (isAnglo)
+				textView.setText(R.string.settings_unit_imperial);
+			else
+				textView.setText(R.string.settings_unit_metric);
+
+			return layout;
+		}
+	}
+
 	private class DeleteLoginAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 		UserCredentials credentials;
@@ -166,7 +223,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 
 		@Override
 		public Object getItem(int arg0) {
-			return new String("deletelogin");
+			return ADAPTER_ITEM_DELETE_LOGIN;
 		}
 
 		@Override

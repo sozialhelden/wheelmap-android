@@ -22,7 +22,9 @@
 package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.adapter.POIsListCursorAdapter;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
+import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.online.R;
@@ -45,6 +47,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
@@ -59,6 +63,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	private DisplayFragmentListener mListener;
 	private POIsListCursorAdapter mAdapter;
 	private Cursor mCursor;
+	private Bus mBus;
 
 	public POIsListFragment() {
 		super();
@@ -93,6 +98,9 @@ public class POIsListFragment extends SherlockListFragment implements
 		mPullToRefreshListView.setOnRefreshListener(this);
 		mAdapter = new POIsListCursorAdapter(getActivity(), null, false);
 		mPullToRefreshListView.getRefreshableView().setAdapter(mAdapter);
+
+		mBus = WheelmapApp.getBus();
+		mBus.register(this);
 
 		return v;
 	}
@@ -154,6 +162,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onDestroyView() {
 		super.onDestroyView();
 		mWorkerFragment.unregisterDisplayFragment(this);
+		mBus.unregister(this);
 	}
 
 	@Override
@@ -276,6 +285,12 @@ public class POIsListFragment extends SherlockListFragment implements
 	@Override
 	public void setCurrentLocation(Location location) {
 
+	}
+
+	@Subscribe
+	public void onDistanceUnitChanged(DistanceUnitChangedEvent e) {
+		Log.d(TAG, "onDistanceUnitChanged");
+		mAdapter.changeAdapter();
 	}
 
 }

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.PrefKey;
@@ -43,6 +44,7 @@ import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.GeocoordinatesMath;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentResolver;
@@ -50,6 +52,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -58,6 +61,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+
+import com.squareup.otto.Bus;
+
 import de.akquinet.android.androlog.Log;
 
 public class SupportManager {
@@ -69,6 +75,7 @@ public class SupportManager {
 	private Drawable[] mWheelDrawables;
 
 	private DetachableResultReceiver mStatusSender;
+	private Bus mBus;
 
 	private NodeType mDefaultNodeType;
 	private Category mDefaultCategory;
@@ -78,6 +85,9 @@ public class SupportManager {
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
+	public final static String PREFS_KEY_UNIT_PREFERENCE = "prefsUnit";
+
+	private boolean mUseAngloDistanceUnit;
 
 	public final static int UNKNOWN_TYPE = 0;
 
@@ -148,8 +158,15 @@ public class SupportManager {
 		}
 	}
 
+	public class DistanceUnitChangedEvent {
+
+	}
+
 	public SupportManager(Context ctx) {
 		mContext = ctx;
+
+		mBus = WheelmapApp.getBus();
+		mBus.register(this);
 
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
@@ -181,6 +198,13 @@ public class SupportManager {
 				mNeedsReloading = true;
 		} else
 			mNeedsReloading = true;
+
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
+		prefs.registerOnSharedPreferenceChangeListener(prefsListener);
+		mUseAngloDistanceUnit = prefs.getBoolean(PREFS_KEY_UNIT_PREFERENCE,
+				false);
+		GeocoordinatesMath.useAngloDistanceUnit(mUseAngloDistanceUnit);
 	}
 
 	public void releaseReceiver() {
@@ -194,6 +218,10 @@ public class SupportManager {
 
 	public boolean needsReloading() {
 		return mNeedsReloading;
+	}
+
+	public boolean useAngloDistanceUnit() {
+		return mUseAngloDistanceUnit;
 	}
 
 	private void initLookup() {
@@ -603,6 +631,23 @@ public class SupportManager {
 			// do nothing, as more than one file would be updated
 		}
 	}
+
+	private OnSharedPreferenceChangeListener prefsListener = new OnSharedPreferenceChangeListener() {
+
+		@Override
+		public void onSharedPreferenceChanged(SharedPreferences prefs,
+				String key) {
+			Log.d(TAG, "onPreferencesChanged: key = " + key);
+
+			if (key.equals(PREFS_KEY_UNIT_PREFERENCE)) {
+				mUseAngloDistanceUnit = prefs.getBoolean(
+						PREFS_KEY_UNIT_PREFERENCE, false);
+				GeocoordinatesMath.useAngloDistanceUnit(mUseAngloDistanceUnit);
+
+				mBus.post(new DistanceUnitChangedEvent());
+			}
+		}
+	};
 
 	static {
 		wsAttributes.put(WheelchairState.YES, new WheelchairAttributes(

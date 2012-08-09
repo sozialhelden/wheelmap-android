@@ -121,4 +121,7 @@
     <string name="error_wheelchairstate_missing_message">Bitte eine Rollstuhleignung angeben.</string>
     <string name="error_newpoi_message">Der neue Ort wird überprüft, bevor er in die Datenbank aufgenommen wird. Dies dauert eine gewisse Zeit.</string>
     <string name="error_newpoi_title">Neuer Ort angelegt!</string>
+    <string name="settings_unit_preference">Entfernungseinheit</string>
+    <string name="settings_unit_metric">Metrisch</string>
+    <string name="settings_unit_imperial">Angloamerikanisch</string>
 </resources>

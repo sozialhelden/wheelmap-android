@@ -34,7 +34,7 @@ public class GeocoordinatesMath {
 	private static final double LAT_DIST_PER_DEGREE_IN_MILES = 69;
 	private static final double EARTH_RADIUS_IN_KM = 6370;
 	private static final double EARTH_RADIUS_IN_MILES = 3956;
-	
+
 	public static DistanceUnit DISTANCE_UNIT = DistanceUnit.KILOMETRES;
 
 	public static BoundingBox calculateBoundingBox(Wgs84GeoCoordinates point,
@@ -75,5 +75,13 @@ public class GeocoordinatesMath {
 										* Math.PI / 180 / 2), 2)));
 
 		return distance;
+	}
+
+	public static void useAngloDistanceUnit(boolean mUseAngloDistanceUnit) {
+		if (mUseAngloDistanceUnit)
+			DISTANCE_UNIT = DistanceUnit.MILES;
+		else
+			DISTANCE_UNIT = DistanceUnit.KILOMETRES;
+
 	}
 }

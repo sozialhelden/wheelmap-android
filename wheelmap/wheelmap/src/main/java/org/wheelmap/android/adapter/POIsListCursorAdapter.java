@@ -26,8 +26,6 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
-import org.wheelmap.android.utils.GeocoordinatesMath;
-import org.wheelmap.android.utils.GeocoordinatesMath.DistanceUnit;
 import org.wheelmap.android.view.POIsListItemView;
 
 import wheelmap.org.WheelchairState;
@@ -40,16 +38,24 @@ import android.view.ViewGroup;
 import de.akquinet.android.androlog.Log;
 
 public class POIsListCursorAdapter extends CursorAdapter {
-	private final static String TAG = "poislist";
+	private final static String TAG = POIsListCursorAdapter.class
+			.getSimpleName();
 	private DistanceFormatter mDistanceFormatter;
 
 	public POIsListCursorAdapter(Context context, Cursor cursor,
 			boolean autorequery) {
 		super(context, cursor, autorequery);
-		if (GeocoordinatesMath.DISTANCE_UNIT == DistanceUnit.KILOMETRES)
-			mDistanceFormatter = new DistanceFormatterMetric();
-		else
+		changeAdapter();
+	}
+
+	public void changeAdapter() {
+		SupportManager sm = WheelmapApp.getSupportManager();
+		if (sm.useAngloDistanceUnit())
 			mDistanceFormatter = new DistanceFormatterAnglo();
+		else
+			mDistanceFormatter = new DistanceFormatterMetric();
+
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -112,7 +118,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		@Override
 		public String format(double distance) {
 			if (distance < 1.0)
-				return String.format("%0.2fmi", distance);
+				return String.format("%01.2fmi", distance);
 			else
 				return String.format("%.1fmi", distance);
 		}
