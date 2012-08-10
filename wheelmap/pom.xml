@@ -21,6 +21,12 @@
 	    <main.basedir>${project.basedir}</main.basedir>
 	    <project.extractDuplicates>false</project.extractDuplicates>
     </properties>
+    
+    <scm>
+      <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
+  	  <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
+  	  <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</developerConnection>
+    </scm>  
 
     <dependencyManagement>
         <dependencies>
