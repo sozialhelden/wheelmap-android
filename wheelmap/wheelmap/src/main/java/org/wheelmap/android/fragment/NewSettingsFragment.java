@@ -43,10 +43,13 @@ public class NewSettingsFragment extends SherlockListFragment implements
 	private CategorySelectCursorAdapter mAdapterCatList;
 	private MergeAdapter mAdapter;
 
+	private UserCredentials mCredentials;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		mCredentials = new UserCredentials(getActivity());
 		mAdapterCatList = new CategorySelectCursorAdapter(getActivity(), null,
 				false);
 	}
@@ -153,8 +156,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 	}
 
 	private void clickDeleteLoginData(MergeAdapter adapter) {
-		UserCredentials credentials = new UserCredentials(getActivity());
-		credentials.logout();
+		mCredentials.logout();
 		adapter.notifyDataSetChanged();
 	}
 
@@ -208,12 +210,9 @@ public class NewSettingsFragment extends SherlockListFragment implements
 
 	private class DeleteLoginAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
-		UserCredentials credentials;
 
 		public DeleteLoginAdapter(LayoutInflater inflater) {
 			mInflater = inflater;
-			credentials = new UserCredentials(getActivity()
-					.getApplicationContext());
 		}
 
 		@Override
@@ -233,14 +232,20 @@ public class NewSettingsFragment extends SherlockListFragment implements
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout layout = (LinearLayout) mInflater.inflate(
-					R.layout.item_settings_delete_logindata, null);
 
-			if (!credentials.isLoggedIn()) {
-				layout.setEnabled(false);
+			View view;
+			if (mCredentials.isLoggedIn()) {
+				view = mInflater.inflate(R.layout.item_settings_login_delete,
+						null);
+
+				TextView tView = (TextView) view.findViewById(R.id.login_text);
+				tView.setText(mCredentials.getLogin() + ".");
+			} else {
+				view = mInflater.inflate(
+						R.layout.item_settings_login_notsignedin, null);
 			}
 
-			return layout;
+			return view;
 		}
 
 		@Override
@@ -250,7 +255,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 
 		@Override
 		public boolean isEnabled(int position) {
-			if (credentials.isLoggedIn())
+			if (mCredentials.isLoggedIn())
 				return true;
 			else
 				return false;

@@ -24,15 +24,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ListItemContainer"
     android:background="@drawable/item_pressable_background"
-    android:paddingTop="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_large" >
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/padding_large"
+    android:paddingLeft="@dimen/padding_medium"
+    android:paddingRight="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_medium" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings_delete_logindata"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium" />
+        android:text="@string/settings_login_signedinas"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/login_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_login_delete"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

@@ -119,7 +119,6 @@
     <string name="search_no_selection">All</string>
     <string name="search_pick_category">Pick a (sub)category</string>
     <string name="search_execute">Search</string>
-    <string name="settings_delete_logindata">Delete Email and Password</string>
     <string name="title_pois_detail_edit">Edit the point of interest</string>
     <string name="title_pois_position_edit">Location Positioning</string>
     <string name="search_distance">Distance in km</string>
@@ -140,7 +139,7 @@
     <string name="error_login_failed">Login Failed</string>
     <string name="helper_delim_dash">\ - \</string>
     <string name="position_geopoint">Location</string>
-    <string name="settings_login_information">Login Information</string>
+    <string name="settings_login_information">Signed In?</string>
     <string name="info_wheelmap_android_one">Wheelmap Android:</string>
     <string name="info_wheelmap_android_two">Version</string>
     <string name="settings_wheelchair_unknown">Unknown</string>
@@ -162,4 +161,7 @@
     <string name="settings_unit_preference">Distance Unit</string>
     <string name="settings_unit_imperial">Imperial</string>
     <string name="settings_unit_metric">Metric</string>
+    <string name="settings_login_delete">Click to delete this sign in.</string>
+    <string name="settings_login_notsignedin">You are not signed in.</string>
+    <string name="settings_login_signedinas">You are signed in as</string>
 </resources>

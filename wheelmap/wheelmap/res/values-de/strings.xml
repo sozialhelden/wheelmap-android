@@ -86,7 +86,6 @@
     <string name="title_search">Suche</string>
     <string name="search_no_selection">Alle</string>
     <string name="search_execute">Suchen</string>
-    <string name="settings_delete_logindata">Löschen von Email und Passwort</string>
     <string name="title_pois_detail_edit">Editieren des Ortes</string>
     <string name="title_pois_position_edit">Positionierung des Ortes</string>
     <string name="search_distance">Entfernung in km</string>
@@ -107,7 +106,7 @@
     <string name="menu_save">Sichern</string>
     <string name="error_login_failed">Einloggen fehlgeschlagen</string>
     <string name="position_geopoint">Ort</string>
-    <string name="settings_login_information">Login Information</string>
+    <string name="settings_login_information">Angemeldet?</string>
     <string name="settings_wheelchair_unknown">Unbekannt</string>
     <string name="settings_wheelchair_yes">Ja</string>
     <string name="settings_wheelchair_limited">Teilweise</string>
@@ -124,4 +123,7 @@
     <string name="settings_unit_preference">Entfernungseinheit</string>
     <string name="settings_unit_metric">Metrisch</string>
     <string name="settings_unit_imperial">Angloamerikanisch</string>
+    <string name="settings_login_delete">Klicken sie, um diese Anmeldung zu löschen.</string>
+    <string name="settings_login_notsignedin">Sie sind nicht angemeldet.</string>
+    <string name="settings_login_signedinas">Sie sind angemeldet als</string>
 </resources>
