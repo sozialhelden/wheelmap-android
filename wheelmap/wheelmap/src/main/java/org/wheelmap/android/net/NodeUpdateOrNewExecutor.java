@@ -146,7 +146,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 	private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
 		String id = POIHelper.getWMId(mCursor);
 		WheelchairState state = POIHelper.getWheelchair(mCursor);
-		return new WheelchairUpdateRequestBuilder(SERVER, apiKey,
+		return new WheelchairUpdateRequestBuilder(getServer(), apiKey,
 				AcceptType.JSON, id, state);
 	}
 
@@ -180,7 +180,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String website = POIHelper.getWebsite(mCursor);
 		String phone = POIHelper.getPhone(mCursor);
 
-		return new NodeUpdateOrNewAllRequestBuilder(SERVER_STAGING, apiKey,
+		return new NodeUpdateOrNewAllRequestBuilder(getServer(), apiKey,
 				AcceptType.JSON, id, name, category, nodeType, latitude,
 				longitude, state, comment, street, housenumber, city, postcode,
 				website, phone);

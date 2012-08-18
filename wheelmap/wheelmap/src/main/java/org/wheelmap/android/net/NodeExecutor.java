@@ -53,7 +53,7 @@ public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
 					SyncServiceException.ERROR_INTERNAL_ERROR,
 					new IllegalArgumentException());
 
-		requestBuilder = new NodeRequestBuilder(SERVER, getApiKey(),
+		requestBuilder = new NodeRequestBuilder(getServer(), getApiKey(),
 				AcceptType.JSON, mWMId);
 		int count = executeSingleRequest(requestBuilder);
 		if (count == 0)

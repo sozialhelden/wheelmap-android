@@ -19,17 +19,22 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.net;
+package org.wheelmap.android.app;
 
-import org.wheelmap.android.app.IAppProperties;
-import org.wheelmap.android.service.SyncServiceException;
+/**
+ * Global constants used in the application
+ */
+public final class Constants
+{
 
-public interface IExecutor {
-	public void prepareContent();
-	
-	
-    public String getServer();
-	public void execute() throws SyncServiceException;
-	public void prepareDatabase() throws SyncServiceException;
-	public void setAppProperties(IAppProperties appProperties);
+	private Constants()
+	{
+		// no instance
+	}
+
+	/**
+	 * Name of the File which is read to get the server url
+	 */
+	public final static String			APP_PROPERTIES_ASSETS_FILE_NAME	= "config/application.properties";
+
 }

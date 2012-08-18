@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
@@ -35,6 +36,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.google.inject.Inject;
 
 import de.akquinet.android.androlog.Log;
 
@@ -43,10 +45,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private static final String TAG = MainSinglePaneActivity.class
 			.getSimpleName();
 	private final static ArrayList<TabHolder> mIndexToTab;
+	
+	@Inject IAppProperties 	appProperties;
 
 	private final static int DEFAULT_SELECTED_TAB = 0;
 	private int mSelectedTab = DEFAULT_SELECTED_TAB;
-	private boolean mIsRecreated;
 	private TrackerWrapper mTrackerWrapper;
 
 	final static int TAB_LIST = 0;
@@ -141,12 +144,10 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	private void executeState(Bundle state) {
-		mIsRecreated = state.getBoolean(Extra.IS_RECREATED, false);
 		mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
 	}
 
 	private void executeDefaultInstanceState() {
-		mIsRecreated = false;
 		mSelectedTab = DEFAULT_SELECTED_TAB;
 	}
 
@@ -165,7 +166,6 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean(Extra.IS_RECREATED, true);
 		outState.putInt(Extra.SELECTED_TAB, mSelectedTab);
 		super.onSaveInstanceState(outState);
 	}

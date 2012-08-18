@@ -62,7 +62,7 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	public void execute() throws SyncServiceException {
 
 		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(
-				SERVER_STAGING, AcceptType.JSON);
+				getServer(), AcceptType.JSON);
 		requestBuilder.setCredentials(mEmail, mPassword);
 		String request;
 		try {

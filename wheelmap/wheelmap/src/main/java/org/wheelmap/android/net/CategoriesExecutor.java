@@ -54,7 +54,7 @@ public class CategoriesExecutor extends MultiPageExecutor<Categories> implements
 	@Override
 	public void execute() throws SyncServiceException {
 		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder(
-				SERVER, getApiKey(), AcceptType.JSON);
+				getServer(), getApiKey(), AcceptType.JSON);
 		if (mLocale != null)
 			requestBuilder.locale(mLocale);
 

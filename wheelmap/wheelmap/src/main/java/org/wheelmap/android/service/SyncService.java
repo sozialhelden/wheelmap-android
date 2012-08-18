@@ -21,12 +21,16 @@
  */
 package org.wheelmap.android.service;
 
+import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIsProvider;
 import org.wheelmap.android.net.AbstractExecutor;
 import org.wheelmap.android.net.IExecutor;
 
-import android.app.IntentService;
+import com.google.inject.Inject;
+
+import roboguice.service.RoboIntentService;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,12 +41,15 @@ import android.util.Log;
  * Background {@link Service} that synchronizes data living in
  * {@link POIsProvider}. Reads data from remote source
  */
-public class SyncService extends IntentService {
+public class SyncService extends RoboIntentService {
 	private static final String TAG = SyncService.class.getSimpleName();
 
 	public static final int STATUS_RUNNING = 0x1;
 	public static final int STATUS_ERROR = 0x2;
 	public static final int STATUS_FINISHED = 0x3;
+	
+	@Inject
+	private IAppProperties mAppProperties;
 
 	public SyncService() {
 		super(TAG);
@@ -72,7 +79,7 @@ public class SyncService extends IntentService {
 		}
 
 		IExecutor executor = AbstractExecutor.create(getApplicationContext(),
-				extras);
+				extras, mAppProperties);
 		executor.prepareContent();
 		try {
 			executor.execute();

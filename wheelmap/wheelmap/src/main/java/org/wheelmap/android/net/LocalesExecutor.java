@@ -46,7 +46,7 @@ public class LocalesExecutor extends SinglePageExecutor<Locales> implements
 	@Override
 	public void execute() throws SyncServiceException {
 		final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder(
-				SERVER, getApiKey(), AcceptType.JSON);
+				getServer(), getApiKey(), AcceptType.JSON);
 
 		clearTempStore();
 		retrieveSinglePage(requestBuilder);

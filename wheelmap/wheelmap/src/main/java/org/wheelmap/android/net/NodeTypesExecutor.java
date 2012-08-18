@@ -55,7 +55,7 @@ public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
 	@Override
 	public void execute() throws SyncServiceException {
 		NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder(
-				SERVER, getApiKey(), AcceptType.JSON);
+				getServer(), getApiKey(), AcceptType.JSON);
 		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE));
 		if (mLocale != null) {
 			requestBuilder.locale(mLocale);

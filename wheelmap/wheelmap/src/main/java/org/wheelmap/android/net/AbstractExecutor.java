@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.app.AppProperties;
+import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.service.SyncServiceException;
@@ -34,22 +36,25 @@ public abstract class AbstractExecutor implements IExecutor {
 
 	private final Context mContext;
 	private final Bundle mBundle;
-	// Testserver
-	// protected static final String SERVER = "staging.wheelmap.org";
-	// Production Server
-	protected static final String SERVER = "wheelmap.org";
-	protected static final String SERVER_STAGING = "staging.wheelmap.org";
+	private IAppProperties mAppProperties;
 
+	
 	protected final static int statusAuthRequired = 401;
 	protected final static int statusRequestForbidden = 403;
 
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
 
-	public AbstractExecutor(Context context, Bundle bundle) {
+    public AbstractExecutor(Context context, Bundle bundle) {
 		mContext = context;
 		mBundle = bundle;
 	}
+	
+	@Override
+    public void setAppProperties(IAppProperties appProperties) {
+		mAppProperties = appProperties;
+	}
+
 
 	public String getApiKey() {
 		return API_KEY;
@@ -73,7 +78,7 @@ public abstract class AbstractExecutor implements IExecutor {
 
 	public abstract void prepareDatabase() throws SyncServiceException;
 
-	public static IExecutor create(Context context, Bundle bundle) {
+	public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties) {
 		if (bundle == null || !bundle.containsKey(Extra.WHAT))
 			return null;
 
@@ -106,8 +111,15 @@ public abstract class AbstractExecutor implements IExecutor {
 		default:
 			return null; // noop no instruction, no operation;
 		}
+		executor.setAppProperties(appProperties);
 
 		return executor;
+	}
+	
+	@Override
+	public String getServer()
+	{
+		return mAppProperties.get(AppProperties.KEY_WHEELMAP_URI);
 	}
 
 	protected String getTag() {

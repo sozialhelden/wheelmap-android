@@ -15,7 +15,6 @@ public interface Extra {
 	public final static String WHEELCHAIR_STATE = "org.wheelmap.android.WHEELCHAIR_STATE";
 
 	public final static String SELECTED_TAB = "org.wheelmap.android.SELECTED_TAB";
-	public final static String IS_RECREATED = "org.wheelmap.android.IS_RECREATED";
 	public final static String CENTER_MAP = "org.wheelmap.android.CENTER_MAP";
 	public final static String FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
 	public final static String CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";

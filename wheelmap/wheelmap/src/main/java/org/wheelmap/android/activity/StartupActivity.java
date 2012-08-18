@@ -23,6 +23,7 @@ package org.wheelmap.android.activity;
 
 import java.util.List;
 
+import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
@@ -33,7 +34,10 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
-import android.app.Activity;
+import roboguice.activity.RoboActivity;
+
+import com.google.inject.Inject;
+
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
@@ -51,9 +55,12 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import de.akquinet.android.androlog.Log;
 
-public class StartupActivity extends Activity implements
+public class StartupActivity extends RoboActivity implements
 		DetachableResultReceiver.Receiver {
 	private final static String TAG = StartupActivity.class.getSimpleName();
+	
+	@Inject IAppProperties 	appProperties;
+
 
 	private State mState;
 	private SupportManager mSupportManager;

@@ -19,17 +19,9 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.net;
+package org.wheelmap.android.app;
 
-import org.wheelmap.android.app.IAppProperties;
-import org.wheelmap.android.service.SyncServiceException;
+public interface IAppProperties {
 
-public interface IExecutor {
-	public void prepareContent();
-	
-	
-    public String getServer();
-	public void execute() throws SyncServiceException;
-	public void prepareDatabase() throws SyncServiceException;
-	public void setAppProperties(IAppProperties appProperties);
+	public String get(final String key);
 }

@@ -19,17 +19,25 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.net;
+package org.wheelmap.modules;
 
+import org.wheelmap.android.app.AppProperties;
 import org.wheelmap.android.app.IAppProperties;
-import org.wheelmap.android.service.SyncServiceException;
 
-public interface IExecutor {
-	public void prepareContent();
-	
-	
-    public String getServer();
-	public void execute() throws SyncServiceException;
-	public void prepareDatabase() throws SyncServiceException;
-	public void setAppProperties(IAppProperties appProperties);
+import com.google.inject.AbstractModule;
+
+public final class MainModule extends AbstractModule
+{
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.inject.AbstractModule#configure()
+	 */
+	@Override
+	protected void configure()
+	{
+		bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();;
+		
+	}
 }

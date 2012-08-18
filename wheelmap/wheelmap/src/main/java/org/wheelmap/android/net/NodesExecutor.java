@@ -28,6 +28,7 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
+
 import wheelmap.org.BoundingBox;
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import wheelmap.org.WheelchairState;
@@ -48,7 +49,8 @@ import de.akquinet.android.androlog.Log;
 public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 		IExecutor {
 	private static final int MAX_PAGES_TO_RETRIEVE = 2;
-
+	
+	
 	private BoundingBox mBoundingBox = null;
 	private int mCategory = Extra.UNKNOWN;
 	private int mNodeType = Extra.UNKNOWN;
@@ -101,16 +103,16 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 	public void execute() throws SyncServiceException {
 		BaseNodesRequestBuilder requestBuilder;
 		if (mCategory != Extra.UNKNOWN) {
-			requestBuilder = new CategoryNodesRequestBuilder(SERVER,
+			requestBuilder = new CategoryNodesRequestBuilder(getServer(),
 					getApiKey(), AcceptType.JSON, mCategory, mSearchTerm);
 		} else if (mNodeType != Extra.UNKNOWN) {
-			requestBuilder = new NodeTypeNodesRequestBuilder(SERVER,
+			requestBuilder = new NodeTypeNodesRequestBuilder(getServer(),
 					getApiKey(), AcceptType.JSON, mNodeType, mSearchTerm);
 		} else if (mSearchTerm != null) {
-			requestBuilder = new SearchNodesRequestBuilder(SERVER, getApiKey(),
+			requestBuilder = new SearchNodesRequestBuilder(getServer(), getApiKey(),
 					AcceptType.JSON, mSearchTerm);
 		} else {
-			requestBuilder = new NodesRequestBuilder(SERVER, getApiKey(),
+			requestBuilder = new NodesRequestBuilder(getServer(), getApiKey(),
 					AcceptType.JSON);
 		}
 
@@ -131,5 +133,7 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 		PrepareDatabaseHelper.replayChangedCopies(getResolver());
 		clearTempStore();
 	}
+	
+
 
 }

@@ -1,0 +1,5 @@
+<resources>
+    <string-array name="roboguice_modules">
+        <item>org.wheelmap.modules.MainModule</item>
+    </string-array>
+</resources>
