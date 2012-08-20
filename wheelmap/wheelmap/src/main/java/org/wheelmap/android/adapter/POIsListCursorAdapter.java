@@ -115,10 +115,12 @@ public class POIsListCursorAdapter extends CursorAdapter {
 	}
 
 	private class DistanceFormatterAnglo implements DistanceFormatter {
+
 		@Override
 		public String format(double distance) {
+
 			if (distance < 1.0)
-				return String.format("%01.2fmi", distance);
+				return String.format("%2.0f0yd", distance * 176.0);
 			else
 				return String.format("%.1fmi", distance);
 		}
