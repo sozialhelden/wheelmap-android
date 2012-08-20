@@ -28,6 +28,7 @@ import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +37,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,6 +62,7 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 
 	private EditText mEmailText;
 	private EditText mPasswordText;
+	private TextView mRegisterText;
 	private ProgressBar mProgressBar;
 
 	private boolean mSyncing;
@@ -115,6 +120,14 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 		mEmailText.setOnEditorActionListener(this);
 		mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
 		mPasswordText.setOnEditorActionListener(this);
+		String formattedHtml = UtilsMisc.formatHtmlLink(
+				getString(R.string.login_link_wheelmap),
+				getString(R.string.login_link_text));
+		Log.d(TAG, "formattedHtml:" + formattedHtml);
+		Spanned spannedText = Html.fromHtml(formattedHtml);
+		mRegisterText = (TextView) dialog.findViewById(R.id.login_register);
+		mRegisterText.setText(spannedText);
+		mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());
 		load();
 		mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 

@@ -29,9 +29,9 @@ import android.database.DatabaseUtils;
 import android.util.Log;
 
 public class UtilsMisc {
-	
+
 	private static final String TAG = UtilsMisc.class.getSimpleName();
-	
+
 	public static void dumpCursorToLog(String tag, Cursor cursor) {
 		cursor.moveToFirst();
 
@@ -42,22 +42,21 @@ public class UtilsMisc {
 		}
 
 	}
-	
-	public static void closeSilently(final InputStream inStream)
-	{
-		if (inStream == null)
-		{
+
+	public static void closeSilently(final InputStream inStream) {
+		if (inStream == null) {
 			return;
 		}
 
-		try
-		{
+		try {
 			inStream.close();
-		}
-		catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			// do nothing because we close silently
 			Log.w(TAG, "cannot close inStream stream", e);
 		}
+	}
+
+	public static String formatHtmlLink(String link, String text) {
+		return String.format("<a href=\"%s\">%s</a>", link, text);
 	}
 }
