@@ -123,7 +123,6 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 		String formattedHtml = UtilsMisc.formatHtmlLink(
 				getString(R.string.login_link_wheelmap),
 				getString(R.string.login_link_text));
-		Log.d(TAG, "formattedHtml:" + formattedHtml);
 		Spanned spannedText = Html.fromHtml(formattedHtml);
 		mRegisterText = (TextView) dialog.findViewById(R.id.login_register);
 		mRegisterText.setText(spannedText);
