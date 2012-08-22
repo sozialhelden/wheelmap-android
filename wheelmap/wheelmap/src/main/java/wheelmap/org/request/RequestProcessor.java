@@ -43,17 +43,20 @@ import de.akquinet.android.androlog.Log;
 public class RequestProcessor {
 	private final static String TAG = RequestProcessor.class.getSimpleName();
 	private final RestTemplate restTemplate;
+	private HttpComponentsClientHttpRequestFactory mRequestFactory; 
 
 	public RequestProcessor() {
 		restTemplate = new RestTemplate();
-		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-		requestFactory.getHttpClient().getParams().setParameter(CoreProtocolPNames.USER_AGENT, "AndroidWheelmap/0.9.0");
+		mRequestFactory = new HttpComponentsClientHttpRequestFactory();
 		
 		restTemplate
-				.setRequestFactory(requestFactory);
+				.setRequestFactory(mRequestFactory);
 		restTemplate.getMessageConverters().add(
 				new MappingJacksonHttpMessageConverter());
-
+	}
+	
+	public void setUserAgent(String userAgent) {
+		mRequestFactory.getHttpClient().getParams().setParameter(CoreProtocolPNames.USER_AGENT, userAgent);
 	}
 
 	public <T> T get(final URI uri, Class<T> clazz) {

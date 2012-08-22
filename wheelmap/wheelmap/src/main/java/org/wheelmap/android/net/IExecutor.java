@@ -25,11 +25,12 @@ import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.service.SyncServiceException;
 
 public interface IExecutor {
-	public void prepareContent();
+	void prepareContent();
 	
 	
-    public String getServer();
-	public void execute() throws SyncServiceException;
-	public void prepareDatabase() throws SyncServiceException;
-	public void setAppProperties(IAppProperties appProperties);
+    String getServer();
+	void execute() throws SyncServiceException;
+	void prepareDatabase() throws SyncServiceException;
+	void setAppProperties(IAppProperties appProperties);
+	void setUserAgent(String userAgent);
 }

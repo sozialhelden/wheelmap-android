@@ -23,6 +23,7 @@ package org.wheelmap.modules;
 
 import org.wheelmap.android.app.AppProperties;
 import org.wheelmap.android.app.IAppProperties;
+import org.wheelmap.request.IHttpUserAgent;
 
 import com.google.inject.AbstractModule;
 
@@ -37,7 +38,8 @@ public final class MainModule extends AbstractModule
 	@Override
 	protected void configure()
 	{
-		bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();;
+		bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();
+		bind(IHttpUserAgent.class).to(HttpUserAgent.class).asEagerSingleton();;
 		
 	}
 }

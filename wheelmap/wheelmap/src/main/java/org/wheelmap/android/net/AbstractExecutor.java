@@ -26,6 +26,7 @@ import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.request.IHttpUserAgent;
 
 import wheelmap.org.request.RequestProcessor;
 import android.content.ContentResolver;
@@ -54,6 +55,12 @@ public abstract class AbstractExecutor implements IExecutor {
     public void setAppProperties(IAppProperties appProperties) {
 		mAppProperties = appProperties;
 	}
+	
+	@Override
+	public void setUserAgent(String userAgent)
+	{
+       mRequestProcessor.setUserAgent(userAgent);		
+	}
 
 
 	public String getApiKey() {
@@ -78,7 +85,7 @@ public abstract class AbstractExecutor implements IExecutor {
 
 	public abstract void prepareDatabase() throws SyncServiceException;
 
-	public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties) {
+	public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties, IHttpUserAgent httpUserAgent) {
 		if (bundle == null || !bundle.containsKey(Extra.WHAT))
 			return null;
 
@@ -112,6 +119,7 @@ public abstract class AbstractExecutor implements IExecutor {
 			return null; // noop no instruction, no operation;
 		}
 		executor.setAppProperties(appProperties);
+		executor.setUserAgent(httpUserAgent.getAppUserAgent());
 
 		return executor;
 	}
