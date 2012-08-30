@@ -19,6 +19,9 @@
         <project.inceptionYear>2011</project.inceptionYear>
 	    <main.basedir>${project.basedir}</main.basedir>
 	    <project.extractDuplicates>false</project.extractDuplicates>
+	    <github.global.server>github</github.global.server>
+        <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
+        <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
     </properties>
     
     <scm>
@@ -26,7 +29,7 @@
   	  <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
   	  <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</developerConnection>
     </scm>  
-
+   
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -78,7 +81,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1-SNAPSHOT</version>
                     <inherited>true</inherited>
                     <configuration>
                         <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
@@ -156,13 +159,23 @@
 				    		
 			 			</execution>	
 			 		</executions>
-		 		</plugin>     
+		 		</plugin>   
+ 			    <plugin>
+			      <groupId>com.github.github</groupId>
+			      <artifactId>downloads-maven-plugin</artifactId>
+			      <version>0.6</version>
+			      <configuration>
+			        <description>${project.version} release of ${project.name}</description>
+			        <override>true</override>
+			        <includeAttached>true</includeAttached>
+			      </configuration>
+			    </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
     <profiles>
-        <profile>
+         <profile>
             <id>release</id>
             <activation>
                 <property>
