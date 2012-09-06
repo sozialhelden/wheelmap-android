@@ -24,9 +24,14 @@ package org.wheelmap.android.utils;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.os.Build;
 import android.util.Log;
+import android.view.View;
 
 public class UtilsMisc {
 
@@ -59,4 +64,56 @@ public class UtilsMisc {
 	public static String formatHtmlLink(String link, String text) {
 		return String.format("<a href=\"%s\">%s</a>", link, text);
 	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void setActivatedCompat(View view, boolean activated) {
+		if (hasHoneycomb()) {
+			view.setActivated(activated);
+		}
+	}
+
+	public static boolean isGoogleTV(Context context) {
+		return context.getPackageManager().hasSystemFeature(
+				"com.google.android.tv");
+	}
+
+	public static boolean hasFroyo() {
+		// Can use static final constants like FROYO, declared in later versions
+		// of the OS since they are inlined at compile time. This is guaranteed
+		// behavior.
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+	}
+
+	public static boolean hasGingerbread() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
+	}
+
+	public static boolean hasHoneycomb() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+	}
+
+	public static boolean hasHoneycombMR1() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
+	}
+
+	public static boolean hasICS() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+	}
+
+	/*
+	 * Enable this if version 4.1 of android.jar is available in maven
+	 * repository
+	 * 
+	 * public static boolean hasJellyBean() { return Build.VERSION.SDK_INT >=
+	 * Build.VERSION_CODES.JELLY_BEAN; }
+	 */
+
+	public static boolean isTablet(Context context) {
+		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+	}
+
+	public static boolean isHoneycombTablet(Context context) {
+		return hasHoneycomb() && isTablet(context);
+	}
+
 }
