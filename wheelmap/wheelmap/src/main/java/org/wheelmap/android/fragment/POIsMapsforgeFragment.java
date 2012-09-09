@@ -32,6 +32,7 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.MyLocationOverlay;
@@ -40,6 +41,7 @@ import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
@@ -84,6 +86,21 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private DisplayFragmentListener mListener;
 
 	private Bundle mDeferredExecuteBundle;
+
+	public static POIsMapsforgeFragment newInstance(boolean createWorker,
+			boolean disableSearch) {
+		POIsMapsforgeFragment f = new POIsMapsforgeFragment();
+		Bundle b = new Bundle();
+		b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
+		b.putBoolean(Extra.DISABLE_SEARCH, disableSearch);
+
+		f.setArguments(b);
+		return f;
+	}
+
+	public POIsMapsforgeFragment() {
+		// noop
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -146,6 +163,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		if (getArguments() == null
 				|| getArguments()
 						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+			Log.d(TAG, "Creating Worker Fragment");
 			FragmentManager fm = getFragmentManager();
 			Fragment fragment = (POIsMapsforgeWorkerFragment) fm
 					.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
@@ -158,6 +176,16 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			}
 			mWorkerFragment = (WorkerFragment) fragment;
 			mWorkerFragment.registerDisplayFragment(this);
+		} else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+				false)) {
+			Log.d(TAG, "Connecting to Combined Worker Fragment");
+			FragmentManager fm = getFragmentManager();
+			Fragment fragment = fm
+					.findFragmentByTag(CombinedWorkerFragment.TAG);
+			mWorkerFragment = (WorkerFragment) fragment;
+			mWorkerFragment.registerDisplayFragment(this);
+			Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+
 		}
 
 		if (savedInstanceState != null)
@@ -288,6 +316,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.ab_map_fragment, menu);
+		if (getArguments().containsKey(Extra.DISABLE_SEARCH))
+			menu.removeItem(R.id.menu_search);
 	}
 
 	@Override
@@ -396,13 +426,15 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			return;
 
 		mCursor = cursor;
-		mPoisItemizedOverlay.setCursor(cursor);
+		mPoisItemizedOverlay.setCursor(mCursor);
+		markItemClear();
 	}
 
 	@Override
-	public void onTap(OverlayItem item, long poiId) {
+	public void onTap(OverlayItem item, ContentValues values) {
+		markItem(values, false);
 		if (mListener != null)
-			mListener.onShowDetail(poiId);
+			mListener.onShowDetail(this, values);
 	}
 
 	private void showSearch() {
@@ -424,7 +456,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void onUpdate(WorkerFragment fragment) {
-		setCursor(fragment.getCursor());
+		setCursor(fragment.getCursor(WorkerFragment.MAP_CURSOR));
 
 		if (mListener != null)
 			mListener.onRefreshing(fragment.isRefreshing());
@@ -439,4 +471,16 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		centerMap(mLastGeoPointE6, false);
 	}
 
+	public void markItem(ContentValues values, boolean centerToItem) {
+		GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
+				values.getAsDouble(POIs.LONGITUDE));
+		mCurrLocationOverlay.setItem(point);
+		if (centerToItem) {
+			centerMap(point, true);
+		}
+	}
+
+	public void markItemClear() {
+		mCurrLocationOverlay.unsetItem();
+	}
 }

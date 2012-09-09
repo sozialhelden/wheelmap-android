@@ -23,6 +23,8 @@ package org.wheelmap.android.overlays;
 
 import org.mapsforge.android.maps.overlay.OverlayItem;
 
+import android.content.ContentValues;
+
 public interface OnTapListener {
-	public void onTap(OverlayItem item, long poiId);
+	public void onTap(OverlayItem item, ContentValues values);
 }

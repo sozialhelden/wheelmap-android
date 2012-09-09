@@ -33,11 +33,9 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import roboguice.activity.RoboActivity;
-
-import com.google.inject.Inject;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
@@ -53,14 +51,17 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+
+import com.google.inject.Inject;
+
 import de.akquinet.android.androlog.Log;
 
 public class StartupActivity extends RoboActivity implements
 		DetachableResultReceiver.Receiver {
 	private final static String TAG = StartupActivity.class.getSimpleName();
-	
-	@Inject IAppProperties 	appProperties;
 
+	@Inject
+	IAppProperties appProperties;
 
 	private State mState;
 	private SupportManager mSupportManager;
@@ -182,10 +183,15 @@ public class StartupActivity extends RoboActivity implements
 	}
 
 	private void startupApp() {
-		Intent intent = new Intent(getApplicationContext(),
-				org.wheelmap.android.activity.MainSinglePaneActivity.class);
-		// Intent intent = new Intent(getApplicationContext(),
-		// POIsListActivity.class);
+		Intent intent;
+
+		if (UtilsMisc.isTablet(getApplicationContext()))
+			intent = new Intent(getApplicationContext(),
+					MainMultiPaneActivity.class);
+		else
+			intent = new Intent(getApplicationContext(),
+					MainSinglePaneActivity.class);
+
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

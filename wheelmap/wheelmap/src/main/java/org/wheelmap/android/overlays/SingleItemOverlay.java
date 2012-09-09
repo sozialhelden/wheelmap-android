@@ -24,14 +24,17 @@ package org.wheelmap.android.overlays;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.manager.SupportManager.NodeType;
-import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.model.Wheelmap.POIs;
 
 import wheelmap.org.WheelchairState;
+import android.content.ContentValues;
 import android.graphics.drawable.Drawable;
 
 public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 	private OverlayItem item;
+	private ContentValues itemValues;
 	private int items;
 	private OnTapListener mListener;
 
@@ -41,17 +44,17 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 		mListener = listener;
 	}
 
-	public void setItem(String title, String snippet, NodeType nodeType,
-			WheelchairState state, double latitude, double longitude) {
-
-		Drawable marker = nodeType.stateDrawables.get(state);
-		item = new OverlayItem();
-		item.setTitle(title);
-		item.setSnippet(snippet);
+	public void setItem(ContentValues values) {
+		itemValues = values;
+		SupportManager sup = WheelmapApp.getSupportManager();
+		Drawable marker = sup.lookupNodeType(values
+				.getAsInteger(POIs.NODETYPE_ID)).stateDrawables
+				.get(WheelchairState.myValueOf(values.getAsString(POIs.STATE)));
+		item.setTitle(values.getAsString(POIs.NAME));
+		item.setSnippet(values.getAsString(POIs.DESCRIPTION));
 		item.setMarker(marker);
-		item.setPoint(new GeoPoint(latitude, longitude));
-		items = 1;
-
+		item.setPoint(new GeoPoint(values.getAsDouble(POIs.LATITUDE), values
+				.getAsDouble(POIs.LONGITUDE)));
 		populate();
 	}
 
@@ -70,7 +73,7 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public boolean onTap(int index) {
 		if (mListener != null) {
-			mListener.onTap(item, Extra.ID_UNKNOWN);
+			mListener.onTap(item, itemValues);
 			return true;
 		}
 

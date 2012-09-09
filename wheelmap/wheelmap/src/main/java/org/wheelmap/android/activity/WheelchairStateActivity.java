@@ -45,7 +45,9 @@ public class WheelchairStateActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+		if (getSupportActionBar() != null)
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
 		mFragment = (WheelchairStateFragment) fm

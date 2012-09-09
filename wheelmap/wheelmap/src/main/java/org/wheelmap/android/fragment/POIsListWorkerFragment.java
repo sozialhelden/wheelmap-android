@@ -273,7 +273,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public Cursor getCursor() {
+	public Cursor getCursor(int id) {
 		return mCursor;
 	}
 

@@ -33,6 +33,7 @@ public class LegalNoticeActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment_legalnotice);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		if (getSupportActionBar() != null)
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 }

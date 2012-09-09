@@ -30,6 +30,14 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+    
+    <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap">
+        
+    </style>
+    
+    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.wheelmap">
+        
+    </style>
 
     <style name="TitleBarNew">
         <item name="android:id">@id/title_container</item>
@@ -116,14 +124,14 @@
         <item name="android:paddingLeft">@dimen/margin_huge</item>
     </style>
 
-    <style name="ListItemContainer">
+    <style name="Container.ListItem">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
         <!-- item name="android:paddingRight">@dimen/padding_large</item -->
         <!-- item name="android:paddingLeft">@dimen/padding_small</item -->
     </style>
 
-    <style name="Container">
+    <style name="Container" parent="@style/Theme.wheelmap">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

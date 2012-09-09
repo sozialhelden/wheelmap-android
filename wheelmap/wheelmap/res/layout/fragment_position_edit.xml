@@ -34,10 +34,13 @@
         </TextView>
     </LinearLayout>
 
-    <org.mapsforge.android.maps.MapView
-        android:id="@+id/map"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        ramCacheSize="0" />
+    <LinearLayout style="@style/Container.Content" >
+
+        <org.mapsforge.android.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            ramCacheSize="0" />
+    </LinearLayout>
 
 </LinearLayout>

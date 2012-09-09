@@ -46,8 +46,10 @@ import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.app.Activity;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -122,6 +124,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private MapController mapController;
 
 	private long poiId;
+	private ContentValues poiValues;
 
 	private final static int ACTION_PROVIDER_DIRECTIONS = 0;
 	private final static int ACTION_PROVIDER_SHARE = 1;
@@ -136,8 +139,15 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		Bundle bundle = new Bundle();
 		bundle.putLong(Extra.POI_ID, id);
+		bundle.putBoolean(Extra.SHOW_MAP, true);
 		POIDetailFragment f = new POIDetailFragment();
 		f.setArguments(bundle);
+		return f;
+	}
+
+	public static POIDetailFragment newInstance() {
+		POIDetailFragment f = new POIDetailFragment();
+		f.setArguments(new Bundle());
 		return f;
 	}
 
@@ -157,6 +167,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		mCap = WheelmapApp.getCapabilityLevel();
 		mWSAttributes = SupportManager.wsAttributes;
+
 		poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
 	}
 
@@ -165,6 +176,12 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_detail, container, false);
 
+		if (getArguments().containsKey(Extra.SHOW_MAP))
+			showMap(v);
+		return v;
+	}
+
+	private void showMap(View v) {
 		int stubId;
 		if (mCap == Capability.DEGRADED_MAX)
 			stubId = R.id.stub_button;
@@ -178,15 +195,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			assignButton(v);
 		else
 			assignMapView(v);
-
-		return v;
-
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		stateLayout.setOnClickListener(this);
 	}
 
 	private void assignMapView(View v) {
@@ -205,10 +213,17 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		stateLayout.setOnClickListener(this);
+		if (poiId == Extra.ID_UNKNOWN)
+			stateLayout.setVisibility(View.INVISIBLE);
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		getLoaderManager().initLoader(LOADER_CONTENT, getArguments(), this);
-
+		getLoaderManager().initLoader(LOADER_CONTENT, null, this);
 	}
 
 	@Override
@@ -315,7 +330,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	@Override
-	public void onTap(OverlayItem item, long id) {
+	public void onTap(OverlayItem item, ContentValues values) {
 
 		if (mListener != null) {
 			mListener.onShowLargeMapAt(item.getPoint());
@@ -324,6 +339,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
+		if (poiId == Extra.ID_UNKNOWN)
+			poiId = 0;
+
 		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiId);
 		return new CursorLoader(getActivity(), uri, null, null, null, null);
 	}
@@ -357,6 +375,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		SupportManager sm = WheelmapApp.getSupportManager();
 
 		NodeType nodeType = sm.lookupNodeType(nodeTypeId);
+		stateLayout.setVisibility(View.VISIBLE);
 		setWheelchairState(state);
 		if (name != null && name.length() > 0)
 			nameText.setText(name);
@@ -386,7 +405,12 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		fillShareActionProvider(wmIdString, name, nodeType.localizedName,
 				comment, address, website);
 
-		if (mCap == Capability.DEGRADED_MAX) {
+		poiValues = new ContentValues();
+		DatabaseUtils.cursorRowToContentValues(c, poiValues);
+
+		if (!getArguments().containsKey(Extra.SHOW_MAP))
+			return;
+		else if (mCap == Capability.DEGRADED_MAX) {
 			mMapButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -398,12 +422,13 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			});
 		} else {
 			SingleItemOverlay overlay = new SingleItemOverlay(this);
-			overlay.setItem(name, comment, nodeType, state, latitude, longitude);
+			overlay.setItem(poiValues);
 			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
 			mapView.getOverlays().add(overlay);
 			mapController.setCenter(new GeoPoint(latitude, longitude));
 		}
+
 	}
 
 	private void setWheelchairState(WheelchairState newState) {
@@ -498,6 +523,11 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			ShareActionProvider provider) {
 		if (intentSaved.containsKey(apKey))
 			provider.setShareIntent(intentSaved.get(apKey));
+	}
+
+	public void showDetail(long id) {
+		poiId = id;
+		getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
 	}
 
 }

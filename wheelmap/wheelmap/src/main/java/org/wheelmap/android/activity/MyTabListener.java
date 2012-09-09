@@ -75,7 +75,7 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 
 		if (mFragment == null) {
 			mFragment = SherlockFragment.instantiate(mActivity,
-					mClass.getName(), null);
+					mClass.getName(), new Bundle());
 			FragmentManager fm = mActivity.getSupportFragmentManager();
 			fm.beginTransaction()
 					.replace(android.R.id.content, mFragment, mTag.name)

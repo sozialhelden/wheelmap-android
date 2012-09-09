@@ -127,4 +127,5 @@
     <string name="settings_login_notsignedin">Sie sind nicht angemeldet.</string>
     <string name="settings_login_signedinas">Sie sind angemeldet als</string>
     <string name="login_link_text">Registrieren bei Wheelmap.org</string>
+    <string name="title_editor">Editor</string>
 </resources>

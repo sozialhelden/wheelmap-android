@@ -33,6 +33,7 @@ public class NewSettingsActivity extends SherlockFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment_settings);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		if (getSupportActionBar() != null)
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 }

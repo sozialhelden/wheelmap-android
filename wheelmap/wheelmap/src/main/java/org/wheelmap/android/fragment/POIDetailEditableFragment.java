@@ -266,6 +266,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.ab_detaileditable_fragment, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override

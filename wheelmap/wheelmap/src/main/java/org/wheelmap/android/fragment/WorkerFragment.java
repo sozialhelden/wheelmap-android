@@ -25,6 +25,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 public interface WorkerFragment {
+	public static final int LIST_CURSOR = 0;
+	public static final int MAP_CURSOR = 1;
+
 	public void registerDisplayFragment(DisplayFragment fragment);
 
 	public void unregisterDisplayFragment(DisplayFragment fragment);
@@ -33,7 +36,7 @@ public interface WorkerFragment {
 
 	public void requestSearch(Bundle bundle);
 
-	public Cursor getCursor();
+	public Cursor getCursor(int id);
 
 	public boolean isRefreshing();
 

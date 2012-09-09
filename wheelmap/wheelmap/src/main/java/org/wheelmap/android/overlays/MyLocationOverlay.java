@@ -29,9 +29,10 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 
 public class MyLocationOverlay extends CircleOverlay<OverlayCircle> {
-	OverlayCircle mCircleLarge, mCircleSmall;
+	OverlayCircle mCircleLarge, mCircleSmall, mCircleMed;
+	private int itemCount = 0;
 	private final static float RADIUS_SMALL_CIRCLE = 2.0f;
-	private final static int NUMBER_OF_CIRCLES = 2;
+	private final static float RADIUS_MED_CIRCLE = 8.0f;
 
 	public MyLocationOverlay() {
 		super(null, null);
@@ -54,24 +55,39 @@ public class MyLocationOverlay extends CircleOverlay<OverlayCircle> {
 
 		mCircleLarge = new OverlayCircle(fillPaintDark, outlinePaintDark);
 		mCircleSmall = new OverlayCircle(fillPaintLight, outlinePaintLight);
+		mCircleMed = new OverlayCircle(fillPaintDark, outlinePaintDark);
 	}
 
 	public void setLocation(GeoPoint center, float radius) {
 		mCircleLarge.setCircleData(center, radius);
 		mCircleSmall.setCircleData(center, RADIUS_SMALL_CIRCLE);
+		itemCount = 2;
+		populate();
+	}
+
+	public void setItem(GeoPoint center) {
+		mCircleMed.setCircleData(center, RADIUS_MED_CIRCLE);
+		itemCount = 3;
+		populate();
+	}
+
+	public void unsetItem() {
+		itemCount = 2;
 		populate();
 	}
 
 	@Override
 	public int size() {
-		return NUMBER_OF_CIRCLES;
+		return itemCount;
 	}
 
 	@Override
 	protected OverlayCircle createCircle(int i) {
-		if (i == 1)
+		if (i == 0)
 			return mCircleLarge;
-		else
+		else if (i == 1)
 			return mCircleSmall;
+		else
+			return mCircleMed;
 	}
 }

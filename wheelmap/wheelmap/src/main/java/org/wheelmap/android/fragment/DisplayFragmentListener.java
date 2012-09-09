@@ -21,8 +21,11 @@
  */
 package org.wheelmap.android.fragment;
 
+import android.content.ContentValues;
+import android.support.v4.app.Fragment;
+
 public interface DisplayFragmentListener {
-	public void onShowDetail(long id);
+	public void onShowDetail(Fragment fragment, ContentValues locationData);
 
 	public void onRefreshing(boolean isRefreshing);
 }

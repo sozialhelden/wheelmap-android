@@ -22,7 +22,7 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ListItemContainer"
+    style="@style/Container.ListItem"
     android:background="@drawable/item_pressable_background"
     android:paddingBottom="@dimen/padding_large"
     android:paddingTop="@dimen/padding_medium" >

@@ -166,4 +166,5 @@
     <string name="settings_login_signedinas">You are signed in as</string>
     <string name="login_link_wheelmap">http://wheelmap.org/users/sign_up</string>
     <string name="login_link_text">Register at Wheelmap.org</string>
+    <string name="title_editor">Editor</string>
 </resources>

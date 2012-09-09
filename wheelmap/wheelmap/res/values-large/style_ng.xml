@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.Wheelmap.Dialog">
+        
+    </style>
+    
+    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.Wheelmap.ActionbarDialog">
+        
+    </style>
+    
+    <style name="Theme.Wheelmap.ActionbarDialog" parent="@style/Theme.Wheelmap.Dialog">   
+        <item name="android:windowIsFloating">false</item>
+    	<item name="android:windowContentOverlay">@null</item>
+    	<item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+   		<item name="android:windowActionModeOverlay">true</item>
+	    <item name="android:windowIsTranslucent">true</item>
+    </style>
+    
+    <style name="Theme.Wheelmap.Dialog" parent="@style/Theme.Sherlock.Light.Dialog">    
+       	<item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
+        <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
+        <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+        <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
+        <item name="actionDropDownStyle">@style/wheelmap_DropDownNav</item>
+        <item name="actionBarStyle">@style/wheelmap_solid_ActionBar</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
+        <item name="android:popupMenuStyle">@style/wheelmap_PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+        <item name="android:actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
+        <item name="android:actionDropDownStyle">@style/wheelmap_DropDownNav</item>
+        <item name="android:actionBarStyle">@style/wheelmap_solid_ActionBar</item>
+        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
+    </style>
+
+</resources>

@@ -33,6 +33,7 @@ import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import wheelmap.org.WheelchairState;
 import android.os.Bundle;
@@ -40,6 +41,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Window;
+
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableActivity extends MapsforgeMapActivity implements
@@ -57,7 +64,13 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		super.onCreate(savedInstanceState);
 
 		setExternalEditableState(savedInstanceState);
+
+		if (UtilsMisc.isTablet(getApplicationContext())) {
+			showAsPopup(this);
+		}
+
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 
@@ -74,6 +87,20 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		fm.beginTransaction()
 				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
 				.commit();
+	}
+
+	private void showAsPopup(SherlockFragmentActivity activity) {
+		activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		activity.getWindow().setFlags(
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+		LayoutParams params = activity.getWindow().getAttributes();
+		params.height = LayoutParams.WRAP_CONTENT;
+		params.width = 600;
+		params.alpha = 1.0f;
+		params.dimAmount = 0.5f;
+		activity.getWindow().setAttributes(
+				(android.view.WindowManager.LayoutParams) params);
 	}
 
 	@Override

@@ -39,6 +39,7 @@ public interface Extra {
 	public final static String CENTER_MAP = "org.wheelmap.android.CENTER_MAP";
 	public final static String FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
 	public final static String CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
+	public static final String DISABLE_SEARCH = "org.wheelmap.android.DISABLE_SEARCH";
 
 	public static final String ZOOM_MAP = "org.wheelmap.android.CENTER_ZOOM";
 	public static final String EXPLICIT_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
@@ -46,6 +47,7 @@ public interface Extra {
 
 	public final static String SHOW_DISTANCE = "org.wheelmap.android.SHOW_DISTANCE";
 	public final static String SHOW_MAP_HINT = "org.wheelmap.android.SHOW_MAP_HINT";
+	public static final String SHOW_MAP = "org.wheelmap.android.SHOW_MAP";
 
 	public static final String TEMPORARY_STORED = "org.wheelmap.android.TEMPORARY_STORED";
 

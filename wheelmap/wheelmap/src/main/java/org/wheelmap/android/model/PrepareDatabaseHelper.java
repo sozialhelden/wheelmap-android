@@ -42,13 +42,18 @@ public class PrepareDatabaseHelper {
 
 	}
 
-	private static void addCopyDefaultValues(ContentValues values) {
+	private static void addCopyDefaultValues(ContentValues values,
+			boolean retain) {
 		values.put(POIs.TAG, POIs.TAG_COPY);
-		values.put(POIs.STATE, POIs.STATE_UNCHANGED);
+		if (!retain)
+			values.put(POIs.STATE, POIs.STATE_UNCHANGED);
+		else
+			values.put(POIs.STATE, POIs.STATE_CHANGED);
 		values.put(POIs.DIRTY, POIs.CLEAN);
 	}
 
-	public static long createCopyIfNotExists(ContentResolver resolver, long id) {
+	public static long createCopyIfNotExists(ContentResolver resolver, long id,
+			boolean retain) {
 		Log.v(TAG, "createCopyIfNotExists id = " + id);
 		Uri uri = Uri.withAppendedPath(POIs.CONTENT_URI_RETRIEVED,
 				Long.toString(id));
@@ -66,7 +71,8 @@ public class PrepareDatabaseHelper {
 
 		ContentValues values = new ContentValues();
 		POIHelper.copyItemToValues(c, values);
-		addCopyDefaultValues(values);
+		addCopyDefaultValues(values, retain);
+
 		c.close();
 		uri = resolver.insert(POIs.CONTENT_URI_COPY, values);
 
@@ -97,7 +103,8 @@ public class PrepareDatabaseHelper {
 		Log.v(TAG, "editCopy id = " + id);
 		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, id);
 		values.put(POIs.STATE, POIs.STATE_CHANGED);
-		resolver.update(uri, values, null, null);
+		int count = resolver.update(uri, values, null, null);
+		Log.d(TAG, "editCopy: edited count = " + count);
 	}
 
 	public static Cursor queryDirty(ContentResolver resolver) {
@@ -220,7 +227,7 @@ public class PrepareDatabaseHelper {
 				Wheelmap.POIs.CONTENT_URI_RETRIEVED, Wheelmap.POIs.PROJECTION,
 				whereClause, whereValues, values);
 
-		createCopyIfNotExists(resolver, id);
+		createCopyIfNotExists(resolver, id, false);
 	}
 
 	public static long insertNew(ContentResolver resolver, String name,

@@ -29,8 +29,10 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
 
 import wheelmap.org.WheelchairState;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -122,8 +124,10 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 		long poiId = POIHelper.getId(mCursor);
 		Log.d(TAG, "onTap index = " + index + " id = " + poiId);
 
+		ContentValues values = new ContentValues();
+		DatabaseUtils.cursorRowToContentValues(mCursor, values);
 		if (mListener != null)
-			mListener.onTap(createItem(index), poiId);
+			mListener.onTap(createItem(index), values);
 
 		return true;
 	}

@@ -27,10 +27,14 @@ import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener
 import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -59,11 +63,23 @@ public class POIsListFragment extends SherlockListFragment implements
 	private WorkerFragment mWorkerFragment;
 	private PullToRefreshListView mPullToRefreshListView;
 	private int mFirstVisiblePosition = 0;
+	private int mCheckedItem;
 
 	private DisplayFragmentListener mListener;
 	private POIsListCursorAdapter mAdapter;
 	private Cursor mCursor;
 	private Bus mBus;
+
+	public static POIsListFragment newInstance(boolean createWorker,
+			boolean disableSearch) {
+		POIsListFragment f = new POIsListFragment();
+		Bundle b = new Bundle();
+		b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
+		b.putBoolean(Extra.DISABLE_SEARCH, disableSearch);
+
+		f.setArguments(b);
+		return f;
+	}
 
 	public POIsListFragment() {
 		super();
@@ -116,7 +132,7 @@ public class POIsListFragment extends SherlockListFragment implements
 		if (getArguments() == null
 				|| getArguments()
 						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-			Log.d(TAG, "onActivityCreated: checking workerfragment");
+			Log.d(TAG, "Creating Worker Fragment");
 			FragmentManager fm = getFragmentManager();
 			Fragment fragment = (POIsListWorkerFragment) fm
 					.findFragmentByTag(POIsListWorkerFragment.TAG);
@@ -129,7 +145,20 @@ public class POIsListFragment extends SherlockListFragment implements
 
 			mWorkerFragment = (WorkerFragment) fragment;
 			mWorkerFragment.registerDisplayFragment(this);
+		} else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+				false)) {
+			Log.d(TAG, "Connecting to Combined Worker Fragment");
+			FragmentManager fm = getFragmentManager();
+			Fragment fragment = fm
+					.findFragmentByTag(CombinedWorkerFragment.TAG);
+			mWorkerFragment = (WorkerFragment) fragment;
+			mWorkerFragment.registerDisplayFragment(this);
+			Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
 		}
+
+		if (UtilsMisc.isTablet(getActivity()))
+			mPullToRefreshListView.getRefreshableView().setChoiceMode(
+					ListView.CHOICE_MODE_SINGLE);
 
 	}
 
@@ -193,6 +222,8 @@ public class POIsListFragment extends SherlockListFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.ab_list_fragment, menu);
+		if (getArguments().containsKey(Extra.DISABLE_SEARCH))
+			menu.removeItem(R.id.menu_search);
 	}
 
 	@Override
@@ -214,7 +245,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	public void onRefresh() {
 		mFirstVisiblePosition = 0;
 		if (mWorkerFragment != null)
-			mWorkerFragment.requestUpdate(null);
+			mWorkerFragment.requestUpdate(new Bundle());
 	}
 
 	@Override
@@ -224,9 +255,11 @@ public class POIsListFragment extends SherlockListFragment implements
 		if (cursor == null)
 			return;
 
-		long poiId = POIHelper.getId(cursor);
+		ContentValues values = new ContentValues();
+		DatabaseUtils.cursorRowToContentValues(cursor, values);
+		markItem(values, false);
 		if (mListener != null)
-			mListener.onShowDetail(poiId);
+			mListener.onShowDetail(this, values);
 
 	}
 
@@ -240,6 +273,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 		mCursor = cursor;
 		mAdapter.swapCursor(cursor);
+		markItemClear();
 		refreshListPosition();
 	}
 
@@ -278,7 +312,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	@Override
 	public void onUpdate(WorkerFragment fragment) {
-		setCursor(fragment.getCursor());
+		setCursor(fragment.getCursor(WorkerFragment.LIST_CURSOR));
 		setRefreshStatus(fragment.isRefreshing());
 	}
 
@@ -293,4 +327,24 @@ public class POIsListFragment extends SherlockListFragment implements
 		mAdapter.changeAdapter();
 	}
 
+	public void markItem(ContentValues values, boolean centerToItem) {
+		Long id = values.getAsLong(POIs.POI_ID);
+
+		int pos;
+		for (pos = 0; pos < mAdapter.getCount(); pos++) {
+			Cursor c = (Cursor) mAdapter.getItem(pos);
+			if (POIHelper.getId(c) == id) {
+				mCheckedItem = pos + 1;
+				mPullToRefreshListView.getRefreshableView().setItemChecked(
+						mCheckedItem, true);
+
+				break;
+			}
+		}
+	}
+
+	public void markItemClear() {
+		mPullToRefreshListView.getRefreshableView().setItemChecked(
+				mCheckedItem, false);
+	}
 }

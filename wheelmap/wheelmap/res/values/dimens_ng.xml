@@ -40,5 +40,6 @@
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
-
+	<dimen name="mp_list_width">400dp</dimen>
+   
 </resources>

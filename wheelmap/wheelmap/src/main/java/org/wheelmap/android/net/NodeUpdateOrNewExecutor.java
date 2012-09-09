@@ -120,7 +120,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		try {
 			if (requestBuilder.getRequestType() == RequestBuilder.REQUEST_POST) {
 				Log.d(TAG, "postRequest = *" + request + "*");
-				mRequestProcessor.post(new URI(request), null, String.class);
+				mRequestProcessor.post(new URI(request), "", String.class);
 			} else {
 				Log.d(TAG, "putRequest = *" + request + "*");
 				mRequestProcessor.put(new URI(request), null);

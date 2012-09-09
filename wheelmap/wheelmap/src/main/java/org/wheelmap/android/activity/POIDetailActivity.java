@@ -139,7 +139,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 				getContentResolver(), wmId, POIs.TAG_RETRIEVED);
 		if (poiId != Extra.ID_UNKNOWN) {
 			long copyPoiId = PrepareDatabaseHelper.createCopyIfNotExists(
-					getContentResolver(), poiId);
+					getContentResolver(), poiId, false);
 			showDetailFragment(copyPoiId);
 			return;
 		}
@@ -166,8 +166,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 
 		// Start the activity whose result we want to retrieve. The
 		// result will come back with request code GET_CODE.
-		Intent intent = new Intent(POIDetailActivity.this,
-				WheelchairStateActivity.class);
+		Intent intent = new Intent(this, WheelchairStateActivity.class);
 		intent.putExtra(Extra.WHEELCHAIR_STATE, wState.getId());
 		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
 
@@ -186,13 +185,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// You can use the requestCode to select between multiple child
-		// activities you may have started. Here there is only one thing
-		// we launch.
 		if (requestCode == SELECT_WHEELCHAIRSTATE) {
-			// This is a standard resultCode that is sent back if the
-			// activity doesn't supply an explicit result. It will also
-			// be returned if the activity failed to launch.
 			if (resultCode == RESULT_OK) {
 				// newly selected wheelchair state as action data
 				if (data != null) {

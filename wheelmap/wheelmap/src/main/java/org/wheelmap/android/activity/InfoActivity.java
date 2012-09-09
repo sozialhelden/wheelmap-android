@@ -37,7 +37,8 @@ public class InfoActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fragment_info);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		if (getSupportActionBar() != null)
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
 	}
 
 	@Override

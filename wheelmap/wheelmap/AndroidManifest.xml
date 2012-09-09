@@ -52,39 +52,49 @@ limitations under the License.
             android:label="" >
         </activity>
         <activity
-            android:name="org.wheelmap.android.activity.POIDetailActivity"
-            android:label="@string/title_pois_detail_activity" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" >
-                </action>
-
-                <category android:name="android.intent.category.DEFAULT" >
-                </category>
-                <category android:name="android.intent.category.BROWSABLE" >
-                </category>
-
-                <data
-                    android:host="*wheelmap.org"
-                    android:pathPrefix="/nodes/"
-                    android:scheme="http" >
-                </data>
-            </intent-filter>
+            android:name="org.wheelmap.android.activity.MainMultiPaneActivity"
+            android:label="" >
         </activity>
         <activity
+            android:name="org.wheelmap.android.activity.POIDetailActivity"
+            android:label="@string/title_pois_detail_activity" />
+
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" >
+            </action>
+
+            <category android:name="android.intent.category.DEFAULT" >
+            </category>
+            <category android:name="android.intent.category.BROWSABLE" >
+            </category>
+
+            <data
+                android:host="*wheelmap.org"
+                android:pathPrefix="/nodes/"
+                android:scheme="http" >
+            </data>
+        </intent-filter>
+
+        <activity
             android:name="org.wheelmap.android.activity.POIDetailEditableActivity"
-            android:label="@string/title_pois_map" />
+            android:label="@string/title_editor"
+            android:theme="@style/Theme.Wheelmap.Editor" />
         <activity
             android:name="org.wheelmap.android.activity.NewSettingsActivity"
-            android:label="@string/title_pois_settings" />
+            android:label="@string/title_pois_settings"
+            android:theme="@style/Theme.Wheelmap.SubActivity" />
         <activity
             android:name="org.wheelmap.android.activity.WheelchairStateActivity"
-            android:label="@string/title_wheelchair_state" />
+            android:label="@string/title_wheelchair_state"
+            android:theme="@style/Theme.Wheelmap.SubActivity" />
         <activity
             android:name="org.wheelmap.android.activity.InfoActivity"
-            android:label="@string/title_info" />
+            android:label="@string/title_info"
+            android:theme="@style/Theme.Wheelmap.SubActivity" />
         <activity
             android:name="org.wheelmap.android.activity.LegalNoticeActivity"
-            android:label="@string/title_legal_notice" />
+            android:label="@string/title_legal_notice"
+            android:theme="@style/Theme.Wheelmap.SubActivity" />
 
         <service android:name="org.wheelmap.android.service.SyncService" />
 

@@ -37,6 +37,7 @@
 
     <ListView
         android:id="@+id/android:list"
+        style="@style/Scrollable.List"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 

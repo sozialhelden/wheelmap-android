@@ -19,7 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -95,9 +95,9 @@
                 android:hint="@string/poi_property_website"
                 android:textColorLink="@android:color/black" />
 
-            <LinearLayout
+            <View
                 android:layout_width="fill_parent"
-                android:layout_height="4dp"
+                android:layout_height="@dimen/separator_large"
                 android:background="@android:color/black" />
 
             <ViewStub

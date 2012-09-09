@@ -21,17 +21,16 @@
  */
 package org.wheelmap.android.activity;
 
-import java.util.ArrayList;
-
-import org.wheelmap.android.activity.MyTabListener.OnStateListener;
-import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.app.IAppProperties;
+import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.POIDetailFragment;
+import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
+import org.wheelmap.android.fragment.SearchDialogFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -39,8 +38,10 @@ import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.tracker.TrackerWrapper;
+import org.wheelmap.android.service.SyncServiceHelper;
 
+import wheelmap.org.WheelchairState;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.location.Location;
@@ -54,7 +55,6 @@ import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.LayoutParams;
-import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -63,35 +63,34 @@ import com.google.inject.Inject;
 
 import de.akquinet.android.androlog.Log;
 
-public class MainSinglePaneActivity extends MapsforgeMapActivity implements
-		DisplayFragmentListener, WorkerFragmentListener, OnStateListener {
-	private static final String TAG = MainSinglePaneActivity.class
+public class MainMultiPaneActivity extends MapsforgeMapActivity implements
+		DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener {
+	private static final String TAG = MainMultiPaneActivity.class
 			.getSimpleName();
-	private final static ArrayList<TabHolder> mIndexToTab;
+
+	static final private int SELECT_WHEELCHAIRSTATE = 0;
 
 	@Inject
 	IAppProperties appProperties;
 
-	private final static int DEFAULT_SELECTED_TAB = 0;
-	private int mSelectedTab = DEFAULT_SELECTED_TAB;
-	private TrackerWrapper mTrackerWrapper;
+	POIsListFragment mListFragment;
+	POIsMapsforgeFragment mMapFragment;
+	POIDetailFragment mDetailFragment;
+	CombinedWorkerFragment mWorkerFragment;
 
-	final static int TAB_LIST = 0;
-	final static int TAB_MAP = 1;
+	Long poiIdSelected = Extra.ID_UNKNOWN;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		// Debug.startMethodTracing("wheelmap");
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminateVisibility(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		setContentView(R.layout.activity_multipane);
 
 		// FragmentManager.enableDebugLogging(true);
-
-		mTrackerWrapper = new TrackerWrapper(this);
 
 		if (savedInstanceState != null)
 			executeState(savedInstanceState);
@@ -99,37 +98,40 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 			executeDefaultInstanceState();
 
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
 		createSearchModeCustomView(actionBar);
 
-		Tab tab = actionBar
-				.newTab()
-				.setText(R.string.title_pois_list)
-				.setIcon(
-						getResources().getDrawable(
-								R.drawable.ic_location_list_wm_holo_light))
-				.setTag(mIndexToTab.get(TAB_LIST).name)
-				.setTabListener(
-						new MyTabListener<POIsListFragment>(this, mIndexToTab
-								.get(TAB_LIST), POIsListFragment.class));
-		actionBar.addTab(tab, TAB_LIST, false);
+		FragmentManager fm = getSupportFragmentManager();
 
-		tab = actionBar
-				.newTab()
-				.setText(R.string.title_pois_map)
-				.setIcon(
-						getResources().getDrawable(
-								R.drawable.ic_location_map_wm_holo_light))
+		mWorkerFragment = (CombinedWorkerFragment) fm
+				.findFragmentByTag(CombinedWorkerFragment.TAG);
+		if (mWorkerFragment == null) {
+			mWorkerFragment = new CombinedWorkerFragment();
+			fm.beginTransaction()
+					.add(mWorkerFragment, CombinedWorkerFragment.TAG).commit();
+		}
 
-				.setTag(mIndexToTab.get(TAB_MAP).name)
-				.setTabListener(
-						new MyTabListener<POIsMapsforgeFragment>(this,
-								mIndexToTab.get(TAB_MAP),
-								POIsMapsforgeFragment.class));
-		actionBar.addTab(tab, TAB_MAP, false);
+		mListFragment = (POIsListFragment) fm
+				.findFragmentById(R.id.list_layout);
+		if (mListFragment == null) {
+			mListFragment = POIsListFragment.newInstance(false, true);
+			fm.beginTransaction().add(R.id.list_layout, mListFragment).commit();
+		}
 
-		actionBar.setSelectedNavigationItem(mSelectedTab);
+		mMapFragment = (POIsMapsforgeFragment) fm
+				.findFragmentById(R.id.map_layout);
+		if (mMapFragment == null) {
+			mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
+			fm.beginTransaction().add(R.id.map_layout, mMapFragment).commit();
+		}
+
+		mDetailFragment = (POIDetailFragment) fm
+				.findFragmentById(R.id.detail_layout);
+		if (mDetailFragment == null) {
+			mDetailFragment = POIDetailFragment.newInstance();
+			fm.beginTransaction().add(R.id.detail_layout, mDetailFragment)
+					.commit();
+		}
 
 	}
 
@@ -153,7 +155,6 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// Debug.stopMethodTracing();
 	}
 
 	private void executeIntent(Intent intent) {
@@ -162,42 +163,23 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 			return;
 
 		executeState(extras);
-		mIndexToTab.get(mSelectedTab).setExecuteBundle(extras);
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setSelectedNavigationItem(mSelectedTab);
 	}
 
 	private void executeState(Bundle state) {
-		mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
 	}
 
 	private void executeDefaultInstanceState() {
-		mSelectedTab = DEFAULT_SELECTED_TAB;
-	}
-
-	public void onStateChange(String tag) {
-		if (tag == null)
-			return;
-
-		Log.d(TAG, "onStateChange " + tag);
-
-		mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
-		String readableName = tag.replaceAll("Fragment", "");
-		mTrackerWrapper.track(readableName);
-
-		getSupportActionBar().setDisplayShowCustomEnabled(false);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putInt(Extra.SELECTED_TAB, mSelectedTab);
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.ab_main_activity, menu);
+		inflater.inflate(R.menu.ab_multi_activity, menu);
 		return true;
 	}
 
@@ -206,6 +188,9 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		int id = item.getItemId();
 
 		switch (id) {
+		case R.id.menu_search:
+			showSearch();
+			return true;
 		case R.id.menu_filter:
 			showFilterSettings();
 			return true;
@@ -219,27 +204,38 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		}
 	}
 
+	@SuppressLint("WrongViewCast")
 	private void createSearchModeCustomView(final ActionBar bar) {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
 				null);
+
 		ImageButton button = (ImageButton) customView.findViewById(R.id.image);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Fragment f = getSupportFragmentManager().findFragmentByTag(
-						POIsMapsforgeWorkerFragment.TAG);
+						CombinedWorkerFragment.TAG);
 				if (f == null)
 					return;
 
-				((POIsMapsforgeWorkerFragment) f).setSearchMode(false);
+				((CombinedWorkerFragment) f).setSearchMode(false);
 				bar.setDisplayShowCustomEnabled(false);
 			}
 		});
 
 		bar.setCustomView(customView, new ActionBar.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+	}
+
+	private void showSearch() {
+		FragmentManager fm = getSupportFragmentManager();
+		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
+				true, false);
+
+		searchDialog.setTargetFragment(mWorkerFragment, 0);
+		searchDialog.show(fm, SearchDialogFragment.TAG);
 	}
 
 	private void showInfo() {
@@ -284,12 +280,18 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onShowDetail(Fragment fragment, ContentValues values) {
-		Long id = values.getAsLong(POIs.POI_ID);
+		long id = values.getAsLong(POIs.POI_ID);
+
 		long copyId = PrepareDatabaseHelper.createCopyIfNotExists(
-				getContentResolver(), id, false);
-		Intent intent = new Intent(this, POIDetailActivity.class);
-		intent.putExtra(Extra.POI_ID, copyId);
-		startActivity(intent);
+				getContentResolver(), id, true);
+		poiIdSelected = copyId;
+		mDetailFragment.showDetail(poiIdSelected);
+
+		if (fragment == mListFragment)
+			mMapFragment.markItem(values, true);
+		if (fragment == mMapFragment)
+			mListFragment.markItem(values, false);
+
 	}
 
 	@Override
@@ -304,12 +306,56 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		getSupportActionBar().setDisplayShowCustomEnabled(true);
 	}
 
-	static {
-		mIndexToTab = new ArrayList<TabHolder>();
-		mIndexToTab.add(new TabHolder(POIsListFragment.TAG,
-				POIsListWorkerFragment.TAG));
-		mIndexToTab.add(new TabHolder(POIsMapsforgeFragment.TAG,
-				POIsMapsforgeWorkerFragment.TAG));
+	@Override
+	public void onEdit(long poiId) {
+		Intent intent = new Intent(this, POIDetailEditableActivity.class);
+		intent.putExtra(Extra.POI_ID, poiId);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onEditWheelchairState(WheelchairState wState) {
+		Intent intent = new Intent(this, WheelchairStateActivity.class);
+		intent.putExtra(Extra.WHEELCHAIR_STATE, wState.getId());
+		startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
+	}
+
+	@Override
+	public void onShowLargeMapAt(GeoPoint point) {
+		// noop
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG, "onActivityResult: requestCode = " + requestCode
+				+ " resultCode = " + resultCode);
+		if (requestCode == SELECT_WHEELCHAIRSTATE) {
+			if (resultCode == RESULT_OK) {
+				// newly selected wheelchair state as action data
+				if (data != null) {
+					WheelchairState state = WheelchairState
+							.valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
+									Extra.UNKNOWN));
+					updateDatabase(poiIdSelected, state);
+					Log.d(TAG, "starting SyncServiceHelper.executeUpdateServer");
+					SyncServiceHelper.executeUpdateServer(this, null);
+				}
+			}
+		}
+	}
+
+	private void updateDatabase(long id, WheelchairState state) {
+		Log.d(TAG,
+				"updating id = " + id + " state = "
+						+ state.asRequestParameter());
+		if (id == Extra.ID_UNKNOWN || state == null)
+			return;
+
+		ContentValues values = new ContentValues();
+		values.put(POIs.WHEELCHAIR, state.getId());
+		values.put(POIs.DIRTY, POIs.DIRTY_STATE);
+
+		PrepareDatabaseHelper.editCopy(getContentResolver(), id, values);
 	}
 
 }
