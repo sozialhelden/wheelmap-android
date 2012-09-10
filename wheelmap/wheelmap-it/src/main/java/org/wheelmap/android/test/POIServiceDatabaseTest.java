@@ -151,7 +151,8 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 				.getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
 		Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
-		long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id);
+		long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
+				false);
 		Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
 
 		ContentValues values = new ContentValues();
@@ -202,7 +203,8 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 				.getContentResolver(), newWmIdToTest, POIs.TAG_RETRIEVED);
 		Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
-		long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id);
+		long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
+				false);
 		Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
 		Cursor c = PrepareDatabaseHelper.queryState(getContext()
 				.getContentResolver(), POIs.STATE_UNCHANGED);
