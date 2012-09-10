@@ -25,6 +25,8 @@ import android.content.ContentValues;
 import android.location.Location;
 
 public interface DisplayFragment {
+	public String getTag();
+
 	public void onUpdate(WorkerFragment fragment);
 
 	public void setCurrentLocation(Location location);

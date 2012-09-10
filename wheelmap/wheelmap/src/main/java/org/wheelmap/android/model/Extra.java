@@ -44,10 +44,11 @@ public interface Extra {
 	public static final String ZOOM_MAP = "org.wheelmap.android.CENTER_ZOOM";
 	public static final String EXPLICIT_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
 	public static final String EXPLICIT_DIRECT_RETRIEVAL = "org.wheelmap.android.DIRECT_RETRIEVAL";
+	public static final String SHOW_MAP = "org.wheelmap.android.SHOW_MAP";
 
 	public final static String SHOW_DISTANCE = "org.wheelmap.android.SHOW_DISTANCE";
 	public final static String SHOW_MAP_HINT = "org.wheelmap.android.SHOW_MAP_HINT";
-	public static final String SHOW_MAP = "org.wheelmap.android.SHOW_MAP";
+	public static final String ENABLE_BOUNDING_BOX = "org.wheelmap.android.ENABLE_BOUNDING_BOX";
 
 	public static final String TEMPORARY_STORED = "org.wheelmap.android.TEMPORARY_STORED";
 

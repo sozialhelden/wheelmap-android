@@ -34,13 +34,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -61,6 +61,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	private int mCategorySelected = Extra.UNKNOWN;
 	private int mNodeTypeSelected = Extra.UNKNOWN;
 	private float mDistance = Extra.UNKNOWN;
+	private boolean mEnableBoundingBoxSearch = false;
 
 	public interface OnSearchDialogListener {
 		public void onSearch(Bundle bundle);
@@ -86,8 +87,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		builder.setIcon(R.drawable.ic_menu_search_wm_holo_light);
 		builder.setNeutralButton(R.string.search_execute, this);
 
-		View view = getActivity().getLayoutInflater().inflate(
-				R.layout.fragment_dialog_search, null);
+		View view = createView();
 		builder.setView(view);
 		bindViews(view);
 
@@ -95,7 +95,12 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		return d;
 	}
 
-	private void bindViews(View v) {
+	protected View createView() {
+		return LayoutInflater.from(getActivity()).inflate(
+				R.layout.fragment_dialog_search, null);
+	}
+
+	protected void bindViews(View v) {
 
 		mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
 		mKeywordText.setOnEditorActionListener(this);
@@ -120,23 +125,42 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		distanceSpinner.setAdapter(distanceSpinnerAdapter);
 		distanceSpinner.setOnItemSelectedListener(this);
 		distanceSpinner.setPromptId(R.string.search_distance);
-		distanceSpinner.setSelection(3);
-
+		int initialPosition = 3;
+		distanceSpinner.setSelection(initialPosition);
+		String distance = (String) distanceSpinner
+				.getItemAtPosition(initialPosition);
+		try {
+			mDistance = Float.valueOf(distance);
+		} catch (NumberFormatException e) {
+			mDistance = Extra.UNKNOWN;
+		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		enableContainerVisibility();
+	}
 
-		LinearLayout mapHintContainer = (LinearLayout) getDialog()
-				.findViewById(R.id.search_map_hint);
+	private View mapHintContainer;
+	private View distanceContainer;
+
+	protected void enableContainerVisibility() {
+		mapHintContainer = getDialog().findViewById(R.id.search_map_hint);
 		if (getArguments().getBoolean(Extra.SHOW_MAP_HINT))
 			mapHintContainer.setVisibility(View.VISIBLE);
 
-		LinearLayout distanceContainer = (LinearLayout) getDialog()
-				.findViewById(R.id.search_spinner_distance_container);
+		distanceContainer = getDialog().findViewById(
+				R.id.search_spinner_distance_container);
 		if (getArguments().getBoolean(Extra.SHOW_DISTANCE))
 			distanceContainer.setVisibility(View.VISIBLE);
+	}
+
+	protected void setSearchMode(boolean enableBoundingBoxSearch) {
+		Log.d(TAG, "enableBoundingBoxSearch = " + enableBoundingBoxSearch);
+		mEnableBoundingBoxSearch = enableBoundingBoxSearch;
+		mapHintContainer.setEnabled(mEnableBoundingBoxSearch);
+		distanceContainer.setEnabled(!mEnableBoundingBoxSearch);
 	}
 
 	public void onItemSelected(AdapterView<?> adapterView, View view,
@@ -164,7 +188,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 			try {
 				mDistance = Float.valueOf(distance);
 			} catch (NumberFormatException e) {
-				// ignore
+				mDistance = Extra.UNKNOWN;
 			}
 			break;
 		}
@@ -179,6 +203,13 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	}
 
 	private void sendSearchInstructions() {
+		Bundle b = createSearchBundle();
+
+		OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
+		listener.onSearch(b);
+	}
+
+	protected Bundle createSearchBundle() {
 		Bundle bundle = new Bundle();
 
 		String keyword = mKeywordText.getText().toString();
@@ -194,11 +225,12 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		else
 			bundle.putInt(Extra.CATEGORY, Extra.UNKNOWN);
 
-		if (mDistance != Extra.UNKNOWN)
+		if (mEnableBoundingBoxSearch)
+			bundle.putBoolean(Extra.ENABLE_BOUNDING_BOX, true);
+		else if (mDistance != Extra.UNKNOWN)
 			bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
 
-		OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
-		listener.onSearch(bundle);
+		return bundle;
 	}
 
 	@Override

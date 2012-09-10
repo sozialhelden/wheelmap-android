@@ -30,6 +30,7 @@ import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
+import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -115,14 +116,18 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 				.findFragmentById(R.id.list_layout);
 		if (mListFragment == null) {
 			mListFragment = POIsListFragment.newInstance(false, true);
-			fm.beginTransaction().add(R.id.list_layout, mListFragment).commit();
+			fm.beginTransaction()
+					.add(R.id.list_layout, mListFragment, POIsListFragment.TAG)
+					.commit();
 		}
 
 		mMapFragment = (POIsMapsforgeFragment) fm
 				.findFragmentById(R.id.map_layout);
 		if (mMapFragment == null) {
 			mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
-			fm.beginTransaction().add(R.id.map_layout, mMapFragment).commit();
+			fm.beginTransaction()
+					.add(R.id.map_layout, mMapFragment,
+							POIsMapsforgeFragment.TAG).commit();
 		}
 
 		mDetailFragment = (POIDetailFragment) fm
@@ -231,8 +236,8 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 	private void showSearch() {
 		FragmentManager fm = getSupportFragmentManager();
-		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
-				true, false);
+		SearchDialogCombinedFragment searchDialog = SearchDialogCombinedFragment
+				.newInstance();
 
 		searchDialog.setTargetFragment(mWorkerFragment, 0);
 		searchDialog.show(fm, SearchDialogFragment.TAG);

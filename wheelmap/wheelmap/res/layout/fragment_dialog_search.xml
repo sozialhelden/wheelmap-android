@@ -33,21 +33,6 @@
         android:paddingLeft="@dimen/padding_medium"
         android:paddingRight="@dimen/padding_medium" >
 
-        <LinearLayout
-            android:id="@+id/search_map_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:text="@string/search_pick_map"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
-
         <EditText
             android:id="@+id/search_keyword"
             android:layout_width="fill_parent"
@@ -90,6 +75,21 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/search_distance" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/search_map_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:text="@string/search_pick_map"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
     </LinearLayout>
 

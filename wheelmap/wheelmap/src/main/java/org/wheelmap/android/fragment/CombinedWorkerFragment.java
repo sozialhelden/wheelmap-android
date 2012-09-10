@@ -26,6 +26,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -162,6 +163,13 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public void onSearch(Bundle bundle) {
+		Log.d(TAG, "requestSearch with bundle " + bundle.toString());
+		if (bundle.containsKey(Extra.ENABLE_BOUNDING_BOX)) {
+			Fragment f = getFragmentManager().findFragmentByTag(
+					POIsMapsforgeFragment.TAG);
+			((OnSearchDialogListener) f).onSearch(bundle);
+
+		}
 		requestSearch(bundle);
 	}
 
@@ -187,7 +195,9 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 			bundle.putInt(Extra.WHAT, what);
 		}
 
-		if (bundle.containsKey(Extra.DISTANCE_LIMIT)) {
+		if (bundle.containsKey(Extra.BOUNDING_BOX)) {
+			// noop
+		} else if (bundle.containsKey(Extra.DISTANCE_LIMIT)) {
 			bundle.putParcelable(Extra.LOCATION, mLocation);
 			bundle.remove(Extra.BOUNDING_BOX);
 		}

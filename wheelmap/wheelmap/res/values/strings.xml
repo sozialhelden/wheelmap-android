@@ -121,7 +121,7 @@
     <string name="search_execute">Search</string>
     <string name="title_pois_detail_edit">Edit the point of interest</string>
     <string name="title_pois_position_edit">Location Positioning</string>
-    <string name="search_distance">Distance in km</string>
+    <string name="search_distance">Distance</string>
     <string name="search_distance_unspecified">Whatever</string>
     <string name="error_not_enough_memory">Your phone does not provide enough memory for this application. Sorry.</string>
     <string name="title_nodetype_edit">Pick a Type</string>
@@ -167,4 +167,6 @@
     <string name="login_link_wheelmap">http://wheelmap.org/users/sign_up</string>
     <string name="login_link_text">Register at Wheelmap.org</string>
     <string name="title_editor">Editor</string>
+    <string name="search_mode_distance">By Distance</string>
+    <string name="search_mode_map">By Map</string>
 </resources>
