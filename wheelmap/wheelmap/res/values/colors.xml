@@ -34,4 +34,9 @@
     <color name="seperator_color_dark_b">#FFE6E6E6</color>
     <color name="text_link">#FF3F3F3F</color>
 
+    <color name="position_marker_fill_blue_dark">#3C7F9FEF</color>
+    <color name="position_marker_fill_blue_light">#FF2F6FDF</color>
+    <color name="position_marker_outline_blue_dark">#FF4F5C8C</color>
+    <color name="position_marker_outline_blue_light">#FF848484</color>
+
 </resources>

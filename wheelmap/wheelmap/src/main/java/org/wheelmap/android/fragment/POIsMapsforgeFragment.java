@@ -138,7 +138,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		// overlays
 		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(getActivity(),
 				this);
-		mCurrLocationOverlay = new MyLocationOverlay();
+		mCurrLocationOverlay = new MyLocationOverlay(getActivity());
 
 		Capability cap = WheelmapApp.getCapabilityLevel();
 		if (cap == Capability.DEGRADED_MIN || cap == Capability.DEGRADED_MAX) {

@@ -21,73 +21,78 @@
  */
 package org.wheelmap.android.overlays;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.CircleOverlay;
 import org.mapsforge.android.maps.overlay.OverlayCircle;
+import org.wheelmap.android.online.R;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 
 public class MyLocationOverlay extends CircleOverlay<OverlayCircle> {
-	OverlayCircle mCircleLarge, mCircleSmall, mCircleMed;
-	private int itemCount = 0;
+	private Set<OverlayCircle> mCircles = new HashSet<OverlayCircle>();
+	private OverlayCircle mCircleLarge, mCircleSmall, mCircleMed;
 	private final static float RADIUS_SMALL_CIRCLE = 2.0f;
 	private final static float RADIUS_MED_CIRCLE = 8.0f;
 
-	public MyLocationOverlay() {
+	public MyLocationOverlay(Context context) {
 		super(null, null);
 
 		Paint fillPaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
-		fillPaintDark.setARGB(60, 127, 159, 239);
+		fillPaintDark.setColor(context.getResources().getColor(
+				R.color.position_marker_fill_blue_dark));
 
 		Paint outlinePaintDark = new Paint(Paint.ANTI_ALIAS_FLAG);
-		outlinePaintDark.setARGB(255, 79, 92, 140);
+		outlinePaintDark.setColor(context.getResources().getColor(
+				R.color.position_marker_outline_blue_dark));
 		outlinePaintDark.setStrokeWidth(4);
 		outlinePaintDark.setStyle(Style.STROKE);
 
 		Paint fillPaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
-		fillPaintLight.setARGB(255, 47, 111, 223);
+		fillPaintLight.setColor(context.getResources().getColor(
+				R.color.position_marker_fill_blue_light));
 
 		Paint outlinePaintLight = new Paint(Paint.ANTI_ALIAS_FLAG);
-		outlinePaintLight.setARGB(255, 132, 132, 132);
+		outlinePaintLight.setColor(context.getResources().getColor(
+				R.color.position_marker_outline_blue_light));
 		outlinePaintLight.setStrokeWidth(10);
 		outlinePaintLight.setStyle(Style.STROKE);
 
 		mCircleLarge = new OverlayCircle(fillPaintDark, outlinePaintDark);
 		mCircleSmall = new OverlayCircle(fillPaintLight, outlinePaintLight);
 		mCircleMed = new OverlayCircle(fillPaintDark, outlinePaintDark);
+		mCircles.add(mCircleSmall);
+		mCircles.add(mCircleLarge);
 	}
 
 	public void setLocation(GeoPoint center, float radius) {
 		mCircleLarge.setCircleData(center, radius);
 		mCircleSmall.setCircleData(center, RADIUS_SMALL_CIRCLE);
-		itemCount = 2;
 		populate();
 	}
 
 	public void setItem(GeoPoint center) {
 		mCircleMed.setCircleData(center, RADIUS_MED_CIRCLE);
-		itemCount = 3;
+		mCircles.add(mCircleMed);
 		populate();
 	}
 
 	public void unsetItem() {
-		itemCount = 2;
+		mCircles.remove(mCircleMed);
 		populate();
 	}
 
 	@Override
 	public int size() {
-		return itemCount;
+		return mCircles.size();
 	}
 
 	@Override
 	protected OverlayCircle createCircle(int i) {
-		if (i == 0)
-			return mCircleLarge;
-		else if (i == 1)
-			return mCircleSmall;
-		else
-			return mCircleMed;
+		return (OverlayCircle) mCircles.toArray()[i];
 	}
 }

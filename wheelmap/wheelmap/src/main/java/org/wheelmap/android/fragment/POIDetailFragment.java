@@ -422,7 +422,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			});
 		} else {
 			SingleItemOverlay overlay = new SingleItemOverlay(this);
-			overlay.setItem(poiValues);
+			overlay.setItem(poiValues, nodeType, state);
 			overlay.enableLowDrawQuality(true);
 			mapView.getOverlays().clear();
 			mapView.getOverlays().add(overlay);

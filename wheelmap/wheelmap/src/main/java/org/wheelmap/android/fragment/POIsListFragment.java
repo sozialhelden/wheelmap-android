@@ -49,6 +49,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Bus;
@@ -57,7 +58,7 @@ import com.squareup.otto.Subscribe;
 import de.akquinet.android.androlog.Log;
 
 public class POIsListFragment extends SherlockListFragment implements
-		DisplayFragment, OnSearchDialogListener, OnRefreshListener,
+		DisplayFragment, OnSearchDialogListener, OnRefreshListener<ListView>,
 		OnExecuteBundle {
 	public static final String TAG = POIsListFragment.class.getSimpleName();
 	private WorkerFragment mWorkerFragment;
@@ -242,7 +243,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onRefresh() {
+	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 		mFirstVisiblePosition = 0;
 		if (mWorkerFragment != null)
 			mWorkerFragment.requestUpdate(new Bundle());

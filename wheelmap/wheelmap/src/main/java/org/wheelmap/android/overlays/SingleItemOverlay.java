@@ -24,16 +24,16 @@ package org.wheelmap.android.overlays;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
 import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
-	private OverlayItem item;
+	private OverlayItem item = new OverlayItem();
 	private ContentValues itemValues;
 	private int items;
 	private OnTapListener mListener;
@@ -44,17 +44,17 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
 		mListener = listener;
 	}
 
-	public void setItem(ContentValues values) {
+	public void setItem(ContentValues values, NodeType nodeType,
+			WheelchairState state) {
 		itemValues = values;
-		SupportManager sup = WheelmapApp.getSupportManager();
-		Drawable marker = sup.lookupNodeType(values
-				.getAsInteger(POIs.NODETYPE_ID)).stateDrawables
-				.get(WheelchairState.myValueOf(values.getAsString(POIs.STATE)));
+		Drawable marker = nodeType.stateDrawables.get(state);
 		item.setTitle(values.getAsString(POIs.NAME));
 		item.setSnippet(values.getAsString(POIs.DESCRIPTION));
 		item.setMarker(marker);
 		item.setPoint(new GeoPoint(values.getAsDouble(POIs.LATITUDE), values
 				.getAsDouble(POIs.LONGITUDE)));
+		Log.d("singleitemoverlay", "item point = " + item.getPoint().toString());
+		items = 1;
 		populate();
 	}
 

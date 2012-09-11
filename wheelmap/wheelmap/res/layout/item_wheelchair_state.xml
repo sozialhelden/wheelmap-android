@@ -19,7 +19,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/wheelchair_state_layout"
@@ -37,15 +37,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/edit_icon"
+        android:layout_toLeftOf="@+id/separator"
         android:layout_toRightOf="@+id/state_icon" >
     </TextView>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="@dimen/separator_small"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toLeftOf="@+id/edit_icon"
+        android:background="?android:attr/dividerVertical" />
 
     <ImageView
         android:id="@+id/edit_icon"
         style="@style/IconMedium"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_menu_edit_wm_holo_light" />
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_menu_edit_wm_holo_light"
+        android:text="@android:string/cancel" />
 
 </RelativeLayout>
