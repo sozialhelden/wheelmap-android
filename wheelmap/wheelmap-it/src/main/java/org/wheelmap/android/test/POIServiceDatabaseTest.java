@@ -40,7 +40,6 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
@@ -49,19 +48,21 @@ import android.util.Log;
 
 import com.jayway.awaitility.Awaitility;
 import com.jayway.awaitility.Duration;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 public class POIServiceDatabaseTest extends AndroidTestCase {
 	private final static String TAG = POIServiceDatabaseTest.class
 			.getSimpleName();
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
-	private Location location;
+	private LocationInfo location;
 
 	public void createLocation() {
 		// Berlin, Andreasstra�e 10
-		location = new Location("");
-		location.setLongitude(13.431240);
-		location.setLatitude(52.512523);
+		location = new LocationInfo(getContext());
+		location.lastLat = 52.512523f;
+		location.lastLong = 13.431240f;
+
 	}
 
 	public void testARetrieveTestDataset() throws Exception {
