@@ -235,6 +235,7 @@ public class POIsListWorkerFragment extends LocationFragment implements
 
 	@Override
 	public void requestUpdate(Bundle bundle) {
+		getLocationInfo().refresh(getActivity());
 		SyncServiceHelper.retrieveNodesByDistance(getActivity(),
 				getLocationInfo(), mDistance, mReceiver);
 	}
