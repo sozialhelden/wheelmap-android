@@ -17,17 +17,17 @@
         <platform.version>4.1.1.4</platform.version>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
         <project.inceptionYear>2011</project.inceptionYear>
-	    <main.basedir>${project.basedir}</main.basedir>
-	    <project.extractDuplicates>false</project.extractDuplicates>
-	    <github.global.server>github</github.global.server>
+	<main.basedir>${project.basedir}</main.basedir>
+	<project.extractDuplicates>false</project.extractDuplicates>
+	<github.global.server>github</github.global.server>
         <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
         <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
     </properties>
     
     <scm>
       <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
-  	  <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
-  	  <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</developerConnection>
+      <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
+      <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</developerConnection>
     </scm>  
    
     <dependencyManagement>
@@ -39,10 +39,10 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-				<groupId>com.google.android</groupId>
-				<artifactId>annotations</artifactId>
-				<version>4.1.1.4</version>
-			</dependency>
+		<groupId>com.google.android</groupId>
+		<artifactId>annotations</artifactId>
+		<version>${platform.version}</version>
+		</dependency>
             <dependency>
                 <groupId>com.google.android</groupId>
                 <artifactId>android-test</artifactId>
