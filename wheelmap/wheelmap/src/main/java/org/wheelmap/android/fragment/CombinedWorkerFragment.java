@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
-import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
@@ -17,12 +16,12 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,13 +30,13 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
-public class CombinedWorkerFragment extends SherlockFragment implements
+public class CombinedWorkerFragment extends LocationFragment implements
 		WorkerFragment, Receiver, LoaderCallbacks<Cursor>,
 		OnSearchDialogListener {
 	public final static String TAG = CombinedWorkerFragment.class
@@ -50,8 +49,6 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 	private WorkerFragmentListener mFragmentListener;
 	private DetachableResultReceiver mReceiver;
 
-	private MyLocationManager mLocationManager;
-	private Location mLocation;
 	private Cursor mListCursor;
 	private Cursor mMapCursor;
 
@@ -77,8 +74,6 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-		mLocationManager = MyLocationManager.get(mReceiver, true);
-		mLocation = mLocationManager.getLastLocation();
 
 	}
 
@@ -98,13 +93,11 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		mLocationManager.register(mReceiver, true);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.release(mReceiver);
 	}
 
 	@Override
@@ -136,7 +129,7 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 
 	private void updateDisplayLocation() {
 		for (DisplayFragment fragment : mListener) {
-			fragment.setCurrentLocation(mLocation);
+			fragment.setCurrentLocation(getLocationInfo());
 		}
 	}
 
@@ -198,7 +191,8 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 		if (bundle.containsKey(Extra.BOUNDING_BOX)) {
 			// noop
 		} else if (bundle.containsKey(Extra.DISTANCE_LIMIT)) {
-			bundle.putParcelable(Extra.LOCATION, mLocation);
+			bundle.putParcelable(Extra.LOCATION,
+					UtilsMisc.convertLocationInfo(getLocationInfo()));
 			bundle.remove(Extra.BOUNDING_BOX);
 		}
 
@@ -249,8 +243,8 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 		} else {
 			String query = UserQueryHelper.getUserQuery();
 			return new CursorLoader(getActivity(),
-					POIs.createUriSorted(mLocation), POIs.PROJECTION, query,
-					null, null);
+					POIs.createUriSorted(getLocationInfo()), POIs.PROJECTION,
+					query, null, null);
 		}
 	}
 
@@ -259,8 +253,10 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 		if (loader.getId() == LOADER_MAP_ID) {
 			mMapCursor = cursor;
 		} else {
+			LocationInfo locationInfo = getLocationInfo();
+
 			Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(
-					mLocation.getLongitude(), mLocation.getLatitude());
+					locationInfo.lastLat, locationInfo.lastLong);
 
 			Cursor wrappingCursor = new POIsCursorWrapper(cursor, location);
 			Log.d(TAG, "cursorloader - new cursor - cursor size = "
@@ -294,14 +290,15 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 				mFragmentListener.onError(e);
 			break;
 		}
-		case What.LOCATION_MANAGER_UPDATE: {
-			mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
-			updateDisplayLocation();
-			resetCursorLoaderUri();
-			break;
-		}
 
 		}
+	}
+
+	@Override
+	protected void updateLocation() {
+		super.updateLocation();
+		updateDisplayLocation();
+		resetCursorLoaderUri();
 	}
 
 	private void resetCursorLoaderUri() {
@@ -310,7 +307,7 @@ public class CombinedWorkerFragment extends SherlockFragment implements
 			return;
 
 		CursorLoader cl = (CursorLoader) loader;
-		cl.setUri(POIs.createUriSorted(mLocation));
+		cl.setUri(POIs.createUriSorted(getLocationInfo()));
 	}
 
 	@Subscribe

@@ -22,14 +22,15 @@
 package org.wheelmap.android.fragment;
 
 import android.content.ContentValues;
-import android.location.Location;
+
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 public interface DisplayFragment {
 	public String getTag();
 
 	public void onUpdate(WorkerFragment fragment);
 
-	public void setCurrentLocation(Location location);
+	public void setCurrentLocation(LocationInfo location);
 
 	public void markItem(ContentValues values, boolean centerToItem);
 

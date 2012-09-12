@@ -23,7 +23,6 @@ package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
-import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
@@ -36,13 +35,13 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -50,13 +49,13 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
-public class POIsListWorkerFragment extends SherlockFragment implements
+public class POIsListWorkerFragment extends LocationFragment implements
 		WorkerFragment, Receiver, LoaderCallbacks<Cursor>,
 		OnSearchDialogListener {
 	public static final String TAG = POIsListWorkerFragment.class
@@ -69,8 +68,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	private DetachableResultReceiver mReceiver;
 	private boolean mRefreshStatus = false;
 
-	private MyLocationManager mLocationManager;
-	private Location mLocation;
 	private float mDistance;
 	private Cursor mCursor;
 	private Bus mBus;
@@ -93,8 +90,6 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		mBus.register(this);
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-		mLocationManager = MyLocationManager.get(mReceiver, true);
-		mLocation = mLocationManager.getLastLocation();
 		mDistance = getDistanceFromPreferences();
 		requestUpdate(null);
 	}
@@ -113,13 +108,11 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		mLocationManager.register(mReceiver, true);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.release(mReceiver);
 	}
 
 	@Override
@@ -159,12 +152,12 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 				mListener.onError(e);
 			break;
 		}
-		case What.LOCATION_MANAGER_UPDATE: {
-			mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
-			resetCursorLoaderUri();
-			break;
 		}
-		}
+	}
+
+	protected void updateLocation() {
+		resetCursorLoaderUri();
+
 	}
 
 	private void setRefreshStatus(boolean refreshState) {
@@ -178,7 +171,7 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 			return;
 
 		CursorLoader cl = (CursorLoader) loader;
-		cl.setUri(POIs.createUriSorted(mLocation));
+		cl.setUri(POIs.createUriSorted(getLocationInfo()));
 	}
 
 	private float getDistanceFromPreferences() {
@@ -196,14 +189,17 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		Log.d(TAG, "onCreateLoader");
 		String query = UserQueryHelper.getUserQuery();
-		return new CursorLoader(getActivity(), POIs.createUriSorted(mLocation),
-				POIs.PROJECTION, query, null, null);
+		return new CursorLoader(getActivity(),
+				POIs.createUriSorted(getLocationInfo()), POIs.PROJECTION,
+				query, null, null);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		LocationInfo locationInfo = getLocationInfo();
+
 		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(
-				mLocation.getLongitude(), mLocation.getLatitude());
+				locationInfo.lastLong, locationInfo.lastLat);
 
 		Cursor wrappingCursor = new POIsCursorWrapper(cursor, location);
 		Log.d(TAG, "cursorloader - new cursor - cursor size = "
@@ -239,8 +235,8 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 
 	@Override
 	public void requestUpdate(Bundle bundle) {
-		SyncServiceHelper.retrieveNodesByDistance(getActivity(), mLocation,
-				mDistance, mReceiver);
+		SyncServiceHelper.retrieveNodesByDistance(getActivity(),
+				getLocationInfo(), mDistance, mReceiver);
 	}
 
 	@Override
@@ -266,7 +262,8 @@ public class POIsListWorkerFragment extends SherlockFragment implements
 		}
 
 		if (bundle.containsKey(Extra.DISTANCE_LIMIT))
-			bundle.putParcelable(Extra.LOCATION, mLocation);
+			bundle.putParcelable(Extra.LOCATION,
+					UtilsMisc.convertLocationInfo(getLocationInfo()));
 
 		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
 		SyncServiceHelper.executeRequest(getActivity(), bundle);

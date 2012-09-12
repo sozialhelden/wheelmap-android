@@ -92,6 +92,18 @@ public class UserQueryHelper {
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences prefs,
 				String key) {
+			boolean oneKeyFound = false;
+			Map<WheelchairState, WheelchairAttributes> wsAttributes = SupportManager.wsAttributes;
+			for (Map.Entry<WheelchairState, WheelchairAttributes> item : wsAttributes
+					.entrySet()) {
+				if (item.getValue().prefsKey.equals(key)) {
+					oneKeyFound = true;
+				}
+			}
+
+			if (oneKeyFound == false)
+				return;
+
 			calcWheelchairStateQuery(prefs);
 			update(true);
 		}

@@ -22,7 +22,6 @@
 package org.wheelmap.android.fragment;
 
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.UserQueryHelper;
@@ -37,7 +36,6 @@ import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.database.Cursor;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,13 +43,12 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
-public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
+public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 		WorkerFragment, Receiver, LoaderCallbacks<Cursor> {
 	public final static String TAG = POIsMapsforgeWorkerFragment.class
 			.getSimpleName();
@@ -61,8 +58,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	private WorkerFragmentListener mListener;
 	private DetachableResultReceiver mReceiver;
 
-	private MyLocationManager mLocationManager;
-	private Location mLocation;
 	private Cursor mCursor;
 
 	boolean isSearchMode;
@@ -87,8 +82,6 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-		mLocationManager = MyLocationManager.get(mReceiver, true);
-		mLocation = mLocationManager.getLastLocation();
 
 	}
 
@@ -106,13 +99,11 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		mLocationManager.register(mReceiver, true);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.release(mReceiver);
 	}
 
 	@Override
@@ -150,18 +141,13 @@ public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 				mListener.onError(e);
 			break;
 		}
-		case What.LOCATION_MANAGER_UPDATE: {
-			mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
-			updateDisplayLocation();
-			break;
-		}
 
 		}
 	}
 
-	private void updateDisplayLocation() {
+	protected void updateLocation() {
 		if (mDisplayFragment != null)
-			mDisplayFragment.setCurrentLocation(mLocation);
+			mDisplayFragment.setCurrentLocation(getLocationInfo());
 	}
 
 	private void setRefreshStatus(boolean refreshState) {

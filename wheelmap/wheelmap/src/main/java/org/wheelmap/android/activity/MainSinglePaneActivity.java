@@ -33,7 +33,6 @@ import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
-import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -43,7 +42,6 @@ import org.wheelmap.android.tracker.TrackerWrapper;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -60,6 +58,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.inject.Inject;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 import de.akquinet.android.androlog.Log;
 
@@ -253,12 +252,11 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	private long insertNewPoi() {
-		Location location = MyLocationManager.get(null, false)
-				.getLastLocation();
+		LocationInfo location = new LocationInfo(getBaseContext());
 
 		String name = getString(R.string.new_default_name);
 		long id = PrepareDatabaseHelper.insertNew(getContentResolver(), name,
-				location.getLatitude(), location.getLongitude());
+				location.lastLat, location.lastLong);
 
 		return id;
 	}

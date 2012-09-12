@@ -33,6 +33,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.squareup.otto.Bus;
 
 import de.akquinet.android.androlog.Log;
@@ -44,8 +45,9 @@ import de.akquinet.android.androlog.Log;
 // the first market version. @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
 // the second market version @ReportsCrashes( formKey = "dEFLbUtHV1VlNEp2MHc0UXg3M0VyUnc6MQ")
 // v0.8: @ReportsCrashes( formKey = "dGEyal90UGZ2Mk0tSmROYnBsVk02THc6MQ")
+// v0.9 @ReportsCrashes(formKey = "dEl3ZHFJUkxYZnplcDRoN0RUZGNCUXc6MQ")
 
-@ReportsCrashes(formKey = "dEl3ZHFJUkxYZnplcDRoN0RUZGNCUXc6MQ")
+@ReportsCrashes(formKey = "dDdKSUloUldNQlBVR3dWbG1FVU1xbEE6MQ")
 public class WheelmapApp extends Application {
 	private final static String TAG = WheelmapApp.class.getSimpleName();
 
@@ -78,6 +80,8 @@ public class WheelmapApp extends Application {
 		ACRA.init(this);
 		Log.init(this);
 		mBus = new Bus();
+		LocationLibrary.initialiseLibrary(getBaseContext(),
+				"org.wheelmap.android.online");
 
 		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 		mMemoryClass = am.getMemoryClass();

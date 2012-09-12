@@ -43,7 +43,6 @@ import org.wheelmap.android.utils.ParceableBoundingBox;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,6 +56,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 import de.akquinet.android.androlog.Log;
 
@@ -463,11 +463,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void setCurrentLocation(Location location) {
-		mLastGeoPointE6 = new GeoPoint(location.getLatitude(),
-				location.getLongitude());
-		mCurrLocationOverlay.setLocation(mLastGeoPointE6,
-				location.getAccuracy());
+	public void setCurrentLocation(LocationInfo location) {
+		mLastGeoPointE6 = new GeoPoint(location.lastLat, location.lastLong);
+		mCurrLocationOverlay
+				.setLocation(mLastGeoPointE6, location.lastAccuracy);
 		centerMap(mLastGeoPointE6, false);
 	}
 

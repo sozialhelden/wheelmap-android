@@ -29,9 +29,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.location.Location;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 public class UtilsMisc {
 
@@ -114,6 +117,15 @@ public class UtilsMisc {
 
 	public static boolean isHoneycombTablet(Context context) {
 		return hasHoneycomb() && isTablet(context);
+	}
+
+	public static Location convertLocationInfo(LocationInfo locationInfo) {
+		Location location = new Location("Created from locationInfo");
+		location.setLatitude(locationInfo.lastLat);
+		location.setLongitude(locationInfo.lastLong);
+		location.setAccuracy(locationInfo.lastAccuracy);
+
+		return location;
 	}
 
 }

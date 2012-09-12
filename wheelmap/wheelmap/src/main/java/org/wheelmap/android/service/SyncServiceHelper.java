@@ -23,12 +23,14 @@ package org.wheelmap.android.service;
 
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+
+import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 public class SyncServiceHelper {
 
@@ -50,12 +52,13 @@ public class SyncServiceHelper {
 	}
 
 	public static void retrieveNodesByDistance(Context context,
-			Location location, float distance, ResultReceiver receiver) {
+			LocationInfo locationInfo, float distance, ResultReceiver receiver) {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);
 		intent.putExtra(Extra.WHAT, What.RETRIEVE_NODES);
 		intent.putExtra(Extra.STATUS_RECEIVER, receiver);
-		intent.putExtra(Extra.LOCATION, location);
+		intent.putExtra(Extra.LOCATION,
+				UtilsMisc.convertLocationInfo(locationInfo));
 		intent.putExtra(Extra.DISTANCE_LIMIT, distance);
 		context.startService(intent);
 	}
