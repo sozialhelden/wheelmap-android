@@ -23,9 +23,9 @@ package org.wheelmap.android.activity;
 
 import java.util.List;
 
+import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
@@ -94,7 +94,7 @@ public class StartupActivity extends RoboActivity implements
 			mState.mReceiver.setReceiver(this);
 		}
 
-		if (WheelmapApp.getCapabilityLevel() == Capability.NOTWORKING) {
+		if (AppCapability.isNotWorking()) {
 			showDialogNotWorking();
 			return;
 		}

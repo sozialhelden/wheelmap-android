@@ -5,25 +5,39 @@
     android:orientation="vertical"
     android:weightSum="2" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
+        <View
+            android:id="@+id/center_position"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true" />
+
         <FrameLayout
             android:id="@+id/list_layout"
-            android:layout_width="0dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1" />
+            android:layout_toLeftOf="@+id/center_position" />
 
         <FrameLayout
             android:id="@+id/detail_layout"
-            android:layout_width="0dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1" />
-    </LinearLayout>
+            android:layout_toRightOf="@+id/center_position" />
+
+        <ImageButton
+            android:id="@+id/button_detail_resize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
     <View
         android:layout_width="fill_parent"

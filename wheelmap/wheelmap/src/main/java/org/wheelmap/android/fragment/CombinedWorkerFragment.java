@@ -127,6 +127,12 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		mListener.remove(fragment);
 	}
 
+	@Override
+	protected void updateLocation() {
+		updateDisplayLocation();
+		resetCursorLoaderUri();
+	}
+
 	private void updateDisplayLocation() {
 		for (DisplayFragment fragment : mListener) {
 			fragment.setCurrentLocation(getLocationInfo());
@@ -292,13 +298,6 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		}
 
 		}
-	}
-
-	@Override
-	protected void updateLocation() {
-		super.updateLocation();
-		updateDisplayLocation();
-		resetCursorLoaderUri();
 	}
 
 	private void resetCursorLoaderUri() {

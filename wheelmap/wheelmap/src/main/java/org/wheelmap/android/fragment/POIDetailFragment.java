@@ -28,8 +28,8 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
+import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
@@ -44,6 +44,7 @@ import org.wheelmap.android.utils.ViewTool;
 
 import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -106,7 +107,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private ViewGroup stateLayout;
 
 	private Button mMapButton;
-	private Capability mCap;
 
 	private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 	private WheelchairState mWheelchairState;
@@ -131,6 +131,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private ShareActionProvider mShareActionProvider;
 	private ShareActionProvider mDirectionsActionProvider;
 
+	@SuppressLint("UseSparseArrays")
 	private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
 
 	public static POIDetailFragment newInstance(long id) {
@@ -162,12 +163,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setHasOptionsMenu(true);
-
-		mCap = WheelmapApp.getCapabilityLevel();
 		mWSAttributes = SupportManager.wsAttributes;
-
 		poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
 	}
 
@@ -183,7 +180,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	private void showMap(View v) {
 		int stubId;
-		if (mCap == Capability.DEGRADED_MAX)
+		if (AppCapability.degradeDetailMapAsButton())
 			stubId = R.id.stub_button;
 		else
 			stubId = R.id.stub_map;
@@ -191,7 +188,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		ViewStub stub = (ViewStub) v.findViewById(stubId);
 		stub.inflate();
 
-		if (mCap == Capability.DEGRADED_MAX)
+		if (AppCapability.degradeDetailMapAsButton())
 			assignButton(v);
 		else
 			assignMapView(v);
@@ -410,7 +407,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		if (!getArguments().containsKey(Extra.SHOW_MAP))
 			return;
-		else if (mCap == Capability.DEGRADED_MAX) {
+		else if (AppCapability.degradeDetailMapAsButton()) {
 			mMapButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

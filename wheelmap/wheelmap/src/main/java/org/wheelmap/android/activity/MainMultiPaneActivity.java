@@ -39,6 +39,7 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.utils.SmoothInterpolator;
 
 import wheelmap.org.WheelchairState;
 import android.annotation.SuppressLint;
@@ -50,6 +51,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -60,11 +63,15 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.inject.Inject;
 import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import de.akquinet.android.androlog.Log;
 
 public class MainMultiPaneActivity extends MapsforgeMapActivity implements
-		DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener {
+		DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener,
+		OnClickListener {
 	private static final String TAG = MainMultiPaneActivity.class
 			.getSimpleName();
 
@@ -77,6 +84,8 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 	POIsMapsforgeFragment mMapFragment;
 	POIDetailFragment mDetailFragment;
 	CombinedWorkerFragment mWorkerFragment;
+	FrameLayout mDetailLayout;
+	ImageButton mResizeButton;
 
 	Long poiIdSelected = Extra.ID_UNKNOWN;
 
@@ -100,6 +109,10 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		createSearchModeCustomView(actionBar);
+
+		mDetailLayout = (FrameLayout) findViewById(R.id.detail_layout);
+		mResizeButton = (ImageButton) findViewById(R.id.button_detail_resize);
+		mResizeButton.setOnClickListener(this);
 
 		FragmentManager fm = getSupportFragmentManager();
 
@@ -361,4 +374,83 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		PrepareDatabaseHelper.editCopy(getContentResolver(), id, values);
 	}
 
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+
+		switch (id) {
+		case R.id.button_detail_resize:
+			toggleResize();
+		}
+	}
+
+	private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
+	private static final long DETAIL_ANIMATION_DURATION = 800;
+	private boolean mDetailVisible = true;
+	private boolean mDetailAnimationRunning = false;
+	private AnimatorListener mDetailAnimatorListener = new AnimatorListener() {
+
+		@Override
+		public void onAnimationStart(Animator animation) {
+			mDetailAnimationRunning = true;
+			if (!mDetailVisible)
+				mDetailLayout.setVisibility(View.VISIBLE);
+
+		}
+
+		@Override
+		public void onAnimationEnd(Animator animation) {
+			int newVisibility;
+			int buttonDrawableRes;
+			if (mDetailVisible) {
+				newVisibility = View.GONE;
+				mDetailVisible = false;
+				buttonDrawableRes = R.drawable.ic_detail_expand;
+			} else {
+				newVisibility = View.VISIBLE;
+				mDetailVisible = true;
+				buttonDrawableRes = R.drawable.ic_detail_collapse;
+			}
+
+			mDetailLayout.setVisibility(newVisibility);
+			mMapFragment.setHeightFull(!mDetailVisible);
+			mResizeButton.setImageResource(buttonDrawableRes);
+			mDetailAnimationRunning = false;
+
+		}
+
+		@Override
+		public void onAnimationCancel(Animator animation) {
+
+		}
+
+		@Override
+		public void onAnimationRepeat(Animator animation) {
+
+		}
+
+	};
+
+	private void toggleResize() {
+		if (mDetailAnimationRunning)
+			return;
+
+		float startValue;
+		float endValue;
+
+		if (mDetailVisible) {
+			startValue = 0.0f;
+			endValue = -mDetailLayout.getHeight();
+		} else {
+			startValue = -mDetailLayout.getHeight();
+			endValue = 0.0f;
+		}
+
+		ObjectAnimator anim = ObjectAnimator.ofFloat(mDetailLayout,
+				"translationY", startValue, endValue);
+		anim.setInterpolator(SMOOTH_INTERPOLATOR);
+		anim.setDuration(DETAIL_ANIMATION_DURATION);
+		anim.addListener(mDetailAnimatorListener);
+		anim.start();
+	}
 }

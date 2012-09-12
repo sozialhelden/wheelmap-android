@@ -26,10 +26,11 @@ import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
+import org.mapsforge.android.maps.Projection;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.activity.MapsforgeMapActivity;
+import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.app.WheelmapApp.Capability;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -43,6 +44,7 @@ import org.wheelmap.android.utils.ParceableBoundingBox;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -67,25 +69,23 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			.getSimpleName();
 
 	private WorkerFragment mWorkerFragment;
+	private DisplayFragmentListener mListener;
+	private Bundle mDeferredExecuteBundle;
 
 	private MapView mMapView;
 	private MapController mMapController;
 	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
 	private MyLocationOverlay mCurrLocationOverlay;
 	private GeoPoint mLastRequestedPosition;
-
-	private Cursor mCursor;
-
+	private GeoPoint mCurrentLocation;
+	private boolean mHeightFull = false;
 	private boolean isCentered;
 	private int oldZoomLevel = 18;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
-	private GeoPoint mLastGeoPointE6;
 
-	private DisplayFragmentListener mListener;
-
-	private Bundle mDeferredExecuteBundle;
+	private Cursor mCursor;
 
 	public static POIsMapsforgeFragment newInstance(boolean createWorker,
 			boolean disableSearch) {
@@ -140,12 +140,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 				this);
 		mCurrLocationOverlay = new MyLocationOverlay(getActivity());
 
-		Capability cap = WheelmapApp.getCapabilityLevel();
-		if (cap == Capability.DEGRADED_MIN || cap == Capability.DEGRADED_MAX) {
+		if (AppCapability.degradeLargeMapQuality()) {
 			mPoisItemizedOverlay.enableLowDrawQuality(true);
 			mCurrLocationOverlay.enableLowDrawQuality(true);
 			mCurrLocationOverlay.enableUseOnlyOneBitmap(true);
-
 		}
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
@@ -329,7 +327,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			showSearch();
 			return true;
 		case R.id.menu_location:
-			centerMap(mLastGeoPointE6, true);
+			centerMap(mCurrentLocation, true);
 			requestUpdate();
 			break;
 		default:
@@ -405,16 +403,31 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	private void centerMap(GeoPoint geoPoint, boolean force) {
-		if (!isCentered || force) {
-			mMapController.setCenter(geoPoint);
-			isCentered = true;
+		Log.d(TAG, "centerMap: force = " + force + " isCentered = "
+				+ isCentered + " geoPoint = " + geoPoint);
+		if (force || !isCentered)
+			setCenterWithOffset(geoPoint);
+	}
+
+	private void setCenterWithOffset(GeoPoint geoPoint) {
+		if (geoPoint == null)
+			return;
+
+		Projection projection = mMapView.getProjection();
+		Point point = new Point();
+
+		projection.toPixels(geoPoint, point);
+
+		if (!mHeightFull) {
+			int mVerticalOffset = mMapView.getHeight() / 4;
+			point.y -= mVerticalOffset;
 		}
 
-		// we got the first time current position so center map on it
-		if (mLastGeoPointE6 == null && !isCentered) {
-			mMapController.setCenter(geoPoint);
-			isCentered = true;
-		}
+		mMapController.setCenter(projection.fromPixels(point.x, point.y));
+	}
+
+	public void setHeightFull(boolean heightFull) {
+		mHeightFull = heightFull;
 	}
 
 	private void setCursor(Cursor cursor) {
@@ -464,10 +477,12 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void setCurrentLocation(LocationInfo location) {
-		mLastGeoPointE6 = new GeoPoint(location.lastLat, location.lastLong);
-		mCurrLocationOverlay
-				.setLocation(mLastGeoPointE6, location.lastAccuracy);
-		centerMap(mLastGeoPointE6, false);
+		GeoPoint geoPoint = new GeoPoint(location.lastLat, location.lastLong);
+		mCurrLocationOverlay.setLocation(geoPoint, location.lastAccuracy);
+		if (mCurrentLocation == null)
+			centerMap(geoPoint, false);
+
+		mCurrentLocation = geoPoint;
 	}
 
 	public void markItem(ContentValues values, boolean centerToItem) {

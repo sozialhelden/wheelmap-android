@@ -22,14 +22,11 @@
 package org.wheelmap.android.app;
 
 import org.acra.ACRA;
-import org.acra.ErrorReporter;
 import org.acra.annotation.ReportsCrashes;
-import org.mapsforge.android.maps.MapActivity;
-import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.UserQueryHelper;
 
-import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 
@@ -52,63 +49,40 @@ public class WheelmapApp extends Application {
 	private final static String TAG = WheelmapApp.class.getSimpleName();
 
 	private static WheelmapApp INSTANCE;
-	private MyLocationManager mLocationManager;
 	private SupportManager mSupportManager;
 	private Bus mBus;
-	private int mMemoryClass;
 
-	private int mMaxMemoryMB;
-	private final static long MAX_MEMORY_DIVISOR = 1024 * 1024;
-	private final static int MAX_MEMORY_LIMIT_FULL = 28;
-	private final static int MAX_MEMORY_LIMIT_DEGRADED_MIN = 24;
-	private final static int MAX_MEMORY_LIMIT_DEGRADED_MAX = 20;
+	private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
+	private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
 
-	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MAX = 16;
-	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MED = 8;
-	private final static int MAPSFORGE_MEMCACHE_CAPACITY_MIN = 0;
-
-	public enum Capability {
-		FULL, DEGRADED_MIN, DEGRADED_MAX, NOTWORKING
-	};
-
-	public Capability mCapability;
+	private static final long PASSIVE_FREQUENCE = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+	private static final int PASSIVE_MAXIMUM_AGE = (int) AlarmManager.INTERVAL_HOUR;
 
 	@Override
 	public void onCreate() {
 		INSTANCE = this;
 
 		ACRA.init(this);
-		Log.init(this);
+		Log.init(getApplicationContext());
+		AppCapability.init(getApplicationContext());
 		mBus = new Bus();
-		LocationLibrary.initialiseLibrary(getBaseContext(),
-				"org.wheelmap.android.online");
 
-		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-		mMemoryClass = am.getMemoryClass();
-		Log.d(TAG, "memoryClass = " + mMemoryClass);
-		ErrorReporter.getInstance().putCustomData("memoryClass",
-				Integer.toString(mMemoryClass));
-
-		mMaxMemoryMB = (int) (Runtime.getRuntime().maxMemory() / MAX_MEMORY_DIVISOR);
-		Log.d(TAG, "mMaxMemoryMB = " + mMaxMemoryMB);
-		ErrorReporter.getInstance().putCustomData("maxMemoryMB",
-				Integer.toString(mMaxMemoryMB));
+		LocationLibrary.initialiseLibrary(getBaseContext(), ACTIVE_FREQUENCY,
+				ACTIVE_MAXIMUM_AGE, "org.wheelmap.android.online");
 
 		super.onCreate();
 		Log.d(TAG, "onCreate");
-		mLocationManager = MyLocationManager.initOnce(this);
 		mSupportManager = new SupportManager(this);
 		UserQueryHelper.init(this);
 
-		calcCapabilityLevel();
-		setMapsforgeSharedMemcacheSize();
 	}
 
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
-		mLocationManager.clear();
 		Log.d(TAG, "onTerminate");
+		LocationLibrary.initialiseLibrary(getBaseContext(), PASSIVE_FREQUENCE,
+				PASSIVE_MAXIMUM_AGE, "org.wheelmap.android.online");
 	}
 
 	@Override
@@ -125,27 +99,6 @@ public class WheelmapApp extends Application {
 		return INSTANCE.mBus;
 	}
 
-	public static int getMemoryClass() {
-		return INSTANCE.mMemoryClass;
-	}
-
-	private void calcCapabilityLevel() {
-		if (mMaxMemoryMB >= MAX_MEMORY_LIMIT_FULL)
-			mCapability = Capability.FULL;
-		else if (mMaxMemoryMB < MAX_MEMORY_LIMIT_FULL
-				&& mMaxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MIN)
-			mCapability = Capability.DEGRADED_MIN;
-		else if (mMaxMemoryMB < MAX_MEMORY_LIMIT_DEGRADED_MIN
-				&& mMaxMemoryMB >= MAX_MEMORY_LIMIT_DEGRADED_MAX)
-			mCapability = Capability.DEGRADED_MAX;
-		else
-			mCapability = Capability.NOTWORKING;
-	}
-
-	public static Capability getCapabilityLevel() {
-		return INSTANCE.mCapability;
-	}
-
 	public static SupportManager getSupportManager() {
 		if (INSTANCE == null)
 			Log.d(TAG, "INSTANCE == null - how can that be?");
@@ -154,17 +107,5 @@ public class WheelmapApp extends Application {
 					"INSTANCE != null - mSupportManager = null - how can that be?");
 
 		return INSTANCE.mSupportManager;
-	}
-
-	private void setMapsforgeSharedMemcacheSize() {
-		int capacity;
-		if (mCapability == Capability.FULL)
-			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MAX;
-		else if (mCapability == Capability.DEGRADED_MAX)
-			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MED;
-		else
-			capacity = MAPSFORGE_MEMCACHE_CAPACITY_MIN;
-
-		MapActivity.setSharedRAMCacheCapacity(capacity);
 	}
 }

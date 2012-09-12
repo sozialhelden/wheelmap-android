@@ -14,23 +14,33 @@
         android:layout_height="fill_parent"
         android:background="@android:color/black" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:weightSum="2" >
+        android:layout_height="fill_parent" >
 
-        <FrameLayout
-            android:id="@+id/detail_layout"
-            android:layout_width="fill_parent"
+        <View
+            android:id="@+id/center_position"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_centerVertical="true" />
 
         <FrameLayout
             android:id="@+id/map_layout"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-    </LinearLayout>
+            android:layout_height="fill_parent" />
+
+        <FrameLayout
+            android:id="@+id/detail_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/center_position" />
+
+        <ImageButton
+            android:id="@+id/button_detail_resize"
+            style="@style/IconLarge"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_detail_collapse" />
+    </RelativeLayout>
 
 </LinearLayout>
