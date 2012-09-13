@@ -55,7 +55,7 @@ public class MultiResultReceiver extends ResultReceiver {
 		return mReceivers.size();
 	}
 
-	public boolean addReceiver(ResultReceiver receiver, boolean resentLast) {
+	public boolean addReceiver(ResultReceiver receiver, boolean resendLast) {
 		boolean isAdded = false;
 
 		if (receiver == null)
@@ -65,7 +65,7 @@ public class MultiResultReceiver extends ResultReceiver {
 			isAdded = true;
 		}
 
-		if (resentLast)
+		if (resendLast)
 			receiver.send(mResultCode, mResultData);
 
 		return isAdded;
