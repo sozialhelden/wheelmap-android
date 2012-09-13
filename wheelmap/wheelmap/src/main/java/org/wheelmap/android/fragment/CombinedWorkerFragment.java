@@ -16,7 +16,6 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.wheelmap.android.utils.UtilsMisc;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
@@ -30,7 +29,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -45,6 +43,8 @@ public class CombinedWorkerFragment extends LocationFragment implements
 
 	public final static int LOADER_LIST_ID = 0;
 	public final static int LOADER_MAP_ID = 1;
+
+	private final static float QUERY_DISTANCE_DEFAULT = 0.8f;
 
 	private WorkerFragmentListener mFragmentListener;
 	private DetachableResultReceiver mReceiver;
@@ -75,6 +75,7 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 
+		requestUpdate(null);
 	}
 
 	@Override
@@ -119,7 +120,6 @@ public class CombinedWorkerFragment extends LocationFragment implements
 	@Override
 	public void registerDisplayFragment(DisplayFragment fragment) {
 		mListener.add(fragment);
-
 	}
 
 	@Override
@@ -129,13 +129,17 @@ public class CombinedWorkerFragment extends LocationFragment implements
 
 	@Override
 	protected void updateLocation() {
+		Log.d(TAG, "updateLocation");
 		updateDisplayLocation();
 		resetCursorLoaderUri();
 	}
 
 	private void updateDisplayLocation() {
+		Log.d(TAG, "updateDisplayLocation fragments = " + mListener.size());
 		for (DisplayFragment fragment : mListener) {
-			fragment.setCurrentLocation(getLocationInfo());
+			Log.d(TAG, "updateDisplayLocation setCurrentLocation on "
+					+ fragment.getTag());
+			fragment.setCurrentLocation(getLocation());
 		}
 	}
 
@@ -155,9 +159,14 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		if (isSearchMode)
 			return;
 
-		bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
-		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-		SyncServiceHelper.executeRequest(getActivity(), bundle);
+		if (bundle == null) {
+			SyncServiceHelper.retrieveNodesByDistance(getActivity(),
+					getLocation(), QUERY_DISTANCE_DEFAULT, mReceiver);
+		} else {
+			bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
+			bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
+			SyncServiceHelper.executeRequest(getActivity(), bundle);
+		}
 	}
 
 	@Override
@@ -197,8 +206,7 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		if (bundle.containsKey(Extra.BOUNDING_BOX)) {
 			// noop
 		} else if (bundle.containsKey(Extra.DISTANCE_LIMIT)) {
-			bundle.putParcelable(Extra.LOCATION,
-					UtilsMisc.convertLocationInfo(getLocationInfo()));
+			bundle.putParcelable(Extra.LOCATION, getLocation());
 			bundle.remove(Extra.BOUNDING_BOX);
 		}
 
@@ -232,12 +240,14 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		isSearchMode = searchMode;
 		if (mFragmentListener != null)
 			mFragmentListener.onSearchModeChange(isSearchMode);
+		update();
 	}
 
 	@Override
 	public void setSearchMode(boolean searchMode) {
 		Log.d(TAG, "setSearchMode: " + isSearchMode);
 		isSearchMode = searchMode;
+		update();
 	}
 
 	@Override
@@ -249,7 +259,7 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		} else {
 			String query = UserQueryHelper.getUserQuery();
 			return new CursorLoader(getActivity(),
-					POIs.createUriSorted(getLocationInfo()), POIs.PROJECTION,
+					POIs.createUriSorted(getLocation()), POIs.PROJECTION,
 					query, null, null);
 		}
 	}
@@ -259,11 +269,8 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		if (loader.getId() == LOADER_MAP_ID) {
 			mMapCursor = cursor;
 		} else {
-			LocationInfo locationInfo = getLocationInfo();
-
 			Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(
-					locationInfo.lastLat, locationInfo.lastLong);
-
+					getLocation());
 			Cursor wrappingCursor = new POIsCursorWrapper(cursor, location);
 			Log.d(TAG, "cursorloader - new cursor - cursor size = "
 					+ wrappingCursor.getCount());
@@ -277,9 +284,19 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		Log.d(TAG, "onLoaderReset - why is that?");
 	}
 
+	private void resetCursorLoaderUri() {
+		Loader<Cursor> loader = getLoaderManager().getLoader(LOADER_LIST_ID);
+		if (loader == null)
+			return;
+
+		CursorLoader cl = (CursorLoader) loader;
+		cl.setUri(POIs.createUriSorted(getLocation()));
+		loader.forceLoad();
+	}
+
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "onReceiveResult in mapsforge resultCode = " + resultCode);
+		Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			setRefreshStatus(true);
@@ -298,15 +315,6 @@ public class CombinedWorkerFragment extends LocationFragment implements
 		}
 
 		}
-	}
-
-	private void resetCursorLoaderUri() {
-		Loader<Cursor> loader = getLoaderManager().getLoader(LOADER_LIST_ID);
-		if (loader == null)
-			return;
-
-		CursorLoader cl = (CursorLoader) loader;
-		cl.setUri(POIs.createUriSorted(getLocationInfo()));
 	}
 
 	@Subscribe

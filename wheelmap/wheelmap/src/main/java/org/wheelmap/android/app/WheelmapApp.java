@@ -23,14 +23,13 @@ package org.wheelmap.android.app;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.UserQueryHelper;
 
-import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
 import com.squareup.otto.Bus;
 
 import de.akquinet.android.androlog.Log;
@@ -55,9 +54,6 @@ public class WheelmapApp extends Application {
 	private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
 	private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
 
-	private static final long PASSIVE_FREQUENCE = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-	private static final int PASSIVE_MAXIMUM_AGE = (int) AlarmManager.INTERVAL_HOUR;
-
 	@Override
 	public void onCreate() {
 		INSTANCE = this;
@@ -65,10 +61,8 @@ public class WheelmapApp extends Application {
 		ACRA.init(this);
 		Log.init(getApplicationContext());
 		AppCapability.init(getApplicationContext());
+		MyLocationManager.init(getApplicationContext());
 		mBus = new Bus();
-
-		LocationLibrary.initialiseLibrary(getBaseContext(), ACTIVE_FREQUENCY,
-				ACTIVE_MAXIMUM_AGE, "org.wheelmap.android.online");
 
 		super.onCreate();
 		Log.d(TAG, "onCreate");
@@ -81,8 +75,7 @@ public class WheelmapApp extends Application {
 	public void onTerminate() {
 		super.onTerminate();
 		Log.d(TAG, "onTerminate");
-		LocationLibrary.initialiseLibrary(getBaseContext(), PASSIVE_FREQUENCE,
-				PASSIVE_MAXIMUM_AGE, "org.wheelmap.android.online");
+		MyLocationManager.destroy();
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -45,9 +46,11 @@ import wheelmap.org.WheelchairState;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -62,7 +65,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.google.inject.Inject;
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -115,41 +117,37 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		mResizeButton.setOnClickListener(this);
 
 		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction t = fm.beginTransaction();
 
 		mWorkerFragment = (CombinedWorkerFragment) fm
 				.findFragmentByTag(CombinedWorkerFragment.TAG);
 		if (mWorkerFragment == null) {
 			mWorkerFragment = new CombinedWorkerFragment();
-			fm.beginTransaction()
-					.add(mWorkerFragment, CombinedWorkerFragment.TAG).commit();
+			t.add(mWorkerFragment, CombinedWorkerFragment.TAG);
 		}
 
 		mListFragment = (POIsListFragment) fm
 				.findFragmentById(R.id.list_layout);
 		if (mListFragment == null) {
 			mListFragment = POIsListFragment.newInstance(false, true);
-			fm.beginTransaction()
-					.add(R.id.list_layout, mListFragment, POIsListFragment.TAG)
-					.commit();
+			t.add(R.id.list_layout, mListFragment, POIsListFragment.TAG);
 		}
 
 		mMapFragment = (POIsMapsforgeFragment) fm
 				.findFragmentById(R.id.map_layout);
 		if (mMapFragment == null) {
 			mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
-			fm.beginTransaction()
-					.add(R.id.map_layout, mMapFragment,
-							POIsMapsforgeFragment.TAG).commit();
+			t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
 		}
 
 		mDetailFragment = (POIDetailFragment) fm
 				.findFragmentById(R.id.detail_layout);
 		if (mDetailFragment == null) {
 			mDetailFragment = POIDetailFragment.newInstance();
-			fm.beginTransaction().add(R.id.detail_layout, mDetailFragment)
-					.commit();
+			t.add(R.id.detail_layout, mDetailFragment);
 		}
 
+		t.commit();
 	}
 
 	@Override
@@ -266,11 +264,10 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 	}
 
 	private long insertNewPoi() {
-		LocationInfo location = new LocationInfo(getBaseContext());
-
+		Location location = MyLocationManager.getLastLocation();
 		String name = getString(R.string.new_default_name);
 		long id = PrepareDatabaseHelper.insertNew(getContentResolver(), name,
-				location.lastLat, location.lastLong);
+				location.getLatitude(), location.getLongitude());
 
 		return id;
 	}
@@ -392,7 +389,6 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 		@Override
 		public void onAnimationStart(Animator animation) {
-			mDetailAnimationRunning = true;
 			if (!mDetailVisible)
 				mDetailLayout.setVisibility(View.VISIBLE);
 
@@ -416,7 +412,6 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 			mMapFragment.setHeightFull(!mDetailVisible);
 			mResizeButton.setImageResource(buttonDrawableRes);
 			mDetailAnimationRunning = false;
-
 		}
 
 		@Override
@@ -434,6 +429,7 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 	private void toggleResize() {
 		if (mDetailAnimationRunning)
 			return;
+		mDetailAnimationRunning = true;
 
 		float startValue;
 		float endValue;

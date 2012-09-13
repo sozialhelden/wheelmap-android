@@ -35,7 +35,6 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.wheelmap.android.utils.UtilsMisc;
 
 import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
@@ -49,7 +48,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -134,7 +132,7 @@ public class POIsListWorkerFragment extends LocationFragment implements
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
+		Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			setRefreshStatus(true);
@@ -157,7 +155,6 @@ public class POIsListWorkerFragment extends LocationFragment implements
 
 	protected void updateLocation() {
 		resetCursorLoaderUri();
-
 	}
 
 	private void setRefreshStatus(boolean refreshState) {
@@ -171,7 +168,8 @@ public class POIsListWorkerFragment extends LocationFragment implements
 			return;
 
 		CursorLoader cl = (CursorLoader) loader;
-		cl.setUri(POIs.createUriSorted(getLocationInfo()));
+		cl.setUri(POIs.createUriSorted(getLocation()));
+		loader.forceLoad();
 	}
 
 	private float getDistanceFromPreferences() {
@@ -190,17 +188,13 @@ public class POIsListWorkerFragment extends LocationFragment implements
 		Log.d(TAG, "onCreateLoader");
 		String query = UserQueryHelper.getUserQuery();
 		return new CursorLoader(getActivity(),
-				POIs.createUriSorted(getLocationInfo()), POIs.PROJECTION,
-				query, null, null);
+				POIs.createUriSorted(getLocation()), POIs.PROJECTION, query,
+				null, null);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		LocationInfo locationInfo = getLocationInfo();
-
-		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(
-				locationInfo.lastLong, locationInfo.lastLat);
-
+		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(getLocation());
 		Cursor wrappingCursor = new POIsCursorWrapper(cursor, location);
 		Log.d(TAG, "cursorloader - new cursor - cursor size = "
 				+ wrappingCursor.getCount());
@@ -235,9 +229,8 @@ public class POIsListWorkerFragment extends LocationFragment implements
 
 	@Override
 	public void requestUpdate(Bundle bundle) {
-		getLocationInfo().refresh(getActivity());
-		SyncServiceHelper.retrieveNodesByDistance(getActivity(),
-				getLocationInfo(), mDistance, mReceiver);
+		SyncServiceHelper.retrieveNodesByDistance(getActivity(), getLocation(),
+				mDistance, mReceiver);
 	}
 
 	@Override
@@ -263,8 +256,7 @@ public class POIsListWorkerFragment extends LocationFragment implements
 		}
 
 		if (bundle.containsKey(Extra.DISTANCE_LIMIT))
-			bundle.putParcelable(Extra.LOCATION,
-					UtilsMisc.convertLocationInfo(getLocationInfo()));
+			bundle.putParcelable(Extra.LOCATION, getLocation());
 
 		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
 		SyncServiceHelper.executeRequest(getActivity(), bundle);

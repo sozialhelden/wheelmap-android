@@ -45,6 +45,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -58,7 +59,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 import de.akquinet.android.androlog.Log;
 
@@ -71,6 +71,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private WorkerFragment mWorkerFragment;
 	private DisplayFragmentListener mListener;
 	private Bundle mDeferredExecuteBundle;
+	private boolean mFirstStart;
 
 	private MapView mMapView;
 	private MapController mMapController;
@@ -78,7 +79,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private MyLocationOverlay mCurrLocationOverlay;
 	private GeoPoint mLastRequestedPosition;
 	private GeoPoint mCurrentLocation;
-	private boolean mHeightFull = false;
+	private boolean mHeightFull;
 	private boolean isCentered;
 	private int oldZoomLevel = 18;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
@@ -158,13 +159,14 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		Fragment fragment = null;
 		if (getArguments() == null
 				|| getArguments()
 						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-			Log.d(TAG, "Creating Worker Fragment");
+			mHeightFull = true;
 			FragmentManager fm = getFragmentManager();
-			Fragment fragment = (POIsMapsforgeWorkerFragment) fm
-					.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
+			fragment = fm.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
+			Log.d(TAG, "Looking for Worker Fragment:" + fragment);
 			if (fragment == null) {
 				fragment = new POIsMapsforgeWorkerFragment();
 				fm.beginTransaction()
@@ -172,28 +174,24 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 						.commit();
 
 			}
-			mWorkerFragment = (WorkerFragment) fragment;
-			mWorkerFragment.registerDisplayFragment(this);
+
 		} else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
 				false)) {
 			Log.d(TAG, "Connecting to Combined Worker Fragment");
 			FragmentManager fm = getFragmentManager();
-			Fragment fragment = fm
-					.findFragmentByTag(CombinedWorkerFragment.TAG);
-			mWorkerFragment = (WorkerFragment) fragment;
-			mWorkerFragment.registerDisplayFragment(this);
-			Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
-
+			fragment = fm.findFragmentByTag(CombinedWorkerFragment.TAG);
 		}
 
-		if (savedInstanceState != null)
+		mWorkerFragment = (WorkerFragment) fragment;
+		mWorkerFragment.registerDisplayFragment(this);
+		Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+
+		if (savedInstanceState == null)
+			mFirstStart = true;
+		else
 			executeState(savedInstanceState);
-		else if (getArguments() != null)
-			executeState(getArguments());
-		else {
-			Bundle storedExecute = getExecuteBundle();
-			executeState(storedExecute);
-		}
+		executeState(getExecuteBundle());
+
 	}
 
 	@Override
@@ -476,9 +474,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void setCurrentLocation(LocationInfo location) {
-		GeoPoint geoPoint = new GeoPoint(location.lastLat, location.lastLong);
-		mCurrLocationOverlay.setLocation(geoPoint, location.lastAccuracy);
+	public void setCurrentLocation(Location location) {
+		GeoPoint geoPoint = new GeoPoint(location.getLatitude(),
+				location.getLongitude());
+		mCurrLocationOverlay.setLocation(geoPoint, location.getAccuracy());
 		if (mCurrentLocation == null)
 			centerMap(geoPoint, false);
 

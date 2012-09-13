@@ -1,69 +1,74 @@
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Extra.What;
+import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibrary;
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationLibraryConstants;
 
 import de.akquinet.android.androlog.Log;
 
-public abstract class LocationFragment extends SherlockFragment {
+public abstract class LocationFragment extends SherlockFragment implements
+		Receiver {
+
 	private final static String TAG = LocationFragment.class.getSimpleName();
-
-	private final IntentFilter mIntentFilter = new IntentFilter(
-			LocationLibraryConstants
-					.getLocationChangedPeriodicBroadcastAction());
-
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.v(TAG, "onReceive: received location update");
-			mLocationInfo = (LocationInfo) intent
-					.getSerializableExtra(LocationLibraryConstants.LOCATION_BROADCAST_EXTRA_LOCATIONINFO);
-			updateLocation();
-		}
-	};
-	private LocationInfo mLocationInfo;
+	private MyLocationManager mLocationManager;
+	private Location mLocation;
+	private DetachableResultReceiver mReceiver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "setLocationInfo: creating location");
-		setLocationInfo(new LocationInfo(WheelmapApp.get()));
-		Log.d(TAG, "locationInfo = " + getLocationInfo().lastLat + " "
-				+ getLocationInfo().lastLong);
-		updateLocation();
+		Log.d(TAG, "onCreate");
+		mReceiver = new DetachableResultReceiver(new Handler());
+		mReceiver.setReceiver(mReceiverInterface);
+		mLocationManager = MyLocationManager.get();
+		setLocation(MyLocationManager.getLastLocation());
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		getActivity().registerReceiver(mReceiver, mIntentFilter);
-		LocationLibrary.forceLocationUpdate(getActivity());
+		Log.d(TAG, "onResume: registerReceiver");
+		mLocationManager.register(mReceiver, true);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		getActivity().unregisterReceiver(mReceiver);
+		Log.d(TAG, "onPause");
+		mLocationManager.release(mReceiver);
 	}
 
-	protected LocationInfo getLocationInfo() {
-		return mLocationInfo;
+	protected Location getLocation() {
+		return mLocation;
 	}
 
-	protected void setLocationInfo(LocationInfo locationInfo) {
-		mLocationInfo = locationInfo;
+	protected void setLocation(Location locationInfo) {
+		mLocation = locationInfo;
 	}
 
-	abstract protected void updateLocation();
+	private Receiver mReceiverInterface = new Receiver() {
+		public void onReceiveResult(int resultCode, Bundle resultData) {
+			Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
+			switch (resultCode) {
+			case What.LOCATION_MANAGER_UPDATE: {
+				mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
+				if (!isAdded())
+					return;
+				updateLocation();
+				break;
+			}
 
+			}
+		}
+	};
+
+	protected abstract void updateLocation();
 }

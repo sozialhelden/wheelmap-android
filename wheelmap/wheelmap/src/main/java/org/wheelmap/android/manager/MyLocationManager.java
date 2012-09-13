@@ -86,29 +86,24 @@ public class MyLocationManager {
 
 	}
 
-	public static MyLocationManager initOnce(Context context) {
+	public static void init(Context context) {
 		if (INSTANCE == null) {
 			INSTANCE = new MyLocationManager(context);
 		}
-
-		return INSTANCE;
 	}
 
-	public void clear() {
-		releaseLocationUpdates();
-		mReceiver.clearReceiver();
+	public static void destroy() {
+		INSTANCE.releaseLocationUpdates();
+		INSTANCE.mReceiver.clearReceiver();
 		INSTANCE = null;
 	}
 
-	public static MyLocationManager get(ResultReceiver receiver,
-			boolean resendLast) {
-
-		INSTANCE.register(receiver, resendLast);
+	public static MyLocationManager get() {
 		return INSTANCE;
 	}
 
-	public Location getLastLocation() {
-		return mCurrentBestLocation;
+	public static Location getLastLocation() {
+		return INSTANCE.mCurrentBestLocation;
 	}
 
 	public void register(ResultReceiver receiver, boolean resendLast) {
@@ -239,10 +234,6 @@ public class MyLocationManager {
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 		}
-	}
-
-	public interface LocationUpdate {
-		public void onNewLocation(Location location);
 	}
 
 	public void updateLocation(Location location) {

@@ -22,10 +22,9 @@
 package org.wheelmap.android.model;
 
 import android.content.ContentResolver;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.BaseColumns;
-
-import com.littlefluffytoys.littlefluffylocationlibrary.LocationInfo;
 
 public class Wheelmap {
 	public static final String AUTHORITY = "org.wheelmap.android";
@@ -117,14 +116,14 @@ public class Wheelmap {
 		public static final String PARAMETER_SORTED = "sorted";
 		public static final String PARAMETER_NONOTIFY = "no_notify";
 
-		public static Uri createUriSorted(LocationInfo location) {
+		public static Uri createUriSorted(Location location) {
 			Uri uri = CONTENT_URI_RETRIEVED;
 			return uri
 					.buildUpon()
 					.appendQueryParameter(PARAMETER_LATITUDE,
-							Double.toString(location.lastLat))
+							Double.toString(location.getLatitude()))
 					.appendQueryParameter(PARAMETER_LONGITUDE,
-							Double.toString(location.lastLong))
+							Double.toString(location.getLongitude()))
 					.appendQueryParameter(PARAMETER_SORTED,
 							String.valueOf(true)).build();
 		}

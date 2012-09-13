@@ -82,7 +82,6 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
-
 	}
 
 	@Override
@@ -124,7 +123,7 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 
 	/** {@inheritDoc} */
 	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "onReceiveResult in mapsforge resultCode = " + resultCode);
+		Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
 		switch (resultCode) {
 		case SyncService.STATUS_RUNNING: {
 			setRefreshStatus(true);
@@ -141,13 +140,12 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 				mListener.onError(e);
 			break;
 		}
-
 		}
 	}
 
 	protected void updateLocation() {
 		if (mDisplayFragment != null)
-			mDisplayFragment.setCurrentLocation(getLocationInfo());
+			mDisplayFragment.setCurrentLocation(getLocation());
 	}
 
 	private void setRefreshStatus(boolean refreshState) {
