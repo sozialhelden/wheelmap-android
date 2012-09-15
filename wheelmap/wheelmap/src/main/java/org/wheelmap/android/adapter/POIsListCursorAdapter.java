@@ -24,6 +24,7 @@ package org.wheelmap.android.adapter;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.model.DirectionCursorWrapper;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.view.POIsListItemView;
@@ -76,7 +77,10 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		WheelchairState state = POIHelper.getWheelchair(cursor);
 		int index = cursor
 				.getColumnIndex(POIsCursorWrapper.LOCATION_COLUMN_NAME);
-		double distance = cursor.getDouble(index);
+		float distance = cursor.getFloat(index);
+		float direction = cursor
+				.getFloat(cursor
+						.getColumnIndex(DirectionCursorWrapper.SHOW_DIRECTION_COLUMN_NAME));
 		int categoryId = POIHelper.getCategoryId(cursor);
 		int nodeTypeId = POIHelper.getNodeTypeId(cursor);
 		NodeType nodeType = manager.lookupNodeType(nodeTypeId);
@@ -91,6 +95,9 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		pliv.setNodeType(nodeType.localizedName);
 
 		pliv.setDistance(mDistanceFormatter.format(distance));
+		pliv.setDirection(direction);
+		if (name != null && name.startsWith("Sweet"))
+			Log.d(TAG, "name = " + name + " direction = " + direction);
 		Drawable marker = manager.lookupWheelDrawable(state.getId());
 		pliv.setIcon(marker);
 	}
@@ -101,12 +108,12 @@ public class POIsListCursorAdapter extends CursorAdapter {
 	}
 
 	private interface DistanceFormatter {
-		String format(double distance);
+		String format(float distance);
 	}
 
 	private class DistanceFormatterMetric implements DistanceFormatter {
 		@Override
-		public String format(double distance) {
+		public String format(float distance) {
 			if (distance < 1.0)
 				return String.format("%2.0f0m", distance * 100.0);
 			else
@@ -117,7 +124,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 	private class DistanceFormatterAnglo implements DistanceFormatter {
 
 		@Override
-		public String format(double distance) {
+		public String format(float distance) {
 
 			if (distance < 1.0)
 				return String.format("%2.0f0yd", distance * 176.0);

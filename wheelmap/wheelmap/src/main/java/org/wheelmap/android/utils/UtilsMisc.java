@@ -23,6 +23,8 @@ package org.wheelmap.android.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -31,6 +33,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.Build;
 import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
 
 public class UtilsMisc {
@@ -116,15 +120,40 @@ public class UtilsMisc {
 		return hasHoneycomb() && isTablet(context);
 	}
 
-	/*
-	 * 
-	 * public static Location convertLocationInfo(LocationInfo locationInfo) {
-	 * Location location = new Location("Created from locationInfo");
-	 * location.setLatitude(locationInfo.lastLat);
-	 * location.setLongitude(locationInfo.lastLong);
-	 * location.setAccuracy(locationInfo.lastAccuracy);
-	 * 
-	 * return location; }
-	 */
+	public static int calcRotationOffset(Display display) {
+
+		int rotation;
+		try {
+			Method method;
+			if (hasFroyo()) {
+				method = Display.class.getDeclaredMethod("getRotation",
+						new Class[0]);
+			} else {
+				method = Display.class.getDeclaredMethod("getOrientation",
+						new Class[0]);
+			}
+			rotation = (Integer) method.invoke(display, new Object[0]);
+		} catch (NoSuchMethodException e) {
+			return 0;
+		} catch (IllegalArgumentException e) {
+			return 0;
+		} catch (IllegalAccessException e) {
+			return 0;
+		} catch (InvocationTargetException e) {
+			return 0;
+		}
+		switch (rotation) {
+		case Surface.ROTATION_0:
+			return 0;
+		case Surface.ROTATION_90:
+			return 90;
+		case Surface.ROTATION_180:
+			return 180;
+		case Surface.ROTATION_270:
+			return -90;
+		default:
+			return 0;
+		}
+	}
 
 }

@@ -36,7 +36,6 @@ import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.SharedPreferences;
@@ -194,8 +193,7 @@ public class POIsListWorkerFragment extends LocationFragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		Wgs84GeoCoordinates location = new Wgs84GeoCoordinates(getLocation());
-		Cursor wrappingCursor = new POIsCursorWrapper(cursor, location);
+		Cursor wrappingCursor = new POIsCursorWrapper(cursor, getLocation());
 		Log.d(TAG, "cursorloader - new cursor - cursor size = "
 				+ wrappingCursor.getCount());
 		mCursor = wrappingCursor;

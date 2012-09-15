@@ -25,6 +25,7 @@ import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
+import org.wheelmap.android.model.DirectionCursorWrapper;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -33,8 +34,13 @@ import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -74,6 +80,13 @@ public class POIsListFragment extends SherlockListFragment implements
 	private Cursor mCursor;
 	private Bus mBus;
 
+	private SensorManager mSensorManager;
+	private boolean mOrientationAvailable;
+	private Sensor mSensor;
+	private DirectionCursorWrapper mDirectionCursorWrapper;
+	private static final float MIN_DIRECTION_DELTA = 3;
+	private float mLastDirection;
+
 	public static POIsListFragment newInstance(boolean createWorker,
 			boolean disableSearch) {
 		POIsListFragment f = new POIsListFragment();
@@ -104,6 +117,10 @@ public class POIsListFragment extends SherlockListFragment implements
 		Log.d(TAG, "onCreate " + hashCode());
 		setHasOptionsMenu(true);
 
+		mSensorManager = (SensorManager) getActivity().getSystemService(
+				Context.SENSOR_SERVICE);
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		mOrientationAvailable = mSensor != null;
 	}
 
 	@Override
@@ -181,11 +198,16 @@ public class POIsListFragment extends SherlockListFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		if (mOrientationAvailable)
+			mSensorManager.registerListener(mSensorEventListener, mSensor,
+					SensorManager.SENSOR_DELAY_UI);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+		if (mOrientationAvailable)
+			mSensorManager.unregisterListener(mSensorEventListener);
 	}
 
 	@Override
@@ -279,7 +301,8 @@ public class POIsListFragment extends SherlockListFragment implements
 			return;
 
 		mCursor = cursor;
-		mAdapter.swapCursor(cursor);
+		mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
+		mAdapter.swapCursor(mDirectionCursorWrapper);
 		markItemClear();
 		refreshListPosition();
 	}
@@ -372,4 +395,37 @@ public class POIsListFragment extends SherlockListFragment implements
 		mPullToRefreshListView.getRefreshableView().setItemChecked(
 				mCheckedItem, false);
 	}
+
+	private SensorEventListener mSensorEventListener = new SensorEventListener() {
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			float direction = event.values[0];
+			if (direction > 180)
+				direction -= 360;
+
+			if (isAdded())
+				direction += UtilsMisc.calcRotationOffset(getActivity()
+						.getWindowManager().getDefaultDisplay());
+
+			updateDirection(direction);
+		}
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+		}
+	};
+
+	private void updateDirection(float direction) {
+		// if (Math.abs(direction - mLastDirection) < MIN_DIRECTION_DELTA)
+		// return;
+		if (mDirectionCursorWrapper == null)
+			return;
+
+		mDirectionCursorWrapper.setDeviceDirection(direction);
+		mLastDirection = direction;
+		mAdapter.notifyDataSetChanged();
+	}
+
 }

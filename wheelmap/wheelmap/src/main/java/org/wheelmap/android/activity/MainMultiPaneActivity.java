@@ -397,20 +397,16 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		@Override
 		public void onAnimationEnd(Animator animation) {
 			int newVisibility;
-			int buttonDrawableRes;
 			if (mDetailVisible) {
 				newVisibility = View.GONE;
 				mDetailVisible = false;
-				buttonDrawableRes = R.drawable.ic_detail_expand;
 			} else {
 				newVisibility = View.VISIBLE;
 				mDetailVisible = true;
-				buttonDrawableRes = R.drawable.ic_detail_collapse;
 			}
 
 			mDetailLayout.setVisibility(newVisibility);
 			mMapFragment.setHeightFull(!mDetailVisible);
-			mResizeButton.setImageResource(buttonDrawableRes);
 			mDetailAnimationRunning = false;
 		}
 
@@ -426,10 +422,22 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 	};
 
+	private void setCollapseButtonImage(boolean toCollapse) {
+		int buttonDrawableRes;
+		if (toCollapse) {
+			buttonDrawableRes = R.drawable.ic_detail_collapse;
+		} else {
+			buttonDrawableRes = R.drawable.ic_detail_expand;
+		}
+		mResizeButton.setImageResource(buttonDrawableRes);
+
+	}
+
 	private void toggleResize() {
 		if (mDetailAnimationRunning)
 			return;
 		mDetailAnimationRunning = true;
+		setCollapseButtonImage(!mDetailVisible);
 
 		float startValue;
 		float endValue;

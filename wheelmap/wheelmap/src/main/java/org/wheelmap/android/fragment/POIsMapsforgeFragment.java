@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.fragment;
 
+import java.util.List;
+
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -43,8 +45,13 @@ import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -88,6 +95,11 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	private Cursor mCursor;
 
+	private SensorManager mSensorManager;
+	private boolean mOrientationAvailable;
+	private List<Sensor> mSensors;
+	private float mDirection;
+
 	public static POIsMapsforgeFragment newInstance(boolean createWorker,
 			boolean disableSearch) {
 		POIsMapsforgeFragment f = new POIsMapsforgeFragment();
@@ -115,6 +127,10 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mSensorManager = (SensorManager) getActivity().getSystemService(
+				Context.SENSOR_SERVICE);
+		mSensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+		mOrientationAvailable = mSensors.size() > 0;
 	}
 
 	@Override
@@ -202,11 +218,16 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		if (mOrientationAvailable)
+			mSensorManager.registerListener(mSensorEventListener,
+					mSensors.get(0), SensorManager.SENSOR_DELAY_FASTEST);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+		if (mOrientationAvailable)
+			mSensorManager.unregisterListener(mSensorEventListener);
 	}
 
 	@Override
@@ -495,5 +516,23 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	public void markItemClear() {
 		mCurrLocationOverlay.unsetItem();
+	}
+
+	private SensorEventListener mSensorEventListener = new SensorEventListener() {
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			mDirection = event.values[0];
+			updateDirection(mDirection);
+		}
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+		}
+	};
+
+	private void updateDirection(float direction) {
+
 	}
 }

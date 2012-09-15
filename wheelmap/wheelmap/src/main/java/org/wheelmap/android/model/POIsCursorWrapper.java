@@ -23,47 +23,54 @@ package org.wheelmap.android.model;
 
 import org.wheelmap.android.utils.GeocoordinatesMath;
 
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.location.Location;
 
 public class POIsCursorWrapper extends CursorWrapper {
 
 	public final static String LOCATION_COLUMN_NAME = "location_column";
-	public int LOCATION_COLUMN_INDEX;
+	public final static String DIRECTION_COLUMN_NAME = "direction_column";
+	public final int LOCATION_COLUMN_INDEX;
+	public final int DIRECTION_COLUMN_INDEX;
+	public final float[] distanceResult = new float[1];
 
-	private Wgs84GeoCoordinates mLocation;
+	private Location mLocation;
 
-	public POIsCursorWrapper(Cursor cursor, Wgs84GeoCoordinates location) {
+	public POIsCursorWrapper(Cursor cursor, Location location) {
 		super(cursor);
 		mLocation = location;
 		LOCATION_COLUMN_INDEX = cursor.getColumnCount();
+		DIRECTION_COLUMN_INDEX = cursor.getColumnCount() + 1;
 	}
 
 	public int getColumnCount() {
-		return super.getColumnCount() + 1;
-	}
-
-	public void setLocation(Wgs84GeoCoordinates location) {
-		mLocation = location;
-		super.requery();
+		return super.getColumnCount() + 2;
 	}
 
 	@Override
 	public int getColumnIndex(String columnName) {
 		if (columnName.equals(LOCATION_COLUMN_NAME))
 			return LOCATION_COLUMN_INDEX;
+		else if (columnName.equals(DIRECTION_COLUMN_NAME))
+			return DIRECTION_COLUMN_INDEX;
 		else
 			return super.getColumnIndex(columnName);
 	}
 
 	@Override
-	public double getDouble(int columnIndex) {
+	public float getFloat(int columnIndex) {
 		if (columnIndex == LOCATION_COLUMN_INDEX) {
-			return GeocoordinatesMath.calculateDistance(mLocation,
-					new Wgs84GeoCoordinates(POIHelper.getLongitude(this),
-							POIHelper.getLatitude(this)));
+			Location target = new Location("");
+			target.setLatitude(POIHelper.getLatitude(this));
+			target.setLongitude(POIHelper.getLongitude(this));
+			return GeocoordinatesMath.calculateDistance(mLocation, target);
+		} else if (columnIndex == DIRECTION_COLUMN_INDEX) {
+			Location target = new Location("");
+			target.setLatitude(POIHelper.getLatitude(this));
+			target.setLongitude(POIHelper.getLongitude(this));
+			return (float) mLocation.bearingTo(target);
 		} else
-			return super.getDouble(columnIndex);
+			return super.getFloat(columnIndex);
 	}
 }

@@ -38,9 +38,12 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.wheelmap" parent="@style/Theme.HoloEverywhereLight.Sherlock">
+       	<!--  custom add -->
+       	<item name="android:selectableItemBackground">@drawable/selectable_background_wheelmap</item>
+        
         <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>

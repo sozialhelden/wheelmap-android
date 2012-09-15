@@ -30,6 +30,7 @@ public abstract class LocationFragment extends SherlockFragment implements
 		mReceiver.setReceiver(mReceiverInterface);
 		mLocationManager = MyLocationManager.get();
 		setLocation(MyLocationManager.getLastLocation());
+
 	}
 
 	@Override
@@ -44,6 +45,7 @@ public abstract class LocationFragment extends SherlockFragment implements
 		super.onPause();
 		Log.d(TAG, "onPause");
 		mLocationManager.release(mReceiver);
+
 	}
 
 	protected Location getLocation() {

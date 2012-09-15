@@ -99,4 +99,12 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary" />
 
+    <org.wheelmap.android.view.CompassView
+        android:id="@+id/compass"
+        style="@style/IconSmall"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_very_small" />
+
 </RelativeLayout>

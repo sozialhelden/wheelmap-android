@@ -33,7 +33,9 @@
             android:id="@+id/title_text_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/titlebar_right_invisible_icon"
+            android:layout_toRightOf="@+id/titlebar_icon"
             android:gravity="center_horizontal"
             android:orientation="vertical" >
 
@@ -46,7 +48,16 @@
             android:id="@+id/titlebar_icon"
             style="@style/IconMedium"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_large" />
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:id="@+id/titlebar_right_invisible_icon"
+            style="@style/IconMedium"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_large"
+            android:src="@android:color/transparent"
+            android:layout_alignParentRight="true" />
     </RelativeLayout>
 
     <ScrollView style="@style/Scrollable.View" >
@@ -96,7 +107,7 @@
                 android:hint="@string/poi_property_website"
                 android:textColorLink="@android:color/black" />
 
-            <View
+            <FrameLayout
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/separator_large"
                 android:background="@android:color/black" />
