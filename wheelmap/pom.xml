@@ -14,12 +14,14 @@
     </modules>
 
     <properties> 
+        <app.version.code>15</app.version.code>
+  		<app.version.name>${project.version}</app.version.name>
         <platform.version>4.1.1.4</platform.version>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
         <project.inceptionYear>2011</project.inceptionYear>
-	<main.basedir>${project.basedir}</main.basedir>
-	<project.extractDuplicates>false</project.extractDuplicates>
-	<github.global.server>github</github.global.server>
+	    <main.basedir>${project.basedir}</main.basedir>
+	    <project.extractDuplicates>false</project.extractDuplicates>
+	    <github.global.server>github</github.global.server>
         <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
         <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
     </properties>
@@ -89,7 +91,7 @@
                     <version>3.3.0</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                        <androidManifestFile>${project.build.directory}/filtered-manifest/AndroidManifest.xml</androidManifestFile>
                         <assetsDirectory>${project.basedir}/assets</assetsDirectory>
                         <resourceDirectory>${project.basedir}/res</resourceDirectory>
                         <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>

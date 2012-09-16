@@ -8,9 +8,7 @@
     <version>0.9.1-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.wheelmap.android</groupId>
   <artifactId>wheelmap-it</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
   <packaging>apk</packaging>
   <name>Wheelmap-it - Integration tests</name>
 
@@ -95,11 +93,34 @@
   </dependencies>
  
   <build>
+      <resources>
+          <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
+    	  <resource>
+              <directory>${project.basedir}</directory>
+      		  <filtering>true</filtering>
+      		  <targetPath>${project.build.directory}/filtered-manifest</targetPath>
+      		  <includes>
+                  <include>AndroidManifest.xml</include>
+      		  </includes>
+          </resource>
+      </resources>
     <plugins>
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
         <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+          <version>2.5</version>
+          <executions>
+            <execution>
+              <phase>initialize</phase>
+              <goals>
+                <goal>resources</goal>
+              </goals>
+            </execution>
+          </executions>
       </plugin>
     </plugins>
   </build>
