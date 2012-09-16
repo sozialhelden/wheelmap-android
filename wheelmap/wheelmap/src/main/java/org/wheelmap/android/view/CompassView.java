@@ -1,8 +1,9 @@
 package org.wheelmap.android.view;
 
+import org.wheelmap.android.online.R;
+
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -31,8 +32,9 @@ public class CompassView extends View {
 	private void init() {
 
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(3);
-		paint.setColor(Color.BLACK);
+		paint.setStrokeWidth(2);
+		paint.setColor(getContext().getResources().getColor(
+				R.color.dark_grey_two));
 
 		firstDraw = true;
 	}
