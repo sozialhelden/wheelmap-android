@@ -47,6 +47,11 @@ mvn android:run
 mvn license:update-file-header
   - an update of the copyright headers is done 
 
+mvn clean install ghDownloads:upload
+  - uploads apk to github
+  - needs a settings.xml with auth-information 
+    see: http://github.com/github/maven-plugins
+
 In the subdirectory (module) wheelmap-it
 -------------------------------
 mvn integration-test
