@@ -15,13 +15,13 @@
 
     <properties> 
         <app.version.code>15</app.version.code>
-  		<app.version.name>${project.version}</app.version.name>
+  	<app.version.name>${project.version}</app.version.name>
         <platform.version>4.1.1.4</platform.version>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
         <project.inceptionYear>2011</project.inceptionYear>
-	    <main.basedir>${project.basedir}</main.basedir>
-	    <project.extractDuplicates>false</project.extractDuplicates>
-	    <github.global.server>github</github.global.server>
+	<main.basedir>${project.basedir}</main.basedir>
+	<project.extractDuplicates>false</project.extractDuplicates>
+	<github.global.server>github</github.global.server>
         <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
         <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
     </properties>
