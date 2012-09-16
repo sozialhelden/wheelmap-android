@@ -25,8 +25,6 @@
 	<item type="id" name="title_container" />
 	<item type="id" name="title_logo" />
 	<item type="id" name="title_text" />
-	<item type="id" name="actionbar_compat" />
-	<item type="id" name="actionbar_compat_switcher" />
 	<item type="id" name="switch_list" />
 	<item type="id" name="switch_maps" />
 	

@@ -21,16 +21,7 @@
   #L%
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="ThemeHoloEverywhereLight.Transparent" parent="@style/Theme.HoloEverywhereLight.Sherlock">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!-- <item name="android:windowContentOverlay">@null</item> -->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:backgroundDimEnabled">true</item>
-    </style>
-    
+  
     <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap">
         
     </style>
