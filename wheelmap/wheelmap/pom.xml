@@ -206,7 +206,7 @@
 	      <configuration>
  	        <description>${project.version} release of ${project.name}</description>
 	        <override>true</override>
-	        <includeAttached>true</includeAttached>
+	        <includeAttached>false</includeAttached>
 	      </configuration>
 	    </plugin>
     </plugins>
