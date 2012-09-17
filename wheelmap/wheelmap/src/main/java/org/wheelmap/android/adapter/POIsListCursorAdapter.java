@@ -96,8 +96,8 @@ public class POIsListCursorAdapter extends CursorAdapter {
 
 		pliv.setDistance(mDistanceFormatter.format(distance));
 		pliv.setDirection(direction);
-		if (name != null && name.startsWith("Sweet"))
-			Log.d(TAG, "name = " + name + " direction = " + direction);
+		// if (name != null && name.startsWith("Sweet"))
+		// Log.d(TAG, "name = " + name + " direction = " + direction);
 		Drawable marker = manager.lookupWheelDrawable(state.getId());
 		pliv.setIcon(marker);
 	}
