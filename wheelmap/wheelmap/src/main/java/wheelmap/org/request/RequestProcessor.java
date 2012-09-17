@@ -27,6 +27,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.params.CoreProtocolPNames;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import de.akquinet.android.androlog.Log;
@@ -43,33 +44,35 @@ import de.akquinet.android.androlog.Log;
 public class RequestProcessor {
 	private final static String TAG = RequestProcessor.class.getSimpleName();
 	private final RestTemplate restTemplate;
-	private HttpComponentsClientHttpRequestFactory mRequestFactory; 
+	private HttpComponentsClientHttpRequestFactory mRequestFactory;
 
 	public RequestProcessor() {
 		restTemplate = new RestTemplate();
 		mRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		
-		restTemplate
-				.setRequestFactory(mRequestFactory);
+
+		restTemplate.setRequestFactory(mRequestFactory);
 		restTemplate.getMessageConverters().add(
 				new MappingJacksonHttpMessageConverter());
 	}
-	
+
 	public void setUserAgent(String userAgent) {
-		mRequestFactory.getHttpClient().getParams().setParameter(CoreProtocolPNames.USER_AGENT, userAgent);
+		mRequestFactory.getHttpClient().getParams()
+				.setParameter(CoreProtocolPNames.USER_AGENT, userAgent);
 	}
 
-	public <T> T get(final URI uri, Class<T> clazz) {
+	public <T> T get(final URI uri, Class<T> clazz) throws RestClientException {
 		Log.d(TAG, uri.getQuery());
 		return restTemplate.getForObject(uri, clazz);
 	}
 
-	public <T> T post(final URI uri, final T postObject, Class<T> clazz) {
+	public <T> T post(final URI uri, final T postObject, Class<T> clazz)
+			throws RestClientException {
 		Log.d(TAG, uri.getQuery());
 		return restTemplate.postForObject(uri, postObject, clazz);
 	}
 
-	public <T> void put(final URI uri, final T putObject) {
+	public <T> void put(final URI uri, final T putObject)
+			throws RestClientException {
 		Log.d(TAG, uri.getQuery());
 		restTemplate.put(uri, putObject);
 	}

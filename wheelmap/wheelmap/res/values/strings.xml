@@ -169,4 +169,6 @@
     <string name="title_editor">Editor</string>
     <string name="search_mode_distance">By Distance</string>
     <string name="search_mode_map">By Map</string>
+    <string name="error_server_failure">The Wheelmap server has a problem. Please try again later.</string>
+    <string name="error_client_failure">This App cant communicate with the server. You need an update. Sorry.</string>
 </resources>

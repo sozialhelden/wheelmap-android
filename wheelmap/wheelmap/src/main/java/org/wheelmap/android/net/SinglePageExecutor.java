@@ -27,6 +27,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.service.SyncServiceException;
 
@@ -103,22 +107,35 @@ public abstract class SinglePageExecutor<T extends Base> extends
 			} catch (URISyntaxException e) {
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_INTERNAL_ERROR, e);
-			} catch (Exception e) {
+			} catch (ResourceAccessException e) {
 				retryCount++;
 				if (retryCount < MAX_RETRY_COUNT) {
 					try {
 						Thread.sleep(200);
-					} catch (InterruptedException e1) {
-						// do nothing, just continue and try again
+					} catch (InterruptedException e1) { // do nothing, just
+														// continue and try
+														// again
 					}
 					continue;
-				} else
+				} else {
 					throw new SyncServiceException(
 							SyncServiceException.ERROR_NETWORK_FAILURE, e);
+				}
+			} catch (HttpClientErrorException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_CLIENT_FAILURE, e);
+
+			} catch (HttpServerErrorException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_SERVER_FAILURE, e);
+
+			} catch (RestClientException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_INTERNAL_ERROR, e);
 			}
+
 		}
 
 		return content;
 	}
-
 }

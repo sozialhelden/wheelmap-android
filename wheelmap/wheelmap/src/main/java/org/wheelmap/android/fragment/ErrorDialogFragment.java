@@ -101,7 +101,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 			SyncServiceException e = getArguments().getParcelable(
 					Extra.EXCEPTION);
 			msg = getString(e.getRessourceString());
-			if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
+			if (e.isNetworkError())
 				title = getString(R.string.error_network_title);
 			else
 				title = getString(R.string.error_occurred);

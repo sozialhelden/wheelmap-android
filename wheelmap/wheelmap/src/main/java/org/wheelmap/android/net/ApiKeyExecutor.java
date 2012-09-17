@@ -27,6 +27,8 @@ import java.net.URISyntaxException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.UserCredentials;
@@ -77,6 +79,9 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		try {
 			authInfo = mRequestProcessor.post(new URI(request), null,
 					AuthInfo.class);
+		} catch (URISyntaxException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_INTERNAL_ERROR, e);
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.value() == statusAuthFailed) {
@@ -87,12 +92,17 @@ public class ApiKeyExecutor extends AbstractExecutor {
 				Log.e(getTag(), "not osm connected");
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_NOT_OSM_CONNECTED, e);
+			} else {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_CLIENT_FAILURE, e);
 			}
-		} catch (URISyntaxException e) {
+		} catch (HttpServerErrorException e) {
 			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR, e);
+					SyncServiceException.ERROR_SERVER_FAILURE, e);
+		} catch (ResourceAccessException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_FAILURE, e);
 		}
-
 		mApiKey = authInfo.getUser().getApiKey();
 	}
 

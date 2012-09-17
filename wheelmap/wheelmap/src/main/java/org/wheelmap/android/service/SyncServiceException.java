@@ -28,40 +28,41 @@ import org.wheelmap.android.online.R;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SyncServiceException extends RuntimeException implements Parcelable, Serializable {
+public class SyncServiceException extends RuntimeException implements
+		Parcelable, Serializable {
 
 	private static final long serialVersionUID = -7198971477542767531L;
 	private final int id;
 
-	public final static int ERROR_NETWORK_FAILURE = 0x0;
-	public final static int ERROR_INTERNAL_ERROR = 0x1;
-	public final static int ERROR_AUTHORIZATION_ERROR = 0x2;
-	public final static int ERROR_NOT_OSM_CONNECTED = 0x3;
-	public final static int ERROR_AUTHORIZATION_REQUIRED = 0x4;
-	public final static int ERROR_REQUEST_FORBIDDEN = 0x5;
-	
-	private final int[] errorString = {
-			R.string.error_network_failure,
-			R.string.error_internal_error,
-			R.string.error_authorization_error,
+	public static final int ERROR_NETWORK_FAILURE = 0x0;
+	public static final int ERROR_INTERNAL_ERROR = 0x1;
+	public static final int ERROR_AUTHORIZATION_ERROR = 0x2;
+	public static final int ERROR_NOT_OSM_CONNECTED = 0x3;
+	public static final int ERROR_AUTHORIZATION_REQUIRED = 0x4;
+	public static final int ERROR_REQUEST_FORBIDDEN = 0x5;
+	public static final int ERROR_CLIENT_FAILURE = 0x6;
+	public static final int ERROR_SERVER_FAILURE = 0x7;
+
+	private final int[] errorString = { R.string.error_network_failure,
+			R.string.error_internal_error, R.string.error_authorization_error,
 			R.string.error_not_osm_connected,
 			R.string.error_authorization_required,
-			R.string.error_request_forbidden,
-	};
+			R.string.error_request_forbidden, R.string.error_client_failure,
+			R.string.error_server_failure };
 
-	public SyncServiceException(int id, Throwable t ) {
-		super( t );
+	public SyncServiceException(int id, Throwable t) {
+		super(t);
 		this.id = id;
 	}
-	
+
 	public int getErrorCode() {
 		return this.id;
 	}
-	
+
 	public int getRessourceString() {
 		return errorString[id];
 	}
-	
+
 	public static final Parcelable.Creator<SyncServiceException> CREATOR = new Parcelable.Creator<SyncServiceException>() {
 		@Override
 		public SyncServiceException createFromParcel(final Parcel in) {
@@ -73,22 +74,26 @@ public class SyncServiceException extends RuntimeException implements Parcelable
 			return new SyncServiceException[size];
 		}
 	};
-	
+
 	@Override
 	public void writeToParcel(final Parcel out, final int arg1) {
-		out.writeInt( this.id );
-		out.writeSerializable( getCause() );
+		out.writeInt(this.id);
+		out.writeSerializable(getCause());
 	}
 
 	private static SyncServiceException readFromParcel(final Parcel in) {
 		final int errorId = in.readInt();
 		final Throwable t = (Throwable) in.readSerializable();
-		
-		return new SyncServiceException( errorId, t );
+
+		return new SyncServiceException(errorId, t);
 	}
 
 	@Override
 	public int describeContents() {
 		return 0;
+	}
+
+	public boolean isNetworkError() {
+		return id == ERROR_NETWORK_FAILURE || id == ERROR_SERVER_FAILURE;
 	}
 }
