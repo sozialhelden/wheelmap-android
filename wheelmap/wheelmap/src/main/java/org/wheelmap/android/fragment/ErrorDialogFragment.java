@@ -74,10 +74,14 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		return dialog;
 	}
 
+	public void setOnErrorDialogListener(OnErrorDialogListener listener) {
+		mListener = listener;
+	}
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		if (activity instanceof OnErrorDialogListener)
+		if (mListener == null && activity instanceof OnErrorDialogListener)
 			mListener = (OnErrorDialogListener) activity;
 	}
 

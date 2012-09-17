@@ -350,6 +350,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	@Override
 	public void onErrorDialogClose(int id) {
+		Log.d(TAG, "onErrorDialogClose");
 		if (id == DIALOG_ID_NEWPOI)
 			quit();
 	}
@@ -519,7 +520,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 				title, message, id);
 		if (errorDialog == null)
 			return;
-
+		errorDialog.setOnErrorDialogListener(this);
 		errorDialog.show(fm, ErrorDialogFragment.TAG);
 	}
 
