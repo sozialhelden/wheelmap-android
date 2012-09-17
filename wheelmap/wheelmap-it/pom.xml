@@ -96,12 +96,12 @@
       <resources>
           <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
     	  <resource>
-              <directory>${project.basedir}</directory>
-      		  <filtering>true</filtering>
-      		  <targetPath>${project.build.directory}/filtered-manifest</targetPath>
-      		  <includes>
-                  <include>AndroidManifest.xml</include>
-      		  </includes>
+              <directory>${project.basedir}/resources</directory>
+	      <filtering>true</filtering>
+	      <targetPath>${project.basedir}</targetPath>
+	      <includes>
+		 <include>AndroidManifest.xml</include>
+	      </includes>
           </resource>
       </resources>
     <plugins>
