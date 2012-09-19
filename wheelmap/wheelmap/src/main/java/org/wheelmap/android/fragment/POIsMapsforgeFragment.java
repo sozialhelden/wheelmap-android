@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import java.util.List;
-
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -42,6 +40,7 @@ import org.wheelmap.android.overlays.MyLocationOverlay;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -96,9 +95,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private Cursor mCursor;
 
 	private SensorManager mSensorManager;
+	private Sensor mSensor;
 	private boolean mOrientationAvailable;
-	private List<Sensor> mSensors;
-	private float mDirection;
 
 	public static POIsMapsforgeFragment newInstance(boolean createWorker,
 			boolean disableSearch) {
@@ -129,8 +127,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		setHasOptionsMenu(true);
 		mSensorManager = (SensorManager) getActivity().getSystemService(
 				Context.SENSOR_SERVICE);
-		mSensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
-		mOrientationAvailable = mSensors.size() > 0;
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		mOrientationAvailable = mSensor != null;
 	}
 
 	@Override
@@ -219,8 +217,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public void onResume() {
 		super.onResume();
 		if (mOrientationAvailable)
-			mSensorManager.registerListener(mSensorEventListener,
-					mSensors.get(0), SensorManager.SENSOR_DELAY_FASTEST);
+			mSensorManager.registerListener(mSensorEventListener, mSensor,
+					SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	@Override
@@ -519,11 +517,25 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	private SensorEventListener mSensorEventListener = new SensorEventListener() {
+		private static final float MIN_DIRECTION_DELTA = 10;
+		private float mDirection;
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
-			mDirection = event.values[0];
-			updateDirection(mDirection);
+			float direction = event.values[0];
+			if (direction > 180)
+				direction -= 360;
+
+			if (isAdded())
+				direction += UtilsMisc.calcRotationOffset(getActivity()
+						.getWindowManager().getDefaultDisplay());
+
+			float lastDirection = mDirection;
+			if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
+				return;
+
+			updateDirection(direction);
+			mDirection = direction;
 		}
 
 		@Override

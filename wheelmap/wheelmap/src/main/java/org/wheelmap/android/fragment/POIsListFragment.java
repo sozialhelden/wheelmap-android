@@ -84,8 +84,6 @@ public class POIsListFragment extends SherlockListFragment implements
 	private boolean mOrientationAvailable;
 	private Sensor mSensor;
 	private DirectionCursorWrapper mDirectionCursorWrapper;
-	private static final float MIN_DIRECTION_DELTA = 3;
-	private float mLastDirection;
 
 	public static POIsListFragment newInstance(boolean createWorker,
 			boolean disableSearch) {
@@ -200,7 +198,7 @@ public class POIsListFragment extends SherlockListFragment implements
 		super.onResume();
 		if (mOrientationAvailable)
 			mSensorManager.registerListener(mSensorEventListener, mSensor,
-					SensorManager.SENSOR_DELAY_UI);
+					SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	@Override
@@ -397,6 +395,8 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	private SensorEventListener mSensorEventListener = new SensorEventListener() {
+		private static final float MIN_DIRECTION_DELTA = 10;
+		private float mDirection;
 
 		@Override
 		public void onSensorChanged(SensorEvent event) {
@@ -408,7 +408,12 @@ public class POIsListFragment extends SherlockListFragment implements
 				direction += UtilsMisc.calcRotationOffset(getActivity()
 						.getWindowManager().getDefaultDisplay());
 
+			float lastDirection = mDirection;
+			if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
+				return;
+
 			updateDirection(direction);
+			mDirection = direction;
 		}
 
 		@Override
@@ -418,14 +423,12 @@ public class POIsListFragment extends SherlockListFragment implements
 	};
 
 	private void updateDirection(float direction) {
-		// if (Math.abs(direction - mLastDirection) < MIN_DIRECTION_DELTA)
-		// return;
 		if (mDirectionCursorWrapper == null)
 			return;
 
 		mDirectionCursorWrapper.setDeviceDirection(direction);
-		mLastDirection = direction;
 		mAdapter.notifyDataSetChanged();
+
 	}
 
 }
