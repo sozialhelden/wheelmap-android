@@ -3,6 +3,7 @@ package org.wheelmap.android.view;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -13,6 +14,8 @@ public class CompassView extends View {
 	private float direction = 0;
 	private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private boolean firstDraw;
+	private int mColor;
+	private final static int DEFAULT_COLOR_RES = R.color.dark_grey_two;
 
 	public CompassView(Context context) {
 		super(context);
@@ -21,21 +24,32 @@ public class CompassView extends View {
 
 	public CompassView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		initAttributes(attrs);
 		init();
 	}
 
 	public CompassView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		initAttributes(attrs);
 		init();
 	}
 
-	private void init() {
+	private void initAttributes(AttributeSet attrs) {
+		TypedArray a = getContext().obtainStyledAttributes(attrs,
+				R.styleable.CompassView);
+		try {
 
+			mColor = a.getColor(R.styleable.CompassView_color, getContext()
+					.getResources().getColor(DEFAULT_COLOR_RES));
+		} finally {
+			a.recycle();
+		}
+	}
+
+	private void init() {
 		paint.setStyle(Paint.Style.STROKE);
 		paint.setStrokeWidth(2);
-		paint.setColor(getContext().getResources().getColor(
-				R.color.dark_grey_two));
-
+		paint.setColor(mColor);
 		firstDraw = true;
 	}
 

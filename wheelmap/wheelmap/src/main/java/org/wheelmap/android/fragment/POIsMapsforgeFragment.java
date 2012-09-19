@@ -41,6 +41,7 @@ import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 import org.wheelmap.android.utils.UtilsMisc;
+import org.wheelmap.android.view.CompassView;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -59,7 +60,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -91,6 +91,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
+
+	private CompassView mCompass;
 
 	private Cursor mCursor;
 
@@ -135,8 +137,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View v = (LinearLayout) inflater.inflate(R.layout.fragment_mapsforge,
-				container, false);
+		View v = inflater
+				.inflate(R.layout.fragment_mapsforge, container, false);
 
 		System.gc();
 		mMapView = (MapView) v.findViewById(R.id.map);
@@ -165,6 +167,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mMapController.setZoom(oldZoomLevel);
 		mMapView.setMoveListener(this);
 		mMapView.setZoomListener(this);
+
+		mCompass = (CompassView) v.findViewById(R.id.compass);
 
 		return v;
 	}
@@ -545,6 +549,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	};
 
 	private void updateDirection(float direction) {
-
+		mCompass.updateDirection(direction);
 	}
 }

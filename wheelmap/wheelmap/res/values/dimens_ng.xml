@@ -34,6 +34,7 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_huge">16dp</dimen>
+    <dimen name="margin_very_huge">24dp</dimen>
     <dimen name="margin_vertical_section">16dp</dimen>
     <dimen name="separator_small">1dp</dimen>
     <dimen name="separator_large">4dp</dimen>
@@ -43,5 +44,8 @@
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
 	<dimen name="mp_list_width">400dp</dimen>
+	<dimen name="mapcompass_margin_vertical">32dp</dimen>
+	<dimen name="mapcompass_margin_horizontal">4dp</dimen>
+	<dimen name="mapcompass_size">44dp</dimen>
    
 </resources>
