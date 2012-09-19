@@ -49,7 +49,7 @@ public class SyncServiceException extends RuntimeException implements
 			R.string.error_not_osm_connected,
 			R.string.error_authorization_required,
 			R.string.error_request_forbidden, R.string.error_client_failure,
-			R.string.error_server_failure
+			R.string.error_server_failure,
 			R.string.error_network_unknown_failure };
 
 	public SyncServiceException(int id, Throwable t) {
@@ -96,6 +96,7 @@ public class SyncServiceException extends RuntimeException implements
 	}
 
 	public boolean isNetworkError() {
-		return id == ERROR_NETWORK_FAILURE || id == ERROR_SERVER_FAILURE || id == ERROR_NETWORK_UNKNOWN_FAILURE;
+		return id == ERROR_NETWORK_FAILURE || id == ERROR_SERVER_FAILURE
+				|| id == ERROR_NETWORK_UNKNOWN_FAILURE;
 	}
 }
