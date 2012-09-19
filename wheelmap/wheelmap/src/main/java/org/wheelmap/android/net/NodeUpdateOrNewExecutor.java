@@ -23,9 +23,13 @@ package org.wheelmap.android.net;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -125,6 +129,12 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				Log.d(TAG, "putRequest = *" + request + "*");
 				mRequestProcessor.put(new URI(request), null);
 			}
+		} catch (URISyntaxException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_INTERNAL_ERROR, e);
+		} catch (ResourceAccessException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_FAILURE, e);
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.value() == statusAuthRequired) {
@@ -136,9 +146,13 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_REQUEST_FORBIDDEN, e);
 			}
-		} catch (Exception e) {
+		} catch (HttpServerErrorException e) {
 			throw new SyncServiceException(
-					SyncServiceException.ERROR_NETWORK_FAILURE, e);
+					SyncServiceException.ERROR_SERVER_FAILURE, e);
+
+		} catch (RestClientException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
 		}
 
 	}

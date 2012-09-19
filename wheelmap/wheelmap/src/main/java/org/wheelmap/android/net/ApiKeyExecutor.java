@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.UserCredentials;
@@ -82,6 +83,9 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		} catch (URISyntaxException e) {
 			throw new SyncServiceException(
 					SyncServiceException.ERROR_INTERNAL_ERROR, e);
+		} catch (ResourceAccessException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_FAILURE, e);
 		} catch (HttpClientErrorException e) {
 			HttpStatus status = e.getStatusCode();
 			if (status.value() == statusAuthFailed) {
@@ -99,9 +103,9 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		} catch (HttpServerErrorException e) {
 			throw new SyncServiceException(
 					SyncServiceException.ERROR_SERVER_FAILURE, e);
-		} catch (ResourceAccessException e) {
+		} catch (RestClientException e) {
 			throw new SyncServiceException(
-					SyncServiceException.ERROR_NETWORK_FAILURE, e);
+					SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
 		}
 		mApiKey = authInfo.getUser().getApiKey();
 	}
