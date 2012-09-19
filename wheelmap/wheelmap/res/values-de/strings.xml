@@ -135,4 +135,5 @@
     <string name="poi_property_city">Stadt</string>
     <string name="poi_property_name">Name</string>
     <string name="poi_property_position">Position</string>
+    <string name="error_network_unknown_failure">Ein unbekannter Netzwerkfehler ist aufgetreten. Die Kommunikation ist fehlgeschlagen.</string>
 </resources>

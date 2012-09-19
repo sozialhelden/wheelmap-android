@@ -131,7 +131,7 @@ public abstract class SinglePageExecutor<T extends Base> extends
 
 			} catch (RestClientException e) {
 				throw new SyncServiceException(
-						SyncServiceException.ERROR_INTERNAL_ERROR, e);
+						SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
 			}
 
 		}

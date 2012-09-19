@@ -171,4 +171,5 @@
     <string name="search_mode_map">By Map</string>
     <string name="error_server_failure">The Wheelmap server has a problem. Please try again later.</string>
     <string name="error_client_failure">This App cant communicate with the server. You need an update. Sorry.</string>
+    <string name="error_network_unknown_failure">An unknown network failure occurred. Sorry, communication failed.</string>
 </resources>
