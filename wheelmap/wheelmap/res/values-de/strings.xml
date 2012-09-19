@@ -132,4 +132,7 @@
     <string name="search_mode_distance">Nach Entfernung</string>
     <string name="error_server_failure">Der Wheelmap Server hat ein Problem. Versuchen sie es später nochmals.</string>
     <string name="error_client_failure">Diese App kann nicht mit dem Server kommunizieren. Sie brauchen ein Update. Sorry.</string>
+    <string name="poi_property_city">Stadt</string>
+    <string name="poi_property_name">Name</string>
+    <string name="poi_property_position">Position</string>
 </resources>
