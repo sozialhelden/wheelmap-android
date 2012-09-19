@@ -131,6 +131,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private ShareActionProvider mShareActionProvider;
 	private ShareActionProvider mDirectionsActionProvider;
 
+	private Menu currentMenu;
+	private boolean isMenuShown;
+
 	@SuppressLint("UseSparseArrays")
 	private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
 
@@ -270,6 +273,16 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		Log.d(TAG, "onCreateOptionsMenu");
 		inflater.inflate(R.menu.ab_detail_fragment, menu);
 		createShareActionProvider(menu);
+		currentMenu = menu;
+	}
+
+	private void showDetailMenu(boolean show) {
+		Log.d(TAG, "showDetailMenu: show = " + show);
+		Log.d(TAG, "showDetailMenu: group = " + currentMenu.getItem(0));
+
+		currentMenu.setGroupEnabled(R.id.menugroup_detailview, show);
+		// currentMenu.setGroupVisible(R.id.menugroup_detailview, show);
+		isMenuShown = show;
 	}
 
 	private void createShareActionProvider(Menu menu) {
@@ -337,7 +350,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
 		if (poiId == Extra.ID_UNKNOWN)
-			poiId = 0;
+			return null;
 
 		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiId);
 		return new CursorLoader(getActivity(), uri, null, null, null, null);
@@ -425,7 +438,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			mapView.getOverlays().add(overlay);
 			mapController.setCenter(new GeoPoint(latitude, longitude));
 		}
-
 	}
 
 	private void setWheelchairState(WheelchairState newState) {
