@@ -11,4 +11,4 @@ before_install:
   - android update sdk --no-ui -t platform-tools
 branches:
   only:
-    - fragment_transition
+    - master
