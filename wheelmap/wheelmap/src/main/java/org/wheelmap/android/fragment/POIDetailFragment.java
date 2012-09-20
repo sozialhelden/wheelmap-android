@@ -132,7 +132,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	private ShareActionProvider mDirectionsActionProvider;
 
 	private Menu currentMenu;
-	private boolean isMenuShown;
+	private boolean mShowMenu;
 
 	@SuppressLint("UseSparseArrays")
 	private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -175,6 +175,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_detail, container, false);
+		mShowMenu = false;
 
 		if (getArguments().containsKey(Extra.SHOW_MAP))
 			showMap(v);
@@ -274,15 +275,14 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		inflater.inflate(R.menu.ab_detail_fragment, menu);
 		createShareActionProvider(menu);
 		currentMenu = menu;
+		menu.setGroupVisible(R.id.menugroup_detailview, mShowMenu);
 	}
 
-	private void showDetailMenu(boolean show) {
-		Log.d(TAG, "showDetailMenu: show = " + show);
-		Log.d(TAG, "showDetailMenu: group = " + currentMenu.getItem(0));
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		Log.d(TAG, "onPrepareOptionsMenu");
 
-		currentMenu.setGroupEnabled(R.id.menugroup_detailview, show);
-		// currentMenu.setGroupVisible(R.id.menugroup_detailview, show);
-		isMenuShown = show;
 	}
 
 	private void createShareActionProvider(Menu menu) {
@@ -350,7 +350,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle arguments) {
 		if (poiId == Extra.ID_UNKNOWN)
-			return null;
+			poiId = 0;
 
 		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_COPY, poiId);
 		return new CursorLoader(getActivity(), uri, null, null, null, null);
@@ -414,6 +414,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 				postCode, city);
 		fillShareActionProvider(wmIdString, name, nodeType.localizedName,
 				comment, address, website);
+
+		mShowMenu = true;
+		getActivity().invalidateOptionsMenu();
 
 		poiValues = new ContentValues();
 		DatabaseUtils.cursorRowToContentValues(c, poiValues);
