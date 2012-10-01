@@ -31,11 +31,11 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.SyncServiceException;
 

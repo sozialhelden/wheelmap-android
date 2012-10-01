@@ -21,8 +21,8 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -141,14 +141,8 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 	}
 
 	private void load() {
-		UserCredentials userCredentials = new UserCredentials(getActivity());
-		String login = userCredentials.getLogin();
-		String password = userCredentials.getPassword();
-
-		if (userCredentials.isLoggedIn()) {
-			mEmailText.setText(login);
-			mPasswordText.setText(password);
-		}
+		mEmailText.setText("");
+		mPasswordText.setText("");
 	}
 
 	@Override

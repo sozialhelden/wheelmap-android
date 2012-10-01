@@ -52,11 +52,12 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 
 import de.akquinet.android.androlog.Log;
 
-public class StartupActivity extends RoboActivity implements
+public class StartupActivity extends RoboSherlockActivity implements
 		DetachableResultReceiver.Receiver {
 	private final static String TAG = StartupActivity.class.getSimpleName();
 
@@ -108,6 +109,9 @@ public class StartupActivity extends RoboActivity implements
 		} else if (mSupportManager.needsReloading()) {
 			mSupportManager.reload(mState.mReceiver);
 		}
+		
+		if (getSupportActionBar() != null)
+			getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 	}
 

@@ -31,8 +31,8 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.apikey.AuthInfo;
@@ -113,7 +113,7 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	@Override
 	public void prepareDatabase() {
 		UserCredentials credentials = new UserCredentials(getContext());
-		credentials.login(mEmail, mPassword, mApiKey);
+		credentials.save(mApiKey, mEmail);
 	}
 
 }

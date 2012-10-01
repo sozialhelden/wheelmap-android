@@ -24,10 +24,10 @@ package org.wheelmap.android.fragment;
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
 import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
+import org.wheelmap.android.app.ICredentials;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support;
-import org.wheelmap.android.model.UserCredentials;
 import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
@@ -48,11 +48,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
+import com.google.inject.Inject;
 
 import de.akquinet.android.androlog.Log;
 
-public class NewSettingsFragment extends SherlockListFragment implements
+public class NewSettingsFragment extends RoboSherlockListFragment implements
 		LoaderCallbacks<Cursor> {
 	private final static String TAG = NewSettingsFragment.class.getSimpleName();
 	private static final int LOADER_ID_LIST = 0;
@@ -64,13 +65,13 @@ public class NewSettingsFragment extends SherlockListFragment implements
 	private CategorySelectCursorAdapter mAdapterCatList;
 	private MergeAdapter mAdapter;
 
-	private UserCredentials mCredentials;
+	@Inject 
+	private ICredentials mCredentials;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-		mCredentials = new UserCredentials(getActivity());
 		mAdapterCatList = new CategorySelectCursorAdapter(getActivity(), null,
 				false);
 	}
@@ -260,7 +261,7 @@ public class NewSettingsFragment extends SherlockListFragment implements
 						null);
 
 				TextView tView = (TextView) view.findViewById(R.id.login_text);
-				tView.setText(mCredentials.getLogin() + ".");
+				tView.setText(mCredentials.getUserName());
 			} else {
 				view = mInflater.inflate(
 						R.layout.item_settings_login_notsignedin, null);

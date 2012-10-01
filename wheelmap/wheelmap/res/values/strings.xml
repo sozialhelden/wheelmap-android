@@ -164,7 +164,7 @@
     <string name="settings_login_delete">Click to delete this sign in.</string>
     <string name="settings_login_notsignedin">You are not signed in.</string>
     <string name="settings_login_signedinas">You are signed in as</string>
-    <string name="login_link_wheelmap">http://wheelmap.org/users/sign_up</string>
+    <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
     <string name="login_link_text">Register at Wheelmap.org</string>
     <string name="title_editor">Editor</string>
     <string name="search_mode_distance">By Distance</string>

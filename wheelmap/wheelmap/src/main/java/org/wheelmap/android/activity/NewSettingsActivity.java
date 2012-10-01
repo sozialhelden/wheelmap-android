@@ -25,9 +25,9 @@ import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
-public class NewSettingsActivity extends SherlockFragmentActivity {
+public class NewSettingsActivity extends RoboSherlockFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
