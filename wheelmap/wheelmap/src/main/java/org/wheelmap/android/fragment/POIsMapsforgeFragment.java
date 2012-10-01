@@ -531,7 +531,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 				direction -= 360;
 
 			if (isAdded())
-				direction += UtilsMisc.calcRotationOffset(getActivity()
+				direction -= UtilsMisc.calcRotationOffset(getActivity()
 						.getWindowManager().getDefaultDisplay());
 
 			float lastDirection = mDirection;
