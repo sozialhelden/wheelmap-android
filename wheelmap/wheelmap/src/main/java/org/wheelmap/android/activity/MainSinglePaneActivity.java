@@ -76,8 +76,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private int mSelectedTab = DEFAULT_SELECTED_TAB;
 	private TrackerWrapper mTrackerWrapper;
 
-	final static int TAB_LIST = 0;
-	final static int TAB_MAP = 1;
+	public final static int TAB_LIST = 0;
+	public final static int TAB_MAP = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
