@@ -42,8 +42,9 @@ import de.akquinet.android.androlog.Log;
 // the second market version @ReportsCrashes( formKey = "dEFLbUtHV1VlNEp2MHc0UXg3M0VyUnc6MQ")
 // v0.8: @ReportsCrashes( formKey = "dGEyal90UGZ2Mk0tSmROYnBsVk02THc6MQ")
 // v0.9 @ReportsCrashes(formKey = "dEl3ZHFJUkxYZnplcDRoN0RUZGNCUXc6MQ")
+// v0.99 @ReportsCrashes(formKey = "dDdKSUloUldNQlBVR3dWbG1FVU1xbEE6MQ")
 
-@ReportsCrashes(formKey = "dDdKSUloUldNQlBVR3dWbG1FVU1xbEE6MQ")
+@ReportsCrashes(formUri = "http://www.bugsense.com/api/acra?api_key=56cc8f6f", formKey = "")
 public class WheelmapApp extends Application {
 	private final static String TAG = WheelmapApp.class.getSimpleName();
 
