@@ -90,6 +90,17 @@
        <artifactId>roboguice</artifactId>
        <scope>provided</scope>
      </dependency>
+     <dependency>
+	   <groupId>com.jayway.android.robotium</groupId>
+	   <artifactId>robotium-solo</artifactId>
+	   <version>3.4.1</version>
+     </dependency>
+     <dependency>
+       <groupId>cglib</groupId>
+       <artifactId>cglib-nodep</artifactId>
+       <version>2.2</version>
+       <scope>provided</scope>
+     </dependency>
   </dependencies>
  
   <build>
