@@ -178,7 +178,10 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		Log.d(TAG, "onLoaderReset - why is that?");
+		Log.d(TAG, "onLoaderReset - need to set it to null");
+
+		mCursor = null;
+		update();
 	}
 
 	@Override

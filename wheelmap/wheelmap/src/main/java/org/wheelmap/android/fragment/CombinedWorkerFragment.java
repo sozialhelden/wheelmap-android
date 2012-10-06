@@ -278,7 +278,15 @@ public class CombinedWorkerFragment extends LocationFragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		Log.d(TAG, "onLoaderReset - why is that?");
+		Log.d(TAG, "onLoaderReset - need to set it to null");
+
+		if (loader.getId() == LOADER_MAP_ID) {
+			mMapCursor = null;
+		} else {
+			mListCursor = null;
+		}
+
+		update();
 	}
 
 	private void resetCursorLoaderUri() {
