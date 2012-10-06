@@ -92,7 +92,7 @@ public class MainSinglePaneTest extends
 	public void testBListFragment() throws InterruptedException {
 		executeTabSelect(0);
 
-		myWait(8000);
+		myWait(10000);
 		solo.clickInList(1);
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
