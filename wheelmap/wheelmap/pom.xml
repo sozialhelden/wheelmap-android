@@ -43,6 +43,13 @@
       </snapshots>
       <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/releases</url>
     </repository>
+    <repository>
+        <id>rutton-maven-repo</id>
+        <url>https://raw.github.com/rutton/maven-repo/master/snapshots</url>
+        <snapshots>
+           <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -143,6 +150,11 @@
       <groupId>com.nineoldandroids</groupId>
       <artifactId>library</artifactId>
       <version>2.4.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>crouton</artifactId>
+      <version>1.4</version>
+      <groupId>de.neofonie.mobile</groupId>
     </dependency>
   </dependencies>
   <build>

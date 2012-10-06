@@ -70,6 +70,8 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import de.akquinet.android.androlog.Log;
+import de.neofonie.mobile.app.android.widget.crouton.Crouton;
+import de.neofonie.mobile.app.android.widget.crouton.Style;
 
 public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener,
@@ -281,6 +283,10 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onError(SyncServiceException e) {
+		if (e.isNetworkError()) {
+			Crouton.makeText(this, e.getRessourceString(), Style.ALERT).show();
+			return;
+		}
 
 		FragmentManager fm = getSupportFragmentManager();
 		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
