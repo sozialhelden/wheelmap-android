@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/separator"
+        android:layout_toLeftOf="@+id/edit_icon"
         android:layout_toRightOf="@+id/state_icon" >
     </TextView>
 
