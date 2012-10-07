@@ -416,7 +416,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 				comment, address, website);
 
 		mShowMenu = true;
-		getActivity().invalidateOptionsMenu();
+		getSherlockActivity().invalidateOptionsMenu();
 
 		poiValues = new ContentValues();
 		DatabaseUtils.cursorRowToContentValues(c, poiValues);
