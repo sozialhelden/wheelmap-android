@@ -89,8 +89,12 @@ public class PrepareDatabaseHelper {
 		Cursor c = resolver.query(POIs.CONTENT_URI_ALL, POIs.PROJECTION,
 				whereClause, whereValues, null);
 
-		if (c == null || c.getCount() == 0)
+		if (c == null)
 			return Extra.ID_UNKNOWN;
+		if (c.getCount() == 0) {
+			c.close();
+			return Extra.ID_UNKNOWN;
+		}
 
 		c.moveToFirst();
 		long id = POIHelper.getId(c);
