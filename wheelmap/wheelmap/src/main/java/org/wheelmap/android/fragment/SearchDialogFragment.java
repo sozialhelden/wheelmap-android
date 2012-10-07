@@ -45,7 +45,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;
@@ -81,8 +81,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
-				getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(R.string.title_search);
 		builder.setIcon(R.drawable.ic_menu_search_wm_holo_light);
 		builder.setNeutralButton(R.string.search_execute, this);

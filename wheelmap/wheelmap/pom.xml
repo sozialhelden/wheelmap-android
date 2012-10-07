@@ -100,20 +100,20 @@
       <version>1.4.0</version>
       <type>apklib</type>
     </dependency>
+    <!--
     <dependency>
       <groupId>com.WazaBe.HoloEverywhere</groupId>
       <artifactId>library</artifactId>
       <version>1.0.0</version>
       <type>apklib</type>
     </dependency>
-    <!--  
+    -->  
     <dependency>
       <groupId>com.github.christopheversieux</groupId>
       <artifactId>holoeverywhere-library</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.2-SNAPSHOT</version>
       <type>apklib</type>
     </dependency>
-    -->
     <dependency>
       <groupId>com.actionbarsherlock</groupId>
       <artifactId>library</artifactId>

@@ -30,7 +30,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ErrorDialogFragment extends SherlockDialogFragment implements
@@ -93,8 +93,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
-				getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		id = getArguments().getInt(Extra.ID);
 		String title;
 		String msg;

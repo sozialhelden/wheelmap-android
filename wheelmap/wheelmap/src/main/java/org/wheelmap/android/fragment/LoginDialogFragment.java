@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
@@ -31,7 +30,6 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -50,7 +48,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;
@@ -94,8 +92,7 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
-				getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(R.string.title_login);
 		builder.setIcon(R.drawable.ic_login_wm_holo_light);
 		builder.setNeutralButton(R.string.login_submit, null);

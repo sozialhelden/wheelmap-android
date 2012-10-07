@@ -40,7 +40,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.wheelmap" parent="@style/Theme.HoloEverywhereLight.Sherlock">
+    <style name="Theme.wheelmap" parent="@style/Holo.Theme.Sherlock.Light">
        	<!--  custom add -->
        	<item name="android:selectableItemBackground">@drawable/selectable_background_wheelmap</item>
         
