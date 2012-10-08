@@ -107,7 +107,7 @@
       <resources>
           <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
     	  <resource>
-              <directory>${project.basedir}/resources</directory>
+              <directory>${project.basedir}/template</directory>
 	      <filtering>true</filtering>
 	      <targetPath>${project.basedir}</targetPath>
 	      <includes>
