@@ -48,14 +48,13 @@ public class ViewTool {
 
 	private static void nullViewDrawableSingle(View view) {
 		try {
-			view.setBackgroundDrawable(null);
+			view.setBackground(null);
 		} catch (Exception e) {
 		}
 
 		try {
 			ImageView imageView = (ImageView) view;
 			imageView.setImageDrawable(null);
-			imageView.setBackgroundDrawable(null);
 		} catch (Exception e) {
 		}
 	}

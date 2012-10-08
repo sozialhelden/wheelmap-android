@@ -117,7 +117,8 @@ public class POIsListFragment extends SherlockListFragment implements
 
 		mSensorManager = (SensorManager) getActivity().getSystemService(
 				Context.SENSOR_SERVICE);
-		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        //noinspection deprecation
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrientationAvailable = mSensor != null;
 	}
 

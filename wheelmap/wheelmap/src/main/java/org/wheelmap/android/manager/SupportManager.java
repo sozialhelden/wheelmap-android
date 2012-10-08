@@ -482,7 +482,7 @@ public class SupportManager {
 			Log.w(TAG, "Warning in createIconDrawable ", e);
 			return null;
 		}
-		return new BitmapDrawable(bitmap);
+		return new BitmapDrawable(mContext.getResources(), bitmap);
 
 	}
 

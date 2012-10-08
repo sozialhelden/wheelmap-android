@@ -84,7 +84,8 @@ public class StartupActivity extends RoboSherlockActivity implements
 
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
 
-		mState = (State) getLastNonConfigurationInstance();
+        //noinspection deprecation
+        mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
 
 		if (previousState) {
@@ -201,7 +202,8 @@ public class StartupActivity extends RoboSherlockActivity implements
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
-	@Override
+	@SuppressWarnings("deprecation")
+    @Override
 	public Object onRetainNonConfigurationInstance() {
 		// Clear any strong references to this Activity, we'll reattach to
 		// handle events on the other side.

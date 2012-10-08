@@ -129,7 +129,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		setHasOptionsMenu(true);
 		mSensorManager = (SensorManager) getActivity().getSystemService(
 				Context.SENSOR_SERVICE);
-		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        //noinspection deprecation
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrientationAvailable = mSensor != null;
 	}
 
@@ -306,8 +307,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 						@Override
 						public void onGlobalLayout() {
 							requestUpdate();
-							mMapView.getViewTreeObserver()
-									.removeGlobalOnLayoutListener(this);
+                            mMapView.getViewTreeObserver()
+									.removeOnGlobalLayoutListener(this);
 						}
 					});
 	}

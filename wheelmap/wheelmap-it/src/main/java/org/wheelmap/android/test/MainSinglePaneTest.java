@@ -48,7 +48,7 @@ public class MainSinglePaneTest extends
 	private Object mutex = new Object();
 
 	public MainSinglePaneTest() {
-		super("org.wheelmap.android", MainSinglePaneActivity.class);
+		super( MainSinglePaneActivity.class);
 	}
 
 	@Override

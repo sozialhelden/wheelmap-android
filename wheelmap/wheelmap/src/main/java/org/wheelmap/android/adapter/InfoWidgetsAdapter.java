@@ -65,7 +65,8 @@ class InfoSimpleView extends LinearLayout {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		// inflating of partial layout ignores layout_widht and layout_height
 		// attributes
-		LinearLayout.LayoutParams parametri = new LinearLayout.LayoutParams(
+		@SuppressWarnings("deprecation")
+        LinearLayout.LayoutParams parametri = new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		View v = inflater.inflate(getLayout(), null, false);
 		this.addView(v, parametri);
