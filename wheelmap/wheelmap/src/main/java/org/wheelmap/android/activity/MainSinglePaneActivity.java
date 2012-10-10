@@ -256,7 +256,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	private long insertNewPoi() {
 		Location location = MyLocationManager.getLastLocation();
-		String name = getString(R.string.new_default_name);
+		String name = getString(R.string.poi_new_default_name);
 		long id = PrepareDatabaseHelper.insertNew(getContentResolver(), name,
 				location.getLatitude(), location.getLongitude());
 

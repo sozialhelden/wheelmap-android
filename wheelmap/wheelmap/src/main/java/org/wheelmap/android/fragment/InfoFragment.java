@@ -107,7 +107,7 @@ public class InfoFragment extends SherlockListFragment {
 				"http://www.sozialhelden.de", InfoTypes.WITH_IMAGE);
 		infoList.add(info);
 		// thanks stiftung
-		info = new Info(R.string.stiftung_text_one, R.drawable.logo_fds,
+		info = new Info(R.string.info_stiftung_text_one, R.drawable.logo_fds,
 				"http://www.fdst.de/", InfoTypes.WITH_IMAGE);
 		infoList.add(info);
 

@@ -249,10 +249,10 @@ public class StartupActivity extends RoboSherlockActivity implements
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setTitle(R.string.error_occurred);
+		builder.setTitle(R.string.error_title_occurred);
 		builder.setMessage(getResources().getString(
 				R.string.error_not_enough_memory));
-		builder.setPositiveButton(R.string.quit,
+		builder.setPositiveButton(R.string.btn_quit,
 				new DialogInterface.OnClickListener() {
 
 					@Override
@@ -272,10 +272,10 @@ public class StartupActivity extends RoboSherlockActivity implements
 		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
 			builder.setTitle(R.string.error_network_title);
 		else
-			builder.setTitle(R.string.error_occurred);
+			builder.setTitle(R.string.error_title_occurred);
 		builder.setIcon(android.R.drawable.ic_dialog_alert);
 		builder.setMessage(e.getRessourceString());
-		builder.setPositiveButton(R.string.quit,
+		builder.setPositiveButton(R.string.btn_quit,
 				new DialogInterface.OnClickListener() {
 
 					@Override
