@@ -46,10 +46,10 @@ public class SyncServiceException extends RuntimeException implements
 
 	private final int[] errorString = { R.string.error_network_failure,
 			R.string.error_internal_error, R.string.error_authorization_error,
-			R.string.error_not_osm_connected,
+			R.string.error_authorization_not_osm_connected,
 			R.string.error_authorization_required,
-			R.string.error_request_forbidden, R.string.error_client_failure,
-			R.string.error_server_failure,
+			R.string.error_authorization_request_forbidden, R.string.error_network_client_failure,
+			R.string.error_network_server_failure,
 			R.string.error_network_unknown_failure };
 
 	public SyncServiceException(int id, Throwable t) {

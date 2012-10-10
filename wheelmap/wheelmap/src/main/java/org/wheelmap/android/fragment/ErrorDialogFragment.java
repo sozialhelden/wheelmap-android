@@ -107,12 +107,12 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 			if (e.isNetworkError())
 				title = getString(R.string.error_network_title);
 			else
-				title = getString(R.string.error_occurred);
+				title = getString(R.string.error_title_occurred);
 		}
 		builder.setTitle(title);
 		builder.setMessage(msg);
 		builder.setIcon(R.drawable.ic_dialog_alert_wm_holo_light);
-		builder.setNeutralButton(R.string.okay, this);
+		builder.setNeutralButton(R.string.btn_okay, this);
 		return builder.create();
 	}
 
