@@ -47,6 +47,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
     </dependency>
@@ -73,10 +78,6 @@
       <groupId>com.jayway.awaitility</groupId>
       <artifactId>awaitility</artifactId>
       <version>1.3.4</version>
-    </dependency>
-    <dependency>
-       <groupId>junit</groupId>
-       <artifactId>junit</artifactId>
     </dependency>
 
     <!-- added as provided as otherwise they are duplicate -->
@@ -107,7 +108,7 @@
       <resources>
           <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
     	  <resource>
-              <directory>${project.basedir}/template</directory>
+              <directory>${project.basedir}/resources/template</directory>
 	      <filtering>true</filtering>
 	      <targetPath>${project.basedir}</targetPath>
 	      <includes>
