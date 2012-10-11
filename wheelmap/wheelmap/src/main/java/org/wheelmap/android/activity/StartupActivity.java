@@ -35,7 +35,6 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import roboguice.activity.RoboActivity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
@@ -74,7 +73,6 @@ public class StartupActivity extends RoboSherlockActivity implements
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_startup);
-
 		FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
 		Animation anim = AnimationUtils.loadAnimation(this,
 				R.anim.zoom_in_animation);
@@ -84,8 +82,8 @@ public class StartupActivity extends RoboSherlockActivity implements
 
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
 
-        //noinspection deprecation
-        mState = (State) getLastNonConfigurationInstance();
+		// noinspection deprecation
+		mState = (State) getLastNonConfigurationInstance();
 		final boolean previousState = mState != null;
 
 		if (previousState) {
@@ -110,10 +108,6 @@ public class StartupActivity extends RoboSherlockActivity implements
 		} else if (mSupportManager.needsReloading()) {
 			mSupportManager.reload(mState.mReceiver);
 		}
-		
-		if (getSupportActionBar() != null)
-			getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 	}
 
 	@Override
@@ -203,7 +197,7 @@ public class StartupActivity extends RoboSherlockActivity implements
 	}
 
 	@SuppressWarnings("deprecation")
-    @Override
+	@Override
 	public Object onRetainNonConfigurationInstance() {
 		// Clear any strong references to this Activity, we'll reattach to
 		// handle events on the other side.
