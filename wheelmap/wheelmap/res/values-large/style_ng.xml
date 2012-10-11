@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
+    
     <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.Wheelmap.Dialog">
         
     </style>
@@ -16,8 +16,7 @@
    		<item name="android:windowActionModeOverlay">true</item>
 	    <item name="android:windowIsTranslucent">true</item>
     </style>
-    
-    <style name="Theme.Wheelmap.Dialog" parent="@style/Theme.Sherlock.Light.Dialog">    
+    <style name="Theme.Wheelmap.Dialog" parent="@style/Theme.Sherlock.Light.Dialog">
        	<item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>

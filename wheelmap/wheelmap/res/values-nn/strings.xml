@@ -11,7 +11,7 @@
     <string name="title_pois_settings">Filter-innstillingar</string>
     <string name="title_pois_detail">Info</string>
     <string name="title_pois_detail_edit">Endre punkt (POI)</string>
-    <string name="title_wheelchair_state">Rullestolinnstillingar</string>
+    <string name="title_wheelchair_state">Tilgjengeleg for rullestol?</string>
     <string name="btn_list">Liste</string>
     <string name="no_pois">ingenting funne med gjevne filterinnstillingar</string>
     <string name="settings_wheelchair_state">Rullestolstatus</string>
@@ -41,7 +41,6 @@
     <string name="info_kartendaten_one">www.openstreetmap.org</string>
     <string name="info_kartendaten_two">© OpenStreetMap-bidragsytarane, CC BY-SA</string>
     <string name="info_web_version_one">www.wheelmap.org</string>
-    <string name="title_wheelchairstate">Tilgjengeleg for rullestol?</string>
     <string name="pull_to_refresh_pull_label">Dra for å oppdatere…</string>
     <string name="pull_to_refresh_release_label">Slepp for å oppdatere…</string>
     <string name="pull_to_refresh_refreshing_label">Oppdaterar…</string>
