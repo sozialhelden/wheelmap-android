@@ -107,11 +107,6 @@
                 android:hint="@string/poi_property_website"
                 android:textColorLink="@android:color/black" />
 
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_large"
-                android:background="@android:color/black" />
-
             <ViewStub
                 android:id="@+id/stub_map"
                 android:layout_width="fill_parent"

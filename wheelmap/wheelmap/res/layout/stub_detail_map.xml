@@ -19,11 +19,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   #L%
-  -->
+-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
+
+    <FrameLayout
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/separator_large"
+        android:background="@android:color/black" />
 
     <org.mapsforge.android.maps.MapView
         android:id="@+id/map"
