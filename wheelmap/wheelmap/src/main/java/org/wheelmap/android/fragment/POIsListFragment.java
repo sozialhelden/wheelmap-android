@@ -297,9 +297,13 @@ public class POIsListFragment extends SherlockListFragment implements
 			return;
 
 		mCursor = cursor;
-		mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
-		mAdapter.swapCursor(mDirectionCursorWrapper);
-		markItemClear();
+        if ( mCursor != null ) {
+		    mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
+        } else {
+            mDirectionCursorWrapper = null;
+        }
+        mAdapter.swapCursor( mDirectionCursorWrapper );
+        markItemClear();
 		refreshListPosition();
 	}
 
