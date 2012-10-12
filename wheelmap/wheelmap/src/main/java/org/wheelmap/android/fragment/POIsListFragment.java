@@ -48,7 +48,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -117,8 +116,8 @@ public class POIsListFragment extends SherlockListFragment implements
 
 		mSensorManager = (SensorManager) getActivity().getSystemService(
 				Context.SENSOR_SERVICE);
-        //noinspection deprecation
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		// noinspection deprecation
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrientationAvailable = mSensor != null;
 	}
 
@@ -127,8 +126,7 @@ public class POIsListFragment extends SherlockListFragment implements
 			Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView " + hashCode());
 
-		View v = (LinearLayout) inflater.inflate(R.layout.fragment_list,
-				container, false);
+		View v = inflater.inflate(R.layout.fragment_list, container, false);
 		mPullToRefreshListView = (PullToRefreshListView) v
 				.findViewById(R.id.pull_to_refresh_listview);
 		mPullToRefreshListView.setOnRefreshListener(this);
@@ -285,7 +283,6 @@ public class POIsListFragment extends SherlockListFragment implements
 
 		ContentValues values = new ContentValues();
 		DatabaseUtils.cursorRowToContentValues(cursor, values);
-		markItem(values, false);
 		if (mListener != null)
 			mListener.onShowDetail(this, values);
 
