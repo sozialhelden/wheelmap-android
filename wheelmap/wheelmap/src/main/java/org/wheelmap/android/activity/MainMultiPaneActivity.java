@@ -42,6 +42,7 @@ import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
 import org.wheelmap.android.utils.SmoothInterpolator;
 
+import roboguice.inject.InjectView;
 import wheelmap.org.WheelchairState;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -54,8 +55,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -84,12 +85,21 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 	@Inject
 	IAppProperties appProperties;
 
-	POIsListFragment mListFragment;
-	POIsMapsforgeFragment mMapFragment;
-	POIDetailFragment mDetailFragment;
-	CombinedWorkerFragment mWorkerFragment;
-	FrameLayout mDetailLayout;
-	ImageButton mResizeButton;
+	private POIsListFragment mListFragment;
+	private POIsMapsforgeFragment mMapFragment;
+	private POIDetailFragment mDetailFragment;
+	private CombinedWorkerFragment mWorkerFragment;
+
+	@InjectView(R.id.movable_layout)
+	private ViewGroup mMovableLayout;
+	@InjectView(R.id.button_movable_resize)
+	private ImageButton mResizeButton;
+
+	private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
+	private static final long MOVABLE_ANIMATION_DURATION = 800;
+	private boolean mMovableVisible;
+	private boolean mMovableAnimationRunning;
+	private boolean mMovableGoneByButton;
 
 	Long poiIdSelected = Extra.ID_UNKNOWN;
 
@@ -114,8 +124,6 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		actionBar.setDisplayShowTitleEnabled(false);
 		createSearchModeCustomView(actionBar);
 
-		mDetailLayout = (FrameLayout) findViewById(R.id.detail_layout);
-		mResizeButton = (ImageButton) findViewById(R.id.button_detail_resize);
 		mResizeButton.setOnClickListener(this);
 
 		FragmentManager fm = getSupportFragmentManager();
@@ -183,14 +191,19 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 	}
 
 	private void executeState(Bundle state) {
+		mMovableVisible = state.getBoolean(Extra.MOVABLE_VISIBLE);
+		if (!mMovableVisible)
+			setMovableGone();
 	}
 
 	private void executeDefaultInstanceState() {
+		setMovableGone();
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putBoolean(Extra.MOVABLE_VISIBLE, mMovableVisible);
 	}
 
 	@Override
@@ -304,13 +317,18 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		long copyId = PrepareDatabaseHelper.createCopyIfNotExists(
 				getContentResolver(), id, true);
 		poiIdSelected = copyId;
+
+		if (!mMovableVisible && !mMovableGoneByButton)
+			toggleMovableResize();
 		mDetailFragment.showDetail(poiIdSelected);
 
-		if (fragment == mListFragment)
+		if (fragment == mListFragment) {
 			mMapFragment.markItem(values, true);
-		if (fragment == mMapFragment)
-			mListFragment.markItem(values, false);
+		}
 
+		if (fragment == mMapFragment) {
+			mListFragment.markItem(values, false);
+		}
 	}
 
 	@Override
@@ -382,38 +400,27 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 		int id = v.getId();
 
 		switch (id) {
-		case R.id.button_detail_resize:
-			toggleResize();
+		case R.id.button_movable_resize:
+			toggleMovableResize();
+			mMovableGoneByButton = !mMovableVisible;
 		}
 	}
 
-	private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
-	private static final long DETAIL_ANIMATION_DURATION = 800;
-	private boolean mDetailVisible = true;
-	private boolean mDetailAnimationRunning = false;
-	private AnimatorListener mDetailAnimatorListener = new AnimatorListener() {
+	private AnimatorListener mMovableAnimatorListener = new AnimatorListener() {
 
 		@Override
 		public void onAnimationStart(Animator animation) {
-			if (!mDetailVisible)
-				mDetailLayout.setVisibility(View.VISIBLE);
-
+			mMapFragment.setHeightFull(!mMovableVisible);
+			if (mMovableVisible)
+				mMovableLayout.setVisibility(View.VISIBLE);
 		}
 
 		@Override
 		public void onAnimationEnd(Animator animation) {
-			int newVisibility;
-			if (mDetailVisible) {
-				newVisibility = View.GONE;
-				mDetailVisible = false;
-			} else {
-				newVisibility = View.VISIBLE;
-				mDetailVisible = true;
-			}
+			if (!mMovableVisible)
+				mMovableLayout.setVisibility(View.GONE);
 
-			mDetailLayout.setVisibility(newVisibility);
-			mMapFragment.setHeightFull(!mDetailVisible);
-			mDetailAnimationRunning = false;
+			mMovableAnimationRunning = false;
 		}
 
 		@Override
@@ -428,6 +435,8 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 	};
 
+	private boolean mIsFirstMoveIn;
+
 	private void setCollapseButtonImage(boolean toCollapse) {
 		int buttonDrawableRes;
 		if (toCollapse) {
@@ -439,28 +448,36 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 	}
 
-	private void toggleResize() {
-		if (mDetailAnimationRunning)
+	private void setMovableGone() {
+		mMovableVisible = false;
+		Log.d(TAG, "setMovableGone height = " + (-mMovableLayout.getHeight()));
+		mMovableLayout.setVisibility(View.INVISIBLE);
+	}
+
+	private void toggleMovableResize() {
+		if (mMovableAnimationRunning)
 			return;
-		mDetailAnimationRunning = true;
-		setCollapseButtonImage(!mDetailVisible);
+		mMovableAnimationRunning = true;
+		setCollapseButtonImage(!mMovableVisible);
 
 		float startValue;
 		float endValue;
 
-		if (mDetailVisible) {
+		if (mMovableVisible) {
 			startValue = 0.0f;
-			endValue = -mDetailLayout.getHeight();
+			endValue = -mMovableLayout.getHeight();
+			mMovableVisible = false;
 		} else {
-			startValue = -mDetailLayout.getHeight();
+			startValue = -mMovableLayout.getHeight();
 			endValue = 0.0f;
+			mMovableVisible = true;
 		}
 
-		ObjectAnimator anim = ObjectAnimator.ofFloat(mDetailLayout,
+		ObjectAnimator anim = ObjectAnimator.ofFloat(mMovableLayout,
 				"translationY", startValue, endValue);
 		anim.setInterpolator(SMOOTH_INTERPOLATOR);
-		anim.setDuration(DETAIL_ANIMATION_DURATION);
-		anim.addListener(mDetailAnimatorListener);
+		anim.setDuration(MOVABLE_ANIMATION_DURATION);
+		anim.addListener(mMovableAnimatorListener);
 		anim.start();
 	}
 }

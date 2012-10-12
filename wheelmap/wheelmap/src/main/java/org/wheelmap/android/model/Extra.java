@@ -64,6 +64,7 @@ public interface Extra {
 	public static final String ALERT_TITLE = "org.wheelmap.android.ALERT_TITLE";
 	public static final String ALERT_MESSAGE = "org.wheelmap.android.ALERT_MESSAGE";
 	public static final String ID = "org.wheelmap.android.ID";
+	public static final String MOVABLE_VISIBLE = "org.wheelma.android.MOVABLE_VISIBLE";
 
 	public interface What {
 

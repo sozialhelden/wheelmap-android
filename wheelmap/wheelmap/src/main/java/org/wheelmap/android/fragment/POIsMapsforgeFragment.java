@@ -85,7 +85,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private MyLocationOverlay mCurrLocationOverlay;
 	private GeoPoint mLastRequestedPosition;
 	private GeoPoint mCurrentLocation;
-	private boolean mHeightFull;
+	private boolean mHeightFull = true;
 	private boolean isCentered;
 	private int oldZoomLevel = 18;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
@@ -129,8 +129,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		setHasOptionsMenu(true);
 		mSensorManager = (SensorManager) getActivity().getSystemService(
 				Context.SENSOR_SERVICE);
-        //noinspection deprecation
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+		// noinspection deprecation
+		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 		mOrientationAvailable = mSensor != null;
 	}
 
@@ -307,7 +307,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 						@Override
 						public void onGlobalLayout() {
 							requestUpdate();
-                            mMapView.getViewTreeObserver()
+							mMapView.getViewTreeObserver()
 									.removeOnGlobalLayoutListener(this);
 						}
 					});
