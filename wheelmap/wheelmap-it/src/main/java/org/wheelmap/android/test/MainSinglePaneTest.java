@@ -1,5 +1,7 @@
 package org.wheelmap.android.test;
 
+import com.jayway.awaitility.Awaitility;
+import com.jayway.awaitility.Duration;
 import org.springframework.util.Assert;
 import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.activity.POIDetailActivity;
@@ -17,11 +19,15 @@ import android.widget.EditText;
 
 import com.jayway.android.robotium.solo.Solo;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 public class MainSinglePaneTest extends
 		ActivityInstrumentationTestCase2<MainSinglePaneActivity> {
 
 	private static final String TAG = "mainsinglepanetest";
 	private static FragmentId[] ids;
+	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
 	private static class FragmentId {
 		FragmentId(int tab, String displayTag, String workerTag) {
@@ -48,7 +54,7 @@ public class MainSinglePaneTest extends
 	private Object mutex = new Object();
 
 	public MainSinglePaneTest() {
-		super( MainSinglePaneActivity.class);
+		super(MainSinglePaneActivity.class);
 	}
 
 	@Override
@@ -61,14 +67,7 @@ public class MainSinglePaneTest extends
 		solo.finishOpenedActivities();
 	}
 
-	public void testAFragmentsGettingStarted() {
-		executeTabSelect(1);
-		executeTabSelect(0);
-		executeTabSelect(1);
-	}
-
-	public void myWait(long microseconds) throws InterruptedException {
-
+	private void myWait(long microseconds) throws InterruptedException {
 		synchronized (mutex) {
 			mutex.wait(microseconds);
 		}
@@ -89,10 +88,37 @@ public class MainSinglePaneTest extends
 		Log.d(TAG, "tab with id = " + tabId + " selected");
 	}
 
-	public void testBListFragment() throws InterruptedException {
-		executeTabSelect(0);
+	private void waitForListRefreshingDone() throws Exception {
+		Callable<Boolean> refreshingDoneCallable = new Callable<Boolean>() {
+			final MainSinglePaneActivity activity = (MainSinglePaneActivity) getActivity();
+			POIsListWorkerFragment f = (POIsListWorkerFragment) activity
+					.getSupportFragmentManager().findFragmentByTag(
+							POIsListWorkerFragment.TAG);
 
-		myWait(10000);
+			@Override
+			public Boolean call() throws Exception {
+				return !f.isRefreshing();
+			}
+		};
+
+		Awaitility
+				.await()
+				.atMost(new Duration(WAIT_IN_SECONDS_TO_FINISH,
+						TimeUnit.SECONDS)).and().until(refreshingDoneCallable);
+
+	}
+
+	public void testAFragmentsGettingStarted() {
+		executeTabSelect(1);
+		executeTabSelect(0);
+		executeTabSelect(1);
+	}
+
+	public void testBListAndDetailFragment()
+			throws Exception {
+		executeTabSelect(0);
+		waitForListRefreshingDone();
+
 		solo.clickInList(1);
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
@@ -101,15 +127,24 @@ public class MainSinglePaneTest extends
 		solo.waitForActivity("MainSinglePaneActivity");
 		solo.assertCurrentActivity("main activity",
 				MainSinglePaneActivity.class);
+		solo.finishOpenedActivities();
 
-		solo.clickInList(0);
+	}
+
+	public void testCMapListAndDetailFragment() throws Exception {
+		solo.waitForActivity("MainSinglePaneActivity" );
+		// executeTabSelect(1);
+		executeTabSelect(0);
+		waitForListRefreshingDone();
+
+		solo.clickInList(4);
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
 
 		solo.goBack();
 		solo.waitForActivity("MainSinglePaneActivity");
 		solo.assertCurrentActivity("main activity",
-				MainSinglePaneActivity.class);
+		MainSinglePaneActivity.class);
 	}
 
 	private void logout() throws InterruptedException {
@@ -145,11 +180,13 @@ public class MainSinglePaneTest extends
 		EditText passwordText = solo.getEditText(1);
 		solo.enterText(emailText, "rutton.r@gmail.com");
 		solo.enterText(passwordText, "testtest");
-		solo.clickOnButton( "Login" );
+		solo.clickOnButton("Login");
+		solo.waitForDialogToClose(1000);
 		// solo.clickOnView(solo.getView(android.R.id.button1));
 	}
 
-	public void testCNewItem() throws InterruptedException {
+	public void testDNewItem() throws InterruptedException {
+		executeTabSelect(1);
 
 		solo.clickOnActionBarItem(R.id.menu_location);
 		solo.clickOnActionBarItem(R.id.menu_new_poi);
@@ -160,6 +197,7 @@ public class MainSinglePaneTest extends
 		solo.waitForActivity("POIDetailEditableActivity");
 		solo.assertCurrentActivity("want edit activity",
 				POIDetailEditableActivity.class);
+		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
 		solo.clickOnActionBarItem(R.id.menu_save);
 
@@ -167,10 +205,10 @@ public class MainSinglePaneTest extends
 
 	}
 
-	public void testDEditItem() throws InterruptedException {
+	public void testEEditItem() throws Exception {
 
 		executeTabSelect(0);
-		myWait(8000);
+		waitForListRefreshingDone();
 
 		solo.clickInList(4);
 		solo.waitForActivity("POIDetailActivity");
@@ -186,6 +224,7 @@ public class MainSinglePaneTest extends
 		solo.assertCurrentActivity("want edit activity",
 				POIDetailEditableActivity.class);
 		Log.d(TAG, "activity = " + solo.getCurrentActivity().toString());
+		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
 		solo.clickOnActionBarItem(R.id.menu_save);
 
