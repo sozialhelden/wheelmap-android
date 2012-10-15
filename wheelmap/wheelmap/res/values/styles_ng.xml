@@ -21,13 +21,18 @@
   #L%
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-  
-    <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap">
+
+    <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap_fixed">
         
     </style>
     
-    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.wheelmap">
+    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.wheelmap_fixed">
         
+    </style>
+
+    <style name="Theme.wheelmap_fixed" parent="@style/Theme.wheelmap">
+      <item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>
+      <item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>
     </style>
 
     <style name="TitleBarNew">
