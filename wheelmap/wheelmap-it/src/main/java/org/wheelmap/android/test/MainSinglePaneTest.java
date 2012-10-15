@@ -145,7 +145,8 @@ public class MainSinglePaneTest extends
 		EditText passwordText = solo.getEditText(1);
 		solo.enterText(emailText, "rutton.r@gmail.com");
 		solo.enterText(passwordText, "testtest");
-		solo.clickOnView(solo.getView(android.R.id.button1));
+		solo.clickOnButton( "Login" );
+		// solo.clickOnView(solo.getView(android.R.id.button1));
 	}
 
 	public void testCNewItem() throws InterruptedException {
