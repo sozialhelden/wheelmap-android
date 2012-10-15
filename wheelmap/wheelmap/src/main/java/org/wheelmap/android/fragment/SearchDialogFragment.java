@@ -27,25 +27,26 @@ import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.activity.HoloRoboSherlockFragmentActivity;
 
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.WazaBe.HoloEverywhere.LayoutInflater;
 import com.WazaBe.HoloEverywhere.app.AlertDialog;
+import com.WazaBe.HoloEverywhere.app.Dialog;
+import com.WazaBe.HoloEverywhere.widget.AdapterView;
+import com.WazaBe.HoloEverywhere.widget.AdapterView.OnItemSelectedListener;
+import com.WazaBe.HoloEverywhere.widget.EditText;
+import com.WazaBe.HoloEverywhere.widget.Spinner;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;
@@ -95,8 +96,10 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	}
 
 	protected View createView() {
-		return LayoutInflater.from(getActivity()).inflate(
-				R.layout.fragment_dialog_search, null);
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		View v = inflater.inflate(R.layout.fragment_dialog_search, null);
+
+		return v;
 	}
 
 	protected void bindViews(View v) {
@@ -133,6 +136,11 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		} catch (NumberFormatException e) {
 			mDistance = Extra.UNKNOWN;
 		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 	}
 
 	@Override

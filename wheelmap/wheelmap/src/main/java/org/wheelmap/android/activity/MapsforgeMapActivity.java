@@ -32,9 +32,7 @@ import org.mapsforge.android.maps.TileRAMCache;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
-
-public class MapsforgeMapActivity extends RoboSherlockFragmentActivity
+public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 		implements MapContext {
 
 	/**
