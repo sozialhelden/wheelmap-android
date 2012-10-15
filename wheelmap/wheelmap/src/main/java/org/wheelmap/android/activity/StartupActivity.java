@@ -23,6 +23,7 @@ package org.wheelmap.android.activity;
 
 import java.util.List;
 
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.app.WheelmapApp;
@@ -51,7 +52,6 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
 
 import de.akquinet.android.androlog.Log;
@@ -81,18 +81,8 @@ public class StartupActivity extends RoboSherlockActivity implements
 		layout.setLayoutAnimation(controller);
 
 		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
-
-		// noinspection deprecation
-		mState = (State) getLastNonConfigurationInstance();
-		final boolean previousState = mState != null;
-
-		if (previousState) {
-			// Start listening for SyncService updates again
-			mState.mReceiver.setReceiver(this);
-		} else {
-			mState = new State();
-			mState.mReceiver.setReceiver(this);
-		}
+		mState = new State();
+		mState.mReceiver.setReceiver(this);
 
 		if (AppCapability.isNotWorking()) {
 			showDialogNotWorking();
@@ -194,15 +184,6 @@ public class StartupActivity extends RoboSherlockActivity implements
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public Object onRetainNonConfigurationInstance() {
-		// Clear any strong references to this Activity, we'll reattach to
-		// handle events on the other side.
-		mState.mReceiver.clearReceiver();
-		return mState;
 	}
 
 	@Override
