@@ -21,17 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.adapter.POIsListCursorAdapter;
-import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
-import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
-import org.wheelmap.android.model.DirectionCursorWrapper;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.utils.UtilsMisc;
-
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -49,7 +38,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -60,8 +48,17 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
 import de.akquinet.android.androlog.Log;
+import org.wheelmap.android.adapter.POIsListCursorAdapter;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
+import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
+import org.wheelmap.android.model.DirectionCursorWrapper;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.UtilsMisc;
 
 public class POIsListFragment extends SherlockListFragment implements
 		DisplayFragment, OnSearchDialogListener, OnRefreshListener<ListView>,
@@ -297,13 +294,13 @@ public class POIsListFragment extends SherlockListFragment implements
 			return;
 
 		mCursor = cursor;
-        if ( mCursor != null ) {
-		    mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
-        } else {
-            mDirectionCursorWrapper = null;
-        }
-        mAdapter.swapCursor( mDirectionCursorWrapper );
-        markItemClear();
+		if (mCursor != null) {
+			mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
+		} else {
+			mDirectionCursorWrapper = null;
+		}
+		mAdapter.swapCursor(mDirectionCursorWrapper);
+		markItemClear();
 		refreshListPosition();
 	}
 
