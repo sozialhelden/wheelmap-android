@@ -123,19 +123,6 @@ limitations under the License.
             android:authorities="org.wheelmap.android.support"
             android:readPermission="org.wheelmap.android.support.Read"
             android:writePermission="org.wheelmap.android.support.Write" />
-
-        <service android:name="com.littlefluffytoys.littlefluffylocationlibrary.LocationBroadcastService" />
-
-        <receiver
-            android:name="com.littlefluffytoys.littlefluffylocationlibrary.StartupBroadcastReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.littlefluffytoys.littlefluffylocationlibrary.PassiveLocationChangedReceiver"
-            android:exported="true" />
     </application>
 
 </manifest>
