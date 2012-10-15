@@ -48,7 +48,7 @@ public class ViewTool {
 
 	private static void nullViewDrawableSingle(View view) {
 		try {
-			view.setBackground(null);
+			view.setBackgroundDrawable(null);
 		} catch (Exception e) {
 		}
 
