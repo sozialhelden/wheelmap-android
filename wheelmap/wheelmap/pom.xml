@@ -153,8 +153,8 @@
     </dependency>
     <dependency>
       <artifactId>crouton</artifactId>
-      <version>1.4</version>
-      <groupId>de.neofonie.mobile</groupId>
+      <version>1.5</version>
+      <groupId>de.keyboardsurfer.android.widget</groupId>
     </dependency>
   </dependencies>
   <build>
