@@ -7,10 +7,7 @@ import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.activity.POIDetailActivity;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.app.UserCredentials;
-import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
+import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.online.R;
 
 import android.test.ActivityInstrumentationTestCase2;
@@ -25,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class MainSinglePaneTest extends
 		ActivityInstrumentationTestCase2<MainSinglePaneActivity> {
 
-	private static final String TAG = "mainsinglepanetest";
+	private static final String TAG = MainSinglePaneTest.class.getSimpleName();
 	private static FragmentId[] ids;
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
@@ -88,25 +85,7 @@ public class MainSinglePaneTest extends
 		Log.d(TAG, "tab with id = " + tabId + " selected");
 	}
 
-	private void waitForListRefreshingDone() throws Exception {
-		Callable<Boolean> refreshingDoneCallable = new Callable<Boolean>() {
-			final MainSinglePaneActivity activity = (MainSinglePaneActivity) getActivity();
-			POIsListWorkerFragment f = (POIsListWorkerFragment) activity
-					.getSupportFragmentManager().findFragmentByTag(
-							POIsListWorkerFragment.TAG);
 
-			@Override
-			public Boolean call() throws Exception {
-				return !f.isRefreshing();
-			}
-		};
-
-		Awaitility
-				.await()
-				.atMost(new Duration(WAIT_IN_SECONDS_TO_FINISH,
-						TimeUnit.SECONDS)).and().until(refreshingDoneCallable);
-
-	}
 
 	public void testAFragmentsGettingStarted() {
 		executeTabSelect(1);
@@ -117,7 +96,7 @@ public class MainSinglePaneTest extends
 	public void testBListAndDetailFragment()
 			throws Exception {
 		executeTabSelect(0);
-		waitForListRefreshingDone();
+		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
 
 		solo.clickInList(1);
 		solo.waitForActivity("POIDetailActivity");
@@ -135,7 +114,7 @@ public class MainSinglePaneTest extends
 		solo.waitForActivity("MainSinglePaneActivity" );
 		// executeTabSelect(1);
 		executeTabSelect(0);
-		waitForListRefreshingDone();
+		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
 
 		solo.clickInList(4);
 		solo.waitForActivity("POIDetailActivity");
@@ -147,43 +126,6 @@ public class MainSinglePaneTest extends
 		MainSinglePaneActivity.class);
 	}
 
-	private void logout() throws InterruptedException {
-		UserCredentials c = new UserCredentials(getActivity());
-		if (!c.isLoggedIn())
-			return;
-		Log.d(TAG, "is logged in - logging out");
-
-		if (solo.getCurrentActivity() != getActivity()) {
-			solo.goBackToActivity("MainSinglePaneActivity");
-		}
-		solo.clickOnActionBarItem(R.id.menu_filter);
-		solo.waitForActivity("NewSettingsActivity");
-		myWait(3000);
-
-		// This is to click the last item in the list, which is logout
-		while (solo.scrollDown())
-			;
-		solo.clickInList(7);
-		solo.goBack();
-		solo.waitForActivity("MainSinglePaneActivity");
-	}
-
-	private void login() {
-		UserCredentials c = new UserCredentials(getActivity());
-		if (c.isLoggedIn())
-			return;
-
-		Log.d(TAG, "is not logged in - logging in");
-
-		solo.waitForText("Login");
-		EditText emailText = solo.getEditText(0);
-		EditText passwordText = solo.getEditText(1);
-		solo.enterText(emailText, "rutton.r@gmail.com");
-		solo.enterText(passwordText, "testtest");
-		solo.clickOnButton("Login");
-		solo.waitForDialogToClose(1000);
-		// solo.clickOnView(solo.getView(android.R.id.button1));
-	}
 
 	public void testDNewItem() throws InterruptedException {
 		executeTabSelect(1);
@@ -192,23 +134,29 @@ public class MainSinglePaneTest extends
 		solo.clickOnActionBarItem(R.id.menu_new_poi);
 
 		myWait(1000);
-		login();
+		RobotiumHelper.login( solo);
 
 		solo.waitForActivity("POIDetailEditableActivity");
 		solo.assertCurrentActivity("want edit activity",
 				POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
+		RobotiumHelper.selectWheelchairState(solo);
+		RobotiumHelper.selectCategoryState(solo);
+		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
 		solo.clickOnActionBarItem(R.id.menu_save);
+		myWait( 2000 );
+		solo.clickOnButton( "Okay");
+		solo.waitForDialogToClose(1000 );
 
-		logout();
+		RobotiumHelper.logout(solo);
 
 	}
 
 	public void testEEditItem() throws Exception {
 
 		executeTabSelect(0);
-		waitForListRefreshingDone();
+		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
 
 		solo.clickInList(4);
 		solo.waitForActivity("POIDetailActivity");
@@ -218,7 +166,7 @@ public class MainSinglePaneTest extends
 		myWait(1000);
 		solo.clickOnActionBarItem(R.id.menu_edit);
 		myWait(1000);
-		login();
+		RobotiumHelper.login(solo);
 
 		solo.waitForActivity("POIDetailEditableActivity");
 		solo.assertCurrentActivity("want edit activity",
@@ -226,6 +174,9 @@ public class MainSinglePaneTest extends
 		Log.d(TAG, "activity = " + solo.getCurrentActivity().toString());
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
+		RobotiumHelper.selectWheelchairState(solo);
+		RobotiumHelper.selectCategoryState(solo);
+		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
 		solo.clickOnActionBarItem(R.id.menu_save);
 
 		solo.waitForActivity("POIDetailActivity");
@@ -238,7 +189,7 @@ public class MainSinglePaneTest extends
 		solo.assertCurrentActivity("Want main activity",
 				MainSinglePaneActivity.class);
 
-		logout();
+		RobotiumHelper.logout(solo);
 
 	}
 }

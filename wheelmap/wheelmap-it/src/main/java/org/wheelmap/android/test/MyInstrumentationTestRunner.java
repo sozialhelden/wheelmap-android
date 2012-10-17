@@ -41,7 +41,7 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 		suite.addTestSuite(LoginTest.class);
 
 		if (UtilsMisc.isTablet(getContext())) {
-			// TODO tablets tests
+			suite.addTestSuite(MainMultiPaneTest.class);
 		} else {
 			suite.addTestSuite(MainSinglePaneTest.class);
 		}
