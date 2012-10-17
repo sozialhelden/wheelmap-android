@@ -1,10 +1,10 @@
 package org.wheelmap.android.fragment;
 
+import com.WazaBe.HoloEverywhere.LayoutInflater;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
