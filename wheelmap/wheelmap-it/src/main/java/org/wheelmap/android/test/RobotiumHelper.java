@@ -49,18 +49,16 @@ public class RobotiumHelper {
 				.await()
 				.atMost(new Duration(WAIT_IN_SECONDS_TO_FINISH,
 						TimeUnit.SECONDS)).and().until(refreshingDoneCallable);
+		myWait( 500 );
 
 	}
 
-	static void  logout(Solo solo) throws InterruptedException {
+	static void  logout(Solo solo, String mainActivity) throws InterruptedException {
 		UserCredentials c = new UserCredentials(solo.getCurrentActivity());
 		if (!c.isLoggedIn())
 			return;
 		Log.d(TAG, "is logged in - logging out");
 
-		if (solo.getCurrentActivity() != solo.getCurrentActivity()) {
-			solo.goBack();
-		}
 		solo.clickOnActionBarItem(org.wheelmap.android.online.R.id.menu_filter);
 		solo.waitForActivity("NewSettingsActivity");
 		myWait(2000);
@@ -70,7 +68,7 @@ public class RobotiumHelper {
 			;
 		solo.clickInList(7);
 		solo.goBack();
-		solo.waitForActivity("MainSinglePaneActivity");
+		solo.waitForActivity(mainActivity);
 	}
 
 	static void  login(Solo solo) {
@@ -100,8 +98,7 @@ public class RobotiumHelper {
 		RadioButton radioButton = (RadioButton) solo.getCurrentActivity().findViewById(R.id.radio_limited );
 		Log.d( TAG, "radio button" + radioButton );
 		solo.clickOnRadioButton(1);
-		solo.waitForActivity( "POIDetailEditableActivity" );
-		solo.assertCurrentActivity( "detail editable activity", POIDetailEditableActivity.class);
+		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG );
 
 	}
 

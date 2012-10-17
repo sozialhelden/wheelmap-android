@@ -24,12 +24,15 @@ public class MainMultiPaneTest extends
 
 	@Override
 	public void setUp() throws Exception {
+		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 		solo.finishOpenedActivities();
+		super.tearDown();
+		solo = null;
 	}
 
 	private void myWait(long microseconds) throws InterruptedException {
@@ -73,7 +76,7 @@ public class MainMultiPaneTest extends
 		solo.clickOnActionBarItem(R.id.menu_save);
 		solo.clickOnButton( "Okay" );
 
-		RobotiumHelper.logout( solo);
+		RobotiumHelper.logout(solo, "MainMultiPaneActivity");
 
 	}
 
@@ -110,7 +113,7 @@ public class MainMultiPaneTest extends
 		solo.assertCurrentActivity("main activity",
 				MainMultiPaneActivity.class);
 
-		RobotiumHelper.logout(solo);
+		RobotiumHelper.logout(solo, "MainMultiPaneActivity");
 
 	}
 }

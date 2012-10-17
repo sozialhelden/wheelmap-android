@@ -23,8 +23,8 @@ public class MainSinglePaneTest extends
 		ActivityInstrumentationTestCase2<MainSinglePaneActivity> {
 
 	private static final String TAG = MainSinglePaneTest.class.getSimpleName();
-	private static FragmentId[] ids;
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
+	private FragmentId[] ids;
 
 	private static class FragmentId {
 		FragmentId(int tab, String displayTag, String workerTag) {
@@ -38,15 +38,6 @@ public class MainSinglePaneTest extends
 		String workerTag;
 	}
 
-	static {
-		ids = new FragmentId[] {
-				new FragmentId(MainSinglePaneActivity.TAB_LIST,
-						POIsListFragment.TAG, POIsListWorkerFragment.TAG),
-				new FragmentId(MainSinglePaneActivity.TAB_MAP,
-						POIsMapsforgeFragment.TAG,
-						POIsMapsforgeWorkerFragment.TAG) };
-	}
-
 	private Solo solo;
 	private Object mutex = new Object();
 
@@ -56,12 +47,21 @@ public class MainSinglePaneTest extends
 
 	@Override
 	public void setUp() throws Exception {
+		ids = new FragmentId[] {
+				new FragmentId(MainSinglePaneActivity.TAB_LIST,
+						POIsListFragment.TAG, POIsListWorkerFragment.TAG),
+				new FragmentId(MainSinglePaneActivity.TAB_MAP,
+						POIsMapsforgeFragment.TAG,
+						POIsMapsforgeWorkerFragment.TAG) };
 		solo = new Solo(getInstrumentation(), getActivity());
+		super.setUp();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 		solo.finishOpenedActivities();
+		super.tearDown();
+		solo = null;
 	}
 
 	private void myWait(long microseconds) throws InterruptedException {
@@ -98,9 +98,10 @@ public class MainSinglePaneTest extends
 		executeTabSelect(0);
 		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
 
-		solo.clickInList(1);
+		solo.clickInList(2);
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
+		solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
 		solo.goBack();
 		solo.waitForActivity("MainSinglePaneActivity");
@@ -119,6 +120,7 @@ public class MainSinglePaneTest extends
 		solo.clickInList(4);
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
+		solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
 		solo.goBack();
 		solo.waitForActivity("MainSinglePaneActivity");
@@ -149,7 +151,7 @@ public class MainSinglePaneTest extends
 		solo.clickOnButton( "Okay");
 		solo.waitForDialogToClose(1000 );
 
-		RobotiumHelper.logout(solo);
+		RobotiumHelper.logout(solo, "MainSinglePaneActivity");
 
 	}
 
@@ -189,7 +191,7 @@ public class MainSinglePaneTest extends
 		solo.assertCurrentActivity("Want main activity",
 				MainSinglePaneActivity.class);
 
-		RobotiumHelper.logout(solo);
+		RobotiumHelper.logout(solo, "MainSinglePaneActivity");
 
 	}
 }
