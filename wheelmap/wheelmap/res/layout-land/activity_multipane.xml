@@ -47,7 +47,7 @@
             style="@style/IconLarge"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_detail_collapse" />
+            android:src="@drawable/ic_detail_expand" />
     </RelativeLayout>
 
 </RelativeLayout>

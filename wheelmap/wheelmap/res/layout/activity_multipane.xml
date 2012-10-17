@@ -59,6 +59,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="48dp"
-        android:src="@drawable/ic_detail_collapse" />
+        android:src="@drawable/ic_detail_expand" />
 
 </RelativeLayout>
