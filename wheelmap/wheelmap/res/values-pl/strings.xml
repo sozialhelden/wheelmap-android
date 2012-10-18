@@ -99,7 +99,7 @@
     <string name="pull_to_refresh_refreshing_label">Odświeżanie&#8230;</string>
     <string name="pull_to_refresh_release_label">Puść, aby odświeżyć&#8230;</string>
     <string name="search_distance">Odległość</string>
-    <string name="search_distance_unspecified">Cokolwiek</string>
+    <string name="search_distance_unspecified">Dowolnie</string>
     <string name="search_execute">Szukaj</string>
     <string name="search_hint_list">Słowo kluczowe (opcjonalnie)</string>
     <string name="search_mode_distance">Wg odległości</string>
