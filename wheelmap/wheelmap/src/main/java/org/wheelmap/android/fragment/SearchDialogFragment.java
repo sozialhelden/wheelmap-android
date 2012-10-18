@@ -23,7 +23,7 @@ package org.wheelmap.android.fragment;
 
 import java.util.ArrayList;
 
-import android.widget.AdapterView;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
@@ -34,8 +34,8 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -48,7 +48,6 @@ import com.WazaBe.HoloEverywhere.widget.AdapterView;
 import com.WazaBe.HoloEverywhere.widget.EditText;
 import com.WazaBe.HoloEverywhere.widget.Spinner;
 import com.WazaBe.HoloEverywhere.widget.AdapterView.OnItemSelectedListener;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;
 
@@ -64,6 +63,9 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	private int mNodeTypeSelected = Extra.UNKNOWN;
 	private float mDistance = Extra.UNKNOWN;
 	private boolean mEnableBoundingBoxSearch = false;
+
+	private Spinner mCategorySpinner;
+	private Spinner mDistanceSpinner;
 
 	public interface OnSearchDialogListener {
 		public void onSearch(Bundle bundle);
@@ -103,21 +105,21 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		return v;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void bindViews(View v) {
 
 		mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
 		mKeywordText.setOnEditorActionListener(this);
 
-		Spinner categorySpinner = (Spinner) v
-				.findViewById(R.id.search_spinner_categorie_nodetype);
+		mCategorySpinner = (Spinner) v.findViewById(R.id.search_spinner_categorie_nodetype);
 
 		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
 				.createTypesList(getActivity(), true);
-		categorySpinner.setAdapter(new TypesAdapter(getActivity(), searchTypes,
+		mCategorySpinner.setAdapter(new TypesAdapter(getActivity(), searchTypes,
 				TypesAdapter.SEARCH_MODE));
-		categorySpinner.setOnItemSelectedListener(this);
+		mCategorySpinner.setOnItemSelectedListener(this);
 
-		Spinner distanceSpinner = (Spinner) v
+		mDistanceSpinner = (Spinner) v
 				.findViewById(R.id.search_spinner_distance);
 
 		ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
@@ -125,23 +127,18 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 						android.R.layout.simple_spinner_item);
 		distanceSpinnerAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		distanceSpinner.setAdapter(distanceSpinnerAdapter);
-		distanceSpinner.setOnItemSelectedListener(this);
-		distanceSpinner.setPromptId(R.string.search_distance);
+		mDistanceSpinner.setAdapter(distanceSpinnerAdapter);
+		mDistanceSpinner.setOnItemSelectedListener(this);
+		mDistanceSpinner.setPromptId(R.string.search_distance);
 		int initialPosition = 3;
-		distanceSpinner.setSelection(initialPosition);
-		String distance = (String) distanceSpinner
+		mDistanceSpinner.setSelection(initialPosition);
+		String distance = (String) mDistanceSpinner
 				.getItemAtPosition(initialPosition);
 		try {
 			mDistance = Float.valueOf(distance);
 		} catch (NumberFormatException e) {
 			mDistance = Extra.UNKNOWN;
 		}
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
 	}
 
 	@Override
@@ -171,12 +168,11 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 		distanceContainer.setEnabled(!mEnableBoundingBoxSearch);
 	}
 
+	@Override
 	public void onItemSelected(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		int viewId = adapterView.getId();
 
-		switch (viewId) {
-		case R.id.search_spinner_categorie_nodetype: {
+		if ( adapterView == mCategorySpinner) {
 			CategoryOrNodeType search = (CategoryOrNodeType) adapterView
 					.getAdapter().getItem(position);
 			switch (search.type) {
@@ -189,23 +185,17 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 			default:
 				// noop
 			}
-			break;
-		}
-		case R.id.search_spinner_distance: {
+		} else if ( adapterView == mDistanceSpinner ) {
 			String distance = (String) adapterView.getItemAtPosition(position);
 			try {
 				mDistance = Float.valueOf(distance);
 			} catch (NumberFormatException e) {
 				mDistance = Extra.UNKNOWN;
 			}
-			break;
 		}
-		default:
-			// noop
-		}
-
 	}
 
+	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
 
 	}
