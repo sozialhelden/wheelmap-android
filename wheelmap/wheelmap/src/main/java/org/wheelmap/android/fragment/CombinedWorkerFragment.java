@@ -89,7 +89,7 @@ public class CombinedWorkerFragment extends LocationFragment implements
 	public void onDestroy() {
 		super.onDestroy();
 		mReceiver.clearReceiver();
-	}}
+	}
 
 	@Override
 	public void registerDisplayFragment(DisplayFragment fragment) {
