@@ -14,7 +14,6 @@ import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.fragment.NodetypeSelectFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.WorkerFragment;
-import org.wheelmap.android.online.*;
 import org.wheelmap.android.online.R;
 
 import java.util.concurrent.Callable;
@@ -59,7 +58,7 @@ public class RobotiumHelper {
 			return;
 		Log.d(TAG, "is logged in - logging out");
 
-		solo.clickOnActionBarItem(org.wheelmap.android.online.R.id.menu_filter);
+		solo.clickOnActionBarItem(R.id.menu_filter);
 		solo.waitForActivity("NewSettingsActivity");
 		myWait(2000);
 
