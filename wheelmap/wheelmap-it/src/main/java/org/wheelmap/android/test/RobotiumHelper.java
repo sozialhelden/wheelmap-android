@@ -6,16 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import com.jayway.android.robotium.solo.Solo;
 import com.jayway.awaitility.Awaitility;
 import com.jayway.awaitility.Duration;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.app.UserCredentials;
-import org.wheelmap.android.fragment.NodetypeSelectFragment;
-import org.wheelmap.android.fragment.POIDetailEditableFragment;
-import org.wheelmap.android.fragment.WorkerFragment;
+import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.online.R;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -76,13 +76,16 @@ public class RobotiumHelper {
 			return;
 
 		Log.d(TAG, "is not logged in - logging in");
+		String loginText = solo.getCurrentActivity().getString(R.string.title_login);
 
-		solo.waitForText("Login");
+		solo.waitForText(loginText);
 		EditText emailText = solo.getEditText(0);
 		EditText passwordText = solo.getEditText(1);
 		solo.enterText(emailText, "rutton.r@gmail.com");
 		solo.enterText(passwordText, "testtest");
-		solo.clickOnButton("Login");
+
+		String loginButtonText = solo.getCurrentActivity().getString(R.string.login_submit);
+		solo.clickOnButton(loginButtonText);
 		solo.waitForDialogToClose(1000);
 	}
 
@@ -109,6 +112,54 @@ public class RobotiumHelper {
 		myWait(1000);
 		solo.clickInList( 2 );
 		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG );
+
+	}
+
+	static void searchTestList( Solo solo, String workerTag ) throws Exception {
+		waitForListRefreshingDone( solo, workerTag );
+		String searchString = solo.getCurrentActivity().getString( R.string.title_search);
+
+		solo.clickOnActionBarItem(R.id.menu_search);
+		solo.waitForText(searchString);
+		solo.clickOnButton(0);
+		solo.waitForDialogToClose( 1000 );
+		waitForListRefreshingDone( solo, workerTag );
+
+		solo.clickOnActionBarItem(R.id.menu_search);
+		solo.waitForText(searchString);
+		String categoryString = solo.getCurrentActivity().getString(R.string.search_no_selection );
+		solo.clickOnText( categoryString );
+
+		solo.scrollDownList(0);
+		solo.scrollDownList(0);
+		solo.scrollDownList(0);
+		solo.clickInList(2);
+		myWait( 500 );
+		solo.clickOnButton( 0 );
+		solo.waitForDialogToClose( 1000 );
+		waitForListRefreshingDone( solo, workerTag );
+
+		solo.clickOnActionBarItem(R.id.menu_search);
+		solo.waitForText(searchString);
+		String distanceString = solo.getCurrentActivity().getResources().getStringArray(R.array.distance_array)[3];
+		solo.clickOnText( distanceString );
+		solo.clickInList( 2 );
+		myWait( 500 );
+		solo.clickOnButton( 0 );
+		solo.waitForDialogToClose( 1000 );
+		waitForListRefreshingDone( solo, workerTag );
+
+		solo.clickOnActionBarItem(R.id.menu_search);
+		solo.waitForText(searchString);
+		solo.enterText( 0, "Fernsehturm" );
+
+		solo.clickOnText( distanceString );
+		solo.scrollUpList(0);
+		solo.clickInList( 0 );
+		myWait( 500 );
+		solo.clickOnButton(0);
+		solo.waitForDialogToClose( 1000 );
+		waitForListRefreshingDone( solo, workerTag );
 
 	}
 

@@ -116,4 +116,10 @@ public class MainMultiPaneTest extends
 		RobotiumHelper.logout(solo, "MainMultiPaneActivity");
 
 	}
+
+	public void testFSearch() throws Exception {
+
+		RobotiumHelper.searchTestList(solo, CombinedWorkerFragment.TAG);
+
+	}
 }

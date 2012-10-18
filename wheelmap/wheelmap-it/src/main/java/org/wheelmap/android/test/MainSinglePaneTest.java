@@ -194,4 +194,10 @@ public class MainSinglePaneTest extends
 		RobotiumHelper.logout(solo, "MainSinglePaneActivity");
 
 	}
+
+	public void testFSearch() throws Exception {
+
+		RobotiumHelper.searchTestList(solo, POIsListWorkerFragment.TAG);
+
+	}
 }
