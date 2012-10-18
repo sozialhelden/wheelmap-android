@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -128,7 +129,9 @@ public abstract class SinglePageExecutor<T extends Base> extends
 			} catch (HttpServerErrorException e) {
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_SERVER_FAILURE, e);
-
+			} catch (HttpMessageConversionException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_NETWORK_FAILURE, e );
 			} catch (RestClientException e) {
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);

@@ -26,6 +26,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -149,7 +151,9 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		} catch (HttpServerErrorException e) {
 			throw new SyncServiceException(
 					SyncServiceException.ERROR_SERVER_FAILURE, e);
-
+		} catch (HttpMessageConversionException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_NETWORK_FAILURE, e );
 		} catch (RestClientException e) {
 			throw new SyncServiceException(
 					SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
