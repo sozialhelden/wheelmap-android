@@ -103,11 +103,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 				(android.view.WindowManager.LayoutParams) params);
 	}
 
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
 	private void setExternalEditableState(Bundle state) {
 		mExternalEditableState = new ExternalEditableState();
 		if (state != null)

@@ -214,11 +214,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
 		if (mOrientationAvailable)
@@ -234,27 +229,12 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
-	}
-
-	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		((MapsforgeMapActivity) getActivity()).destroyMapView(mMapView);
 		mWorkerFragment.unregisterDisplayFragment(this);
 		WheelmapApp.getSupportManager().cleanReferences();
 		System.gc();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
 	}
 
 	@Override

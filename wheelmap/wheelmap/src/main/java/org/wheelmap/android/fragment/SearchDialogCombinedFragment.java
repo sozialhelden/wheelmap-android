@@ -34,13 +34,7 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
 				.findViewById(R.id.radioGroupSearchMode);
 		group.setOnCheckedChangeListener(this);
 
-		// hier radio button handling einbauen
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		// kann eventuell wieder weg
+		// TODO: hier radio button handling einbauen
 	}
 
 	@Override

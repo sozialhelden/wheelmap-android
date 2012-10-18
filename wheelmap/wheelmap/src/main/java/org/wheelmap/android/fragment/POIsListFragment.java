@@ -185,11 +185,6 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
 		if (mOrientationAvailable)
@@ -205,27 +200,10 @@ public class POIsListFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
-	}
-
-	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		mWorkerFragment.unregisterDisplayFragment(this);
 		mBus.unregister(this);
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "onDestroy " + hashCode());
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		Log.d(TAG, "onDetach " + hashCode());
 	}
 
 	@Override

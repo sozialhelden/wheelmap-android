@@ -23,6 +23,7 @@ package org.wheelmap.android.fragment;
 
 import java.util.ArrayList;
 
+import android.widget.AdapterView;
 import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
@@ -44,9 +45,9 @@ import com.WazaBe.HoloEverywhere.LayoutInflater;
 import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.WazaBe.HoloEverywhere.app.Dialog;
 import com.WazaBe.HoloEverywhere.widget.AdapterView;
-import com.WazaBe.HoloEverywhere.widget.AdapterView.OnItemSelectedListener;
 import com.WazaBe.HoloEverywhere.widget.EditText;
 import com.WazaBe.HoloEverywhere.widget.Spinner;
+import com.WazaBe.HoloEverywhere.widget.AdapterView.OnItemSelectedListener;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;

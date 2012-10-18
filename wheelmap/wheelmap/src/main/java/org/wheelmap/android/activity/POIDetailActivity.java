@@ -77,31 +77,6 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		executeIntent(getIntent());
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
 	private void executeIntent(Intent intent) {
 		if (intent == null)
 			return;

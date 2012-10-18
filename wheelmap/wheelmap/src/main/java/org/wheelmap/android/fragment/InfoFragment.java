@@ -131,16 +131,6 @@ public class InfoFragment extends SherlockListFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Info info = (Info) getListAdapter().getItem(position);
 		switch (info.getInfoType()) {

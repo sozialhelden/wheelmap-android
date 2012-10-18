@@ -228,27 +228,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		ViewTool.logMemory();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
-
-	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		WheelmapApp.getSupportManager().cleanReferences();
@@ -257,16 +236,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		mapController = null;
 		System.gc();
 		System.gc(); // to be sure ;-)
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
 	}
 
 	@Override
