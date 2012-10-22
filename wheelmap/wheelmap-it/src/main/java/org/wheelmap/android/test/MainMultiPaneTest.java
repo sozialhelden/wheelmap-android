@@ -4,6 +4,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import android.widget.ImageView;
 import com.jayway.android.robotium.solo.Solo;
+import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 import org.wheelmap.android.activity.MainMultiPaneActivity;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.fragment.*;
@@ -15,7 +16,7 @@ public class MainMultiPaneTest extends
 	private static final String TAG = MainMultiPaneTest.class.getSimpleName();
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
-	private Solo solo;
+	private SoloCompatibilityAbs solo;
 	private Object mutex = new Object();
 
 	public MainMultiPaneTest() {
@@ -25,7 +26,7 @@ public class MainMultiPaneTest extends
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		solo = new Solo(getInstrumentation(), getActivity());
+		solo = new SoloCompatibilityAbs(getInstrumentation(), getActivity());
 	}
 
 	@Override
@@ -35,24 +36,18 @@ public class MainMultiPaneTest extends
 		solo = null;
 	}
 
-	private void myWait(long microseconds) throws InterruptedException {
-		synchronized (mutex) {
-			mutex.wait(microseconds);
-		}
-	}
-
 
 	public void testAActivityGettingStarted() throws Exception {
 		RobotiumHelper.waitForListRefreshingDone( solo, CombinedWorkerFragment.TAG );
 
 		solo.clickInList(1);
-		myWait(2000);
+		solo.sleep(2000);
 
 		ImageView moveButton = (ImageView)getActivity().findViewById(R.id.button_movable_resize);
 		solo.clickOnView(moveButton);
-		myWait(500);
+		solo.sleep(500);
 		solo.clickOnView(moveButton);
-		myWait(500);
+		solo.sleep(500);
 		solo.clickInList( 4 );
 	}
 
@@ -63,7 +58,7 @@ public class MainMultiPaneTest extends
 		solo.clickOnActionBarItem(R.id.menu_location);
 		solo.clickOnActionBarItem(R.id.menu_new_poi);
 
-		myWait(1000);
+		solo.sleep(1000);
 		RobotiumHelper.login( solo );
 
 		solo.waitForActivity("POIDetailEditableActivity");
