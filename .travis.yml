@@ -9,7 +9,7 @@ before_install:
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # current package index for platform api level 16 is 6 
   # this may change with a future release
-  # - android update sdk --no-ui -a -t 6
+  - android update sdk --no-ui -a -t 6
   - android update sdk --no-ui -t platform-tools
 branches:
   only:
