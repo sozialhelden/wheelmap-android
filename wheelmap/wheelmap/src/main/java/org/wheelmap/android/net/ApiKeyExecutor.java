@@ -31,10 +31,11 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
-import org.wheelmap.android.app.UserCredentials;
+import org.wheelmap.android.app.ICredentials;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.service.SyncServiceException;
 
+import roboguice.RoboGuice;
 import wheelmap.org.domain.apikey.AuthInfo;
 import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.ApiKeyRequestBuilder;
@@ -51,8 +52,12 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	private final static int statusAuthFailed = 400;
 	private final static int statusOSMFailed = 403;
 
+	@Inject
+	private ICredentials mCredentials;
+
 	public ApiKeyExecutor(Context context, Bundle bundle) {
 		super(context, bundle);
+		RoboGuice.injectMembers(context, this );
 	}
 
 	@Override
@@ -112,8 +117,7 @@ public class ApiKeyExecutor extends AbstractExecutor {
 
 	@Override
 	public void prepareDatabase() {
-		UserCredentials credentials = new UserCredentials(getContext());
-		credentials.save(mApiKey, mEmail);
+		mCredentials.save( mApiKey, mEmail );
 	}
 
 }
