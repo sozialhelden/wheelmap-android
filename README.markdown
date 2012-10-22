@@ -11,7 +11,7 @@ Tablet Version
 ==============
 ![Tablet Screen][3]
 
-Continuous integration is provided by [Travis CI][1].
+Continuous integration is provided by [Travis CI][4].
 [![Build Status](https://secure.travis-ci.org/sozialhelden/wheelmap-android.png?branch=master)](http://travis-ci.org/sozialhelden/wheelmap-android)
 
 License
@@ -35,5 +35,5 @@ License
 [1]: http://wheelmap.org
 [2]: https://raw.github.com/sozialhelden/wheelmap-android/master/screenshots/wheelmap-v0.9.1-list.png
 [3]: https://raw.github.com/sozialhelden/wheelmap-android/master/screenshots/wheelmap-v0.9.1-tablet-maponly.png
-[1]: https://travis-ci.org/sozialhelden/wheelmap-android
+[4]: https://travis-ci.org/sozialhelden/wheelmap-android
 
