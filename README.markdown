@@ -1,7 +1,7 @@
 Wheelmap for Android
 ====================
 
-Wheelmap for Android is an App for the Wheelmap service. The Wheelmap service enables people to find and add whelchair-accessible places and is provided by the [Sozialhelden e.V][1]. For more information visit [Wheelmap.org][2]. This App has undergone a major update and and now provides modern design, full editing, search capabilities and a tablet version.
+Wheelmap for Android is an App for the Wheelmap service. The Wheelmap service enables people to find and add whelchair-accessible places and is provided by the [Sozialhelden e.V][1]. For more information visit [Wheelmap.org][2]. This App has undergone a major update and is about to released with a new modern design, full editing and search capabilities, direction pointers and a tablet version.
 
 Smartphone Version
 ==================
