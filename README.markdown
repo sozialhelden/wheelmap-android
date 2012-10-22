@@ -1,17 +1,17 @@
 Wheelmap for Android
 ====================
 
-Wheelmap for Android is an App for the Wheelmap service. This app provides access to this services and in an upcoming release full editing and search capabilities. For more information about the Wheelmap service provided by the Sozialhelden e.V. visit [Wheelmap.org][1].
+Wheelmap for Android is an App for the Wheelmap service. The Wheelmap service enables people to find and add whelchair-accessible places and is provided by the [Sozialhelden e.V][1]. For more information visit [Wheelmap.org][2]. This App has undergone a major update and and now provides modern design, full editing, search capabilities and a tablet version.
 
 Smartphone Version
 ==================
-![Smartphone Screen][2]
+![Smartphone Screen][3]
 
 Tablet Version
 ==============
-![Tablet Screen][3]
+![Tablet Screen][4]
 
-Continuous integration is provided by [Travis CI][4].
+Continuous integration is provided by [Travis CI][5].
 [![Build Status](https://secure.travis-ci.org/sozialhelden/wheelmap-android.png?branch=master)](http://travis-ci.org/sozialhelden/wheelmap-android)
 
 License
@@ -32,8 +32,9 @@ License
  See the License for the specific language governing permissions and
  limitations under the License.
 
-[1]: http://wheelmap.org
-[2]: https://raw.github.com/sozialhelden/wheelmap-android/master/screenshots/wheelmap-v0.9.1-list.png
-[3]: https://raw.github.com/sozialhelden/wheelmap-android/master/screenshots/wheelmap-v0.9.1-tablet-maponly.png
-[4]: https://travis-ci.org/sozialhelden/wheelmap-android
+[1]: http://sozialhelden.de/
+[2]: http://wheelmap.org
+[3]: https://raw.github.com/sozialhelden/wheelmap-android/master/screenshots/wheelmap-v0.9.1-list.png
+[4]: https://raw.github.com/sozialhelden/wheelmap-android/master/screenshots/wheelmap-v0.9.1-tablet-maponly.png
+[5]: https://travis-ci.org/sozialhelden/wheelmap-android
 
