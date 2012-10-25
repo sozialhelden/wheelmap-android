@@ -15,6 +15,7 @@
 	<string name="error_authorization_login_failed">Login Failed</string>
 	<string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to openstreetmap.</string>
 	<string name="error_authorization_request_forbidden">Request forbidden</string>
+	<string name="error_authorization_request_failed">Authorization failed. The app does not have proper access rights to the service. If you are logged in, your can try to log out. Otherwise the app needs to be updated or the service has a problem.</string>
 	<string name="error_authorization_required">Authorization required</string>
 	<string name="error_category_missing_message">Cannot store without a category for the location.</string>
 	<string name="error_category_missing_title">No category set!</string>

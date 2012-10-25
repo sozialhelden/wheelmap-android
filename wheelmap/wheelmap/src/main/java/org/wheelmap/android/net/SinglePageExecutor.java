@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -45,6 +46,11 @@ public abstract class SinglePageExecutor<T extends Base> extends
 		AbstractExecutor implements IExecutor {
 	private static final int MAX_RETRY_COUNT = 3;
 	protected static final int DEFAULT_TEST_PAGE_SIZE = 500;
+	private final static int statusAuthFailed = 401;
+	private final static int statusAuthForbidden = 403;
+	private final static int statusBadRequest = 400;
+	private final static int statusNotFound = 404;
+	private final static int statusNotAcceptable = 406;
 
 	private final Class<T> mClazz;
 	private List<T> mTempStore = new ArrayList<T>();
@@ -123,15 +129,32 @@ public abstract class SinglePageExecutor<T extends Base> extends
 							SyncServiceException.ERROR_NETWORK_FAILURE, e);
 				}
 			} catch (HttpClientErrorException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_CLIENT_FAILURE, e);
+				HttpStatus status = e.getStatusCode();
+				if (status.value() == statusAuthFailed) {
+					Log.e(getTag(), "authorization failed - apikey not valid");
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_AUTHORIZATION_FAILED, e);
+				} else if (status.value() == statusAuthForbidden) {
+					Log.e(getTag(), "request forbidden");
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_REQUEST_FORBIDDEN, e);
+				} else if ((status.value() == statusBadRequest)
+						|| (status.value() == statusNotFound)
+						|| (status.value() == statusNotAcceptable)) {
+					Log.e(getTag(), "request error");
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_CLIENT_FAILURE, e);
+				} else {
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_CLIENT_FAILURE, e);
+				}
 
 			} catch (HttpServerErrorException e) {
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_SERVER_FAILURE, e);
 			} catch (HttpMessageConversionException e) {
 				throw new SyncServiceException(
-						SyncServiceException.ERROR_NETWORK_FAILURE, e );
+						SyncServiceException.ERROR_NETWORK_FAILURE, e);
 			} catch (RestClientException e) {
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);

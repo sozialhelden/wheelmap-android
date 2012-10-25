@@ -15,6 +15,7 @@
 	<string name="error_authorization_login_failed">Einloggen fehlgeschlagen</string>
 	<string name="error_authorization_not_osm_connected">Ihr Wheelmap Account ist nicht mit Openstreetmap verbunden.</string>
 	<string name="error_authorization_request_forbidden">Anfrage nicht erlaubt</string>
+	<string name="error_authorization_request_failed">Die Autorisierung ist fehlgeschlagen. Die App hat keine funktionierenden Zugriffsrechte für den Dienst. Falls sie eingeloggt sind, loggen sie sich aus. Andernfalls braucht die App ein Update oder der Dienst hat ein temporäres Problem.</string>
 	<string name="error_authorization_required">Autorisierung erforderlich</string>
 	<string name="error_category_missing_message">Der neue Ort kann nur mit Angabe einer Kategorie gesichert werden.</string>
 	<string name="error_category_missing_title">Kategorie fehlt</string>
