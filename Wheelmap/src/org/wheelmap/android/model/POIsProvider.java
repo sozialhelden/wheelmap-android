@@ -399,13 +399,21 @@ public class POIsProvider extends ContentProvider {
 					inserter.bind( wheelchairColumn, wheelchair);
 					String wheelchairDesc = valuesArray[i].getAsString( Wheelmap.POIs.WHEELCHAIR_DESC);
 					inserter.bind( wheelchairDescColumn, wheelchairDesc );
-					int categoryId = valuesArray[i].getAsInteger( Wheelmap.POIs.CATEGORY_ID );
+					Integer categoryId = valuesArray[i].getAsInteger( Wheelmap.POIs.CATEGORY_ID );
+					if ( categoryId == null)
+						categoryId = 0;
 					inserter.bind( categoryIdColumn, categoryId );
 					String categoryIdentifier = valuesArray[i].getAsString( Wheelmap.POIs.CATEGORY_IDENTIFIER);
+					if ( categoryIdentifier == null)
+						categoryIdentifier = "unknown";
 					inserter.bind( categoryIdentifierColumn, categoryIdentifier);
-					int nodetypeId = valuesArray[i].getAsInteger( Wheelmap.POIs.NODETYPE_ID );
+					Integer nodetypeId = valuesArray[i].getAsInteger( Wheelmap.POIs.NODETYPE_ID );
+					if ( nodetypeId == null)
+						nodetypeId = 0;
 					inserter.bind( nodetypeIdColumn, nodetypeId );
 					String nodetypeIdentifier = valuesArray[i].getAsString( Wheelmap.POIs.NODETYPE_IDENTIFIER);
+					if ( nodetypeIdentifier == null )
+						nodetypeIdentifier = "unknown";
 					inserter.bind( nodetypeIdentifierColumn, nodetypeIdentifier );
 					double sinLat = valuesArray[i].getAsDouble( Wheelmap.POIs.SIN_LAT_RAD );
 					inserter.bind( sinLatColumn, sinLat );

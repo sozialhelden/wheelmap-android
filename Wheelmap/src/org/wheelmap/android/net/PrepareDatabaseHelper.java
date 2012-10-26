@@ -1,5 +1,7 @@
 package org.wheelmap.android.net;
 
+import java.math.BigInteger;
+
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap;
 
@@ -10,7 +12,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 public class PrepareDatabaseHelper {
 	private static final String TAG = "PrepareDatabase";
@@ -92,14 +93,23 @@ public class PrepareDatabaseHelper {
 				WheelchairState.myValueOf(node.getWheelchair()).getId());
 		values.put(Wheelmap.POIs.WHEELCHAIR_DESC,
 				node.getWheelchairDescription());
-		values.put(Wheelmap.POIs.CATEGORY_ID, node.getCategory().getId()
-				.intValue());
-		values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, node.getCategory()
-				.getIdentifier());
-		values.put(Wheelmap.POIs.NODETYPE_ID, node.getNodeType().getId()
-				.intValue());
-		values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, node.getNodeType()
-				.getIdentifier());
+		
+		wheelmap.org.domain.node.Category cat = node.getCategory();
+		if ( cat != null ) {
+			BigInteger id = cat.getId();
+			if ( id != null )
+				values.put(Wheelmap.POIs.CATEGORY_ID, id.intValue());
+			values.put(Wheelmap.POIs.CATEGORY_IDENTIFIER, cat.getIdentifier());
+		}
+		
+		wheelmap.org.domain.node.NodeType nodeType = node.getNodeType();
+		if ( nodeType != null ) {
+			BigInteger id = nodeType.getId();
+			if ( id != null )
+				values.put(Wheelmap.POIs.NODETYPE_ID, id.intValue());
+			values.put(Wheelmap.POIs.NODETYPE_IDENTIFIER, nodeType.getIdentifier());
+		}
+		
 		values.put(Wheelmap.POIs.UPDATE_TAG, Wheelmap.UPDATE_NO);
 	}
 	
