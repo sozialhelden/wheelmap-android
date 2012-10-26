@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,8 +243,10 @@ public class SupportManager {
 		cursor.moveToFirst();
 		int count = cursor.getCount();
 
-		if (count != 1)
+		if (count != 1) {
+			cursor.close();
 			return true;
+		}
 
 		Date date;
 		try {
@@ -256,10 +259,12 @@ public class SupportManager {
 
 		long now = System.currentTimeMillis();
 
+		Log.d( TAG, "Lastupdate: " + date.toLocaleString());
 		long days = (now - date.getTime()) / MILLISECS_PER_DAY;
-		Log.d(TAG, "checkIfUpdateDurationPassed: days = " + days);
+		boolean hotfixUpdate = date.before( new GregorianCalendar(2012, 9, 26).getTime());
+		Log.d(TAG, "checkIfUpdateDurationPassed: days = " + days + " hotfixUpdate " + hotfixUpdate);
 
-		if (days >= DATE_INTERVAL_FOR_UPDATE_IN_DAYS) {
+		if (days >= DATE_INTERVAL_FOR_UPDATE_IN_DAYS || hotfixUpdate) {
 			cursor.close();
 			return true;
 		}
