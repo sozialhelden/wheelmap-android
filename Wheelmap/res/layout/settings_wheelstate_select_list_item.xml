@@ -27,7 +27,7 @@ limitations under the License.
 	<TextView android:id="@+id/list_item_wheelstate_text"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_toRightOf="@+id/list_item_wheelstate_icon"
-		android:layout_toLeftOf="@+id/list_item_select_wheelstate_checkbox"
+		android:layout_toLeftOf="@+id/list_item_wheelstate_checkbox"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:singleLine="true" android:layout_marginTop="9dip"
 		android:layout_marginLeft="5dip" />

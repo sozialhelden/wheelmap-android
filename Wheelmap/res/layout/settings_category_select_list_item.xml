@@ -27,7 +27,7 @@ limitations under the License.
 	<TextView android:id="@+id/list_item_category_text"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_toRightOf="@+id/list_item_category_icon"
-		android:layout_toLeftOf="@+id/list_item_select_category_checkbox"
+		android:layout_toLeftOf="@+id/list_item_category_checkbox"
 		android:textAppearance="?android:attr/textAppearanceLarge"
 		android:singleLine="true" android:layout_marginTop="9dip"/>
 	<CheckBox android:id="@+id/list_item_category_checkbox"
