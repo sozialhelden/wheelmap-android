@@ -18,8 +18,8 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto"
     package="org.wheelmap.android.online"
-    android:versionCode="13"
-    android:versionName="0.8" >
+    android:versionCode="15"
+    android:versionName="0.8.2" >
 
     <uses-sdk android:minSdkVersion="7" />
 
