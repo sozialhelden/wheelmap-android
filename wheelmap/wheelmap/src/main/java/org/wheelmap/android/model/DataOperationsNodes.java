@@ -30,6 +30,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 
+import java.math.BigDecimal;
+
 public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 
 	public DataOperationsNodes(ContentResolver resolver) {
@@ -46,8 +48,13 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 		values.clear();
 		values.put(POIs.WM_ID, node.getId().longValue());
 		values.put(POIs.NAME, node.getName());
-		values.put(POIs.LATITUDE, node.getLat().doubleValue());
-		values.put(POIs.LONGITUDE, node.getLon().doubleValue());
+
+		BigDecimal latitude = node.getLat();
+		if ( latitude != null )
+			values.put(POIs.LATITUDE, latitude.doubleValue());
+		BigDecimal longitude = node.getLon();
+		if ( longitude != null )
+			values.put(POIs.LONGITUDE, longitude.doubleValue());
 		values.put(POIs.STREET, node.getStreet());
 		values.put(POIs.HOUSE_NUM, node.getHousenumber());
 		values.put(POIs.POSTCODE, node.getPostcode());
@@ -57,15 +64,24 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 		values.put(POIs.WHEELCHAIR,
 				WheelchairState.myValueOf(node.getWheelchair()).getId());
 		values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
-		values.put(POIs.CATEGORY_ID, node.getCategory().getId().intValue());
-		values.put(POIs.NODETYPE_ID, node.getNodeType().getId().intValue());
+
+		wheelmap.org.domain.node.Category cat = node.getCategory();
+		if ( cat != null ) {
+			values.put(POIs.CATEGORY_ID, cat.getId().intValue());
+			values.put(POIs.CATEGORY_IDENTIFIER, cat.getIdentifier());
+		}
+
+		wheelmap.org.domain.node.NodeType nodeType = node.getNodeType();
+		if ( nodeType != null ) {
+			values.put(POIs.NODETYPE_ID, nodeType.getId().intValue());
+			values.put(POIs.NODETYPE_IDENTIFIER, nodeType.getIdentifier());
+		}
 		values.put(POIs.TAG, POIs.TAG_RETRIEVED);
 	}
 
 	@Override
 	protected Uri getUri() {
 		return POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED);
-		// return POIs.CONTENT_URI_RETRIEVED;
 	}
 
 }

@@ -40,6 +40,10 @@ public abstract class DataOperations<T extends BaseDomain, U> {
 		return this.getClass().getSimpleName();
 	}
 
+	public ContentResolver getResolver() {
+		return mResolver;
+	}
+
 	protected abstract Uri getUri();
 
 	public void insert(List<T> items) {

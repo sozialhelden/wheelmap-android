@@ -21,13 +21,18 @@
  */
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Support.NodeTypesContent;
+import org.wheelmap.android.model.Support.LastUpdateContent;
 
 import wheelmap.org.domain.nodetype.NodeType;
 import wheelmap.org.domain.nodetype.NodeTypes;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class DataOperationsNodeTypes extends
 		DataOperations<NodeTypes, NodeType> {
@@ -44,16 +49,18 @@ public class DataOperationsNodeTypes extends
 	@Override
 	public void copyToValues(NodeType item, ContentValues values) {
 		values.clear();
-		values.put(NodeTypesContent.NODETYPE_ID, item.getId().intValue());
+		BigDecimal id = item.getId();
+		if ( id != null )
+			values.put(NodeTypesContent.NODETYPE_ID, id.intValue());
+
 		values.put(NodeTypesContent.IDENTIFIER, item.getIdentifier());
 		values.put(NodeTypesContent.ICON_URL, item.getIconUrl());
 		values.put(NodeTypesContent.LOCALIZED_NAME, item.getLocalizedName());
-		values.put(NodeTypesContent.CATEGORY_ID, item.getCategoryId()
-				.intValue());
-		// values.put( NodeTypesContent.CATEGORY_ID,
-		// nodeType.getCategory().getId().intValue());
-		// values.put( NodeTypesContent.CATEGORY_IDENTIFIER,
-		// nodeType.getCategory().getIdentifier());
+
+		BigDecimal catId = item.getCategoryId();
+		if ( catId != null ) {
+			values.put(NodeTypesContent.CATEGORY_ID, catId.intValue());
+		}
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class POIsProvider extends ContentProvider {
 	private static final int POIS_TMP = 5;
 
 	private static final String DATABASE_NAME = "wheelmap.db";
-	private static final int DATABASE_VERSION = 12;
+	private static final int DATABASE_VERSION = 13;
 	private static final String POIS_TABLE_NAME = "pois";
 
 	private DatabaseHelper mOpenHelper;
@@ -76,8 +76,10 @@ public class POIsProvider extends ContentProvider {
 					+ POIs.WM_ID + " VARCHAR(20), " 
 					+ POIs.NAME + " TEXT,"
 					
-					+ POIs.CATEGORY_ID + " INTEGER, " 
+					+ POIs.CATEGORY_ID + " INTEGER, "
+					+ POIs.CATEGORY_IDENTIFIER + " TEXT, "
 					+ POIs.NODETYPE_ID + " INTEGER, "
+					+ POIs.NODETYPE_IDENTIFIER + " TEXT, "
 					
 					+ POIs.LATITUDE + " VARCHAR(15)," 
 					+ POIs.LONGITUDE + " VARCHAR(15),"
@@ -333,7 +335,9 @@ public class POIsProvider extends ContentProvider {
 		final int wheelchairColumn = inserter.getColumnIndex(POIs.WHEELCHAIR);
 		final int descriptionColumn = inserter.getColumnIndex(POIs.DESCRIPTION);
 		final int categoryIdColumn = inserter.getColumnIndex(POIs.CATEGORY_ID);
+		final int categoryIdentifierColumn = inserter.getColumnIndex( POIs.CATEGORY_IDENTIFIER );
 		final int nodeTypeIdColumn = inserter.getColumnIndex(POIs.NODETYPE_ID);
+		final int nodeTypeIdentifierColumn = inserter.getColumnIndex( POIs.NODETYPE_IDENTIFIER );
 		final int sinLatColumn = inserter.getColumnIndex(POIs.SIN_LAT_RAD);
 		final int cosLatColumn = inserter.getColumnIndex(POIs.COS_LAT_RAD);
 		final int sinLonColumn = inserter.getColumnIndex(POIs.SIN_LON_RAD);
@@ -375,10 +379,21 @@ public class POIsProvider extends ContentProvider {
 					inserter.bind(wheelchairColumn, wheelchair);
 					String description = values.getAsString(POIs.DESCRIPTION);
 					inserter.bind(descriptionColumn, description);
-					int categoryId = values.getAsInteger(POIs.CATEGORY_ID);
-					inserter.bind(categoryIdColumn, categoryId);
-					int nodetypeId = values.getAsInteger(POIs.NODETYPE_ID);
-					inserter.bind(nodeTypeIdColumn, nodetypeId);
+
+
+					Integer categoryId = values.getAsInteger(POIs.CATEGORY_ID);
+					if ( categoryId != null)
+						inserter.bind(categoryIdColumn, categoryId);
+					String categoryIdentifier = values.getAsString( POIs.CATEGORY_IDENTIFIER );
+					inserter.bind(categoryIdentifierColumn, categoryIdentifier);
+
+					Integer nodetypeId = values.getAsInteger(POIs.NODETYPE_ID);
+					if ( nodetypeId != null)
+						inserter.bind(nodeTypeIdColumn, nodetypeId);
+					String nodetypeIdentifier = values.getAsString( POIs.NODETYPE_IDENTIFIER );
+					inserter.bind(nodeTypeIdentifierColumn, nodetypeIdentifier );
+
+
 					double sinLat = values.getAsDouble(POIs.SIN_LAT_RAD);
 					inserter.bind(sinLatColumn, sinLat);
 					double cosLat = values.getAsDouble(POIs.COS_LAT_RAD);
@@ -586,7 +601,9 @@ public class POIsProvider extends ContentProvider {
 		sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR);
 		sPOIsProjectionMap.put(POIs.DESCRIPTION, POIs.DESCRIPTION);
 		sPOIsProjectionMap.put(POIs.CATEGORY_ID, POIs.CATEGORY_ID);
+		sPOIsProjectionMap.put(POIs.CATEGORY_IDENTIFIER, POIs.CATEGORY_IDENTIFIER);
 		sPOIsProjectionMap.put(POIs.NODETYPE_ID, POIs.NODETYPE_ID);
+		sPOIsProjectionMap.put(POIs.NODETYPE_IDENTIFIER, POIs.NODETYPE_IDENTIFIER);
 		sPOIsProjectionMap.put(POIs.TAG, POIs.TAG);
 		sPOIsProjectionMap.put(POIs.STATE, POIs.STATE);
 		sPOIsProjectionMap.put(POIs.DIRTY, POIs.DIRTY);

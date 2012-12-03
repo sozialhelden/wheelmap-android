@@ -48,7 +48,9 @@ public class Wheelmap {
 		public static final String NAME = "name";
 
 		public static final String CATEGORY_ID = "category_id";
+		public static final String CATEGORY_IDENTIFIER = "category_identifier";
 		public static final String NODETYPE_ID = "nodetype_id";
+		public static final String NODETYPE_IDENTIFIER = "nodetype_identifier";
 
 		public static final String LATITUDE = "latitude";
 		public static final String LONGITUDE = "longitude";
@@ -155,7 +157,7 @@ public class Wheelmap {
 		 */
 		public static final String[] PROJECTION = new String[] { _ID, WM_ID,
 				NAME, LATITUDE, LONGITUDE, STREET, HOUSE_NUM, POSTCODE, CITY,
-				PHONE, WEBSITE, WHEELCHAIR, DESCRIPTION, CATEGORY_ID,
-				NODETYPE_ID, TAG, STATE, DIRTY, STORE_TIMESTAMP };
+				PHONE, WEBSITE, WHEELCHAIR, DESCRIPTION, CATEGORY_IDENTIFIER,
+				NODETYPE_IDENTIFIER, TAG, STATE, DIRTY, STORE_TIMESTAMP };
 	}
 }
