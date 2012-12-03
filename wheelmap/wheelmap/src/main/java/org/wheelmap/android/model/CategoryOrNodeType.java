@@ -38,8 +38,6 @@ public class CategoryOrNodeType {
 		NO_SELECTION, CATEGORY, NODETYPE
 	}
 
-	private static final int UNKNOWN = -1;
-
 	public Types type;
 	public String text;
 	public int id;
@@ -57,7 +55,7 @@ public class CategoryOrNodeType {
 		ArrayList<CategoryOrNodeType> types = new ArrayList<CategoryOrNodeType>();
 		if (addAll)
 			types.add(new CategoryOrNodeType(context.getResources().getString(
-					R.string.search_no_selection), UNKNOWN, Types.NO_SELECTION));
+					R.string.search_no_selection), Extra.UNKNOWN, Types.NO_SELECTION));
 
 		List<Category> categories = support.getCategoryList();
 		Collections.sort(categories, new SupportManager.CategoryComparator());
