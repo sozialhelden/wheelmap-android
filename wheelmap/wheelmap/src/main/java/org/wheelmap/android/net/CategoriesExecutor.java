@@ -21,8 +21,10 @@
  */
 package org.wheelmap.android.net;
 
+import de.akquinet.android.androlog.Log;
 import org.wheelmap.android.model.DataOperationsCategories;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.service.SyncServiceException;
 
@@ -33,9 +35,12 @@ import wheelmap.org.request.CategoriesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
 
-public class CategoriesExecutor extends MultiPageExecutor<Categories> implements
+public class CategoriesExecutor extends SinglePageExecutor<Categories> implements
 		IExecutor {
+	private final static String TAG = CategoriesExecutor.class.getSimpleName();
 	private Locale mLocale;
+	private String mEtag;
+	private boolean mContentIsEqual;
 
 	public CategoriesExecutor(Context context, Bundle bundle) {
 		super(context, bundle, Categories.class);
@@ -48,7 +53,7 @@ public class CategoriesExecutor extends MultiPageExecutor<Categories> implements
 			mLocale = new Locale(locale);
 		}
 
-		getResolver().delete(CategoriesContent.CONTENT_URI, null, null);
+		mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_CATEGORIES);
 	}
 
 	@Override
@@ -59,11 +64,23 @@ public class CategoriesExecutor extends MultiPageExecutor<Categories> implements
 			requestBuilder.locale(mLocale);
 
 		clearTempStore();
+		setEtag( mEtag );
 		retrieveSinglePage(requestBuilder);
+		if ( mEtag != null && mEtag.equals( getEtag()) && getTempStore().isEmpty())
+			mContentIsEqual = true;
+
+		LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_CATEGORIES, getEtag());
+		Log.d(TAG, "etag = " + getEtag());
 	}
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
+		if ( mContentIsEqual ) {
+			Log.i( TAG, "content is equal according to etag - doing nothing" );
+			return;
+		}
+
+		getResolver().delete(CategoriesContent.CONTENT_URI, null, null);
 		DataOperationsCategories doc = new DataOperationsCategories(
 				getResolver());
 		doc.insert(getTempStore());

@@ -179,10 +179,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String name = POIHelper.getName(mCursor);
 		SupportManager sm = WheelmapApp.getSupportManager();
 
-		int categoryId = POIHelper.getCategoryId(mCursor);
-		String category = sm.lookupCategory(categoryId).identifier;
-		int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
-		String nodeType = sm.lookupNodeType(nodeTypeId).identifier;
+		String categoryIdentifier = POIHelper.getCategoryIdentifier(mCursor);
+		String nodeTypeIdentifier = POIHelper.getNodeTypeIdentifier(mCursor);
 
 		double latitude = POIHelper.getLatitude(mCursor);
 		double longitude = POIHelper.getLongitude(mCursor);
@@ -199,7 +197,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor {
 		String phone = POIHelper.getPhone(mCursor);
 
 		return new NodeUpdateOrNewAllRequestBuilder(getServer(), apiKey,
-				AcceptType.JSON, id, name, category, nodeType, latitude,
+				AcceptType.JSON, id, name, categoryIdentifier, nodeTypeIdentifier, latitude,
 				longitude, state, comment, street, housenumber, city, postcode,
 				website, phone);
 	}

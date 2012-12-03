@@ -21,8 +21,10 @@
  */
 package org.wheelmap.android.net;
 
+import de.akquinet.android.androlog.Log;
 import org.wheelmap.android.model.DataOperationsNodeTypes;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.service.SyncServiceException;
 
@@ -36,7 +38,10 @@ import android.os.Bundle;
 
 public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
 		IExecutor {
+	private final static String TAG = NodeTypesExecutor.class.getSimpleName();
 	private Locale mLocale;
+	private String mEtag;
+	private boolean mContentIsEqual;
 
 	public NodeTypesExecutor(Context context, Bundle bundle) {
 		super(context, bundle, NodeTypes.class);
@@ -49,7 +54,7 @@ public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
 			mLocale = new Locale(locale);
 		}
 
-		getResolver().delete(NodeTypesContent.CONTENT_URI, null, null);
+		mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_NODETYPES);
 	}
 
 	@Override
@@ -61,12 +66,24 @@ public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
 			requestBuilder.locale(mLocale);
 		}
 		clearTempStore();
-		retrieveSinglePage(requestBuilder);
 
+		setEtag( mEtag );
+		retrieveSinglePage(requestBuilder);
+		if ( mEtag != null && mEtag.equals( getEtag()) && getTempStore().isEmpty())
+			mContentIsEqual = true;
+
+		LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_NODETYPES, getEtag());
+		Log.d(TAG, "etag = " + getEtag());
 	}
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
+		if ( mContentIsEqual ) {
+			Log.i( TAG, "content is equal according to etag - doing nothing" );
+			return;
+		}
+
+		getResolver().delete(NodeTypesContent.CONTENT_URI, null, null);
 		DataOperationsNodeTypes don = new DataOperationsNodeTypes(getResolver());
 		don.insert(getTempStore());
 		clearTempStore();

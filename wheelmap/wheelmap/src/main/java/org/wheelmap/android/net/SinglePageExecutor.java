@@ -44,7 +44,7 @@ import de.akquinet.android.androlog.Log;
 
 public abstract class SinglePageExecutor<T extends Base> extends
 		AbstractExecutor implements IExecutor {
-	private static final int MAX_RETRY_COUNT = 3;
+	private static final int MAX_RETRY_COUNT = 5;
 	protected static final int DEFAULT_TEST_PAGE_SIZE = 500;
 	private final static int statusAuthFailed = 401;
 	private final static int statusAuthForbidden = 403;
@@ -84,7 +84,7 @@ public abstract class SinglePageExecutor<T extends Base> extends
 
 		T items = retrieveNumberOfHits(getRequest);
 		if (items == null) {
-			Log.e(getTag(), "retrieved no items - tempstore is empty");
+			Log.w(getTag(), "retrieved no items - tempstore is empty");
 			return 0;
 		}
 

@@ -39,29 +39,34 @@ public abstract class AbstractExecutor implements IExecutor {
 	private final Bundle mBundle;
 	private IAppProperties mAppProperties;
 
-	
 	protected final static int statusAuthRequired = 401;
 	protected final static int statusRequestForbidden = 403;
 
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
 
-    public AbstractExecutor(Context context, Bundle bundle) {
+	public AbstractExecutor(Context context, Bundle bundle) {
 		mContext = context;
 		mBundle = bundle;
 	}
-	
+
 	@Override
-    public void setAppProperties(IAppProperties appProperties) {
+	public void setAppProperties(IAppProperties appProperties) {
 		mAppProperties = appProperties;
 	}
-	
+
 	@Override
-	public void setUserAgent(String userAgent)
-	{
-       mRequestProcessor.setUserAgent(userAgent);		
+	public void setUserAgent(String userAgent) {
+		mRequestProcessor.setUserAgent(userAgent);
 	}
 
+	protected String getEtag() {
+		return mRequestProcessor.getEtag();
+	}
+
+	protected void setEtag(String etag) {
+		mRequestProcessor.setEtag(etag);
+	}
 
 	public String getApiKey() {
 		return API_KEY;
@@ -85,7 +90,8 @@ public abstract class AbstractExecutor implements IExecutor {
 
 	public abstract void prepareDatabase() throws SyncServiceException;
 
-	public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties, IHttpUserAgent httpUserAgent) {
+	public static IExecutor create(Context context, Bundle bundle,
+			IAppProperties appProperties, IHttpUserAgent httpUserAgent) {
 		if (bundle == null || !bundle.containsKey(Extra.WHAT))
 			return null;
 
@@ -123,15 +129,14 @@ public abstract class AbstractExecutor implements IExecutor {
 
 		return executor;
 	}
-	
+
 	@Override
-	public String getServer()
-	{
+	public String getServer() {
 		return mAppProperties.get(AppProperties.KEY_WHEELMAP_URI);
 	}
 
 	protected String getTag() {
-		return this.getClass().getSimpleName();
+		return getClass().getSimpleName();
 	}
 
 }

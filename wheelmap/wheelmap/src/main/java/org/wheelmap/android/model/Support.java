@@ -25,6 +25,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -37,7 +39,14 @@ public class Support {
 	}
 
 	public static interface LastUpdateColumns {
+
+		public static final int MODULE_LOCALE = 0x1;
+		public static final int MODULE_CATEGORIES = 0x2;
+		public static final int MODULE_NODETYPES = 0x3;
+
+		public static final String MODULE = "module";
 		public static final String DATE = "date";
+		public static final String ETAG = "etag";
 	}
 
 	public static interface LocaleColumns {
@@ -71,12 +80,19 @@ public class Support {
 		public static final Uri CONTENT_URI = Uri.parse("content://"
 				+ AUTHORITY + "/lastupdate");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.lastupdate";
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.lastupdate";
 
-		public static final String[] PROJECTION = new String[] { _ID, DATE };
+		public static final String[] PROJECTION = new String[] { _ID, MODULE, DATE, ETAG };
+
+		public static String getModule(Cursor c) {
+			return c.getString(c.getColumnIndexOrThrow(MODULE));
+		}
 
 		public static String getDate(Cursor c) {
 			return c.getString(c.getColumnIndexOrThrow(DATE));
+		}
+
+		public static String getEtag(Cursor c ) {
+			return c.getString(c.getColumnIndexOrThrow(ETAG));
 		}
 
 		public static String formatDate(Date date) {
@@ -88,6 +104,47 @@ public class Support {
 			SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_DATEFORMAT);
 			return sdf.parse(iso8601_date);
 		}
+
+		public static String queryEtag( ContentResolver resolver, int module ) {
+			String whereClause = MODULE + " = "
+					+ module;
+			Cursor c = resolver.query(CONTENT_URI,
+					PROJECTION, whereClause, null, null);
+			if (c == null || c.getCount() != 1)
+				return null;
+			c.moveToFirst();
+			String etag = getEtag(c);
+			c.close();
+			return etag;
+		}
+
+		public static void storeEtag( ContentResolver resolver, int module, String eTag) {
+			ContentValues values = new ContentValues();
+			values.put( MODULE, module);
+			values.put( ETAG, eTag);
+			String date = formatDate(new Date());
+			values.put(LastUpdateContent.DATE, date);
+			String whereClause = MODULE + " = " + module;
+			PrepareDatabaseHelper.insertOrUpdateContentValues(resolver, CONTENT_URI, PROJECTION, whereClause, null, values);
+		}
+
+		public static Date queryTimeStamp( ContentResolver resolver, int module) {
+			String whereClause = MODULE + " = "
+					+ module;
+			Cursor c = resolver.query(CONTENT_URI,
+					PROJECTION, whereClause, null, null);
+			if (c == null || c.getCount() != 1)
+				return null;
+			c.moveToFirst();
+			Date date;
+			try {
+		 		date  = parseDate(getDate(c));
+			} catch (ParseException e ) {
+				date = null;
+			}
+			c.close();
+			return date;
+		}
 	}
 
 	public static final class LocalesContent implements BaseColumns,
@@ -98,7 +155,6 @@ public class Support {
 		public static final Uri CONTENT_URI = Uri.parse("content://"
 				+ AUTHORITY + "/locales");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.locales";
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.locales";
 
 		public static final String[] PROJECTION = new String[] { _ID,
 				LOCALE_ID, LOCALIZED_NAME };
@@ -120,7 +176,6 @@ public class Support {
 		public static final Uri CONTENT_URI = Uri.parse("content://"
 				+ AUTHORITY + "/categories");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.categories";
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.categories";
 		public static final String DEFAULT_SORT_ORDER = LOCALIZED_NAME + " ASC";
 
 		public static final String[] PROJECTION = new String[] { _ID,
@@ -158,7 +213,6 @@ public class Support {
 		public static final Uri CONTENT_URI = Uri.parse("content://"
 				+ AUTHORITY + "/nodetypes");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.nodetypes";
-		public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.wheelmap.nodetypes";
 
 		public static final String[] PROJECTION = new String[] { _ID,
 				NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME, CATEGORY_ID,

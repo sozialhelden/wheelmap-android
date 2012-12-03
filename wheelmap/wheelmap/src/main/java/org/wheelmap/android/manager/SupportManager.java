@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
@@ -41,7 +42,6 @@ import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
-import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeocoordinatesMath;
@@ -72,6 +72,7 @@ public class SupportManager {
 	private Context mContext;
 	private Map<Integer, NodeType> mNodeTypeLookup;
 	private Map<Integer, Category> mCategoryLookup;
+	private Map<Integer, String> mCategoryIdentifierLookup = new HashMap<Integer, String>();
 	private Drawable[] mWheelDrawables;
 
 	private DetachableResultReceiver mStatusSender;
@@ -83,7 +84,7 @@ public class SupportManager {
 	private boolean mInitialized;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
-	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 90;
+	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 1;
 	public final static String PREFS_SERVICE_LOCALE = "prefsServiceLocale";
 	public final static String PREFS_KEY_UNIT_PREFERENCE = "prefsUnit";
 
@@ -193,9 +194,7 @@ public class SupportManager {
 		mNeedsReloading = false;
 		if (checkForLocales() && checkForCategories() && checkForNodeTypes()) {
 			initLookup();
-
-			if (checkIfUpdateDurationPassed())
-				mNeedsReloading = true;
+			mNeedsReloading = true;
 		} else
 			mNeedsReloading = true;
 
@@ -251,7 +250,6 @@ public class SupportManager {
 
 	public void reloadStageFour() {
 		initNodeTypes();
-		createCurrentTimeTag();
 		mInitialized = true;
 		mNeedsReloading = false;
 	}
@@ -285,27 +283,11 @@ public class SupportManager {
 
 	}
 
-	private boolean checkIfUpdateDurationPassed() {
-		ContentResolver resolver = mContext.getContentResolver();
-		Cursor cursor = resolver.query(LastUpdateContent.CONTENT_URI,
-				LastUpdateContent.PROJECTION, null, null, null);
-		if (cursor == null)
-			return true;
 
-		cursor.moveToFirst();
-		int count = cursor.getCount();
-
-		if (count != 1)
+	private boolean checkIfUpdateDurationPassed(int module) {
+		Date date = LastUpdateContent.queryTimeStamp(mContext.getContentResolver(), module);
+		if (date == null)
 			return true;
-
-		Date date;
-		try {
-			date = Support.LastUpdateContent.parseDate(LastUpdateContent
-					.getDate(cursor));
-		} catch (ParseException e) {
-			cursor.close();
-			return true;
-		}
 
 		long now = System.currentTimeMillis();
 
@@ -313,25 +295,12 @@ public class SupportManager {
 		Log.d(TAG, "checkIfUpdateDurationPassed: days = " + days);
 
 		if (days >= DATE_INTERVAL_FOR_UPDATE_IN_DAYS) {
-			cursor.close();
+			Log.d( TAG, "checkIfUpdateDurationPassed: interval passed - forcing update module = " + module);
 			return true;
 		}
 
-		cursor.close();
 		return false;
 
-	}
-
-	public void createCurrentTimeTag() {
-
-		ContentValues values = new ContentValues();
-		String date = Support.LastUpdateContent.formatDate(new Date());
-		values.put(LastUpdateContent.DATE, date);
-		String whereClause = "( " + LastUpdateContent._ID + " = ? )";
-		String[] whereValues = new String[] { String.valueOf(1) };
-
-		insertContentValues(LastUpdateContent.CONTENT_URI,
-				LastUpdateContent.PROJECTION, whereClause, whereValues, values);
 	}
 
 	private boolean checkForLocales() {
@@ -348,13 +317,14 @@ public class SupportManager {
 				.getDefaultSharedPreferences(mContext);
 		String prefsLocale = prefs.getString(PREFS_SERVICE_LOCALE, "");
 		boolean prefsEmpty = prefsLocale.equals("");
+		boolean updateDurationPassed = checkIfUpdateDurationPassed(LastUpdateContent.MODULE_LOCALE);
 
 		String locale = mContext.getResources().getConfiguration().locale
 				.getLanguage();
 
-		if (dbEmpty || prefsEmpty || !locale.equals(prefsLocale)) {
+		if (dbEmpty || prefsEmpty || !locale.equals(prefsLocale) || updateDurationPassed) {
 			Log.d(TAG, "dbEmpty = " + dbEmpty + " prefsLocale = " + prefsLocale
-					+ " locale = " + locale);
+					+ " locale = " + locale + " updateDurationPassed = " + updateDurationPassed);
 			return false;
 		} else
 			return true;
@@ -369,7 +339,13 @@ public class SupportManager {
 
 		boolean dbFull = cursor.getCount() != 0;
 		cursor.close();
-		return dbFull;
+
+		boolean updateDurationPassed = checkIfUpdateDurationPassed(LastUpdateContent.MODULE_CATEGORIES);
+
+		if ( dbFull && !updateDurationPassed)
+			return true;
+		else
+			return false;
 	}
 
 	private boolean checkForNodeTypes() {
@@ -381,7 +357,12 @@ public class SupportManager {
 
 		boolean dbFull = cursor.getCount() != 0;
 		cursor.close();
-		return dbFull;
+		boolean updateDurationPassed = checkIfUpdateDurationPassed(LastUpdateContent.MODULE_CATEGORIES);
+
+		if ( dbFull && !updateDurationPassed)
+			return true;
+		else
+			return false;
 	}
 
 	public void initLocales() {
@@ -432,8 +413,9 @@ public class SupportManager {
 			int id = CategoriesContent.getCategoryId(cursor);
 			String identifier = CategoriesContent.getIdentifier(cursor);
 			String localizedName = CategoriesContent.getLocalizedName(cursor);
-			mCategoryLookup
-					.put(id, new Category(id, identifier, localizedName));
+			mCategoryLookup.put(id, new Category(id, identifier,
+					localizedName));
+			mCategoryIdentifierLookup.put(id, identifier);
 
 			cursor.moveToNext();
 		}
@@ -543,7 +525,7 @@ public class SupportManager {
 		// Log.d(TAG, "clearing callbacks for mDefaultNodeType ");
 		cleanReferences(mDefaultNodeType.stateDrawables);
 
-		for (int nodeTypeId : mNodeTypeLookup.keySet()) {
+		for (Integer nodeTypeId : mNodeTypeLookup.keySet()) {
 			NodeType nodeType = mNodeTypeLookup.get(nodeTypeId);
 			// Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
 			cleanReferences(nodeType.stateDrawables);
@@ -567,7 +549,6 @@ public class SupportManager {
 			return mCategoryLookup.get(id);
 		else
 			return mDefaultCategory;
-
 	}
 
 	public NodeType lookupNodeType(int id) {
@@ -587,16 +568,6 @@ public class SupportManager {
 		for (Integer key : keys) {
 			list.add(mCategoryLookup.get(key));
 		}
-		return list;
-	}
-
-	public List<NodeType> getNodeTypeList() {
-		Set<Integer> keys = mNodeTypeLookup.keySet();
-		List<NodeType> list = new ArrayList<NodeType>();
-		for (Integer key : keys) {
-			list.add(mNodeTypeLookup.get(key));
-		}
-
 		return list;
 	}
 

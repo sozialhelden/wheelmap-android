@@ -128,8 +128,16 @@ public class POIHelper {
 		return c.getInt(c.getColumnIndexOrThrow(POIs.CATEGORY_ID));
 	}
 
+	public static String getCategoryIdentifier( Cursor c ) {
+		return c.getString( c.getColumnIndexOrThrow( POIs.CATEGORY_IDENTIFIER ));
+	}
+
 	public static int getNodeTypeId(Cursor c) {
 		return c.getInt(c.getColumnIndexOrThrow(POIs.NODETYPE_ID));
+	}
+
+	public static String getNodeTypeIdentifier( Cursor c ) {
+		return c.getString( c.getColumnIndexOrThrow( POIs.NODETYPE_IDENTIFIER ));
 	}
 
 	public static int getDirtyTag(Cursor c) {
@@ -141,7 +149,9 @@ public class POIHelper {
 		values.put(POIs.NAME, getName(c));
 
 		values.put(POIs.CATEGORY_ID, getCategoryId(c));
+		values.put(POIs.CATEGORY_IDENTIFIER, getCategoryIdentifier(c));
 		values.put(POIs.NODETYPE_ID, getNodeTypeId(c));
+		values.put(POIs.NODETYPE_IDENTIFIER, getNodeTypeIdentifier(c));
 
 		values.put(POIs.LATITUDE, getLatitude(c));
 		values.put(POIs.LONGITUDE, getLongitude(c));

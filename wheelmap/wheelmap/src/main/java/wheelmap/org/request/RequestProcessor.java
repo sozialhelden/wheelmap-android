@@ -28,7 +28,6 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import de.akquinet.android.androlog.Log;
 
@@ -43,11 +42,11 @@ import de.akquinet.android.androlog.Log;
  */
 public class RequestProcessor {
 	private final static String TAG = RequestProcessor.class.getSimpleName();
-	private final RestTemplate restTemplate;
+	private final RestTemplateExt restTemplate;
 	private HttpComponentsClientHttpRequestFactory mRequestFactory;
 
 	public RequestProcessor() {
-		restTemplate = new RestTemplate();
+		restTemplate = new RestTemplateExt();
 		mRequestFactory = new HttpComponentsClientHttpRequestFactory();
 
 		restTemplate.setRequestFactory(mRequestFactory);
@@ -58,6 +57,14 @@ public class RequestProcessor {
 	public void setUserAgent(String userAgent) {
 		mRequestFactory.getHttpClient().getParams()
 				.setParameter(CoreProtocolPNames.USER_AGENT, userAgent);
+	}
+
+	public void setEtag(String etag) {
+		restTemplate.getRequestHttpHeaders().setIfNoneMatch(etag);
+	}
+
+	public String getEtag() {
+		return restTemplate.getResponseHttpHeaders().getETag();
 	}
 
 	public <T> T get(final URI uri, Class<T> clazz) throws RestClientException {

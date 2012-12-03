@@ -46,7 +46,7 @@ public class SupportProvider extends ContentProvider {
 
 	private static final String TAG = SupportProvider.class.getSimpleName();
 	private static final String DATABASE_NAME = "support.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 8;
 
 	private static final UriMatcher sUriMatcher;
 	private static HashMap<String, String> sLocalesProjectionMap;
@@ -75,7 +75,9 @@ public class SupportProvider extends ContentProvider {
 			db.execSQL("CREATE TABLE " + LASTUPDATE_TABLE_NAME + " ("
 					+ LastUpdateContent._ID
 					+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
-					+ LastUpdateContent.DATE + " TEXT)");
+					+ LastUpdateContent.MODULE + " INTEGER, "
+					+ LastUpdateContent.DATE + " TEXT, "
+					+ LastUpdateContent.ETAG + " TEXT)");
 
 			db.execSQL("CREATE TABLE " + LOCALES_TABLE_NAME + " ("
 					+ LocalesContent._ID
@@ -351,7 +353,7 @@ public class SupportProvider extends ContentProvider {
 			for (i = 0; i < values.length; i++) {
 				inserter.prepareForInsert();
 
-				int categoryId = values[i]
+				Integer categoryId = values[i]
 						.getAsInteger(CategoriesContent.CATEGORY_ID);
 				inserter.bind(categoryIdColumn, categoryId);
 
@@ -363,7 +365,7 @@ public class SupportProvider extends ContentProvider {
 						.getAsString(CategoriesContent.IDENTIFIER);
 				inserter.bind(identifierColumn, identifier);
 
-				int selected = values[i]
+				Integer selected = values[i]
 						.getAsInteger(CategoriesContent.SELECTED);
 				inserter.bind(selectedColumn, selected);
 
@@ -403,7 +405,7 @@ public class SupportProvider extends ContentProvider {
 		try {
 			for (i = 0; i < values.length; i++) {
 				inserter.prepareForInsert();
-				int nodeTypeId = values[i]
+				Integer nodeTypeId = values[i]
 						.getAsInteger(NodeTypesContent.NODETYPE_ID);
 				inserter.bind(nodeTypeIdColumn, nodeTypeId);
 				String identifier = values[i]
@@ -444,8 +446,10 @@ public class SupportProvider extends ContentProvider {
 		sLastUpdateProjectionMap = new HashMap<String, String>();
 		sLastUpdateProjectionMap.put(LastUpdateContent._ID,
 				LastUpdateContent._ID);
+		sLastUpdateProjectionMap.put(LastUpdateContent.MODULE, LastUpdateContent.MODULE);
 		sLastUpdateProjectionMap.put(LastUpdateContent.DATE,
 				LastUpdateContent.DATE);
+		sLastUpdateProjectionMap.put(LastUpdateContent.ETAG, LastUpdateContent.ETAG);
 
 		sLocalesProjectionMap = new HashMap<String, String>();
 		sLocalesProjectionMap.put(LocalesContent._ID, LocalesContent._ID);
