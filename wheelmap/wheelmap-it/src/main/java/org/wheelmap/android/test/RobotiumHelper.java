@@ -86,7 +86,7 @@ public class RobotiumHelper {
 		solo.waitForText(loginText);
 		EditText emailText = solo.getEditText(0);
 		EditText passwordText = solo.getEditText(1);
-		solo.enterText(emailText, "rutton.r@gmail.com");
+		solo.enterText(emailText, "rutton@web.de");
 		solo.enterText(passwordText, "testtest");
 
 		String loginButtonText = solo.getString(R.string.login_submit);

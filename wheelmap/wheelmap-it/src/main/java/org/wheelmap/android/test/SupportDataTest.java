@@ -29,6 +29,7 @@ import junit.framework.Assert;
 
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
+import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
@@ -59,6 +60,7 @@ public class SupportDataTest extends AndroidTestCase {
 		cr.delete(LocalesContent.CONTENT_URI, null, null);
 		cr.delete(CategoriesContent.CONTENT_URI, null, null);
 		cr.delete(NodeTypesContent.CONTENT_URI, null, null);
+		cr.delete(Support.LastUpdateContent.CONTENT_URI, null, null);
 
 	}
 
