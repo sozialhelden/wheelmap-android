@@ -90,7 +90,7 @@
       <version>1.0.0.RELEASE</version>
     </dependency>
     <dependency>
-      <groupId>org.wheelmap.android</groupId>
+      <groupId>org.mapsforge.android</groupId>
       <artifactId>mapsforge-map</artifactId>
       <version>0.2.4</version>
     </dependency>
