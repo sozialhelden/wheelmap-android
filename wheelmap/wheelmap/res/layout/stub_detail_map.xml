@@ -23,7 +23,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/separator"
@@ -37,5 +38,4 @@
         android:layout_height="@dimen/detail_mapview_height"
         ramCacheShared="true"
         ramCacheSize="4" />
-
 </LinearLayout>
