@@ -64,7 +64,6 @@ public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
 
 	@Override
 	public void prepareDatabase() throws SyncServiceException {
-		PrepareDatabaseHelper.cleanupOldCopies(getResolver());
 		PrepareDatabaseHelper.insert(getResolver(), getTempStore().get(0));
 		PrepareDatabaseHelper.replayChangedCopies(getResolver());
 	}

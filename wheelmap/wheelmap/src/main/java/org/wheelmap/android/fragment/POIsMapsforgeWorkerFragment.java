@@ -125,7 +125,6 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 
 	private void setRefreshStatus(boolean refreshState) {
 		mRefreshStatus = refreshState;
-		update();
 	}
 
 	private void update() {

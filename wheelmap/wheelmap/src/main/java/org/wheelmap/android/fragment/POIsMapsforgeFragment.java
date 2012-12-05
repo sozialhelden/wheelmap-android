@@ -207,10 +207,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 		if (savedInstanceState == null)
 			mFirstStart = true;
-		else
-			executeState(savedInstanceState);
-		executeState(getExecuteBundle());
-
+		else if ( !hasExecuteBundle()) {
+			executeBundle(savedInstanceState);
+		}
 	}
 
 	@Override
@@ -219,6 +218,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		if (mOrientationAvailable)
 			mSensorManager.registerListener(mSensorEventListener, mSensor,
 					SensorManager.SENSOR_DELAY_NORMAL);
+		executeState(retrieveExecuteBundle());
 	}
 
 	@Override
@@ -239,7 +239,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void executeBundle(Bundle bundle) {
-		if (isAdded()) {
+		Log.d(TAG, "executeBundle fragment is visible = " + isVisible());
+		if (isVisible()) {
 			bundle.putBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, true);
 			executeState(bundle);
 		} else
@@ -251,53 +252,66 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 			return;
 
 		boolean doRequest = false;
+		GeoPoint centerPoint = null;
+		int zoom = 0;
 
 		if (bundle.containsKey(Extra.CENTER_MAP)) {
 			double lat = bundle.getDouble(Extra.LATITUDE);
 			double lon = bundle.getDouble(Extra.LONGITUDE);
-			int zoom = bundle.getInt(Extra.ZOOM_MAP, MAP_ZOOM_DEFAULT);
-
-			GeoPoint gp = new GeoPoint(lat, lon);
-			mMapController.setCenter(gp);
-			mMapView.setZoomListener(null);
-			mMapController.setZoom(zoom);
-			mMapView.setZoomListener(this);
-			isCentered = true;
-			oldZoomLevel = zoom;
-
+			zoom = bundle.getInt(Extra.ZOOM_MAP, MAP_ZOOM_DEFAULT);
+			centerPoint = new GeoPoint(lat, lon);
 			doRequest = true;
 		}
 
 		if (bundle.getBoolean(Extra.EXPLICIT_RETRIEVAL, false)) {
-			mMapController.setZoom(MAP_ZOOM_DEFAULT);
-			oldZoomLevel = MAP_ZOOM_DEFAULT;
+			Log.d(TAG, "Explicit retrieval");
+			zoom = MAP_ZOOM_DEFAULT;
 			doRequest = true;
 		}
 
-		if (doRequest
-				&& bundle.getBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, false)) {
-			requestUpdate();
-			return;
+		if (doRequest) {
+			if (bundle.getBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, false)) {
+				Log.d(TAG, "executeState: explicit direct retrieval");
+				executeMapPositioning(centerPoint, zoom);
+			} else {
+				Log.d(TAG, "executeState: deferred retrieval");
+				final GeoPoint finalCenterPoint = centerPoint;
+				final int finalZoom = zoom;
+				mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
+						new OnGlobalLayoutListener() {
+
+							@Override
+							public void onGlobalLayout() {
+								Log.d( "onGlobalLayout: doing mapview center" );
+								executeMapPositioning(finalCenterPoint, finalZoom);
+								mMapView.getViewTreeObserver()
+										.removeOnGlobalLayoutListener(this);
+							}
+						});
+			}
+
 		}
 
-		if (doRequest)
-			mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
-					new OnGlobalLayoutListener() {
+	}
 
-						@Override
-						public void onGlobalLayout() {
-							requestUpdate();
-							mMapView.getViewTreeObserver()
-									.removeOnGlobalLayoutListener(this);
-						}
-					});
+	private void executeMapPositioning( GeoPoint geoPoint, int zoom ) {
+		if (geoPoint != null)
+			centerMap(geoPoint, true);
+		if (zoom != 0)
+			setZoomIntern(zoom);
+		markItemIntern( geoPoint, false );
+		requestUpdate();
+	}
+
+	private boolean hasExecuteBundle() {
+		return mDeferredExecuteBundle != null;
 	}
 
 	private void storeExecuteBundle(Bundle bundle) {
 		mDeferredExecuteBundle = bundle;
 	}
 
-	private Bundle getExecuteBundle() {
+	private Bundle retrieveExecuteBundle() {
 		Bundle result = mDeferredExecuteBundle;
 		mDeferredExecuteBundle = null;
 		return result;
@@ -415,21 +429,32 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		if (geoPoint == null)
 			return;
 
-		Projection projection = mMapView.getProjection();
-		Point point = new Point();
+		GeoPoint actualGeoPoint;
 
-		projection.toPixels(geoPoint, point);
-
-		if (!mHeightFull) {
+		if (mHeightFull) {
+			actualGeoPoint = geoPoint;
+		} else {
+			Projection projection = mMapView.getProjection();
+			Point point = new Point();
+			point = projection.toPixels(geoPoint, point);
 			int mVerticalOffset = mMapView.getHeight() / 4;
 			point.y -= mVerticalOffset;
+			actualGeoPoint = projection.fromPixels(point.x, point.y);
 		}
 
-		mMapController.setCenter(projection.fromPixels(point.x, point.y));
+		mMapController.setCenter(actualGeoPoint);
+		isCentered = true;
 	}
 
 	public void setHeightFull(boolean heightFull) {
 		mHeightFull = heightFull;
+	}
+
+	private void setZoomIntern(int zoom) {
+		mMapView.setZoomListener(null);
+		mMapController.setZoom(zoom);
+		mMapView.setZoomListener(this);
+		oldZoomLevel = zoom;
 	}
 
 	private void setCursor(Cursor cursor) {
@@ -442,7 +467,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 		mCursor = cursor;
 		mPoisItemizedOverlay.setCursor(mCursor);
-		markItemClear();
+
+		if ( mWorkerFragment instanceof CombinedWorkerFragment )
+			markItemClear();
 	}
 
 	@Override
@@ -488,9 +515,15 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mCurrentLocation = geoPoint;
 	}
 
+	@Override
 	public void markItem(ContentValues values, boolean centerToItem) {
+		Log.d( TAG, "markItem" );
 		GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
 				values.getAsDouble(POIs.LONGITUDE));
+		markItemIntern(point, centerToItem);
+	}
+
+	private void markItemIntern(GeoPoint point, boolean centerToItem) {
 		mCurrLocationOverlay.setItem(point);
 		if (centerToItem) {
 			centerMap(point, true);

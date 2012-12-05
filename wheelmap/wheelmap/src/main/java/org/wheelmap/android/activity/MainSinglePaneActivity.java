@@ -155,6 +155,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		Log.d( TAG, "onDestroy" );
 		// Debug.stopMethodTracing();
 	}
 
@@ -289,9 +290,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onShowDetail(Fragment fragment, ContentValues values) {
-		Long id = values.getAsLong(POIs.POI_ID);
-		long copyId = PrepareDatabaseHelper.createCopyIfNotExists(
-				getContentResolver(), id, false);
+		long copyId = PrepareDatabaseHelper.createCopyFromContentValues(
+				getContentResolver(), values, false);
 		Intent intent = new Intent(this, POIDetailActivity.class);
 		intent.putExtra(Extra.POI_ID, copyId);
 		startActivity(intent);

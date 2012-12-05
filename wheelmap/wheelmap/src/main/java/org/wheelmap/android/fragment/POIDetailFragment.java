@@ -24,6 +24,8 @@ package org.wheelmap.android.fragment;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.view.animation.Interpolator;
+import com.nineoldandroids.animation.ObjectAnimator;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -40,6 +42,7 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
+import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.ViewTool;
 
 import roboguice.inject.InjectView;
@@ -80,6 +83,9 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	public final static String TAG = POIDetailFragment.class.getSimpleName();
 	private final static int LOADER_CONTENT = 0;
+
+	private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
+	private final static long FADE_IN_ANIMATION_DURATION = 500;
 
 	@InjectView(R.id.title_container)
 	private RelativeLayout title_container;
@@ -176,7 +182,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_detail, container, false);
 		mShowMenu = false;
-
 		if (getArguments().containsKey(Extra.SHOW_MAP))
 			showMap(v);
 		return v;
@@ -225,6 +230,18 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		getLoaderManager().initLoader(LOADER_CONTENT, null, this);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		float startValue = 0.0f;
+		float endValue = 1.0f;
+		ObjectAnimator anim = ObjectAnimator.ofFloat(getView(),
+				"alpha", startValue, endValue);
+		anim.setInterpolator(SMOOTH_INTERPOLATOR);
+		anim.setDuration(FADE_IN_ANIMATION_DURATION);
+		anim.start();
 	}
 
 	@Override

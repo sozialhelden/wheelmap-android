@@ -126,7 +126,7 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 	@Override
 	public void prepareDatabase() {
 		Log.d(getTag(), "prepareDatabase");
-		PrepareDatabaseHelper.cleanupOldCopies(getResolver());
+		PrepareDatabaseHelper.cleanupOldCopies(getResolver(), false);
 		PrepareDatabaseHelper.deleteRetrievedData(getResolver());
 		DataOperationsNodes don = new DataOperationsNodes(getResolver());
 		don.insert(getTempStore());

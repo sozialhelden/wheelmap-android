@@ -312,10 +312,8 @@ public class MainMultiPaneActivity extends MapsforgeMapActivity implements
 
 	@Override
 	public void onShowDetail(Fragment fragment, ContentValues values) {
-		long id = values.getAsLong(POIs.POI_ID);
-
-		long copyId = PrepareDatabaseHelper.createCopyIfNotExists(
-				getContentResolver(), id, true);
+		long copyId = PrepareDatabaseHelper.createCopyFromContentValues(
+				getContentResolver(), values, true);
 		poiIdSelected = copyId;
 
 		if (!mMovableVisible && !mMovableGoneByButton)

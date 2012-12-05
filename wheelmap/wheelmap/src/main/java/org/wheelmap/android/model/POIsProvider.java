@@ -157,6 +157,7 @@ public class POIsProvider extends ContentProvider {
 		case POIS_COPY_ID:
 		case POIS_TMP:
 			whereClause = concatenateWhere(whereClause, where);
+			Log.d( TAG, "whereClause = " + whereClause + " whereArgs = " + whereArgs);
 			count = db.delete(POIS_TABLE_NAME, whereClause, whereArgs);
 			break;
 		default:
@@ -252,7 +253,6 @@ public class POIsProvider extends ContentProvider {
 		long rowId = db.insert(POIS_TABLE_NAME, POIs.NAME, values);
 		if (rowId > 0) {
 			Uri placeUri = ContentUris.withAppendedId(uri, rowId);
-			getContext().getContentResolver().notifyChange(uri, null);
 			return placeUri;
 		}
 

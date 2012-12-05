@@ -66,6 +66,7 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 
 		FragmentManager fm = mActivity.getSupportFragmentManager();
 		mFragment = fm.findFragmentByTag(mTag.name);
+		Log.d( TAG, "MyTabListener created: mFragment = " + mFragment);
 	}
 
 	/* The following are each of the ActionBar.TabListener callbacks */
@@ -85,9 +86,9 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 			Log.d(TAG, "Fragment mFragment = " + mFragment.toString());
 		}
 
-		Bundle executeBundle = mTag.getExecuteBundle();
-		if (executeBundle != null && mFragment instanceof OnExecuteBundle) {
-			((OnExecuteBundle) mFragment).executeBundle(executeBundle);
+		if (mTag.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
+			Log.d( TAG, "onTabSelected: executing bundle" );
+			((OnExecuteBundle) mFragment).executeBundle(mTag.getExecuteBundle());
 		}
 
 		if (listener != null)
@@ -112,9 +113,9 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 		Log.d(TAG, "onTabReselected: tag = " + mTag.name);
 
-		Bundle executeBundle = mTag.getExecuteBundle();
-		if (executeBundle != null && mFragment instanceof OnExecuteBundle) {
-			((OnExecuteBundle) mFragment).executeBundle(executeBundle);
+		if (mTag.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
+			Log.d( TAG, "onTabReselected: executing bundle" );
+			((OnExecuteBundle) mFragment).executeBundle(mTag.getExecuteBundle());
 		}
 	}
 
@@ -140,6 +141,10 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 			Bundle newBundle = bundle;
 			bundle = null;
 			return newBundle;
+		}
+
+		public boolean hasExecuteBundle() {
+			return bundle != null;
 		}
 	}
 

@@ -32,6 +32,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import de.akquinet.android.androlog.Log;
 
+import java.io.PipedOutputStream;
+
 public class PrepareDatabaseHelper {
 	private static final String TAG = PrepareDatabaseHelper.class
 			.getSimpleName();
@@ -42,14 +44,20 @@ public class PrepareDatabaseHelper {
 
 	}
 
-	private static void addCopyDefaultValues(ContentValues values,
+	private static void prepareCopyDefaultValues(ContentValues values,
 			boolean retain) {
+		values.remove( POIs._ID);
+		values.remove(POIs.DISTANCE_ACOS);
 		values.put(POIs.TAG, POIs.TAG_COPY);
 		if (!retain)
 			values.put(POIs.STATE, POIs.STATE_UNCHANGED);
 		else
 			values.put(POIs.STATE, POIs.STATE_CHANGED);
-		values.put(POIs.DIRTY, POIs.CLEAN);
+		values.put( POIs.DIRTY, POIs.CLEAN);
+		long now = System.currentTimeMillis();
+
+		Log.d( TAG, "prepareCopyDefaultValues: copy with timestamp " + now );
+		values.put( POIs.STORE_TIMESTAMP, now);
 	}
 
 	public static long createCopyIfNotExists(ContentResolver resolver, long id,
@@ -63,19 +71,20 @@ public class PrepareDatabaseHelper {
 			return Extra.ID_UNKNOWN;
 
 		c.moveToFirst();
-		String wmId = POIHelper.getWMId(c);
+		ContentValues values = new ContentValues();
+		POIHelper.copyItemToValues(c, values);
+		c.close();
+		return createCopyFromContentValues(resolver, values, retain );
+	}
 
+	public static long createCopyFromContentValues( ContentResolver resolver, ContentValues values, boolean retain ) {
+		String wmId = values.getAsString( POIs.WM_ID );
 		long copyId = getRowIdForWMId(resolver, wmId, POIs.TAG_COPY);
 		if (copyId != Extra.ID_UNKNOWN)
 			return copyId;
 
-		ContentValues values = new ContentValues();
-		POIHelper.copyItemToValues(c, values);
-		addCopyDefaultValues(values, retain);
-
-		c.close();
-		uri = resolver.insert(POIs.CONTENT_URI_COPY, values);
-
+		prepareCopyDefaultValues(values, retain);
+		Uri uri = resolver.insert(POIs.CONTENT_URI_COPY, values);
 		return ContentUris.parseId(uri);
 	}
 
@@ -168,21 +177,28 @@ public class PrepareDatabaseHelper {
 		resolver.notifyChange(POIs.CONTENT_URI_RETRIEVED, null);
 	}
 
-	public static void cleanupOldCopies(ContentResolver resolver) {
+	public static void cleanupOldCopies(ContentResolver resolver, boolean force) {
 		Log.v(TAG, "cleanupOldCopies");
 		long now = System.currentTimeMillis();
-		String whereClause = "( " + POIs.STATE + " = ? ) OR " + "( " + POIs.TAG
-				+ " = ? ) OR (( " + POIs.STATE + " = ? ) AND ( "
-				+ POIs.STORE_TIMESTAMP + " < ?))";
+		String whereClause =
+				"( " + POIs.TAG + " = ? AND  "
+				+ POIs.STORE_TIMESTAMP + "< ?) OR ( " + POIs.TAG + " = ? )";
+
+		long deleteTime;
+		if ( !force)
+			deleteTime = now - TIME_TO_DELETE_FOR_PENDING;
+		else
+			deleteTime = now;
+
 
 		String[] whereValues = new String[] {
-				Integer.toString(POIs.STATE_UNCHANGED),
-				Integer.toString(POIs.TAG_TMP),
-				Integer.toString(POIs.STATE_CHANGED),
-				Long.toString(now - TIME_TO_DELETE_FOR_PENDING) };
+				Integer.toString(POIs.TAG_COPY),
+				Long.toString(deleteTime),
+				Integer.toString(POIs.TAG_TMP)};
 
-		Uri uri = POIs.createNoNotify(POIs.CONTENT_URI_COPY);
-		resolver.delete(uri, whereClause, whereValues);
+		Uri uri = POIs.createNoNotify(POIs.CONTENT_URI_ALL);
+		int count = resolver.delete(uri, whereClause, whereValues);
+		Log.v( TAG, "cleanupOldCopies: cleaned " + count + " copies" );
 	}
 
 	public static long insertOrUpdateContentValues(ContentResolver resolver,

@@ -214,10 +214,10 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 		c.close();
 
 		PrepareDatabaseHelper.cleanupOldCopies(getContext()
-				.getContentResolver());
+				.getContentResolver(), false);
 
 		c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
-		Assert.assertEquals(0, c.getCount());
+		Assert.assertEquals(1, c.getCount());
 		c.close();
 
 	}
@@ -246,9 +246,10 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 	public void testEPrepareDatabaseHelperMisc() {
 		final ContentResolver cr = getContext().getContentResolver();
 		PrepareDatabaseHelper.deleteRetrievedData(cr);
+		PrepareDatabaseHelper.cleanupOldCopies(cr, true);
 
 		Cursor c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_CHANGED);
-		Assert.assertEquals(1, c.getCount());
+		Assert.assertEquals(0, c.getCount());
 		c.close();
 		c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
 		Assert.assertEquals(0, c.getCount());

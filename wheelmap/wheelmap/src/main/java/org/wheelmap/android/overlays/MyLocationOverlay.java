@@ -93,6 +93,9 @@ public class MyLocationOverlay extends CircleOverlay<OverlayCircle> {
 
 	@Override
 	protected OverlayCircle createCircle(int i) {
+		if ( i > mCircles.size() - 1)
+			return null;
+
 		return (OverlayCircle) mCircles.toArray()[i];
 	}
 }

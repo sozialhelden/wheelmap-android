@@ -72,6 +72,8 @@ public class Wheelmap {
 		public static final String SIN_LON_RAD = "sin_lon_rad";
 		public static final String COS_LON_RAD = "cos_lon_rad";
 
+		public static final String DISTANCE_ACOS = "distance_acos";
+
 		public static final String TAG = "tag";
 		public static final int TAG_RETRIEVED = 0x0;
 		public static final int TAG_COPY = 0x1;

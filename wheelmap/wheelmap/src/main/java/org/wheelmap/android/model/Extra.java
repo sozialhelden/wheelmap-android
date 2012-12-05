@@ -66,6 +66,8 @@ public interface Extra {
 	public static final String ID = "org.wheelmap.android.ID";
 	public static final String MOVABLE_VISIBLE = "org.wheelma.android.MOVABLE_VISIBLE";
 
+	public static final String IS_RESTARTED = "org.wheelmap.android.IS_RESTARTED";
+
 	public interface What {
 
 		public static final int RETRIEVE_NODES = 0x1;

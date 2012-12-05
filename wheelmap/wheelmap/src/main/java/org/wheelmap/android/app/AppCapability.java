@@ -54,6 +54,7 @@ public class AppCapability {
 			sCapability = Capability.DEGRADED_MAX;
 		else
 			sCapability = Capability.NOTWORKING;
+
 	}
 
 	private static void setMapsforgeSharedMemcacheSize() {

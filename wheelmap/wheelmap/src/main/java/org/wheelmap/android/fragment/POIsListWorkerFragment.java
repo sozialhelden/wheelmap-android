@@ -88,7 +88,8 @@ public class POIsListWorkerFragment extends LocationFragment implements
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 		mDistance = getDistanceFromPreferences();
-		requestUpdate(null);
+		if ( savedInstanceState == null)
+			requestUpdate(null);
 	}
 
 	@Override
@@ -102,6 +103,11 @@ public class POIsListWorkerFragment extends LocationFragment implements
 		super.onDestroy();
 		mReceiver.clearReceiver();
 		mBus.unregister(this);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean( Extra.IS_RESTARTED, true);
 	}
 
 	/** {@inheritDoc} */
@@ -205,6 +211,7 @@ public class POIsListWorkerFragment extends LocationFragment implements
 
 	@Override
 	public void requestUpdate(Bundle bundle) {
+		Log.d( TAG, "requestUpdate" );
 		SyncServiceHelper.retrieveNodesByDistance(getActivity(), getLocation(),
 				mDistance, mReceiver);
 	}

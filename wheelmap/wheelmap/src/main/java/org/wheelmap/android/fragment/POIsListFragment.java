@@ -149,13 +149,11 @@ public class POIsListFragment extends SherlockListFragment implements
 						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
 			FragmentManager fm = getFragmentManager();
 			fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
-			Log.d(TAG, "Looking for Worker Fragment:" + fragment);
+			Log.d(TAG, "Found worker fragment:" + fragment);
 			if (fragment == null) {
-
 				fragment = new POIsListWorkerFragment();
 				fm.beginTransaction().add(fragment, POIsListWorkerFragment.TAG)
 						.commit();
-
 			}
 
 		} else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
