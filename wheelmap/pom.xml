@@ -24,7 +24,8 @@
         <github.global.server>github</github.global.server>
         <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
         <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
-       <app.debuggable>true</app.debuggable>
+        <app.debuggable>true</app.debuggable>
+        <asset.variant>development</asset.variant>
     </properties>
     
     <scm>
@@ -93,7 +94,7 @@
                     <inherited>true</inherited>
                     <configuration>
                         <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-                        <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+                        <assetsDirectory>${project.build.directory}/filtered-assets</assetsDirectory>
                         <resourceDirectory>${project.basedir}/res</resourceDirectory>
                         <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
                         <sdk>
@@ -193,6 +194,7 @@
             </activation>
             <properties>
                <app.debuggable>false</app.debuggable>
+               <asset.variant>production</asset.variant>
             </properties>
             <build>
                 <plugins>

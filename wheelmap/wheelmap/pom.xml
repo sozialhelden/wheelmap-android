@@ -168,6 +168,22 @@
       		      <include>AndroidManifest.xml</include>
       		  </includes>
         </resource>
+        <resource>
+          <directory>${project.basedir}/assets</directory>
+          <filtering>true</filtering>
+          <targetPath>${project.build.directory}/filtered-assets</targetPath>
+          <includes>
+            <include>**/*.png</include>
+            <include>**/application.properties</include>
+          </includes>
+        </resource>
+        <resource>
+          <directory>${project.basedir}/assets/${asset.variant}</directory>
+          <targetPath>${project.build.directory}/filtered-assets</targetPath>
+          <includes>
+            <include>**/org.wheelmap.android.online.properties</include>
+          </includes>
+        </resource>
     </resources>
     <plugins>
       <plugin>
@@ -252,7 +268,7 @@
       <id>release</id>
       
       <build>
-        <plugins> 
+        <plugins>
           <plugin>
             <artifactId>maven-jarsigner-plugin</artifactId>
             <executions>
