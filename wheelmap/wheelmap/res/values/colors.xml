@@ -27,7 +27,7 @@
     <color name="wheel_limited">#FFF19D46</color>
     <color name="wheel_disabled">#FFD6382F</color>
     <color name="wheel_unknown">#FF8D8D8E</color>
-    <color name="dark_grey_two">#FF9F9F9F</color>
+    <color name="dark_grey_two">#FFCFCFCF</color>
     <color name="green_wheelmap_logo">#FF6DB135</color>
     <color name="color_base_ng">@color/green_wheelmap_logo</color>
     <color name="seperator_color_dark_a">#FFC6C6C6</color>
