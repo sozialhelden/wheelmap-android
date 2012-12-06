@@ -7,6 +7,7 @@ import com.jayway.android.robotium.solo.Solo;
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 import org.wheelmap.android.activity.MainMultiPaneActivity;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.online.R;
 
@@ -36,6 +37,15 @@ public class MainMultiPaneTest extends
 		solo = null;
 	}
 
+	public void testAAASetupApp() {
+		getInstrumentation().runOnMainSync( new Runnable() {
+			@Override
+			public void run() {
+				getInstrumentation().callApplicationOnCreate(WheelmapApp.getApp());
+			}
+		});
+		getInstrumentation().waitForIdleSync();
+	}
 
 	public void testAActivityGettingStarted() throws Exception {
 		RobotiumHelper.waitForListRefreshingDone( solo, CombinedWorkerFragment.TAG );
@@ -89,7 +99,6 @@ public class MainMultiPaneTest extends
 		solo.enterText(0, "testtest");
 		RobotiumHelper.selectWheelchairState(solo);
 		RobotiumHelper.selectCategoryState(solo);
-
 		solo.clickOnActionBarItem(R.id.menu_save );
 		solo.waitForActivity("MainMultiPaneActivity" );
 
@@ -100,7 +109,7 @@ public class MainMultiPaneTest extends
 		solo.assertCurrentActivity("detail activity", POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
-		RobotiumHelper.selectCategoryState(solo);
+		RobotiumHelper.selectWheelchairState(solo);
 		RobotiumHelper.selectCategoryState(solo);
 
 		solo.clickOnActionBarItem(R.id.menu_save );

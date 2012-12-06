@@ -135,6 +135,7 @@ public class RobotiumHelper {
 		solo.waitForText(searchString);
 		String categoryString = solo.getString(R.string.search_no_selection );
 		solo.clickOnText( categoryString );
+		solo.sleep( 500 );
 
 		solo.scrollDownList(0);
 		solo.scrollDownList(0);

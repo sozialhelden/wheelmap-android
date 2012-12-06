@@ -192,11 +192,11 @@ public class SupportManager {
 
 		mInitialized = false;
 		mNeedsReloading = false;
-		if (checkForLocales() && checkForCategories() && checkForNodeTypes()) {
-			initLookup();
+		if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
 			mNeedsReloading = true;
-		} else
-			mNeedsReloading = true;
+		}
+		Log.i( TAG, "Loading lookup data" );
+		initLookup();
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(mContext);
@@ -366,10 +366,10 @@ public class SupportManager {
 	}
 
 	public void initLocales() {
-		// Log.d(TAG, "SupportManager:initLocales");
+		Log.d(TAG, "SupportManager:initLocales");
 		String locale = mContext.getResources().getConfiguration().locale
 				.getLanguage();
-		// Log.d(TAG, "SupportManager: locale = " + locale);
+		Log.d(TAG, "SupportManager: locale = " + locale);
 		ContentResolver resolver = mContext.getContentResolver();
 		String whereClause = "( " + LocalesContent.LOCALE_ID + " = ? )";
 		String[] whereValues = { locale };
@@ -394,12 +394,11 @@ public class SupportManager {
 			prefs.edit().putString(PREFS_SERVICE_LOCALE, serviceLocale)
 					.commit();
 		}
-		// Log.d(TAG, "SupportManager:initLocales: serviceLocale = "
-		// + serviceLocale);
+		Log.i(TAG, "SupportManager:initLocales: serviceLocale = " + serviceLocale);
 	}
 
 	public void initCategories() {
-		// Log.d(TAG, "SupportManager:initCategories");
+		Log.d(TAG, "SupportManager:initCategories");
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(CategoriesContent.CONTENT_URI,
 				CategoriesContent.PROJECTION, null, null, null);
@@ -421,6 +420,7 @@ public class SupportManager {
 		}
 
 		cursor.close();
+		Log.i( TAG, "Categories count = " + mCategoryLookup.size());
 	}
 
 	public void initNodeTypes() {
@@ -451,6 +451,7 @@ public class SupportManager {
 		}
 
 		cursor.close();
+		Log.i( TAG, "NodeTypes count = " + mNodeTypeLookup.size());
 	}
 
 	private Drawable createIconDrawable(String assetPath) {

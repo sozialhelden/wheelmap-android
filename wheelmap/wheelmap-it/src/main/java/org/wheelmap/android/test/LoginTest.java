@@ -57,7 +57,7 @@ public class LoginTest extends AndroidTestCase {
 
 		rb.setCredentials("rutton@web.de", "testtest"); // no osm connection
 		result = testRequest(rb);
-		Assert.assertEquals(result, 1);
+		Assert.assertEquals(result, 0);
 
 		rb.setCredentials("rutton.r@gmail.com", "testtest"); // correct
 		result = testRequest(rb);

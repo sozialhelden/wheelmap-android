@@ -55,21 +55,25 @@ public class WheelmapApp extends Application {
 	private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
 	private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
 
+	private boolean isAcraInitCalled;
+
 	@Override
 	public void onCreate() {
-		INSTANCE = this;
-
-		ACRA.init(this);
+		super.onCreate();
 		Log.init(getApplicationContext());
-		AppCapability.init(getApplicationContext());
-		MyLocationManager.init(getApplicationContext());
+		Log.d(TAG, "onCreate: creating App");
+		INSTANCE = this;
 		mBus = new Bus();
 
-		super.onCreate();
-		Log.d(TAG, "onCreate");
+		if (!isAcraInitCalled) {
+			ACRA.init(this);
+			isAcraInitCalled = true;
+		}
+		AppCapability.init(getApplicationContext());
+		MyLocationManager.init(getApplicationContext());
+
 		mSupportManager = new SupportManager(this);
 		UserQueryHelper.init(this);
-
 	}
 
 	@Override
@@ -87,6 +91,10 @@ public class WheelmapApp extends Application {
 
 	public static Context get() {
 		return INSTANCE.getApplicationContext();
+	}
+
+	public static WheelmapApp getApp() {
+		return INSTANCE;
 	}
 
 	public static Bus getBus() {

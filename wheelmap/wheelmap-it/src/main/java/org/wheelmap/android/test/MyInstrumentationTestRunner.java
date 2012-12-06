@@ -23,6 +23,7 @@ package org.wheelmap.android.test;
 
 import junit.framework.TestSuite;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.test.InstrumentationTestRunner;
@@ -34,11 +35,11 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 		TestSuite suite = new TestSuite(
 				MyInstrumentationTestRunner.class.getName());
 
-		suite.addTestSuite(GeocoordinatesMathTest.class);
-		suite.addTestSuite(POIServiceDatabaseTest.class);
-		suite.addTestSuite(POIContentProviderTest.class);
-		suite.addTestSuite(SupportDataTest.class);
-		suite.addTestSuite(LoginTest.class);
+//		suite.addTestSuite(GeocoordinatesMathTest.class);
+//		suite.addTestSuite(POIServiceDatabaseTest.class);
+		//suite.addTestSuite(POIContentProviderTest.class);
+		// suite.addTestSuite(SupportDataTest.class);
+//		suite.addTestSuite(LoginTest.class);
 
 		if (UtilsMisc.isTablet(getContext())) {
 			suite.addTestSuite(MainMultiPaneTest.class);
