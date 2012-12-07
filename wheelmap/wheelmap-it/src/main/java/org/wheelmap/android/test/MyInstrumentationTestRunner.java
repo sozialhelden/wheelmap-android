@@ -36,11 +36,11 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 				MyInstrumentationTestRunner.class.getName());
 
 //		suite.addTestSuite(GeocoordinatesMathTest.class);
-//		suite.addTestSuite(POIServiceDatabaseTest.class);
-		//suite.addTestSuite(POIContentProviderTest.class);
-		// suite.addTestSuite(SupportDataTest.class);
 //		suite.addTestSuite(LoginTest.class);
+//		suite.addTestSuite(POIContentProviderTest.class);
+//		suite.addTestSuite(POIServiceDatabaseTest.class);
 
+		suite.addTestSuite(SupportDataTest.class);
 		if (UtilsMisc.isTablet(getContext())) {
 			suite.addTestSuite(MainMultiPaneTest.class);
 		} else {

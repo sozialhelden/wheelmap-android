@@ -346,7 +346,6 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	public void markItem(ContentValues values, boolean centerToItem) {
 		Long id = values.getAsLong(POIs.POI_ID);
-
 		int pos;
 		for (pos = 0; pos < mAdapter.getCount(); pos++) {
 			Cursor c = (Cursor) mAdapter.getItem(pos);

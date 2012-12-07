@@ -78,13 +78,15 @@ public class PrepareDatabaseHelper {
 	}
 
 	public static long createCopyFromContentValues( ContentResolver resolver, ContentValues values, boolean retain ) {
-		String wmId = values.getAsString( POIs.WM_ID );
+		ContentValues copyValues = new ContentValues(values);
+
+		String wmId = copyValues.getAsString( POIs.WM_ID );
 		long copyId = getRowIdForWMId(resolver, wmId, POIs.TAG_COPY);
 		if (copyId != Extra.ID_UNKNOWN)
 			return copyId;
 
-		prepareCopyDefaultValues(values, retain);
-		Uri uri = resolver.insert(POIs.CONTENT_URI_COPY, values);
+		prepareCopyDefaultValues(copyValues, retain);
+		Uri uri = resolver.insert(POIs.CONTENT_URI_COPY, copyValues);
 		return ContentUris.parseId(uri);
 	}
 
