@@ -88,7 +88,7 @@ public class MainSinglePaneTest extends
 		Log.d(TAG, "tab with id = " + tabId + " selected");
 	}
 
-	public void atestAAASetupApp() {
+	public void testAAASetupApp() {
 		getInstrumentation().runOnMainSync( new Runnable() {
 			@Override
 			public void run() {

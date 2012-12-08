@@ -90,14 +90,15 @@ public class StartupActivity extends RoboSherlockActivity implements
 		}
 
 		mSupportManager = WheelmapApp.getSupportManager();
-		if (mSupportManager.isInitialized()) {
-			if (needStartApp())
-				startupAppDelayed();
-			else
-				finish();
-		} else if (mSupportManager.needsReloading()) {
+		if (mSupportManager.needsReloading()) {
 			mSupportManager.reload(mState.mReceiver);
+			return;
 		}
+
+		if (needStartApp())
+			startupAppDelayed();
+		else
+			finish();
 	}
 
 	@Override

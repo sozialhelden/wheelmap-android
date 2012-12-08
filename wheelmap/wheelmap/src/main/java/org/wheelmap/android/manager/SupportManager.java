@@ -81,7 +81,6 @@ public class SupportManager {
 	private NodeType mDefaultNodeType;
 	private Category mDefaultCategory;
 	private boolean mNeedsReloading;
-	private boolean mInitialized;
 
 	private final static long MILLISECS_PER_DAY = 1000 * 60 * 60 * 24;
 	private final static long DATE_INTERVAL_FOR_UPDATE_IN_DAYS = 1;
@@ -190,7 +189,6 @@ public class SupportManager {
 		mWheelDrawables = new Drawable[] { wheelUnknown, wheelYes,
 				wheelLimited, wheelNo, null };
 
-		mInitialized = false;
 		mNeedsReloading = false;
 		if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
 			mNeedsReloading = true;
@@ -211,10 +209,6 @@ public class SupportManager {
 			mStatusSender.clearReceiver();
 	}
 
-	public boolean isInitialized() {
-		return mInitialized;
-	}
-
 	public boolean needsReloading() {
 		return mNeedsReloading;
 	}
@@ -226,7 +220,6 @@ public class SupportManager {
 	private void initLookup() {
 		initCategories();
 		initNodeTypes();
-		mInitialized = true;
 	}
 
 	public void reload(DetachableResultReceiver receiver) {
@@ -250,7 +243,6 @@ public class SupportManager {
 
 	public void reloadStageFour() {
 		initNodeTypes();
-		mInitialized = true;
 		mNeedsReloading = false;
 	}
 
@@ -407,6 +399,7 @@ public class SupportManager {
 
 		cursor.moveToFirst();
 		mCategoryLookup.clear();
+		mCategoryIdentifierLookup.clear();
 
 		while (!cursor.isAfterLast()) {
 			int id = CategoriesContent.getCategoryId(cursor);
