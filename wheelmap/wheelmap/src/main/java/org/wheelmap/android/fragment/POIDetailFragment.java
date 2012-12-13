@@ -358,6 +358,7 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			return;
 
 		c.moveToFirst();
+		poiId = POIHelper.getId( c );
 		String wmIdString = POIHelper.getWMId(c);
 		WheelchairState state = POIHelper.getWheelchair(c);
 		String name = POIHelper.getName(c);

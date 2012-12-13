@@ -74,13 +74,14 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 
-		mFragment = fm.findFragmentById(android.R.id.content);
+		mFragment = fm.findFragmentByTag( POIDetailEditableActivity.TAG );
 		if (mFragment != null) {
 			return;
 		}
 
 		Long poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
 		if (poiID == Extra.ID_UNKNOWN) {
+			Log.w( TAG, "poi id is not given - cant do anything" );
 			return;
 		}
 
@@ -186,7 +187,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onBackStackChanged() {
 		FragmentManager fm = getSupportFragmentManager();
-		mFragment = fm.findFragmentById(android.R.id.content);
+		mFragment = fm.findFragmentByTag(POIDetailEditableFragment.TAG );
 	}
 
 	public static class ExternalEditableState {
