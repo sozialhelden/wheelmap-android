@@ -25,7 +25,7 @@
 
     <item
         android:id="@+id/menu_search"
-        android:icon="@drawable/ic_menu_search_wheelmap"
+        android:icon="@drawable/ic_menu_search_wheelmap_light"
         android:showAsAction="ifRoom"
         android:title="@string/menu_search"/>
 

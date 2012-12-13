@@ -87,7 +87,7 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(R.string.title_search);
-		builder.setIcon(R.drawable.ic_menu_search_wheelmap);
+		builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
 		builder.setNeutralButton(R.string.search_execute, this);
 
 		View view = createView();

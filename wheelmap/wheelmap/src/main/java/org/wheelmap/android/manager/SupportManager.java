@@ -73,7 +73,6 @@ public class SupportManager {
 	private Map<Integer, NodeType> mNodeTypeLookup;
 	private Map<Integer, Category> mCategoryLookup;
 	private Map<Integer, String> mCategoryIdentifierLookup = new HashMap<Integer, String>();
-	// private Drawable[] mWheelDrawables;
 
 	private DetachableResultReceiver mStatusSender;
 	private Bus mBus;
@@ -177,19 +176,6 @@ public class SupportManager {
 		mDefaultNodeType = new NodeType(UNKNOWN_TYPE, "unknown",
 				mContext.getString(R.string.support_nodetype_unknown), 0);
 		mDefaultNodeType.stateDrawables = createDefaultDrawables();
-
-		/*
-		Drawable wheelYes = ctx.getResources().getDrawable(
-				R.drawable.wheelchair_state_enabled);
-		Drawable wheelLimited = ctx.getResources().getDrawable(
-				R.drawable.wheelchair_state_limited);
-		Drawable wheelNo = ctx.getResources().getDrawable(
-				R.drawable.wheelchair_state_disabled);
-		Drawable wheelUnknown = ctx.getResources().getDrawable(
-				R.drawable.wheelchair_state_unknown);
-		mWheelDrawables = new Drawable[] { wheelUnknown, wheelYes,
-				wheelLimited, wheelNo, null };
-				*/
 
 		mNeedsReloading = false;
 		if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
@@ -526,13 +512,6 @@ public class SupportManager {
 			// Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
 			cleanReferences(nodeType.stateDrawables);
 		}
-
-		/*
-		for (Drawable wheelDrawable : mWheelDrawables) {
-			if (wheelDrawable != null)
-				wheelDrawable.setCallback(null);
-		}
-		*/
 	}
 
 	public void cleanReferences(Map<WheelchairState, Drawable> lookupMap) {
@@ -555,12 +534,6 @@ public class SupportManager {
 		else
 			return mDefaultNodeType;
 	}
-
-	/*
-	public int lookupWheelDrawable(int idx) {
-		return wsAttributes.get( WheelchairState.valueOf(idx));
-	}
-	*/
 
 	public List<Category> getCategoryList() {
 		Set<Integer> keys = mCategoryLookup.keySet();
