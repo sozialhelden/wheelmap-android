@@ -98,7 +98,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 		pliv.setDirection(direction);
 		// if (name != null && name.startsWith("Sweet"))
 		// Log.d(TAG, "name = " + name + " direction = " + direction);
-		Drawable marker = manager.lookupWheelDrawable(state.getId());
+		Drawable marker = context.getResources().getDrawable( SupportManager.wsAttributes.get( state ).drawableId);
 		pliv.setIcon(marker);
 	}
 

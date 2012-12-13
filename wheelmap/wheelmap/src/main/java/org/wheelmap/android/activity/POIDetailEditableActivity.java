@@ -80,13 +80,14 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		}
 
 		Long poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
-		if (poiID != Extra.ID_UNKNOWN) {
-			mFragment = POIDetailEditableFragment.newInstance(poiID);
+		if (poiID == Extra.ID_UNKNOWN) {
+			return;
 		}
 
+		mFragment = POIDetailEditableFragment.newInstance(poiID);
 		fm.beginTransaction()
-				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
-				.commit();
+				.add(android.R.id.content, mFragment,
+						POIDetailEditableFragment.TAG).commit();
 	}
 
 	private void showAsPopup(SherlockFragmentActivity activity) {

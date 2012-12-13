@@ -15,7 +15,7 @@ public class CompassView extends View {
 	private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private boolean firstDraw;
 	private int mColor;
-	private final static int DEFAULT_COLOR_RES = R.color.dark_grey_two;
+	private final static int DEFAULT_COLOR_RES = R.color.dark_grey_one;
 
 	public CompassView(Context context) {
 		super(context);

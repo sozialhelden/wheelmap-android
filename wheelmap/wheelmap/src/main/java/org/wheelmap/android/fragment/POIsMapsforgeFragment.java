@@ -251,6 +251,8 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		if (bundle == null)
 			return;
 
+		mHeightFull = bundle.getBoolean(Extra.MAP_HEIGHT_FULL, false );
+
 		boolean doRequest = false;
 		GeoPoint centerPoint = null;
 		int zoom = 0;
@@ -325,6 +327,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		outState.putDouble(Extra.LATITUDE, gp.getLatitude());
 		outState.putDouble(Extra.LONGITUDE, gp.getLongitude());
 		outState.putInt(Extra.ZOOM_MAP, mMapView.getZoomLevel());
+		outState.putBoolean( Extra.MAP_HEIGHT_FULL, mHeightFull);
 	}
 
 	@Override

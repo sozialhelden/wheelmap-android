@@ -73,7 +73,7 @@ public class SupportManager {
 	private Map<Integer, NodeType> mNodeTypeLookup;
 	private Map<Integer, Category> mCategoryLookup;
 	private Map<Integer, String> mCategoryIdentifierLookup = new HashMap<Integer, String>();
-	private Drawable[] mWheelDrawables;
+	// private Drawable[] mWheelDrawables;
 
 	private DetachableResultReceiver mStatusSender;
 	private Bus mBus;
@@ -178,6 +178,7 @@ public class SupportManager {
 				mContext.getString(R.string.support_nodetype_unknown), 0);
 		mDefaultNodeType.stateDrawables = createDefaultDrawables();
 
+		/*
 		Drawable wheelYes = ctx.getResources().getDrawable(
 				R.drawable.wheelchair_state_enabled);
 		Drawable wheelLimited = ctx.getResources().getDrawable(
@@ -188,6 +189,7 @@ public class SupportManager {
 				R.drawable.wheelchair_state_unknown);
 		mWheelDrawables = new Drawable[] { wheelUnknown, wheelYes,
 				wheelLimited, wheelNo, null };
+				*/
 
 		mNeedsReloading = false;
 		if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
@@ -525,10 +527,12 @@ public class SupportManager {
 			cleanReferences(nodeType.stateDrawables);
 		}
 
+		/*
 		for (Drawable wheelDrawable : mWheelDrawables) {
 			if (wheelDrawable != null)
 				wheelDrawable.setCallback(null);
 		}
+		*/
 	}
 
 	public void cleanReferences(Map<WheelchairState, Drawable> lookupMap) {
@@ -552,9 +556,11 @@ public class SupportManager {
 			return mDefaultNodeType;
 	}
 
-	public Drawable lookupWheelDrawable(int idx) {
-		return mWheelDrawables[idx];
+	/*
+	public int lookupWheelDrawable(int idx) {
+		return wsAttributes.get( WheelchairState.valueOf(idx));
 	}
+	*/
 
 	public List<Category> getCategoryList() {
 		Set<Integer> keys = mCategoryLookup.keySet();
@@ -618,22 +624,22 @@ public class SupportManager {
 		wsAttributes.put(WheelchairState.YES, new WheelchairAttributes(
 				R.string.ws_enabled_title, R.string.ws_enabled,
 				R.string.settings_wheelchair_yes,
-				R.drawable.wheelchair_state_enabled, R.color.wheel_enabled,
+				R.drawable.wheelie_yes, R.color.wheel_enabled,
 				PrefKey.WHEELCHAIR_STATE_YES));
 		wsAttributes.put(WheelchairState.LIMITED, new WheelchairAttributes(
 				R.string.ws_limited_title, R.string.ws_limited,
 				R.string.settings_wheelchair_limited,
-				R.drawable.wheelchair_state_limited, R.color.wheel_limited,
+				R.drawable.wheelie_limited, R.color.wheel_limited,
 				PrefKey.WHEELCHAIR_STATE_LIMITED));
 		wsAttributes.put(WheelchairState.NO, new WheelchairAttributes(
 				R.string.ws_disabled_title, R.string.ws_disabled,
 				R.string.settings_wheelchair_no,
-				R.drawable.wheelchair_state_disabled, R.color.wheel_disabled,
+				R.drawable.wheelie_no, R.color.wheel_disabled,
 				PrefKey.WHEELCHAIR_STATE_NO));
 		wsAttributes.put(WheelchairState.UNKNOWN, new WheelchairAttributes(
 				R.string.ws_unknown_title, R.string.ws_unknown,
 				R.string.settings_wheelchair_unknown,
-				R.drawable.wheelchair_state_unknown, R.color.wheel_unknown,
+				R.drawable.wheelie_unknown, R.color.wheel_unknown,
 				PrefKey.WHEELCHAIR_STATE_UNKNOWN));
 
 	}

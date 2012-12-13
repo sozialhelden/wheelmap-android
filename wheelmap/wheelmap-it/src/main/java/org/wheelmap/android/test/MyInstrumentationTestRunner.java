@@ -35,10 +35,10 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 		TestSuite suite = new TestSuite(
 				MyInstrumentationTestRunner.class.getName());
 
-//		suite.addTestSuite(GeocoordinatesMathTest.class);
-//		suite.addTestSuite(LoginTest.class);
-//		suite.addTestSuite(POIContentProviderTest.class);
-//		suite.addTestSuite(POIServiceDatabaseTest.class);
+		suite.addTestSuite(GeocoordinatesMathTest.class);
+		suite.addTestSuite(LoginTest.class);
+		suite.addTestSuite(POIContentProviderTest.class);
+		suite.addTestSuite(POIServiceDatabaseTest.class);
 
 		suite.addTestSuite(SupportDataTest.class);
 		if (UtilsMisc.isTablet(getContext())) {

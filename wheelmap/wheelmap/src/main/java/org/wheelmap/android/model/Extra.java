@@ -45,6 +45,7 @@ public interface Extra {
 	public static final String EXPLICIT_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
 	public static final String EXPLICIT_DIRECT_RETRIEVAL = "org.wheelmap.android.DIRECT_RETRIEVAL";
 	public static final String SHOW_MAP = "org.wheelmap.android.SHOW_MAP";
+	public static final String MAP_HEIGHT_FULL = "org.wheelmap.android.MAP_HEIGHT_FULL";
 
 	public final static String SHOW_DISTANCE = "org.wheelmap.android.SHOW_DISTANCE";
 	public final static String SHOW_MAP_HINT = "org.wheelmap.android.SHOW_MAP_HINT";
@@ -64,7 +65,7 @@ public interface Extra {
 	public static final String ALERT_TITLE = "org.wheelmap.android.ALERT_TITLE";
 	public static final String ALERT_MESSAGE = "org.wheelmap.android.ALERT_MESSAGE";
 	public static final String ID = "org.wheelmap.android.ID";
-	public static final String MOVABLE_VISIBLE = "org.wheelma.android.MOVABLE_VISIBLE";
+	public static final String MOVABLE_VISIBLE = "org.wheelmap.android.MOVABLE_VISIBLE";
 
 	public static final String IS_RESTARTED = "org.wheelmap.android.IS_RESTARTED";
 

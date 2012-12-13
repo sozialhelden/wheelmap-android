@@ -25,12 +25,12 @@
 
     <item
         android:id="@+id/menu_location"
-        android:icon="@drawable/ic_location_found_wm_holo_light"
+        android:icon="@drawable/ic_location_found_wheelmap"
         android:showAsAction="ifRoom"
         android:title="@string/menu_mylocation"/>
     <item
         android:id="@+id/menu_search"
-        android:icon="@drawable/ic_menu_search_wm_holo_light"
+        android:icon="@drawable/ic_menu_search_wheelmap"
         android:showAsAction="ifRoom"
         android:title="@string/menu_search"/>
 

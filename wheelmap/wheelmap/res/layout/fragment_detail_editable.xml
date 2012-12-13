@@ -63,7 +63,7 @@
                     style="@style/IconMedium"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_menu_edit_wm_holo_light" />
+                    android:src="@drawable/ic_menu_edit_wheelmap_dark" />
             </RelativeLayout>
 
             <LinearLayout
@@ -91,7 +91,7 @@
                         style="@style/IconMedium"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_menu_edit_wm_holo_light" />
+                        android:src="@drawable/ic_menu_edit_wheelmap_dark" />
                 </RelativeLayout>
             </LinearLayout>
 

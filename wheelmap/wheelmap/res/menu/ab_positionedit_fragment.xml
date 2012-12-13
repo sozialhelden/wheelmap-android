@@ -25,7 +25,7 @@
     
     <item
         android:id="@+id/menu_save"
-        android:icon="@drawable/ic_menu_save_wm_holo_light"
+        android:icon="@drawable/ic_menu_save_wheelmap"
         android:showAsAction="ifRoom"
         android:title="@string/menu_save" />
 

@@ -26,14 +26,14 @@
     <group android:id="@+id/menugroup_detailview" >
         <item
             android:id="@+id/menu_edit"
-            android:icon="@drawable/ic_menu_edit_wm_holo_light"
+            android:icon="@drawable/ic_menu_edit_wheelmap_light"
             android:showAsAction="ifRoom"
             android:title="@string/menu_edit"/>
         <item
             android:id="@+id/menu_share"
             android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
             android:enabled="true"
-            android:icon="@drawable/ic_menu_share_wm_holo_light"
+            android:icon="@drawable/ic_menu_share_wheelmap"
             android:showAsAction="ifRoom"
             android:title="@string/menu_share"
             android:visible="true"/>
@@ -41,7 +41,7 @@
             android:id="@+id/menu_directions"
             android:actionProviderClass="org.wheelmap.android.actionbar.DirectionsActionProvider"
             android:enabled="true"
-            android:icon="@drawable/ic_menu_directions_wm_holo_light"
+            android:icon="@drawable/ic_menu_directions_wheelmap"
             android:showAsAction="ifRoom"
             android:title="@string/menu_directions"
             android:visible="true"/>

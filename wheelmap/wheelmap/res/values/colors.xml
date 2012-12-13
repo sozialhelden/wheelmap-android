@@ -27,9 +27,11 @@
     <color name="wheel_limited">#FFF19D46</color>
     <color name="wheel_disabled">#FFD6382F</color>
     <color name="wheel_unknown">#FF8D8D8E</color>
+    <color name="dark_grey_one">#FFAFAFAF</color>
     <color name="dark_grey_two">#FFCFCFCF</color>
     <color name="green_wheelmap_logo">#FF6DB135</color>
-    <color name="color_base_ng">@color/green_wheelmap_logo</color>
+    <color name="dark_blue">#FF1B2A3A</color>
+    <color name="color_base_ng">@color/dark_blue</color>
     <color name="seperator_color_dark_a">#FFC6C6C6</color>
     <color name="seperator_color_dark_b">#FFE6E6E6</color>
     <color name="text_link">#FF3F3F3F</color>

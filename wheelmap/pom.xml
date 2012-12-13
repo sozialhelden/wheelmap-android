@@ -4,7 +4,7 @@
 
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99-SNAPSHOT</version>
+    <version>0.99.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Wheelmap - Parent</name>
 

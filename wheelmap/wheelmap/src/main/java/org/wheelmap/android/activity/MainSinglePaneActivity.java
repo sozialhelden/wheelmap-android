@@ -110,7 +110,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 				.setText(R.string.title_pois_list)
 				.setIcon(
 						getResources().getDrawable(
-								R.drawable.ic_location_list_wm_holo_light))
+								R.drawable.ic_location_list_wheelmap))
 				.setTag(mIndexToTab.get(TAB_LIST).name)
 				.setTabListener(
 						new MyTabListener<POIsListFragment>(this, mIndexToTab
@@ -122,7 +122,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 				.setText(R.string.title_pois_map)
 				.setIcon(
 						getResources().getDrawable(
-								R.drawable.ic_location_map_wm_holo_light))
+								R.drawable.ic_location_map_wheelmap))
 
 				.setTag(mIndexToTab.get(TAB_MAP).name)
 				.setTabListener(

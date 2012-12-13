@@ -69,7 +69,7 @@
         <item name="android:id">@id/titlebar_title</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColor">?android:textColorPrimaryInverse</item>
     </style>
 
     <style name="TitleBarTextNew.Subtitle">

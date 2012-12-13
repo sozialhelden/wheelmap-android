@@ -111,7 +111,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		}
 		builder.setTitle(title);
 		builder.setMessage(msg);
-		builder.setIcon(R.drawable.ic_dialog_alert_wm_holo_light);
+		builder.setIcon(R.drawable.ic_dialog_alert_wheelmap);
 		builder.setNeutralButton(R.string.btn_okay, this);
 		return builder.create();
 	}
