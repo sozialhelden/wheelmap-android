@@ -53,15 +53,15 @@ public class LoginTest extends AndroidTestCase {
 				AcceptType.JSON);
 		rb.setCredentials("olfila@gmx.ne", "testtest"); // wrong
 		int result = testRequest(rb);
-		Assert.assertEquals(result, 2);
+		Assert.assertEquals(2, result);
 
 		rb.setCredentials("rutton@web.de", "testtest"); // no osm connection
 		result = testRequest(rb);
-		Assert.assertEquals(result, 0);
+		Assert.assertEquals(0, result);
 
 		rb.setCredentials("rutton.r@gmail.com", "testtest"); // correct
 		result = testRequest(rb);
-		Assert.assertEquals(result, 0);
+		Assert.assertEquals(2, result);
 
 	}
 

@@ -23,7 +23,6 @@ package org.wheelmap.android.test;
 
 import junit.framework.TestSuite;
 
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.test.InstrumentationTestRunner;

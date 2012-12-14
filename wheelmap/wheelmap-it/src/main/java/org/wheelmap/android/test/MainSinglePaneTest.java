@@ -1,5 +1,6 @@
 package org.wheelmap.android.test;
 
+import android.app.Activity;
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 import com.jayway.awaitility.Awaitility;
 import com.jayway.awaitility.Duration;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import com.jayway.android.robotium.solo.Solo;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -98,13 +100,13 @@ public class MainSinglePaneTest extends
 		getInstrumentation().waitForIdleSync();
 	}
 
-	public void atestAFragmentsGettingStarted() {
+	public void testAFragmentsGettingStarted() {
 		executeTabSelect(1);
 		executeTabSelect(0);
 		executeTabSelect(1);
 	}
 
-	public void atestBListAndDetailFragment()
+	public void testBListAndDetailFragment()
 			throws Exception {
 		executeTabSelect(0);
 		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
@@ -122,41 +124,48 @@ public class MainSinglePaneTest extends
 
 	}
 
-	public void atestCMapListAndDetailFragment() throws Exception {
+	public void testCMapListAndDetailFragment() throws Exception {
 		solo.waitForActivity("MainSinglePaneActivity" );
-		// executeTabSelect(1);
+		executeTabSelect(1);
+		solo.waitForFragmentByTag( POIsMapsforgeFragment.TAG);
+		clickOnActionbar(R.id.menu_location);
 		executeTabSelect(0);
 		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
+		solo.sleep(500);
 
 		solo.clickInList(4);
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
 		solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
+		RobotiumHelper.selectWheelchairState(solo, "POIDetailActivity");
+		solo.waitForActivity("POIDetailActivity" );
 		solo.goBack();
 		solo.waitForActivity("MainSinglePaneActivity");
 		solo.assertCurrentActivity("main activity",
 		MainSinglePaneActivity.class);
 	}
 
+	public void testDNewItem() throws Exception {
+		solo.waitForActivity("MainSinglePaneActivity" );
+		Log.d( TAG, "current activity 1 = " + solo.getCurrentActivity());
+		executeTabSelect(0);
+		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
 
-	public void testDNewItem() throws InterruptedException {
-		executeTabSelect(1);
-
-		clickOnActionbar(R.id.menu_location);
 		clickOnActionbar(R.id.menu_new_poi);
-
-		solo.sleep(1000);
-		RobotiumHelper.login( solo);
-
 		solo.waitForActivity("POIDetailEditableActivity");
 		solo.assertCurrentActivity("want edit activity",
 				POIDetailEditableActivity.class);
+
+		RobotiumHelper.login(solo);
+		solo.sleep(500);
+
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
-		RobotiumHelper.selectWheelchairState(solo);
+
+		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
-		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
+		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
 		solo.clickOnActionBarItem(R.id.menu_save);
 		solo.sleep(2000);
 		String buttonOkay = getActivity().getString(R.string.btn_okay);
@@ -167,7 +176,7 @@ public class MainSinglePaneTest extends
 
 	}
 
-	public void atestEEditItem() throws Exception {
+	public void testEEditItem() throws Exception {
 
 		executeTabSelect(0);
 		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
@@ -176,10 +185,10 @@ public class MainSinglePaneTest extends
 		solo.waitForActivity("POIDetailActivity");
 		solo.assertCurrentActivity("want detail activity",
 				POIDetailActivity.class);
+		solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
-		solo.sleep(1000);
 		clickOnActionbar(R.id.menu_edit);
-		solo.sleep(1000);
+		solo.sleep(500);
 		RobotiumHelper.login(solo);
 
 		solo.waitForActivity("POIDetailEditableActivity");
@@ -188,14 +197,16 @@ public class MainSinglePaneTest extends
 		Log.d(TAG, "activity = " + solo.getCurrentActivity().toString());
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
-		RobotiumHelper.selectWheelchairState(solo);
+		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
 		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
 		clickOnActionbar(R.id.menu_save);
 
-		solo.waitForActivity("POIDetailActivity");
-		solo.assertCurrentActivity("Want detail activity",
-				POIDetailActivity.class);
+		getInstrumentation().waitForIdleSync();
+
+		// solo.waitForActivity("POIDetailActivity");
+		// solo.assertCurrentActivity("Want detail activity",
+		//		POIDetailActivity.class);
 		solo.waitForText("testtest");
 
 		solo.goBack();
@@ -207,7 +218,7 @@ public class MainSinglePaneTest extends
 
 	}
 
-	public void atestFSearch() throws Exception {
+	public void testFSearch() throws Exception {
 
 		RobotiumHelper.searchTestList(solo, POIsListWorkerFragment.TAG);
 

@@ -76,7 +76,7 @@ public class MainMultiPaneTest extends
 				POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
-		RobotiumHelper.selectWheelchairState(solo);
+		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
 		solo.clickOnActionBarItem(R.id.menu_save);
 		solo.clickOnButton( "Okay" );
@@ -97,7 +97,7 @@ public class MainMultiPaneTest extends
 		solo.assertCurrentActivity("detail activity", POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
-		RobotiumHelper.selectWheelchairState(solo);
+		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
 		solo.clickOnActionBarItem(R.id.menu_save );
 		solo.waitForActivity("MainMultiPaneActivity" );
@@ -109,7 +109,7 @@ public class MainMultiPaneTest extends
 		solo.assertCurrentActivity("detail activity", POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
-		RobotiumHelper.selectWheelchairState(solo);
+		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
 
 		solo.clickOnActionBarItem(R.id.menu_save );

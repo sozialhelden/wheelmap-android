@@ -21,6 +21,7 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +55,17 @@ public class RobotiumHelper {
 				.atMost(new Duration(WAIT_IN_SECONDS_TO_FINISH,
 						TimeUnit.SECONDS)).and().until(refreshingDoneCallable);
 		solo.sleep(500);
+	}
 
+	private static Activity lookupActivity( Solo solo, String activityName ) {
+
+		List<Activity> acts = solo.getAllOpenedActivities();
+		for ( Activity actvt: acts ) {
+			if ( actvt.getClass().getSimpleName().equals( activityName ))
+				return actvt;
+		}
+
+		return null;
 	}
 
 	static void  logout(Solo solo, String mainActivity) throws InterruptedException {
@@ -94,30 +105,27 @@ public class RobotiumHelper {
 		solo.waitForDialogToClose(1000);
 	}
 
-	static void selectWheelchairState( Solo solo) throws InterruptedException {
-
-		View wheelchairStateButton = solo.getCurrentActivity().findViewById(R.id.wheelchair_state_layout);
-		solo.clickOnView( wheelchairStateButton );
+	static void selectWheelchairState( Solo solo, String activityName) throws InterruptedException {
+		View wheelchairStateButton = lookupActivity(solo, activityName).findViewById(R.id.wheelchair_state_layout);
 		Log.d(TAG, "wheelchairState Button " + wheelchairStateButton);
+		solo.clickOnView( wheelchairStateButton );
 
 		Log.d( TAG, "Current activity " + solo.getCurrentActivity());
-		solo.waitForView( RadioButton.class );
+		solo.waitForFragmentByTag( WheelchairStateFragment.TAG );
 		RadioButton radioButton = (RadioButton) solo.getCurrentActivity().findViewById(R.id.radio_limited);
-		Log.d(TAG, "radio button" + radioButton);
+		Log.d(TAG, "radio button " + radioButton);
 		solo.clickOnRadioButton(1);
-		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG );
-
 	}
 
 	static void selectCategoryState( Solo solo) throws InterruptedException {
+		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
+		View categoryButton = lookupActivity(solo, "POIDetailEditableActivity").findViewById(R.id.edit_nodetype);
+		Log.d(TAG, "category Button " + categoryButton);
+		Log.d( TAG, "Current activity " + solo.getCurrentActivity());
 
-		View categoryButton = solo.getCurrentActivity().findViewById(R.id.edit_nodetype );
 		solo.clickOnView(categoryButton);
 		solo.waitForFragmentByTag(NodetypeSelectFragment.TAG);
-		solo.sleep(1000);
-		solo.clickInList( 2 );
-		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG );
-
+		solo.clickInList(2);
 	}
 
 	static void searchTestList( SoloCompatibilityAbs solo, String workerTag ) throws Exception {
