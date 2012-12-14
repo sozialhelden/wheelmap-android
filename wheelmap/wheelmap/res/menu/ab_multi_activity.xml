@@ -8,15 +8,22 @@
         android:title="@string/menu_search"/>
     <item
         android:id="@+id/menu_new_poi"
+        android:menuCategory="secondary"
+        android:orderInCategory="0"
         android:showAsAction="never"
         android:title="@string/menu_new_poi"/>
     <item
         android:id="@+id/menu_filter"
+        android:menuCategory="secondary"
+        android:orderInCategory="1"
         android:showAsAction="never"
         android:title="@string/menu_filter"/>
     <item
         android:id="@+id/menu_about"
+        android:menuCategory="secondary"
+        android:orderInCategory="2"
         android:showAsAction="never"
-        android:title="@string/menu_about"/>
+        android:title="@string/menu_about">
+    </item>
 
 </menu>
