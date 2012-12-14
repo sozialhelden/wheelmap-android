@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import android.R;
 import org.wheelmap.android.fragment.EditPositionFragment;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
@@ -74,7 +75,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 
-		mFragment = fm.findFragmentByTag( POIDetailEditableActivity.TAG );
+		mFragment = fm.findFragmentById( R.id.content );
 		if (mFragment != null) {
 			return;
 		}
@@ -187,7 +188,7 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onBackStackChanged() {
 		FragmentManager fm = getSupportFragmentManager();
-		mFragment = fm.findFragmentByTag(POIDetailEditableFragment.TAG );
+		mFragment = fm.findFragmentById(R.id.content);
 	}
 
 	public static class ExternalEditableState {
