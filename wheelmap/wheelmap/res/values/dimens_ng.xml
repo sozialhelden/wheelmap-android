@@ -47,5 +47,6 @@
 	<dimen name="mapcompass_margin_vertical">32dp</dimen>
 	<dimen name="mapcompass_margin_horizontal">4dp</dimen>
 	<dimen name="mapcompass_size">44dp</dimen>
+	<dimen name="landscape_divider_margin">0dp</dimen>
    
 </resources>

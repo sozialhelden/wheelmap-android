@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    
+
     <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.Wheelmap.Dialog">
-        
+        <item name="android:windowNoTitle">true</item>
     </style>
-    
-    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.Wheelmap.ActionbarDialog">
-        
-    </style>
-    
-    <style name="Theme.Wheelmap.ActionbarDialog" parent="@style/Theme.Wheelmap.Dialog">   
+
+    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.Wheelmap.ActionbarDialog"></style>
+
+    <style name="Theme.Wheelmap.ActionbarDialog" parent="@style/Theme.Wheelmap.Dialog">
         <item name="android:windowIsFloating">false</item>
-    	<item name="android:windowContentOverlay">@null</item>
-    	<item name="android:windowSoftInputMode">stateAlwaysHidden</item>
-   		<item name="android:windowActionModeOverlay">true</item>
-	    <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
-  <!-- Theme.Sherlock.Light.Dialog -->
+    <!-- Theme.Sherlock.Light.Dialog -->
     <style name="Theme.Wheelmap.Dialog" parent="@style/Holo.Theme.Dialog.Light">
-       	<item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
+        <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
         <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
