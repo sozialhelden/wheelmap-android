@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.fragment;
 
+import de.neofonie.mobile.app.android.widget.crouton.Crouton;
+import de.neofonie.mobile.app.android.widget.crouton.Style;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
@@ -156,12 +158,12 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 			loginSuccessful();
 			break;
 		case SyncService.STATUS_ERROR:
-			// Error happened down in SyncService, show as toast.
+			// Error happened down in SyncService, show as crouton.
 			mSyncing = false;
 			updateRefreshStatus();
 			final SyncServiceException e = resultData
 					.getParcelable(Extra.EXCEPTION);
-			showErrorDialog(e);
+			Crouton.makeText(getActivity(), e.getRessourceString(), Style.ALERT).show();
 			break;
 		default: // noop
 		}
@@ -173,16 +175,6 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 			mProgressBar.setVisibility(View.VISIBLE);
 		else
 			mProgressBar.setVisibility(View.INVISIBLE);
-	}
-
-	private void showErrorDialog(SyncServiceException e) {
-		FragmentManager fm = getFragmentManager();
-		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
-				Extra.UNKNOWN);
-		if (errorDialog == null)
-			return;
-
-		errorDialog.show(fm, ErrorDialogFragment.TAG);
 	}
 
 	private void loginSuccessful() {
