@@ -34,6 +34,11 @@
       <item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>
       <item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>
     </style>
+  
+    <style name="DetailView">
+
+
+    </style>
 
     <style name="TitleBarNew">
         <item name="android:id">@id/title_container</item>

@@ -31,4 +31,8 @@
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
     </style>
 
+    <style name="DetailView">
+        <item name="android:background">@android:color/background_light</item>
+    </style>
+
 </resources>
