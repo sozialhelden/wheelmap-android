@@ -91,7 +91,7 @@
     </dependency>
     <dependency>
       <groupId>org.mapsforge.android</groupId>
-      <artifactId>mapsforge-map</artifactId>
+      <artifactId>mapsforge-map-patched</artifactId>
       <version>0.2.4</version>
     </dependency>
     <dependency>
