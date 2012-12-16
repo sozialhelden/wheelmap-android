@@ -45,7 +45,7 @@ import de.akquinet.android.androlog.Log;
 public abstract class SinglePageExecutor<T extends Base> extends
 		AbstractExecutor implements IExecutor {
 	private static final int MAX_RETRY_COUNT = 5;
-	protected static final int DEFAULT_TEST_PAGE_SIZE = 500;
+	protected static final int DEFAULT_TEST_PAGE_SIZE = 250;
 	private final static int statusAuthFailed = 401;
 	private final static int statusAuthForbidden = 403;
 	private final static int statusBadRequest = 400;
