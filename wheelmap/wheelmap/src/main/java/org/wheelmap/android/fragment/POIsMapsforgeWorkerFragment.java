@@ -75,6 +75,7 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d( TAG, "onCreate" );
 		setRetainInstance(true);
 
 		mBus = WheelmapApp.getBus();
@@ -135,7 +136,6 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		Log.d(TAG, "onCreateLoader");
-
 		Uri uri = POIs.CONTENT_URI_RETRIEVED;
 		return new CursorLoader(getActivity(), uri, POIs.PROJECTION,
 				UserQueryHelper.getUserQuery(), null, null);

@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.1-SNAPSHOT</version>
+    <version>0.99.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>wheelmap-it</artifactId>
@@ -65,7 +65,6 @@
       <artifactId>wheelmap</artifactId>
       <type>apk</type>
       <version>${project.version}</version> 
-      <!-- version>0.9.1-SNAPSHOT</version -->
       <classifier>${zipaligned-classifier}</classifier> <!--  classifier set according to the ran profile -->
       <scope>provided</scope>
     </dependency>
