@@ -34,6 +34,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import de.akquinet.android.androlog.Log;
+import org.wheelmap.android.model.Extra;
 
 public class MyTabListener<T extends Fragment> implements TabListener {
 	private final static String TAG = MyTabListener.class.getSimpleName();

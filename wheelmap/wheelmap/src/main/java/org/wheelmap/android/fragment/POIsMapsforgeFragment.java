@@ -77,7 +77,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private WorkerFragment mWorkerFragment;
 	private DisplayFragmentListener mListener;
 	private Bundle mDeferredExecuteBundle;
-	private boolean mFirstStart;
 
 	private MapView mMapView;
 	private MapController mMapController;
@@ -101,7 +100,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 	private boolean mOrientationAvailable;
 
 	public static POIsMapsforgeFragment newInstance(boolean createWorker,
-			boolean disableSearch) {
+													boolean disableSearch) {
 		POIsMapsforgeFragment f = new POIsMapsforgeFragment();
 		Bundle b = new Bundle();
 		b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
@@ -136,7 +135,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 
 		View v = inflater
 				.inflate(R.layout.fragment_mapsforge, container, false);
@@ -147,10 +146,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
 		mMapView.setScaleBar(true);
-
-		ConfigureMapView.pickAppropriateMap(getActivity()
-				.getApplicationContext(), mMapView);
-
 		mMapController = mMapView.getController();
 
 		// overlays
@@ -181,7 +176,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		Fragment fragment = null;
 		if (getArguments() == null
 				|| getArguments()
-						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+				.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
 			mHeightFull = true;
 			FragmentManager fm = getFragmentManager();
 			fragment = fm.findFragmentByTag(POIsMapsforgeWorkerFragment.TAG);
@@ -205,10 +200,11 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mWorkerFragment.registerDisplayFragment(this);
 		Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
 
-		if (savedInstanceState == null)
-			mFirstStart = true;
-		else if ( !hasExecuteBundle()) {
-			executeBundle(savedInstanceState);
+		if (!hasExecuteBundle()) {
+			if (savedInstanceState != null)
+				executeBundle(savedInstanceState);
+			else
+				executeMapDeferred(null, 0, false, true);
 		}
 	}
 
@@ -251,58 +247,27 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		if (bundle == null)
 			return;
 
-		mHeightFull = bundle.getBoolean(Extra.MAP_HEIGHT_FULL, false );
+		mHeightFull = bundle.getBoolean(Extra.MAP_HEIGHT_FULL, false);
 
 		boolean doRequest = false;
+		boolean doCenter = false;
 		GeoPoint centerPoint = null;
 		int zoom = 0;
+
+		if (bundle.containsKey(Extra.REQUEST)) {
+			doRequest = true;
+		}
 
 		if (bundle.containsKey(Extra.CENTER_MAP)) {
 			double lat = bundle.getDouble(Extra.LATITUDE);
 			double lon = bundle.getDouble(Extra.LONGITUDE);
 			zoom = bundle.getInt(Extra.ZOOM_MAP, MAP_ZOOM_DEFAULT);
 			centerPoint = new GeoPoint(lat, lon);
-			doRequest = true;
+			doCenter = true;
 		}
 
-		if (bundle.getBoolean(Extra.EXPLICIT_RETRIEVAL, false)) {
-			Log.d(TAG, "Explicit retrieval");
-			zoom = MAP_ZOOM_DEFAULT;
-			doRequest = true;
-		}
-
-		if (doRequest) {
-			if (bundle.getBoolean(Extra.EXPLICIT_DIRECT_RETRIEVAL, false)) {
-				Log.d(TAG, "executeState: explicit direct retrieval");
-				executeMapPositioning(centerPoint, zoom);
-			} else {
-				Log.d(TAG, "executeState: deferred retrieval");
-				final GeoPoint finalCenterPoint = centerPoint;
-				final int finalZoom = zoom;
-				mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
-						new OnGlobalLayoutListener() {
-
-							@Override
-							public void onGlobalLayout() {
-								Log.d( "onGlobalLayout: doing mapview center" );
-								executeMapPositioning(finalCenterPoint, finalZoom);
-								mMapView.getViewTreeObserver()
-										.removeOnGlobalLayoutListener(this);
-							}
-						});
-			}
-
-		}
-
-	}
-
-	private void executeMapPositioning( GeoPoint geoPoint, int zoom ) {
-		if (geoPoint != null)
-			centerMap(geoPoint, true);
-		if (zoom != 0)
-			setZoomIntern(zoom);
-		markItemIntern( geoPoint, false );
-		requestUpdate();
+		if (doCenter || doRequest)
+			executeMapDeferred(centerPoint, zoom, doCenter, doRequest);
 	}
 
 	private boolean hasExecuteBundle() {
@@ -319,15 +284,35 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		return result;
 	}
 
+	private void executeMapDeferred(final GeoPoint centerPoint, final int zoom, final boolean center, final boolean request) {
+		mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
+				new OnGlobalLayoutListener() {
+
+					@Override
+					public void onGlobalLayout() {
+						Log.d("onGlobalLayout: doing mapview center deffered");
+						if (center)
+							executeMapPositioning(centerPoint, zoom);
+						if (request)
+							requestUpdate();
+						mMapView.getViewTreeObserver()
+								.removeOnGlobalLayoutListener(this);
+					}
+				});
+	}
+
+	private void executeMapPositioning(GeoPoint geoPoint, int zoom) {
+		if (geoPoint != null)
+			centerMap(geoPoint, true);
+		if (zoom != 0)
+			setZoomIntern(zoom);
+		markItemIntern(geoPoint, false);
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		GeoPoint gp = mMapView.getMapCenter();
-		outState.putBoolean(Extra.CENTER_MAP, true);
-		outState.putDouble(Extra.LATITUDE, gp.getLatitude());
-		outState.putDouble(Extra.LONGITUDE, gp.getLongitude());
-		outState.putInt(Extra.ZOOM_MAP, mMapView.getZoomLevel());
-		outState.putBoolean( Extra.MAP_HEIGHT_FULL, mHeightFull);
+		outState.putBoolean(Extra.MAP_HEIGHT_FULL, mHeightFull);
 	}
 
 	@Override
@@ -342,15 +327,15 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		int id = item.getItemId();
 
 		switch (id) {
-		case R.id.menu_search:
-			showSearch();
-			return true;
-		case R.id.menu_location:
-			centerMap(mCurrentLocation, true);
-			requestUpdate();
-			break;
-		default:
-			// noop
+			case R.id.menu_search:
+				showSearch();
+				return true;
+			case R.id.menu_location:
+				centerMap(mCurrentLocation, true);
+				requestUpdate();
+				break;
+			default:
+				// noop
 		}
 
 		return false;
@@ -358,15 +343,16 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void onMove(float vertical, float horizontal) {
+		Log.d(TAG, "onMove");
 		GeoPoint centerLocation = mMapView.getMapCenter();
 		int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
 
 		if (mLastRequestedPosition != null
 				&& (Math.abs(mLastRequestedPosition.getLatitudeE6()
-						- centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
+				- centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
 				&& (Math.abs(mLastRequestedPosition.getLongitudeE6()
-						- centerLocation.getLongitudeE6()) < minimalLongitudeSpan))
+				- centerLocation.getLongitudeE6()) < minimalLongitudeSpan))
 			return;
 
 		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
@@ -377,6 +363,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 
 	@Override
 	public void onZoom(byte zoomLevel) {
+		Log.d(TAG, "onZoom");
 		boolean isZoomedEnough = true;
 
 		if (zoomLevel < ZOOMLEVEL_MIN) {
@@ -413,9 +400,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mLastRequestedPosition = center;
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
-						+ (lonSpan / 2),
+				+ (lonSpan / 2),
 				center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
-						- (lonSpan / 2));
+				- (lonSpan / 2));
 		bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
 
 		return bundle;
@@ -471,7 +458,7 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mCursor = cursor;
 		mPoisItemizedOverlay.setCursor(mCursor);
 
-		if ( mWorkerFragment instanceof CombinedWorkerFragment )
+		if (mWorkerFragment instanceof CombinedWorkerFragment)
 			markItemClear();
 	}
 
@@ -512,15 +499,16 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		GeoPoint geoPoint = new GeoPoint(location.getLatitude(),
 				location.getLongitude());
 		mCurrLocationOverlay.setLocation(geoPoint, location.getAccuracy());
-		if (mCurrentLocation == null)
+		if (mMapView != null && !mMapView.hasInitializedCenter()) {
 			centerMap(geoPoint, false);
+		}
 
 		mCurrentLocation = geoPoint;
 	}
 
 	@Override
 	public void markItem(ContentValues values, boolean centerToItem) {
-		Log.d( TAG, "markItem" );
+		Log.d(TAG, "markItem");
 		GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
 				values.getAsDouble(POIs.LONGITUDE));
 		markItemIntern(point, centerToItem);
@@ -537,33 +525,33 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		mCurrLocationOverlay.unsetItem();
 	}
 
-	private SensorEventListener mSensorEventListener = new SensorEventListener() {
-		private static final float MIN_DIRECTION_DELTA = 10;
-		private float mDirection;
+private SensorEventListener mSensorEventListener = new SensorEventListener() {
+	private static final float MIN_DIRECTION_DELTA = 10;
+	private float mDirection;
 
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			float direction = event.values[0];
-			if (direction > 180)
-				direction -= 360;
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		float direction = event.values[0];
+		if (direction > 180)
+			direction -= 360;
 
-			if (isAdded())
-				direction -= UtilsMisc.calcRotationOffset(getActivity()
-						.getWindowManager().getDefaultDisplay());
+		if (isAdded())
+			direction -= UtilsMisc.calcRotationOffset(getActivity()
+					.getWindowManager().getDefaultDisplay());
 
-			float lastDirection = mDirection;
-			if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
-				return;
+		float lastDirection = mDirection;
+		if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
+			return;
 
-			updateDirection(direction);
-			mDirection = direction;
-		}
+		updateDirection(direction);
+		mDirection = direction;
+	}
 
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-		}
-	};
+	}
+};
 
 	private void updateDirection(float direction) {
 		mCompass.updateDirection(direction);

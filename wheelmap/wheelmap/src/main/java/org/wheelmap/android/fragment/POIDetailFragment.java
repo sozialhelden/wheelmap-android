@@ -208,7 +208,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 		mapView.setClickable(true);
 		mapView.setBuiltInZoomControls(true);
-		ConfigureMapView.pickAppropriateMap(getActivity(), mapView);
 		mapController = mapView.getController();
 		mapController.setZoom(18);
 	}

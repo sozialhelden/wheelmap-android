@@ -33,6 +33,7 @@ public interface Extra {
 	public final static String NODETYPE = "org.wheelmap.android.NODETYPE";
 	public final static String LATITUDE = "org.wheelmap.android.LATITUDE";
 	public final static String LONGITUDE = "org.wheelmap.android.LONGITUDE";
+	public final static String ZOOM_LEVEL = "org.wheelmap.android.ZOOM_LEVEL";
 	public final static String WHEELCHAIR_STATE = "org.wheelmap.android.WHEELCHAIR_STATE";
 
 	public final static String SELECTED_TAB = "org.wheelmap.android.SELECTED_TAB";
@@ -42,7 +43,7 @@ public interface Extra {
 	public static final String DISABLE_SEARCH = "org.wheelmap.android.DISABLE_SEARCH";
 
 	public static final String ZOOM_MAP = "org.wheelmap.android.CENTER_ZOOM";
-	public static final String EXPLICIT_RETRIEVAL = "org.wheelmap.android.RETRIEVAL";
+	public static final String REQUEST = "org.wheelmap.android:REQUEST";
 	public static final String EXPLICIT_DIRECT_RETRIEVAL = "org.wheelmap.android.DIRECT_RETRIEVAL";
 	public static final String SHOW_MAP = "org.wheelmap.android.SHOW_MAP";
 	public static final String MAP_HEIGHT_FULL = "org.wheelmap.android.MAP_HEIGHT_FULL";

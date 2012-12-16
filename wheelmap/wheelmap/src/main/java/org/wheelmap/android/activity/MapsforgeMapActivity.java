@@ -24,16 +24,21 @@ package org.wheelmap.android.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.akquinet.android.androlog.Log;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapContext;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.TileRAMCache;
+import org.wheelmap.android.model.Extra;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import org.wheelmap.android.overlays.ConfigureMapView;
 
 public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 		implements MapContext {
+
+	private final static String TAG = MapsforgeMapActivity.class.getSimpleName();
 
 	/**
 	 * Name of the file where the map position and other settings are stored.
@@ -52,18 +57,24 @@ public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 
 	private void destroyMapViews() {
 		if (this.mapViews != null) {
-			MapView currentMapView;
+			MapView mapView;
 			while (!this.mapViews.isEmpty()) {
-				currentMapView = this.mapViews.get(0);
-				currentMapView.destroy();
+				mapView = this.mapViews.get(0);
+				mapView.destroy();
 			}
-			currentMapView = null;
+			mapView = null;
 			this.mapViews.clear();
 			this.mapViews = null;
 		}
 	}
 
 	public void destroyMapView(MapView mapView) {
+		int i;
+		for( i = 0; i < this.mapViews.size(); i++ ) {
+			if ( mapViews.get(i) == mapView )
+				mapViews.remove( i );
+		}
+
 		mapView.destroy();
 		mapView = null;
 	}
@@ -71,27 +82,11 @@ public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Editor editor = getSharedPreferences(PREFERENCES_FILE, MODE_PRIVATE)
-				.edit();
-		for (int i = 0, n = this.mapViews.size(); i < n; ++i) {
-			MapView currentMapView = this.mapViews.get(i);
-			currentMapView.onPause();
 
-			editor.clear();
-			if (currentMapView.hasValidCenter()) {
-				if (!currentMapView.getMapViewMode()
-						.requiresInternetConnection()
-						&& currentMapView.hasValidMapFile()) {
-					// save the map file
-					editor.putString("mapFile", currentMapView.getMapFile());
-				}
-				// save the map position and zoom level
-				GeoPoint mapCenter = currentMapView.getMapCenter();
-				editor.putInt("latitude", mapCenter.getLatitudeE6());
-				editor.putInt("longitude", mapCenter.getLongitudeE6());
-				editor.putInt("zoomLevel", currentMapView.getZoomLevel());
-			}
-			editor.commit();
+		for (int i = 0, n = this.mapViews.size(); i < n; ++i) {
+			MapView mapView = this.mapViews.get(i);
+			mapView.onPause();
+			storeMapView( mapView );
 		}
 	}
 
@@ -127,15 +122,17 @@ public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 	 */
 	@Override
 	public void registerMapView(MapView mapView) {
+		ConfigureMapView.pickAppropriateMap(this
+				.getApplicationContext(), mapView);
 		if (this.mapViews != null) {
 			this.mapViews.add(mapView);
 
 			SharedPreferences preferences = getSharedPreferences(
-					PREFERENCES_FILE, MODE_PRIVATE);
+					PREFERENCES_FILE + mapView.getId(), MODE_PRIVATE);
 			// restore the position
-			if (preferences.contains("latitude")
-					&& preferences.contains("longitude")
-					&& preferences.contains("zoomLevel")) {
+			if (preferences.contains(Extra.LATITUDE)
+					&& preferences.contains(Extra.LONGITUDE)
+					&& preferences.contains(Extra.ZOOM_LEVEL)) {
 				if (!mapView.getMapViewMode().requiresInternetConnection()
 						&& preferences.contains("mapFile")) {
 					// get and set the map file
@@ -146,14 +143,35 @@ public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 				// get and set the map position and zoom level
 				GeoPoint defaultStartPoint = mapView.getDefaultStartPoint();
 				mapView.setCenterAndZoom(
-						new GeoPoint(preferences.getInt("latitude",
+						new GeoPoint(preferences.getInt(Extra.LATITUDE,
 								defaultStartPoint.getLatitudeE6()), preferences
-								.getInt("longitude",
+								.getInt(Extra.LONGITUDE,
 										defaultStartPoint.getLongitudeE6())),
-						(byte) preferences.getInt("zoomLevel",
+						(byte) preferences.getInt(Extra.ZOOM_LEVEL,
 								mapView.getDefaultZoomLevel()));
 			}
 		}
+	}
+	
+	private void storeMapView(MapView mapView ) {
+		Editor editor = getSharedPreferences(PREFERENCES_FILE + mapView.getId(), MODE_PRIVATE)
+				.edit();
+
+		editor.clear();
+		if (mapView.hasValidCenter()) {
+			if (!mapView.getMapViewMode()
+					.requiresInternetConnection()
+					&& mapView.hasValidMapFile()) {
+				// save the map file
+				editor.putString("mapFile", mapView.getMapFile());
+			}
+			// save the map position and zoom level
+			GeoPoint mapCenter = mapView.getMapCenter();
+			editor.putInt(Extra.LATITUDE, mapCenter.getLatitudeE6());
+			editor.putInt(Extra.LONGITUDE, mapCenter.getLongitudeE6());
+			editor.putInt(Extra.ZOOM_LEVEL, mapView.getZoomLevel());
+		}
+		editor.commit();
 	}
 
 	/**
@@ -164,6 +182,7 @@ public class MapsforgeMapActivity extends HoloRoboSherlockFragmentActivity
 	 */
 	@Override
 	public void unregisterMapView(MapView mapView) {
+		storeMapView(mapView);
 		if (this.mapViews != null) {
 			this.mapViews.remove(mapView);
 		}

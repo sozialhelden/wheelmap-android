@@ -195,6 +195,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		intent.putExtra(Extra.CENTER_MAP, true);
 		intent.putExtra(Extra.LATITUDE, point.getLatitude());
 		intent.putExtra(Extra.LONGITUDE, point.getLongitude());
+		intent.putExtra(Extra.REQUEST, true);
 		startActivity(intent);
 		finish();
 	}
