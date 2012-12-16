@@ -39,7 +39,7 @@ public class DirectionsActionProvider extends ShareActionProvider {
 	public View onCreateActionView() {
 		View view = super.onCreateActionView();
 		ImageView image = (ImageView) view.findViewById(R.id.abs__image);
-		image.setImageResource(R.drawable.ic_menu_directions);
+		image.setImageResource(R.drawable.ic_menu_directions_wheelmap);
 
 		return view;
 	}
