@@ -104,9 +104,16 @@ public class UserCredentials implements ICredentials{
 				0);
 
 		ObscuredSharedPreferences  obscuredSharedPreferences = new WheelmapObscuredSharedPreferences(mContext, settings);
-		mApiKey = obscuredSharedPreferences.getString(API_KEY, ANONYMOUNS_ACCESS_API_KEY);
-		mEmail = obscuredSharedPreferences.getString(E_MAIL, "");
-		mIsLoggenIn = obscuredSharedPreferences.getBoolean(LOGGED_IN, false);
+		try {
+			mApiKey = obscuredSharedPreferences.getString(API_KEY, ANONYMOUNS_ACCESS_API_KEY);
+			mEmail = obscuredSharedPreferences.getString(E_MAIL, "");
+			mIsLoggenIn = obscuredSharedPreferences.getBoolean(LOGGED_IN, false);
+		} catch( RuntimeException e ) {
+			mApiKey = null;
+			mEmail = null;
+			mIsLoggenIn = false;
+			saveSecure();
+		}
 	}
 
 	@Override
