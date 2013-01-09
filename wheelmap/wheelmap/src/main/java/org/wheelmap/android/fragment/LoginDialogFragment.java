@@ -163,7 +163,14 @@ public class LoginDialogFragment extends SherlockDialogFragment implements
 			updateRefreshStatus();
 			final SyncServiceException e = resultData
 					.getParcelable(Extra.EXCEPTION);
-			Crouton.makeText(getActivity(), e.getRessourceString(), Style.ALERT).show();
+
+			FragmentManager fm = getFragmentManager();
+			ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
+					Extra.UNKNOWN);
+			if (errorDialog == null)
+				return;
+
+			errorDialog.show(fm, ErrorDialogFragment.TAG);
 			break;
 		default: // noop
 		}
