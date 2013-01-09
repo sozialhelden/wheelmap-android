@@ -295,8 +295,9 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 							executeMapPositioning(centerPoint, zoom);
 						if (request)
 							requestUpdate();
+
 						mMapView.getViewTreeObserver()
-								.removeOnGlobalLayoutListener(this);
+								.removeGlobalOnLayoutListener(this);
 					}
 				});
 	}
