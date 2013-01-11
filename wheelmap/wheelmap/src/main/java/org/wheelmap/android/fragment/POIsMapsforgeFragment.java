@@ -140,7 +140,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		View v = inflater
 				.inflate(R.layout.fragment_mapsforge, container, false);
 
-		System.gc();
 		mMapView = (MapView) v.findViewById(R.id.map);
 
 		mMapView.setClickable(true);
@@ -230,7 +229,6 @@ public class POIsMapsforgeFragment extends SherlockFragment implements
 		((MapsforgeMapActivity) getActivity()).destroyMapView(mMapView);
 		mWorkerFragment.unregisterDisplayFragment(this);
 		WheelmapApp.getSupportManager().cleanReferences();
-		System.gc();
 	}
 
 	@Override

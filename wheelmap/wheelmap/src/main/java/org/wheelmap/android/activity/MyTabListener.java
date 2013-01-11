@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import android.os.Debug;
 import org.wheelmap.android.fragment.OnExecuteBundle;
 
 import android.os.Bundle;
@@ -69,8 +70,6 @@ public class MyTabListener<T extends Fragment> implements TabListener {
 		mFragment = fm.findFragmentByTag(mTag.name);
 		Log.d( TAG, "MyTabListener created: mFragment = " + mFragment);
 	}
-
-	/* The following are each of the ActionBar.TabListener callbacks */
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		Log.d(TAG, "onTabSelected tag = " + mTag.name);

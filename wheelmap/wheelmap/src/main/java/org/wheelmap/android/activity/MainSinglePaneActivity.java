@@ -23,6 +23,7 @@ package org.wheelmap.android.activity;
 
 import java.util.ArrayList;
 
+import android.os.Debug;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
 import org.wheelmap.android.app.IAppProperties;
@@ -85,7 +86,6 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
-		// Debug.startMethodTracing("wheelmap");
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminateVisibility(false);
@@ -156,7 +156,6 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.d( TAG, "onDestroy" );
-		// Debug.stopMethodTracing();
 	}
 
 	private void executeIntent(Intent intent) {

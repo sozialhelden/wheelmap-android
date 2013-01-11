@@ -250,8 +250,6 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 		ViewTool.nullViewDrawables(getView());
 		mapView = null;
 		mapController = null;
-		System.gc();
-		System.gc(); // to be sure ;-)
 	}
 
 	@Override
