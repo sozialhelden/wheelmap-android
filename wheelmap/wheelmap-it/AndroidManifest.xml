@@ -17,8 +17,8 @@ limitations under the License.
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wheelmap.android.test"
-    android:versionCode="17"
-    android:versionName="0.99.1-SNAPSHOT">
+    android:versionCode="19"
+    android:versionName="0.99.3-SNAPSHOT">
 
     <uses-sdk
         android:minSdkVersion="7"

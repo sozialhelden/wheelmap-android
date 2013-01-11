@@ -4,7 +4,7 @@
 
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.2-SNAPSHOT</version>
+    <version>0.99.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Wheelmap - Parent</name>
 
@@ -14,7 +14,7 @@
     </modules>
 
     <properties>
-        <app.version.code>18</app.version.code>
+        <app.version.code>19</app.version.code>
         <app.version.name>${project.version}</app.version.name>
         <platform.version>4.1.1.4</platform.version>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
