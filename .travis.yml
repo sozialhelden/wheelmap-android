@@ -1,8 +1,8 @@
 language: java
 before_install:
   # download the latest android sdk and unzip
-  - wget http://dl.google.com/android/android-sdk_r20-linux.tgz
-  - tar -zxf android-sdk_r20-linux.tgz
+  - wget http://dl.google.com/android/android-sdk_r21-linux.tgz
+  - tar -zxf android-sdk_r21-linux.tgz
   # setup your ANDROID_HOME and PATH environment variables
   # use ~/builds/[Github username]/[project]/android-sdk-linux
   - export ANDROID_HOME=~/builds/sozialhelden/wheelmap-android/android-sdk-linux
