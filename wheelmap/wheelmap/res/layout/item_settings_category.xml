@@ -41,7 +41,7 @@
         android:layout_toRightOf="@id/image"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginLeft="@dimen/margin_medium" />
+        android:layout_marginLeft="@dimen/margin_medium"/>
 
     <CheckBox
         android:id="@id/checkbox"

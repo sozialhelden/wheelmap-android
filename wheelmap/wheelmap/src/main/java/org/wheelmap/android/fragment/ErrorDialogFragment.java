@@ -30,7 +30,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.WazaBe.HoloEverywhere.app.AlertDialog;
+import org.holoeverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ErrorDialogFragment extends SherlockDialogFragment implements

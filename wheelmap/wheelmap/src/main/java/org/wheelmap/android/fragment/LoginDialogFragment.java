@@ -49,8 +49,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.WazaBe.HoloEverywhere.app.AlertDialog;
-import com.WazaBe.HoloEverywhere.app.Dialog;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Dialog;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import de.akquinet.android.androlog.Log;

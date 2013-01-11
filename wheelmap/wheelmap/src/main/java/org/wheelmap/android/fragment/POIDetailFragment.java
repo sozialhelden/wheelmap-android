@@ -296,6 +296,12 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			if (mListener != null)
 				mListener.onEdit(poiId);
 			return true;
+			case R.id.menu_directions:
+				startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS), getString(R.string.menu_directions)));
+				break;
+			case R.id.menu_share:
+				startActivity(Intent.createChooser(intentSaved.get( ACTION_PROVIDER_SHARE), getString(R.string.menu_share)));
+				break;
 		default:
 			// noop
 		}
@@ -511,9 +517,8 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 
 	private void setIntentOrStore(int apKey, Intent intent,
 			ShareActionProvider provider) {
-		if (provider == null)
-			intentSaved.put(apKey, intent);
-		else
+		intentSaved.put(apKey, intent);
+		if ( provider != null)
 			provider.setShareIntent(intent);
 	}
 

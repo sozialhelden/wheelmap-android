@@ -1,6 +1,6 @@
 package org.wheelmap.android.fragment;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 

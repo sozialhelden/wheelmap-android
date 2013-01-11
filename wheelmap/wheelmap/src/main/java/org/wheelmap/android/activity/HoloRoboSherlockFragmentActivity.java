@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-import com.WazaBe.HoloEverywhere.FontLoader;
-import com.WazaBe.HoloEverywhere.app.Activity;
-import com.WazaBe.HoloEverywhere.preference.PreferenceManager;
-import com.WazaBe.HoloEverywhere.preference.SharedPreferences;
+import org.holoeverywhere.FontLoader;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.preference.PreferenceManager;
+import org.holoeverywhere.preference.SharedPreferences;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import de.akquinet.android.androlog.Log;
 

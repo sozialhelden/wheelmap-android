@@ -23,7 +23,8 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    xmlns:holo="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/search_layout"
@@ -76,7 +77,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:prompt="@string/search_pick_category" />
+                android:prompt="@string/search_pick_category"
+                holo:spinnerMode="dialog"/>
         </LinearLayout>
 
         <LinearLayout
@@ -98,7 +100,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_medium"
-                android:text="@string/search_distance" />
+                android:text="@string/search_distance"
+                holo:spinnerMode="dialog"/>
         </LinearLayout>
     </LinearLayout>
 

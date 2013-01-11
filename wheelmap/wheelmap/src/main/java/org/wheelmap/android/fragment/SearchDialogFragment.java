@@ -28,7 +28,6 @@ import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.activity.HoloRoboSherlockFragmentActivity;
 
 import android.app.SearchManager;
 import android.content.DialogInterface;
@@ -41,13 +40,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.app.AlertDialog;
-import com.WazaBe.HoloEverywhere.app.Dialog;
-import com.WazaBe.HoloEverywhere.widget.AdapterView;
-import com.WazaBe.HoloEverywhere.widget.EditText;
-import com.WazaBe.HoloEverywhere.widget.Spinner;
-import com.WazaBe.HoloEverywhere.widget.AdapterView.OnItemSelectedListener;
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Dialog;
+import org.holoeverywhere.widget.AdapterView;
+import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.Spinner;
+import org.holoeverywhere.widget.AdapterView.OnItemSelectedListener;
 
 import de.akquinet.android.androlog.Log;
 
