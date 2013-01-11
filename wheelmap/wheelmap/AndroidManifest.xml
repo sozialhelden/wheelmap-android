@@ -24,8 +24,7 @@ limitations under the License.
     package="org.wheelmap.android.online"
     android:installLocation="auto"
     android:versionCode="19"
-    android:versionName="0.99.3-SNAPSHOT"
-        >
+    android:versionName="0.99.3-SNAPSHOT" >
 
     <uses-sdk
         android:minSdkVersion="7"
