@@ -214,6 +214,9 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	@Override
 	public void executeBundle(Bundle bundle) {
+		if ( bundle == null)
+			return;
+
 		if ( bundle.getBoolean(Extra.REQUEST, false))
 			mWorkerFragment.requestUpdate(null);
 	}
