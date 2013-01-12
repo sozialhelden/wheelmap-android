@@ -21,7 +21,7 @@
   #L%
   -->
 
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@id/text"
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="fill_parent"

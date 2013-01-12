@@ -123,9 +123,9 @@ public class SearchDialogFragment extends SherlockDialogFragment implements
 
 		ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
 				.createFromResource(getActivity(), R.array.distance_array,
-						android.R.layout.simple_spinner_item);
+						R.layout.simple_spinner_item);
 		distanceSpinnerAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 		mDistanceSpinner.setAdapter(distanceSpinnerAdapter);
 		mDistanceSpinner.setOnItemSelectedListener(this);
 		mDistanceSpinner.setPromptId(R.string.search_distance);

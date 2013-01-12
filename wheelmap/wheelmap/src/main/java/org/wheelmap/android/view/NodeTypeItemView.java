@@ -21,21 +21,21 @@
  */
 package org.wheelmap.android.view;
 
+import android.widget.TextView;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
 
 public class NodeTypeItemView extends FrameLayout implements TypeItemView {
-	private CheckedTextView mText;
+	private TextView mText;
 
 	public NodeTypeItemView(Context context) {
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
 		inflater.inflate(R.layout.item_search_nodetype, this, true);
-		mText = (CheckedTextView) findViewById(R.id.text);
+		mText = (TextView) findViewById(R.id.text);
 	}
 
 	public void setText(String text) {

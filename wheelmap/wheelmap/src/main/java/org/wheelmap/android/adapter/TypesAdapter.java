@@ -27,6 +27,7 @@ import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.view.CategoryItemView;
 import org.wheelmap.android.view.NodeTypeItemView;
 import org.wheelmap.android.view.TypeItemView;
+import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -93,7 +94,7 @@ public class TypesAdapter extends BaseAdapter implements SpinnerAdapter {
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) mContext
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(android.R.layout.simple_spinner_item,
+			view = inflater.inflate(R.layout.simple_spinner_item,
 					parent, false);
 		} else {
 			view = convertView;
