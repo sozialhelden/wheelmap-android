@@ -159,6 +159,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	}
 
 	private void executeIntent(Intent intent) {
+		Log.d( TAG, "executeIntent intent = " + intent);
 		Bundle extras = intent.getExtras();
 		if (extras == null)
 			return;
@@ -292,6 +293,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		long copyId = PrepareDatabaseHelper.createCopyFromContentValues(
 				getContentResolver(), values, false);
 		Intent intent = new Intent(this, POIDetailActivity.class);
+		intent.setFlags( Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		intent.putExtra(Extra.POI_ID, copyId);
 		startActivity(intent);
 	}

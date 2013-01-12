@@ -88,8 +88,6 @@ public class POIsListWorkerFragment extends LocationFragment implements
 		mReceiver = new DetachableResultReceiver(new Handler());
 		mReceiver.setReceiver(this);
 		mDistance = getDistanceFromPreferences();
-		if ( savedInstanceState == null)
-			requestUpdate(null);
 	}
 
 	@Override

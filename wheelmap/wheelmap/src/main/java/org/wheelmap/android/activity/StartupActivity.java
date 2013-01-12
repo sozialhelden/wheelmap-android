@@ -182,6 +182,7 @@ public class StartupActivity extends RoboSherlockActivity implements
 			intent = new Intent(getApplicationContext(),
 					MainSinglePaneActivity.class);
 
+		intent.putExtra( Extra.REQUEST, true );
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

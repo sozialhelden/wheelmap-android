@@ -70,11 +70,23 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		FragmentManager fm = getSupportFragmentManager();
 		mFragment = (POIDetailFragment) fm
 				.findFragmentByTag(POIDetailFragment.TAG);
-		if (mFragment != null) {
-			return;
-		}
+	}
 
-		executeIntent(getIntent());
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d(TAG, "onNewIntent");
+		setIntent(intent);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (getIntent() != null) {
+			executeIntent(getIntent());
+			setIntent(null);
+		}
 	}
 
 	private void executeIntent(Intent intent) {
@@ -132,7 +144,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		mFragment = POIDetailFragment.newInstance(id);
 
 		fm.beginTransaction()
-				.add(android.R.id.content, mFragment, POIDetailFragment.TAG)
+				.replace(android.R.id.content, mFragment, POIDetailFragment.TAG)
 				.commit();
 	}
 
@@ -197,7 +209,7 @@ public class POIDetailActivity extends MapsforgeMapActivity implements
 		intent.putExtra(Extra.LONGITUDE, point.getLongitude());
 		intent.putExtra(Extra.REQUEST, true);
 		startActivity(intent);
-		finish();
+		// finish();
 	}
 
 	@Override
