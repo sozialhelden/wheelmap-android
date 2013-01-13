@@ -82,6 +82,8 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	public final static int TAB_LIST = 0;
 	public final static int TAB_MAP = 1;
 
+	public boolean mFirstStart;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -161,7 +163,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private void executeIntent(Intent intent) {
 		Log.d( TAG, "executeIntent intent = " + intent);
 		Bundle extras = intent.getExtras();
-		if (extras == null)
+		if (extras == null || !mFirstStart)
 			return;
 
 		executeState(extras);
@@ -172,10 +174,12 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 	private void executeState(Bundle state) {
 		mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
+		mFirstStart = false;
 	}
 
 	private void executeDefaultInstanceState() {
 		mSelectedTab = DEFAULT_SELECTED_TAB;
+		mFirstStart = true;
 	}
 
 	public void onStateChange(String tag) {
