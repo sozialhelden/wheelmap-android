@@ -41,6 +41,7 @@ public class MyLocationManager {
 	private static MyLocationManager INSTANCE;
 	private LocationManager mLocationManager;
 
+	private Handler mReleaseDelayedHandler;
 	private MyGPSLocationListener mGPSLocationListener;
 	private MyNetworkLocationListener mNetworkLocationListener;
 	private Location mCurrentBestLocation;
@@ -118,8 +119,15 @@ public class MyLocationManager {
 
 	public void release(ResultReceiver receiver) {
 		mReceiver.removeReceiver(receiver);
-		if (mReceiver.getReceiverCount() == 0)
-			releaseLocationUpdates();
+		mReleaseDelayedHandler = new Handler();
+			mReleaseDelayedHandler.postDelayed( new Runnable() {
+				@Override
+				public void run() {
+					if (mReceiver.getReceiverCount() == 0) {
+						releaseLocationUpdates();
+					}
+				}
+			}, 2000l);
 	}
 
 	private boolean findProvider(String find) {
