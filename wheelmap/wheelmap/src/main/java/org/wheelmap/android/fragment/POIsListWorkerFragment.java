@@ -132,6 +132,9 @@ public class POIsListWorkerFragment extends LocationFragment implements
 	}
 
 	protected void updateLocation() {
+		if ( isNewDistanceFar())
+			requestUpdate(null);
+
 		resetCursorLoaderUri();
 	}
 

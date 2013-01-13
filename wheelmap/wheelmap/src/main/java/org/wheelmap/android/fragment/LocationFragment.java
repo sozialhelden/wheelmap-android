@@ -13,6 +13,7 @@ import android.os.Handler;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import de.akquinet.android.androlog.Log;
+import org.wheelmap.android.utils.GeocoordinatesMath;
 
 public abstract class LocationFragment extends SherlockFragment implements
 		Receiver {
@@ -20,7 +21,10 @@ public abstract class LocationFragment extends SherlockFragment implements
 	private final static String TAG = LocationFragment.class.getSimpleName();
 	private MyLocationManager mLocationManager;
 	private Location mLocation;
+	private Location mLastLocation;
 	private DetachableResultReceiver mReceiver;
+
+	private final static float DISTANCE_TO_RELOAD = 2l;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public abstract class LocationFragment extends SherlockFragment implements
 			Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
 			switch (resultCode) {
 			case What.LOCATION_MANAGER_UPDATE: {
+				mLastLocation = mLocation;
 				mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
 				if (!isAdded())
 					return;
@@ -73,4 +78,13 @@ public abstract class LocationFragment extends SherlockFragment implements
 	};
 
 	protected abstract void updateLocation();
+
+	protected boolean isNewDistanceFar() {
+		float distance = GeocoordinatesMath.calculateDistance(mLastLocation, mLocation );
+
+		if ( distance > DISTANCE_TO_RELOAD)
+			return true;
+		else
+			return false;
+	}
 }
