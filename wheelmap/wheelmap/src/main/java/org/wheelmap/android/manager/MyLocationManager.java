@@ -120,14 +120,14 @@ public class MyLocationManager {
 	public void release(ResultReceiver receiver) {
 		mReceiver.removeReceiver(receiver);
 		mReleaseDelayedHandler = new Handler();
-			mReleaseDelayedHandler.postDelayed( new Runnable() {
-				@Override
-				public void run() {
-					if (mReceiver.getReceiverCount() == 0) {
-						releaseLocationUpdates();
-					}
+		mReleaseDelayedHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if (mReceiver.getReceiverCount() == 0) {
+					releaseLocationUpdates();
 				}
-			}, 2000l);
+			}
+		}, 2000l);
 	}
 
 	private boolean findProvider(String find) {
@@ -256,15 +256,13 @@ public class MyLocationManager {
 	/**
 	 * Determines whether one Location reading is better than the current
 	 * Location fix
-	 * 
-	 * @param location
-	 *            The new Location that you want to evaluate
-	 * @param currentBestLocation
-	 *            The current Location fix, to which you want to compare the new
-	 *            one
+	 *
+	 * @param location            The new Location that you want to evaluate
+	 * @param currentBestLocation The current Location fix, to which you want to compare the new
+	 *                            one
 	 */
 	protected boolean isBetterLocation(Location location,
-			Location currentBestLocation) {
+									   Location currentBestLocation) {
 		if (currentBestLocation == null) {
 			// A new location is always better than no location
 			return true;
@@ -318,7 +316,9 @@ public class MyLocationManager {
 		return false;
 	}
 
-	/** Checks whether two providers are the same */
+	/**
+	 * Checks whether two providers are the same
+	 */
 	private boolean isSameProvider(String provider1, String provider2) {
 		if (provider1 == null) {
 			return provider2 == null;
