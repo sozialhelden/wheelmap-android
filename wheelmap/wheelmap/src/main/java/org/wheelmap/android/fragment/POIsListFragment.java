@@ -82,7 +82,7 @@ public class POIsListFragment extends SherlockListFragment implements
 	private DirectionCursorWrapper mDirectionCursorWrapper;
 
 	public static POIsListFragment newInstance(boolean createWorker,
-			boolean disableSearch) {
+											   boolean disableSearch) {
 		POIsListFragment f = new POIsListFragment();
 		Bundle b = new Bundle();
 		b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
@@ -120,7 +120,7 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView " + hashCode());
 
 		View v = inflater.inflate(R.layout.fragment_list, container, false);
@@ -146,7 +146,7 @@ public class POIsListFragment extends SherlockListFragment implements
 		Fragment fragment = null;
 		if (getArguments() == null
 				|| getArguments()
-						.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+				.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
 			FragmentManager fm = getFragmentManager();
 			fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
 			Log.d(TAG, "Found worker fragment:" + fragment);
@@ -214,10 +214,11 @@ public class POIsListFragment extends SherlockListFragment implements
 
 	@Override
 	public void executeBundle(Bundle bundle) {
-		if ( bundle == null)
+		Log.d(TAG, "executeState fragment is visible = " + isVisible());
+		if (bundle == null)
 			return;
 
-		if ( bundle.getBoolean(Extra.REQUEST, false))
+		if (bundle.getBoolean(Extra.REQUEST, false))
 			mWorkerFragment.requestUpdate(null);
 	}
 
@@ -233,11 +234,11 @@ public class POIsListFragment extends SherlockListFragment implements
 		int id = item.getItemId();
 
 		switch (id) {
-		case R.id.menu_search:
-			showSearch();
-			return true;
-		default:
-			// noop
+			case R.id.menu_search:
+				showSearch();
+				return true;
+			default:
+				// noop
 		}
 
 		return false;

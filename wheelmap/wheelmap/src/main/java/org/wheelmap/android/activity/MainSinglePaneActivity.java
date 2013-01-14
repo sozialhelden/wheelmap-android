@@ -97,11 +97,6 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 		mTrackerWrapper = new TrackerWrapper(this);
 
-		if (savedInstanceState != null)
-			executeState(savedInstanceState);
-		else
-			executeDefaultInstanceState();
-
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -133,8 +128,13 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 								POIsMapsforgeFragment.class));
 		actionBar.addTab(tab, TAB_MAP, false);
 
-		actionBar.setSelectedNavigationItem(mSelectedTab);
 
+		if (savedInstanceState != null)
+			executeState(savedInstanceState);
+		else
+			executeDefaultInstanceState();
+
+		actionBar.setSelectedNavigationItem(mSelectedTab);
 	}
 
 	@Override
@@ -150,7 +150,6 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 
 		if (getIntent() != null) {
 			executeIntent(getIntent());
-			setIntent(null);
 		}
 	}
 
@@ -163,13 +162,14 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private void executeIntent(Intent intent) {
 		Log.d( TAG, "executeIntent intent = " + intent);
 		Bundle extras = intent.getExtras();
-		if (extras == null || !mFirstStart)
+		if (extras == null || (!mFirstStart && extras.containsKey(Extra.REQUEST)))
 			return;
 
 		executeState(extras);
 		mIndexToTab.get(mSelectedTab).setExecuteBundle(extras);
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setSelectedNavigationItem(mSelectedTab);
+
 	}
 
 	private void executeState(Bundle state) {
