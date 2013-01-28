@@ -24,7 +24,10 @@ package org.wheelmap.android.fragment;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.os.Build;
 import android.view.animation.Interpolator;
+import com.actionbarsherlock.internal.view.menu.MenuItemWrapper;
+import com.actionbarsherlock.view.ActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
@@ -294,17 +297,23 @@ public class POIDetailFragment extends RoboSherlockFragment implements
 			if (mListener != null)
 				mListener.onEdit(poiId);
 			return true;
-			case R.id.menu_directions:
+		case R.id.menu_directions:
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				return false;
+			else {
 				startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS), getString(R.string.menu_directions)));
-				break;
-			case R.id.menu_share:
+				return true;
+			}
+		case R.id.menu_share:
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+				return false;
+			else {
 				startActivity(Intent.createChooser(intentSaved.get( ACTION_PROVIDER_SHARE), getString(R.string.menu_share)));
-				break;
+				return true;
+			}
 		default:
-			// noop
+			return super.onOptionsItemSelected(item);
 		}
-
-		return false;
 	}
 
 	public long getPoiId() {
