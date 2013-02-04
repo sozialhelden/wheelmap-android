@@ -26,62 +26,63 @@ public interface Extra {
 	public final static String WM_ID_UNKNOWN = null;
 	public final static int UNKNOWN = -1;
 
-	public final static String POI_ID = "org.wheelmap.android.POI_ID";
-	public final static String WM_ID = "org.wheelmap.android.WM_ID";
+	public final static String POI_ID = "POI_ID";
+	public final static String WM_ID = "WM_ID";
 
-	public static final String CATEGORY = "org.wheelmap.android.CATEGORY";
-	public final static String NODETYPE = "org.wheelmap.android.NODETYPE";
-	public final static String LATITUDE = "org.wheelmap.android.LATITUDE";
-	public final static String LONGITUDE = "org.wheelmap.android.LONGITUDE";
-	public final static String ZOOM_LEVEL = "org.wheelmap.android.ZOOM_LEVEL";
-	public final static String WHEELCHAIR_STATE = "org.wheelmap.android.WHEELCHAIR_STATE";
+	public final static String CATEGORY = "CATEGORY";
+	public final static String NODETYPE = "NODETYPE";
+	public final static String LATITUDE = "LATITUDE";
+	public final static String LONGITUDE = "LONGITUDE";
+	public final static String ZOOM_LEVEL = "ZOOM_LEVEL";
+	public final static String WHEELCHAIR_STATE = "WHEELCHAIR_STATE";
 
-	public final static String SELECTED_TAB = "org.wheelmap.android.SELECTED_TAB";
-	public final static String CENTER_MAP = "org.wheelmap.android.CENTER_MAP";
-	public final static String FIRST_VISIBLE_POSITION = "org.wheelmap.android.FIRST_VISIBLE_POSITION";
-	public final static String CREATE_WORKER_FRAGMENT = "org.wheelmap.android.CREATE_WORKER_FRAGMENT";
-	public static final String DISABLE_SEARCH = "org.wheelmap.android.DISABLE_SEARCH";
+	public final static String SELECTED_TAB = "SELECTED_TAB";
+	public final static String CENTER_MAP = "CENTER_MAP";
+	public final static String FIRST_VISIBLE_POSITION = "FIRST_VISIBLE_POSITION";
+	public final static String CREATE_WORKER_FRAGMENT = "CREATE_WORKER_FRAGMENT";
+	public final static String DISABLE_SEARCH = "DISABLE_SEARCH";
+	public final static String SHOW_POI = "SHOW_POI";
+	
+	public final static String ZOOM_MAP = "CENTER_ZOOM";
+	public final static String REQUEST = "REQUEST";
+	public final static String EXPLICIT_DIRECT_RETRIEVAL = "DIRECT_RETRIEVAL";
+	public final static String SHOW_MAP = "SHOW_MAP";
+	public final static String MAP_HEIGHT_FULL = "MAP_HEIGHT_FULL";
 
-	public static final String ZOOM_MAP = "org.wheelmap.android.CENTER_ZOOM";
-	public static final String REQUEST = "org.wheelmap.android:REQUEST";
-	public static final String EXPLICIT_DIRECT_RETRIEVAL = "org.wheelmap.android.DIRECT_RETRIEVAL";
-	public static final String SHOW_MAP = "org.wheelmap.android.SHOW_MAP";
-	public static final String MAP_HEIGHT_FULL = "org.wheelmap.android.MAP_HEIGHT_FULL";
+	public final static String SHOW_DISTANCE = "SHOW_DISTANCE";
+	public final static String SHOW_MAP_HINT = "SHOW_MAP_HINT";
+	public final static String ENABLE_BOUNDING_BOX = "ENABLE_BOUNDING_BOX";
 
-	public final static String SHOW_DISTANCE = "org.wheelmap.android.SHOW_DISTANCE";
-	public final static String SHOW_MAP_HINT = "org.wheelmap.android.SHOW_MAP_HINT";
-	public static final String ENABLE_BOUNDING_BOX = "org.wheelmap.android.ENABLE_BOUNDING_BOX";
+	public final static String TEMPORARY_STORED = "TEMPORARY_STORED";
 
-	public static final String TEMPORARY_STORED = "org.wheelmap.android.TEMPORARY_STORED";
+	public final static String EXCEPTION = "EXCEPTION";
+	public final static String STATUS_RECEIVER = "STATUS_RECEIVER";
+	public final static String BOUNDING_BOX = "BOUNDING_BOX";
+	public final static String LOCATION = "LOCATION";
+	public final static String DISTANCE_LIMIT = "DISTANCE_LIMIT";
+	public final static String LOCALE = "LOCALE";
+	public final static String EMAIL = "EMAIL";
+	public final static String PASSWORD = "PASSWORD";
+	public final static String WHAT = "WHAT";
+	public final static String ALERT_TITLE = "ALERT_TITLE";
+	public final static String ALERT_MESSAGE = "ALERT_MESSAGE";
+	public final static String ID = "ID";
+	public final static String MOVABLE_VISIBLE = "MOVABLE_VISIBLE";
 
-	public final static String EXCEPTION = "org.wheelmap.android.EXCEPTION";
-	public static final String STATUS_RECEIVER = "org.wheelmap.android.STATUS_RECEIVER";
-	public static final String BOUNDING_BOX = "org.wheelmap.android.BOUNDING_BOX";
-	public static final String LOCATION = "org.wheelmap.android.LOCATION";
-	public static final String DISTANCE_LIMIT = "org.wheelmap.android.DISTANCE_LIMIT";
-	public static final String LOCALE = "org.wheelmap.android.LOCALE";
-	public static final String EMAIL = "org.wheelmap.android.EMAIL";
-	public static final String PASSWORD = "org.wheelmap.android.PASSWORD";
-	public static final String WHAT = "org.wheelmap.android.WHAT";
-	public static final String ALERT_TITLE = "org.wheelmap.android.ALERT_TITLE";
-	public static final String ALERT_MESSAGE = "org.wheelmap.android.ALERT_MESSAGE";
-	public static final String ID = "org.wheelmap.android.ID";
-	public static final String MOVABLE_VISIBLE = "org.wheelmap.android.MOVABLE_VISIBLE";
-
-	public static final String IS_RESTARTED = "org.wheelmap.android.IS_RESTARTED";
+	public final static String IS_RESTARTED = "IS_RESTARTED";
 
 	public interface What {
 
-		public static final int RETRIEVE_NODES = 0x1;
-		public static final int RETRIEVE_NODE = 0x2;
-		public static final int RETRIEVE_LOCALES = 0x3;
-		public static final int RETRIEVE_CATEGORIES = 0x4;
-		public static final int RETRIEVE_NODETYPES = 0x5;
-		public static final int UPDATE_SERVER = 0x6;
-		public static final int RETRIEVE_APIKEY = 0x7;
-		public static final int SEARCH_NODES_IN_BOX = 0x8;
-		public static final int SEARCH_NODES = 0x9;
-		public static final int LOCATION_MANAGER_UPDATE = 0x11;
+		public final static int RETRIEVE_NODES = 0x1;
+		public final static int RETRIEVE_NODE = 0x2;
+		public final static int RETRIEVE_LOCALES = 0x3;
+		public final static int RETRIEVE_CATEGORIES = 0x4;
+		public final static int RETRIEVE_NODETYPES = 0x5;
+		public final static int UPDATE_SERVER = 0x6;
+		public final static int RETRIEVE_APIKEY = 0x7;
+		public final static int SEARCH_NODES_IN_BOX = 0x8;
+		public final static int SEARCH_NODES = 0x9;
+		public final static int LOCATION_MANAGER_UPDATE = 0x11;
 
 	}
 }
