@@ -1,4 +1,6 @@
 language: java
+jdk:
+  - openjdk6
 before_install:
   # download the latest android sdk and unzip
   - wget http://dl.google.com/android/android-sdk_r21-linux.tgz
