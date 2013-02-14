@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.5-SNAPSHOT</version>
+    <version>0.99.5-SNAPSHOT-LIFE</version>
   </parent>
   <artifactId>wheelmap</artifactId>
   <packaging>apk</packaging>
@@ -100,28 +100,6 @@
       <version>1.4.0</version>
       <type>apklib</type>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>com.WazaBe.HoloEverywhere</groupId>
-      <artifactId>library</artifactId>
-      <version>1.0.0</version>
-      <type>apklib</type>
-    </dependency>
-    -->
-    <!--
-    <dependency>
-      <groupId>com.github.christopheversieux</groupId>
-      <artifactId>holoeverywhere-library</artifactId>
-      <version>1.3.1</version>
-      <type>apklib</type>
-    </dependency>
-    <dependency>
-      <groupId>com.github.christopheversieux</groupId>
-      <artifactId>holoeverywhere-library</artifactId>
-      <version>1.3.1</version>
-      <type>apklib</type>
-    </dependency>
-    -->
     <dependency>
       <groupId>org.holoeverywhere</groupId>
       <artifactId>library</artifactId>
@@ -205,6 +183,9 @@
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
         <extensions>true</extensions>
+        <configuration>
+          <renameManifestPackage>${app.package}</renameManifestPackage>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -281,7 +262,10 @@
     </profile>            
     <profile>
       <id>release</id>
-      
+      <properties>
+          <app.icon>@drawable/ic_launcher</app.icon>
+          <app.package>org.wheelmap.android.online</app.package>
+      </properties>
       <build>
         <plugins>
           <plugin>
