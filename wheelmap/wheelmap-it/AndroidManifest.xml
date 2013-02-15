@@ -18,7 +18,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wheelmap.android.test"
     android:versionCode="21"
-    android:versionName="0.99.5-SNAPSHOT">
+    android:versionName="0.99.5-SNAPSHOT-LIFE">
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -29,7 +29,7 @@ limitations under the License.
 
     <instrumentation
         android:name=".MyInstrumentationTestRunner"
-        android:targetPackage="org.wheelmap.android.online.beta" >
+        android:targetPackage="org.wheelmap.android.beta" >
     </instrumentation>
 
     <application
