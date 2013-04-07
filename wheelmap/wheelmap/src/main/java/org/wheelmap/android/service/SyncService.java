@@ -24,6 +24,7 @@ package org.wheelmap.android.service;
 import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIsProvider;
+import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.net.AbstractExecutor;
 import org.wheelmap.android.net.IExecutor;
 import org.wheelmap.request.IHttpUserAgent;
@@ -107,6 +108,12 @@ public class SyncService extends RoboIntentService {
 			final Bundle bundle = new Bundle();
 			bundle.putInt(Extra.WHAT, what);
 			receiver.send(STATUS_FINISHED, bundle);
+		}
+
+		if (what != Extra.What.UPDATE_SERVER &&
+			PrepareDatabaseHelper.queryDirty(getContentResolver()).getCount() > 0) {
+			Log.d( TAG, "retrying to send dirty items" );
+			SyncServiceHelper.executeUpdateServer(this, null);
 		}
 	}
 }

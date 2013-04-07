@@ -166,10 +166,11 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 		c.moveToFirst();
 		int dirty = c.getInt(c.getColumnIndexOrThrow(POIs.DIRTY));
 		Assert.assertEquals(POIs.DIRTY_ALL, dirty);
+		id = POIHelper.getId(c);
 		c.close();
 
 		PrepareDatabaseHelper.markDirtyAsClean(getContext()
-				.getContentResolver());
+				.getContentResolver(), id);
 		c = PrepareDatabaseHelper.queryDirty(cr);
 		Assert.assertEquals(0, c.getCount());
 		c.close();
@@ -187,7 +188,7 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 		PrepareDatabaseHelper.editCopy(cr, idOfCopy, values);
 
 		PrepareDatabaseHelper.markDirtyAsClean(getContext()
-				.getContentResolver());
+				.getContentResolver(), idOfCopy);
 
 	}
 

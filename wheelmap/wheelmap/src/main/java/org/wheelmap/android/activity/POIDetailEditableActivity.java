@@ -63,6 +63,9 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setSupportProgressBarIndeterminateVisibility(false);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		setExternalEditableState(savedInstanceState);
 
@@ -70,7 +73,6 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 			showAsPopup(this);
 		}
 
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
@@ -233,6 +235,11 @@ public class POIDetailEditableActivity extends MapsforgeMapActivity implements
 	@Override
 	public void requestExternalEditedState(POIDetailEditableFragment fragment) {
 		mExternalEditableState.setInFragment(fragment);
+	}
+
+	@Override
+	public void onStoring( boolean storing ) {
+		setSupportProgressBarIndeterminateVisibility(storing);
 	}
 
 }

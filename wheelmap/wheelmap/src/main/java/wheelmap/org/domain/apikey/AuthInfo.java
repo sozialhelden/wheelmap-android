@@ -21,15 +21,17 @@
  */
 package wheelmap.org.domain.apikey;
 
-public class AuthInfo {
+import wheelmap.org.domain.Base;
+
+public class AuthInfo extends Base {
 
 	protected User user;
-	
+
 	public User getUser() {
 		return user;
 	}
-	
-	public void setUser( User user ) {
+
+	public void setUser(User user) {
 		this.user = user;
 	}
 }

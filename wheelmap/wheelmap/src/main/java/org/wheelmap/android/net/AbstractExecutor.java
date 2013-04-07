@@ -21,6 +21,17 @@
  */
 package org.wheelmap.android.net;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.AppProperties;
 import org.wheelmap.android.app.IAppProperties;
 import org.wheelmap.android.model.Extra;
@@ -28,26 +39,40 @@ import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.request.IHttpUserAgent;
 
+import de.akquinet.android.androlog.Log;
+
+import wheelmap.org.domain.Base;
+import wheelmap.org.request.RequestBuilder;
 import wheelmap.org.request.RequestProcessor;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
-public abstract class AbstractExecutor implements IExecutor {
+public abstract class AbstractExecutor<T extends Base> implements IExecutor {
+	private final static int statusBadRequest = 400;
+	private final static int statusAuthRequired = 401;
+	private final static int statusRequestForbidden = 403;
+	private final static int statusNotFound = 404;
+	private final static int statusNotAcceptable = 406;
+	private final static int statusInternalServerError = 500;
+	private final static int statusDownMaintenance = 503;
+
+	private final int fMaxRetryCount;
 
 	private final Context mContext;
 	private final Bundle mBundle;
 	private IAppProperties mAppProperties;
-
-	protected final static int statusAuthRequired = 401;
-	protected final static int statusRequestForbidden = 403;
+	private final Class<T> mClazz;
 
 	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
 
-	public AbstractExecutor(Context context, Bundle bundle) {
+	public AbstractExecutor(Context context, Bundle bundle, Class<T> clazz,
+			int maxRetryCount) {
 		mContext = context;
 		mBundle = bundle;
+		mClazz = clazz;
+		fMaxRetryCount = maxRetryCount;
 	}
 
 	@Override
@@ -139,4 +164,92 @@ public abstract class AbstractExecutor implements IExecutor {
 		return getClass().getSimpleName();
 	}
 
+	@SuppressWarnings("unchecked")
+	protected T executeRequest(RequestBuilder requestBuilder)
+			throws SyncServiceException {
+		T content = null;
+
+		String request;
+		try {
+			request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
+					"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new SyncServiceException(
+					SyncServiceException.ERROR_INTERNAL_ERROR, e);
+		}
+
+		int retryCount = 0;
+		while (retryCount < fMaxRetryCount) {
+			try {
+				if (requestBuilder.getRequestType() == RequestBuilder.REQUEST_GET) {
+					Log.d(getTag(), "getRequest = *" + request + "*");
+					content = mRequestProcessor.get(new URI(request), mClazz);
+				} else if (requestBuilder.getRequestType() == RequestBuilder.REQUEST_POST) {
+					Log.d(getTag(), "postRequest = *" + request + "*");
+					content = (T) mRequestProcessor.post(new URI(request),
+							null, mClazz);
+				} else {
+					Log.d(getTag(), "putRequest = *" + request + "*");
+					mRequestProcessor.put(new URI(request), null);
+				}
+				break;
+			} catch (URISyntaxException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_INTERNAL_ERROR, e);
+			} catch (ResourceAccessException e) {
+				retryCount++;
+				if (retryCount < fMaxRetryCount) {
+					Log.d(getTag(), "request timed out - retrying");
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e1) { // do nothing, just
+														// continue and try
+														// again
+					}
+					continue;
+				} else {
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_NETWORK_FAILURE, e);
+				}
+			} catch (HttpClientErrorException e) {
+				HttpStatus status = e.getStatusCode();
+				if (status.value() == statusAuthRequired) {
+					Log.e(getTag(), "authorization failed - apikey not valid");
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_AUTHORIZATION_FAILED, e);
+				} else if (status.value() == statusRequestForbidden) {
+					Log.e(getTag(), "request forbidden");
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_REQUEST_FORBIDDEN, e);
+				} else if ((status.value() == statusBadRequest)
+						|| (status.value() == statusNotFound)
+						|| (status.value() == statusNotAcceptable)) {
+					Log.e(getTag(), "request error");
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_CLIENT_FAILURE, e);
+				} else {
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_CLIENT_FAILURE, e);
+				}
+
+			} catch (HttpServerErrorException e) {
+				HttpStatus status = e.getStatusCode();
+				if (status.value() == statusDownMaintenance)
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_SERVER_DOWN, e);
+				else
+					throw new SyncServiceException(
+							SyncServiceException.ERROR_SERVER_FAILURE, e);
+			} catch (HttpMessageConversionException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_NETWORK_FAILURE, e);
+			} catch (RestClientException e) {
+				throw new SyncServiceException(
+						SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
+			}
+		}
+		Log.d(getTag(), "executeRequest successful");
+
+		return content;
+	}
 }

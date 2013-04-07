@@ -65,6 +65,7 @@ public class SyncServiceHelper {
 		final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
 				SyncService.class);
 		intent.putExtra(Extra.WHAT, What.UPDATE_SERVER);
+		intent.putExtra(Extra.STATUS_RECEIVER, receiver);
 		context.startService(intent);
 	}
 

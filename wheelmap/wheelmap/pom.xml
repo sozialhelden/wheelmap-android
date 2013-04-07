@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.5-SNAPSHOT-LIFE</version>
+    <version>0.99.6-SNAPSHOT-LIFE</version>
   </parent>
   <artifactId>wheelmap</artifactId>
   <packaging>apk</packaging>
@@ -93,6 +93,11 @@
       <groupId>org.mapsforge.android</groupId>
       <artifactId>mapsforge-map-patched</artifactId>
       <version>0.2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osmdroid</groupId>
+      <artifactId>osmdroid-android</artifactId>
+      <version>3.0.9</version>
     </dependency>
     <dependency>
       <groupId>com.github.chrisbanes.pulltorefresh</groupId>

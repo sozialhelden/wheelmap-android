@@ -1,23 +1,14 @@
 package org.wheelmap.android.activity;
 
-import android.content.ComponentCallbacks;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
 import org.holoeverywhere.FontLoader;
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.preference.PreferenceManager;
 import org.holoeverywhere.preference.SharedPreferences;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
-import de.akquinet.android.androlog.Log;
-
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
 
 public class HoloRoboSherlockFragmentActivity extends
 		RoboSherlockFragmentActivity implements LayoutInflater.Factory {

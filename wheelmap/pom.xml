@@ -4,7 +4,7 @@
 
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.5-SNAPSHOT-LIFE</version>
+    <version>0.99.6-SNAPSHOT-LIFE</version>
     <packaging>pom</packaging>
     <name>Wheelmap - Parent</name>
 
@@ -14,9 +14,9 @@
     </modules>
 
     <properties>
-        <app.version.code>21</app.version.code>
+        <app.version.code>22</app.version.code>
         <app.version.name>${project.version}</app.version.name>
-        <app.package>org.wheelmap.android.beta</app.package>
+        <app.package>org.wheelmap.android.online</app.package>
         <app.icon>@drawable/ic_launcher_life</app.icon>
         <app.debuggable>true</app.debuggable>
         <platform.version>4.1.1.4</platform.version>

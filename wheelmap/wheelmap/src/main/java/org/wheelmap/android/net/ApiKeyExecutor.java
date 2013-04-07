@@ -21,17 +21,7 @@
  */
 package org.wheelmap.android.net;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import com.google.inject.Inject;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.ICredentials;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.service.SyncServiceException;
@@ -42,9 +32,9 @@ import wheelmap.org.request.AcceptType;
 import wheelmap.org.request.ApiKeyRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
-import de.akquinet.android.androlog.Log;
 
-public class ApiKeyExecutor extends AbstractExecutor {
+public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
+	private static final int MAX_RETRY_COUNT = 1;
 
 	private String mEmail;
 	private String mPassword;
@@ -57,8 +47,8 @@ public class ApiKeyExecutor extends AbstractExecutor {
 	private ICredentials mCredentials;
 
 	public ApiKeyExecutor(Context context, Bundle bundle) {
-		super(context, bundle);
-		RoboGuice.injectMembers(context, this );
+		super(context, bundle, AuthInfo.class, MAX_RETRY_COUNT);
+		RoboGuice.injectMembers(context, this);
 	}
 
 	@Override
@@ -73,52 +63,14 @@ public class ApiKeyExecutor extends AbstractExecutor {
 		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(
 				getServer(), AcceptType.JSON);
 		requestBuilder.setCredentials(mEmail, mPassword);
-		String request;
-		try {
-			request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
-					"utf-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR, e);
-		}
 
-		AuthInfo authInfo = null;
-		try {
-			authInfo = mRequestProcessor.post(new URI(request), null,
-					AuthInfo.class);
-		} catch (URISyntaxException e) {
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR, e);
-		} catch (ResourceAccessException e) {
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_NETWORK_FAILURE, e);
-		} catch (HttpClientErrorException e) {
-			HttpStatus status = e.getStatusCode();
-			if (status.value() == statusAuthFailed) {
-				Log.e(getTag(), "wrong email or password");
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_AUTHORIZATION_ERROR, e);
-			} else if (status.value() == statusOSMFailed) {
-				Log.e(getTag(), "not osm connected");
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_NOT_OSM_CONNECTED, e);
-			} else {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_CLIENT_FAILURE, e);
-			}
-		} catch (HttpServerErrorException e) {
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_SERVER_FAILURE, e);
-		} catch (RestClientException e) {
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
-		}
+		AuthInfo authInfo = executeRequest(requestBuilder);
 		mApiKey = authInfo.getUser().getApiKey();
 	}
 
 	@Override
 	public void prepareDatabase() {
-		mCredentials.save( mApiKey, mEmail );
+		mCredentials.save(mApiKey, mEmail);
 	}
 
 }

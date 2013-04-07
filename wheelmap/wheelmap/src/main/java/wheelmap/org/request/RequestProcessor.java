@@ -41,13 +41,18 @@ import de.akquinet.android.androlog.Log;
  * @author p.lipp@web.de
  */
 public class RequestProcessor {
+
 	private final static String TAG = RequestProcessor.class.getSimpleName();
+	private static final int CONNECT_TIMEOUT = 5 * 1000;
+	private static final int READ_TIMEOUT = 5 * 1000;
 	private final RestTemplateExt restTemplate;
 	private HttpComponentsClientHttpRequestFactory mRequestFactory;
 
 	public RequestProcessor() {
 		restTemplate = new RestTemplateExt();
 		mRequestFactory = new HttpComponentsClientHttpRequestFactory();
+		mRequestFactory.setConnectTimeout(CONNECT_TIMEOUT);
+		mRequestFactory.setReadTimeout(READ_TIMEOUT);
 
 		restTemplate.setRequestFactory(mRequestFactory);
 		restTemplate.getMessageConverters().add(

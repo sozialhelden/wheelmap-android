@@ -23,7 +23,6 @@ package org.wheelmap.android.activity;
 
 import java.util.ArrayList;
 
-import android.os.Debug;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
 import org.wheelmap.android.app.IAppProperties;
@@ -37,7 +36,6 @@ import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.tracker.TrackerWrapper;
@@ -262,10 +260,9 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 	private long insertNewPoi() {
 		Location location = MyLocationManager.getLastLocation();
 		String name = getString(R.string.poi_new_default_name);
-		long id = PrepareDatabaseHelper.insertNew(getContentResolver(), name,
-				location.getLatitude(), location.getLongitude());
 
-		return id;
+		return PrepareDatabaseHelper.insertNew(getContentResolver(), name,
+				location.getLatitude(), location.getLongitude());
 	}
 
 	private void createNewPoi() {

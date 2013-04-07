@@ -23,10 +23,12 @@ package org.wheelmap.android.fragment;
 
 import java.util.Map;
 
+import android.os.Handler;
 import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.Category;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Extra;
@@ -34,7 +36,11 @@ import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.service.SyncService;
+import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import roboguice.inject.InjectView;
@@ -70,7 +76,7 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableFragment extends RoboSherlockFragment implements
-		OnErrorDialogListener, OnClickListener, LoaderCallbacks<Cursor> {
+		OnErrorDialogListener, Receiver, OnClickListener, LoaderCallbacks<Cursor> {
 	public final static String TAG = POIDetailEditableFragment.class
 			.getSimpleName();
 
@@ -78,6 +84,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private final static int LOADER_TMP = 1;
 
 	private static final int DIALOG_ID_NEWPOI = 1;
+	private static final int DIALOG_ID_NETWORK_ERROR = 2;
 
 	@InjectView(R.id.title_container)
 	private LinearLayout title_container;
@@ -127,6 +134,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	private OnPOIDetailEditableListener mListener;
 
 	private boolean mTemporaryStored;
+	private DetachableResultReceiver mReceiver;
 
 	public interface OnPOIDetailEditableListener {
 		public void onEditSave();
@@ -139,6 +147,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 		public void requestExternalEditedState(
 				POIDetailEditableFragment fragment);
+		public void onStoring(boolean isRefreshing);
+
 	}
 
 	public static POIDetailEditableFragment newInstance(long poiId) {
@@ -171,6 +181,8 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		setHasOptionsMenu(true);
 		mWSAttributes = SupportManager.wsAttributes;
 		poiID = getArguments().getLong(Extra.POI_ID);
+		mReceiver = new DetachableResultReceiver(new Handler());
+		mReceiver.setReceiver(this);
 	}
 
 	@Override
@@ -219,7 +231,6 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		Log.d(TAG, "retrieve: init loader id = " + loaderId);
 		getLoaderManager().initLoader(loaderId, null, this);
 	}
-
 
 	@Override
 	public void onPause() {
@@ -283,8 +294,6 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	}
 
 	public void save() {
-
-		boolean dontQuit = false;
 		ContentValues values = retrieveContentValues();
 		if (!values.containsKey(POIs.NODETYPE_ID)) {
 			showErrorMessage(getString(R.string.error_category_missing_title),
@@ -297,20 +306,12 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 					getString(R.string.error_wheelchairstate_missing_message),
 					Extra.UNKNOWN);
 			return;
-		} else if (TextUtils.isEmpty(wmID)) {
-			showErrorMessage(getString(R.string.error_newpoi_title),
-					getString(R.string.error_newpoi_message), DIALOG_ID_NEWPOI);
-			dontQuit = true;
 		}
 
 		values.put(POIs.DIRTY, POIs.DIRTY_ALL);
-
 		PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
 				poiID, values);
-		SyncServiceHelper.executeUpdateServer(getActivity(), null);
-
-		if (!dontQuit)
-			quit();
+		SyncServiceHelper.executeUpdateServer(getActivity(), mReceiver);
 	}
 
 	private void quit() {
@@ -322,7 +323,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	@Override
 	public void onErrorDialogClose(int id) {
 		Log.d(TAG, "onErrorDialogClose");
-		if (id == DIALOG_ID_NEWPOI)
+		if (id == DIALOG_ID_NEWPOI || id == DIALOG_ID_NETWORK_ERROR)
 			quit();
 	}
 
@@ -409,9 +410,14 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		SupportManager sm = WheelmapApp.getSupportManager();
 
 		if (mNodeType != SupportManager.UNKNOWN_TYPE) {
-			int categoryId = sm.lookupNodeType(mNodeType).categoryId;
-			values.put(POIs.CATEGORY_ID, categoryId);
+			NodeType nodeType = sm.lookupNodeType(mNodeType);
+			Category category = sm.lookupCategory(nodeType.categoryId);
+
+			values.put(POIs.CATEGORY_ID, nodeType.categoryId);
+			values.put(POIs.CATEGORY_IDENTIFIER, category.identifier);
+			values.put(POIs.NODETYPE_IDENTIFIER, nodeType.identifier);
 			values.put(POIs.NODETYPE_ID, mNodeType);
+
 		}
 
 		values.put(POIs.LATITUDE, mLatitude);
@@ -488,8 +494,17 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 	public void showErrorMessage(String title, String message, int id) {
 		FragmentManager fm = getFragmentManager();
 		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
-				title, message, id);
+				title, message, id );
 		if (errorDialog == null)
+			return;
+		errorDialog.setOnErrorDialogListener(this);
+		errorDialog.show(fm, ErrorDialogFragment.TAG);
+	}
+
+	public void showNetworkErrorMessage(SyncServiceException e, int id ) {
+		FragmentManager fm = getFragmentManager();
+		ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance( e, id );
+		if ( errorDialog == null)
 			return;
 		errorDialog.setOnErrorDialogListener(this);
 		errorDialog.show(fm, ErrorDialogFragment.TAG);
@@ -516,5 +531,40 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		Log.d(TAG, "storeTemporary wmId = " + wmID + " id = " + id);
 		getLoaderManager().destroyLoader(LOADER_CONTENT);
 		mTemporaryStored = true;
+	}
+
+	private void storingStatus( boolean storing ) {
+		if ( mListener != null)
+			mListener.onStoring( storing );
+	}
+
+	private void showNewPoiOrQuit() {
+		if (TextUtils.isEmpty(wmID)) {
+			showErrorMessage(getString(R.string.error_newpoi_title),
+					getString(R.string.error_newpoi_message), DIALOG_ID_NEWPOI);
+		} else {
+			quit();
+		}
+	}
+
+	/** {@inheritDoc} */
+	public void onReceiveResult(int resultCode, Bundle resultData) {
+		Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
+		switch (resultCode) {
+			case SyncService.STATUS_RUNNING: {
+				storingStatus(true);
+				break;
+			}
+			case SyncService.STATUS_FINISHED: {
+				storingStatus(false);
+				showNewPoiOrQuit();
+				break;
+			}
+			case SyncService.STATUS_ERROR: {
+				storingStatus(false);
+				showNewPoiOrQuit();
+				break;
+			}
+		}
 	}
 }

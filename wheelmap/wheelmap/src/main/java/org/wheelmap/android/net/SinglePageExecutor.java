@@ -21,19 +21,9 @@
  */
 package org.wheelmap.android.net;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageConversionException;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.service.SyncServiceException;
 
 import wheelmap.org.domain.Base;
@@ -43,21 +33,14 @@ import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
 public abstract class SinglePageExecutor<T extends Base> extends
-		AbstractExecutor implements IExecutor {
-	private static final int MAX_RETRY_COUNT = 5;
+		AbstractExecutor<T> implements IExecutor {
 	protected static final int DEFAULT_TEST_PAGE_SIZE = 250;
-	private final static int statusAuthFailed = 401;
-	private final static int statusAuthForbidden = 403;
-	private final static int statusBadRequest = 400;
-	private final static int statusNotFound = 404;
-	private final static int statusNotAcceptable = 406;
+	private static final int MAX_RETRY_COUNT = 5;
 
-	private final Class<T> mClazz;
 	private List<T> mTempStore = new ArrayList<T>();
 
 	public SinglePageExecutor(Context context, Bundle bundle, Class<T> clazz) {
-		super(context, bundle);
-		mClazz = clazz;
+		super(context, bundle, clazz, MAX_RETRY_COUNT);
 	}
 
 	protected void clearTempStore() {
@@ -79,10 +62,7 @@ public abstract class SinglePageExecutor<T extends Base> extends
 	protected int executeSingleRequest(RequestBuilder requestBuilder)
 			throws SyncServiceException {
 
-		String getRequest = requestBuilder.buildRequestUri();
-		// Log.d(TAG, "getRequest " + getRequest);
-
-		T items = retrieveNumberOfHits(getRequest);
+		T items = executeRequest(requestBuilder);
 		if (items == null) {
 			Log.w(getTag(), "retrieved no items - tempstore is empty");
 			return 0;
@@ -91,77 +71,5 @@ public abstract class SinglePageExecutor<T extends Base> extends
 		mTempStore.add(items);
 
 		return 1;
-	}
-
-	protected T retrieveNumberOfHits(String getRequest)
-			throws SyncServiceException {
-		T content = null;
-
-		String request;
-		try {
-			request = UriUtils.encodeQuery(getRequest, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR, e);
-		}
-
-		int retryCount = 0;
-
-		while (retryCount < MAX_RETRY_COUNT) {
-			try {
-				content = mRequestProcessor.get(new URI(request), mClazz);
-				break;
-			} catch (URISyntaxException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_INTERNAL_ERROR, e);
-			} catch (ResourceAccessException e) {
-				retryCount++;
-				if (retryCount < MAX_RETRY_COUNT) {
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException e1) { // do nothing, just
-														// continue and try
-														// again
-					}
-					continue;
-				} else {
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_NETWORK_FAILURE, e);
-				}
-			} catch (HttpClientErrorException e) {
-				HttpStatus status = e.getStatusCode();
-				if (status.value() == statusAuthFailed) {
-					Log.e(getTag(), "authorization failed - apikey not valid");
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_AUTHORIZATION_FAILED, e);
-				} else if (status.value() == statusAuthForbidden) {
-					Log.e(getTag(), "request forbidden");
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_REQUEST_FORBIDDEN, e);
-				} else if ((status.value() == statusBadRequest)
-						|| (status.value() == statusNotFound)
-						|| (status.value() == statusNotAcceptable)) {
-					Log.e(getTag(), "request error");
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_CLIENT_FAILURE, e);
-				} else {
-					throw new SyncServiceException(
-							SyncServiceException.ERROR_CLIENT_FAILURE, e);
-				}
-
-			} catch (HttpServerErrorException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_SERVER_FAILURE, e);
-			} catch (HttpMessageConversionException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_NETWORK_FAILURE, e);
-			} catch (RestClientException e) {
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
-			}
-
-		}
-
-		return content;
 	}
 }

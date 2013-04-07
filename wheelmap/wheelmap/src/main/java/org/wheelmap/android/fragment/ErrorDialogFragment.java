@@ -38,13 +38,13 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 	public static final String TAG = ErrorDialogFragment.class.getSimpleName();
 	static boolean isShowing;
 	private OnErrorDialogListener mListener;
-	private int id;
+	private int mId;
 
 	public interface OnErrorDialogListener {
-		public void onErrorDialogClose(int id);
+		void onErrorDialogClose(int id);
 	}
 
-	public final static ErrorDialogFragment newInstance(String title,
+	public static ErrorDialogFragment newInstance(String title,
 			String message, int id) {
 		if (isShowing)
 			return null;
@@ -60,7 +60,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 		return dialog;
 	}
 
-	public final static ErrorDialogFragment newInstance(SyncServiceException e,
+	public static ErrorDialogFragment newInstance(SyncServiceException e,
 			int id) {
 		if (isShowing)
 			return null;
@@ -94,7 +94,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		id = getArguments().getInt(Extra.ID);
+		mId = getArguments().getInt(Extra.ID);
 		String title;
 		String msg;
 		if (getArguments().containsKey(Extra.ALERT_TITLE)) {
@@ -118,8 +118,7 @@ public class ErrorDialogFragment extends SherlockDialogFragment implements
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
-
 		if (mListener != null)
-			mListener.onErrorDialogClose(id);
+			mListener.onErrorDialogClose(mId);
 	}
 }
