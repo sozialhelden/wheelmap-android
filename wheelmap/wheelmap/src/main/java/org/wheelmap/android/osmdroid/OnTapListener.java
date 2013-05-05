@@ -19,30 +19,11 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.modules;
+package org.wheelmap.android.osmdroid;
 
-import org.wheelmap.android.app.AppProperties;
-import org.wheelmap.android.app.IAppProperties;
-import org.wheelmap.android.app.ICredentials;
-import org.wheelmap.android.app.UserCredentials;
-import org.wheelmap.request.IHttpUserAgent;
+import android.content.ContentValues;
+import org.osmdroid.views.overlay.OverlayItem;
 
-import com.google.inject.AbstractModule;
-
-public final class MainModule extends AbstractModule
-{
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.inject.AbstractModule#configure()
-	 */
-	@Override
-	protected void configure()
-	{
-		bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();
-		bind(IHttpUserAgent.class).to(HttpUserAgent.class).asEagerSingleton();
-		bind(ICredentials.class).to(UserCredentials.class).asEagerSingleton();
-		
-	}
+public interface OnTapListener {
+	public void onTap(OverlayItem item, ContentValues values);
 }

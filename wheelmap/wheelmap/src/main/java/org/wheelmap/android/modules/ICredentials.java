@@ -1,4 +1,4 @@
-package org.wheelmap.android.app;
+package org.wheelmap.android.modules;
 
 
 /**
@@ -13,18 +13,14 @@ public interface ICredentials {
 	 * @return API_KEY for accessing REST API of wheelmap
 	 */
 	public String getApiKey();
-	
-	
-	
+
 	/**
 	 * gets Name of user that is logged in
 	 * 
 	 * @return user's name as {@link String}
 	 */
 	public String getUserName();
-	
-	
-	
+
 	/**
 	 * @return 	true if user was succesfully authentificated on wheelmap server 
 	 */

@@ -19,13 +19,15 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.app;
+package org.wheelmap.android.modules;
 
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.google.inject.Singleton;
+import org.wheelmap.android.app.Constants;
 import org.wheelmap.android.utils.UtilsMisc;
 
 
@@ -34,32 +36,21 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 
 
 /**
  * Provides to lookup resources which are need for basic usage like the discovery uri.
  */
-@Singleton
-public final class AppProperties implements IAppProperties
+
+ @Singleton
+class AppProperties implements IAppProperties
 {
 	
-	private static final String					LOG_TAG	= AppProperties.class.getSimpleName();
-
+	private static final String	LOG_TAG	= AppProperties.class.getSimpleName();
 
 	private  Properties	properties;
 
-	/**
-	 * Lookup key for the discovery URI
-	 */
-	public final static String	KEY_WHEELMAP_URI	= "wheelmap_URI";
 
-
-	/**
-	 * 
-	 * @param context
-	 * @throws IOException
-	 */
 	@Inject
 	public AppProperties(Provider<Application> applicationProvider) 
 	{
@@ -82,8 +73,7 @@ public final class AppProperties implements IAppProperties
 				}
 
 			} catch (IOException e) {
-				e.printStackTrace();
-				Log.e(LOG_TAG, "excpetio by instatiating of app properties" +  e.toString());
+				Log.e(LOG_TAG, "exception by instatiating of app properties" +  e);
 			}
 		}
 	}
@@ -97,15 +87,16 @@ public final class AppProperties implements IAppProperties
 	 */
 	public String get(final String key)
 	{
-		if (key != null)
-		{
-			final Object value = properties.get(key);
-			if (value == null)
-			{
-				throw new IllegalArgumentException("No value found for key '" + key + "'");
-			}
+		if (key == null)
+			return null;
+
+		final Object value = properties.get(key);
+		if ( value == null) {
+			Log.w( LOG_TAG, "key " + key + " not found - returning null" );
+			return null;
+		} else {
 			return value.toString();
 		}
-		return "";
+
 	}
 }

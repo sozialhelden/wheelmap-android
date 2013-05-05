@@ -19,6 +19,7 @@ project.properties
 *.iws
 classes
 gen-external-apklibs
+out
 
 #Maven
 target

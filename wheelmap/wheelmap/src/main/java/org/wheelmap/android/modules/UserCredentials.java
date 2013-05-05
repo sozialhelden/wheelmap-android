@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.app;
+package org.wheelmap.android.modules;
 
 
 import com.google.inject.Inject;
@@ -27,15 +27,13 @@ import com.google.inject.Inject;
 import oak.ObscuredSharedPreferences;
 import android.content.Context;
 import android.content.SharedPreferences;
+import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
 
-public class UserCredentials implements ICredentials{
+class UserCredentials implements ICredentials {
 
 	private static final String LOGGED_IN = "loggedin";
-	
 	private static final String E_MAIL = "email";
-
 	private static final String API_KEY = "apiKey";
-
 	private static final String PREFS_NAME = "credentials";
 
 	// anonymous API key for changing wheelchair state (no access to OSM data)
@@ -44,7 +42,7 @@ public class UserCredentials implements ICredentials{
 
 	private String mApiKey;
 	private String mEmail;	
-	private boolean mIsLoggenIn;
+	private boolean mIsLoggedIn;
 	private Context mContext;
 
 	@Inject
@@ -58,21 +56,21 @@ public class UserCredentials implements ICredentials{
 	 */
 	@Override
 	public void save(final String apiKey, final String email) {
-		mIsLoggenIn = true;
+		mIsLoggedIn = true;
 		mApiKey = apiKey;
 		mEmail = email;
 		saveSecure();
 	}
 
 	public String getApiKey() {
-		if (mIsLoggenIn)
+		if (mIsLoggedIn)
 			return mApiKey;
 		else	
 			return ANONYMOUNS_ACCESS_API_KEY;
 	}
 
 	public void logout() {
-		mIsLoggenIn = false;
+		mIsLoggedIn = false;
 		mApiKey = null;
 		saveSecure();
 	}
@@ -80,7 +78,7 @@ public class UserCredentials implements ICredentials{
 
 	@Override
 	public boolean isLoggedIn() {
-		return mIsLoggenIn;
+		return mIsLoggedIn;
 	}
 
 	private void saveSecure() {
@@ -92,7 +90,7 @@ public class UserCredentials implements ICredentials{
 
 		SharedPreferences.Editor editor = obscuredSharedPreferences.edit();
 		editor.putString(API_KEY, mApiKey);
-		editor.putBoolean(LOGGED_IN, mIsLoggenIn);
+		editor.putBoolean(LOGGED_IN, mIsLoggedIn);
 		editor.putString(E_MAIL, mEmail);
 		// Commit the edits!
 		editor.commit();
@@ -107,11 +105,11 @@ public class UserCredentials implements ICredentials{
 		try {
 			mApiKey = obscuredSharedPreferences.getString(API_KEY, ANONYMOUNS_ACCESS_API_KEY);
 			mEmail = obscuredSharedPreferences.getString(E_MAIL, "");
-			mIsLoggenIn = obscuredSharedPreferences.getBoolean(LOGGED_IN, false);
+			mIsLoggedIn = obscuredSharedPreferences.getBoolean(LOGGED_IN, false);
 		} catch( RuntimeException e ) {
 			mApiKey = null;
 			mEmail = null;
-			mIsLoggenIn = false;
+			mIsLoggedIn = false;
 			saveSecure();
 		}
 	}

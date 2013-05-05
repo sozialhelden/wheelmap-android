@@ -19,9 +19,15 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.app;
+package org.wheelmap.android.modules;
 
 public interface IAppProperties {
+
+	/**
+	 * Lookup key for the discovery URI
+	 */
+	String KEY_WHEELMAP_URI	= "wheelmap_URI";
+	String KEY_HOCKEY_URI = "hockey_update_url";
 
 	public String get(final String key);
 }

@@ -1,6 +1,4 @@
-package org.wheelmap.modules;
-
-import org.wheelmap.request.IHttpUserAgent;
+package org.wheelmap.android.modules;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -9,7 +7,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class HttpUserAgent implements IHttpUserAgent {
+class HttpUserAgent implements IHttpUserAgent {
 
 	private Application application;
 
