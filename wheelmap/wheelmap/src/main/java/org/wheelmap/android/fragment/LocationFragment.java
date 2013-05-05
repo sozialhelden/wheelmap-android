@@ -15,8 +15,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import de.akquinet.android.androlog.Log;
 import org.wheelmap.android.utils.GeocoordinatesMath;
 
-public abstract class LocationFragment extends SherlockFragment implements
-		Receiver {
+public abstract class LocationFragment extends SherlockFragment {
 
 	private final static String TAG = LocationFragment.class.getSimpleName();
 	private MyLocationManager mLocationManager;
@@ -69,7 +68,7 @@ public abstract class LocationFragment extends SherlockFragment implements
 				mLocation = (Location) resultData.getParcelable(Extra.LOCATION);
 				if (!isAdded())
 					return;
-				updateLocation();
+				updateLocation(mLocation);
 				break;
 			}
 
@@ -77,7 +76,7 @@ public abstract class LocationFragment extends SherlockFragment implements
 		}
 	};
 
-	protected abstract void updateLocation();
+	protected abstract void updateLocation(Location location);
 
 	protected boolean isNewDistanceFar() {
 		float distance = GeocoordinatesMath.calculateDistance(mLastLocation, mLocation );

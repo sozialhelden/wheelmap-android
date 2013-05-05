@@ -23,7 +23,6 @@ package org.wheelmap.android.manager;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -37,7 +36,6 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.PrefKey;
-import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
@@ -68,6 +66,7 @@ import de.akquinet.android.androlog.Log;
 
 public class SupportManager {
 	private static final String TAG = SupportManager.class.getSimpleName();
+	private final float fMarkerDimension;
 
 	private Context mContext;
 	private Map<Integer, NodeType> mNodeTypeLookup;
@@ -166,6 +165,8 @@ public class SupportManager {
 
 		mBus = WheelmapApp.getBus();
 		mBus.register(this);
+
+		fMarkerDimension = mContext.getResources().getDimension(R.dimen.mapmarker_halflength);
 
 		mCategoryLookup = new HashMap<Integer, Category>();
 		mNodeTypeLookup = new HashMap<Integer, NodeType>();
@@ -443,7 +444,7 @@ public class SupportManager {
 			bitmap = BitmapFactory.decodeStream(is);
 			is.close();
 		} catch (IOException e) {
-			Log.w(TAG, "Warning in createIconDrawable ", e);
+			Log.w(TAG, "Warning in createIconDrawable : " + e.getMessage());
 			return null;
 		}
 		return new BitmapDrawable(mContext.getResources(), bitmap);
@@ -464,11 +465,11 @@ public class SupportManager {
 				drawable = Drawable.createFromStream(is, null);
 				is.close();
 			} catch (IOException e) {
-				Log.w(TAG, "Error in createDefaultDrawables", e);
+				Log.w(TAG, "Error in createDefaultDrawables. " + e.getMessage());
 			}
-			// drawable.setBounds(-32, -64, 32, 0);
+
 			if (drawable != null)
-				drawable.setBounds(-24, -48, 24, 0);
+				drawable.setBounds(- (int) fMarkerDimension, (int)(-fMarkerDimension * 2), (int) fMarkerDimension, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
@@ -491,16 +492,20 @@ public class SupportManager {
 				is.close();
 			} catch (IOException e) {
 				Log.w(TAG,
-						"Error in createDrawableLookup. Assigning fallback.", e);
+						"Error in createDrawableLookup. Assigning fallback. " + e.getMessage());
 				drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
 						.valueOf(idx));
 			}
-			// drawable.setBounds(-32, -64, 32, 0);
-			drawable.setBounds(-24, -48, 24, 0);
+			if (drawable != null)
+				drawable.setBounds(- (int) fMarkerDimension, (int)(-fMarkerDimension * 2), (int) fMarkerDimension, 0);
 			lookupMap.put(WheelchairState.valueOf(idx), drawable);
 		}
 
 		return lookupMap;
+	}
+
+	public Drawable getDefaultOverlayDrawable() {
+		return mDefaultNodeType.stateDrawables.get( WheelchairState.UNKNOWN );
 	}
 
 	public void cleanReferences() {

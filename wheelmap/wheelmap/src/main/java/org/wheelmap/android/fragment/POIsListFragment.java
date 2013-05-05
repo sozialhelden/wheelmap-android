@@ -338,11 +338,6 @@ public class POIsListFragment extends SherlockListFragment implements
 		mPullToRefreshListView.setMode(mode);
 	}
 
-	@Override
-	public void setCurrentLocation(Location location) {
-
-	}
-
 	@Subscribe
 	public void onDistanceUnitChanged(DistanceUnitChangedEvent e) {
 		Log.d(TAG, "onDistanceUnitChanged");

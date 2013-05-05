@@ -6,27 +6,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Spinner;
-import com.actionbarsherlock.ActionBarSherlock;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.google.inject.Inject;
 import com.jayway.android.robotium.solo.Solo;
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 import com.jayway.awaitility.Awaitility;
 import com.jayway.awaitility.Duration;
-import org.wheelmap.android.activity.POIDetailEditableActivity;
-import org.wheelmap.android.app.UserCredentials;
+import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 public class RobotiumHelper {
 	private final static String TAG = RobotiumHelper.class.getSimpleName();
+
+	@Inject
+	public ICredentials mCredentials;
 
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
@@ -57,7 +56,7 @@ public class RobotiumHelper {
 		solo.sleep(500);
 	}
 
-	private static Activity lookupActivity( Solo solo, String activityName ) {
+	private static Activity lookupActivity( SoloCompatibilityAbs solo, String activityName ) {
 
 		List<Activity> acts = solo.getAllOpenedActivities();
 		for ( Activity actvt: acts ) {
@@ -105,7 +104,7 @@ public class RobotiumHelper {
 		solo.waitForDialogToClose(1000);
 	}
 
-	static void selectWheelchairState( Solo solo, String activityName) throws InterruptedException {
+	static void selectWheelchairState( SoloCompatibilityAbs solo, String activityName) throws InterruptedException {
 		View wheelchairStateButton = lookupActivity(solo, activityName).findViewById(R.id.wheelchair_state_layout);
 		Log.d(TAG, "wheelchairState Button " + wheelchairStateButton);
 		solo.clickOnView( wheelchairStateButton );
@@ -117,7 +116,7 @@ public class RobotiumHelper {
 		solo.clickOnRadioButton(1);
 	}
 
-	static void selectCategoryState( Solo solo) throws InterruptedException {
+	static void selectCategoryState( SoloCompatibilityAbs solo) throws InterruptedException {
 		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
 		View categoryButton = lookupActivity(solo, "POIDetailEditableActivity").findViewById(R.id.edit_nodetype);
 		Log.d(TAG, "category Button " + categoryButton);

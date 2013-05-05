@@ -22,7 +22,7 @@
 package org.wheelmap.android.activity;
 
 import org.mapsforge.android.maps.GeoPoint;
-import org.wheelmap.android.app.IAppProperties;
+import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;

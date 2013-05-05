@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import android.location.Location;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
@@ -131,7 +132,7 @@ public class POIsListWorkerFragment extends LocationFragment implements
 		}
 	}
 
-	protected void updateLocation() {
+	protected void updateLocation(Location location) {
 		if ( isNewDistanceFar())
 			requestUpdate(null);
 

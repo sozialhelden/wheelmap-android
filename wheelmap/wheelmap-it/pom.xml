@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.6-SNAPSHOT-LIFE</version>
+    <version>0.99.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>wheelmap-it</artifactId>
@@ -13,38 +14,14 @@
   <name>Wheelmap-it - Integration tests</name>
 
   <properties>
-      <!--
-        When not running a release, we are deploying the plain artifact (so no classifier)
-        This is overridden during the release.
-      -->
-      <zipaligned-classifier />
-      <main.basedir>${project.parent.basedir}</main.basedir>
-      <sherlock.version>4.2.0</sherlock.version>
-      <project.extractDuplicates>true</project.extractDuplicates>
+    <!--
+      When not running a release, we are deploying the plain artifact (so no classifier)
+      This is overridden during the release.
+    -->
+    <zipaligned-classifier/>
+    <sherlock.version>4.2.0</sherlock.version>
+    <project.extractDuplicates>true</project.extractDuplicates>
   </properties>
-  
-  <repositories>
-    <repository>
-      <id>michalharakal-snapshots</id>
-      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>michalharakal-releases</id>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/releases</url>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>
@@ -53,19 +30,29 @@
     </dependency>
 
     <dependency>
-      <groupId>com.google.android</groupId>
+      <groupId>${platformcore.groupid}</groupId>
       <artifactId>android</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android-test</artifactId>
+      <version>${platformaddon.version}</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.android</groupId>
+          <artifactId>android</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+
     <dependency>
       <groupId>org.wheelmap.android</groupId>
       <artifactId>wheelmap</artifactId>
       <type>apk</type>
-      <version>${project.version}</version> 
-      <classifier>${zipaligned-classifier}</classifier> <!--  classifier set according to the ran profile -->
+      <version>${project.version}</version>
+      <classifier>${zipaligned-classifier}</classifier>
+      <!--  classifier set according to the ran profile -->
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -90,41 +77,40 @@
 
     <!-- added as provided as otherwise they are duplicate -->
     <dependency>
-       <groupId>de.akquinet.android.androlog</groupId>
-       <artifactId>androlog</artifactId>
-       <scope>provided</scope>
+      <groupId>de.akquinet.android.androlog</groupId>
+      <artifactId>androlog</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-       <groupId>org.roboguice</groupId>
-       <artifactId>roboguice</artifactId>
-       <scope>provided</scope>
-     </dependency>
-     <dependency>
-       <groupId>com.jayway.android.robotium</groupId>
-       <artifactId>robotium-solo</artifactId>
-       <version>3.6</version>
-     </dependency>
-     <dependency>
-       <groupId>cglib</groupId>
-       <artifactId>cglib-nodep</artifactId>
-       <version>2.2</version>
-       <scope>provided</scope>
-     </dependency>
+      <groupId>com.jayway.android.robotium</groupId>
+      <artifactId>robotium-solo</artifactId>
+      <version>4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
- 
+
   <build>
-      <resources>
-          <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
-    	  <resource>
-              <directory>${project.basedir}/src/main/resources</directory>
-	      <filtering>true</filtering>
-	      <targetPath>${project.basedir}</targetPath>
-	      <includes>
-		 <include>AndroidManifest.xml</include>
-	      </includes>
-          </resource>
-      </resources>
+    <resources>
+      <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}</targetPath>
+        <includes>
+          <include>AndroidManifest.xml</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <inherited>true</inherited>
+      </plugin>
       <plugin>
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
@@ -132,15 +118,22 @@
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-          <version>2.5</version>
-          <executions>
-            <execution>
-              <phase>initialize</phase>
-              <goals>
-                <goal>resources</goal>
-              </goals>
-            </execution>
-          </executions>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
   </build>

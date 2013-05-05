@@ -29,8 +29,7 @@
     <org.osmdroid.views.MapView
         android:id="@+id/map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        ramCacheShared="true" />
+        android:layout_height="fill_parent" />
 
     <org.wheelmap.android.view.CompassView
         android:id="@+id/compass"

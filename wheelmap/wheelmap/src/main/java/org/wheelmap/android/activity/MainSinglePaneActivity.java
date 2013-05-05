@@ -25,14 +25,8 @@ import java.util.ArrayList;
 
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
-import org.wheelmap.android.app.IAppProperties;
-import org.wheelmap.android.fragment.DisplayFragmentListener;
-import org.wheelmap.android.fragment.ErrorDialogFragment;
-import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeWorkerFragment;
-import org.wheelmap.android.fragment.WorkerFragmentListener;
+import org.wheelmap.android.modules.IAppProperties;
+import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
@@ -112,6 +106,7 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 								.get(TAB_LIST), POIsListFragment.class));
 		actionBar.addTab(tab, TAB_LIST, false);
 
+		/*
 		tab = actionBar
 				.newTab()
 				.setText(R.string.title_pois_map)
@@ -124,6 +119,20 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 						new MyTabListener<POIsMapsforgeFragment>(this,
 								mIndexToTab.get(TAB_MAP),
 								POIsMapsforgeFragment.class));
+		*/
+		tab = actionBar
+				.newTab()
+				.setText(R.string.title_pois_map)
+				.setIcon(
+						getResources().getDrawable(
+								R.drawable.ic_location_map_wheelmap))
+
+				.setTag(mIndexToTab.get(TAB_MAP).name)
+				.setTabListener(
+						new MyTabListener<POIsOsmdroidFragment>(this,
+								mIndexToTab.get(TAB_MAP),
+								POIsOsmdroidFragment.class));
+
 		actionBar.addTab(tab, TAB_MAP, false);
 
 
@@ -315,8 +324,9 @@ public class MainSinglePaneActivity extends MapsforgeMapActivity implements
 		mIndexToTab = new ArrayList<TabHolder>();
 		mIndexToTab.add(new TabHolder(POIsListFragment.TAG,
 				POIsListWorkerFragment.TAG));
-		mIndexToTab.add(new TabHolder(POIsMapsforgeFragment.TAG,
-				POIsMapsforgeWorkerFragment.TAG));
-	}
+//		mIndexToTab.add(new TabHolder(POIsMapsforgeFragment.TAG,
+//				POIsMapsforgeWorkerFragment.TAG));
+		mIndexToTab.add(new TabHolder(POIsOsmdroidFragment.TAG,
+				POIsMapsforgeWorkerFragment.TAG));	}
 
 }

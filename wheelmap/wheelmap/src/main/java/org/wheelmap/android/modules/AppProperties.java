@@ -90,6 +90,11 @@ class AppProperties implements IAppProperties
 		if (key == null)
 			return null;
 
+		if (properties == null) {
+			Log.w( LOG_TAG, "properties are not initialized - returning null" );
+			return null;
+		}
+
 		final Object value = properties.get(key);
 		if ( value == null) {
 			Log.w( LOG_TAG, "key " + key + " not found - returning null" );

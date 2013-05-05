@@ -29,8 +29,6 @@ public interface DisplayFragment {
 
 	public void onUpdate(WorkerFragment fragment);
 
-	public void setCurrentLocation(Location location);
-
 	public void markItem(ContentValues values, boolean centerToItem);
 
 }

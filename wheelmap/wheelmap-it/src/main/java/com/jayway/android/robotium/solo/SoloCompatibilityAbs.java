@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+
 public class SoloCompatibilityAbs extends Solo {
 
 	protected ClickerCompatibilityAbs clickerCompatibilityAbs;
@@ -27,7 +29,7 @@ public class SoloCompatibilityAbs extends Solo {
 	 */
 	public void clickOnVisibleActionbarItem(int resourceId) {
 		waitForView(LinearLayout.class);
-		LinearLayout linearLayout = (LinearLayout) getter.getView(resourceId);
+		LinearLayout linearLayout = (LinearLayout)  getter.getView(resourceId, 0);
 		clickOnView(linearLayout);
 	}
 
@@ -52,5 +54,9 @@ public class SoloCompatibilityAbs extends Solo {
 	 */
 	public void clickOnActionModeOverflowMenuItem(String text) {
 		clickerCompatibilityAbs.clickOnActionModeOverflowMenuItem(text);
+	}
+
+	public ArrayList<Activity> getAllOpenedActivities() {
+		return activityUtils.getAllOpenedActivities();
 	}
 }

@@ -1,12 +1,11 @@
 package org.wheelmap.android.app;
 
-import android.util.DisplayMetrics;
-import org.acra.ACRA;
-import org.mapsforge.android.maps.MapActivity;
-
 import android.app.ActivityManager;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import de.akquinet.android.androlog.Log;
+import org.acra.ACRA;
+import org.mapsforge.android.maps.MapActivity;
 
 public class AppCapability {
 	private static final String TAG = AppCapability.class.getSimpleName();
@@ -113,6 +112,9 @@ public class AppCapability {
 	}
 
 	private static void setAcraData() {
+		if (!WheelmapApp.getApp().isAcraInitCalled())
+			return;
+
 		ACRA.getErrorReporter().putCustomData("memoryClass",
 				Integer.toString(sMemoryClass));
 

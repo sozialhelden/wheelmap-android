@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="host_hockey_url">http://storagerutton.de/hockey</string>
+  <string name="app_name">${app.name}</string>
+  <string name="wheelmapprovider">${app.package}.wheelmap</string>
+  <string name="supportprovider">${app.package}.support</string>
+  <string name="andrologproperties">androlog.properties</string>
+  <bool name="developbuild">${app.developbuild}</bool>
 
 </resources>

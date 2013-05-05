@@ -1,65 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>0.99.6-SNAPSHOT-LIFE</version>
+    <version>0.99.6-SNAPSHOT</version>
   </parent>
   <artifactId>wheelmap</artifactId>
   <packaging>apk</packaging>
   <name>Wheelmap - App</name>
   <properties>
-    <main.basedir>${project.parent.basedir}</main.basedir>
     <sherlock.version>4.2.0</sherlock.version>
     <proguard.disable>true</proguard.disable>
   </properties>
-  <repositories>
-    <repository>
-      <id>org.springframework.maven.milestone</id>
-      <name>Spring Maven Milestone Repository</name>
-      <url>http://maven.springframework.org/milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>michalharakal-snapshots</id>
-      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>michalharakal-releases</id>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/releases</url>
-    </repository>
-    <repository>
-        <id>rutton-maven-repo</id>
-        <url>https://raw.github.com/rutton/maven-repo/master/snapshots</url>
-        <snapshots>
-           <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+
   <dependencies>
     <dependency>
-      <groupId>com.google.android</groupId>
+      <groupId>${platformcore.groupid}</groupId>
       <artifactId>android</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>annotations</artifactId>
-      </dependency>
+    </dependency>
     <dependency>
       <groupId>de.akquinet.android.androlog</groupId>
       <artifactId>androlog</artifactId>
@@ -100,6 +64,11 @@
       <version>3.0.9</version>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-android</artifactId>
+      <version>1.6.1-RC1</version>
+    </dependency>
+    <dependency>
       <groupId>com.github.chrisbanes.pulltorefresh</groupId>
       <artifactId>library</artifactId>
       <version>1.4.0</version>
@@ -128,16 +97,24 @@
     <dependency>
       <groupId>org.roboguice</groupId>
       <artifactId>roboguice</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>3.0</version>
+      <classifier>no_aop</classifier>
     </dependency>
     <dependency>
       <groupId>com.github.rtyley</groupId>
       <artifactId>roboguice-sherlock</artifactId>
-      <version>1.3</version>
+      <version>1.5</version>
     </dependency>
     <!-- For the optional Nullable annotation -->
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
+      <version>1.3.9</version>
     </dependency>
     <dependency>
       <groupId>com.squareup</groupId>
@@ -154,43 +131,68 @@
       <version>1.5</version>
       <groupId>de.keyboardsurfer.android.widget</groupId>
     </dependency>
+    <dependency>
+      <groupId>net.hockeykit.android</groupId>
+      <artifactId>library</artifactId>
+      <version>1.0.0</version>
+      <type>apklib</type>
+    </dependency>
   </dependencies>
   <build>
-      <resources>
-          <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
-    	  <resource>
-              <directory>${project.basedir}/src/main/resources</directory>
-      		  <filtering>true</filtering>
-      		  <targetPath>${project.basedir}</targetPath>
-      		  <includes>
-      		      <include>AndroidManifest.xml</include>
-      		  </includes>
-        </resource>
-        <resource>
-          <directory>${project.basedir}/assets</directory>
-          <filtering>true</filtering>
-          <targetPath>${project.build.directory}/filtered-assets</targetPath>
-          <includes>
-            <include>**/*.png</include>
-            <include>**/application.properties</include>
-          </includes>
-        </resource>
-        <resource>
-          <directory>${project.basedir}/assets/${asset.variant}</directory>
-          <targetPath>${project.build.directory}/filtered-assets</targetPath>
-          <includes>
-            <include>**/org.wheelmap.android.online.properties</include>
-          </includes>
-        </resource>
+    <resources>
+      <!-- filter manifest and put filtered file in target/filtered-manifest/ -->
+      <resource>
+        <directory>src/main/resources/android</directory>
+        <filtering>true</filtering>
+        <targetPath>${project.basedir}</targetPath>
+        <includes>
+          <include>AndroidManifest.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources/android</directory>
+        <filtering>true</filtering>
+        <targetPath>${project.build.directory}/filtered-res/values</targetPath>
+        <includes>
+          <include>configs.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>res</directory>
+        <filtering>true</filtering>
+        <targetPath>${project.build.directory}/filtered-res</targetPath>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources/hockey</directory>
+        <filtering>true</filtering>
+        <targetPath>${project.build.directory}</targetPath>
+        <includes>
+          <include>app.json</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>assets/${asset.variant}</directory>
+        <targetPath>${project.build.directory}/filtered-assets</targetPath>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.png</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/*</exclude>
+        </excludes>
+      </resource>
     </resources>
     <plugins>
       <plugin>
-        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-        <artifactId>android-maven-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <renameManifestPackage>${app.package}</renameManifestPackage>
-        </configuration>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <inherited>true</inherited>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -212,65 +214,116 @@
         </executions>
       </plugin>
       <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-          <version>2.5</version>
-          <executions>
-            <execution>
-              <phase>initialize</phase>
-              <goals>
-                <goal>resources</goal>
-              </goals>
-            </execution>
-          </executions>
+        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+        <artifactId>android-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <resourceDirectory>${project.build.directory}/filtered-res</resourceDirectory>
+          <renameManifestPackage>${app.package}</renameManifestPackage>
+        </configuration>
       </plugin>
-       <plugin>
-	      <groupId>com.github.github</groupId>
-	      <artifactId>downloads-maven-plugin</artifactId>
-	      <version>0.6</version>
-	      <configuration>
- 	        <description>${project.version} release of ${project.name}</description>
-	        <override>true</override>
-	        <includeAttached>false</includeAttached>
-	      </configuration>
-	    </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <resources>
+            <resource>
+              <directory>src/main/resources/android</directory>
+              <excludes>
+                <exclude>**/*</exclude>
+              </excludes>
+            </resource>
+          </resources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>downloads-maven-plugin</artifactId>
+        <version>0.6</version>
+        <configuration>
+          <description>${project.version} release of ${project.name}</description>
+          <override>true</override>
+          <includeAttached>false</includeAttached>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>wagon-maven-plugin</artifactId>
+        <version>1.0-beta-4</version>
+        <configuration>
+          <fromDir>${project.build.directory}</fromDir>
+          <includes>${project.artifactId}-${project.version}-${app.type}.apk,app.json</includes>
+          <url>${hockey.repository.url}</url>
+          <toDir>${app.package}/${project.artifactId}${app.version.code}</toDir>
+          <serverId>hockey-distribution</serverId>
+        </configuration>
+        <executions>
+          <execution>
+            <id>upload-stuff</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    <extensions>
+      <!-- Enabling the use of FTP -->
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>2.4</version>
+      </extension>
+    </extensions>
   </build>
   <profiles>
     <profile>
-        <id>with-googleanalytics</id>
-        <activation>
-            <property>
-                <name>!without-googleanalytics</name>
-            </property>
-        </activation>
-        <dependencies>
-          <dependency>
-            <groupId>org.wheelmap.android</groupId>
-            <artifactId>googleanalytics</artifactId>
-            <version>1.0</version>
-          </dependency>    
-        </dependencies>
-        <properties>
-          <ga_additional_src_dir>${basedir}/src/with_googleanalytics/java</ga_additional_src_dir>  
-        </properties>
+      <id>with-googleanalytics</id>
+      <activation>
+        <property>
+          <name>with-googleanalytics</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.wheelmap.android</groupId>
+          <artifactId>googleanalytics</artifactId>
+          <version>1.0</version>
+        </dependency>
+      </dependencies>
+      <properties>
+        <ga_additional_src_dir>${basedir}/src/with_googleanalytics/java</ga_additional_src_dir>
+      </properties>
     </profile>
     <profile>
       <id>without-googleanalytics</id>
       <activation>
-          <property>
-              <name>without-googleanalytics</name>
-          </property>
+        <property>
+          <name>!with-googleanalytics</name>
+        </property>
       </activation>
       <properties>
-          <ga_additional_src_dir>${basedir}/src/without_googleanalytics/java</ga_additional_src_dir>
-      </properties>    
-    </profile>            
-    <profile>
-      <id>release</id>
-      <properties>
-          <app.icon>@drawable/ic_launcher</app.icon>
-          <app.package>org.wheelmap.android.online</app.package>
+        <ga_additional_src_dir>${basedir}/src/without_googleanalytics/java</ga_additional_src_dir>
       </properties>
+    </profile>
+    <profile>
+      <id>alternative-signature</id>
       <build>
         <plugins>
           <plugin>
@@ -290,14 +343,14 @@
             <groupId>com.jayway.maven.plugins.android.generation2</groupId>
             <artifactId>android-maven-plugin</artifactId>
             <inherited>true</inherited>
-	        <extensions>true</extensions>
+            <extensions>true</extensions>
             <executions>
               <execution>
                 <id>process-sources</id>
-			    <phase>process-classes</phase>
-			    <goals>
-			      <goal>proguard</goal>
-			    </goals>                
+                <phase>process-classes</phase>
+                <goals>
+                  <goal>proguard</goal>
+                </goals>
               </execution>
               <execution>
                 <id>zipalign-application-apk</id>
@@ -310,15 +363,18 @@
             <configuration>
               <zipalign>
                 <verbose>true</verbose>
-                <inputApk>${project.build.directory}/${project.artifactId}-${project.version}.apk</inputApk>
-                <outputApk>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</outputApk>
+                <inputApk>${project.build.directory}/${project.artifactId}-${project.version}-${app.type}.apk</inputApk>
+                <outputApk>
+                  ${project.build.directory}/${project.artifactId}-${project.version}-${app.type}-signed-aligned.apk
+                </outputApk>
+                <skip>false</skip>
               </zipalign>
               <sign>
                 <debug>false</debug>
-              </sign>              
-		      <proguard>
-			    <skip>${proguard.disable}</skip>
-		      </proguard>
+              </sign>
+              <proguard>
+                <skip>${proguard.disable}</skip>
+              </proguard>
             </configuration>
           </plugin>
           <plugin>
@@ -343,7 +399,34 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>com.github.danielflower.mavenplugins</groupId>
+            <artifactId>maven-gitlog-plugin</artifactId>
+            <version>1.5.0</version>
+            <configuration>
+              <reportTitle>Changelog for ${app.name} version ${app.version.name}-${app.type}</reportTitle>
+              <verbose>true</verbose>
+              <outputDirectory>${project.build.directory}/hockey</outputDirectory>
+              <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
+              <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
+              <generateMarkdownChangeLog>false</generateMarkdownChangeLog>
+              <simpleHTMLChangeLogFilename>app.html</simpleHTMLChangeLogFilename>
+              <generateHTMLTableOnlyChangeLog>true</generateHTMLTableOnlyChangeLog>
+              <htmlTableOnlyChangeLogFilename>app-tableonly.html</htmlTableOnlyChangeLogFilename>
+              <issueManagementSystem>GitHub issue tracker</issueManagementSystem>
+              <issueManagementUrl>https://github.com/danielflower/maven-gitlog-plugin/issues</issueManagementUrl>
+              <fullGitMessage>true</fullGitMessage>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
+
       </build>
     </profile>
   </profiles>

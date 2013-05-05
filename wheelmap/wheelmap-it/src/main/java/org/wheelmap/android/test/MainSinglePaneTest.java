@@ -1,28 +1,18 @@
 package org.wheelmap.android.test;
 
-import android.app.Activity;
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
-import com.jayway.awaitility.Awaitility;
-import com.jayway.awaitility.Duration;
 import org.springframework.util.Assert;
 import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.activity.POIDetailActivity;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
-import org.wheelmap.android.app.UserCredentials;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.online.R;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import android.widget.EditText;
 
-import com.jayway.android.robotium.solo.Solo;
 import org.wheelmap.android.utils.UtilsMisc;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 public class MainSinglePaneTest extends
 		ActivityInstrumentationTestCase2<MainSinglePaneActivity> {

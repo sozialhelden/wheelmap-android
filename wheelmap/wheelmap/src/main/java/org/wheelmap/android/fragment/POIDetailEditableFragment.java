@@ -24,7 +24,8 @@ package org.wheelmap.android.fragment;
 import java.util.Map;
 
 import android.os.Handler;
-import org.wheelmap.android.app.UserCredentials;
+import com.google.inject.Inject;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
@@ -85,6 +86,9 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 
 	private static final int DIALOG_ID_NEWPOI = 1;
 	private static final int DIALOG_ID_NETWORK_ERROR = 2;
+
+	@Inject
+	private ICredentials mCredentials;
 
 	@InjectView(R.id.title_container)
 	private LinearLayout title_container;
@@ -208,9 +212,7 @@ public class POIDetailEditableFragment extends RoboSherlockFragment implements
 		Log.d(TAG, "onActivityCreated");
 
 		retrieve(savedInstanceState);
-		UserCredentials credentials = new UserCredentials(getActivity()
-				.getApplicationContext());
-		if (!credentials.isLoggedIn()) {
+		if (!mCredentials.isLoggedIn()) {
 			FragmentManager fm = getFragmentManager();
 			LoginDialogFragment loginDialog = new LoginDialogFragment();
 			loginDialog.show(fm, LoginDialogFragment.TAG);

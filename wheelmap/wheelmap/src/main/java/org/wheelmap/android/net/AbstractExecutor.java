@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.google.inject.Inject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.HttpClientErrorException;
@@ -32,15 +33,16 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
-import org.wheelmap.android.app.AppProperties;
-import org.wheelmap.android.app.IAppProperties;
+import org.wheelmap.android.modules.IAppProperties;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.request.IHttpUserAgent;
+import org.wheelmap.android.modules.IHttpUserAgent;
 
 import de.akquinet.android.androlog.Log;
 
+import roboguice.RoboGuice;
 import wheelmap.org.domain.Base;
 import wheelmap.org.request.RequestBuilder;
 import wheelmap.org.request.RequestProcessor;
@@ -61,10 +63,11 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
 	private final Context mContext;
 	private final Bundle mBundle;
-	private IAppProperties mAppProperties;
 	private final Class<T> mClazz;
 
-	protected static final String API_KEY = "jWeAsb34CJq4yVAryjtc";
+	protected IAppProperties mAppProperties;
+	protected ICredentials mCredentials;
+
 	protected static RequestProcessor mRequestProcessor = new RequestProcessor();
 
 	public AbstractExecutor(Context context, Bundle bundle, Class<T> clazz,
@@ -73,11 +76,17 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 		mBundle = bundle;
 		mClazz = clazz;
 		fMaxRetryCount = maxRetryCount;
+		RoboGuice.injectMembers(context, this);
 	}
 
 	@Override
-	public void setAppProperties(IAppProperties appProperties) {
+	public void setAppProperties( IAppProperties appProperties ) {
 		mAppProperties = appProperties;
+	}
+
+	@Override
+	public void setCredentials(ICredentials credentials) {
+		mCredentials = credentials;
 	}
 
 	@Override
@@ -91,10 +100,6 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
 	protected void setEtag(String etag) {
 		mRequestProcessor.setEtag(etag);
-	}
-
-	public String getApiKey() {
-		return API_KEY;
 	}
 
 	protected Context getContext() {
@@ -115,8 +120,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
 	public abstract void prepareDatabase() throws SyncServiceException;
 
-	public static IExecutor create(Context context, Bundle bundle,
-			IAppProperties appProperties, IHttpUserAgent httpUserAgent) {
+	public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties, ICredentials credentials, IHttpUserAgent httpUserAgent) {
 		if (bundle == null || !bundle.containsKey(Extra.WHAT))
 			return null;
 
@@ -150,6 +154,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 			return null; // noop no instruction, no operation;
 		}
 		executor.setAppProperties(appProperties);
+		executor.setCredentials(credentials);
 		executor.setUserAgent(httpUserAgent.getAppUserAgent());
 
 		return executor;
@@ -157,11 +162,15 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
 	@Override
 	public String getServer() {
-		return mAppProperties.get(AppProperties.KEY_WHEELMAP_URI);
+		return mAppProperties.get(IAppProperties.KEY_WHEELMAP_URI);
 	}
 
 	protected String getTag() {
 		return getClass().getSimpleName();
+	}
+
+	protected String getApiKey() {
+		return mCredentials.getApiKey();
 	}
 
 	@SuppressWarnings("unchecked")

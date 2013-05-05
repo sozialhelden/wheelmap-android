@@ -50,8 +50,7 @@ limitations under the License.
         android:icon="${app.icon}"
         android:label="@string/app_name"
         android:logo="@drawable/title_logo_shadow"
-        android:theme="@style/Theme.wheelmap_fixed"
-        android:debuggable="${app.debuggable}">
+        android:theme="@style/Theme.wheelmap_fixed">
         <activity
             android:name="org.wheelmap.android.activity.StartupActivity"
             android:label="@string/app_name"
@@ -115,17 +114,21 @@ limitations under the License.
             android:label="@string/title_legal_notice"
             android:theme="@style/Theme.Wheelmap.SubActivity" />
 
+        <activity
+            android:name="net.hockeyapp.android.UpdateActivity" />
+
+
         <service android:name="org.wheelmap.android.service.SyncService"
                 android:exported="false"/>
 
         <provider
             android:name="org.wheelmap.android.model.POIsProvider"
-            android:authorities="org.wheelmap.android"
+            android:authorities="@string/wheelmapprovider"
             android:readPermission="org.wheelmap.android.pois.Read"
             android:writePermission="org.wheelmap.android.pois.Write" />
         <provider
             android:name="org.wheelmap.android.model.SupportProvider"
-            android:authorities="org.wheelmap.android.support"
+            android:authorities="@string/supportprovider"
             android:readPermission="org.wheelmap.android.support.Read"
             android:writePermission="org.wheelmap.android.support.Write" />
     </application>

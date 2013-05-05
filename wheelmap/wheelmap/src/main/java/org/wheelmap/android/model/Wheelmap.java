@@ -22,12 +22,15 @@
 package org.wheelmap.android.model;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import org.wheelmap.android.online.R;
 
 public class Wheelmap {
-	public static final String AUTHORITY = "org.wheelmap.android";
+	public static String AUTHORITY;
+
 
 	// This class cannot be instantiated
 	private Wheelmap() {
@@ -40,7 +43,7 @@ public class Wheelmap {
 
 		/**
 		 * The name of the place
-		 * <P>
+		 * <p/>
 		 * Type: TEXT
 		 * </P>
 		 */
@@ -89,12 +92,16 @@ public class Wheelmap {
 		public static final int DIRTY_ALL = 0x2;
 
 		public static final String STORE_TIMESTAMP = "store_timestamp";
+
 	}
 
 	public static final class POIs implements BaseColumns, POIsColumns {
-		// This class cannot be instantiated
-		private POIs() {
-		}
+		static Uri CONTENT_URI_BASE;
+		public static Uri CONTENT_URI_ALL;
+		public static Uri CONTENT_URI_RETRIEVED;
+		public static Uri CONTENT_URI_COPY;
+		public static Uri CONTENT_URI_TMP;
+
 
 		/**
 		 * The content:// style URL for this table
@@ -104,16 +111,24 @@ public class Wheelmap {
 		static final String PATH_COPY = "copy";
 		static final String PATH_TMP = "tmp";
 
-		private static final Uri CONTENT_URI_BASE = Uri
-				.parse(ContentResolver.SCHEME_CONTENT + "://" + AUTHORITY);
-		public static final Uri CONTENT_URI_ALL = CONTENT_URI_BASE.buildUpon()
-				.appendPath(PATH_ALL).build();
-		public static final Uri CONTENT_URI_RETRIEVED = CONTENT_URI_BASE
-				.buildUpon().appendPath(PATH_RETRIEVED).build();
-		public static final Uri CONTENT_URI_COPY = CONTENT_URI_BASE.buildUpon()
-				.appendPath(PATH_COPY).build();
-		public static final Uri CONTENT_URI_TMP = CONTENT_URI_BASE.buildUpon()
-				.appendPath(PATH_TMP).build();
+		// This class cannot be instantiated
+		private POIs() {
+		}
+
+		public static void init(Context context) {
+			AUTHORITY = context.getString( R.string.wheelmapprovider);
+
+			CONTENT_URI_BASE = Uri
+					.parse(ContentResolver.SCHEME_CONTENT + "://" + AUTHORITY);
+			CONTENT_URI_ALL = CONTENT_URI_BASE.buildUpon()
+					.appendPath(PATH_ALL).build();
+			CONTENT_URI_RETRIEVED = CONTENT_URI_BASE
+					.buildUpon().appendPath(PATH_RETRIEVED).build();
+			CONTENT_URI_COPY = CONTENT_URI_BASE.buildUpon()
+					.appendPath(PATH_COPY).build();
+			CONTENT_URI_TMP = CONTENT_URI_BASE.buildUpon()
+					.appendPath(PATH_TMP).build();
+		}
 
 		public static final String PARAMETER_LONGITUDE = "longitude";
 		public static final String PARAMETER_LATITUDE = "latitude";
@@ -138,11 +153,11 @@ public class Wheelmap {
 		}
 
 		/**
-		 * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
+		 * The MIME type providing a directory of notes.
 		 */
 		public static final String CONTENT_TYPE_DIR = "vnd.android.cursor.dir/vnd.wheelmap.pois";
 		/**
-		 * The MIME type of a {@link #CONTENT_URI} sub-directory of a single
+		 * The MIME type sub-directory of a single
 		 * note.
 		 */
 		public static final String CONTENT_TYPE_ITEM = "vnd.android.cursor.item/vnd.wheelmap.poi_id";
@@ -157,9 +172,9 @@ public class Wheelmap {
 		/**
 		 * The columns we are interested in from the database
 		 */
-		public static final String[] PROJECTION = new String[] { _ID, WM_ID,
+		public static final String[] PROJECTION = new String[]{_ID, WM_ID,
 				NAME, LATITUDE, LONGITUDE, STREET, HOUSE_NUM, POSTCODE, CITY,
 				PHONE, WEBSITE, WHEELCHAIR, DESCRIPTION, CATEGORY_ID, CATEGORY_IDENTIFIER,
-				NODETYPE_ID, NODETYPE_IDENTIFIER, TAG, STATE, DIRTY, STORE_TIMESTAMP };
+				NODETYPE_ID, NODETYPE_IDENTIFIER, TAG, STATE, DIRTY, STORE_TIMESTAMP};
 	}
 }

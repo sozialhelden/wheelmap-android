@@ -29,7 +29,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
 
-class UserCredentials implements ICredentials {
+public class UserCredentials implements ICredentials {
 
 	private static final String LOGGED_IN = "loggedin";
 	private static final String E_MAIL = "email";

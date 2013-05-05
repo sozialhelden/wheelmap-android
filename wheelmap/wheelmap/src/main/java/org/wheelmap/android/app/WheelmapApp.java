@@ -21,18 +21,19 @@
  */
 package org.wheelmap.android.app;
 
+import android.app.Application;
+import android.content.Context;
+import com.squareup.otto.Bus;
+import de.akquinet.android.androlog.Log;
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
-
-import android.app.Application;
-import android.content.Context;
-
-import com.squareup.otto.Bus;
-
-import de.akquinet.android.androlog.Log;
+import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.online.R;
+import roboguice.RoboGuice;
 
 // Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
 // RC1 - key: @ReportsCrashes(formKey = "dC1VVDdKenJLRUpZTC1MZXBVR3p6ZlE6MQ" )
@@ -60,12 +61,17 @@ public class WheelmapApp extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.init(getApplicationContext());
+		Log.init(getApplicationContext(), getString( R.string.andrologproperties ));
 		Log.d(TAG, "onCreate: creating App");
 		INSTANCE = this;
+
+		RoboGuice.setModulesResourceId(R.array.roboguice_modules);
+		Support.init(getApplicationContext());
+		Wheelmap.POIs.init(getApplicationContext());
+
 		mBus = new Bus();
 
-		if (!isAcraInitCalled) {
+		if (!getResources().getBoolean(R.bool.developbuild) && !isAcraInitCalled) {
 			ACRA.init(this);
 			isAcraInitCalled = true;
 		}
@@ -99,6 +105,10 @@ public class WheelmapApp extends Application {
 
 	public static Bus getBus() {
 		return INSTANCE.mBus;
+	}
+
+	public boolean isAcraInitCalled() {
+		return isAcraInitCalled;
 	}
 
 	public static SupportManager getSupportManager() {

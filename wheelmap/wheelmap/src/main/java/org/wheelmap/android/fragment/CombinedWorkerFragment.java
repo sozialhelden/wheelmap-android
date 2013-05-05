@@ -3,6 +3,7 @@ package org.wheelmap.android.fragment;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.location.Location;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.model.Extra;
@@ -102,19 +103,9 @@ public class CombinedWorkerFragment extends LocationFragment implements
 	}
 
 	@Override
-	protected void updateLocation() {
+	protected void updateLocation(Location location) {
 		Log.d(TAG, "updateLocation");
-		updateDisplayLocation();
 		resetCursorLoaderUri();
-	}
-
-	private void updateDisplayLocation() {
-		Log.d(TAG, "updateDisplayLocation fragments = " + mListener.size());
-		for (DisplayFragment fragment : mListener) {
-			Log.d(TAG, "updateDisplayLocation setCurrentLocation on "
-					+ fragment.getTag());
-			fragment.setCurrentLocation(getLocation());
-		}
 	}
 
 	private void setRefreshStatus(boolean refreshState) {

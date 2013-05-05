@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">Wheelmap</string>
     <string name="description_logo">Wheelmap</string>
     <string name="description_map">Kart</string>
     <string name="description_filter">Filter</string>

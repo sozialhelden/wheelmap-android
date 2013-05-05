@@ -438,10 +438,10 @@ public class SupportProvider extends ContentProvider {
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(Support.AUTHORITY, "lastupdate", LASTUPDATE);
-		sUriMatcher.addURI(Support.AUTHORITY, "locales", LOCALES);
-		sUriMatcher.addURI(Support.AUTHORITY, "categories", CATEGORIES);
-		sUriMatcher.addURI(Support.AUTHORITY, "nodetypes", NODETYPES);
+		sUriMatcher.addURI("*", "lastupdate", LASTUPDATE);
+		sUriMatcher.addURI("*", "locales", LOCALES);
+		sUriMatcher.addURI("*", "categories", CATEGORIES);
+		sUriMatcher.addURI("*", "nodetypes", NODETYPES);
 
 		sLastUpdateProjectionMap = new HashMap<String, String>();
 		sLastUpdateProjectionMap.put(LastUpdateContent._ID,

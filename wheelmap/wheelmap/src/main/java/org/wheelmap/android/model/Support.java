@@ -27,15 +27,31 @@ import java.util.Date;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import org.wheelmap.android.online.R;
 
 public class Support {
-	public static final String AUTHORITY = "org.wheelmap.android.support";
+	public static String AUTHORITY;
 
 	// This class cannot be instantiated
 	private Support() {
+	}
+
+	public static void init( Context context ) {
+		AUTHORITY = context.getString( R.string.supportprovider);
+
+		LastUpdateContent.CONTENT_URI = Uri.parse("content://"
+				+ AUTHORITY + LastUpdateContent.CONTENT_PATH);
+		LocalesContent.CONTENT_URI =  Uri.parse("content://"
+				+ AUTHORITY + LocalesContent.CONTENT_PATH);
+		CategoriesContent.CONTENT_URI = Uri.parse("content://"
+				+ AUTHORITY + CategoriesContent.CONTENT_PATH);
+
+		NodeTypesContent.CONTENT_URI = Uri.parse("content://"
+				+ AUTHORITY + NodeTypesContent.CONTENT_PATH);
 	}
 
 	public static interface LastUpdateColumns {
@@ -75,12 +91,11 @@ public class Support {
 		private LastUpdateContent() {
 		};
 
+		public static final String CONTENT_PATH = "/lastupdate";
 		private static final String ISO_8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
-
-		public static final Uri CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + "/lastupdate");
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.lastupdate";
 
+		public static Uri CONTENT_URI;
 		public static final String[] PROJECTION = new String[] { _ID, MODULE, DATE, ETAG };
 
 		public static String getModule(Cursor c) {
@@ -152,8 +167,9 @@ public class Support {
 		private LocalesContent() {
 		}
 
-		public static final Uri CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + "/locales");
+		public static final String CONTENT_PATH = "/locales";
+		public static Uri CONTENT_URI;
+
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.locales";
 
 		public static final String[] PROJECTION = new String[] { _ID,
@@ -173,10 +189,11 @@ public class Support {
 		private CategoriesContent() {
 		};
 
-		public static final Uri CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + "/categories");
+		public static final String CONTENT_PATH = "/categories";
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.categories";
 		public static final String DEFAULT_SORT_ORDER = LOCALIZED_NAME + " ASC";
+
+		public static Uri CONTENT_URI;
 
 		public static final String[] PROJECTION = new String[] { _ID,
 				CATEGORY_ID, LOCALIZED_NAME, IDENTIFIER, SELECTED };
@@ -210,9 +227,10 @@ public class Support {
 		private NodeTypesContent() {
 		};
 
-		public static final Uri CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + "/nodetypes");
+		public static final String CONTENT_PATH = "/nodetypes";
 		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.nodetypes";
+
+		public static Uri CONTENT_URI ;
 
 		public static final String[] PROJECTION = new String[] { _ID,
 				NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME, CATEGORY_ID,

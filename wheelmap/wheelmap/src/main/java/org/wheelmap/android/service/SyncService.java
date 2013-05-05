@@ -21,13 +21,14 @@
  */
 package org.wheelmap.android.service;
 
-import org.wheelmap.android.app.IAppProperties;
+import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIsProvider;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.net.AbstractExecutor;
 import org.wheelmap.android.net.IExecutor;
-import org.wheelmap.request.IHttpUserAgent;
+import org.wheelmap.android.modules.IHttpUserAgent;
 
 import com.google.inject.Inject;
 
@@ -52,6 +53,9 @@ public class SyncService extends RoboIntentService {
 	
 	@Inject
 	private IAppProperties mAppProperties;
+
+	@Inject
+	private ICredentials mCredentials;
 
 	@Inject
 	private IHttpUserAgent mHttpUserAgent;
@@ -84,7 +88,7 @@ public class SyncService extends RoboIntentService {
 		}
 
 		IExecutor executor = AbstractExecutor.create(getApplicationContext(),
-				extras, mAppProperties, mHttpUserAgent);
+				extras, mAppProperties, mCredentials, mHttpUserAgent);
 		executor.prepareContent();
 		try {
 			executor.execute();

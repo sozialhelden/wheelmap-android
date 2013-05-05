@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
@@ -48,7 +49,7 @@ import com.squareup.otto.Subscribe;
 
 import de.akquinet.android.androlog.Log;
 
-public class POIsMapsforgeWorkerFragment extends LocationFragment implements
+public class POIsMapsforgeWorkerFragment extends SherlockFragment implements
 		WorkerFragment, Receiver, LoaderCallbacks<Cursor> {
 	public final static String TAG = POIsMapsforgeWorkerFragment.class
 			.getSimpleName();
@@ -117,11 +118,6 @@ public class POIsMapsforgeWorkerFragment extends LocationFragment implements
 			break;
 		}
 		}
-	}
-
-	protected void updateLocation() {
-		if (mDisplayFragment != null)
-			mDisplayFragment.setCurrentLocation(getLocation());
 	}
 
 	private void setRefreshStatus(boolean refreshState) {

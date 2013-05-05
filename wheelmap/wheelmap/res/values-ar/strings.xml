@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">ويل ماب</string>
 	<string name="btn_cancel">إلغاء</string>
 	<string name="btn_legal_notice">إشعار قانوني</string>
 	<string name="btn_list">قائمة</string>

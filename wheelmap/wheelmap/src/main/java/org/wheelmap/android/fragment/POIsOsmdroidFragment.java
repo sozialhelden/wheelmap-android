@@ -21,27 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.mapsforge.android.maps.GeoPoint;
-import org.mapsforge.android.maps.MapController;
-import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.MapView.OnMoveListener;
-import org.mapsforge.android.maps.MapView.OnZoomListener;
-import org.mapsforge.android.maps.Projection;
-import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.activity.MapsforgeMapActivity;
-import org.wheelmap.android.app.AppCapability;
-import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.overlays.MyLocationOverlay;
-import org.wheelmap.android.overlays.OnTapListener;
-import org.wheelmap.android.overlays.POIsCursorMapsforgeOverlay;
-import org.wheelmap.android.utils.ParceableBoundingBox;
-import org.wheelmap.android.utils.UtilsMisc;
-import org.wheelmap.android.view.CompassView;
-
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -52,6 +32,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -59,17 +40,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-
 import de.akquinet.android.androlog.Log;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.online.R;
+import org.wheelmap.android.osmdroid.OnTapListener;
+import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
+import org.wheelmap.android.utils.ParceableBoundingBox;
+import org.wheelmap.android.utils.UtilsMisc;
+import org.wheelmap.android.view.CompassView;
 
-public class POIsMapsforgeFragment extends LocationFragment implements
-		DisplayFragment, OnMoveListener, OnZoomListener, OnTapListener,
+public class POIsOsmdroidFragment extends LocationFragment implements
+		DisplayFragment, MapListener, OnTapListener,
 		OnSearchDialogListener, OnExecuteBundle {
-	public final static String TAG = POIsMapsforgeFragment.class
+	public final static String TAG = POIsOsmdroidFragment.class
 			.getSimpleName();
 
 	private WorkerFragment mWorkerFragment;
@@ -78,16 +81,19 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 
 	private MapView mMapView;
 	private MapController mMapController;
-	private POIsCursorMapsforgeOverlay mPoisItemizedOverlay;
-	private MyLocationOverlay mCurrLocationOverlay;
-	private GeoPoint mLastRequestedPosition;
+	private POIsCursorOsmdroidOverlay mPoisItemizedOverlay;
+	private MyLocationNewOverlay mCurrLocationOverlay;
+	private IGeoPoint mLastRequestedPosition;
 	private GeoPoint mCurrentLocationGeoPoint;
 	private boolean mHeightFull = true;
 	private boolean isCentered;
-	private int oldZoomLevel = 18;
+	private int oldZoomLevel = 20;
 	private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 	private static final byte ZOOMLEVEL_MIN = 16;
 	private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
+	private final OnlineTileSourceBase MAPBOX =
+			new XYTileSource("Mapbox", null, 3, 21, 256, ".png", "http://a.tiles.mapbox.com/v3/chilibeta.map-knq7846c/");
+
 
 	private CompassView mCompass;
 
@@ -97,9 +103,9 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 	private Sensor mSensor;
 	private boolean mOrientationAvailable;
 
-	public static POIsMapsforgeFragment newInstance(boolean createWorker,
-													boolean disableSearch) {
-		POIsMapsforgeFragment f = new POIsMapsforgeFragment();
+	public static POIsOsmdroidFragment newInstance(boolean createWorker,
+												   boolean disableSearch) {
+		POIsOsmdroidFragment f = new POIsOsmdroidFragment();
 		Bundle b = new Bundle();
 		b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
 		b.putBoolean(Extra.DISABLE_SEARCH, disableSearch);
@@ -108,7 +114,7 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 		return f;
 	}
 
-	public POIsMapsforgeFragment() {
+	public POIsOsmdroidFragment() {
 		// noop
 	}
 
@@ -136,30 +142,25 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 							 Bundle savedInstanceState) {
 
 		View v = inflater
-				.inflate(R.layout.fragment_mapsforge, container, false);
+				.inflate(R.layout.fragment_osmdroid, container, false);
 
 		mMapView = (MapView) v.findViewById(R.id.map);
+		mMapView.setTileSource(MAPBOX);
+		setHardwareAccelerationOff();
 
-		mMapView.setClickable(true);
+		// mMapView.setClickable(true);
 		mMapView.setBuiltInZoomControls(true);
-		mMapView.setScaleBar(true);
+		mMapView.setMultiTouchControls(true);
+
 		mMapController = mMapView.getController();
 
 		// overlays
-		mPoisItemizedOverlay = new POIsCursorMapsforgeOverlay(getActivity(),
-				this);
-		mCurrLocationOverlay = new MyLocationOverlay(getActivity());
-
-		if (AppCapability.degradeLargeMapQuality()) {
-			mPoisItemizedOverlay.enableLowDrawQuality(true);
-			mCurrLocationOverlay.enableLowDrawQuality(true);
-			mCurrLocationOverlay.enableUseOnlyOneBitmap(true);
-		}
+		mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
+		mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider, mMapView);
 		mMapView.getOverlays().add(mPoisItemizedOverlay);
 		mMapView.getOverlays().add(mCurrLocationOverlay);
 		mMapController.setZoom(oldZoomLevel);
-		mMapView.setMoveListener(this);
-		mMapView.setZoomListener(this);
+		mMapView.setMapListener(this);
 
 		mCompass = (CompassView) v.findViewById(R.id.compass);
 
@@ -224,9 +225,16 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		((MapsforgeMapActivity) getActivity()).destroyMapView(mMapView);
 		mWorkerFragment.unregisterDisplayFragment(this);
 		WheelmapApp.getSupportManager().cleanReferences();
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void setHardwareAccelerationOff()
+	{
+		// Turn off hardware acceleration here, or in manifest
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			mMapView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 	}
 
 	@Override
@@ -339,9 +347,9 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 	}
 
 	@Override
-	public void onMove(float vertical, float horizontal) {
+	public boolean onScroll(ScrollEvent event) {
 		Log.d(TAG, "onMove");
-		GeoPoint centerLocation = mMapView.getMapCenter();
+		IGeoPoint centerLocation = mMapView.getMapCenter();
 		int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
 		int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
 
@@ -350,23 +358,24 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 				- centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
 				&& (Math.abs(mLastRequestedPosition.getLongitudeE6()
 				- centerLocation.getLongitudeE6()) < minimalLongitudeSpan))
-			return;
+			return false;
 
 		if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN)
-			return;
+			return false;
 
 		requestUpdate();
+		return true;
 	}
 
 	@Override
-	public void onZoom(byte zoomLevel) {
+	public boolean onZoom(ZoomEvent event) {
+		int zoomLevel = event.getZoomLevel();
 		Log.d(TAG, "onZoom");
 		boolean isZoomedEnough = true;
 
 		if (zoomLevel < ZOOMLEVEL_MIN) {
-			isZoomedEnough = false;
 			oldZoomLevel = zoomLevel;
-			return;
+			return false;
 		}
 
 		if (zoomLevel < oldZoomLevel) {
@@ -375,12 +384,12 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 
 		if (isZoomedEnough && zoomLevel >= oldZoomLevel) {
 			oldZoomLevel = zoomLevel;
-			return;
+			return false;
 		}
 
 		requestUpdate();
-		isZoomedEnough = true;
 		oldZoomLevel = zoomLevel;
+		return false;
 	}
 
 	private void requestUpdate() {
@@ -393,7 +402,7 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 
 		int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
 		int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
-		GeoPoint center = mMapView.getMapCenter();
+		IGeoPoint center = mMapView.getMapCenter();
 		mLastRequestedPosition = center;
 		ParceableBoundingBox boundingBox = new ParceableBoundingBox(
 				center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()
@@ -416,7 +425,7 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 		if (geoPoint == null)
 			return;
 
-		GeoPoint actualGeoPoint;
+		IGeoPoint actualGeoPoint;
 
 		if (mHeightFull) {
 			actualGeoPoint = geoPoint;
@@ -438,9 +447,9 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 	}
 
 	private void setZoomIntern(int zoom) {
-		mMapView.setZoomListener(null);
+		mMapView.setMapListener(null);
 		mMapController.setZoom(zoom);
-		mMapView.setZoomListener(this);
+		mMapView.setMapListener(this);
 		oldZoomLevel = zoom;
 	}
 
@@ -454,9 +463,6 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 
 		mCursor = cursor;
 		mPoisItemizedOverlay.setCursor(mCursor);
-
-		if (mWorkerFragment instanceof CombinedWorkerFragment)
-			markItemClear();
 	}
 
 	@Override
@@ -492,18 +498,6 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 	}
 
 	@Override
-	public void updateLocation(Location location) {
-		GeoPoint geoPoint = new GeoPoint(location.getLatitude(),
-				location.getLongitude());
-		mCurrLocationOverlay.setLocation(geoPoint, location.getAccuracy());
-		if (mMapView != null && !mMapView.hasInitializedCenter()) {
-			centerMap(geoPoint, false);
-		}
-
-		mCurrentLocationGeoPoint = geoPoint;
-	}
-
-	@Override
 	public void markItem(ContentValues values, boolean centerToItem) {
 		Log.d(TAG, "markItem");
 		GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
@@ -512,45 +506,82 @@ public class POIsMapsforgeFragment extends LocationFragment implements
 	}
 
 	private void markItemIntern(GeoPoint point, boolean centerToItem) {
-		mCurrLocationOverlay.setItem(point);
 		if (centerToItem) {
 			centerMap(point, true);
 		}
 	}
 
-	public void markItemClear() {
-		mCurrLocationOverlay.unsetItem();
-	}
+	private SensorEventListener mSensorEventListener = new SensorEventListener() {
+		private static final float MIN_DIRECTION_DELTA = 10;
+		private float mDirection;
 
-private SensorEventListener mSensorEventListener = new SensorEventListener() {
-	private static final float MIN_DIRECTION_DELTA = 10;
-	private float mDirection;
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			float direction = event.values[0];
+			if (direction > 180)
+				direction -= 360;
+
+			if (isAdded())
+				direction -= UtilsMisc.calcRotationOffset(getActivity()
+						.getWindowManager().getDefaultDisplay());
+
+			float lastDirection = mDirection;
+			if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
+				return;
+
+			updateDirection(direction);
+			mDirection = direction;
+		}
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+		}
+
+		private void updateDirection(float direction) {
+			mCompass.updateDirection(direction);
+		}
+	};
 
 	@Override
-	public void onSensorChanged(SensorEvent event) {
-		float direction = event.values[0];
-		if (direction > 180)
-			direction -= 360;
+	protected void updateLocation(Location location) {
+		GeoPoint geoPoint = new GeoPoint(location.getLatitude(),
+				location.getLongitude());
 
-		if (isAdded())
-			direction -= UtilsMisc.calcRotationOffset(getActivity()
-					.getWindowManager().getDefaultDisplay());
+		if (mMapView != null && !isCentered) {
+			centerMap(geoPoint, false);
+		}
 
-		float lastDirection = mDirection;
-		if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
-			return;
-
-		updateDirection(direction);
-		mDirection = direction;
+		mCurrentLocationGeoPoint = geoPoint;
+		mMyLocationProvider.updateLocation(location);
 	}
 
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
-	}
-};
+	private class MyLocationProvider implements IMyLocationProvider {
+		private IMyLocationConsumer mMyLocationConsumer;
+		private Location mLocation;
 
-	private void updateDirection(float direction) {
-		mCompass.updateDirection(direction);
+		@Override
+		public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
+			mMyLocationConsumer = myLocationConsumer;
+			return true;
+		}
+
+		@Override
+		public void stopLocationProvider() {
+			mMyLocationConsumer = null;
+		}
+
+		@Override
+		public Location getLastKnownLocation() {
+			return mLocation;
+		}
+
+		public void updateLocation(final Location location) {
+			mLocation = location;
+			if (mMyLocationConsumer != null)
+				mMyLocationConsumer.onLocationChanged(mLocation, this);
+		}
 	}
 }

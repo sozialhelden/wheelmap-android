@@ -23,9 +23,14 @@ package org.wheelmap.android.activity;
 
 import java.util.List;
 
+import android.text.TextUtils;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import net.hockeyapp.android.CheckUpdateTask;
+import net.hockeyapp.android.CheckUpdateTask.OnHockeyDoneListener;
+import net.hockeyapp.android.UpdateActivity;
+
 import org.wheelmap.android.app.AppCapability;
-import org.wheelmap.android.app.IAppProperties;
+import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
@@ -57,16 +62,17 @@ import com.google.inject.Inject;
 import de.akquinet.android.androlog.Log;
 
 public class StartupActivity extends RoboSherlockActivity implements
-		DetachableResultReceiver.Receiver {
+		DetachableResultReceiver.Receiver, OnHockeyDoneListener {
 	private final static String TAG = StartupActivity.class.getSimpleName();
 
 	@Inject
-	IAppProperties appProperties;
+	public IAppProperties appProperties;
 
 	private State mState;
 	private SupportManager mSupportManager;
 	private ProgressBar mProgressBar;
 	private boolean mIsInForeground;
+	private CheckUpdateTask checkUpdateTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,21 +90,8 @@ public class StartupActivity extends RoboSherlockActivity implements
 		mState = new State();
 		mState.mReceiver.setReceiver(this);
 
-		if (AppCapability.isNotWorking()) {
-			showDialogNotWorking();
-			return;
-		}
-
-		mSupportManager = WheelmapApp.getSupportManager();
-		if (mSupportManager.needsReloading()) {
-			mSupportManager.reload(mState.mReceiver);
-			return;
-		}
-
-		if (needStartApp())
-			startupAppDelayed();
-		else
-			finish();
+		UpdateActivity.iconDrawableId = R.drawable.ic_launcher;
+		checkForUpdates();
 	}
 
 	@Override
@@ -135,6 +128,33 @@ public class StartupActivity extends RoboSherlockActivity implements
 		// (device orientation changes or hardware keyboard open/close).
 		// just do nothing on these changes:
 		super.onConfigurationChanged(null);
+	}
+
+    @Override
+    public void onHockeyDone() {
+        if (AppCapability.isNotWorking()) {
+            showDialogNotWorking();
+            return;
+        }
+
+
+        if (!startupPersistentStuff())
+            return;
+
+        if (needStartApp())
+            startupAppDelayed();
+        else
+            finish();
+    }
+
+    private boolean startupPersistentStuff() {
+		mSupportManager = WheelmapApp.getSupportManager();
+		if (mSupportManager.needsReloading()) {
+			mSupportManager.reload(mState.mReceiver);
+			return true;
+		}
+
+		return false;
 	}
 
 	private boolean needStartApp() {
@@ -182,10 +202,22 @@ public class StartupActivity extends RoboSherlockActivity implements
 			intent = new Intent(getApplicationContext(),
 					MainSinglePaneActivity.class);
 
-		intent.putExtra( Extra.REQUEST, true );
+		intent.putExtra(Extra.REQUEST, true);
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+
+	private void checkForUpdates() { 
+		String hockeyURI = appProperties.get( IAppProperties.KEY_HOCKEY_URI );
+		if ( TextUtils.isEmpty(hockeyURI))
+			return;
+
+		checkUpdateTask = new
+				CheckUpdateTask(this, appProperties.get(IAppProperties.KEY_HOCKEY_URI), null);
+		checkUpdateTask.execute();
+
 	}
 
 	@Override
@@ -219,7 +251,7 @@ public class StartupActivity extends RoboSherlockActivity implements
 	private static class State {
 		public DetachableResultReceiver mReceiver;
 
-		private State() {
+		State() {
 			mReceiver = new DetachableResultReceiver(new Handler());
 		}
 	}

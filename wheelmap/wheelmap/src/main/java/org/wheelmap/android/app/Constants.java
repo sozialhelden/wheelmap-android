@@ -24,17 +24,15 @@ package org.wheelmap.android.app;
 /**
  * Global constants used in the application
  */
-public final class Constants
-{
+public final class Constants {
 
-	private Constants()
-	{
+	private Constants() {
 		// no instance
 	}
 
 	/**
 	 * Name of the File which is read to get the server url
 	 */
-	public final static String			APP_PROPERTIES_ASSETS_FILE_NAME	= "config/application.properties";
+	public final static String APP_PROPERTIES_ASSETS_FILE_NAME = "application.properties";
 
 }

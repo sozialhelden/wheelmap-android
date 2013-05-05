@@ -21,7 +21,8 @@
  */
 package org.wheelmap.android.net;
 
-import org.wheelmap.android.app.UserCredentials;
+import com.google.inject.Inject;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
@@ -46,6 +47,9 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 	private static final int MAX_RETRY_COUNT = 3;
 	private Cursor mCursor;
 
+	@Inject
+	private ICredentials mCredentials;
+
 	public NodeUpdateOrNewExecutor(Context context) {
 		super(context, null, Message.class, MAX_RETRY_COUNT);
 	}
@@ -67,7 +71,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
 		while (!mCursor.isAfterLast()) {
 
-			String editApiKey = getEditApiKey();
+			String editApiKey = getApiKey();
 			if (editApiKey.length() == 0)
 				throw new SyncServiceException(
 						SyncServiceException.ERROR_AUTHORIZATION_ERROR,
@@ -142,11 +146,6 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 				AcceptType.JSON, id, name, categoryIdentifier,
 				nodeTypeIdentifier, latitude, longitude, state, comment,
 				street, housenumber, city, postcode, website, phone);
-	}
-
-	private String getEditApiKey() {
-		UserCredentials credentials = new UserCredentials(getContext());
-		return credentials.getApiKey();
 	}
 
 }

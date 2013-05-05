@@ -23,8 +23,8 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wheelmap.android.online"
     android:installLocation="auto"
-    android:versionCode="22"
-    android:versionName="0.99.6-SNAPSHOT-LIFE"
+    android:versionCode="20"
+    android:versionName="0.99.6-SNAPSHOT-STAGING"
         >
 
     <uses-sdk
@@ -47,11 +47,10 @@ limitations under the License.
 
     <application
         android:name="org.wheelmap.android.app.WheelmapApp"
-        android:icon="@drawable/ic_launcher_life"
+        android:icon="@drawable/ic_launcher_staging"
         android:label="@string/app_name"
         android:logo="@drawable/title_logo_shadow"
-        android:theme="@style/Theme.wheelmap_fixed"
-        android:debuggable="true">
+        android:theme="@style/Theme.wheelmap_fixed">
         <activity
             android:name="org.wheelmap.android.activity.StartupActivity"
             android:label="@string/app_name"
@@ -115,17 +114,21 @@ limitations under the License.
             android:label="@string/title_legal_notice"
             android:theme="@style/Theme.Wheelmap.SubActivity" />
 
+        <activity
+            android:name="net.hockeyapp.android.UpdateActivity" />
+
+
         <service android:name="org.wheelmap.android.service.SyncService"
                 android:exported="false"/>
 
         <provider
             android:name="org.wheelmap.android.model.POIsProvider"
-            android:authorities="org.wheelmap.android"
+            android:authorities="@string/wheelmapprovider"
             android:readPermission="org.wheelmap.android.pois.Read"
             android:writePermission="org.wheelmap.android.pois.Write" />
         <provider
             android:name="org.wheelmap.android.model.SupportProvider"
-            android:authorities="org.wheelmap.android.support"
+            android:authorities="@string/supportprovider"
             android:readPermission="org.wheelmap.android.support.Read"
             android:writePermission="org.wheelmap.android.support.Write" />
     </application>

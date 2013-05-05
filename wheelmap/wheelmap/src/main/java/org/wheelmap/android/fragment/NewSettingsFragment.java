@@ -24,7 +24,7 @@ package org.wheelmap.android.fragment;
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
 import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
-import org.wheelmap.android.app.ICredentials;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support;

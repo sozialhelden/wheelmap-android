@@ -22,7 +22,7 @@
 package org.wheelmap.android.net;
 
 import com.google.inject.Inject;
-import org.wheelmap.android.app.ICredentials;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.service.SyncServiceException;
 

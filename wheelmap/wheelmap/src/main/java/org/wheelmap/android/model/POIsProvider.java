@@ -575,15 +575,15 @@ public class POIsProvider extends ContentProvider {
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_ALL, POIS_ALL);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_RETRIEVED,
+		sUriMatcher.addURI("*", POIs.PATH_ALL, POIS_ALL);
+		sUriMatcher.addURI("*", POIs.PATH_RETRIEVED,
 				POIS_RETRIEVED);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_RETRIEVED + "/#",
+		sUriMatcher.addURI("*", POIs.PATH_RETRIEVED + "/#",
 				POIS_RETRIEVED_ID);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_COPY, POIS_COPY);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_COPY + "/#",
+		sUriMatcher.addURI("*", POIs.PATH_COPY, POIS_COPY);
+		sUriMatcher.addURI("*", POIs.PATH_COPY + "/#",
 				POIS_COPY_ID);
-		sUriMatcher.addURI(Wheelmap.AUTHORITY, POIs.PATH_TMP, POIS_TMP);
+		sUriMatcher.addURI("*", POIs.PATH_TMP, POIS_TMP);
 
 		// POIs
 		sPOIsProjectionMap = new HashMap<String, String>();

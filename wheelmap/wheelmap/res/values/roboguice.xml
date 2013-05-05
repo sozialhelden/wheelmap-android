@@ -21,6 +21,6 @@
   -->
 <resources>
     <string-array name="roboguice_modules">
-        <item>org.wheelmap.modules.MainModule</item>
+        <item>org.wheelmap.android.modules.MainModule</item>
     </string-array>
 </resources>

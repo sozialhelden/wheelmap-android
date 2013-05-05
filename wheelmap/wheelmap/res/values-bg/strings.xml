@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Wheelmap</string>
 	<string name="btn_cancel">Отказ</string>
 	<string name="btn_legal_notice">Правна информация</string>
 	<string name="btn_list">Списък</string>

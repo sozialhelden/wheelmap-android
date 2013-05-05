@@ -1,0 +1,5 @@
+{
+        "title":"${app.name}",
+        "versionCode":${app.version.code},
+        "versionName":"${app.version.name}"
+}
