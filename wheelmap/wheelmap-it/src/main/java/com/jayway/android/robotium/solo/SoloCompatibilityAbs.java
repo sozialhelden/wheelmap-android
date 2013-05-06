@@ -29,7 +29,7 @@ public class SoloCompatibilityAbs extends Solo {
 	 */
 	public void clickOnVisibleActionbarItem(int resourceId) {
 		waitForView(LinearLayout.class);
-		LinearLayout linearLayout = (LinearLayout)  getter.getView(resourceId, 0);
+		LinearLayout linearLayout = (LinearLayout)  getter.getView(resourceId);
 		clickOnView(linearLayout);
 	}
 

@@ -7,6 +7,7 @@
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
     <version>0.99.6-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>wheelmap-it</artifactId>
@@ -19,7 +20,7 @@
       This is overridden during the release.
     -->
     <zipaligned-classifier/>
-    <sherlock.version>4.2.0</sherlock.version>
+    <sherlock.version>4.3.1</sherlock.version>
     <project.extractDuplicates>true</project.extractDuplicates>
   </properties>
 
@@ -30,13 +31,13 @@
     </dependency>
 
     <dependency>
-      <groupId>${platformcore.groupid}</groupId>
+      <groupId>${platform.core.groupid}</groupId>
       <artifactId>android</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android-test</artifactId>
-      <version>${platformaddon.version}</version>
+      <version>${platform.addon.version}</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -84,7 +85,7 @@
     <dependency>
       <groupId>com.jayway.android.robotium</groupId>
       <artifactId>robotium-solo</artifactId>
-      <version>4.1</version>
+      <version>3.6</version>
     </dependency>
     <dependency>
       <groupId>cglib</groupId>
@@ -115,18 +116,6 @@
         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
         <artifactId>android-maven-plugin</artifactId>
         <extensions>true</extensions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
-        <executions>
-          <execution>
-            <phase>initialize</phase>
-            <goals>
-              <goal>resources</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-deploy-plugin</artifactId>

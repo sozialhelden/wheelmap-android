@@ -17,7 +17,7 @@ limitations under the License.
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.wheelmap.android.test"
-    android:versionCode="20"
+    android:versionCode="36"
     android:versionName="0.99.6-SNAPSHOT-STAGING">
 
     <uses-sdk

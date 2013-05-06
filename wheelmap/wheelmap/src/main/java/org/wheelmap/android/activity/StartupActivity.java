@@ -21,20 +21,20 @@
  */
 package org.wheelmap.android.activity;
 
-import java.util.List;
+import com.google.inject.Inject;
 
-import android.text.TextUtils;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+
 import net.hockeyapp.android.CheckUpdateTask;
 import net.hockeyapp.android.CheckUpdateTask.OnHockeyDoneListener;
 import net.hockeyapp.android.UpdateActivity;
 
 import org.wheelmap.android.app.AppCapability;
-import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
+import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.SyncService;
 import org.wheelmap.android.service.SyncServiceException;
@@ -47,9 +47,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -57,7 +57,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.google.inject.Inject;
+import java.util.List;
 
 import de.akquinet.android.androlog.Log;
 
@@ -90,8 +90,7 @@ public class StartupActivity extends RoboSherlockActivity implements
 		mState = new State();
 		mState.mReceiver.setReceiver(this);
 
-		UpdateActivity.iconDrawableId = R.drawable.ic_launcher;
-		checkForUpdates();
+		checkForHockeyUpdates();
 	}
 
 	@Override
@@ -122,13 +121,20 @@ public class StartupActivity extends RoboSherlockActivity implements
 			mSupportManager.releaseReceiver();
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// this prevents StartupActivity recreation on Configuration changes
-		// (device orientation changes or hardware keyboard open/close).
-		// just do nothing on these changes:
-		super.onConfigurationChanged(null);
-	}
+    private void checkForHockeyUpdates() {
+        String hockeyURI = appProperties.get( IAppProperties.KEY_HOCKEY_URI );
+        Log.d( TAG, "hockeyURI = *" + hockeyURI + "*");
+        if ( TextUtils.isEmpty(hockeyURI)) {
+            onHockeyDone();
+            return;
+        }
+
+        UpdateActivity.iconDrawableId = getApplicationInfo().icon;
+        checkUpdateTask = new
+                CheckUpdateTask(this, appProperties.get(IAppProperties.KEY_HOCKEY_URI), null);
+        checkUpdateTask.execute();
+
+    }
 
     @Override
     public void onHockeyDone() {
@@ -206,18 +212,6 @@ public class StartupActivity extends RoboSherlockActivity implements
 		startActivity(intent);
 		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-	}
-
-
-	private void checkForUpdates() { 
-		String hockeyURI = appProperties.get( IAppProperties.KEY_HOCKEY_URI );
-		if ( TextUtils.isEmpty(hockeyURI))
-			return;
-
-		checkUpdateTask = new
-				CheckUpdateTask(this, appProperties.get(IAppProperties.KEY_HOCKEY_URI), null);
-		checkUpdateTask.execute();
-
 	}
 
 	@Override

@@ -1,379 +1,428 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.wheelmap.android</groupId>
-  <artifactId>wheelmap-parent</artifactId>
-  <version>0.99.6-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Wheelmap - Parent</name>
+    <groupId>org.wheelmap.android</groupId>
+    <artifactId>wheelmap-parent</artifactId>
+    <version>0.99.6-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Wheelmap - Parent</name>
 
-  <modules>
-    <module>wheelmap</module>
-    <module>wheelmap-it</module>
-  </modules>
+    <modules>
+        <module>wheelmap</module>
+        <module>wheelmap-it</module>
+    </modules>
 
-  <properties>
-    <app.name>Wheelmap</app.name>
-    <app.version.code>20</app.version.code>
-    <app.version.name>${project.version}-${app.type}</app.version.name>
-    <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.</project.organization.name>
-    <project.inceptionYear>2011</project.inceptionYear>
+    <properties>
 
-    <!-- Configuration Options -->
-    <app.type>UNKNOWN</app.type>
-    <app.basepackage>org.wheelmap.android</app.basepackage>
-
-    <!-- Build and debug environment -->
-    <!-- the publicly available dependency -->
-    <!--
-        <platformcore.groupid>com.google.android</platformcore.groupid>
-        <platformcore.version>4.1.1.4</platformcore.version>
-        <platformcore.code>16</platformcore.code>
-    -->
-
-    <!-- extracted by maven-android-sdk-deployer
-	 useful for debugging to match the version of the phone -->
-    <platformcore.groupid>android</platformcore.groupid>
-    <platformcore.version>4.2_r1</platformcore.version>
-    <platformcore.code>17</platformcore.code>
-
-    <asset.variant>development</asset.variant>
-    <hockey.repository.url>ftp://storagerutton.de/</hockey.repository.url>
-
-    <github.global.server>github</github.global.server>
-    <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
-    <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
-
-    <project.extractDuplicates>false</project.extractDuplicates>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <main.basedir>${project.basedir}</main.basedir>
-
-    <!-- used for addons -->
-    <platformaddon.version>4.1.1.4</platformaddon.version>
-
-  </properties>
-
-  <scm>
-    <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
-    <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
-    <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</developerConnection>
-  </scm>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${platformcore.groupid}</groupId>
-        <artifactId>android</artifactId>
-        <version>${platformcore.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.google.android</groupId>
-        <artifactId>annotations</artifactId>
-        <version>${platformaddon.version}</version>
-      </dependency>
-
-      <!-- Androlog is a logging and reporting library for Android -->
-      <dependency>
-        <groupId>de.akquinet.android.androlog</groupId>
-        <artifactId>androlog</artifactId>
-        <version>1.0.5</version>
-      </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.10</version>
-        <scope>provided</scope>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
-
-  <build>
-    <finalName>${project.artifactId}-${app.version.name}</finalName>
-
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-          <artifactId>android-maven-plugin</artifactId>
-          <version>3.5.3</version>
-          <inherited>true</inherited>
-          <configuration>
-            <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-            <assetsDirectory>${project.build.directory}/filtered-assets</assetsDirectory>
-            <manifestDebuggable>${app.enabledebug}</manifestDebuggable>
-            <apkDebug>${app.enabledebug}</apkDebug>
-            <sdk>
-              <platform>${platformcore.code}</platform>
-            </sdk>
-            <undeployBeforeDeploy>false</undeployBeforeDeploy>
-            <extractDuplicates>${project.extractDuplicates}</extractDuplicates>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
-          <inherited>true</inherited>
-          <configuration>
-            <source>1.6</source>
-            <target>1.6</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.1</version>
-          <configuration>
-            <autoVersionSubmodules>true</autoVersionSubmodules>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jarsigner-plugin</artifactId>
-          <version>1.2</version>
-          <inherited>true</inherited>
-          <configuration>
-            <removeExistingSignatures>true</removeExistingSignatures>
-            <archiveDirectory/>
-            <archive>${project.build.directory}/${project.build.finalName}.${project.packaging}</archive>
-            <verbose>true</verbose>
-            <certs>true</certs>
-            <keystore>${sign.keystore}</keystore>
-            <alias>${sign.alias}</alias>
-            <storepass>${sign.storepass}</storepass>
-            <keypass>${sign.keypass}</keypass>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>license-maven-plugin</artifactId>
-          <version>1.1</version>
-          <configuration>
-            <verbose>false</verbose>
-            <addSvnKeyWords>false</addSvnKeyWords>
-            <licenseName>our_license</licenseName>
-            <licenseResolver>file://${main.basedir}/src/license</licenseResolver>
-            <roots>
-              <root>src/main/java</root>
-              <root>src/test</root>
-              <root>res</root>
-            </roots>
-            <exludes>
-              <exclude>target/*</exclude>
-            </exludes>
-          </configuration>
-          <executions>
-            <execution>
-              <id>first</id>
-              <goals>
-                <goal>update-file-header</goal>
-              </goals>
-              <phase>process-sources</phase>
-
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>com.github.github</groupId>
-          <artifactId>downloads-maven-plugin</artifactId>
-          <version>0.6</version>
-          <configuration>
-            <description>${project.version} release of ${project.name}</description>
-            <override>true</override>
-            <includeAttached>true</includeAttached>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.2</version>
-        <executions>
-          <execution>
-            <id>enforce-profile</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireProperty>
-                  <property>app.package</property>
-                  <message>You need to select one of the available build configurations. They are profiles develop, staging, life or production
-                  </message>
-                </requireProperty>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-
-    </plugins>
-  </build>
-  <profiles>
-    <profile>
-      <id>develop</id>
-      <properties>
-        <app.name>Wheelmap Dev</app.name>
-        <app.developbuild>true</app.developbuild>
-        <app.type>DEVEL</app.type>
-        <app.package>${app.basepackage}.develop</app.package>
-        <app.icon>@drawable/ic_launcher</app.icon>
-        <asset.variant>development</asset.variant>
-        <hockey.update.url></hockey.update.url>
-        <app.enabledebug>true</app.enabledebug>
-      </properties>
-    </profile>
-    <profile>
-      <id>staging</id>
-      <properties>
-        <app.name>WheelStaging</app.name>
-        <app.developbuild>false</app.developbuild>
-        <app.type>STAGING</app.type>
-        <app.package>${app.basepackage}.staging</app.package>
-        <app.icon>@drawable/ic_launcher_staging</app.icon>
-        <asset.variant>development</asset.variant>
-        <hockey.update.url>http://storagerutton.de/hockey/</hockey.update.url>
-        <app.enabledebug>true</app.enabledebug>
-      </properties>
-    </profile>
-    <profile>
-      <id>life</id>
-      <properties>
-        <app.name>Wheelmap Life</app.name>
-        <app.developbuild>true</app.developbuild>
-        <app.type>LIFE</app.type>
-        <app.package>${app.basepackage}.life</app.package>
-        <app.icon>@drawable/ic_launcher_life</app.icon>
-        <asset.variant>life</asset.variant>
-        <hockey.update.url>http://storagerutton.de/hockey/</hockey.update.url>
-        <app.enabledebug>true</app.enabledebug>
-      </properties>
-    </profile>
-    <profile>
-      <id>production</id>
-      <activation>
-        <property>
-          <name>performRelease</name>
-          <value>true</value>
-        </property>
-      </activation>
-      <properties>
         <app.name>Wheelmap</app.name>
-        <app.developbuild>false</app.developbuild>
-        <app.type>PRODUCTION</app.type>
-        <app.package>${app.basepackage}.online</app.package>
-        <app.icon>@drawable/ic_launcher</app.icon>
-        <asset.variant>production</asset.variant>
-        <hockey.update.url></hockey.update.url>
-        <app.enabledebug>false</app.enabledebug>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-enforcer-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>enforce-signing-properties</id>
-                <goals>
-                  <goal>enforce</goal>
-                </goals>
-                <configuration>
-                  <rules>
-                    <requireProperty>
-                      <property>sign.keystore</property>
-                      <message>The 'sign.keystore' property is missing. It must contain the path to the
-                        keystore used to sign the application.
-                      </message>
-                    </requireProperty>
-                    <requireFilesExist>
-                      <files>
-                        <file>${sign.keystore}</file>
-                      </files>
-                      <message>The 'sign.keystore' property does not point to a file. It must contain the
-                        path to the keystore used to sign the application.
-                      </message>
-                    </requireFilesExist>
-                    <requireProperty>
-                      <property>sign.alias</property>
-                      <message>The 'sign.alias' property is missing. It must contain the key alias used to
-                        sign the application.
-                      </message>
-                    </requireProperty>
-                    <requireProperty>
-                      <property>sign.storepass</property>
-                      <message>The 'sign.storepass' property is missing. It must contain the password of
-                        the keystore used to sign the application.
-                      </message>
-                    </requireProperty>
-                    <requireProperty>
-                      <property>sign.keypass</property>
-                      <message>The 'sign.keypass' property is missing. It must contain the password of the
-                        key used to sign the application.
-                      </message>
-                    </requireProperty>
-                  </rules>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+        <app.version.code>${buildNumber}</app.version.code>
+        <app.version.name>${project.version}-${app.type}</app.version.name>
+        <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.
+        </project.organization.name>
+        <project.inceptionYear>2011</project.inceptionYear>
 
-  <repositories>
-    <repository>
-      <id>org.springframework.maven.milestone</id>
-      <name>Spring Maven Milestone Repository</name>
-      <url>http://maven.springframework.org/milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>michalharakal-snapshots</id>
-      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>michalharakal-releases</id>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/releases</url>
-    </repository>
-    <repository>
-      <id>rutton-maven-repo</id>
-      <url>https://raw.github.com/rutton/maven-repo/master/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  <distributionManagement>
-    <repository>
-      <id>hockey-distribution</id>
-      <name>Hockey Distribution Repo</name>
-      <url>${hockey.repository.url}</url>
-    </repository>
-  </distributionManagement>
+        <!-- Configuration Options -->
+        <app.type>UNKNOWN</app.type>
+        <app.basepackage>org.wheelmap.android</app.basepackage>
+
+        <!-- Build and debug environment -->
+        <!-- the publicly available dependency -->
+        <platform.core.groupid>com.google.android</platform.core.groupid>
+        <platform.core.version>4.1.1.4</platform.core.version>
+        <platform.core.code>16</platform.core.code>
+
+        <!-- extracted by maven-android-sdk-deployer
+         useful for debugging to match the version of the phone -->
+        <!--
+        <platform.core.groupid>android</platform.core.groupid>
+        <platform.core.version>4.2.2_r2</platform.core.version>
+        <platform.core.code>17</platform.core.code>
+        -->
+
+        <!-- used for addons -->
+        <platform.addon.version>4.1.1.4</platform.addon.version>
+
+        <app.asset.variant>development</app.asset.variant>
+        <hockey.repository.url>ftp://storagerutton.de/</hockey.repository.url>
+        <app.hockey.update.url>http://storagerutton.de/hockey/</app.hockey.update.url>
+
+        <github.global.server>github</github.global.server>
+        <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
+        <github.downloads.repositoryOwner>sozialhelden</github.downloads.repositoryOwner>
+
+        <project.extractDuplicates>false</project.extractDuplicates>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <main.basedir>${project.basedir}</main.basedir>
+
+
+    </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
+        <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
+        <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git
+        </developerConnection>
+    </scm>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${platform.core.groupid}</groupId>
+                <artifactId>android</artifactId>
+                <version>${platform.core.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.android</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${platform.addon.version}</version>
+            </dependency>
+
+            <!-- Androlog is a logging and reporting library for Android -->
+            <dependency>
+                <groupId>de.akquinet.android.androlog</groupId>
+                <artifactId>androlog</artifactId>
+                <version>1.0.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.10</version>
+                <scope>provided</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <finalName>${project.artifactId}-${app.version.name}</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                    <executions>
+                        <execution>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>resources</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>3.5.3</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <androidManifestFile>${project.basedir}/AndroidManifest.xml
+                        </androidManifestFile>
+                        <assetsDirectory>${project.build.directory}/filtered-assets
+                        </assetsDirectory>
+                        <manifestDebuggable>${app.enabledebug}</manifestDebuggable>
+                        <apkDebug>${app.enabledebug}</apkDebug>
+                        <sdk>
+                            <platform>${platform.core.code}</platform>
+                        </sdk>
+                        <undeployBeforeDeploy>false</undeployBeforeDeploy>
+                        <extractDuplicates>${project.extractDuplicates}</extractDuplicates>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.4.1</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <releaseProfiles>staging,life</releaseProfiles>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jarsigner-plugin</artifactId>
+                    <version>1.2</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <removeExistingSignatures>true</removeExistingSignatures>
+                        <archiveDirectory/>
+                        <archive>
+                            ${project.build.directory}/${project.build.finalName}.${project.packaging}
+                        </archive>
+                        <verbose>true</verbose>
+                        <certs>true</certs>
+                        <keystore>${sign.keystore}</keystore>
+                        <alias>${sign.alias}</alias>
+                        <storepass>${sign.storepass}</storepass>
+                        <keypass>${sign.keypass}</keypass>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>1.1</version>
+                    <configuration>
+                        <verbose>false</verbose>
+                        <addSvnKeyWords>false</addSvnKeyWords>
+                        <licenseName>our_license</licenseName>
+                        <licenseResolver>file://${main.basedir}/src/license</licenseResolver>
+                        <roots>
+                            <root>src/main/java</root>
+                            <root>src/test</root>
+                            <root>res</root>
+                        </roots>
+                        <exludes>
+                            <exclude>target/*</exclude>
+                        </exludes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>first</id>
+                            <goals>
+                                <goal>update-file-header</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.github</groupId>
+                    <artifactId>downloads-maven-plugin</artifactId>
+                    <version>0.6</version>
+                    <configuration>
+                        <description>${project.version} release of ${project.name}</description>
+                        <override>true</override>
+                        <includeAttached>true</includeAttached>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-profile</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireProperty>
+                                    <property>app.package</property>
+                                    <message>You need to select one of the available build
+                                        configurations. They are profiles develop, staging, life or
+                                        production
+                                    </message>
+                                </requireProperty>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <format>{0,number}</format>
+                    <items>
+                        <item>buildNumber</item>
+                    </items>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>develop</id>
+            <properties>
+                <app.name>Wheelmap Dev</app.name>
+                <app.developbuild>true</app.developbuild>
+                <app.type>DEVEL</app.type>
+                <app.package>${app.basepackage}.develop</app.package>
+                <app.icon>@drawable/ic_launcher_develop</app.icon>
+                <asset.variant>development</asset.variant>
+                <hockey.update.url></hockey.update.url>
+                <app.enabledebug>true</app.enabledebug>
+            </properties>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <properties>
+                <app.name>Wheelmap Staging</app.name>
+                <app.developbuild>false</app.developbuild>
+                <app.type>STAGING</app.type>
+                <app.package>${app.basepackage}.staging</app.package>
+                <app.icon>@drawable/ic_launcher_staging</app.icon>
+                <asset.variant>development</asset.variant>
+                <hockey.update.url>${app.hockey.update.url}</hockey.update.url>
+                <app.enabledebug>true</app.enabledebug>
+            </properties>
+        </profile>
+        <profile>
+            <id>life</id>
+            <properties>
+                <app.name>Wheelmap Life</app.name>
+                <app.developbuild>true</app.developbuild>
+                <app.type>LIFE</app.type>
+                <app.package>${app.basepackage}.life</app.package>
+                <app.icon>@drawable/ic_launcher_life</app.icon>
+                <asset.variant>life</asset.variant>
+                <hockey.update.url>${app.hockey.update.url}</hockey.update.url>
+                <app.enabledebug>true</app.enabledebug>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <app.name>Wheelmap</app.name>
+                <app.developbuild>false</app.developbuild>
+                <app.type>PRODUCTION</app.type>
+                <app.package>${app.basepackage}.online</app.package>
+                <app.icon>@drawable/ic_launcher</app.icon>
+                <asset.variant>production</asset.variant>
+                <hockey.update.url></hockey.update.url>
+                <app.enabledebug>false</app.enabledebug>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-signing-properties</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>sign.keystore</property>
+                                            <message>The 'sign.keystore' property is missing. It
+                                                must contain the path to the
+                                                keystore used to sign the application.
+                                            </message>
+                                        </requireProperty>
+                                        <requireFilesExist>
+                                            <files>
+                                                <file>${sign.keystore}</file>
+                                            </files>
+                                            <message>The 'sign.keystore' property does not point to
+                                                a file. It must contain the
+                                                path to the keystore used to sign the application.
+                                            </message>
+                                        </requireFilesExist>
+                                        <requireProperty>
+                                            <property>sign.alias</property>
+                                            <message>The 'sign.alias' property is missing. It must
+                                                contain the key alias used to
+                                                sign the application.
+                                            </message>
+                                        </requireProperty>
+                                        <requireProperty>
+                                            <property>sign.storepass</property>
+                                            <message>The 'sign.storepass' property is missing. It
+                                                must contain the password of
+                                                the keystore used to sign the application.
+                                            </message>
+                                        </requireProperty>
+                                        <requireProperty>
+                                            <property>sign.keypass</property>
+                                            <message>The 'sign.keypass' property is missing. It must
+                                                contain the password of the
+                                                key used to sign the application.
+                                            </message>
+                                        </requireProperty>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>rutton-maven-repo</id>
+            <url>https://raw.github.com/rutton/maven-repo/master/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>michalharakal-snapshots</id>
+            <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>michalharakal-releases</id>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>https://raw.github.com/michalharakal/wheelmap-maven-repo/master/releases</url>
+        </repository>
+        <repository>
+            <id>org.springframework.maven</id>
+            <name>Spring Maven Repository</name>
+            <url>http://repo.springsource.org/release</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>hockey-distribution</id>
+            <name>Hockey Distribution Repo</name>
+            <url>${hockey.repository.url}</url>
+        </repository>
+    </distributionManagement>
 
 </project>
