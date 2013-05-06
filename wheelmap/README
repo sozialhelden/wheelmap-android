@@ -15,8 +15,9 @@ In the top level directory
 mvn install -P<profile>
     - compiles and builds in the wheelmap subdir
     - builds and executes integration tests in the wheelmap-it subdir
-    - the use of a profile is enforced to configure the build
-      The following build config profiles are available: develop, staging, life, production
+    - The default build configuration is develop, see the pom for details about its configuration
+      Other build config profiles are available: staging, life, production
+
     - <x>-with/without-ga switches the googleanalytics on and off. Per default, no analytics is included
     - for a production build an alternative-signature is enforced - you need to also specify the alternative-signature profile
 

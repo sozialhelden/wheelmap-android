@@ -28,6 +28,16 @@
         <app.type>UNKNOWN</app.type>
         <app.basepackage>org.wheelmap.android</app.basepackage>
 
+        <!-- Default build configuration with develop settings -->
+        <app.name>Wheelmap Dev</app.name>
+        <app.developbuild>true</app.developbuild>
+        <app.type>DEVEL</app.type>
+        <app.package>${app.basepackage}.develop</app.package>
+        <app.icon>@drawable/ic_launcher_develop</app.icon>
+        <asset.variant>development</asset.variant>
+        <hockey.update.url></hockey.update.url>
+        <app.enabledebug>true</app.enabledebug>
+
         <!-- Build and debug environment -->
         <!-- the publicly available dependency -->
         <platform.core.groupid>com.google.android</platform.core.groupid>
@@ -212,29 +222,6 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>enforce-profile</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireProperty>
-                                    <property>app.package</property>
-                                    <message>You need to select one of the available build
-                                        configurations. They are profiles develop, staging, life or
-                                        production
-                                    </message>
-                                </requireProperty>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>1.2</version>
@@ -264,19 +251,6 @@
         </plugins>
     </build>
     <profiles>
-        <profile>
-            <id>develop</id>
-            <properties>
-                <app.name>Wheelmap Dev</app.name>
-                <app.developbuild>true</app.developbuild>
-                <app.type>DEVEL</app.type>
-                <app.package>${app.basepackage}.develop</app.package>
-                <app.icon>@drawable/ic_launcher_develop</app.icon>
-                <asset.variant>development</asset.variant>
-                <hockey.update.url></hockey.update.url>
-                <app.enabledebug>true</app.enabledebug>
-            </properties>
-        </profile>
         <profile>
             <id>staging</id>
             <properties>

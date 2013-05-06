@@ -4,10 +4,10 @@
 
 <resources>
 
-    <string name="app_name">${app.name}</string>
-    <string name="wheelmapprovider">${app.package}.wheelmap</string>
-    <string name="supportprovider">${app.package}.support</string>
+    <string name="app_name">Wheelmap Dev</string>
+    <string name="wheelmapprovider">org.wheelmap.android.develop.wheelmap</string>
+    <string name="supportprovider">org.wheelmap.android.develop.support</string>
     <string name="andrologproperties">androlog.properties</string>
-    <bool name="developbuild">${app.developbuild}</bool>
+    <bool name="developbuild">true</bool>
 
 </resources>

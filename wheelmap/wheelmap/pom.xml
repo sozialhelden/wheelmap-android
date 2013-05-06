@@ -149,17 +149,9 @@
             <resource>
                 <directory>src/main/resources/android</directory>
                 <filtering>true</filtering>
-                <targetPath>${project.build.directory}/filtered-res/values</targetPath>
+                <targetPath>${project.basedir}/res/values/</targetPath>
                 <includes>
                     <include>configs.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>res</directory>
-                <filtering>true</filtering>
-                <targetPath>${project.build.directory}/filtered-res</targetPath>
-                <includes>
-                    <include>**/*</include>
                 </includes>
             </resource>
             <resource>
@@ -209,7 +201,6 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <resourceDirectory>${project.build.directory}/filtered-res</resourceDirectory>
                     <renameManifestPackage>${app.package}</renameManifestPackage>
                 </configuration>
             </plugin>
@@ -231,37 +222,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.github.danielflower.mavenplugins</groupId>
-                <artifactId>maven-gitlog-plugin</artifactId>
-                <version>1.5.0</version>
-                <configuration>
-                    <reportTitle>Changelog for ${app.name} version ${app.version.name}-${app.type}</reportTitle>
-                    <verbose>true</verbose>
-                    <outputDirectory>${project.build.directory}/hockey</outputDirectory>
-                    <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
-                    <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
-                    <generateMarkdownChangeLog>false</generateMarkdownChangeLog>
-                    <simpleHTMLChangeLogFilename>app.html</simpleHTMLChangeLogFilename>
-                    <generateHTMLTableOnlyChangeLog>true</generateHTMLTableOnlyChangeLog>
-                    <htmlTableOnlyChangeLogFilename>app-tableonly.html
-                    </htmlTableOnlyChangeLogFilename>
-                    <fullGitMessage>true</fullGitMessage>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>1.0-beta-4</version>
                 <configuration>
                     <fromDir>${project.build.directory}</fromDir>
-                    <includes>${project.artifactId}-${project.version}-${app.type}.apk,app.json
+                    <includes>${project.artifactId}-${project.version}-${app.type}.apk,app.json,app.html
                     </includes>
                     <url>${hockey.repository.url}</url>
                     <toDir>${app.package}/${project.artifactId}${app.version.code}</toDir>
@@ -401,4 +367,5 @@
             </build>
         </profile>
     </profiles>
+
 </project>
