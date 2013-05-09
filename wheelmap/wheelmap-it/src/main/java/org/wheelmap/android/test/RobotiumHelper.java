@@ -1,25 +1,31 @@
 package org.wheelmap.android.test;
 
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import org.wheelmap.android.fragment.NodetypeSelectFragment;
+import org.wheelmap.android.fragment.POIDetailEditableFragment;
+import org.wheelmap.android.fragment.WheelchairStateFragment;
+import org.wheelmap.android.fragment.WorkerFragment;
+import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.modules.UserCredentials;
+import org.wheelmap.android.utils.UtilsMisc;
+
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
+
 import com.google.inject.Inject;
 import com.jayway.android.robotium.solo.Solo;
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 import com.jayway.awaitility.Awaitility;
 import com.jayway.awaitility.Duration;
-import org.wheelmap.android.modules.ICredentials;
-import org.wheelmap.android.modules.UserCredentials;
-import org.wheelmap.android.fragment.*;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.utils.UtilsMisc;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
+import org.wheelmap.android.online.R;
 
 public class RobotiumHelper {
 	private final static String TAG = RobotiumHelper.class.getSimpleName();
@@ -29,8 +35,8 @@ public class RobotiumHelper {
 
 	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
-	static void clickOnActionbar( SoloCompatibilityAbs solo, int resId) {
-		if ( UtilsMisc.hasHoneycomb())
+	static void clickOnActionbar(SoloCompatibilityAbs solo, int resId) {
+		if (UtilsMisc.hasHoneycomb())
 			solo.clickOnActionBarItem(resId);
 		else
 			solo.clickOnVisibleActionbarItem(resId);
@@ -56,18 +62,20 @@ public class RobotiumHelper {
 		solo.sleep(500);
 	}
 
-	private static Activity lookupActivity( SoloCompatibilityAbs solo, String activityName ) {
+	private static Activity lookupActivity(SoloCompatibilityAbs solo,
+			String activityName) {
 
 		List<Activity> acts = solo.getAllOpenedActivities();
-		for ( Activity actvt: acts ) {
-			if ( actvt.getClass().getSimpleName().equals( activityName ))
+		for (Activity actvt : acts) {
+			if (actvt.getClass().getSimpleName().equals(activityName))
 				return actvt;
 		}
 
 		return null;
 	}
 
-	static void  logout(Solo solo, String mainActivity) throws InterruptedException {
+	static void logout(Solo solo, String mainActivity)
+			throws InterruptedException {
 		UserCredentials c = new UserCredentials(solo.getCurrentActivity());
 		if (!c.isLoggedIn())
 			return;
@@ -85,7 +93,7 @@ public class RobotiumHelper {
 		solo.waitForActivity(mainActivity);
 	}
 
-	static void  login(Solo solo) {
+	static void login(Solo solo) {
 		UserCredentials c = new UserCredentials(solo.getCurrentActivity());
 		if (c.isLoggedIn())
 			return;
@@ -104,80 +112,86 @@ public class RobotiumHelper {
 		solo.waitForDialogToClose(1000);
 	}
 
-	static void selectWheelchairState( SoloCompatibilityAbs solo, String activityName) throws InterruptedException {
-		View wheelchairStateButton = lookupActivity(solo, activityName).findViewById(R.id.wheelchair_state_layout);
+	static void selectWheelchairState(SoloCompatibilityAbs solo,
+			String activityName) throws InterruptedException {
+		View wheelchairStateButton = lookupActivity(solo, activityName)
+				.findViewById(R.id.wheelchair_state_layout);
 		Log.d(TAG, "wheelchairState Button " + wheelchairStateButton);
-		solo.clickOnView( wheelchairStateButton );
+		solo.clickOnView(wheelchairStateButton);
 
-		Log.d( TAG, "Current activity " + solo.getCurrentActivity());
-		solo.waitForFragmentByTag( WheelchairStateFragment.TAG );
-		RadioButton radioButton = (RadioButton) solo.getCurrentActivity().findViewById(R.id.radio_limited);
+		Log.d(TAG, "Current activity " + solo.getCurrentActivity());
+		solo.waitForFragmentByTag(WheelchairStateFragment.TAG);
+		RadioButton radioButton = (RadioButton) solo.getCurrentActivity()
+				.findViewById(R.id.radio_limited);
 		Log.d(TAG, "radio button " + radioButton);
 		solo.clickOnRadioButton(1);
 	}
 
-	static void selectCategoryState( SoloCompatibilityAbs solo) throws InterruptedException {
-		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
-		View categoryButton = lookupActivity(solo, "POIDetailEditableActivity").findViewById(R.id.edit_nodetype);
+	static void selectCategoryState(SoloCompatibilityAbs solo)
+			throws InterruptedException {
+		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
+		View categoryButton = lookupActivity(solo, "POIDetailEditableActivity")
+				.findViewById(R.id.edit_nodetype);
 		Log.d(TAG, "category Button " + categoryButton);
-		Log.d( TAG, "Current activity " + solo.getCurrentActivity());
+		Log.d(TAG, "Current activity " + solo.getCurrentActivity());
 
 		solo.clickOnView(categoryButton);
 		solo.waitForFragmentByTag(NodetypeSelectFragment.TAG);
 		solo.clickInList(2);
 	}
 
-	static void searchTestList( SoloCompatibilityAbs solo, String workerTag ) throws Exception {
-		waitForListRefreshingDone( solo, workerTag );
+	static void searchTestList(SoloCompatibilityAbs solo, String workerTag)
+			throws Exception {
+		waitForListRefreshingDone(solo, workerTag);
 		String searchString = solo.getString(R.string.title_search);
 
 		clickOnActionbar(solo, R.id.menu_search);
 		solo.waitForText(searchString);
 		solo.clickOnButton(0);
-		solo.waitForDialogToClose( 1000 );
-		waitForListRefreshingDone( solo, workerTag );
+		solo.waitForDialogToClose(1000);
+		waitForListRefreshingDone(solo, workerTag);
 
 		clickOnActionbar(solo, R.id.menu_search);
 
 		solo.waitForText(searchString);
-		String categoryString = solo.getString(R.string.search_no_selection );
-		solo.clickOnText( categoryString );
-		solo.sleep( 500 );
+		String categoryString = solo.getString(R.string.search_no_selection);
+		solo.clickOnText(categoryString);
+		solo.sleep(500);
 
 		solo.scrollDownList(0);
 		solo.scrollDownList(0);
 		solo.scrollDownList(0);
 		solo.clickInList(2);
 		solo.sleep(500);
-		solo.clickOnButton( 0 );
-		solo.waitForDialogToClose( 1000 );
-		waitForListRefreshingDone( solo, workerTag );
+		solo.clickOnButton(0);
+		solo.waitForDialogToClose(1000);
+		waitForListRefreshingDone(solo, workerTag);
 
 		clickOnActionbar(solo, R.id.menu_search);
 
 		solo.waitForText(searchString);
-		String distanceString = solo.getCurrentActivity().getResources().getStringArray(R.array.distance_array)[3];
+		String distanceString = solo.getCurrentActivity().getResources()
+				.getStringArray(R.array.distance_array)[3];
 		solo.clickOnText(distanceString);
 		solo.clickInList(2);
 		solo.sleep(500);
-		solo.clickOnButton( 0 );
-		solo.waitForDialogToClose( 1000 );
-		waitForListRefreshingDone( solo, workerTag );
+		solo.clickOnButton(0);
+		solo.waitForDialogToClose(1000);
+		waitForListRefreshingDone(solo, workerTag);
 
 		clickOnActionbar(solo, R.id.menu_search);
 
 		solo.waitForText(searchString);
-		solo.enterText( 0, "Fernsehturm" );
+		solo.enterText(0, "Fernsehturm");
 
 		solo.clickOnText(distanceString);
 		solo.scrollUpList(0);
 		solo.clickInList(0);
 		solo.sleep(500);
 		solo.clickOnButton(0);
-		solo.waitForDialogToClose( 1000 );
-		waitForListRefreshingDone( solo, workerTag );
+		solo.waitForDialogToClose(1000);
+		waitForListRefreshingDone(solo, workerTag);
 
 	}
-
 
 }

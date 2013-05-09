@@ -130,6 +130,7 @@
                     <artifactId>android-maven-plugin</artifactId>
                     <version>3.5.3</version>
                     <inherited>true</inherited>
+                    <extensions>true</extensions>
                     <configuration>
                         <androidManifestFile>${project.basedir}/AndroidManifest.xml
                         </androidManifestFile>
@@ -159,6 +160,7 @@
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <releaseProfiles>staging,life</releaseProfiles>
+                        <goals>buildnumber:create deploy</goals>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -223,16 +225,26 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.2</version>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
+                        <phase>initialize</phase>
                         <goals>
-                            <goal>create</goal>
+                            <goal>read-project-properties</goal>
                         </goals>
+                        <configuration>
+                            <files>
+                                <file>buildNumber.properties</file>
+                            </files>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.2</version>
                 <configuration>
                     <format>{0,number}</format>
                     <items>

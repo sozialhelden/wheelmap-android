@@ -20,7 +20,7 @@
   limitations under the License.
   #L%
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap_fixed">
         

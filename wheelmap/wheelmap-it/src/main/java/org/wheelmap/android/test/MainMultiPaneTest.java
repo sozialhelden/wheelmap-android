@@ -1,15 +1,16 @@
 package org.wheelmap.android.test;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-import android.widget.ImageView;
-import com.jayway.android.robotium.solo.Solo;
-import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 import org.wheelmap.android.activity.MainMultiPaneActivity;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.*;
+import org.wheelmap.android.fragment.CombinedWorkerFragment;
+
+import android.test.ActivityInstrumentationTestCase2;
+import android.widget.ImageView;
+
 import org.wheelmap.android.online.R;
+
+import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 
 public class MainMultiPaneTest extends
 		ActivityInstrumentationTestCase2<MainMultiPaneActivity> {
@@ -38,38 +39,41 @@ public class MainMultiPaneTest extends
 	}
 
 	public void testAAASetupApp() {
-		getInstrumentation().runOnMainSync( new Runnable() {
+		getInstrumentation().runOnMainSync(new Runnable() {
 			@Override
 			public void run() {
-				getInstrumentation().callApplicationOnCreate(WheelmapApp.getApp());
+				getInstrumentation().callApplicationOnCreate(
+						WheelmapApp.getApp());
 			}
 		});
 		getInstrumentation().waitForIdleSync();
 	}
 
 	public void testAActivityGettingStarted() throws Exception {
-		RobotiumHelper.waitForListRefreshingDone( solo, CombinedWorkerFragment.TAG );
+		RobotiumHelper.waitForListRefreshingDone(solo,
+				CombinedWorkerFragment.TAG);
 
 		solo.clickInList(1);
 		solo.sleep(2000);
 
-		ImageView moveButton = (ImageView)getActivity().findViewById(R.id.button_movable_resize);
+		ImageView moveButton = (ImageView) getActivity().findViewById(
+				R.id.button_movable_resize);
 		solo.clickOnView(moveButton);
 		solo.sleep(500);
 		solo.clickOnView(moveButton);
 		solo.sleep(500);
-		solo.clickInList( 4 );
+		solo.clickInList(4);
 	}
 
-
 	public void testBNewItem() throws Exception {
-		RobotiumHelper.waitForListRefreshingDone(solo, CombinedWorkerFragment.TAG);
+		RobotiumHelper.waitForListRefreshingDone(solo,
+				CombinedWorkerFragment.TAG);
 
 		solo.clickOnActionBarItem(R.id.menu_location);
 		solo.clickOnActionBarItem(R.id.menu_new_poi);
 
 		solo.sleep(1000);
-		RobotiumHelper.login( solo );
+		RobotiumHelper.login(solo);
 
 		solo.waitForActivity("POIDetailEditableActivity");
 		solo.assertCurrentActivity("want edit activity",
@@ -79,43 +83,44 @@ public class MainMultiPaneTest extends
 		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
 		solo.clickOnActionBarItem(R.id.menu_save);
-		solo.clickOnButton( "Okay" );
+		solo.clickOnButton("Okay");
 
 		RobotiumHelper.logout(solo, "MainMultiPaneActivity");
 
 	}
 
-	public void testCListAndEditorFragment()
-			throws Exception {
-		RobotiumHelper.waitForListRefreshingDone( solo, CombinedWorkerFragment.TAG);
+	public void testCListAndEditorFragment() throws Exception {
+		RobotiumHelper.waitForListRefreshingDone(solo,
+				CombinedWorkerFragment.TAG);
 		RobotiumHelper.login(solo);
 
 		solo.clickInList(2);
-		solo.clickOnActionBarItem(R.id.menu_edit );
+		solo.clickOnActionBarItem(R.id.menu_edit);
 
 		solo.waitForActivity("POIDetailEditableActivity");
-		solo.assertCurrentActivity("detail activity", POIDetailEditableActivity.class);
+		solo.assertCurrentActivity("detail activity",
+				POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
 		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
-		solo.clickOnActionBarItem(R.id.menu_save );
-		solo.waitForActivity("MainMultiPaneActivity" );
+		solo.clickOnActionBarItem(R.id.menu_save);
+		solo.waitForActivity("MainMultiPaneActivity");
 
 		solo.clickInList(5);
-		solo.clickOnActionBarItem(R.id.menu_edit );
+		solo.clickOnActionBarItem(R.id.menu_edit);
 
 		solo.waitForActivity("POIDetailEditableActivity");
-		solo.assertCurrentActivity("detail activity", POIDetailEditableActivity.class);
+		solo.assertCurrentActivity("detail activity",
+				POIDetailEditableActivity.class);
 		solo.clearEditText(0);
 		solo.enterText(0, "testtest");
 		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
 		RobotiumHelper.selectCategoryState(solo);
 
-		solo.clickOnActionBarItem(R.id.menu_save );
+		solo.clickOnActionBarItem(R.id.menu_save);
 		solo.waitForActivity("MainMultiPaneActivity");
-		solo.assertCurrentActivity("main activity",
-				MainMultiPaneActivity.class);
+		solo.assertCurrentActivity("main activity", MainMultiPaneActivity.class);
 
 		RobotiumHelper.logout(solo, "MainMultiPaneActivity");
 
