@@ -160,7 +160,7 @@
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <releaseProfiles>staging,life</releaseProfiles>
-                        <goals>buildnumber:create deploy</goals>
+                        <preparationGoals>clean verify buildnumber:create</preparationGoals>
                     </configuration>
                 </plugin>
                 <plugin>
