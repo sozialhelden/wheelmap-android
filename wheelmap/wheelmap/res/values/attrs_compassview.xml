@@ -2,7 +2,7 @@
 <resources>
 
     <declare-styleable name="CompassView">
-        <attr name="color" format="reference|color" />
+        <attr name="color" format="reference|color"/>
     </declare-styleable>
 
 </resources>

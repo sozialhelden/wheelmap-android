@@ -22,21 +22,21 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/padding_large" >
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/padding_large">
 
     <TextView
-        android:id="@id/text"
-        style="@style/FontSectionTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_medium" />
+            android:id="@id/text"
+            style="@style/FontSectionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"/>
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/separator_medium"
-        android:src="@color/color_base_ng" />
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_medium"
+            android:src="@color/color_base_ng"/>
 
 </LinearLayout>

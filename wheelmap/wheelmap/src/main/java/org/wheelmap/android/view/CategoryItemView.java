@@ -30,22 +30,24 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 public class CategoryItemView extends FrameLayout implements TypeItemView {
-	private TextView mText;
 
-	public CategoryItemView(Context context, int type) {
-		super(context);
-		LayoutInflater inflater = LayoutInflater.from(context);
-		int resource;
-		if (type == TypesAdapter.SEARCH_MODE)
-			resource = R.layout.item_search_category;
-		else
-			resource = R.layout.item_search_category_noselect;
+    private TextView mText;
 
-		inflater.inflate(resource, this, true);
-		mText = (TextView) findViewById(R.id.text);
-	}
+    public CategoryItemView(Context context, int type) {
+        super(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        int resource;
+        if (type == TypesAdapter.SEARCH_MODE) {
+            resource = R.layout.item_search_category;
+        } else {
+            resource = R.layout.item_search_category_noselect;
+        }
 
-	public void setText(String text) {
-		mText.setText(text);
-	}
+        inflater.inflate(resource, this, true);
+        mText = (TextView) findViewById(R.id.text);
+    }
+
+    public void setText(String text) {
+        mText.setText(text);
+    }
 }

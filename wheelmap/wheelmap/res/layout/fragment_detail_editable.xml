@@ -22,156 +22,156 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
-    <LinearLayout style="@style/TitleBarNew.SingleLine" >
+    <LinearLayout style="@style/TitleBarNew.SingleLine">
 
         <TextView
-            style="@style/TitleBarTextNew.Title"
-            android:text="@string/title_pois_detail_edit" >
+                style="@style/TitleBarTextNew.Title"
+                android:text="@string/title_pois_detail_edit">
         </TextView>
     </LinearLayout>
 
-    <ScrollView style="@style/Scrollable.View" >
+    <ScrollView style="@style/Scrollable.View">
 
         <LinearLayout
-            style="@style/Container.ScrollviewContent"
-            android:orientation="vertical" >
+                style="@style/Container.ScrollviewContent"
+                android:orientation="vertical">
 
             <EditText
-                android:id="@+id/name"
-                style="@style/DetailFontNew.Editable"
-                android:hint="@string/poi_property_name" />
+                    android:id="@+id/name"
+                    style="@style/DetailFontNew.Editable"
+                    android:hint="@string/poi_property_name"/>
 
-            <include layout="@layout/separator" />
+            <include layout="@layout/separator"/>
 
             <RelativeLayout
-                android:id="@+id/edit_nodetype"
-                style="@style/Container.Pressable" >
+                    android:id="@+id/edit_nodetype"
+                    style="@style/Container.Pressable">
 
                 <TextView
-                    android:id="@+id/nodetype"
-                    style="@style/DetailFontNew"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/edit_nodetype_icon"
-                    android:hint="@string/poi_property_nodetype" />
-
-                <ImageView
-                    android:id="@+id/edit_nodetype_icon"
-                    style="@style/IconMedium"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_menu_edit_wheelmap_dark" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/edit_geolocation_container"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <include layout="@layout/separator" />
-
-                <RelativeLayout
-                    android:id="@+id/edit_geolocation"
-                    style="@style/Container.Pressable" >
-
-                    <TextView
-                        android:id="@+id/edit_position_text"
+                        android:id="@+id/nodetype"
                         style="@style/DetailFontNew"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/edit_geolocation_icon"
-                        android:hint="@string/poi_property_position" />
+                        android:layout_toLeftOf="@+id/edit_nodetype_icon"
+                        android:hint="@string/poi_property_nodetype"/>
 
-                    <ImageView
-                        android:id="@+id/edit_geolocation_icon"
+                <ImageView
+                        android:id="@+id/edit_nodetype_icon"
                         style="@style/IconMedium"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_menu_edit_wheelmap_dark" />
+                        android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                    android:id="@+id/edit_geolocation_container"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                <include layout="@layout/separator"/>
+
+                <RelativeLayout
+                        android:id="@+id/edit_geolocation"
+                        style="@style/Container.Pressable">
+
+                    <TextView
+                            android:id="@+id/edit_position_text"
+                            style="@style/DetailFontNew"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/edit_geolocation_icon"
+                            android:hint="@string/poi_property_position"/>
+
+                    <ImageView
+                            android:id="@+id/edit_geolocation_icon"
+                            style="@style/IconMedium"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
                 </RelativeLayout>
             </LinearLayout>
 
-            <include layout="@layout/separator" />
+            <include layout="@layout/separator"/>
 
-            <include layout="@layout/item_wheelchair_state" />
+            <include layout="@layout/item_wheelchair_state"/>
 
-            <include layout="@layout/separator" />
+            <include layout="@layout/separator"/>
 
             <EditText
-                android:id="@+id/comment"
-                style="@style/DetailFontNew.Editable"
-                android:hint="@string/poi_property_comment" />
+                    android:id="@+id/comment"
+                    style="@style/DetailFontNew.Editable"
+                    android:hint="@string/poi_property_comment"/>
 
-            <include layout="@layout/separator" />
+            <include layout="@layout/separator"/>
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/street"
-                    style="@style/DetailFontNew.Editable"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:hint="@string/poi_property_street" />
+                        android:id="@+id/street"
+                        style="@style/DetailFontNew.Editable"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:hint="@string/poi_property_street"/>
 
                 <EditText
-                    android:id="@+id/housenum"
-                    style="@style/DetailFontNew.Editable"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-					android:hint="@string/poi_property_housenum" />
+                        android:id="@+id/housenum"
+                        style="@style/DetailFontNew.Editable"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:hint="@string/poi_property_housenum"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/postcode"
-                    style="@style/DetailFontNew.Editable"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
-                    android:hint="@string/poi_property_postcode" />
+                        android:id="@+id/postcode"
+                        style="@style/DetailFontNew.Editable"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:hint="@string/poi_property_postcode"/>
 
                 <EditText
-                    android:id="@+id/city"
-                    style="@style/DetailFontNew.Editable"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.7"
-                    android:hint="@string/poi_property_city" />
+                        android:id="@+id/city"
+                        style="@style/DetailFontNew.Editable"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7"
+                        android:hint="@string/poi_property_city"/>
             </LinearLayout>
 
-            <include layout="@layout/separator" />
+            <include layout="@layout/separator"/>
 
             <EditText
-                android:id="@+id/phone"
-                style="@style/DetailFontNew.Editable"
-                android:autoLink="phone"
-                android:hint="@string/poi_property_phone" />
+                    android:id="@+id/phone"
+                    style="@style/DetailFontNew.Editable"
+                    android:autoLink="phone"
+                    android:hint="@string/poi_property_phone"/>
 
-            <include layout="@layout/separator" />
+            <include layout="@layout/separator"/>
 
             <EditText
-                android:id="@+id/website"
-                style="@style/DetailFontNew.Editable"
-                android:autoLink="web"
-                android:hint="@string/poi_property_website" />
+                    android:id="@+id/website"
+                    style="@style/DetailFontNew.Editable"
+                    android:autoLink="web"
+                    android:hint="@string/poi_property_website"/>
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_large"
-                android:background="@android:color/black" />
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/separator_large"
+                    android:background="@android:color/black"/>
         </LinearLayout>
     </ScrollView>
 

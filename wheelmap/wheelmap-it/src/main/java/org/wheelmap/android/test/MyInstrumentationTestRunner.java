@@ -29,23 +29,23 @@ import android.test.InstrumentationTestRunner;
 
 public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 
-	public TestSuite getAllTests() {
+    public TestSuite getAllTests() {
 
-		TestSuite suite = new TestSuite(
-				MyInstrumentationTestRunner.class.getName());
+        TestSuite suite = new TestSuite(
+                MyInstrumentationTestRunner.class.getName());
 
-		suite.addTestSuite(GeocoordinatesMathTest.class);
-		suite.addTestSuite(LoginTest.class);
-		suite.addTestSuite(POIContentProviderTest.class);
-		suite.addTestSuite(POIServiceDatabaseTest.class);
+        suite.addTestSuite(GeocoordinatesMathTest.class);
+        suite.addTestSuite(LoginTest.class);
+        suite.addTestSuite(POIContentProviderTest.class);
+        suite.addTestSuite(POIServiceDatabaseTest.class);
 
-		suite.addTestSuite(SupportDataTest.class);
-		if (UtilsMisc.isTablet(getContext())) {
-			suite.addTestSuite(MainMultiPaneTest.class);
-		} else {
-			suite.addTestSuite(MainSinglePaneTest.class);
-		}
-		return suite;
-	}
+        suite.addTestSuite(SupportDataTest.class);
+        if (UtilsMisc.isTablet(getContext())) {
+            suite.addTestSuite(MainMultiPaneTest.class);
+        } else {
+            suite.addTestSuite(MainSinglePaneTest.class);
+        }
+        return suite;
+    }
 
 }

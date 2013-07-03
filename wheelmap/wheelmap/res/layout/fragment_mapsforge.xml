@@ -22,24 +22,24 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:compass="http://schemas.android.com/apk/res/org.wheelmap.android.online"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+                xmlns:compass="http://schemas.android.com/apk/res-auto"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
     <org.mapsforge.android.maps.MapView
-        android:id="@+id/map"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        ramCacheShared="true" />
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            ramCacheShared="true"/>
 
     <org.wheelmap.android.view.CompassView
-        android:id="@+id/compass"
-       	android:layout_width="@dimen/mapcompass_size"
-       	android:layout_height="@dimen/mapcompass_size"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="@dimen/mapcompass_margin_vertical"
-        android:layout_marginLeft="@dimen/mapcompass_margin_horizontal"
-        compass:color="@android:color/black" />
+            android:id="@+id/compass"
+            android:layout_width="@dimen/mapcompass_size"
+            android:layout_height="@dimen/mapcompass_size"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/mapcompass_margin_vertical"
+            android:layout_marginLeft="@dimen/mapcompass_margin_horizontal"
+            compass:color="@android:color/black"/>
 
 </RelativeLayout>

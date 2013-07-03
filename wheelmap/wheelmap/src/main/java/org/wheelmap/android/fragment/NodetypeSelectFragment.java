@@ -21,116 +21,120 @@
  */
 package org.wheelmap.android.fragment;
 
-import java.util.ArrayList;
-
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.ListFragment;
+import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
-import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import java.util.ArrayList;
 
-public class NodetypeSelectFragment extends SherlockListFragment {
-	public static final String TAG = NodetypeSelectFragment.class
-			.getSimpleName();
-	private int mNodeTypeSelected;
-	private CheckedTextView oldCheckedView;
+public class NodetypeSelectFragment extends ListFragment {
 
-	private OnNodetypeSelectListener mListener;
+    public static final String TAG = NodetypeSelectFragment.class
+            .getSimpleName();
 
-	public interface OnNodetypeSelectListener {
-		public void onSelect(int nodetype);
-	}
+    private int mNodeTypeSelected;
 
-	public static NodetypeSelectFragment newInstance(int nodetype) {
-		Bundle b = new Bundle();
-		b.putInt(Extra.NODETYPE, nodetype);
+    private CheckedTextView oldCheckedView;
 
-		NodetypeSelectFragment f = new NodetypeSelectFragment();
-		f.setArguments(b);
+    private OnNodetypeSelectListener mListener;
 
-		return f;
-	}
+    public interface OnNodetypeSelectListener {
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+        public void onSelect(int nodetype);
+    }
 
-		if (activity instanceof OnEditPositionListener) {
-			mListener = (OnNodetypeSelectListener) activity;
-		}
-	}
+    public static NodetypeSelectFragment newInstance(int nodetype) {
+        Bundle b = new Bundle();
+        b.putInt(Extra.NODETYPE, nodetype);
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mNodeTypeSelected = getArguments().getInt(Extra.NODETYPE);
-	}
+        NodetypeSelectFragment f = new NodetypeSelectFragment();
+        f.setArguments(b);
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_nodetype_select,
-				container, false);
+        return f;
+    }
 
-		ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
-				.createTypesList(getActivity(), false);
-		setListAdapter(new PickOnlyNodeTypesAdapter(getActivity(), types));
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-		return view;
-	}
+        if (activity instanceof OnEditPositionListener) {
+            mListener = (OnNodetypeSelectListener) activity;
+        }
+    }
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		CategoryOrNodeType item = (CategoryOrNodeType) l.getAdapter().getItem(
-				position);
-		switch (item.type) {
-		case NODETYPE:
-			mNodeTypeSelected = item.id;
-			// if (oldCheckedView != null)
-			// oldCheckedView.setChecked(false);
-			// CheckedTextView view = (CheckedTextView) v
-			// .findViewById(R.id.search_type);
-			// view.setChecked(true);
-			// oldCheckedView = view;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mNodeTypeSelected = getArguments().getInt(Extra.NODETYPE);
+    }
 
-			if (mListener != null) {
-				mListener.onSelect(mNodeTypeSelected);
-			}
-			break;
-		default:
-			//
-		}
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_nodetype_select,
+                container, false);
 
-	private static class PickOnlyNodeTypesAdapter extends TypesAdapter {
-		public PickOnlyNodeTypesAdapter(Context context,
-				ArrayList<CategoryOrNodeType> items) {
-			super(context, items, TypesAdapter.SELECT_MODE);
-		}
+        ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
+                .createTypesList(getActivity(), false);
+        setListAdapter(new PickOnlyNodeTypesAdapter(getActivity(), types));
 
-		@Override
-		public boolean isEnabled(int position) {
-			CategoryOrNodeType item = (CategoryOrNodeType) getItem(position);
-			switch (item.type) {
-			case CATEGORY:
-				return false;
-			case NODETYPE:
-				return true;
-			default:
-				return false;
-			}
-		}
-	}
+        return view;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        CategoryOrNodeType item = (CategoryOrNodeType) l.getAdapter().getItem(
+                position);
+        switch (item.type) {
+            case NODETYPE:
+                mNodeTypeSelected = item.id;
+                // if (oldCheckedView != null)
+                // oldCheckedView.setChecked(false);
+                // CheckedTextView view = (CheckedTextView) v
+                // .findViewById(R.id.search_type);
+                // view.setChecked(true);
+                // oldCheckedView = view;
+
+                if (mListener != null) {
+                    mListener.onSelect(mNodeTypeSelected);
+                }
+                break;
+            default:
+                //
+        }
+    }
+
+    private static class PickOnlyNodeTypesAdapter extends TypesAdapter {
+
+        public PickOnlyNodeTypesAdapter(Context context,
+                ArrayList<CategoryOrNodeType> items) {
+            super(context, items, TypesAdapter.SELECT_MODE);
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            CategoryOrNodeType item = (CategoryOrNodeType) getItem(position);
+            switch (item.type) {
+                case CATEGORY:
+                    return false;
+                case NODETYPE:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
 
 }

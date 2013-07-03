@@ -25,58 +25,63 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
-import wheelmap.org.WheelchairState;
 import android.content.ContentValues;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
-	private OverlayItem item = new OverlayItem();
-	private ContentValues itemValues;
-	private int items;
-	private OnTapListener mListener;
 
-	public SingleItemOverlay(OnTapListener listener) {
-		super(null);
-		items = 0;
-		mListener = listener;
-	}
+    private OverlayItem item = new OverlayItem();
 
-	public void setItem(ContentValues values, NodeType nodeType,
-			WheelchairState state) {
-		itemValues = values;
-		Drawable marker = nodeType.stateDrawables.get(state);
-		item.setTitle(values.getAsString(POIs.NAME));
-		item.setSnippet(values.getAsString(POIs.DESCRIPTION));
-		item.setMarker(marker);
-		item.setPoint(new GeoPoint(values.getAsDouble(POIs.LATITUDE), values
-				.getAsDouble(POIs.LONGITUDE)));
-		Log.d("singleitemoverlay", "item point = " + item.getPoint().toString());
-		items = 1;
-		populate();
-	}
+    private ContentValues itemValues;
 
-	@Override
-	public int size() {
-		return items;
-	}
+    private int items;
 
-	@Override
-	protected OverlayItem createItem(int index) {
-		if (index > 0)
-			return null;
-		return item;
-	}
+    private OnTapListener mListener;
 
-	@Override
-	public boolean onTap(int index) {
-		if (mListener != null) {
-			mListener.onTap(item, itemValues);
-			return true;
-		}
+    public SingleItemOverlay(OnTapListener listener) {
+        super(null);
+        items = 0;
+        mListener = listener;
+    }
 
-		return false;
-	}
+    public void setItem(ContentValues values, NodeType nodeType,
+            WheelchairState state) {
+        itemValues = values;
+        Drawable marker = nodeType.stateDrawables.get(state);
+        item.setTitle(values.getAsString(POIs.NAME));
+        item.setSnippet(values.getAsString(POIs.DESCRIPTION));
+        item.setMarker(marker);
+        item.setPoint(new GeoPoint(values.getAsDouble(POIs.LATITUDE), values
+                .getAsDouble(POIs.LONGITUDE)));
+        Log.d("singleitemoverlay", "item point = " + item.getPoint().toString());
+        items = 1;
+        populate();
+    }
+
+    @Override
+    public int size() {
+        return items;
+    }
+
+    @Override
+    protected OverlayItem createItem(int index) {
+        if (index > 0) {
+            return null;
+        }
+        return item;
+    }
+
+    @Override
+    public boolean onTap(int index) {
+        if (mListener != null) {
+            mListener.onTap(item, itemValues);
+            return true;
+        }
+
+        return false;
+    }
 }

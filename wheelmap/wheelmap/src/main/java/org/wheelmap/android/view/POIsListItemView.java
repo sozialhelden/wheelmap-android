@@ -32,58 +32,61 @@ import android.widget.TextView;
 
 public class POIsListItemView extends RelativeLayout {
 
-	private TextView poiName;
-	private TextView poiCategory;
-	private TextView poiNodeType;
-	private TextView poiDistance;
-	private ImageView poiIcon;
-	private CompassView poiCompass;
+    private TextView poiName;
 
-	/**
-	 * constructor creates a new line item of list
-	 * 
-	 * @param context
-	 */
-	public POIsListItemView(Context context) {
-		super(context);
-		// inflate rating
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private TextView poiCategory;
 
-		inflater.inflate(R.layout.item_list_pois, this, true);
+    private TextView poiNodeType;
 
-		poiName = (TextView) findViewById(R.id.poi_name);
-		poiCategory = (TextView) findViewById(R.id.poi_category);
-		poiNodeType = (TextView) findViewById(R.id.poi_nodetype);
-		poiDistance = (TextView) findViewById(R.id.poi_distance);
-		poiIcon = (ImageView) findViewById(R.id.image);
-		poiCompass = (CompassView) findViewById(R.id.compass);
-	}
+    private TextView poiDistance;
 
-	/**
-	 * Convenience method to set the properties of POI
-	 */
-	public void setName(String text) {
-		poiName.setText(text);
-	}
+    private ImageView poiIcon;
 
-	public void setCategory(String text) {
-		poiCategory.setText(text);
-	}
+    private CompassView poiCompass;
 
-	public void setNodeType(String text) {
-		poiNodeType.setText(text);
-	}
+    /**
+     * constructor creates a new line item of list
+     */
+    public POIsListItemView(Context context) {
+        super(context);
+        // inflate rating
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-	public void setDistance(String text) {
-		poiDistance.setText(text);
-	}
+        inflater.inflate(R.layout.item_list_pois, this, true);
 
-	public void setIcon(Drawable drawable) {
-		poiIcon.setImageDrawable(drawable);
-	}
+        poiName = (TextView) findViewById(R.id.poi_name);
+        poiCategory = (TextView) findViewById(R.id.poi_category);
+        poiNodeType = (TextView) findViewById(R.id.poi_nodetype);
+        poiDistance = (TextView) findViewById(R.id.poi_distance);
+        poiIcon = (ImageView) findViewById(R.id.image);
+        poiCompass = (CompassView) findViewById(R.id.compass);
+    }
 
-	public void setDirection(float direction) {
-		poiCompass.updateDirection(direction);
-	}
+    /**
+     * Convenience method to set the properties of POI
+     */
+    public void setName(String text) {
+        poiName.setText(text);
+    }
+
+    public void setCategory(String text) {
+        poiCategory.setText(text);
+    }
+
+    public void setNodeType(String text) {
+        poiNodeType.setText(text);
+    }
+
+    public void setDistance(String text) {
+        poiDistance.setText(text);
+    }
+
+    public void setIcon(Drawable drawable) {
+        poiIcon.setImageDrawable(drawable);
+    }
+
+    public void setDirection(float direction) {
+        poiCompass.updateDirection(direction);
+    }
 }

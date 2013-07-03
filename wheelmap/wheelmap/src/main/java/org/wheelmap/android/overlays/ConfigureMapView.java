@@ -31,81 +31,89 @@ import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 
 public class ConfigureMapView {
-	private final static MapViewMode defaultViewMode = MapViewMode.MAPNIK_TILE_DOWNLOAD;
-	private final static int MAP_CACHE_IN_MB = 10;
-	private final static int MB_TO_BYTES_MULTIPLIER = 1000000;
 
-	// private final static MapViewMode defaultViewMode =
-	// MapViewMode.OSMARENDER_TILE_DOWNLOAD;
+    private final static MapViewMode defaultViewMode = MapViewMode.MAPNIK_TILE_DOWNLOAD;
 
-	private static MapPicker mMapPicker = new MapPickerSimple();
+    private final static int MAP_CACHE_IN_MB = 10;
 
-	public static void pickAppropriateMap( Context context, MapView mapView ) {
-		mMapPicker.pickAppropriateMap(context, mapView);
-	}
+    private final static int MB_TO_BYTES_MULTIPLIER = 1000000;
 
-	private interface MapPicker {
-		public void pickAppropriateMap(Context context, MapView mapView);
-	}
+    // private final static MapViewMode defaultViewMode =
+    // MapViewMode.OSMARENDER_TILE_DOWNLOAD;
 
-	private static class MapPickerSimple implements MapPicker {
-		public void pickAppropriateMap(Context context, MapView mapView) {
-			int tileSizeInBytes = MapView.getTileSizeInBytes();
-			int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER
-					/ tileSizeInBytes;
-			mapView.setMemoryCardCacheSize(tileNum);
-			mapView.setMemoryCardCachePersistence(false);
-			mapView.setMapViewMode(defaultViewMode);
-		}
-	}
+    private static MapPicker mMapPicker = new MapPickerSimple();
 
-	private static class MapPickerExtern implements MapPicker {
-		public void pickAppropriateMap(Context context, MapView mapView) {
-			int tileSizeInBytes = MapView.getTileSizeInBytes();
-			int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER
-					/ tileSizeInBytes;
-			// Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes +
-			// " tileNum = " + tileNum );
+    public static void pickAppropriateMap(Context context, MapView mapView) {
+        mMapPicker.pickAppropriateMap(context, mapView);
+    }
 
-			mapView.setMemoryCardCacheSize(tileNum);
-			mapView.setMemoryCardCachePersistence(false);
+    private interface MapPicker {
 
-			ProviderInfo info = context.getPackageManager().resolveContentProvider(
-					MapAccess.AUTHORITY, 0);
+        public void pickAppropriateMap(Context context, MapView mapView);
+    }
 
-			if (info == null) {
-				mapView.setMapViewMode(defaultViewMode);
-				return;
-			}
+    private static class MapPickerSimple implements MapPicker {
 
-			ContentResolver resolver = context.getContentResolver();
-			Cursor c;
-			try {
-				c = resolver.query(MapAccess.CONTENT_URI_SELECTED,
-						MapAccess.selectedPROJECTION, null, null, null);
-			} catch (RuntimeException e) {
-				mapView.setMapViewMode(defaultViewMode);
-				return;
-			}
-			if (c == null) {
-				mapView.setMapViewMode(defaultViewMode);
-				return;
-			}
+        public void pickAppropriateMap(Context context, MapView mapView) {
+            int tileSizeInBytes = MapView.getTileSizeInBytes();
+            int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER
+                    / tileSizeInBytes;
+            mapView.setMemoryCardCacheSize(tileNum);
+            mapView.setMemoryCardCachePersistence(false);
+            mapView.setMapViewMode(defaultViewMode);
+        }
+    }
 
-			String mapFile;
-			if (c.getCount() == 1) {
-				c.moveToFirst();
-				mapFile = MapAccess.createPath(MapAccess.getParentName(c),
-						MapAccess.getName(c));
-				mapView.setMapFile(mapFile);
-				if (mapView.hasValidMapFile())
-					mapView.setMapViewMode(MapViewMode.CANVAS_RENDERER);
-				else
-					mapView.setMapViewMode(defaultViewMode);
-			} else
-				mapView.setMapViewMode(defaultViewMode);
+    private static class MapPickerExtern implements MapPicker {
 
-			c.close();
-		}
-	}
+        public void pickAppropriateMap(Context context, MapView mapView) {
+            int tileSizeInBytes = MapView.getTileSizeInBytes();
+            int tileNum = MAP_CACHE_IN_MB * MB_TO_BYTES_MULTIPLIER
+                    / tileSizeInBytes;
+            // Log.d( "mapsforge", "tileSizeInBytes = " + tileSizeInBytes +
+            // " tileNum = " + tileNum );
+
+            mapView.setMemoryCardCacheSize(tileNum);
+            mapView.setMemoryCardCachePersistence(false);
+
+            ProviderInfo info = context.getPackageManager().resolveContentProvider(
+                    MapAccess.AUTHORITY, 0);
+
+            if (info == null) {
+                mapView.setMapViewMode(defaultViewMode);
+                return;
+            }
+
+            ContentResolver resolver = context.getContentResolver();
+            Cursor c;
+            try {
+                c = resolver.query(MapAccess.CONTENT_URI_SELECTED,
+                        MapAccess.selectedPROJECTION, null, null, null);
+            } catch (RuntimeException e) {
+                mapView.setMapViewMode(defaultViewMode);
+                return;
+            }
+            if (c == null) {
+                mapView.setMapViewMode(defaultViewMode);
+                return;
+            }
+
+            String mapFile;
+            if (c.getCount() == 1) {
+                c.moveToFirst();
+                mapFile = MapAccess.createPath(MapAccess.getParentName(c),
+                        MapAccess.getName(c));
+                mapView.setMapFile(mapFile);
+                if (mapView.hasValidMapFile()) {
+                    mapView.setMapViewMode(MapViewMode.CANVAS_RENDERER);
+                } else {
+                    mapView.setMapViewMode(defaultViewMode);
+                }
+            } else {
+                mapView.setMapViewMode(defaultViewMode);
+            }
+
+            c.close();
+        }
+    }
 }

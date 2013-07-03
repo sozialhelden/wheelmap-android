@@ -22,86 +22,76 @@
 package org.wheelmap.android.modules;
 
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
 import org.wheelmap.android.app.Constants;
 import org.wheelmap.android.utils.UtilsMisc;
-
 
 import android.app.Application;
 import android.util.Log;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 
 /**
  * Provides to lookup resources which are need for basic usage like the discovery uri.
  */
 
- @Singleton
-class AppProperties implements IAppProperties
-{
-	
-	private static final String	LOG_TAG	= AppProperties.class.getSimpleName();
+@Singleton
+class AppProperties implements IAppProperties {
 
-	private  Properties	properties;
+    private static final String LOG_TAG = AppProperties.class.getSimpleName();
 
-
-	@Inject
-	public AppProperties(Provider<Application> applicationProvider) 
-	{
-		final BufferedInputStream stream;
-		
-		{
-			final Application app = applicationProvider.get();
-			try 
-			{
-				stream = new BufferedInputStream(app.getAssets().open(
-							Constants.APP_PROPERTIES_ASSETS_FILE_NAME));
-				try 
-				{
-					properties = new Properties();
-					properties.load(stream);
-				}
-				finally
-				{
-					UtilsMisc.closeSilently(stream);
-				}
-
-			} catch (IOException e) {
-				Log.e(LOG_TAG, "exception by instatiating of app properties" +  e);
-			}
-		}
-	}
+    private Properties properties;
 
 
-	/**
-	 * Returns an {@link String} value for the lookup key.
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public String get(final String key)
-	{
-		if (key == null)
-			return null;
+    @Inject
+    public AppProperties(Provider<Application> applicationProvider) {
+        final BufferedInputStream stream;
 
-		if (properties == null) {
-			Log.w( LOG_TAG, "properties are not initialized - returning null" );
-			return null;
-		}
+        {
+            final Application app = applicationProvider.get();
+            try {
+                stream = new BufferedInputStream(app.getAssets().open(
+                        Constants.APP_PROPERTIES_ASSETS_FILE_NAME));
+                try {
+                    properties = new Properties();
+                    properties.load(stream);
+                } finally {
+                    UtilsMisc.closeSilently(stream);
+                }
 
-		final Object value = properties.get(key);
-		if ( value == null) {
-			Log.w( LOG_TAG, "key " + key + " not found - returning null" );
-			return null;
-		} else {
-			return value.toString();
-		}
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "exception by instatiating of app properties" + e);
+            }
+        }
+    }
 
-	}
+
+    /**
+     * Returns an {@link String} value for the lookup key.
+     */
+    public String get(final String key) {
+        if (key == null) {
+            return null;
+        }
+
+        if (properties == null) {
+            Log.w(LOG_TAG, "properties are not initialized - returning null");
+            return null;
+        }
+
+        final Object value = properties.get(key);
+        if (value == null) {
+            Log.w(LOG_TAG, "key " + key + " not found - returning null");
+            return null;
+        } else {
+            return value.toString();
+        }
+
+    }
 }

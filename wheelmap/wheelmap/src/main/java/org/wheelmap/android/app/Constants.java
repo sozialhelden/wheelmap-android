@@ -26,13 +26,13 @@ package org.wheelmap.android.app;
  */
 public final class Constants {
 
-	private Constants() {
-		// no instance
-	}
+    private Constants() {
+        // no instance
+    }
 
-	/**
-	 * Name of the File which is read to get the server url
-	 */
-	public final static String APP_PROPERTIES_ASSETS_FILE_NAME = "application.properties";
+    /**
+     * Name of the File which is read to get the server url
+     */
+    public final static String APP_PROPERTIES_ASSETS_FILE_NAME = "application.properties";
 
 }

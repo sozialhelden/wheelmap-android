@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
     <View
-        android:id="@+id/center_vertical_position"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerVertical="true" />
-
-    <FrameLayout
-        android:id="@+id/map_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
-    <RelativeLayout
-        android:id="@+id/movable_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/center_vertical_position"
-        android:baselineAligned="false" >
-
-        <View
-            android:id="@+id/center_horizontal_position"
+            android:id="@+id/center_vertical_position"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerVertical="true"/>
 
-        <FrameLayout
-            android:id="@+id/list_layout"
+    <FrameLayout
+            android:id="@+id/map_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+    <RelativeLayout
+            android:id="@+id/movable_layout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_toLeftOf="@+id/center_horizontal_position"
-            android:background="@android:color/background_light" />
-
-        <FrameLayout
-            android:id="@+id/detail_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_toRightOf="@+id/center_horizontal_position" />
-
-        <ImageView
-            android:layout_width="@dimen/margin_huge"
-            android:layout_height="fill_parent"
-            android:layout_toLeftOf="@+id/center_horizontal_position"
-            android:src="@drawable/fragment_shadow_right" />
+            android:layout_above="@+id/center_vertical_position"
+            android:baselineAligned="false">
 
         <View
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/separator_large"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/black" />
+                android:id="@+id/center_horizontal_position"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerHorizontal="true"/>
+
+        <FrameLayout
+                android:id="@+id/list_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@+id/center_horizontal_position"
+                android:background="@android:color/background_light"/>
+
+        <FrameLayout
+                android:id="@+id/detail_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/center_horizontal_position"/>
+
+        <ImageView
+                android:layout_width="@dimen/margin_huge"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@+id/center_horizontal_position"
+                android:src="@drawable/fragment_shadow_right"/>
+
+        <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/separator_large"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/black"/>
     </RelativeLayout>
 
     <ImageButton
-        android:id="@+id/button_movable_resize"
-        style="@style/IconLarge"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="48dp"
-        android:src="@drawable/ic_detail_expand" />
+            android:id="@+id/button_movable_resize"
+            style="@style/IconLarge"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="48dp"
+            android:src="@drawable/ic_detail_expand"/>
 
 </RelativeLayout>

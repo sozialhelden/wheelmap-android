@@ -16,26 +16,26 @@ limitations under the License.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.wheelmap.android.test"
-    android:versionCode="21"
-    android:versionName="0.99.6-SNAPSHOT-DEVEL">
+          package="org.wheelmap.android.test"
+          android:versionCode="23"
+          android:versionName="0.99.6-SNAPSHOT-DEVEL">
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="14" />
+            android:minSdkVersion="7"
+            android:targetSdkVersion="14"/>
 
-    <uses-permission android:name="org.wheelmap.android.pois.Write" />
-    <uses-permission android:name="org.wheelmap.android.pois.Read" />
+    <uses-permission android:name="org.wheelmap.android.pois.Write"/>
+    <uses-permission android:name="org.wheelmap.android.pois.Read"/>
 
     <instrumentation
-        android:name=".MyInstrumentationTestRunner"
-        android:targetPackage="org.wheelmap.android.develop" >
+            android:name="org.wheelmap.android.test.MyInstrumentationTestRunner"
+            android:targetPackage="org.wheelmap.android.develop">
     </instrumentation>
 
     <application
-        android:icon="@drawable/icon"
-        android:label="@string/app_name" >
-        <uses-library android:name="android.test.runner" />
+            android:icon="@drawable/icon"
+            android:label="@string/app_name">
+        <uses-library android:name="android.test.runner"/>
     </application>
 
 </manifest>

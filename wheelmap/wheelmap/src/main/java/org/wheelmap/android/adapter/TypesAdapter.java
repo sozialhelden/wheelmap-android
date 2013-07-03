@@ -21,13 +21,11 @@
  */
 package org.wheelmap.android.adapter;
 
-import java.util.ArrayList;
-
 import org.wheelmap.android.model.CategoryOrNodeType;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.view.CategoryItemView;
 import org.wheelmap.android.view.NodeTypeItemView;
 import org.wheelmap.android.view.TypeItemView;
-import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -37,92 +35,100 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class TypesAdapter extends BaseAdapter implements SpinnerAdapter {
-	public static final int SEARCH_MODE = 0;
-	public static final int SELECT_MODE = 1;
 
-	private int mType;
+    public static final int SEARCH_MODE = 0;
 
-	private Context mContext;
-	private ArrayList<CategoryOrNodeType> items;
+    public static final int SELECT_MODE = 1;
 
-	public TypesAdapter(Context context, ArrayList<CategoryOrNodeType> items,
-			int type) {
-		mContext = context;
-		this.items = items;
-		mType = type;
-	}
+    private int mType;
 
-	@Override
-	public int getCount() {
-		return items.size();
-	}
+    private Context mContext;
 
-	@Override
-	public Object getItem(int position) {
-		return items.get(position);
-	}
+    private ArrayList<CategoryOrNodeType> items;
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    public TypesAdapter(Context context, ArrayList<CategoryOrNodeType> items,
+            int type) {
+        mContext = context;
+        this.items = items;
+        mType = type;
+    }
 
-	@Override
-	public int getItemViewType(int position) {
-		return items.get(position).type.ordinal();
-	}
+    @Override
+    public int getCount() {
+        return items.size();
+    }
 
-	@Override
-	public int getViewTypeCount() {
-		return 3;
-	}
+    @Override
+    public Object getItem(int position) {
+        return items.get(position);
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-		if (mType == SELECT_MODE)
-			return getDropDownView(position, convertView, parent);
-		else
-			return getSelectedItemView(position, convertView, parent);
-	}
+    @Override
+    public int getItemViewType(int position) {
+        return items.get(position).type.ordinal();
+    }
 
-	private View getSelectedItemView(int position, View convertView,
-			ViewGroup parent) {
-		View view;
-		TextView text;
-		if (convertView == null) {
-			LayoutInflater inflater = (LayoutInflater) mContext
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflater.inflate(R.layout.simple_spinner_item,
-					parent, false);
-		} else {
-			view = convertView;
-		}
+    @Override
+    public int getViewTypeCount() {
+        return 3;
+    }
 
-		text = (TextView) view.findViewById(android.R.id.text1);
-		text.setText(items.get(position).text);
-		return view;
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		View useView;
-		CategoryOrNodeType item = items.get(position);
+        if (mType == SELECT_MODE) {
+            return getDropDownView(position, convertView, parent);
+        } else {
+            return getSelectedItemView(position, convertView, parent);
+        }
+    }
 
-		if (item.type == CategoryOrNodeType.Types.CATEGORY
-				|| item.type == CategoryOrNodeType.Types.NO_SELECTION)
-			if (convertView instanceof CategoryItemView)
-				useView = convertView;
-			else
-				useView = new CategoryItemView(mContext, mType);
-		else if (convertView instanceof NodeTypeItemView)
-			useView = convertView;
-		else
-			useView = new NodeTypeItemView(mContext);
+    private View getSelectedItemView(int position, View convertView,
+            ViewGroup parent) {
+        View view;
+        TextView text;
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.simple_spinner_item,
+                    parent, false);
+        } else {
+            view = convertView;
+        }
 
-		((TypeItemView) useView).setText(item.text);
+        text = (TextView) view.findViewById(android.R.id.text1);
+        text.setText(items.get(position).text);
+        return view;
+    }
 
-		return useView;
-	}
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        View useView;
+        CategoryOrNodeType item = items.get(position);
+
+        if (item.type == CategoryOrNodeType.Types.CATEGORY
+                || item.type == CategoryOrNodeType.Types.NO_SELECTION) {
+            if (convertView instanceof CategoryItemView) {
+                useView = convertView;
+            } else {
+                useView = new CategoryItemView(mContext, mType);
+            }
+        } else if (convertView instanceof NodeTypeItemView) {
+            useView = convertView;
+        } else {
+            useView = new NodeTypeItemView(mContext);
+        }
+
+        ((TypeItemView) useView).setText(item.text);
+
+        return useView;
+    }
 }

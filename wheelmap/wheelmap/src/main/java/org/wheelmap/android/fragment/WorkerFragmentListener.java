@@ -21,11 +21,12 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.RestServiceException;
 
 public interface WorkerFragmentListener {
-	public void onError(SyncServiceException e);
 
-	public void onSearchModeChange(boolean isSearchMode);
+    public void onError(RestServiceException e);
+
+    public void onSearchModeChange(boolean isSearchMode);
 
 }

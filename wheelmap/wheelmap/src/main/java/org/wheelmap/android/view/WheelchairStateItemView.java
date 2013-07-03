@@ -31,36 +31,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class WheelchairStateItemView extends FrameLayout {
-	ImageView mWheelStateIcon;
-	TextView mWheelStateText;
-	CheckBox mWheelStateCheckBox;
 
-	public WheelchairStateItemView(Context context) {
-		super(context);
-		LayoutInflater inflater = LayoutInflater.from(context);
-		inflater.inflate(R.layout.item_settings_wheelchair, this, true);
+    ImageView mWheelStateIcon;
 
-		mWheelStateIcon = (ImageView) findViewById(R.id.image);
-		mWheelStateText = (TextView) findViewById(R.id.text);
-		mWheelStateCheckBox = (CheckBox) findViewById(R.id.checkbox);
+    TextView mWheelStateText;
 
-		mWheelStateCheckBox.setClickable(false);
-		mWheelStateCheckBox.setFocusable(false);
-	}
+    CheckBox mWheelStateCheckBox;
 
-	public void setIcon(int resourceId) {
-		mWheelStateIcon.setImageResource(resourceId);
-	}
+    public WheelchairStateItemView(Context context) {
+        super(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.item_settings_wheelchair, this, true);
 
-	public void setText(String text) {
-		mWheelStateText.setText(text);
-	}
+        mWheelStateIcon = (ImageView) findViewById(R.id.image);
+        mWheelStateText = (TextView) findViewById(R.id.text);
+        mWheelStateCheckBox = (CheckBox) findViewById(R.id.checkbox);
 
-	public void setTextColor(int color) {
-		mWheelStateText.setTextColor(color);
-	}
+        mWheelStateCheckBox.setClickable(false);
+        mWheelStateCheckBox.setFocusable(false);
+    }
 
-	public void setCheckboxChecked(boolean checked) {
-		mWheelStateCheckBox.setChecked(checked);
-	}
+    public void setIcon(int resourceId) {
+        mWheelStateIcon.setImageResource(resourceId);
+    }
+
+    public void setText(String text) {
+        mWheelStateText.setText(text);
+    }
+
+    public void setTextColor(int color) {
+        mWheelStateText.setTextColor(color);
+    }
+
+    public void setCheckboxChecked(boolean checked) {
+        mWheelStateCheckBox.setChecked(checked);
+    }
 }

@@ -22,20 +22,20 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/separator"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/separator_large"
-        android:background="@android:color/black" />
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_large"
+            android:background="@android:color/black"/>
 
     <org.mapsforge.android.maps.MapView
-        android:id="@+id/map"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/detail_mapview_height"
-        ramCacheShared="true"
-        ramCacheSize="4" />
+            android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/detail_mapview_height"
+            ramCacheShared="true"
+            ramCacheSize="4"/>
 </LinearLayout>

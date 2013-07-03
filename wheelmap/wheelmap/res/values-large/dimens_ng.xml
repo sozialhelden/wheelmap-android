@@ -22,8 +22,8 @@
   -->
 
 <resources>
-	<dimen name="mapcompass_margin_vertical">48dp</dimen>
-	<dimen name="mapcompass_margin_horizontal">8dp</dimen>
-	<dimen name="mapcompass_size">64dp</dimen>
-   
+    <dimen name="mapcompass_margin_vertical">48dp</dimen>
+    <dimen name="mapcompass_margin_horizontal">8dp</dimen>
+    <dimen name="mapcompass_size">64dp</dimen>
+
 </resources>

@@ -10,30 +10,58 @@
     <string name="description_gps">Current location</string>
     <string name="description_logo">Wheelmap</string>
     <string name="description_map">Map</string>
-    <string name="error_authorization_error">Email or password was wrong. Sorry. Can\'t log you in.</string>
+    <string name="error_authorization_error">Email or password was wrong. Sorry. Can\'t log you
+        in.
+    </string>
     <string name="error_authorization_login_failed">Login Failed</string>
-    <string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to openstreetmap.</string>
+    <string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to
+        openstreetmap.
+    </string>
     <string name="error_authorization_request_forbidden">Request forbidden</string>
-    <string name="error_authorization_request_failed">Authorization failed. The app does not have proper access rights to the service. If you are logged in, your can try to log out. Otherwise the app needs to be updated or the service has a problem.</string>
+    <string name="error_authorization_request_failed">Authorization failed. The app does not have
+        proper access rights to the service. If you are logged in, your can try to log out.
+        Otherwise the app needs to be updated or the service has a problem.
+    </string>
     <string name="error_authorization_required">Authorization required</string>
-    <string name="error_category_missing_message">Cannot store without a category for the location.</string>
+    <string name="error_category_missing_message">Cannot store without a category for the
+        location.
+    </string>
     <string name="error_category_missing_title">No category set!</string>
-    <string name="error_internal_error">An unexpected internal error occurred. Please restart the app.</string>
-    <string name="error_network_client_failure">This App cant communicate with the server. You need an update. Sorry.</string>
-    <string name="error_network_failure">Network unstable. Please check your internet connection or try again later.</string>
-    <string name="error_network_server_failure">The Wheelmap server has a problem. Please try again later.</string>
-  	<string name="error_network_server_maintenance">The Wheelmap server is down for maintenance. Please try again later</string>
+    <string name="error_internal_error">An unexpected internal error occurred. Please restart the
+        app.
+    </string>
+    <string name="error_network_client_failure">This App cant communicate with the server. You need
+        an update. Sorry.
+    </string>
+    <string name="error_network_failure">Network unstable. Please check your internet connection or
+        try again later.
+    </string>
+    <string name="error_network_server_failure">The Wheelmap server has a problem. Please try again
+        later.
+    </string>
+    <string name="error_network_server_maintenance">The Wheelmap server is down for maintenance.
+        Please try again later
+    </string>
     <string name="error_network_title">Network issue</string>
-    <string name="error_network_unknown_failure">An unknown network failure occurred. Sorry, communication failed.</string>
-    <string name="error_newpoi_message">The new location will be verified before it shows up in the database. This will take some time.</string>
+    <string name="error_network_unknown_failure">An unknown network failure occurred. Sorry,
+        communication failed.
+    </string>
+    <string name="error_newpoi_message">The new location will be verified before it shows up in the
+        database. This will take some time.
+    </string>
     <string name="error_newpoi_title">New Location created</string>
-    <string name="error_noid_message">Sorry, this link contains no identification to retrieve from the Wheelmap servers. Unable to find the location.</string>
+    <string name="error_noid_message">Sorry, this link contains no identification to retrieve from
+        the Wheelmap servers. Unable to find the location.
+    </string>
     <string name="error_noid_title">Link lacks node id</string>
-    <string name="error_not_enough_memory">Your phone does not provide enough memory for this application. Sorry.</string>
+    <string name="error_not_enough_memory">Your phone does not provide enough memory for this
+        application. Sorry.
+    </string>
     <string name="error_title_occurred">An error occurred</string>
-    <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.</string>
+    <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.
+    </string>
     <string name="error_wheelchairstate_missing_title">No Wheelchair State given</string>
-    <string name="helper_delim_dash">\ - \ </string>
+    <string name="helper_delim_dash">\ - \</string>
     <string name="info_a_project_of">a project of</string>
     <string name="info_android_development">Android Development:</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
@@ -55,22 +83,28 @@
     <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
     <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
     <string name="legal_notice_iconscollection">Map Icons Collection</string>
-    <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com</string>
+    <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com
+    </string>
     <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>
-    <string name="legal_notice_intro">This Software is based on other works. Their copyright is as follows:</string>
+    <string name="legal_notice_intro">This Software is based on other works. Their copyright is as
+        follows:
+    </string>
     <string name="legal_notice_jackson">Jackson JSON Processor</string>
     <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
     <string name="legal_notice_mapsforge">Mapsforge</string>
     <string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3)</string>
     <string name="legal_notice_opensource">This Software is Open Source</string>
-    <string name="legal_notice_opensource_copyright">https://github.com/sozialhelden/wheelmap-android</string>
+    <string name="legal_notice_opensource_copyright">
+        https://github.com/sozialhelden/wheelmap-android
+    </string>
     <string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
     <string name="legal_notice_pulltorefresh">PullToRefresh Widget</string>
     <string name="legal_notice_pulltorefresh_copyright">© Chris Banes (Apache License V2)</string>
     <string name="legal_notice_springandroid">Spring Android</string>
     <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
     <string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
-    <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org</string>
+    <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org
+    </string>
     <string name="login_email">Email</string>
     <string name="login_link_text">Register at Wheelmap.org</string>
     <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
@@ -143,11 +177,16 @@
     <string name="title_pois_settings">Filter settings</string>
     <string name="title_search">Search</string>
     <string name="title_wheelchair_state">Wheelchair accessible?</string>
-    <string name="ws_disabled">No: Entry has steep or several steps, rooms are not accessible</string>
+    <string name="ws_disabled">No: Entry has steep or several steps, rooms are not accessible
+    </string>
     <string name="ws_disabled_title">Not wheelchair accessible</string>
-    <string name="ws_enabled">Yes: Entrance without steps, all rooms without steps and accessible toilet</string>
+    <string name="ws_enabled">Yes: Entrance without steps, all rooms without steps and accessible
+        toilet
+    </string>
     <string name="ws_enabled_title">Wheelchair accessible</string>
-    <string name="ws_limited">Limited: Entry has a step (max. height 7cm), most rooms are stepless, toilet is not accessible</string>
+    <string name="ws_limited">Limited: Entry has a step (max. height 7cm), most rooms are stepless,
+        toilet is not accessible
+    </string>
     <string name="ws_limited_title">Partly wheelchair accessible</string>
     <string name="ws_unknown">Unknown: Help us and mark this location.</string>
     <string name="ws_unknown_title">Unknown Status</string>

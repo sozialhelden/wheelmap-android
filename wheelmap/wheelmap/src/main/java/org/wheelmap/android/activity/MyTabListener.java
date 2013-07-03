@@ -21,131 +21,153 @@
  */
 package org.wheelmap.android.activity;
 
-import android.os.Debug;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
+
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.fragment.OnExecuteBundle;
+import org.wheelmap.android.fragment.POIsListFragment;
+import org.wheelmap.android.fragment.POIsListWorkerFragment;
+import org.wheelmap.android.fragment.POIsMapWorkerFragment;
+import org.wheelmap.android.fragment.POIsMapsforgeFragment;
+import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.ActionBar.TabListener;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import java.util.ArrayList;
 
 import de.akquinet.android.androlog.Log;
-import org.wheelmap.android.model.Extra;
 
-public class MyTabListener<T extends Fragment> implements TabListener {
-	private final static String TAG = MyTabListener.class.getSimpleName();
-	private Fragment mFragment;
-	private final SherlockFragmentActivity mActivity;
-	private final TabHolder mTag;
-	private final Class<T> mClass;
-	private final OnStateListener listener;
+public class MyTabListener implements TabListener {
 
-	/**
-	 * Constructor used each time a new tab is created.
-	 * 
-	 * @param activity
-	 *            The host Activity, used to instantiate the fragment
-	 * @param tag
-	 *            The identifier tag for the fragment
-	 * @param clz
-	 *            The fragment's Class, used to instantiate the fragment
-	 */
-	public MyTabListener(SherlockFragmentActivity activity, TabHolder tag,
-			Class<T> clz) {
-		mActivity = activity;
-		mTag = tag;
-		mClass = clz;
+    private final static String TAG = MyTabListener.class.getSimpleName();
 
-		if (activity instanceof OnStateListener)
-			listener = (OnStateListener) activity;
-		else
-			listener = null;
+    public final static int TAB_LIST = 0;
 
-		FragmentManager fm = mActivity.getSupportFragmentManager();
-		mFragment = fm.findFragmentByTag(mTag.name);
-		Log.d( TAG, "MyTabListener created: mFragment = " + mFragment);
-	}
+    public final static int TAB_MAP = 1;
 
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		Log.d(TAG, "onTabSelected tag = " + mTag.name);
+    private final static ArrayList<TabHolder> sIndexToTab;
 
-		if (mFragment == null) {
-			mFragment = SherlockFragment.instantiate(mActivity,
-					mClass.getName(), new Bundle());
-			FragmentManager fm = mActivity.getSupportFragmentManager();
-			fm.beginTransaction()
-					.replace(android.R.id.content, mFragment, mTag.name)
-					.commit();
+    private final Activity mActivity;
 
-		} else {
-			Log.d(TAG, "Fragment mFragment = " + mFragment.toString());
-		}
+    private Fragment mFragment;
 
-		if (mTag.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
-			Log.d( TAG, "onTabSelected: executing bundle" );
-			((OnExecuteBundle) mFragment).executeBundle(mTag.getExecuteBundle());
-		}
+    private OnStateListener mListener;
 
-		if (listener != null)
-			listener.onStateChange(mTag.name);
-	}
+    /**
+     * Constructor used each time a new tab is created.
+     *
+     * @param activity The host Activity, used to instantiate the fragment
+     */
+    public MyTabListener(Activity activity) {
+        mActivity = activity;
 
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		Log.d(TAG, "onTabUnselected: tag = " + mTag.name);
-		if (mFragment != null) {
-			Log.d(TAG, "removing tab");
-			FragmentManager fm = mActivity.getSupportFragmentManager();
-			fm.beginTransaction().remove(mFragment).commit();
+        if (activity instanceof OnStateListener) {
+            mListener = (OnStateListener) activity;
+        }
+    }
 
-			Fragment workerFragment = fm.findFragmentByTag(mTag.workerName);
-			if (workerFragment != null)
-				fm.beginTransaction().remove(workerFragment).commit();
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        TabHolder holder = sIndexToTab.get(tab.getPosition());
+        Log.d(TAG, "onTabSelected tag = " + holder.tag);
 
-			mFragment = null;
-		}
-	}
+        if (mFragment == null) {
+            mFragment = Fragment.instantiate(holder.clazz, new Bundle());
+            ft.replace(android.R.id.content, mFragment, holder.tag).commit();
+        } else {
+            Log.d(TAG, "Fragment mFragment = " + mFragment.toString());
+        }
 
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		Log.d(TAG, "onTabReselected: tag = " + mTag.name);
+        if (holder.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
+            Log.d(TAG, "onTabSelected: executing bundle");
+            ((OnExecuteBundle) mFragment).executeBundle(holder.getExecuteBundle());
+        }
 
-		if (mTag.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
-			Log.d( TAG, "onTabReselected: executing bundle" );
-			((OnExecuteBundle) mFragment).executeBundle(mTag.getExecuteBundle());
-		}
-	}
+        if (mListener != null) {
+            mListener.onStateChange(holder.tag);
+        }
+    }
 
-	public interface OnStateListener {
-		public void onStateChange(String tag);
-	}
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+        TabHolder holder = sIndexToTab.get(tab.getPosition());
+        Log.d(TAG, "onTabUnselected: tag = " + holder.tag);
+        if (mFragment == null) {
+            return;
+        }
 
-	public static class TabHolder {
-		public String name;
-		public String workerName;
-		private Bundle bundle;
+        Log.d(TAG, "removing tab");
+        ft.remove(mFragment);
 
-		public TabHolder(String name, String workerName) {
-			this.name = name;
-			this.workerName = workerName;
-		}
+        FragmentManager fm = mActivity.getSupportFragmentManager();
+        Fragment workerFragment = (Fragment) fm.findFragmentByTag(holder.workerTag);
+        if (workerFragment != null) {
+            ft.remove(workerFragment);
+        }
 
-		public void setExecuteBundle(Bundle extras) {
-			bundle = extras;
-		}
+        ft.commit();
+        mFragment = null;
+    }
 
-		public Bundle getExecuteBundle() {
-			Bundle newBundle = bundle;
-			bundle = null;
-			return newBundle;
-		}
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        TabHolder holder = sIndexToTab.get(tab.getPosition());
+        Log.d(TAG, "onTabReselected: tag = " + holder.tag);
 
-		public boolean hasExecuteBundle() {
-			return bundle != null;
-		}
-	}
+        if (holder.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
+            Log.d(TAG, "onTabReselected: executing bundle");
+            ((OnExecuteBundle) mFragment).executeBundle(holder.getExecuteBundle());
+        }
+    }
 
+    public TabHolder getHolder(int index) {
+        return sIndexToTab.get(index);
+    }
+
+    public interface OnStateListener {
+
+        public void onStateChange(String tag);
+    }
+
+    public static class TabHolder {
+
+        public Class<? extends Fragment> clazz;
+
+        public String tag;
+
+        public String workerTag;
+
+        private Bundle bundle;
+
+        public TabHolder(Class<? extends Fragment> clazz, String tag, String workerTag) {
+            this.clazz = clazz;
+            this.tag = tag;
+            this.workerTag = workerTag;
+        }
+
+        public Bundle getExecuteBundle() {
+            Bundle newBundle = bundle;
+            bundle = null;
+            return newBundle;
+        }
+
+        public void setExecuteBundle(Bundle extras) {
+            bundle = extras;
+        }
+
+        public boolean hasExecuteBundle() {
+            return bundle != null;
+        }
+    }
+
+    static {
+        sIndexToTab = new ArrayList<TabHolder>();
+        sIndexToTab.add(new TabHolder(POIsListFragment.class, POIsListFragment.TAG,
+                POIsListWorkerFragment.TAG));
+        sIndexToTab.add(new TabHolder(POIsMapsforgeFragment.class, POIsMapsforgeFragment.TAG,
+                POIsMapWorkerFragment.TAG));
+        sIndexToTab.add(new TabHolder(POIsOsmdroidFragment.class, POIsOsmdroidFragment.TAG,
+                POIsMapWorkerFragment.TAG));
+    }
 }

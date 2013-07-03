@@ -21,119 +21,124 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.model.DataOperationsNodes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.utils.GeocoordinatesMath;
+import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.BaseNodesRequestBuilder;
+import org.wheelmap.android.net.request.BoundingBox;
+import org.wheelmap.android.net.request.BoundingBox.Wgs84GeoCoordinates;
+import org.wheelmap.android.net.request.CategoryNodesRequestBuilder;
+import org.wheelmap.android.net.request.NodeTypeNodesRequestBuilder;
+import org.wheelmap.android.net.request.NodesRequestBuilder;
+import org.wheelmap.android.net.request.Paging;
+import org.wheelmap.android.net.request.SearchNodesRequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
+import org.wheelmap.android.utils.GeoCoordinatesMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
-
-import wheelmap.org.BoundingBox;
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
-import wheelmap.org.WheelchairState;
-import wheelmap.org.domain.node.Nodes;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.BaseNodesRequestBuilder;
-import wheelmap.org.request.CategoryNodesRequestBuilder;
-import wheelmap.org.request.NodeTypeNodesRequestBuilder;
-import wheelmap.org.request.NodesRequestBuilder;
-import wheelmap.org.request.Paging;
-import wheelmap.org.request.SearchNodesRequestBuilder;
 import android.app.SearchManager;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+
 import de.akquinet.android.androlog.Log;
 
 public class NodesExecutor extends MultiPageExecutor<Nodes> implements
-		IExecutor {
-	private static final int MAX_PAGES_TO_RETRIEVE = 2;
-	
-	
-	private BoundingBox mBoundingBox = null;
-	private int mCategory = Extra.UNKNOWN;
-	private int mNodeType = Extra.UNKNOWN;
-	private String mSearchTerm = null;
-	private WheelchairState mWheelchairState = null;
+        IExecutor {
 
-	public NodesExecutor(Context context, Bundle bundle) {
-		super(context, bundle, Nodes.class);
-	}
+    private static final int MAX_PAGES_TO_RETRIEVE = 2;
 
-	@Override
-	public void prepareContent() {
-		if (getBundle().containsKey(Extra.BOUNDING_BOX)) {
-			ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) getBundle()
-					.getSerializable(Extra.BOUNDING_BOX);
-			mBoundingBox = parcBoundingBox.toBoundingBox();
-			// Log.d(TAG,
-			// "retrieving with bounding box: "
-			// + parcBoundingBox.toString());
-		} else if (getBundle().containsKey(Extra.LOCATION)) {
-			float distance = getBundle().getFloat(Extra.DISTANCE_LIMIT);
-			Location location = (Location) getBundle().getParcelable(
-					Extra.LOCATION);
-			mBoundingBox = GeocoordinatesMath.calculateBoundingBox(
-					new Wgs84GeoCoordinates(location.getLongitude(), location
-							.getLatitude()), distance);
-			// Log.d(TAG,
-			// "retrieving with current location = ("
-			// + location.getLongitude() + ","
-			// + location.getLatitude() + ") and distance = "
-			// + distance);
-		}
 
-		if (getBundle().containsKey(Extra.CATEGORY)) {
-			mCategory = getBundle().getInt(Extra.CATEGORY);
-		} else if (getBundle().containsKey(Extra.NODETYPE)) {
-			mNodeType = getBundle().getInt(Extra.NODETYPE);
-		}
+    private BoundingBox mBoundingBox = null;
 
-		if (getBundle().containsKey(SearchManager.QUERY)) {
-			mSearchTerm = getBundle().getString(SearchManager.QUERY);
-		}
+    private int mCategory = Extra.UNKNOWN;
 
-		if (getBundle().containsKey(Extra.WHEELCHAIR_STATE))
-			mWheelchairState = WheelchairState.valueOf(getBundle().getInt(
-					Extra.WHEELCHAIR_STATE));
-	}
+    private int mNodeType = Extra.UNKNOWN;
 
-	@Override
-	public void execute() throws SyncServiceException {
-		BaseNodesRequestBuilder requestBuilder;
-		if (mCategory != Extra.UNKNOWN) {
-			requestBuilder = new CategoryNodesRequestBuilder(getServer(),
-					getApiKey(), AcceptType.JSON, mCategory, mSearchTerm);
-		} else if (mNodeType != Extra.UNKNOWN) {
-			requestBuilder = new NodeTypeNodesRequestBuilder(getServer(),
-					getApiKey(), AcceptType.JSON, mNodeType, mSearchTerm);
-		} else if (mSearchTerm != null) {
-			requestBuilder = new SearchNodesRequestBuilder(getServer(), getApiKey(),
-					AcceptType.JSON, mSearchTerm);
-		} else {
-			requestBuilder = new NodesRequestBuilder(getServer(), getApiKey(),
-					AcceptType.JSON);
-		}
+    private String mSearchTerm = null;
 
-		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
-				mBoundingBox);
-		requestBuilder.wheelchairState(mWheelchairState);
-		clearTempStore();
-		retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
-	}
+    private WheelchairState mWheelchairState = null;
 
-	@Override
-	public void prepareDatabase() {
-		Log.d(getTag(), "prepareDatabase");
-		PrepareDatabaseHelper.cleanupOldCopies(getResolver(), false);
-		PrepareDatabaseHelper.deleteRetrievedData(getResolver());
-		DataOperationsNodes don = new DataOperationsNodes(getResolver());
-		don.insert(getTempStore());
-		PrepareDatabaseHelper.replayChangedCopies(getResolver());
-		clearTempStore();
-	}
-	
+    public NodesExecutor(Context context, Bundle bundle) {
+        super(context, bundle, Nodes.class);
+    }
+
+    @Override
+    public void prepareContent() {
+        if (getBundle().containsKey(Extra.BOUNDING_BOX)) {
+            ParceableBoundingBox parcBoundingBox = (ParceableBoundingBox) getBundle()
+                    .getSerializable(Extra.BOUNDING_BOX);
+            mBoundingBox = parcBoundingBox.toBoundingBox();
+            // Log.d(TAG,
+            // "retrieving with bounding box: "
+            // + parcBoundingBox.toString());
+        } else if (getBundle().containsKey(Extra.LOCATION)) {
+            float distance = getBundle().getFloat(Extra.DISTANCE_LIMIT);
+            Location location = (Location) getBundle().getParcelable(
+                    Extra.LOCATION);
+            mBoundingBox = GeoCoordinatesMath.calculateBoundingBox(
+                    new Wgs84GeoCoordinates(location.getLongitude(), location
+                            .getLatitude()), distance);
+            // Log.d(TAG,
+            // "retrieving with current location = ("
+            // + location.getLongitude() + ","
+            // + location.getLatitude() + ") and distance = "
+            // + distance);
+        }
+
+        if (getBundle().containsKey(Extra.CATEGORY)) {
+            mCategory = getBundle().getInt(Extra.CATEGORY);
+        } else if (getBundle().containsKey(Extra.NODETYPE)) {
+            mNodeType = getBundle().getInt(Extra.NODETYPE);
+        }
+
+        if (getBundle().containsKey(SearchManager.QUERY)) {
+            mSearchTerm = getBundle().getString(SearchManager.QUERY);
+        }
+
+        if (getBundle().containsKey(Extra.WHEELCHAIR_STATE)) {
+            mWheelchairState = WheelchairState.valueOf(getBundle().getInt(
+                    Extra.WHEELCHAIR_STATE));
+        }
+    }
+
+    @Override
+    public void execute() throws RestServiceException {
+        BaseNodesRequestBuilder requestBuilder;
+        if (mCategory != Extra.UNKNOWN) {
+            requestBuilder = new CategoryNodesRequestBuilder(getServer(),
+                    getApiKey(), AcceptType.JSON, mCategory, mSearchTerm);
+        } else if (mNodeType != Extra.UNKNOWN) {
+            requestBuilder = new NodeTypeNodesRequestBuilder(getServer(),
+                    getApiKey(), AcceptType.JSON, mNodeType, mSearchTerm);
+        } else if (mSearchTerm != null) {
+            requestBuilder = new SearchNodesRequestBuilder(getServer(), getApiKey(),
+                    AcceptType.JSON, mSearchTerm);
+        } else {
+            requestBuilder = new NodesRequestBuilder(getServer(), getApiKey(),
+                    AcceptType.JSON);
+        }
+
+        requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
+                mBoundingBox);
+        requestBuilder.wheelchairState(mWheelchairState);
+        clearTempStore();
+        retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
+    }
+
+    @Override
+    public void prepareDatabase() {
+        Log.d(getTag(), "prepareDatabase");
+        PrepareDatabaseHelper.cleanupOldCopies(getResolver(), false);
+        PrepareDatabaseHelper.deleteRetrievedData(getResolver());
+        DataOperationsNodes don = new DataOperationsNodes(getResolver());
+        don.insert(getTempStore());
+        PrepareDatabaseHelper.replayChangedCopies(getResolver());
+        clearTempStore();
+    }
 
 
 }

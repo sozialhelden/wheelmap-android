@@ -20,21 +20,22 @@
   limitations under the License.
   #L%
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+        >
 
     <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap_fixed">
-        
+
     </style>
-    
+
     <style name="Theme.Wheelmap.Editor" parent="@style/Theme.wheelmap_fixed">
-        
+
     </style>
 
     <style name="Theme.wheelmap_fixed" parent="@style/Theme.wheelmap">
-      <item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>
-      <item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>
+        <item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>
+        <item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>
     </style>
-  
+
     <style name="DetailView">
 
 
@@ -83,7 +84,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
-    
+
     <style name="IconSmall">
         <item name="android:id">@id/image</item>
         <item name="android:layout_width">@dimen/icon_size_small</item>
@@ -127,8 +128,8 @@
     <style name="Scrollable.List">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:paddingRight">@dimen/margin_huge</item>
-        <item name="android:paddingLeft">@dimen/margin_huge</item>
+        <item name="android:paddingRight">@dimen/margin_large</item>
+        <item name="android:paddingLeft">@dimen/margin_large</item>
     </style>
 
     <style name="Container.ListItem">
@@ -212,7 +213,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">true</item>
     </style>
-    
+
     <style name="WheelStateCheckableText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -221,6 +222,6 @@
         <item name="android:singleLine">true</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
     </style>
-    
+
 
 </resources>

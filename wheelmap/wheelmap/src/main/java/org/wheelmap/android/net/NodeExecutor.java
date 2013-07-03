@@ -21,50 +21,53 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.mapping.node.SingleNode;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.NodeRequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
 
-import wheelmap.org.domain.node.SingleNode;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.NodeRequestBuilder;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
 
 public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
-		IExecutor {
-	private String mWMId = Extra.WM_ID_UNKNOWN;
+        IExecutor {
 
-	public NodeExecutor(Context context, Bundle bundle) {
-		super(context, bundle, SingleNode.class);
-	}
+    private String mWMId = Extra.WM_ID_UNKNOWN;
 
-	@Override
-	public void prepareContent() {
-		mWMId = getBundle().getString(Extra.WM_ID);
-	}
+    public NodeExecutor(Context context, Bundle bundle) {
+        super(context, bundle, SingleNode.class);
+    }
 
-	@Override
-	public void execute() throws SyncServiceException {
-		NodeRequestBuilder requestBuilder = null;
-		if (mWMId == Extra.WM_ID_UNKNOWN)
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR,
-					new IllegalArgumentException());
+    @Override
+    public void prepareContent() {
+        mWMId = getBundle().getString(Extra.WM_ID);
+    }
 
-		requestBuilder = new NodeRequestBuilder(getServer(), getApiKey(),
-				AcceptType.JSON, mWMId);
-		int count = executeSingleRequest(requestBuilder);
-		if (count == 0)
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_NETWORK_FAILURE,
-					new NetworkErrorException());
-	}
+    @Override
+    public void execute() throws RestServiceException {
+        NodeRequestBuilder requestBuilder = null;
+        if (mWMId == Extra.WM_ID_UNKNOWN) {
+            throw new RestServiceException(
+                    RestServiceException.ERROR_INTERNAL_ERROR,
+                    new IllegalArgumentException());
+        }
 
-	@Override
-	public void prepareDatabase() throws SyncServiceException {
-		PrepareDatabaseHelper.insert(getResolver(), getTempStore().get(0));
-		PrepareDatabaseHelper.replayChangedCopies(getResolver());
-	}
+        requestBuilder = new NodeRequestBuilder(getServer(), getApiKey(),
+                AcceptType.JSON, mWMId);
+        int count = executeSingleRequest(requestBuilder);
+        if (count == 0) {
+            throw new RestServiceException(
+                    RestServiceException.ERROR_NETWORK_FAILURE,
+                    new NetworkErrorException());
+        }
+    }
+
+    @Override
+    public void prepareDatabase() throws RestServiceException {
+        PrepareDatabaseHelper.insert(getResolver(), getTempStore().get(0));
+        PrepareDatabaseHelper.replayChangedCopies(getResolver());
+    }
 }

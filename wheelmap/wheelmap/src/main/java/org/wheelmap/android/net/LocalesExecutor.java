@@ -21,63 +21,65 @@
  */
 package org.wheelmap.android.net;
 
-import android.content.ContentValues;
-import android.database.Cursor;
+import org.wheelmap.android.mapping.locale.Locales;
 import org.wheelmap.android.model.DataOperationsLocales;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.LocalesRequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
 
-import wheelmap.org.domain.locale.Locales;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.LocalesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
+
 import de.akquinet.android.androlog.Log;
 
 public class LocalesExecutor extends SinglePageExecutor<Locales> implements
-		IExecutor {
+        IExecutor {
 
-	private final static String TAG = LocalesExecutor.class.getSimpleName();
-	private String mEtag;
-	private boolean mContentIsEqual;
+    private final static String TAG = LocalesExecutor.class.getSimpleName();
 
-	public LocalesExecutor(Context context, Bundle bundle) {
-		super(context, bundle, Locales.class);
-	}
+    private String mEtag;
 
-	@Override
-	public void prepareContent() {
-		mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_LOCALE);
-	}
+    private boolean mContentIsEqual;
 
-	@Override
-	public void execute() throws SyncServiceException {
-		final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder(
-				getServer(), getApiKey(), AcceptType.JSON);
+    public LocalesExecutor(Context context, Bundle bundle) {
+        super(context, bundle, Locales.class);
+    }
 
-		clearTempStore();
-		setEtag( mEtag );
-		retrieveSinglePage(requestBuilder);
-		if ( mEtag != null && mEtag.equals( getEtag()) && getTempStore().isEmpty())
-			mContentIsEqual = true;
+    @Override
+    public void prepareContent() {
+        mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_LOCALE);
+    }
 
-		LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_LOCALE, getEtag());
-		Log.d(TAG, "etag = " + getEtag());
-	}
+    @Override
+    public void execute() throws RestServiceException {
+        final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder(
+                getServer(), getApiKey(), AcceptType.JSON);
 
-	@Override
-	public void prepareDatabase() throws SyncServiceException {
-		if ( mContentIsEqual ) {
-		    Log.i( TAG, "content is equal according to etag - doing nothing" );
-			return;
-		}
+        clearTempStore();
+        setEtag(mEtag);
+        retrieveSinglePage(requestBuilder);
+        if (mEtag != null && mEtag.equals(getEtag()) && getTempStore().isEmpty()) {
+            mContentIsEqual = true;
+        }
 
-		getResolver().delete(LocalesContent.CONTENT_URI, null, null);
-		DataOperationsLocales dol = new DataOperationsLocales(getResolver());
-		dol.insert(getTempStore());
-		clearTempStore();
-	}
+        LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_LOCALE, getEtag());
+        Log.d(TAG, "etag = " + getEtag());
+    }
+
+    @Override
+    public void prepareDatabase() throws RestServiceException {
+        if (mContentIsEqual) {
+            Log.i(TAG, "content is equal according to etag - doing nothing");
+            return;
+        }
+
+        getResolver().delete(LocalesContent.CONTENT_URI, null, null);
+        DataOperationsLocales dol = new DataOperationsLocales(getResolver());
+        dol.insert(getTempStore());
+        clearTempStore();
+    }
 
 
 }

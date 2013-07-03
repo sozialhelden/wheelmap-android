@@ -21,71 +21,77 @@
  */
 package org.wheelmap.android.net;
 
-import de.akquinet.android.androlog.Log;
+import org.wheelmap.android.mapping.nodetype.NodeTypes;
 import org.wheelmap.android.model.DataOperationsNodeTypes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.Locale;
+import org.wheelmap.android.net.request.NodeTypesRequestBuilder;
+import org.wheelmap.android.net.request.Paging;
+import org.wheelmap.android.service.RestServiceException;
 
-import wheelmap.org.Locale;
-import wheelmap.org.domain.nodetype.NodeTypes;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.NodeTypesRequestBuilder;
-import wheelmap.org.request.Paging;
 import android.content.Context;
 import android.os.Bundle;
 
+import de.akquinet.android.androlog.Log;
+
 public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
-		IExecutor {
-	private final static String TAG = NodeTypesExecutor.class.getSimpleName();
-	private Locale mLocale;
-	private String mEtag;
-	private boolean mContentIsEqual;
+        IExecutor {
 
-	public NodeTypesExecutor(Context context, Bundle bundle) {
-		super(context, bundle, NodeTypes.class);
-	}
+    private final static String TAG = NodeTypesExecutor.class.getSimpleName();
 
-	@Override
-	public void prepareContent() {
-		String locale = getBundle().getString(Extra.LOCALE);
-		if (locale != null && !locale.equals("de")) {
-			mLocale = new Locale(locale);
-		}
+    private Locale mLocale;
 
-		mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_NODETYPES);
-	}
+    private String mEtag;
 
-	@Override
-	public void execute() throws SyncServiceException {
-		NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder(
-				getServer(), getApiKey(), AcceptType.JSON);
-		requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE));
-		if (mLocale != null) {
-			requestBuilder.locale(mLocale);
-		}
-		clearTempStore();
+    private boolean mContentIsEqual;
 
-		setEtag( mEtag );
-		retrieveSinglePage(requestBuilder);
-		if ( mEtag != null && mEtag.equals( getEtag()) && getTempStore().isEmpty())
-			mContentIsEqual = true;
+    public NodeTypesExecutor(Context context, Bundle bundle) {
+        super(context, bundle, NodeTypes.class);
+    }
 
-		LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_NODETYPES, getEtag());
-		Log.d(TAG, "etag = " + getEtag());
-	}
+    @Override
+    public void prepareContent() {
+        String locale = getBundle().getString(Extra.LOCALE);
+        if (locale != null && !locale.equals("de")) {
+            mLocale = new Locale(locale);
+        }
 
-	@Override
-	public void prepareDatabase() throws SyncServiceException {
-		if ( mContentIsEqual ) {
-			Log.i( TAG, "content is equal according to etag - doing nothing" );
-			return;
-		}
+        mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_NODETYPES);
+    }
 
-		getResolver().delete(NodeTypesContent.CONTENT_URI, null, null);
-		DataOperationsNodeTypes don = new DataOperationsNodeTypes(getResolver());
-		don.insert(getTempStore());
-		clearTempStore();
-	}
+    @Override
+    public void execute() throws RestServiceException {
+        NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder(
+                getServer(), getApiKey(), AcceptType.JSON);
+        requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE));
+        if (mLocale != null) {
+            requestBuilder.locale(mLocale);
+        }
+        clearTempStore();
+
+        setEtag(mEtag);
+        retrieveSinglePage(requestBuilder);
+        if (mEtag != null && mEtag.equals(getEtag()) && getTempStore().isEmpty()) {
+            mContentIsEqual = true;
+        }
+
+        LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_NODETYPES, getEtag());
+        Log.d(TAG, "etag = " + getEtag());
+    }
+
+    @Override
+    public void prepareDatabase() throws RestServiceException {
+        if (mContentIsEqual) {
+            Log.i(TAG, "content is equal according to etag - doing nothing");
+            return;
+        }
+
+        getResolver().delete(NodeTypesContent.CONTENT_URI, null, null);
+        DataOperationsNodeTypes don = new DataOperationsNodeTypes(getResolver());
+        don.insert(getTempStore());
+        clearTempStore();
+    }
 }

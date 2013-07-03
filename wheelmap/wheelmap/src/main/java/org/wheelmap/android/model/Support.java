@@ -21,9 +21,7 @@
  */
 package org.wheelmap.android.model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -31,233 +29,263 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import org.wheelmap.android.online.R;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Support {
-	public static String AUTHORITY;
 
-	// This class cannot be instantiated
-	private Support() {
-	}
+    public static String AUTHORITY;
 
-	public static void init( Context context ) {
-		AUTHORITY = context.getString( R.string.supportprovider);
+    // This class cannot be instantiated
+    private Support() {
+    }
 
-		LastUpdateContent.CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + LastUpdateContent.CONTENT_PATH);
-		LocalesContent.CONTENT_URI =  Uri.parse("content://"
-				+ AUTHORITY + LocalesContent.CONTENT_PATH);
-		CategoriesContent.CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + CategoriesContent.CONTENT_PATH);
+    public static void init(Context context) {
+        AUTHORITY = context.getString(R.string.supportprovider);
 
-		NodeTypesContent.CONTENT_URI = Uri.parse("content://"
-				+ AUTHORITY + NodeTypesContent.CONTENT_PATH);
-	}
+        LastUpdateContent.CONTENT_URI = Uri.parse("content://"
+                + AUTHORITY + LastUpdateContent.CONTENT_PATH);
+        LocalesContent.CONTENT_URI = Uri.parse("content://"
+                + AUTHORITY + LocalesContent.CONTENT_PATH);
+        CategoriesContent.CONTENT_URI = Uri.parse("content://"
+                + AUTHORITY + CategoriesContent.CONTENT_PATH);
 
-	public static interface LastUpdateColumns {
+        NodeTypesContent.CONTENT_URI = Uri.parse("content://"
+                + AUTHORITY + NodeTypesContent.CONTENT_PATH);
+    }
 
-		public static final int MODULE_LOCALE = 0x1;
-		public static final int MODULE_CATEGORIES = 0x2;
-		public static final int MODULE_NODETYPES = 0x3;
+    public static interface LastUpdateColumns {
 
-		public static final String MODULE = "module";
-		public static final String DATE = "date";
-		public static final String ETAG = "etag";
-	}
+        public static final int MODULE_LOCALE = 0x1;
+        public static final int MODULE_CATEGORIES = 0x2;
+        public static final int MODULE_NODETYPES = 0x3;
 
-	public static interface LocaleColumns {
-		public static final String LOCALE_ID = "locale_id";
-		public static final String LOCALIZED_NAME = "localized_name";
-	}
+        public static final String MODULE = "module";
+        public static final String DATE = "date";
+        public static final String ETAG = "etag";
+    }
 
-	public static interface CategoryColumns {
-		public static final String CATEGORY_ID = "category_id";
-		public static final String LOCALIZED_NAME = "localized_name";
-		public static final String IDENTIFIER = "identifier";
-		public static final String SELECTED = "selected";
-	}
+    public static interface LocaleColumns {
 
-	public static interface NodeTypeColumns {
-		public static final String NODETYPE_ID = "nodetype_id";
-		public static final String IDENTIFIER = "identifier";
-		public static final String ICON_URL = "icon_url";
-		public static final String LOCALIZED_NAME = "localized_name";
-		public static final String CATEGORY_ID = "category_id";
-		public static final String CATEGORY_IDENTIFIER = "category_identifier";
-	}
+        public static final String LOCALE_ID = "locale_id";
+        public static final String LOCALIZED_NAME = "localized_name";
+    }
 
-	public static final class LastUpdateContent implements BaseColumns,
-			LastUpdateColumns {
-		private LastUpdateContent() {
-		};
+    public static interface CategoryColumns {
 
-		public static final String CONTENT_PATH = "/lastupdate";
-		private static final String ISO_8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.lastupdate";
+        public static final String CATEGORY_ID = "category_id";
+        public static final String LOCALIZED_NAME = "localized_name";
+        public static final String IDENTIFIER = "identifier";
+        public static final String SELECTED = "selected";
+    }
 
-		public static Uri CONTENT_URI;
-		public static final String[] PROJECTION = new String[] { _ID, MODULE, DATE, ETAG };
+    public static interface NodeTypeColumns {
 
-		public static String getModule(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(MODULE));
-		}
+        public static final String NODETYPE_ID = "nodetype_id";
+        public static final String IDENTIFIER = "identifier";
+        public static final String ICON_URL = "icon_url";
+        public static final String LOCALIZED_NAME = "localized_name";
+        public static final String CATEGORY_ID = "category_id";
+        public static final String CATEGORY_IDENTIFIER = "category_identifier";
+    }
 
-		public static String getDate(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(DATE));
-		}
+    public static final class LastUpdateContent implements BaseColumns,
+            LastUpdateColumns {
 
-		public static String getEtag(Cursor c ) {
-			return c.getString(c.getColumnIndexOrThrow(ETAG));
-		}
+        private LastUpdateContent() {
+        }
 
-		public static String formatDate(Date date) {
-			SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_DATEFORMAT);
-			return sdf.format(date);
-		}
+        ;
 
-		public static Date parseDate(String iso8601_date) throws ParseException {
-			SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_DATEFORMAT);
-			return sdf.parse(iso8601_date);
-		}
+        public static final String CONTENT_PATH = "/lastupdate";
 
-		public static String queryEtag( ContentResolver resolver, int module ) {
-			String whereClause = MODULE + " = "
-					+ module;
-			Cursor c = resolver.query(CONTENT_URI,
-					PROJECTION, whereClause, null, null);
-			if (c == null || c.getCount() != 1)
-				return null;
-			c.moveToFirst();
-			String etag = getEtag(c);
-			c.close();
-			return etag;
-		}
+        private static final String ISO_8601_DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
-		public static void storeEtag( ContentResolver resolver, int module, String eTag) {
-			ContentValues values = new ContentValues();
-			values.put( MODULE, module);
-			values.put( ETAG, eTag);
-			String date = formatDate(new Date());
-			values.put(LastUpdateContent.DATE, date);
-			String whereClause = MODULE + " = " + module;
-			PrepareDatabaseHelper.insertOrUpdateContentValues(resolver, CONTENT_URI, PROJECTION, whereClause, null, values);
-		}
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.lastupdate";
 
-		public static Date queryTimeStamp( ContentResolver resolver, int module) {
-			String whereClause = MODULE + " = "
-					+ module;
-			Cursor c = resolver.query(CONTENT_URI,
-					PROJECTION, whereClause, null, null);
-			if (c == null || c.getCount() != 1)
-				return null;
-			c.moveToFirst();
-			Date date;
-			try {
-		 		date  = parseDate(getDate(c));
-			} catch (ParseException e ) {
-				date = null;
-			}
-			c.close();
-			return date;
-		}
-	}
+        public static Uri CONTENT_URI;
 
-	public static final class LocalesContent implements BaseColumns,
-			LocaleColumns {
-		private LocalesContent() {
-		}
+        public static final String[] PROJECTION = new String[]{_ID, MODULE, DATE, ETAG};
 
-		public static final String CONTENT_PATH = "/locales";
-		public static Uri CONTENT_URI;
+        public static String getModule(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(MODULE));
+        }
 
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.locales";
+        public static String getDate(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(DATE));
+        }
 
-		public static final String[] PROJECTION = new String[] { _ID,
-				LOCALE_ID, LOCALIZED_NAME };
+        public static String getEtag(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(ETAG));
+        }
 
-		public static String getId(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(LOCALE_ID));
-		}
+        public static String formatDate(Date date) {
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_DATEFORMAT);
+            return sdf.format(date);
+        }
 
-		public static String getLocalizedName(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(LOCALIZED_NAME));
-		}
-	}
+        public static Date parseDate(String iso8601_date) throws ParseException {
+            SimpleDateFormat sdf = new SimpleDateFormat(ISO_8601_DATEFORMAT);
+            return sdf.parse(iso8601_date);
+        }
 
-	public static final class CategoriesContent implements BaseColumns,
-			CategoryColumns {
-		private CategoriesContent() {
-		};
+        public static String queryEtag(ContentResolver resolver, int module) {
+            String whereClause = MODULE + " = "
+                    + module;
+            Cursor c = resolver.query(CONTENT_URI,
+                    PROJECTION, whereClause, null, null);
+            if (c == null || c.getCount() != 1) {
+                return null;
+            }
+            c.moveToFirst();
+            String etag = getEtag(c);
+            c.close();
+            return etag;
+        }
 
-		public static final String CONTENT_PATH = "/categories";
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.categories";
-		public static final String DEFAULT_SORT_ORDER = LOCALIZED_NAME + " ASC";
+        public static void storeEtag(ContentResolver resolver, int module, String eTag) {
+            ContentValues values = new ContentValues();
+            values.put(MODULE, module);
+            values.put(ETAG, eTag);
+            String date = formatDate(new Date());
+            values.put(LastUpdateContent.DATE, date);
+            String whereClause = MODULE + " = " + module;
+            PrepareDatabaseHelper
+                    .insertOrUpdateContentValues(resolver, CONTENT_URI, PROJECTION, whereClause,
+                            null, values);
+        }
 
-		public static Uri CONTENT_URI;
+        public static Date queryTimeStamp(ContentResolver resolver, int module) {
+            String whereClause = MODULE + " = "
+                    + module;
+            Cursor c = resolver.query(CONTENT_URI,
+                    PROJECTION, whereClause, null, null);
+            if (c == null || c.getCount() != 1) {
+                return null;
+            }
+            c.moveToFirst();
+            Date date;
+            try {
+                date = parseDate(getDate(c));
+            } catch (ParseException e) {
+                date = null;
+            }
+            c.close();
+            return date;
+        }
+    }
 
-		public static final String[] PROJECTION = new String[] { _ID,
-				CATEGORY_ID, LOCALIZED_NAME, IDENTIFIER, SELECTED };
+    public static final class LocalesContent implements BaseColumns,
+            LocaleColumns {
 
-		public static final int SELECTED_NO = 0;
-		public static final int SELECTED_YES = 1;
+        private LocalesContent() {
+        }
 
-		public static int getCategoryId(Cursor c) {
-			return c.getInt(c.getColumnIndexOrThrow(CATEGORY_ID));
-		}
+        public static final String CONTENT_PATH = "/locales";
 
-		public static String getLocalizedName(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(LOCALIZED_NAME));
-		}
+        public static Uri CONTENT_URI;
 
-		public static String getIdentifier(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(IDENTIFIER));
-		}
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.locales";
 
-		public static Boolean getSelected(Cursor c) {
-			int value = c.getInt(c.getColumnIndexOrThrow(SELECTED));
-			if (value == SELECTED_YES)
-				return true;
-			else
-				return false;
-		}
-	}
+        public static final String[] PROJECTION = new String[]{_ID,
+                LOCALE_ID, LOCALIZED_NAME};
 
-	public static final class NodeTypesContent implements BaseColumns,
-			NodeTypeColumns {
-		private NodeTypesContent() {
-		};
+        public static String getId(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(LOCALE_ID));
+        }
 
-		public static final String CONTENT_PATH = "/nodetypes";
-		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.nodetypes";
+        public static String getLocalizedName(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(LOCALIZED_NAME));
+        }
+    }
 
-		public static Uri CONTENT_URI ;
+    public static final class CategoriesContent implements BaseColumns,
+            CategoryColumns {
 
-		public static final String[] PROJECTION = new String[] { _ID,
-				NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME, CATEGORY_ID,
-				CATEGORY_IDENTIFIER };
+        private CategoriesContent() {
+        }
 
-		public static int getNodeTypeId(Cursor c) {
-			return c.getInt(c.getColumnIndexOrThrow(NODETYPE_ID));
-		}
+        ;
 
-		public static String getIdentifier(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(IDENTIFIER));
-		}
+        public static final String CONTENT_PATH = "/categories";
 
-		public static String getIconURL(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(ICON_URL));
-		}
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.categories";
 
-		public static String getLocalizedName(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(LOCALIZED_NAME));
-		}
+        public static final String DEFAULT_SORT_ORDER = LOCALIZED_NAME + " ASC";
 
-		public static int getCategoryId(Cursor c) {
-			return c.getInt(c.getColumnIndexOrThrow(CATEGORY_ID));
-		}
+        public static Uri CONTENT_URI;
 
-		public static String getCategoryIdentifier(Cursor c) {
-			return c.getString(c.getColumnIndexOrThrow(CATEGORY_IDENTIFIER));
-		}
-	}
+        public static final String[] PROJECTION = new String[]{_ID,
+                CATEGORY_ID, LOCALIZED_NAME, IDENTIFIER, SELECTED};
+
+        public static final int SELECTED_NO = 0;
+
+        public static final int SELECTED_YES = 1;
+
+        public static int getCategoryId(Cursor c) {
+            return c.getInt(c.getColumnIndexOrThrow(CATEGORY_ID));
+        }
+
+        public static String getLocalizedName(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(LOCALIZED_NAME));
+        }
+
+        public static String getIdentifier(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(IDENTIFIER));
+        }
+
+        public static Boolean getSelected(Cursor c) {
+            int value = c.getInt(c.getColumnIndexOrThrow(SELECTED));
+            if (value == SELECTED_YES) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static final class NodeTypesContent implements BaseColumns,
+            NodeTypeColumns {
+
+        private NodeTypesContent() {
+        }
+
+        ;
+
+        public static final String CONTENT_PATH = "/nodetypes";
+
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.wheelmap.nodetypes";
+
+        public static Uri CONTENT_URI;
+
+        public static final String[] PROJECTION = new String[]{_ID,
+                NODETYPE_ID, IDENTIFIER, ICON_URL, LOCALIZED_NAME, CATEGORY_ID,
+                CATEGORY_IDENTIFIER};
+
+        public static int getNodeTypeId(Cursor c) {
+            return c.getInt(c.getColumnIndexOrThrow(NODETYPE_ID));
+        }
+
+        public static String getIdentifier(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(IDENTIFIER));
+        }
+
+        public static String getIconURL(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(ICON_URL));
+        }
+
+        public static String getLocalizedName(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(LOCALIZED_NAME));
+        }
+
+        public static int getCategoryId(Cursor c) {
+            return c.getInt(c.getColumnIndexOrThrow(CATEGORY_ID));
+        }
+
+        public static String getCategoryIdentifier(Cursor c) {
+            return c.getString(c.getColumnIndexOrThrow(CATEGORY_IDENTIFIER));
+        }
+    }
 }

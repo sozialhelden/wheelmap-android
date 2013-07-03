@@ -21,21 +21,20 @@
  */
 package org.wheelmap.android.test;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.jayway.awaitility.Awaitility;
+import com.jayway.awaitility.Duration;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.UserQueryHelper;
+import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.service.RestService;
+import org.wheelmap.android.service.RestServiceException;
+import org.wheelmap.android.service.RestServiceHelper;
 
-import wheelmap.org.WheelchairState;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -47,216 +46,219 @@ import android.os.ResultReceiver;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.jayway.awaitility.Awaitility;
-import com.jayway.awaitility.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class POIServiceDatabaseTest extends AndroidTestCase {
-	private final static String TAG = POIServiceDatabaseTest.class
-			.getSimpleName();
-	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
-	private Location location;
+    private final static String TAG = POIServiceDatabaseTest.class
+            .getSimpleName();
 
-	public void createLocation() {
-		// Berlin, Andreasstra�e 10
-		location = new Location("Location");
-		location.setLatitude(52.512523f);
-		location.setLongitude(13.431240f);
-	}
+    private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
-	public void testARetrieveTestDataset() throws Exception {
-		Log.d(TAG, "testPOIServiceDatabaseOne starting");
+    private Location location;
 
-		final AtomicBoolean testDone = new AtomicBoolean();
+    public void createLocation() {
+        // Berlin, Andreasstra�e 10
+        location = new Location("Location");
+        location.setLatitude(52.512523f);
+        location.setLongitude(13.431240f);
+    }
 
-		final ContentResolver cr = getContext().getContentResolver();
-		cr.delete(POIs.CONTENT_URI_ALL, null, null);
+    public void testARetrieveTestDataset() throws Exception {
+        Log.d(TAG, "testPOIServiceDatabaseOne starting");
 
-		ResultReceiver receiver = new ResultReceiver(null) {
-			@Override
-			protected void onReceiveResult(int resultCode, Bundle resultData) {
-				Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
-				switch (resultCode) {
-				case SyncService.STATUS_RUNNING: {
-					Log.d(TAG, "retrieval running");
+        final AtomicBoolean testDone = new AtomicBoolean();
 
-					break;
-				}
-				case SyncService.STATUS_FINISHED: {
-					Log.d(TAG, "retrieval finished");
-					Cursor cursor = cr.query(POIs.CONTENT_URI_RETRIEVED,
-							POIs.PROJECTION, null, null, null);
-					Log.d(TAG, "cursor count = " + cursor.getCount());
-					Assert.assertFalse(cursor.getCount() == 0);
-					Util.dumpCursorToLog(TAG, cursor);
-					cursor.close();
-					testDone.set(true);
-					break;
-				}
-				case SyncService.STATUS_ERROR: {
-					Log.d(TAG, "retrieval error");
-					final SyncServiceException e = resultData
-							.getParcelable(Extra.EXCEPTION);
+        final ContentResolver cr = getContext().getContentResolver();
+        cr.delete(POIs.CONTENT_URI_ALL, null, null);
 
-					Log.e(TAG, "error: ", e);
-					throw e;
-				}
-				default: {
-					// noop
-				}
-				}
-			}
-		};
+        ResultReceiver receiver = new ResultReceiver(null) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
+                switch (resultCode) {
+                    case RestService.STATUS_RUNNING: {
+                        Log.d(TAG, "retrieval running");
 
-		createLocation();
-		float distance = 0.2f;
+                        break;
+                    }
+                    case RestService.STATUS_FINISHED: {
+                        Log.d(TAG, "retrieval finished");
+                        Cursor cursor = cr.query(POIs.CONTENT_URI_RETRIEVED,
+                                POIs.PROJECTION, null, null, null);
+                        Log.d(TAG, "cursor count = " + cursor.getCount());
+                        Assert.assertFalse(cursor.getCount() == 0);
+                        Util.dumpCursorToLog(TAG, cursor);
+                        cursor.close();
+                        testDone.set(true);
+                        break;
+                    }
+                    case RestService.STATUS_ERROR: {
+                        Log.d(TAG, "retrieval error");
+                        final RestServiceException e = resultData
+                                .getParcelable(Extra.EXCEPTION);
 
-		Log.d(TAG, "starting service for nodes request");
-		SyncServiceHelper.retrieveNodesByDistance(getContext(), location,
-				distance, receiver);
+                        Log.e(TAG, "error: ", e);
+                        throw e;
+                    }
+                    default: {
+                        // noop
+                    }
+                }
+            }
+        };
 
-		Log.d(TAG, "waiting for finishing service requests");
-		Awaitility
-				.await()
-				.atMost(new Duration(WAIT_IN_SECONDS_TO_FINISH,
-						TimeUnit.SECONDS)).and().untilTrue(testDone);
+        createLocation();
+        float distance = 0.2f;
 
-		Log.d(TAG, "testSupportData done");
-	}
+        Log.d(TAG, "starting service for nodes request");
+        RestServiceHelper.retrieveNodesByDistance(getContext(), location,
+                distance, receiver);
 
-	public void testATestSortedURI() {
-		ContentResolver cr = getContext().getContentResolver();
-		createLocation();
+        Log.d(TAG, "waiting for finishing service requests");
+        Awaitility
+                .await()
+                .atMost(new Duration(WAIT_IN_SECONDS_TO_FINISH,
+                        TimeUnit.SECONDS)).and().untilTrue(testDone);
 
-		Uri uri = POIs.createUriSorted(location);
-		Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
-		Assert.assertFalse(c.getCount() == 0);
-		c.close();
+        Log.d(TAG, "testSupportData done");
+    }
 
-		String query = UserQueryHelper.getUserQuery();
-		Log.d(TAG, "Query for excluded is *" + query + "*");
-		c = cr.query(uri, POIs.PROJECTION, query, null, null);
-		Assert.assertFalse(c.getCount() == 0);
-		c.close();
+    public void testATestSortedURI() {
+        ContentResolver cr = getContext().getContentResolver();
+        createLocation();
 
-	}
+        Uri uri = POIs.createUriSorted(location);
+        Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
+        Assert.assertFalse(c.getCount() == 0);
+        c.close();
 
-	private String wmIdToTest = "537132758";
-	private String newName = "changed name";
+        String query = UserQueryHelper.getUserQuery();
+        Log.d(TAG, "Query for excluded is *" + query + "*");
+        c = cr.query(uri, POIs.PROJECTION, query, null, null);
+        Assert.assertFalse(c.getCount() == 0);
+        c.close();
 
-	public void testBPrepareDatabaseHelperWithDatasetA() {
-		final ContentResolver cr = getContext().getContentResolver();
+    }
 
-		long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
-				.getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
-		Assert.assertFalse(id == Extra.ID_UNKNOWN);
+    private String wmIdToTest = "537132758";
 
-		long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
-				false);
-		Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
+    private String newName = "changed name";
 
-		ContentValues values = new ContentValues();
-		values.put(POIs.NAME, newName);
-		values.put(POIs.DIRTY, POIs.DIRTY_ALL);
-		PrepareDatabaseHelper.editCopy(cr, idOfCopy, values);
+    public void testBPrepareDatabaseHelperWithDatasetA() {
+        final ContentResolver cr = getContext().getContentResolver();
 
-		Cursor c = PrepareDatabaseHelper.queryDirty(getContext()
-				.getContentResolver());
-		Assert.assertEquals(1, c.getCount());
-		c.moveToFirst();
-		int dirty = c.getInt(c.getColumnIndexOrThrow(POIs.DIRTY));
-		Assert.assertEquals(POIs.DIRTY_ALL, dirty);
-		id = POIHelper.getId(c);
-		c.close();
+        long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
+                .getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
+        Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
-		PrepareDatabaseHelper.markDirtyAsClean(getContext()
-				.getContentResolver(), id);
-		c = PrepareDatabaseHelper.queryDirty(cr);
-		Assert.assertEquals(0, c.getCount());
-		c.close();
+        long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
+                false);
+        Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
 
-		// TEST on changed values
-		c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_CHANGED);
-		Assert.assertEquals(1, c.getCount());
-		int state = c.getInt(c.getColumnIndexOrThrow(POIs.STATE));
-		Assert.assertEquals(POIs.STATE_CHANGED, state);
-		c.close();
+        ContentValues values = new ContentValues();
+        values.put(POIs.NAME, newName);
+        values.put(POIs.DIRTY, POIs.DIRTY_ALL);
+        PrepareDatabaseHelper.editCopy(cr, idOfCopy, values);
 
-		values.clear();
-		values.put(POIs.WHEELCHAIR, WheelchairState.YES.getId());
-		values.put(POIs.DIRTY, POIs.DIRTY_STATE);
-		PrepareDatabaseHelper.editCopy(cr, idOfCopy, values);
+        Cursor c = PrepareDatabaseHelper.queryDirty(getContext()
+                .getContentResolver());
+        Assert.assertEquals(1, c.getCount());
+        c.moveToFirst();
+        int dirty = c.getInt(c.getColumnIndexOrThrow(POIs.DIRTY));
+        Assert.assertEquals(POIs.DIRTY_ALL, dirty);
+        id = POIHelper.getId(c);
+        c.close();
 
-		PrepareDatabaseHelper.markDirtyAsClean(getContext()
-				.getContentResolver(), idOfCopy);
+        PrepareDatabaseHelper.markDirtyAsClean(getContext()
+                .getContentResolver(), id);
+        c = PrepareDatabaseHelper.queryDirty(cr);
+        Assert.assertEquals(0, c.getCount());
+        c.close();
 
-	}
+        // TEST on changed values
+        c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_CHANGED);
+        Assert.assertEquals(1, c.getCount());
+        int state = c.getInt(c.getColumnIndexOrThrow(POIs.STATE));
+        Assert.assertEquals(POIs.STATE_CHANGED, state);
+        c.close();
 
-	public void testCPrepareDatabaseHelperWithDatasetB() {
-		final ContentResolver cr = getContext().getContentResolver();
+        values.clear();
+        values.put(POIs.WHEELCHAIR, WheelchairState.YES.getId());
+        values.put(POIs.DIRTY, POIs.DIRTY_STATE);
+        PrepareDatabaseHelper.editCopy(cr, idOfCopy, values);
+
+        PrepareDatabaseHelper.markDirtyAsClean(getContext()
+                .getContentResolver(), idOfCopy);
+
+    }
+
+    public void testCPrepareDatabaseHelperWithDatasetB() {
+        final ContentResolver cr = getContext().getContentResolver();
 
 		/*
-		 * new dataset
+         * new dataset
 		 */
-		String newWmIdToTest = "424236321";
+        String newWmIdToTest = "424236321";
 
-		long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
-				.getContentResolver(), newWmIdToTest, POIs.TAG_RETRIEVED);
-		Assert.assertFalse(id == Extra.ID_UNKNOWN);
+        long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
+                .getContentResolver(), newWmIdToTest, POIs.TAG_RETRIEVED);
+        Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
-		long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
-				false);
-		Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
-		Cursor c = PrepareDatabaseHelper.queryState(getContext()
-				.getContentResolver(), POIs.STATE_UNCHANGED);
-		Assert.assertEquals(1, c.getCount());
-		int state = c.getInt(c.getColumnIndexOrThrow(POIs.STATE));
-		Assert.assertEquals(POIs.STATE_UNCHANGED, state);
-		c.close();
+        long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
+                false);
+        Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
+        Cursor c = PrepareDatabaseHelper.queryState(getContext()
+                .getContentResolver(), POIs.STATE_UNCHANGED);
+        Assert.assertEquals(1, c.getCount());
+        int state = c.getInt(c.getColumnIndexOrThrow(POIs.STATE));
+        Assert.assertEquals(POIs.STATE_UNCHANGED, state);
+        c.close();
 
-		PrepareDatabaseHelper.cleanupOldCopies(getContext()
-				.getContentResolver(), false);
+        PrepareDatabaseHelper.cleanupOldCopies(getContext()
+                .getContentResolver(), false);
 
-		c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
-		Assert.assertEquals(1, c.getCount());
-		c.close();
+        c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
+        Assert.assertEquals(1, c.getCount());
+        c.close();
 
-	}
+    }
 
-	public void testDPrepareDatabaseHelperWithDatasetA() {
-		final ContentResolver cr = getContext().getContentResolver();
+    public void testDPrepareDatabaseHelperWithDatasetA() {
+        final ContentResolver cr = getContext().getContentResolver();
 
-		Cursor c = PrepareDatabaseHelper.queryState(getContext()
-				.getContentResolver(), POIs.STATE_CHANGED);
-		Assert.assertEquals(1, c.getCount());
-		c.close();
+        Cursor c = PrepareDatabaseHelper.queryState(getContext()
+                .getContentResolver(), POIs.STATE_CHANGED);
+        Assert.assertEquals(1, c.getCount());
+        c.close();
 
-		PrepareDatabaseHelper.replayChangedCopies(getContext()
-				.getContentResolver());
+        PrepareDatabaseHelper.replayChangedCopies(getContext()
+                .getContentResolver());
 
-		long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
-				.getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
-		Assert.assertFalse(id == Extra.ID_UNKNOWN);
+        long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
+                .getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
+        Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
-		Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_RETRIEVED, id);
-		c = cr.query(uri, POIs.PROJECTION, null, null, null);
-		c.moveToFirst();
-		Assert.assertEquals(newName, POIHelper.getName(c));
-	}
+        Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_RETRIEVED, id);
+        c = cr.query(uri, POIs.PROJECTION, null, null, null);
+        c.moveToFirst();
+        Assert.assertEquals(newName, POIHelper.getName(c));
+    }
 
-	public void testEPrepareDatabaseHelperMisc() {
-		final ContentResolver cr = getContext().getContentResolver();
-		PrepareDatabaseHelper.deleteRetrievedData(cr);
-		PrepareDatabaseHelper.cleanupOldCopies(cr, true);
+    public void testEPrepareDatabaseHelperMisc() {
+        final ContentResolver cr = getContext().getContentResolver();
+        PrepareDatabaseHelper.deleteRetrievedData(cr);
+        PrepareDatabaseHelper.cleanupOldCopies(cr, true);
 
-		Cursor c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_CHANGED);
-		Assert.assertEquals(0, c.getCount());
-		c.close();
-		c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
-		Assert.assertEquals(0, c.getCount());
-		c.close();
-		c = PrepareDatabaseHelper.queryDirty(cr);
-		Assert.assertEquals(0, c.getCount());
-		c.close();
-	}
+        Cursor c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_CHANGED);
+        Assert.assertEquals(0, c.getCount());
+        c.close();
+        c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
+        Assert.assertEquals(0, c.getCount());
+        c.close();
+        c = PrepareDatabaseHelper.queryDirty(cr);
+        Assert.assertEquals(0, c.getCount());
+        c.close();
+    }
 }

@@ -22,130 +22,136 @@
 package org.wheelmap.android.net;
 
 import com.google.inject.Inject;
-import org.wheelmap.android.modules.ICredentials;
-import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.manager.SupportManager;
+
+import org.wheelmap.android.mapping.Message;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.NodeUpdateOrNewAllRequestBuilder;
+import org.wheelmap.android.net.request.RequestBuilder;
+import org.wheelmap.android.net.request.WheelchairUpdateRequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
 
-import wheelmap.org.WheelchairState;
-import wheelmap.org.domain.Message;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.NodeUpdateOrNewAllRequestBuilder;
-import wheelmap.org.request.RequestBuilder;
-import wheelmap.org.request.WheelchairUpdateRequestBuilder;
 import android.content.Context;
 import android.database.Cursor;
+
 import de.akquinet.android.androlog.Log;
 
 public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
-	private final static String TAG = NodeUpdateOrNewExecutor.class
-			.getSimpleName();
 
-	private static final int MAX_RETRY_COUNT = 3;
-	private Cursor mCursor;
+    private final static String TAG = NodeUpdateOrNewExecutor.class
+            .getSimpleName();
 
-	@Inject
-	private ICredentials mCredentials;
+    private static final int MAX_RETRY_COUNT = 3;
 
-	public NodeUpdateOrNewExecutor(Context context) {
-		super(context, null, Message.class, MAX_RETRY_COUNT);
-	}
+    private Cursor mCursor;
 
-	public void prepareContent() {
-		mCursor = PrepareDatabaseHelper.queryDirty(getResolver());
+    @Inject
+    private ICredentials mCredentials;
 
-		if (mCursor == null)
-			return;
+    public NodeUpdateOrNewExecutor(Context context) {
+        super(context, null, Message.class, MAX_RETRY_COUNT);
+    }
 
-		mCursor.moveToFirst();
-	}
+    public void prepareContent() {
+        mCursor = PrepareDatabaseHelper.queryDirty(getResolver());
 
-	public void execute() throws SyncServiceException {
-		if (mCursor == null)
-			throw new SyncServiceException(
-					SyncServiceException.ERROR_INTERNAL_ERROR,
-					new NullPointerException("Cursor is null"));
+        if (mCursor == null) {
+            return;
+        }
 
-		while (!mCursor.isAfterLast()) {
+        mCursor.moveToFirst();
+    }
 
-			String editApiKey = getApiKey();
-			if (editApiKey.length() == 0)
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_AUTHORIZATION_ERROR,
-						new RuntimeException("No apikey to edit available"));
+    public void execute() throws RestServiceException {
 
-			RequestBuilder requestBuilder = null;
+        if (mCursor == null) {
+            throw new RestServiceException(
+                    RestServiceException.ERROR_INTERNAL_ERROR,
+                    new NullPointerException("Cursor is null"));
+        }
 
-			int dirtyTag = POIHelper.getDirtyTag(mCursor);
-			switch (dirtyTag) {
-			case POIs.DIRTY_STATE:
-				requestBuilder = wheelchairUpdateRequestBuilder(editApiKey);
-				break;
-			case POIs.DIRTY_ALL:
-				requestBuilder = updateOrNewRequestBuilder(editApiKey);
-				break;
-			default:
-				throw new SyncServiceException(
-						SyncServiceException.ERROR_INTERNAL_ERROR,
-						new RuntimeException(
-								"Cant find matching RequestBuilder for update request"));
-			}
+        while (!mCursor.isAfterLast()) {
 
-			executeRequest(requestBuilder);
-			long id = POIHelper.getId(mCursor);
-			PrepareDatabaseHelper.markDirtyAsClean(getResolver(), id);
-			mCursor.moveToNext();
-		}
+            String editApiKey = getApiKey();
+            if (editApiKey.length() == 0) {
+                throw new RestServiceException(
+                        RestServiceException.ERROR_AUTHORIZATION_ERROR,
+                        new RuntimeException("No apikey to edit available"));
+            }
 
-		mCursor.close();
-	}
+            RequestBuilder requestBuilder = null;
 
-	public void prepareDatabase() {
-		PrepareDatabaseHelper.replayChangedCopies(getResolver());
-	}
+            int dirtyTag = POIHelper.getDirtyTag(mCursor);
+            switch (dirtyTag) {
+                case POIs.DIRTY_STATE:
+                    requestBuilder = wheelchairUpdateRequestBuilder(editApiKey);
+                    break;
+                case POIs.DIRTY_ALL:
+                    requestBuilder = updateOrNewRequestBuilder(editApiKey);
+                    break;
+                default:
+                    throw new RestServiceException(
+                            RestServiceException.ERROR_INTERNAL_ERROR,
+                            new RuntimeException(
+                                    "Cant find matching RequestBuilder for update request"));
+            }
 
-	private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
-		String id = POIHelper.getWMId(mCursor);
-		WheelchairState state = POIHelper.getWheelchair(mCursor);
-		return new WheelchairUpdateRequestBuilder(getServer(), apiKey,
-				AcceptType.JSON, id, state);
-	}
+            executeRequest(requestBuilder);
+            long id = POIHelper.getId(mCursor);
+            PrepareDatabaseHelper.markDirtyAsClean(getResolver(), id);
+            mCursor.moveToNext();
+        }
 
-	private RequestBuilder updateOrNewRequestBuilder(String apiKey) {
-		String id = POIHelper.getWMId(mCursor);
-		if (id != null)
-			Log.d(TAG, "updateOrNewRequestBuilder: doing an update of id = "
-					+ id);
-		else
-			Log.d(TAG, "updateOrNewRequestBuilder: creating a new poi");
+        mCursor.close();
+    }
 
-		String name = POIHelper.getName(mCursor);
-		SupportManager sm = WheelmapApp.getSupportManager();
+    public void prepareDatabase() {
+        PrepareDatabaseHelper.replayChangedCopies(getResolver());
+    }
 
-		String categoryIdentifier = POIHelper.getCategoryIdentifier(mCursor);
-		String nodeTypeIdentifier = POIHelper.getNodeTypeIdentifier(mCursor);
+    private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
+        String id = POIHelper.getWMId(mCursor);
+        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        return new WheelchairUpdateRequestBuilder(getServer(), apiKey,
+                AcceptType.JSON, id, state);
+    }
 
-		double latitude = POIHelper.getLatitude(mCursor);
-		double longitude = POIHelper.getLongitude(mCursor);
+    private RequestBuilder updateOrNewRequestBuilder(String apiKey) {
+        String id = POIHelper.getWMId(mCursor);
+        if (id != null) {
+            Log.d(TAG, "updateOrNewRequestBuilder: doing an update of id = "
+                    + id);
+        } else {
+            Log.d(TAG, "updateOrNewRequestBuilder: creating a new poi");
+        }
 
-		WheelchairState state = POIHelper.getWheelchair(mCursor);
-		String comment = POIHelper.getComment(mCursor);
+        String name = POIHelper.getName(mCursor);
 
-		String street = POIHelper.getStreet(mCursor);
-		String housenumber = POIHelper.getHouseNumber(mCursor);
-		String city = POIHelper.getCity(mCursor);
-		String postcode = POIHelper.getPostcode(mCursor);
+        String categoryIdentifier = POIHelper.getCategoryIdentifier(mCursor);
+        String nodeTypeIdentifier = POIHelper.getNodeTypeIdentifier(mCursor);
 
-		String website = POIHelper.getWebsite(mCursor);
-		String phone = POIHelper.getPhone(mCursor);
+        double latitude = POIHelper.getLatitude(mCursor);
+        double longitude = POIHelper.getLongitude(mCursor);
 
-		return new NodeUpdateOrNewAllRequestBuilder(getServer(), apiKey,
-				AcceptType.JSON, id, name, categoryIdentifier,
-				nodeTypeIdentifier, latitude, longitude, state, comment,
-				street, housenumber, city, postcode, website, phone);
-	}
+        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        String comment = POIHelper.getComment(mCursor);
+
+        String street = POIHelper.getStreet(mCursor);
+        String housenumber = POIHelper.getHouseNumber(mCursor);
+        String city = POIHelper.getCity(mCursor);
+        String postcode = POIHelper.getPostcode(mCursor);
+
+        String website = POIHelper.getWebsite(mCursor);
+        String phone = POIHelper.getPhone(mCursor);
+
+        return new NodeUpdateOrNewAllRequestBuilder(getServer(), apiKey,
+                AcceptType.JSON, id, name, categoryIdentifier,
+                nodeTypeIdentifier, latitude, longitude, state, comment,
+                street, housenumber, city, postcode, website, phone);
+    }
 
 }

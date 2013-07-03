@@ -21,15 +21,11 @@
  */
 package org.wheelmap.android.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.view.WheelchairStateItemView;
 
-import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -37,55 +33,63 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class WheelchairStateSelectAdapter extends BaseAdapter {
-	private Context mContext;
-	private List<WheelchairAttributes> mItems;
-	private SharedPreferences mPrefs;
 
-	public WheelchairStateSelectAdapter(Context context) {
-		super();
-		mContext = context;
-		mItems = new ArrayList<WheelchairAttributes>();
-		mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-		Map<WheelchairState, WheelchairAttributes> attributes = SupportManager.wsAttributes;
+    private Context mContext;
 
-		mItems.add(attributes.get(WheelchairState.YES));
-		mItems.add(attributes.get(WheelchairState.LIMITED));
-		mItems.add(attributes.get(WheelchairState.NO));
-		mItems.add(attributes.get(WheelchairState.UNKNOWN));
-	}
+    private List<WheelchairAttributes> mItems;
 
-	@Override
-	public int getCount() {
-		return mItems.size();
-	}
+    private SharedPreferences mPrefs;
 
-	@Override
-	public Object getItem(int position) {
-		return mItems.get(position);
-	}
+    public WheelchairStateSelectAdapter(Context context) {
+        super();
+        mContext = context;
+        mItems = new ArrayList<WheelchairAttributes>();
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Map<WheelchairState, WheelchairAttributes> attributes = SupportManager.wsAttributes;
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+        mItems.add(attributes.get(WheelchairState.YES));
+        mItems.add(attributes.get(WheelchairState.LIMITED));
+        mItems.add(attributes.get(WheelchairState.NO));
+        mItems.add(attributes.get(WheelchairState.UNKNOWN));
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		WheelchairStateItemView itemView;
-		if (convertView != null)
-			itemView = (WheelchairStateItemView) convertView;
-		else
-			itemView = new WheelchairStateItemView(mContext);
+    @Override
+    public int getCount() {
+        return mItems.size();
+    }
 
-		WheelchairAttributes attributes = mItems.get(position);
-		itemView.setIcon(attributes.drawableId);
-		itemView.setText(mContext.getString(attributes.settingsStringId));
-		itemView.setTextColor(mContext.getResources().getColor(
-				attributes.colorId));
-		itemView.setCheckboxChecked(mPrefs
-				.getBoolean(attributes.prefsKey, true));
-		return itemView;
+    @Override
+    public Object getItem(int position) {
+        return mItems.get(position);
+    }
 
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        WheelchairStateItemView itemView;
+        if (convertView != null) {
+            itemView = (WheelchairStateItemView) convertView;
+        } else {
+            itemView = new WheelchairStateItemView(mContext);
+        }
+
+        WheelchairAttributes attributes = mItems.get(position);
+        itemView.setIcon(attributes.drawableId);
+        itemView.setText(mContext.getString(attributes.settingsStringId));
+        itemView.setTextColor(mContext.getResources().getColor(
+                attributes.colorId));
+        itemView.setCheckboxChecked(mPrefs
+                .getBoolean(attributes.prefsKey, true));
+        return itemView;
+
+    }
 }

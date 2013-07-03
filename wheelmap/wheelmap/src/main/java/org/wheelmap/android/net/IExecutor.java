@@ -22,17 +22,23 @@
 package org.wheelmap.android.net;
 
 import org.wheelmap.android.modules.IAppProperties;
-import org.wheelmap.android.service.SyncServiceException;
 import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.service.RestServiceException;
 
 public interface IExecutor {
-	void prepareContent();
-	
-	
+
+    void prepareContent();
+
+
     String getServer();
-	void execute() throws SyncServiceException;
-	void prepareDatabase() throws SyncServiceException;
-	void setUserAgent(String userAgent);
-	void setAppProperties(IAppProperties properties );
-	void setCredentials(ICredentials credentials);
+
+    void execute() throws RestServiceException;
+
+    void prepareDatabase() throws RestServiceException;
+
+    void setUserAgent(String userAgent);
+
+    void setAppProperties(IAppProperties properties);
+
+    void setCredentials(ICredentials credentials);
 }

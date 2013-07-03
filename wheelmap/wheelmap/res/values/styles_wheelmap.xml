@@ -16,7 +16,8 @@
      limitations under the License.
 -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.wheelmap" parent="@style/Holo.Theme.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
@@ -25,21 +26,34 @@
         <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
         <item name="actionDropDownStyle">@style/wheelmap_DropDownNav</item>
         <item name="actionBarStyle">@style/wheelmap_solid_ActionBar</item>
-        <item name="android:actionBarItemBackground" tools:targetApi="ice_cream_sandwich">@drawable/selectable_background_wheelmap</item>
-        <item name="android:popupMenuStyle" tools:targetApi="ice_cream_sandwich">@style/wheelmap_PopupMenu</item>
-        <item name="android:dropDownListViewStyle" tools:targetApi="ice_cream_sandwich">@style/wheelmap_DropDownListView</item>
-        <item name="android:actionBarTabStyle" tools:targetApi="ice_cream_sandwich">@style/wheelmap_ActionBarTabStyle</item>
-        <item name="android:actionDropDownStyle" tools:targetApi="ice_cream_sandwich">@style/wheelmap_DropDownNav</item>
-        <item name="android:actionBarStyle" tools:targetApi="ice_cream_sandwich">@style/wheelmap_solid_ActionBar</item>
+        <item name="android:actionBarItemBackground" tools:targetApi="ice_cream_sandwich">
+            @drawable/selectable_background_wheelmap
+        </item>
+        <item name="android:popupMenuStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_PopupMenu
+        </item>
+        <item name="android:dropDownListViewStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_DropDownListView
+        </item>
+        <item name="android:actionBarTabStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_ActionBarTabStyle
+        </item>
+        <item name="android:actionDropDownStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_DropDownNav
+        </item>
+        <item name="android:actionBarStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_solid_ActionBar
+        </item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
-        
-                <!-- Light.DarkActionBar specific -->
+
+        <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
         <item name="android:actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
 
     </style>
 
-    <style name="wheelmap_solid_ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="wheelmap_solid_ActionBar"
+           parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_wheelmap</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wheelmap</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_wheelmap</item>
@@ -54,15 +68,15 @@
     <style name="wheelmap_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_wheelmap</item>
         <item name="progressBarStyle">@style/wheelmap_ProgressBar</item>
-        
+
         <item name="android:background">@drawable/ab_transparent_wheelmap</item>
         <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>
     </style>
-	
-    <style name="wheelmap_PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">	
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wheelmap</item>	
+
+    <style name="wheelmap_PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wheelmap</item>
     </style>
-	
+
     <style name="wheelmap_DropDownListView" parent="@style/Widget.Sherlock.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wheelmap</item>
     </style>
@@ -72,7 +86,7 @@
 
         <item name="android:background">@drawable/tab_indicator_ab_wheelmap</item>
     </style>
-	
+
     <style name="wheelmap_DropDownNav" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
         <item name="background">@drawable/spinner_background_ab_wheelmap</item>
 
@@ -80,16 +94,16 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wheelmap</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_wheelmap</item>
     </style>
-    
+
     <style name="wheelmap_ProgressBar" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wheelmap</item>
     </style>
-    
+
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.wheelmap.widget" parent="@style/Theme.Sherlock">
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
-        
+
         <item name="android:popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
     </style>

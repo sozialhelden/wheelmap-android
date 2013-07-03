@@ -21,9 +21,11 @@
  */
 package org.wheelmap.android.osmdroid;
 
-import android.content.ContentValues;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import android.content.ContentValues;
+
 public interface OnTapListener {
-	public void onTap(OverlayItem item, ContentValues values);
+
+    public void onTap(OverlayItem item, ContentValues values);
 }

@@ -21,7 +21,11 @@
  */
 package org.wheelmap.android.activity;
 
-import android.R;
+import com.google.inject.Inject;
+
+import com.actionbarsherlock.view.Window;
+
+import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.fragment.EditPositionFragment;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
@@ -29,14 +33,14 @@ import org.wheelmap.android.fragment.NodetypeSelectFragment;
 import org.wheelmap.android.fragment.NodetypeSelectFragment.OnNodetypeSelectListener;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
-import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import wheelmap.org.WheelchairState;
+import android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,201 +49,210 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Window;
-
 import de.akquinet.android.androlog.Log;
 
-public class POIDetailEditableActivity extends MapsforgeMapActivity implements
-		OnPOIDetailEditableListener, OnLoginDialogListener,
-		OnEditPositionListener, OnNodetypeSelectListener,
-		OnBackStackChangedListener, OnWheelchairState {
-	private final static String TAG = POIDetailEditableActivity.class
-			.getSimpleName();
+@Activity.Addons(Activity.ADDON_SHERLOCK)
+public class POIDetailEditableActivity extends MapActivity implements
+        OnPOIDetailEditableListener, OnLoginDialogListener,
+        OnEditPositionListener, OnNodetypeSelectListener,
+        OnBackStackChangedListener, OnWheelchairState {
 
-	private Fragment mFragment;
-	private ExternalEditableState mExternalEditableState;
+    private final static String TAG = POIDetailEditableActivity.class
+            .getSimpleName();
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setSupportProgressBarIndeterminateVisibility(false);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
+    @Inject
+    roboguice.inject.ContentViewListener ignored;
 
-		setExternalEditableState(savedInstanceState);
+    private Fragment mFragment;
 
-		if (UtilsMisc.isTablet(getApplicationContext())) {
-			showAsPopup(this);
-		}
+    private ExternalEditableState mExternalEditableState;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setSupportProgressBarIndeterminateVisibility(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-		FragmentManager fm = getSupportFragmentManager();
-		fm.addOnBackStackChangedListener(this);
+        setExternalEditableState(savedInstanceState);
 
-		mFragment = fm.findFragmentById( R.id.content );
-		if (mFragment != null) {
-			return;
-		}
+        if (UtilsMisc.isTablet(getApplicationContext())) {
+            showAsPopup(this);
+        }
 
-		Long poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
-		if (poiID == Extra.ID_UNKNOWN) {
-			Log.w( TAG, "poi id is not given - cant do anything" );
-			return;
-		}
+        FragmentManager fm = getSupportFragmentManager();
+        fm.addOnBackStackChangedListener(this);
 
-		mFragment = POIDetailEditableFragment.newInstance(poiID);
-		fm.beginTransaction()
-				.add(android.R.id.content, mFragment,
-						POIDetailEditableFragment.TAG).commit();
-	}
+        mFragment = fm.findFragmentById(R.id.content);
+        if (mFragment != null) {
+            return;
+        }
 
-	private void showAsPopup(SherlockFragmentActivity activity) {
-		activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
-		activity.getWindow().setFlags(
-				WindowManager.LayoutParams.FLAG_DIM_BEHIND,
-				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-		LayoutParams params = activity.getWindow().getAttributes();
-		params.height = LayoutParams.WRAP_CONTENT;
-		params.width = 600;
-		params.alpha = 1.0f;
-		params.dimAmount = 0.5f;
-		activity.getWindow().setAttributes(
-				(android.view.WindowManager.LayoutParams) params);
-	}
+        Long poiID = getIntent().getLongExtra(Extra.POI_ID, Extra.ID_UNKNOWN);
+        if (poiID == Extra.ID_UNKNOWN) {
+            Log.w(TAG, "poi id is not given - cant do anything");
+            return;
+        }
 
-	private void setExternalEditableState(Bundle state) {
-		mExternalEditableState = new ExternalEditableState();
-		if (state != null)
-			mExternalEditableState.restoreState(state);
-	}
+        mFragment = POIDetailEditableFragment.newInstance(poiID);
+        fm.beginTransaction()
+                .add(android.R.id.content, mFragment,
+                        POIDetailEditableFragment.TAG).commit();
+    }
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		mExternalEditableState.saveState(outState);
-	}
+    private void showAsPopup(Activity activity) {
+        activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        activity.getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        LayoutParams params = activity.getWindow().getAttributes();
+        params.height = LayoutParams.WRAP_CONTENT;
+        params.width = 600;
+        params.alpha = 1.0f;
+        params.dimAmount = 0.5f;
+        activity.getWindow().setAttributes(
+                (android.view.WindowManager.LayoutParams) params);
+    }
 
-	@Override
-	public void onEditWheelchairState(WheelchairState state) {
-		mFragment = WheelchairStateFragment.newInstance(state);
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
-		ft.addToBackStack(null);
-		ft.commit();
-	}
+    private void setExternalEditableState(Bundle state) {
+        mExternalEditableState = new ExternalEditableState();
+        if (state != null) {
+            mExternalEditableState.restoreState(state);
+        }
+    }
 
-	@Override
-	public void onWheelchairStateSelect(WheelchairState state) {
-		Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
-		mExternalEditableState.state = state;
-		getSupportFragmentManager().popBackStack();
-	}
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mExternalEditableState.saveState(outState);
+    }
 
-	@Override
-	public void onEditSave() {
-		finish();
-	}
+    @Override
+    public void onEditWheelchairState(WheelchairState state) {
+        mFragment = WheelchairStateFragment.newInstance(state);
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
 
-	@Override
-	public void onEditGeolocation(double latitude, double longitude) {
-		mFragment = EditPositionFragment.newInstance(latitude, longitude);
+    @Override
+    public void onWheelchairStateSelect(WheelchairState state) {
+        Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
+        mExternalEditableState.state = state;
+        getSupportFragmentManager().popBackStack();
+    }
 
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
-		ft.addToBackStack(null);
-		ft.commit();
-	}
+    @Override
+    public void onEditSave() {
+        finish();
+    }
 
-	@Override
-	public void onEditPosition(double latitude, double longitude) {
-		mExternalEditableState.latitude = latitude;
-		mExternalEditableState.longitude = longitude;
-		getSupportFragmentManager().popBackStack();
-	}
+    @Override
+    public void onEditGeolocation(double latitude, double longitude) {
+        mFragment = EditPositionFragment.newInstance(latitude, longitude);
 
-	@Override
-	public void onEditNodetype(int nodetype) {
-		mFragment = NodetypeSelectFragment.newInstance(nodetype);
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
 
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.replace(android.R.id.content, mFragment, NodetypeSelectFragment.TAG);
-		ft.addToBackStack(null);
-		ft.commit();
-	}
+    @Override
+    public void onEditPosition(double latitude, double longitude) {
+        mExternalEditableState.latitude = latitude;
+        mExternalEditableState.longitude = longitude;
+        getSupportFragmentManager().popBackStack();
+    }
 
-	@Override
-	public void onSelect(int nodetype) {
-		mExternalEditableState.nodetype = nodetype;
-		getSupportFragmentManager().popBackStack();
-	}
+    @Override
+    public void onEditNodetype(int nodetype) {
+        mFragment = NodetypeSelectFragment.newInstance(nodetype);
 
-	@Override
-	public void onLoginSuccessful() {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(android.R.id.content, mFragment, NodetypeSelectFragment.TAG);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
 
-	}
+    @Override
+    public void onSelect(int nodetype) {
+        mExternalEditableState.nodetype = nodetype;
+        getSupportFragmentManager().popBackStack();
+    }
 
-	@Override
-	public void onLoginCancelled() {
-		finish();
-	}
+    @Override
+    public void onLoginSuccessful() {
 
-	@Override
-	public void onBackStackChanged() {
-		FragmentManager fm = getSupportFragmentManager();
-		mFragment = fm.findFragmentById(R.id.content);
-	}
+    }
 
-	public static class ExternalEditableState {
-		WheelchairState state = null;
-		int nodetype = SupportManager.UNKNOWN_TYPE;
-		double latitude = Extra.UNKNOWN;
-		double longitude = Extra.UNKNOWN;
+    @Override
+    public void onLoginCancelled() {
+        finish();
+    }
 
-		void saveState(Bundle bundle) {
-			if (state != null)
-				bundle.putInt(Extra.WHEELCHAIR_STATE, state.getId());
-			bundle.putInt(Extra.NODETYPE, nodetype);
-			bundle.putDouble(Extra.LATITUDE, latitude);
-			bundle.putDouble(Extra.LONGITUDE, longitude);
-		}
+    @Override
+    public void onBackStackChanged() {
+        FragmentManager fm = getSupportFragmentManager();
+        mFragment = fm.findFragmentById(R.id.content);
+    }
 
-		void restoreState(Bundle bundle) {
-			int stateId = bundle.getInt(Extra.WHEELCHAIR_STATE, Extra.UNKNOWN);
-			if (stateId != Extra.UNKNOWN)
-				state = WheelchairState.valueOf(stateId);
+    public static class ExternalEditableState {
 
-			nodetype = bundle.getInt(Extra.NODETYPE,
-					SupportManager.UNKNOWN_TYPE);
-			latitude = bundle.getDouble(Extra.LATITUDE, Extra.UNKNOWN);
-			longitude = bundle.getDouble(Extra.LONGITUDE, Extra.UNKNOWN);
-		}
+        WheelchairState state = null;
 
-		void clear() {
-			state = null;
-			nodetype = SupportManager.UNKNOWN_TYPE;
-			latitude = Extra.UNKNOWN;
-			longitude = Extra.UNKNOWN;
-		}
+        int nodetype = SupportManager.UNKNOWN_TYPE;
 
-		void setInFragment(POIDetailEditableFragment fragment) {
-			fragment.setWheelchairState(state);
-			fragment.setNodetype(nodetype);
-			fragment.setGeolocation(latitude, longitude);
-		}
-	}
+        double latitude = Extra.UNKNOWN;
 
-	@Override
-	public void requestExternalEditedState(POIDetailEditableFragment fragment) {
-		mExternalEditableState.setInFragment(fragment);
-	}
+        double longitude = Extra.UNKNOWN;
 
-	@Override
-	public void onStoring( boolean storing ) {
-		setSupportProgressBarIndeterminateVisibility(storing);
-	}
+        void saveState(Bundle bundle) {
+            if (state != null) {
+                bundle.putInt(Extra.WHEELCHAIR_STATE, state.getId());
+            }
+            bundle.putInt(Extra.NODETYPE, nodetype);
+            bundle.putDouble(Extra.LATITUDE, latitude);
+            bundle.putDouble(Extra.LONGITUDE, longitude);
+        }
+
+        void restoreState(Bundle bundle) {
+            int stateId = bundle.getInt(Extra.WHEELCHAIR_STATE, Extra.UNKNOWN);
+            if (stateId != Extra.UNKNOWN) {
+                state = WheelchairState.valueOf(stateId);
+            }
+
+            nodetype = bundle.getInt(Extra.NODETYPE,
+                    SupportManager.UNKNOWN_TYPE);
+            latitude = bundle.getDouble(Extra.LATITUDE, Extra.UNKNOWN);
+            longitude = bundle.getDouble(Extra.LONGITUDE, Extra.UNKNOWN);
+        }
+
+        void clear() {
+            state = null;
+            nodetype = SupportManager.UNKNOWN_TYPE;
+            latitude = Extra.UNKNOWN;
+            longitude = Extra.UNKNOWN;
+        }
+
+        void setInFragment(POIDetailEditableFragment fragment) {
+            fragment.setWheelchairState(state);
+            fragment.setNodetype(nodetype);
+            fragment.setGeolocation(latitude, longitude);
+        }
+    }
+
+    @Override
+    public void requestExternalEditedState(POIDetailEditableFragment fragment) {
+        mExternalEditableState.setInFragment(fragment);
+    }
+
+    @Override
+    public void onStoring(boolean storing) {
+        setSupportProgressBarIndeterminateVisibility(storing);
+    }
 
 }

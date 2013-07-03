@@ -21,9 +21,14 @@
  */
 package org.wheelmap.android.fragment;
 
-import java.util.ArrayList;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Dialog;
+import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.AdapterView;
+import org.holoeverywhere.widget.AdapterView.OnItemSelectedListener;
+import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.Spinner;
 import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
@@ -33,218 +38,224 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.view.View;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Dialog;
-import org.holoeverywhere.widget.AdapterView;
-import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.Spinner;
-import org.holoeverywhere.widget.AdapterView.OnItemSelectedListener;
+import java.util.ArrayList;
 
 import de.akquinet.android.androlog.Log;
 
-public class SearchDialogFragment extends SherlockDialogFragment implements
-		OnItemSelectedListener, OnClickListener, OnEditorActionListener {
-	public final static String TAG = SearchDialogFragment.class.getSimpleName();
+public class SearchDialogFragment extends DialogFragment implements
+        OnItemSelectedListener, OnClickListener, OnEditorActionListener {
 
-	public final static int PERFORM_SEARCH = 1;
+    public final static String TAG = SearchDialogFragment.class.getSimpleName();
 
-	private EditText mKeywordText;
+    public final static int PERFORM_SEARCH = 1;
 
-	private int mCategorySelected = Extra.UNKNOWN;
-	private int mNodeTypeSelected = Extra.UNKNOWN;
-	private float mDistance = Extra.UNKNOWN;
-	private boolean mEnableBoundingBoxSearch = false;
+    private EditText mKeywordText;
 
-	private Spinner mCategorySpinner;
-	private Spinner mDistanceSpinner;
+    private int mCategorySelected = Extra.UNKNOWN;
 
-	public interface OnSearchDialogListener {
-		public void onSearch(Bundle bundle);
-	}
+    private int mNodeTypeSelected = Extra.UNKNOWN;
 
-	public final static SearchDialogFragment newInstance(boolean showDistance,
-			boolean showMapHint) {
-		SearchDialogFragment dialog = new SearchDialogFragment();
-		Bundle b = new Bundle();
+    private float mDistance = Extra.UNKNOWN;
 
-		b.putBoolean(Extra.SHOW_DISTANCE, showDistance);
-		b.putBoolean(Extra.SHOW_MAP_HINT, showMapHint);
-		dialog.setArguments(b);
-		return dialog;
+    private boolean mEnableBoundingBoxSearch = false;
 
-	}
+    private Spinner mCategorySpinner;
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(R.string.title_search);
-		builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
-		builder.setNeutralButton(R.string.search_execute, this);
+    private Spinner mDistanceSpinner;
 
-		View view = createView();
-		builder.setView(view);
-		bindViews(view);
+    public interface OnSearchDialogListener {
 
-		Dialog d = builder.create();
-		return d;
-	}
+        public void onSearch(Bundle bundle);
+    }
 
-	protected View createView() {
-		LayoutInflater inflater = LayoutInflater.from(getActivity());
-		View v = inflater.inflate(R.layout.fragment_dialog_search, null);
+    public final static SearchDialogFragment newInstance(boolean showDistance,
+            boolean showMapHint) {
+        SearchDialogFragment dialog = new SearchDialogFragment();
+        Bundle b = new Bundle();
 
-		return v;
-	}
+        b.putBoolean(Extra.SHOW_DISTANCE, showDistance);
+        b.putBoolean(Extra.SHOW_MAP_HINT, showMapHint);
+        dialog.setArguments(b);
+        return dialog;
 
-	@SuppressWarnings("unchecked")
-	protected void bindViews(View v) {
+    }
 
-		mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
-		mKeywordText.setOnEditorActionListener(this);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.title_search);
+        builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
+        builder.setNeutralButton(R.string.search_execute, this);
 
-		mCategorySpinner = (Spinner) v.findViewById(R.id.search_spinner_categorie_nodetype);
+        View view = createView();
+        builder.setView(view);
+        bindViews(view);
 
-		ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
-				.createTypesList(getActivity(), true);
-		mCategorySpinner.setAdapter(new TypesAdapter(getActivity(), searchTypes,
-				TypesAdapter.SEARCH_MODE));
-		mCategorySpinner.setOnItemSelectedListener(this);
+        Dialog d = builder.create();
+        return d;
+    }
 
-		mDistanceSpinner = (Spinner) v
-				.findViewById(R.id.search_spinner_distance);
+    protected View createView() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View v = inflater.inflate(R.layout.fragment_dialog_search, null);
 
-		ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
-				.createFromResource(getActivity(), R.array.distance_array,
-						R.layout.simple_spinner_item);
-		distanceSpinnerAdapter
-				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-		mDistanceSpinner.setAdapter(distanceSpinnerAdapter);
-		mDistanceSpinner.setOnItemSelectedListener(this);
-		mDistanceSpinner.setPromptId(R.string.search_distance);
-		int initialPosition = 3;
-		mDistanceSpinner.setSelection(initialPosition);
-		String distance = (String) mDistanceSpinner
-				.getItemAtPosition(initialPosition);
-		try {
-			mDistance = Float.valueOf(distance);
-		} catch (NumberFormatException e) {
-			mDistance = Extra.UNKNOWN;
-		}
-	}
+        return v;
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		enableContainerVisibility();
-	}
+    @SuppressWarnings("unchecked")
+    protected void bindViews(View v) {
 
-	private View mapHintContainer;
-	private View distanceContainer;
+        mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
+        mKeywordText.setOnEditorActionListener(this);
 
-	protected void enableContainerVisibility() {
-		mapHintContainer = getDialog().findViewById(R.id.search_map_hint);
-		if (getArguments().getBoolean(Extra.SHOW_MAP_HINT))
-			mapHintContainer.setVisibility(View.VISIBLE);
+        mCategorySpinner = (Spinner) v.findViewById(R.id.search_spinner_categorie_nodetype);
 
-		distanceContainer = getDialog().findViewById(
-				R.id.search_spinner_distance_container);
-		if (getArguments().getBoolean(Extra.SHOW_DISTANCE))
-			distanceContainer.setVisibility(View.VISIBLE);
-	}
+        ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
+                .createTypesList(getActivity(), true);
+        mCategorySpinner.setAdapter(new TypesAdapter(getActivity(), searchTypes,
+                TypesAdapter.SEARCH_MODE));
+        mCategorySpinner.setOnItemSelectedListener(this);
 
-	protected void setSearchMode(boolean enableBoundingBoxSearch) {
-		Log.d(TAG, "enableBoundingBoxSearch = " + enableBoundingBoxSearch);
-		mEnableBoundingBoxSearch = enableBoundingBoxSearch;
-		mapHintContainer.setEnabled(mEnableBoundingBoxSearch);
-		distanceContainer.setEnabled(!mEnableBoundingBoxSearch);
-	}
+        mDistanceSpinner = (Spinner) v
+                .findViewById(R.id.search_spinner_distance);
 
-	@Override
-	public void onItemSelected(AdapterView<?> adapterView, View view,
-			int position, long id) {
+        ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
+                .createFromResource(getActivity(), R.array.distance_array,
+                        R.layout.simple_spinner_item);
+        distanceSpinnerAdapter
+                .setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        mDistanceSpinner.setAdapter(distanceSpinnerAdapter);
+        mDistanceSpinner.setOnItemSelectedListener(this);
+        mDistanceSpinner.setPromptId(R.string.search_distance);
+        int initialPosition = 3;
+        mDistanceSpinner.setSelection(initialPosition);
+        String distance = (String) mDistanceSpinner
+                .getItemAtPosition(initialPosition);
+        try {
+            mDistance = Float.valueOf(distance);
+        } catch (NumberFormatException e) {
+            mDistance = Extra.UNKNOWN;
+        }
+    }
 
-		if ( adapterView == mCategorySpinner) {
-			CategoryOrNodeType search = (CategoryOrNodeType) adapterView
-					.getAdapter().getItem(position);
-			switch (search.type) {
-			case CATEGORY:
-				mCategorySelected = search.id;
-				break;
-			case NODETYPE:
-				mNodeTypeSelected = search.id;
-				break;
-			default:
-				// noop
-			}
-		} else if ( adapterView == mDistanceSpinner ) {
-			String distance = (String) adapterView.getItemAtPosition(position);
-			try {
-				mDistance = Float.valueOf(distance);
-			} catch (NumberFormatException e) {
-				mDistance = Extra.UNKNOWN;
-			}
-		}
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+        enableContainerVisibility();
+    }
 
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
+    private View mapHintContainer;
 
-	}
+    private View distanceContainer;
 
-	private void sendSearchInstructions() {
-		Bundle b = createSearchBundle();
+    protected void enableContainerVisibility() {
+        mapHintContainer = getDialog().findViewById(R.id.search_map_hint);
+        if (getArguments().getBoolean(Extra.SHOW_MAP_HINT)) {
+            mapHintContainer.setVisibility(View.VISIBLE);
+        }
 
-		OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
-		listener.onSearch(b);
-	}
+        distanceContainer = getDialog().findViewById(
+                R.id.search_spinner_distance_container);
+        if (getArguments().getBoolean(Extra.SHOW_DISTANCE)) {
+            distanceContainer.setVisibility(View.VISIBLE);
+        }
+    }
 
-	protected Bundle createSearchBundle() {
-		Bundle bundle = new Bundle();
+    protected void setSearchMode(boolean enableBoundingBoxSearch) {
+        Log.d(TAG, "enableBoundingBoxSearch = " + enableBoundingBoxSearch);
+        mEnableBoundingBoxSearch = enableBoundingBoxSearch;
+        mapHintContainer.setEnabled(mEnableBoundingBoxSearch);
+        distanceContainer.setEnabled(!mEnableBoundingBoxSearch);
+    }
 
-		String keyword = mKeywordText.getText().toString();
-		if (keyword.length() > 0)
-			bundle.putString(SearchManager.QUERY, keyword);
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view,
+            int position, long id) {
 
-		Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
-				+ mNodeTypeSelected);
-		if (mCategorySelected != Extra.UNKNOWN)
-			bundle.putInt(Extra.CATEGORY, mCategorySelected);
-		else if (mNodeTypeSelected != Extra.UNKNOWN)
-			bundle.putInt(Extra.NODETYPE, mNodeTypeSelected);
-		else
-			bundle.putInt(Extra.CATEGORY, Extra.UNKNOWN);
+        if (adapterView == mCategorySpinner) {
+            CategoryOrNodeType search = (CategoryOrNodeType) adapterView
+                    .getAdapter().getItem(position);
+            switch (search.type) {
+                case CATEGORY:
+                    mCategorySelected = search.id;
+                    break;
+                case NODETYPE:
+                    mNodeTypeSelected = search.id;
+                    break;
+                default:
+                    // noop
+            }
+        } else if (adapterView == mDistanceSpinner) {
+            String distance = (String) adapterView.getItemAtPosition(position);
+            try {
+                mDistance = Float.valueOf(distance);
+            } catch (NumberFormatException e) {
+                mDistance = Extra.UNKNOWN;
+            }
+        }
+    }
 
-		if (mEnableBoundingBoxSearch)
-			bundle.putBoolean(Extra.ENABLE_BOUNDING_BOX, true);
-		else if (mDistance != Extra.UNKNOWN)
-			bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
-		return bundle;
-	}
+    }
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		sendSearchInstructions();
-		dismiss();
-	}
+    private void sendSearchInstructions() {
+        Bundle b = createSearchBundle();
 
-	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (EditorInfo.IME_ACTION_DONE == actionId) {
-			sendSearchInstructions();
-			dismiss();
-			return true;
-		}
+        OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
+        listener.onSearch(b);
+    }
 
-		return false;
-	}
+    protected Bundle createSearchBundle() {
+        Bundle bundle = new Bundle();
+
+        String keyword = mKeywordText.getText().toString();
+        if (keyword.length() > 0) {
+            bundle.putString(SearchManager.QUERY, keyword);
+        }
+
+        Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
+                + mNodeTypeSelected);
+        if (mCategorySelected != Extra.UNKNOWN) {
+            bundle.putInt(Extra.CATEGORY, mCategorySelected);
+        } else if (mNodeTypeSelected != Extra.UNKNOWN) {
+            bundle.putInt(Extra.NODETYPE, mNodeTypeSelected);
+        } else {
+            bundle.putInt(Extra.CATEGORY, Extra.UNKNOWN);
+        }
+
+        if (mEnableBoundingBoxSearch) {
+            bundle.putBoolean(Extra.ENABLE_BOUNDING_BOX, true);
+        } else if (mDistance != Extra.UNKNOWN) {
+            bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
+        }
+
+        return bundle;
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        sendSearchInstructions();
+        dismiss();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (EditorInfo.IME_ACTION_DONE == actionId) {
+            sendSearchInstructions();
+            dismiss();
+            return true;
+        }
+
+        return false;
+    }
 
 }

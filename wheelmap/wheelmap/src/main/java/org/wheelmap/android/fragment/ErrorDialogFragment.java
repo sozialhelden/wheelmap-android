@@ -21,104 +21,114 @@
  */
 package org.wheelmap.android.fragment;
 
+import com.actionbarsherlock.app.SherlockDialogFragment;
+
+import org.holoeverywhere.app.AlertDialog;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.RestServiceException;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import org.holoeverywhere.app.AlertDialog;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 public class ErrorDialogFragment extends SherlockDialogFragment implements
-		DialogInterface.OnClickListener {
-	public static final String TAG = ErrorDialogFragment.class.getSimpleName();
-	static boolean isShowing;
-	private OnErrorDialogListener mListener;
-	private int mId;
+        DialogInterface.OnClickListener {
 
-	public interface OnErrorDialogListener {
-		void onErrorDialogClose(int id);
-	}
+    public static final String TAG = ErrorDialogFragment.class.getSimpleName();
 
-	public static ErrorDialogFragment newInstance(String title,
-			String message, int id) {
-		if (isShowing)
-			return null;
+    static boolean isShowing;
 
-		isShowing = true;
+    private OnErrorDialogListener mListener;
 
-		ErrorDialogFragment dialog = new ErrorDialogFragment();
-		Bundle b = new Bundle();
-		b.putString(Extra.ALERT_TITLE, title);
-		b.putString(Extra.ALERT_MESSAGE, message);
-		b.putInt(Extra.ID, id);
-		dialog.setArguments(b);
-		return dialog;
-	}
+    private int mId;
 
-	public static ErrorDialogFragment newInstance(SyncServiceException e,
-			int id) {
-		if (isShowing)
-			return null;
+    public interface OnErrorDialogListener {
 
-		isShowing = true;
-		ErrorDialogFragment dialog = new ErrorDialogFragment();
-		Bundle b = new Bundle();
-		b.putParcelable(Extra.EXCEPTION, e);
-		b.putInt(Extra.ID, id);
-		dialog.setArguments(b);
-		return dialog;
-	}
+        void onErrorDialogClose(int id);
+    }
 
-	public void setOnErrorDialogListener(OnErrorDialogListener listener) {
-		mListener = listener;
-	}
+    public static ErrorDialogFragment newInstance(String title,
+            String message, int id) {
+        if (isShowing) {
+            return null;
+        }
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		if (mListener == null && activity instanceof OnErrorDialogListener)
-			mListener = (OnErrorDialogListener) activity;
-	}
+        isShowing = true;
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		isShowing = false;
-	}
+        ErrorDialogFragment dialog = new ErrorDialogFragment();
+        Bundle b = new Bundle();
+        b.putString(Extra.ALERT_TITLE, title);
+        b.putString(Extra.ALERT_MESSAGE, message);
+        b.putInt(Extra.ID, id);
+        dialog.setArguments(b);
+        return dialog;
+    }
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		mId = getArguments().getInt(Extra.ID);
-		String title;
-		String msg;
-		if (getArguments().containsKey(Extra.ALERT_TITLE)) {
-			title = getArguments().getString(Extra.ALERT_TITLE);
-			msg = getArguments().getString(Extra.ALERT_MESSAGE);
-		} else {
-			SyncServiceException e = getArguments().getParcelable(
-					Extra.EXCEPTION);
-			msg = getString(e.getRessourceString());
-			if (e.isNetworkError())
-				title = getString(R.string.error_network_title);
-			else
-				title = getString(R.string.error_title_occurred);
-		}
-		builder.setTitle(title);
-		builder.setMessage(msg);
-		builder.setIcon(R.drawable.ic_dialog_alert_wheelmap);
-		builder.setNeutralButton(R.string.btn_okay, this);
-		return builder.create();
-	}
+    public static ErrorDialogFragment newInstance(RestServiceException e,
+            int id) {
+        if (isShowing) {
+            return null;
+        }
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (mListener != null)
-			mListener.onErrorDialogClose(mId);
-	}
+        isShowing = true;
+        ErrorDialogFragment dialog = new ErrorDialogFragment();
+        Bundle b = new Bundle();
+        b.putParcelable(Extra.EXCEPTION, e);
+        b.putInt(Extra.ID, id);
+        dialog.setArguments(b);
+        return dialog;
+    }
+
+    public void setOnErrorDialogListener(OnErrorDialogListener listener) {
+        mListener = listener;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (mListener == null && activity instanceof OnErrorDialogListener) {
+            mListener = (OnErrorDialogListener) activity;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        isShowing = false;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        mId = getArguments().getInt(Extra.ID);
+        String title;
+        String msg;
+        if (getArguments().containsKey(Extra.ALERT_TITLE)) {
+            title = getArguments().getString(Extra.ALERT_TITLE);
+            msg = getArguments().getString(Extra.ALERT_MESSAGE);
+        } else {
+            RestServiceException e = getArguments().getParcelable(
+                    Extra.EXCEPTION);
+            msg = getString(e.getRessourceString());
+            if (e.isNetworkError()) {
+                title = getString(R.string.error_network_title);
+            } else {
+                title = getString(R.string.error_title_occurred);
+            }
+        }
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setIcon(R.drawable.ic_dialog_alert_wheelmap);
+        builder.setNeutralButton(R.string.btn_okay, this);
+        return builder.create();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (mListener != null) {
+            mListener.onErrorDialogClose(mId);
+        }
+    }
 }

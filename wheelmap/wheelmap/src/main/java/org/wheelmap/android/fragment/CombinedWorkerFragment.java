@@ -1,298 +1,323 @@
 package org.wheelmap.android.fragment;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import android.location.Location;
-import org.wheelmap.android.app.WheelmapApp;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.UserQueryHelper;
-import org.wheelmap.android.model.UserQueryUpdateEvent;
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.service.SyncServiceException;
-import org.wheelmap.android.service.SyncServiceHelper;
+import org.wheelmap.android.service.RestService;
+import org.wheelmap.android.service.RestServiceException;
+import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.database.Cursor;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.akquinet.android.androlog.Log;
+import de.greenrobot.event.EventBus;
 
-public class CombinedWorkerFragment extends LocationFragment implements
-		WorkerFragment, Receiver, LoaderCallbacks<Cursor>,
-		OnSearchDialogListener {
-	public final static String TAG = CombinedWorkerFragment.class
-			.getSimpleName();
-	Set<DisplayFragment> mListener = new HashSet<DisplayFragment>();
+public class CombinedWorkerFragment extends Fragment implements
+        WorkerFragment, Receiver, LoaderCallbacks<Cursor>,
+        OnSearchDialogListener {
 
-	public final static int LOADER_LIST_ID = 0;
-	public final static int LOADER_MAP_ID = 1;
+    public final static String TAG = CombinedWorkerFragment.class
+            .getSimpleName();
 
-	private final static float QUERY_DISTANCE_DEFAULT = 0.8f;
+    Set<DisplayFragment> mListener = new HashSet<DisplayFragment>();
 
-	private WorkerFragmentListener mFragmentListener;
-	private DetachableResultReceiver mReceiver;
+    public final static int LOADER_LIST_ID = 0;
 
-	private Cursor mListCursor;
-	private Cursor mMapCursor;
+    public final static int LOADER_MAP_ID = 1;
 
-	boolean isSearchMode;
-	private boolean mRefreshStatus;
-	private Bus mBus;
+    private final static float QUERY_DISTANCE_DEFAULT = 0.8f;
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+    private WorkerFragmentListener mFragmentListener;
 
-		if (activity instanceof WorkerFragmentListener)
-			mFragmentListener = (WorkerFragmentListener) activity;
-	}
+    private DetachableResultReceiver mReceiver;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
+    private Cursor mListCursor;
 
-		mBus = WheelmapApp.getBus();
-		mBus.register(this);
+    private Cursor mMapCursor;
 
-		mReceiver = new DetachableResultReceiver(new Handler());
-		mReceiver.setReceiver(this);
+    boolean isSearchMode;
 
-		requestUpdate(null);
-	}
+    private boolean mRefreshStatus;
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "starting both loaders");
-		getLoaderManager().initLoader(LOADER_LIST_ID, null, this);
-		getLoaderManager().initLoader(LOADER_MAP_ID, null, this);
-	}
+    private EventBus mBus;
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		mReceiver.clearReceiver();
-	}
+    private Location mLocation;
 
-	@Override
-	public void registerDisplayFragment(DisplayFragment fragment) {
-		mListener.add(fragment);
-	}
+    private String mUserQuery;
 
-	@Override
-	public void unregisterDisplayFragment(DisplayFragment fragment) {
-		mListener.remove(fragment);
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-	@Override
-	protected void updateLocation(Location location) {
-		Log.d(TAG, "updateLocation");
-		resetCursorLoaderUri();
-	}
+        if (activity instanceof WorkerFragmentListener) {
+            mFragmentListener = (WorkerFragmentListener) activity;
+        }
+    }
 
-	private void setRefreshStatus(boolean refreshState) {
-		mRefreshStatus = refreshState;
-		update();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
-	public void update() {
-		for (DisplayFragment fragment : mListener) {
-			fragment.onUpdate(this);
-		}
-	}
+        mReceiver = new DetachableResultReceiver(new Handler());
+        mReceiver.setReceiver(this);
 
-	@Override
-	public void requestUpdate(Bundle bundle) {
-		if (isSearchMode)
-			return;
+        requestUpdate(null);
+    }
 
-		if (bundle == null) {
-			SyncServiceHelper.retrieveNodesByDistance(getActivity(),
-					getLocation(), QUERY_DISTANCE_DEFAULT, mReceiver);
-		} else {
-			bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
-			bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-			SyncServiceHelper.executeRequest(getActivity(), bundle);
-		}
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "starting both loaders");
+        mBus = EventBus.getDefault();
+        mBus.register(this);
+        getLoaderManager().initLoader(LOADER_LIST_ID, null, this);
+        getLoaderManager().initLoader(LOADER_MAP_ID, null, this);
+    }
 
-	@Override
-	public void onSearch(Bundle bundle) {
-		Log.d(TAG, "requestSearch with bundle " + bundle.toString());
-		if (bundle.containsKey(Extra.ENABLE_BOUNDING_BOX)) {
-			Fragment f = getFragmentManager().findFragmentByTag(
-					POIsMapsforgeFragment.TAG);
-			((OnSearchDialogListener) f).onSearch(bundle);
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mBus.post(new MyLocationManager.UnregisterEvent());
+        mBus.unregister(this);
+    }
 
-		}
-		requestSearch(bundle);
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mReceiver.clearReceiver();
+    }
 
-	@Override
-	public void requestSearch(Bundle bundle) {
-		if (!bundle.containsKey(SearchManager.QUERY)
-				&& !bundle.containsKey(Extra.CATEGORY)
-				&& !bundle.containsKey(Extra.NODETYPE)
-				&& !bundle.containsKey(Extra.WHEELCHAIR_STATE))
-			return;
+    @Override
+    public void registerDisplayFragment(DisplayFragment fragment) {
+        mListener.add(fragment);
+    }
 
-		if (bundle.getInt(Extra.CATEGORY) == Extra.UNKNOWN)
-			bundle.remove(Extra.CATEGORY);
+    @Override
+    public void unregisterDisplayFragment(DisplayFragment fragment) {
+        mListener.remove(fragment);
+    }
 
-		if (!bundle.containsKey(Extra.WHAT)) {
-			int what;
-			if (bundle.containsKey(Extra.CATEGORY)
-					|| bundle.containsKey(Extra.NODETYPE))
-				what = What.RETRIEVE_NODES;
-			else
-				what = What.SEARCH_NODES;
+    private void setRefreshStatus(boolean refreshState) {
+        mRefreshStatus = refreshState;
+        update();
+    }
 
-			bundle.putInt(Extra.WHAT, what);
-		}
+    public void update() {
+        for (DisplayFragment fragment : mListener) {
+            fragment.onUpdate(this);
+        }
+    }
 
-		if (bundle.containsKey(Extra.BOUNDING_BOX)) {
-			// noop
-		} else if (bundle.containsKey(Extra.DISTANCE_LIMIT)) {
-			bundle.putParcelable(Extra.LOCATION, getLocation());
-			bundle.remove(Extra.BOUNDING_BOX);
-		}
+    @Override
+    public void requestUpdate(Bundle bundle) {
+        if (isSearchMode) {
+            return;
+        }
 
-		bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-		SyncServiceHelper.executeRequest(getActivity(), bundle);
-		setSearchModeInt(true);
-	}
+        if (bundle == null) {
+            RestServiceHelper.retrieveNodesByDistance(getActivity(),
+                    mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
+        } else {
+            bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
+            bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
+            RestServiceHelper.executeRequest(getActivity(), bundle);
+        }
+    }
 
-	@Override
-	public Cursor getCursor(int id) {
-		if (id == LIST_CURSOR)
-			return mListCursor;
-		else if (id == MAP_CURSOR)
-			return mMapCursor;
-		else
-			throw new IllegalArgumentException("Cursor id not available ");
-	}
+    @Override
+    public void onSearch(Bundle bundle) {
+        Log.d(TAG, "requestSearch with bundle " + bundle.toString());
+        if (bundle.containsKey(Extra.ENABLE_BOUNDING_BOX)) {
+            Fragment f = (Fragment) getFragmentManager().findFragmentByTag(
+                    POIsMapsforgeFragment.TAG);
+            ((OnSearchDialogListener) f).onSearch(bundle);
 
-	@Override
-	public boolean isRefreshing() {
-		return mRefreshStatus;
-	}
+        }
+        requestSearch(bundle);
+    }
 
-	@Override
-	public boolean isSearchMode() {
-		return isSearchMode;
-	}
+    @Override
+    public void requestSearch(Bundle bundle) {
+        if (!bundle.containsKey(SearchManager.QUERY)
+                && !bundle.containsKey(Extra.CATEGORY)
+                && !bundle.containsKey(Extra.NODETYPE)
+                && !bundle.containsKey(Extra.WHEELCHAIR_STATE)) {
+            return;
+        }
 
-	private void setSearchModeInt(boolean searchMode) {
-		Log.d(TAG, "setSearchMode: " + searchMode);
-		isSearchMode = searchMode;
-		if (mFragmentListener != null)
-			mFragmentListener.onSearchModeChange(isSearchMode);
-		update();
-	}
+        if (bundle.getInt(Extra.CATEGORY) == Extra.UNKNOWN) {
+            bundle.remove(Extra.CATEGORY);
+        }
 
-	@Override
-	public void setSearchMode(boolean searchMode) {
-		Log.d(TAG, "setSearchMode: " + isSearchMode);
-		isSearchMode = searchMode;
-		update();
-	}
+        if (!bundle.containsKey(Extra.WHAT)) {
+            int what;
+            if (bundle.containsKey(Extra.CATEGORY)
+                    || bundle.containsKey(Extra.NODETYPE)) {
+                what = What.RETRIEVE_NODES;
+            } else {
+                what = What.SEARCH_NODES;
+            }
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		if (id == LOADER_MAP_ID) {
-			Uri uri = POIs.CONTENT_URI_RETRIEVED;
-			return new CursorLoader(getActivity(), uri, POIs.PROJECTION,
-					UserQueryHelper.getUserQuery(), null, null);
-		} else {
-			String query = UserQueryHelper.getUserQuery();
-			return new CursorLoader(getActivity(),
-					POIs.createUriSorted(getLocation()), POIs.PROJECTION,
-					query, null, null);
-		}
-	}
+            bundle.putInt(Extra.WHAT, what);
+        }
 
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (loader.getId() == LOADER_MAP_ID) {
-			mMapCursor = cursor;
-		} else {
-			Cursor wrappingCursor = new POIsCursorWrapper(cursor, getLocation());
-			Log.d(TAG, "cursorloader - new cursor - cursor size = "
-					+ wrappingCursor.getCount());
-			mListCursor = wrappingCursor;
-		}
-		update();
-	}
+        if (bundle.containsKey(Extra.BOUNDING_BOX)) {
+            // noop
+        } else if (bundle.containsKey(Extra.DISTANCE_LIMIT)) {
+            bundle.putParcelable(Extra.LOCATION, mLocation);
+            bundle.remove(Extra.BOUNDING_BOX);
+        }
 
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		Log.d(TAG, "onLoaderReset - need to set it to null");
+        bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
+        RestServiceHelper.executeRequest(getActivity(), bundle);
+        setSearchModeInt(true);
+    }
 
-		if (loader.getId() == LOADER_MAP_ID) {
-			mMapCursor = null;
-		} else {
-			mListCursor = null;
-		}
+    @Override
+    public Cursor getCursor(int id) {
+        if (id == LIST_CURSOR) {
+            return mListCursor;
+        } else if (id == MAP_CURSOR) {
+            return mMapCursor;
+        } else {
+            throw new IllegalArgumentException("Cursor id not available ");
+        }
+    }
 
-		update();
-	}
+    @Override
+    public boolean isRefreshing() {
+        return mRefreshStatus;
+    }
 
-	private void resetCursorLoaderUri() {
-		Loader<Cursor> loader = getLoaderManager().getLoader(LOADER_LIST_ID);
-		if (loader == null)
-			return;
+    @Override
+    public boolean isSearchMode() {
+        return isSearchMode;
+    }
 
-		CursorLoader cl = (CursorLoader) loader;
-		cl.setUri(POIs.createUriSorted(getLocation()));
-		loader.forceLoad();
-	}
+    private void setSearchModeInt(boolean searchMode) {
+        Log.d(TAG, "setSearchMode: " + searchMode);
+        isSearchMode = searchMode;
+        if (mFragmentListener != null) {
+            mFragmentListener.onSearchModeChange(isSearchMode);
+        }
+        update();
+    }
 
-	/** {@inheritDoc} */
-	public void onReceiveResult(int resultCode, Bundle resultData) {
-		Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
-		switch (resultCode) {
-		case SyncService.STATUS_RUNNING: {
-			setRefreshStatus(true);
-			break;
-		}
-		case SyncService.STATUS_FINISHED: {
-			setRefreshStatus(false);
-			break;
-		}
-		case SyncService.STATUS_ERROR: {
-			setRefreshStatus(false);
-			SyncServiceException e = resultData.getParcelable(Extra.EXCEPTION);
-			if (mFragmentListener != null)
-				mFragmentListener.onError(e);
-			break;
-		}
+    @Override
+    public void setSearchMode(boolean searchMode) {
+        Log.d(TAG, "setSearchMode: " + isSearchMode);
+        isSearchMode = searchMode;
+        update();
+    }
 
-		}
-	}
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (id == LOADER_MAP_ID) {
+            Uri uri = POIs.CONTENT_URI_RETRIEVED;
+            return new CursorLoader(getActivity(), uri, POIs.PROJECTION,
+                    mUserQuery, null, null);
+        } else {
+            return new CursorLoader(getActivity(),
+                    POIs.createUriSorted(mLocation), POIs.PROJECTION,
+                    mUserQuery, null, null);
+        }
+    }
 
-	@Subscribe
-	public void onUserQueryChanged(UserQueryUpdateEvent e) {
-		Log.d(TAG, "onUserQueryChanged: received event");
-		getLoaderManager().restartLoader(LOADER_LIST_ID, null, this);
-		getLoaderManager().restartLoader(LOADER_MAP_ID, null, this);
-	}
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (loader.getId() == LOADER_MAP_ID) {
+            mMapCursor = cursor;
+        } else {
+            Cursor wrappingCursor = new POIsCursorWrapper(cursor, mLocation);
+            Log.d(TAG, "cursorloader - new cursor - cursor size = "
+                    + wrappingCursor.getCount());
+            mListCursor = wrappingCursor;
+        }
+
+        update();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset - need to set it to null");
+
+        if (loader.getId() == LOADER_MAP_ID) {
+            mMapCursor = null;
+        } else {
+            mListCursor = null;
+        }
+
+        update();
+    }
+
+    private void resetCursorLoaderUri() {
+        Loader<Cursor> loader = getLoaderManager().getLoader(LOADER_LIST_ID);
+        if (loader == null) {
+            return;
+        }
+
+        CursorLoader cl = (CursorLoader) loader;
+        cl.setUri(POIs.createUriSorted(mLocation));
+        loader.forceLoad();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
+        switch (resultCode) {
+            case RestService.STATUS_RUNNING: {
+                setRefreshStatus(true);
+                break;
+            }
+            case RestService.STATUS_FINISHED: {
+                setRefreshStatus(false);
+                break;
+            }
+            case RestService.STATUS_ERROR: {
+                setRefreshStatus(false);
+                RestServiceException e = resultData.getParcelable(Extra.EXCEPTION);
+                if (mFragmentListener != null) {
+                    mFragmentListener.onError(e);
+                }
+                break;
+            }
+
+        }
+    }
+
+    public void onEventMainThread(MyLocationManager.LocationEvent locationEvent) {
+        Log.d(TAG, "updateLocation");
+        mLocation = locationEvent.location;
+        resetCursorLoaderUri();
+    }
+
+    public void onEventMainThread(UserQueryHelper.UserQueryUpdateEvent e) {
+        Log.d(TAG, "onUserQueryChanged: received event");
+        mUserQuery = e.query;
+        getLoaderManager().restartLoader(LOADER_LIST_ID, null, this);
+        getLoaderManager().restartLoader(LOADER_MAP_ID, null, this);
+    }
 
 }

@@ -24,98 +24,109 @@ package org.wheelmap.android.modules;
 
 import com.google.inject.Inject;
 
-import oak.ObscuredSharedPreferences;
+import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
+
+import oak.ObscuredSharedPreferences;
 
 public class UserCredentials implements ICredentials {
 
-	private static final String LOGGED_IN = "loggedin";
-	private static final String E_MAIL = "email";
-	private static final String API_KEY = "apiKey";
-	private static final String PREFS_NAME = "credentials";
+    private static final String LOGGED_IN = "loggedin";
 
-	// anonymous API key for changing wheelchair state (no access to OSM data)
-	protected static final String ANONYMOUNS_ACCESS_API_KEY = "jWeAsb34CJq4yVAryjtc";
+    private static final String E_MAIL = "email";
 
+    private static final String API_KEY = "apiKey";
 
-	private String mApiKey;
-	private String mEmail;	
-	private boolean mIsLoggedIn;
-	private Context mContext;
+    private static final String PREFS_NAME = "credentials";
 
-	@Inject
-	public UserCredentials(Context context) {
-		mContext = context;
-		load();
-	}
-
-	/**
-	 * saves credential for user logged in
-	 */
-	@Override
-	public void save(final String apiKey, final String email) {
-		mIsLoggedIn = true;
-		mApiKey = apiKey;
-		mEmail = email;
-		saveSecure();
-	}
-
-	public String getApiKey() {
-		if (mIsLoggedIn)
-			return mApiKey;
-		else	
-			return ANONYMOUNS_ACCESS_API_KEY;
-	}
-
-	public void logout() {
-		mIsLoggedIn = false;
-		mApiKey = null;
-		saveSecure();
-	}
+    // anonymous API key for changing wheelchair state (no access to OSM data)
+    protected static final String ANONYMOUNS_ACCESS_API_KEY = "jWeAsb34CJq4yVAryjtc";
 
 
-	@Override
-	public boolean isLoggedIn() {
-		return mIsLoggedIn;
-	}
+    private String mApiKey;
 
-	private void saveSecure() {
-		// Restore preferences
-		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME,
-				0);
+    private String mEmail;
 
-		ObscuredSharedPreferences  obscuredSharedPreferences = new WheelmapObscuredSharedPreferences(mContext, settings);
+    private boolean mIsLoggedIn;
 
-		SharedPreferences.Editor editor = obscuredSharedPreferences.edit();
-		editor.putString(API_KEY, mApiKey);
-		editor.putBoolean(LOGGED_IN, mIsLoggedIn);
-		editor.putString(E_MAIL, mEmail);
-		// Commit the edits!
-		editor.commit();
-	}
+    private Context mContext;
 
-	private void load() {
-		// Restore preferences
-		SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME,
-				0);
+    @Inject
+    public UserCredentials(Context context) {
+        mContext = context;
+        load();
+    }
 
-		ObscuredSharedPreferences  obscuredSharedPreferences = new WheelmapObscuredSharedPreferences(mContext, settings);
-		try {
-			mApiKey = obscuredSharedPreferences.getString(API_KEY, ANONYMOUNS_ACCESS_API_KEY);
-			mEmail = obscuredSharedPreferences.getString(E_MAIL, "");
-			mIsLoggedIn = obscuredSharedPreferences.getBoolean(LOGGED_IN, false);
-		} catch( RuntimeException e ) {
-			mApiKey = null;
-			mEmail = null;
-			mIsLoggedIn = false;
-			saveSecure();
-		}
-	}
+    /**
+     * saves credential for user logged in
+     */
+    @Override
+    public void save(final String apiKey, final String email) {
+        mIsLoggedIn = true;
+        mApiKey = apiKey;
+        mEmail = email;
+        saveSecure();
+    }
 
-	@Override
-	public String getUserName() {
-		return mEmail;
-	}
+    public String getApiKey() {
+        if (mIsLoggedIn) {
+            return mApiKey;
+        } else {
+            return ANONYMOUNS_ACCESS_API_KEY;
+        }
+    }
+
+    public void logout() {
+        mIsLoggedIn = false;
+        mApiKey = null;
+        saveSecure();
+    }
+
+
+    @Override
+    public boolean isLoggedIn() {
+        return mIsLoggedIn;
+    }
+
+    private void saveSecure() {
+        // Restore preferences
+        SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME,
+                0);
+
+        ObscuredSharedPreferences obscuredSharedPreferences = new WheelmapObscuredSharedPreferences(
+                mContext, settings);
+
+        SharedPreferences.Editor editor = obscuredSharedPreferences.edit();
+        editor.putString(API_KEY, mApiKey);
+        editor.putBoolean(LOGGED_IN, mIsLoggedIn);
+        editor.putString(E_MAIL, mEmail);
+        // Commit the edits!
+        editor.commit();
+    }
+
+    private void load() {
+        // Restore preferences
+        SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME,
+                0);
+
+        ObscuredSharedPreferences obscuredSharedPreferences = new WheelmapObscuredSharedPreferences(
+                mContext, settings);
+        try {
+            mApiKey = obscuredSharedPreferences.getString(API_KEY, ANONYMOUNS_ACCESS_API_KEY);
+            mEmail = obscuredSharedPreferences.getString(E_MAIL, "");
+            mIsLoggedIn = obscuredSharedPreferences.getBoolean(LOGGED_IN, false);
+        } catch (RuntimeException e) {
+            mApiKey = null;
+            mEmail = null;
+            mIsLoggedIn = false;
+            saveSecure();
+        }
+    }
+
+    @Override
+    public String getUserName() {
+        return mEmail;
+    }
 }

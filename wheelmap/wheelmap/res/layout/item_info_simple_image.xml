@@ -22,23 +22,23 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Container.ListItem"
-    android:background="@drawable/item_pressable_background"
-    android:orientation="vertical" >
+              style="@style/Container.ListItem"
+              android:background="@drawable/item_pressable_background"
+              android:orientation="vertical">
 
     <TextView
-        android:id="@+id/info_activity_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:id="@+id/info_activity_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <ImageView
-        android:id="@+id/info_activity_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small" />
+            android:id="@+id/info_activity_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"/>
 
 </LinearLayout>

@@ -22,20 +22,20 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
-    <LinearLayout style="@style/TitleBarNew.SingleLine" >
+    <LinearLayout style="@style/TitleBarNew.SingleLine">
 
         <TextView
-            style="@style/TitleBarTextNew.Title"
-            android:text="@string/title_pois_settings" >
+                style="@style/TitleBarTextNew.Title"
+                android:text="@string/title_pois_settings">
         </TextView>
     </LinearLayout>
 
     <ListView
-        android:id="@+id/android:list"
-        style="@style/Scrollable.List" />
+            android:id="@+id/android:list"
+            style="@style/Scrollable.List"/>
 
 </LinearLayout>

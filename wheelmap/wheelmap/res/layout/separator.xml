@@ -21,16 +21,16 @@
   #L%
 -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/separator_small"
-        android:background="@color/seperator_color_dark_a" />
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_small"
+            android:background="@color/seperator_color_dark_a"/>
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/separator_small"
-        android:background="@color/seperator_color_dark_b" />
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_small"
+            android:background="@color/seperator_color_dark_b"/>
 
 </merge>

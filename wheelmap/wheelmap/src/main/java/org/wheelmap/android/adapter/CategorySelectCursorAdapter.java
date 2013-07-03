@@ -33,24 +33,24 @@ import android.view.ViewGroup;
 
 public class CategorySelectCursorAdapter extends CursorAdapter {
 
-	public CategorySelectCursorAdapter(Context context, Cursor c,
-			boolean autoRequery) {
-		super(context, c, autoRequery);
-	}
+    public CategorySelectCursorAdapter(Context context, Cursor c,
+            boolean autoRequery) {
+        super(context, c, autoRequery);
+    }
 
-	@Override
-	public void bindView(View view, Context ctx, Cursor cursor) {
-		CategorySelectItemView itemView = (CategorySelectItemView) view;
+    @Override
+    public void bindView(View view, Context ctx, Cursor cursor) {
+        CategorySelectItemView itemView = (CategorySelectItemView) view;
 
-		String name = Support.CategoriesContent.getLocalizedName(cursor);
-		boolean selected = CategoriesContent.getSelected(cursor);
-		itemView.setName(name);
-		itemView.setCheckboxChecked(selected);
-	}
+        String name = Support.CategoriesContent.getLocalizedName(cursor);
+        boolean selected = CategoriesContent.getSelected(cursor);
+        itemView.setName(name);
+        itemView.setCheckboxChecked(selected);
+    }
 
-	@Override
-	public View newView(Context ctx, Cursor cursor, ViewGroup parent) {
-		return new CategorySelectItemView(ctx);
-	}
+    @Override
+    public View newView(Context ctx, Cursor cursor, ViewGroup parent) {
+        return new CategorySelectItemView(ctx);
+    }
 
 }

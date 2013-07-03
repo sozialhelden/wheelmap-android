@@ -21,78 +21,96 @@
  */
 package org.wheelmap.android.utils;
 
-import wheelmap.org.BoundingBox;
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
+import org.wheelmap.android.net.request.BoundingBox;
+import org.wheelmap.android.net.request.BoundingBox.Wgs84GeoCoordinates;
+
 import android.location.Location;
 
-public class GeocoordinatesMath {
+public class GeoCoordinatesMath {
 
-	private enum DistanceUnit {
-		MILES, KILOMETRES
-	};
+    private enum DistanceUnit {
+        MILES, KILOMETRES
+    }
 
-	private static final double LAT_DIST_PER_DEGREE_IN_KM = 111;
-	private static final double LAT_DIST_PER_DEGREE_IN_MILES = 69;
-	private static final double EARTH_RADIUS_IN_KM = 6370;
-	private static final double EARTH_RADIUS_IN_MILES = 3956;
-	private static double sEarthRadius;
-	private static double sLatDistPerDegree;
-	private static DistanceUnit sDistanceUnit;
+    ;
 
-	public static BoundingBox calculateBoundingBox(Wgs84GeoCoordinates point,
-			double dist) {
+    private static final double LAT_DIST_PER_DEGREE_IN_KM = 111;
 
-		double longDifference = dist
-				/ Math.abs(Math.cos(Math.toRadians(point.latitude))
-						* sLatDistPerDegree);
-		double westLon = point.longitude - longDifference;
-		double eastLon = point.longitude + longDifference;
+    private static final double LAT_DIST_PER_DEGREE_IN_MILES = 69;
 
-		double latDifference = dist / sLatDistPerDegree;
-		double southLat = point.latitude - latDifference;
-		double northLat = point.latitude + latDifference;
+    private static final double EARTH_RADIUS_IN_KM = 6370;
 
-		return new BoundingBox(new Wgs84GeoCoordinates(westLon, southLat),
-				new Wgs84GeoCoordinates(eastLon, northLat));
+    private static final double EARTH_RADIUS_IN_MILES = 3956;
 
-	}
+    private static double sEarthRadius;
 
-	public static float calculateDistance(Location point, Location pointDest) {
+    private static double sLatDistPerDegree;
 
-		double distance = sEarthRadius
-				* 2
-				* Math.asin(Math.sqrt(Math.pow(
-						Math.sin((point.getLatitude() - Math.abs(pointDest
-								.getLatitude())) * Math.PI / 180 / 2), 2)
-						+ Math.cos(point.getLatitude() * Math.PI / 180)
-						* Math.cos(Math.abs(pointDest.getLatitude()) * Math.PI
-								/ 180)
-						* Math.pow(
-								Math.sin((point.getLongitude() - pointDest
-										.getLongitude()) * Math.PI / 180 / 2),
-								2)));
+    private static DistanceUnit sDistanceUnit;
 
-		return (float) distance;
-	}
+    public static BoundingBox calculateBoundingBox(Wgs84GeoCoordinates point,
+            double dist) {
 
-	public static void useAngloDistanceUnit(boolean mUseAngloDistanceUnit) {
-		if (mUseAngloDistanceUnit) {
-			sDistanceUnit = DistanceUnit.MILES;
-			sEarthRadius = EARTH_RADIUS_IN_MILES;
-			sLatDistPerDegree = LAT_DIST_PER_DEGREE_IN_MILES;
-		} else {
-			sDistanceUnit = DistanceUnit.KILOMETRES;
-			sEarthRadius = EARTH_RADIUS_IN_KM;
-			sLatDistPerDegree = LAT_DIST_PER_DEGREE_IN_KM;
-		}
-	}
+        double longDifference = dist
+                / Math.abs(Math.cos(Math.toRadians(point.latitude))
+                * sLatDistPerDegree);
+        double westLon = point.longitude - longDifference;
+        double eastLon = point.longitude + longDifference;
 
-	public static boolean isUsingAngloDistanceUnit() {
-		return sDistanceUnit == DistanceUnit.MILES;
-	}
+        double latDifference = dist / sLatDistPerDegree;
+        double southLat = point.latitude - latDifference;
+        double northLat = point.latitude + latDifference;
 
-	static {
-		useAngloDistanceUnit(false);
-	}
+        return new BoundingBox(new Wgs84GeoCoordinates(westLon, southLat),
+                new Wgs84GeoCoordinates(eastLon, northLat));
+
+    }
+
+    public static float calculateDistance(Location point, Location pointDest) {
+        //if (point == null || pointDest == null)
+        //    return 0f;
+        if (point == null) {
+            return Float.MAX_VALUE;
+        }
+
+        if (pointDest == null) {
+            return 0f;
+        }
+
+        double distance = sEarthRadius
+                * 2
+                * Math.asin(Math.sqrt(Math.pow(
+                Math.sin((point.getLatitude() - Math.abs(pointDest
+                        .getLatitude())) * Math.PI / 180 / 2), 2)
+                + Math.cos(point.getLatitude() * Math.PI / 180)
+                * Math.cos(Math.abs(pointDest.getLatitude()) * Math.PI
+                / 180)
+                * Math.pow(
+                Math.sin((point.getLongitude() - pointDest
+                        .getLongitude()) * Math.PI / 180 / 2),
+                2)));
+
+        return (float) distance;
+    }
+
+    public static void useAngloDistanceUnit(boolean mUseAngloDistanceUnit) {
+        if (mUseAngloDistanceUnit) {
+            sDistanceUnit = DistanceUnit.MILES;
+            sEarthRadius = EARTH_RADIUS_IN_MILES;
+            sLatDistPerDegree = LAT_DIST_PER_DEGREE_IN_MILES;
+        } else {
+            sDistanceUnit = DistanceUnit.KILOMETRES;
+            sEarthRadius = EARTH_RADIUS_IN_KM;
+            sLatDistPerDegree = LAT_DIST_PER_DEGREE_IN_KM;
+        }
+    }
+
+    public static boolean isUsingAngloDistanceUnit() {
+        return sDistanceUnit == DistanceUnit.MILES;
+    }
+
+    static {
+        useAngloDistanceUnit(false);
+    }
 
 }

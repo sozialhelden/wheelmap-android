@@ -21,24 +21,25 @@
  */
 package org.wheelmap.android.view;
 
-import android.widget.TextView;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 public class NodeTypeItemView extends FrameLayout implements TypeItemView {
-	private TextView mText;
 
-	public NodeTypeItemView(Context context) {
-		super(context);
-		LayoutInflater inflater = LayoutInflater.from(context);
-		inflater.inflate(R.layout.item_search_nodetype, this, true);
-		mText = (TextView) findViewById(R.id.text);
-	}
+    private TextView mText;
 
-	public void setText(String text) {
-		mText.setText(text);
-	}
+    public NodeTypeItemView(Context context) {
+        super(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.item_search_nodetype, this, true);
+        mText = (TextView) findViewById(R.id.text);
+    }
+
+    public void setText(String text) {
+        mText.setText(text);
+    }
 }

@@ -21,11 +21,9 @@
  */
 package org.wheelmap.android.test;
 
-import java.util.concurrent.TimeUnit; 
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.jayway.awaitility.Awaitility;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsProvider;
 import org.wheelmap.android.model.Wheelmap;
@@ -41,187 +39,189 @@ import android.net.Uri;
 import android.test.ProviderTestCase2;
 import android.util.Log;
 
-import com.jayway.awaitility.Awaitility;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class POIContentProviderTest extends ProviderTestCase2<POIsProvider> {
-	private final static String TAG = POIContentProviderTest.class
-			.getSimpleName();
 
-	private Location mLocation;
+    private final static String TAG = POIContentProviderTest.class
+            .getSimpleName();
 
-	public POIContentProviderTest() {
-		super(POIsProvider.class, Wheelmap.AUTHORITY);
-	}
+    private Location mLocation;
 
-	protected void setUp() throws Exception {
-		super.setUp();
-		// Berlin, AndreasstraÔøΩe 10
-		mLocation = new Location("");
-		mLocation.setLongitude(13.431240);
-		mLocation.setLatitude(52.512523);
-	}
+    public POIContentProviderTest() {
+        super(POIsProvider.class, Wheelmap.AUTHORITY);
+    }
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+    protected void setUp() throws Exception {
+        super.setUp();
+        // Berlin, AndreasstraÔøΩe 10
+        mLocation = new Location("");
+        mLocation.setLongitude(13.431240);
+        mLocation.setLatitude(52.512523);
+    }
 
-	public void testAAACleanDatabase() {
-		final ContentResolver cr = getContext().getContentResolver();
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 
-		Uri uri = POIs.CONTENT_URI_ALL;
-		Log.d(TAG, "deleting all at uri = " + uri);
-		int count = cr.delete(uri, null, null);
-		Log.d(TAG, "deleted records: count = " + count);
-	}
+    public void testAAACleanDatabase() {
+        final ContentResolver cr = getContext().getContentResolver();
 
-	private ContentValues createDummyContentValues(String name) {
-		ContentValues cv = new ContentValues();
+        Uri uri = POIs.CONTENT_URI_ALL;
+        Log.d(TAG, "deleting all at uri = " + uri);
+        int count = cr.delete(uri, null, null);
+        Log.d(TAG, "deleted records: count = " + count);
+    }
 
-		cv.put(Wheelmap.POIs.NAME, name);
-		cv.put(Wheelmap.POIs.LATITUDE, Math.ceil(mLocation.getLatitude() * 1E6));
-		cv.put(Wheelmap.POIs.LONGITUDE,
-				Math.ceil(mLocation.getLongitude() * 1E6));
-		cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
-		cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
+    private ContentValues createDummyContentValues(String name) {
+        ContentValues cv = new ContentValues();
 
-		return cv;
-	}
+        cv.put(Wheelmap.POIs.NAME, name);
+        cv.put(Wheelmap.POIs.LATITUDE, Math.ceil(mLocation.getLatitude() * 1E6));
+        cv.put(Wheelmap.POIs.LONGITUDE,
+                Math.ceil(mLocation.getLongitude() * 1E6));
+        cv.put(Wheelmap.POIs.CATEGORY_ID, 1);
+        cv.put(Wheelmap.POIs.NODETYPE_ID, 1);
 
-	public void testAInsertFirstItemIntoRetrieved() {
-		final ContentResolver cr = getContext().getContentResolver();
+        return cv;
+    }
 
-		Uri uri = POIs.CONTENT_URI_RETRIEVED;
-		ContentValues values = createDummyContentValues("testA");
-		cr.insert(uri, values);
-		values = createDummyContentValues("testB");
-		cr.insert(uri, values);
-		values = createDummyContentValues("testC");
-		cr.insert(uri, values);
+    public void testAInsertFirstItemIntoRetrieved() {
+        final ContentResolver cr = getContext().getContentResolver();
 
-		Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
-		assertEquals(3, c.getCount());
+        Uri uri = POIs.CONTENT_URI_RETRIEVED;
+        ContentValues values = createDummyContentValues("testA");
+        cr.insert(uri, values);
+        values = createDummyContentValues("testB");
+        cr.insert(uri, values);
+        values = createDummyContentValues("testC");
+        cr.insert(uri, values);
 
-		// Util.dumpCursorToLog(TAG, c);
-	}
+        Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
+        assertEquals(3, c.getCount());
 
-	public void testBInsertFirstItemIntoCopy() {
-		final ContentResolver cr = getContext().getContentResolver();
+        // Util.dumpCursorToLog(TAG, c);
+    }
 
-		Uri uri = POIs.CONTENT_URI_COPY;
-		ContentValues values = createDummyContentValues("testA");
-		cr.insert(uri, values);
-		values = createDummyContentValues("testB");
-		cr.insert(uri, values);
-		values = createDummyContentValues("testC");
-		cr.insert(uri, values);
+    public void testBInsertFirstItemIntoCopy() {
+        final ContentResolver cr = getContext().getContentResolver();
 
-		Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
-		assertEquals(3, c.getCount());
+        Uri uri = POIs.CONTENT_URI_COPY;
+        ContentValues values = createDummyContentValues("testA");
+        cr.insert(uri, values);
+        values = createDummyContentValues("testB");
+        cr.insert(uri, values);
+        values = createDummyContentValues("testC");
+        cr.insert(uri, values);
 
-		// Util.dumpCursorToLog(TAG, c);
-	}
+        Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
+        assertEquals(3, c.getCount());
 
-	public void testCQueryAll() {
-		final ContentResolver cr = getContext().getContentResolver();
+        // Util.dumpCursorToLog(TAG, c);
+    }
 
-		Uri uri = POIs.CONTENT_URI_ALL;
-		Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
-		assertEquals(6, c.getCount());
+    public void testCQueryAll() {
+        final ContentResolver cr = getContext().getContentResolver();
 
-		Util.dumpCursorToLog(TAG, c);
-	}
+        Uri uri = POIs.CONTENT_URI_ALL;
+        Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
+        assertEquals(6, c.getCount());
 
-	private String newName = "hallo - holla";
+        Util.dumpCursorToLog(TAG, c);
+    }
 
-	public void testDReplaceAllTestANames() {
-		final ContentResolver cr = getContext().getContentResolver();
-		String whereClause = POIs.NAME + "= ?";
-		String[] whereValues = new String[] { "testA" };
-		ContentValues values = new ContentValues();
-		values.put(POIs.NAME, newName);
+    private String newName = "hallo - holla";
 
-		Uri uri = POIs.CONTENT_URI_ALL;
-		int updated = cr.update(uri, values, whereClause, whereValues);
-		Assert.assertEquals(2, updated);
-		Log.d(TAG, "updated rows = " + updated);
-	}
+    public void testDReplaceAllTestANames() {
+        final ContentResolver cr = getContext().getContentResolver();
+        String whereClause = POIs.NAME + "= ?";
+        String[] whereValues = new String[]{"testA"};
+        ContentValues values = new ContentValues();
+        values.put(POIs.NAME, newName);
 
-	public void testEReplaceCopyTestBNames() {
-		final ContentResolver cr = getContext().getContentResolver();
-		String whereClause = POIs.NAME + "= ?";
-		String[] whereValues = new String[] { "testB" };
-		ContentValues values = new ContentValues();
-		values.put(POIs.NAME, newName);
+        Uri uri = POIs.CONTENT_URI_ALL;
+        int updated = cr.update(uri, values, whereClause, whereValues);
+        Assert.assertEquals(2, updated);
+        Log.d(TAG, "updated rows = " + updated);
+    }
 
-		Uri uri = POIs.CONTENT_URI_COPY;
-		int updated = cr.update(uri, values, whereClause, whereValues);
-		Assert.assertEquals(1, updated);
-		Log.d(TAG, "updated rows = " + updated);
-	}
+    public void testEReplaceCopyTestBNames() {
+        final ContentResolver cr = getContext().getContentResolver();
+        String whereClause = POIs.NAME + "= ?";
+        String[] whereValues = new String[]{"testB"};
+        ContentValues values = new ContentValues();
+        values.put(POIs.NAME, newName);
 
-	public void testFReplaceRetrievedTestCNames() {
-		final ContentResolver cr = getContext().getContentResolver();
-		String whereClause = POIs.NAME + "= ?";
-		String[] whereValues = new String[] { "testC" };
-		ContentValues values = new ContentValues();
-		values.put(POIs.NAME, newName);
+        Uri uri = POIs.CONTENT_URI_COPY;
+        int updated = cr.update(uri, values, whereClause, whereValues);
+        Assert.assertEquals(1, updated);
+        Log.d(TAG, "updated rows = " + updated);
+    }
 
-		Uri uri = POIs.CONTENT_URI_COPY;
-		int updated = cr.update(uri, values, whereClause, whereValues);
-		Assert.assertEquals(1, updated);
-		Log.d(TAG, "updated rows = " + updated);
-	}
+    public void testFReplaceRetrievedTestCNames() {
+        final ContentResolver cr = getContext().getContentResolver();
+        String whereClause = POIs.NAME + "= ?";
+        String[] whereValues = new String[]{"testC"};
+        ContentValues values = new ContentValues();
+        values.put(POIs.NAME, newName);
 
-	public void testGQueryCopy() throws Exception {
-		final ContentResolver cr = getContext().getContentResolver();
-		String whereClause = POIs.NAME + "= ?";
-		String[] whereValues = new String[] { newName };
+        Uri uri = POIs.CONTENT_URI_COPY;
+        int updated = cr.update(uri, values, whereClause, whereValues);
+        Assert.assertEquals(1, updated);
+        Log.d(TAG, "updated rows = " + updated);
+    }
 
-		Uri uri = POIs.CONTENT_URI_ALL;
-		Cursor c = cr.query(uri, POIs.PROJECTION, whereClause, whereValues,
-				null);
-		Assert.assertEquals(4, c.getCount());
-		c.close();
+    public void testGQueryCopy() throws Exception {
+        final ContentResolver cr = getContext().getContentResolver();
+        String whereClause = POIs.NAME + "= ?";
+        String[] whereValues = new String[]{newName};
 
-		uri = POIs.CONTENT_URI_RETRIEVED;
-		c = cr.query(uri, POIs.PROJECTION, whereClause, whereValues, null);
-		Assert.assertEquals(1, c.getCount());
+        Uri uri = POIs.CONTENT_URI_ALL;
+        Cursor c = cr.query(uri, POIs.PROJECTION, whereClause, whereValues,
+                null);
+        Assert.assertEquals(4, c.getCount());
+        c.close();
 
-		final AtomicBoolean done = new AtomicBoolean();
-		c.registerContentObserver(new ContentObserver(null) {
+        uri = POIs.CONTENT_URI_RETRIEVED;
+        c = cr.query(uri, POIs.PROJECTION, whereClause, whereValues, null);
+        Assert.assertEquals(1, c.getCount());
 
-			@Override
-			public void onChange(boolean selfChange) {
-				done.set(true);
-				Log.d(TAG, "ContentObeserver:onChange called");
-			}
+        final AtomicBoolean done = new AtomicBoolean();
+        c.registerContentObserver(new ContentObserver(null) {
 
-		});
+            @Override
+            public void onChange(boolean selfChange) {
+                done.set(true);
+                Log.d(TAG, "ContentObeserver:onChange called");
+            }
 
-		ContentValues values = new ContentValues();
-		values.put(POIs.NAME, "das geht voran");
-		int updated = cr.update(uri, values, whereClause, whereValues);
-		Assert.assertEquals(1, updated);
-		done.set(false);
+        });
 
-		String newDescription = "schön schön schön";
+        ContentValues values = new ContentValues();
+        values.put(POIs.NAME, "das geht voran");
+        int updated = cr.update(uri, values, whereClause, whereValues);
+        Assert.assertEquals(1, updated);
+        done.set(false);
 
-		values.put(POIs.DESCRIPTION, newDescription);
-		c.moveToFirst();
-		long id = POIHelper.getId(c);
-		Uri uriWithId = ContentUris.withAppendedId(POIs.CONTENT_URI_RETRIEVED,
-				id);
-		updated = cr.update(uriWithId, values, null, null);
-		Assert.assertEquals(1, updated);
+        String newDescription = "schön schön schön";
 
-		String newWhereClause = POIs.DESCRIPTION + "= ?";
-		String[] newWhereValues = new String[] { newDescription };
+        values.put(POIs.DESCRIPTION, newDescription);
+        c.moveToFirst();
+        long id = POIHelper.getId(c);
+        Uri uriWithId = ContentUris.withAppendedId(POIs.CONTENT_URI_RETRIEVED,
+                id);
+        updated = cr.update(uriWithId, values, null, null);
+        Assert.assertEquals(1, updated);
 
-		c = cr.query(POIs.CONTENT_URI_RETRIEVED, POIs.PROJECTION,
-				newWhereClause, newWhereValues, null);
-		Assert.assertEquals(1, c.getCount());
+        String newWhereClause = POIs.DESCRIPTION + "= ?";
+        String[] newWhereValues = new String[]{newDescription};
 
-		Awaitility.await().atMost(60, TimeUnit.SECONDS).untilTrue(done);
-	}
+        c = cr.query(POIs.CONTENT_URI_RETRIEVED, POIs.PROJECTION,
+                newWhereClause, newWhereValues, null);
+        Assert.assertEquals(1, c.getCount());
+
+        Awaitility.await().atMost(60, TimeUnit.SECONDS).untilTrue(done);
+    }
 
 }

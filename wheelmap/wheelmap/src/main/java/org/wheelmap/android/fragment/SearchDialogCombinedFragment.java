@@ -10,38 +10,39 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class SearchDialogCombinedFragment extends SearchDialogFragment
-		implements OnCheckedChangeListener {
+        implements OnCheckedChangeListener {
 
-	public final static SearchDialogCombinedFragment newInstance() {
-		SearchDialogCombinedFragment f = new SearchDialogCombinedFragment();
-		Bundle b = new Bundle();
+    public final static SearchDialogCombinedFragment newInstance() {
+        SearchDialogCombinedFragment f = new SearchDialogCombinedFragment();
+        Bundle b = new Bundle();
 
-		b.putBoolean(Extra.SHOW_DISTANCE, true);
-		b.putBoolean(Extra.SHOW_MAP_HINT, true);
-		f.setArguments(b);
-		return f;
-	}
+        b.putBoolean(Extra.SHOW_DISTANCE, true);
+        b.putBoolean(Extra.SHOW_MAP_HINT, true);
+        f.setArguments(b);
+        return f;
+    }
 
-	protected View createView() {
-		return LayoutInflater.from(getActivity()).inflate(
-				R.layout.fragment_dialog_search_combined, null);
-	}
+    protected View createView() {
+        return LayoutInflater.from(getActivity()).inflate(
+                R.layout.fragment_dialog_search_combined, null);
+    }
 
-	protected void bindViews(View v) {
-		super.bindViews(v);
+    protected void bindViews(View v) {
+        super.bindViews(v);
 
-		RadioGroup group = (RadioGroup) v
-				.findViewById(R.id.radioGroupSearchMode);
-		group.setOnCheckedChangeListener(this);
+        RadioGroup group = (RadioGroup) v
+                .findViewById(R.id.radioGroupSearchMode);
+        group.setOnCheckedChangeListener(this);
 
-		// TODO: hier radio button handling einbauen
-	}
+        // TODO: hier radio button handling einbauen
+    }
 
-	@Override
-	public void onCheckedChanged(RadioGroup group, int id) {
-		if (id == R.id.radioEnableDistance)
-			setSearchMode(false);
-		else if (id == R.id.radioEnableBoundingBox)
-			setSearchMode(true);
-	}
+    @Override
+    public void onCheckedChanged(RadioGroup group, int id) {
+        if (id == R.id.radioEnableDistance) {
+            setSearchMode(false);
+        } else if (id == R.id.radioEnableBoundingBox) {
+            setSearchMode(true);
+        }
+    }
 }

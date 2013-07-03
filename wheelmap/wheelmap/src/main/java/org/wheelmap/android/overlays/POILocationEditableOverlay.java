@@ -29,34 +29,36 @@ import android.graphics.drawable.Drawable;
 
 public class POILocationEditableOverlay extends ItemizedOverlay<OverlayItem> {
 
-	private OverlayItem mItem;
-	private int mItemCount;
+    private OverlayItem mItem;
 
-	public POILocationEditableOverlay(double latitude, double longitude,
-			Drawable marker) {
-		super(null);
-		ItemizedOverlay.boundCenterBottom(marker);
-		mItem = new OverlayItem();
-		mItem.setMarker(marker);
-		mItem.setPoint(new GeoPoint(latitude, longitude));
-		mItemCount = 1;
-	}
+    private int mItemCount;
 
-	public void setPosition(GeoPoint geoPoint) {
-		mItem.setPoint(geoPoint);
-		populate();
-	}
+    public POILocationEditableOverlay(double latitude, double longitude,
+            Drawable marker) {
+        super(null);
+        ItemizedOverlay.boundCenterBottom(marker);
+        mItem = new OverlayItem();
+        mItem.setMarker(marker);
+        mItem.setPoint(new GeoPoint(latitude, longitude));
+        mItemCount = 1;
+    }
 
-	@Override
-	public int size() {
-		return mItemCount;
-	}
+    public void setPosition(GeoPoint geoPoint) {
+        mItem.setPoint(geoPoint);
+        populate();
+    }
 
-	@Override
-	protected OverlayItem createItem(int index) {
-		if (index > 0)
-			return null;
-		return mItem;
-	}
+    @Override
+    public int size() {
+        return mItemCount;
+    }
+
+    @Override
+    protected OverlayItem createItem(int index) {
+        if (index > 0) {
+            return null;
+        }
+        return mItem;
+    }
 
 }

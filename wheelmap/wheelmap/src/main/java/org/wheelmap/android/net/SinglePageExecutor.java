@@ -21,55 +21,58 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.mapping.Base;
+import org.wheelmap.android.net.request.RequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
+
+import android.content.Context;
+import android.os.Bundle;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wheelmap.android.service.SyncServiceException;
-
-import wheelmap.org.domain.Base;
-import wheelmap.org.request.RequestBuilder;
-import android.content.Context;
-import android.os.Bundle;
 import de.akquinet.android.androlog.Log;
 
 public abstract class SinglePageExecutor<T extends Base> extends
-		AbstractExecutor<T> implements IExecutor {
-	protected static final int DEFAULT_TEST_PAGE_SIZE = 250;
-	private static final int MAX_RETRY_COUNT = 5;
+        AbstractExecutor<T> implements IExecutor {
 
-	private List<T> mTempStore = new ArrayList<T>();
+    protected static final int DEFAULT_TEST_PAGE_SIZE = 250;
 
-	public SinglePageExecutor(Context context, Bundle bundle, Class<T> clazz) {
-		super(context, bundle, clazz, MAX_RETRY_COUNT);
-	}
+    private static final int MAX_RETRY_COUNT = 5;
 
-	protected void clearTempStore() {
-		mTempStore.clear();
-	}
+    private List<T> mTempStore = new ArrayList<T>();
 
-	protected List<T> getTempStore() {
-		return mTempStore;
-	}
+    public SinglePageExecutor(Context context, Bundle bundle, Class<T> clazz) {
+        super(context, bundle, clazz, MAX_RETRY_COUNT);
+    }
 
-	protected void retrieveSinglePage(RequestBuilder requestBuilder)
-			throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
-		int result = executeSingleRequest(requestBuilder);
-		Log.i(getTag(), "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
-	}
+    protected void clearTempStore() {
+        mTempStore.clear();
+    }
 
-	protected int executeSingleRequest(RequestBuilder requestBuilder)
-			throws SyncServiceException {
+    protected List<T> getTempStore() {
+        return mTempStore;
+    }
 
-		T items = executeRequest(requestBuilder);
-		if (items == null) {
-			Log.w(getTag(), "retrieved no items - tempstore is empty");
-			return 0;
-		}
+    protected void retrieveSinglePage(RequestBuilder requestBuilder)
+            throws RestServiceException {
+        final long startRemote = System.currentTimeMillis();
+        int result = executeSingleRequest(requestBuilder);
+        Log.i(getTag(), "remote sync took "
+                + (System.currentTimeMillis() - startRemote) + "ms");
+    }
 
-		mTempStore.add(items);
+    protected int executeSingleRequest(RequestBuilder requestBuilder)
+            throws RestServiceException {
 
-		return 1;
-	}
+        T items = executeRequest(requestBuilder);
+        if (items == null) {
+            Log.w(getTag(), "retrieved no items - tempstore is empty");
+            return 0;
+        }
+
+        mTempStore.add(items);
+
+        return 1;
+    }
 }

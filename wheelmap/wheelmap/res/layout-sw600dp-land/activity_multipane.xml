@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
     <FrameLayout
-        android:id="@+id/list_layout"
-        android:layout_width="@dimen/mp_list_width"
-        android:layout_height="fill_parent" />
+            android:id="@+id/list_layout"
+            android:layout_width="@dimen/mp_list_width"
+            android:layout_height="fill_parent"/>
 
     <ImageView
-        android:layout_width="@dimen/margin_large"
-        android:layout_height="fill_parent"
-        android:layout_alignRight="@+id/list_layout"
-        android:src="@drawable/fragment_shadow_right" />
+            android:layout_width="@dimen/margin_large"
+            android:layout_height="fill_parent"
+            android:layout_alignRight="@+id/list_layout"
+            android:src="@drawable/fragment_shadow_right"/>
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_toRightOf="@+id/list_layout" >
-
-        <View
-            android:id="@+id/center_position"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/landscape_divider_margin" />
-
-        <FrameLayout
-            android:id="@+id/map_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-        <FrameLayout
-            android:id="@+id/movable_layout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@+id/center_position" >
+            android:layout_toRightOf="@+id/list_layout">
+
+        <View
+                android:id="@+id/center_position"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/landscape_divider_margin"/>
+
+        <FrameLayout
+                android:id="@+id/map_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"/>
+
+        <FrameLayout
+                android:id="@+id/movable_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_above="@+id/center_position">
 
             <FrameLayout
-                android:id="@+id/detail_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+                    android:id="@+id/detail_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"/>
         </FrameLayout>
 
         <ImageButton
-            android:id="@+id/button_movable_resize"
-            style="@style/IconLarge"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_detail_expand" />
+                android:id="@+id/button_movable_resize"
+                style="@style/IconLarge"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/ic_detail_expand"/>
     </RelativeLayout>
 
 </RelativeLayout>

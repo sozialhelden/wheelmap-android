@@ -21,19 +21,20 @@
  */
 package org.wheelmap.android.activity;
 
+import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+@Activity.Addons("MyRoboguice")
+public class NewSettingsActivity extends Activity {
 
-public class NewSettingsActivity extends RoboSherlockFragmentActivity {
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_fragment_settings);
-		if (getSupportActionBar() != null)
-			getSupportActionBar().setDisplayShowTitleEnabled(false);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fragment_settings);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+    }
 }

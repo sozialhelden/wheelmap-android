@@ -21,18 +21,22 @@
  */
 package org.wheelmap.android.app;
 
-import android.app.Application;
-import android.content.Context;
-import com.squareup.otto.Bus;
-import de.akquinet.android.androlog.Log;
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
+import org.holoeverywhere.HoloEverywhere;
+import org.holoeverywhere.addon.AddonMyRoboguice;
+import org.holoeverywhere.app.Application;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.modules.MainModule;
 import org.wheelmap.android.online.R;
+
+import android.content.Context;
+
+import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
 
 // Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
@@ -47,77 +51,79 @@ import roboguice.RoboGuice;
 
 @ReportsCrashes(formUri = "http://www.bugsense.com/api/acra?api_key=56cc8f6f", formKey = "")
 public class WheelmapApp extends Application {
-	private final static String TAG = WheelmapApp.class.getSimpleName();
 
-	private static WheelmapApp INSTANCE;
-	private SupportManager mSupportManager;
-	private Bus mBus;
+    private final static String TAG = WheelmapApp.class.getSimpleName();
 
-	private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
-	private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
+    private static WheelmapApp INSTANCE;
 
-	private boolean isAcraInitCalled;
+    private SupportManager mSupportManager;
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Log.init(getApplicationContext(), getString( R.string.andrologproperties ));
-		Log.d(TAG, "onCreate: creating App");
-		INSTANCE = this;
+    private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
 
-		RoboGuice.setModulesResourceId(R.array.roboguice_modules);
-		Support.init(getApplicationContext());
-		Wheelmap.POIs.init(getApplicationContext());
+    private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
 
-		mBus = new Bus();
+    private boolean isAcraInitCalled;
 
-		if (!getResources().getBoolean(R.bool.developbuild) && !isAcraInitCalled) {
-			ACRA.init(this);
-			isAcraInitCalled = true;
-		}
-		AppCapability.init(getApplicationContext());
-		MyLocationManager.init(getApplicationContext());
+    @Override
+    public void onCreate() {
+        RoboGuice.setModulesResourceId(R.array.roboguice_modules);
+        AddonMyRoboguice.addModule(MainModule.class);
+        super.onCreate();
+        INSTANCE = this;
+        Log.init(getApplicationContext(), getString(R.string.andrologproperties));
+        Log.d(TAG, "onCreate: creating App");
 
-		mSupportManager = new SupportManager(this);
-		UserQueryHelper.init(this);
-	}
+        if (!getResources().getBoolean(R.bool.developbuild) && !isAcraInitCalled) {
+            ACRA.init(this);
+            isAcraInitCalled = true;
+        }
 
-	@Override
-	public void onTerminate() {
-		super.onTerminate();
-		Log.d(TAG, "onTerminate");
-		MyLocationManager.destroy();
-	}
+        Support.init(getApplicationContext());
+        Wheelmap.POIs.init(getApplicationContext());
+        AppCapability.init(getApplicationContext());
+        MyLocationManager.init(getApplicationContext());
 
-	@Override
-	public void onLowMemory() {
-		super.onLowMemory();
-		Log.d("lowmemory", "wheelmap app - onLowMemory");
-	}
+        mSupportManager = new SupportManager(getApplicationContext());
+        UserQueryHelper.init(getApplicationContext());
+    }
 
-	public static Context get() {
-		return INSTANCE.getApplicationContext();
-	}
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Log.d(TAG, "onTerminate");
+        MyLocationManager.destroy();
+    }
 
-	public static WheelmapApp getApp() {
-		return INSTANCE;
-	}
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.d("lowmemory", "wheelmap app - onLowMemory");
+    }
 
-	public static Bus getBus() {
-		return INSTANCE.mBus;
-	}
+    public static Context get() {
+        return INSTANCE.getApplicationContext();
+    }
 
-	public boolean isAcraInitCalled() {
-		return isAcraInitCalled;
-	}
+    public static WheelmapApp getApp() {
+        return INSTANCE;
+    }
 
-	public static SupportManager getSupportManager() {
-		if (INSTANCE == null)
-			Log.d(TAG, "INSTANCE == null - how can that be?");
-		if (INSTANCE != null && INSTANCE.mSupportManager == null)
-			Log.d(TAG,
-					"INSTANCE != null - mSupportManager = null - how can that be?");
+    public boolean isAcraInitCalled() {
+        return isAcraInitCalled;
+    }
 
-		return INSTANCE.mSupportManager;
-	}
+    public static SupportManager getSupportManager() {
+        if (INSTANCE == null || INSTANCE.mSupportManager == null) {
+            throw new NullPointerException(
+
+                    "instance is null or mSupportManager is null - need to terminated");
+        }
+
+        return INSTANCE.mSupportManager;
+    }
+
+    static {
+        HoloEverywhere.DEBUG = true;
+    }
+
 }

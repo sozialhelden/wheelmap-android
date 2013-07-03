@@ -21,70 +21,77 @@
  */
 package org.wheelmap.android.net;
 
-import de.akquinet.android.androlog.Log;
+import org.wheelmap.android.mapping.categories.Categories;
 import org.wheelmap.android.model.DataOperationsCategories;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.CategoriesContent;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.model.Support.LastUpdateContent;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.CategoriesRequestBuilder;
+import org.wheelmap.android.net.request.Locale;
+import org.wheelmap.android.service.RestServiceException;
 
-import wheelmap.org.Locale;
-import wheelmap.org.domain.categories.Categories;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.CategoriesRequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
 
+import de.akquinet.android.androlog.Log;
+
 public class CategoriesExecutor extends SinglePageExecutor<Categories> implements
-		IExecutor {
-	private final static String TAG = CategoriesExecutor.class.getSimpleName();
-	private Locale mLocale;
-	private String mEtag;
-	private boolean mContentIsEqual;
+        IExecutor {
 
-	public CategoriesExecutor(Context context, Bundle bundle) {
-		super(context, bundle, Categories.class);
-	}
+    private final static String TAG = CategoriesExecutor.class.getSimpleName();
 
-	@Override
-	public void prepareContent() {
-		String locale = getBundle().getString(Extra.LOCALE);
-		if (locale != null && !locale.equals("de")) {
-			mLocale = new Locale(locale);
-		}
+    private Locale mLocale;
 
-		mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_CATEGORIES);
-	}
+    private String mEtag;
 
-	@Override
-	public void execute() throws SyncServiceException {
-		CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder(
-				getServer(), getApiKey(), AcceptType.JSON);
-		if (mLocale != null)
-			requestBuilder.locale(mLocale);
+    private boolean mContentIsEqual;
 
-		clearTempStore();
-		setEtag( mEtag );
-		retrieveSinglePage(requestBuilder);
-		if ( mEtag != null && mEtag.equals( getEtag()) && getTempStore().isEmpty())
-			mContentIsEqual = true;
+    public CategoriesExecutor(Context context, Bundle bundle) {
+        super(context, bundle, Categories.class);
+    }
 
-		LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_CATEGORIES, getEtag());
-		Log.d(TAG, "etag = " + getEtag());
-	}
+    @Override
+    public void prepareContent() {
+        String locale = getBundle().getString(Extra.LOCALE);
+        if (locale != null && !locale.equals("de")) {
+            mLocale = new Locale(locale);
+        }
 
-	@Override
-	public void prepareDatabase() throws SyncServiceException {
-		if ( mContentIsEqual ) {
-			Log.i( TAG, "content is equal according to etag - doing nothing" );
-			return;
-		}
+        mEtag = LastUpdateContent.queryEtag(getResolver(), LastUpdateContent.MODULE_CATEGORIES);
+    }
 
-		getResolver().delete(CategoriesContent.CONTENT_URI, null, null);
-		DataOperationsCategories doc = new DataOperationsCategories(
-				getResolver());
-		doc.insert(getTempStore());
-		clearTempStore();
-	}
+    @Override
+    public void execute() throws RestServiceException {
+        CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder(
+                getServer(), getApiKey(), AcceptType.JSON);
+        if (mLocale != null) {
+            requestBuilder.locale(mLocale);
+        }
+
+        clearTempStore();
+        setEtag(mEtag);
+        retrieveSinglePage(requestBuilder);
+        if (mEtag != null && mEtag.equals(getEtag()) && getTempStore().isEmpty()) {
+            mContentIsEqual = true;
+        }
+
+        LastUpdateContent.storeEtag(getResolver(), LastUpdateContent.MODULE_CATEGORIES, getEtag());
+        Log.d(TAG, "etag = " + getEtag());
+    }
+
+    @Override
+    public void prepareDatabase() throws RestServiceException {
+        if (mContentIsEqual) {
+            Log.i(TAG, "content is equal according to etag - doing nothing");
+            return;
+        }
+
+        getResolver().delete(CategoriesContent.CONTENT_URI, null, null);
+        DataOperationsCategories doc = new DataOperationsCategories(
+                getResolver());
+        doc.insert(getTempStore());
+        clearTempStore();
+    }
 
 }

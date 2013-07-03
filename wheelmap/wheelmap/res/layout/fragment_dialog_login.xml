@@ -21,57 +21,57 @@
   #L%
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
     <LinearLayout
-        android:id="@+id/login_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_large" >
-
-        <EditText
-            android:id="@+id/login_email"
+            android:id="@+id/login_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:freezesText="true"
-            android:hint="@string/login_email"
-            android:imeOptions="actionDone"
-            android:inputType="textEmailAddress"
-            android:singleLine="true" />
+            android:orientation="vertical"
+            android:padding="@dimen/padding_large">
 
         <EditText
-            android:id="@+id/login_password"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:freezesText="true"
-            android:hint="@string/login_password"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:singleLine="true" />
+                android:id="@+id/login_email"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:freezesText="true"
+                android:hint="@string/login_email"
+                android:imeOptions="actionDone"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"/>
+
+        <EditText
+                android:id="@+id/login_password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:freezesText="true"
+                android:hint="@string/login_password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:singleLine="true"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_huge"
-            android:layout_marginTop="@dimen/margin_huge"
-            android:orientation="horizontal" >
-
-            <ProgressBar
-                android:id="@+id/progressbar"
-                android:layout_width="18dip"
-                android:layout_height="18dip"
-                android:layout_marginRight="@dimen/margin_medium"
-                android:indeterminate="true"
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/login_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_marginLeft="@dimen/margin_huge"
+                android:layout_marginTop="@dimen/margin_huge"
+                android:orientation="horizontal">
+
+            <ProgressBar
+                    android:id="@+id/progressbar"
+                    android:layout_width="18dip"
+                    android:layout_height="18dip"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    android:indeterminate="true"
+                    android:visibility="invisible"/>
+
+            <TextView
+                    android:id="@+id/login_register"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
         </LinearLayout>
     </LinearLayout>
 

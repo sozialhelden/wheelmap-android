@@ -21,52 +21,55 @@
  */
 package org.wheelmap.android.net;
 
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.mapping.BaseDomain;
+import org.wheelmap.android.net.request.BaseNodesRequestBuilder;
+import org.wheelmap.android.net.request.Paging;
+import org.wheelmap.android.net.request.RequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
 
-import wheelmap.org.domain.BaseDomain;
-import wheelmap.org.request.BaseNodesRequestBuilder;
-import wheelmap.org.request.Paging;
-import wheelmap.org.request.RequestBuilder;
 import android.content.Context;
 import android.os.Bundle;
+
 import de.akquinet.android.androlog.Log;
 
 public abstract class MultiPageExecutor<T extends BaseDomain> extends
-		SinglePageExecutor<T> implements IExecutor {
+        SinglePageExecutor<T> implements IExecutor {
 
-	public MultiPageExecutor(Context context, Bundle bundle, Class<T> clazz) {
-		super(context, bundle, clazz);
-	}
+    public MultiPageExecutor(Context context, Bundle bundle, Class<T> clazz) {
+        super(context, bundle, clazz);
+    }
 
-	@Override
-	protected int executeSingleRequest(RequestBuilder requestBuilder) {
-		super.executeSingleRequest(requestBuilder);
-		int pages = getTempStore().get(0).getMeta().getNumPages().intValue();
-		Log.d(getTag(), "pages available " + pages);
-		return pages;
-	}
+    @Override
+    protected int executeSingleRequest(RequestBuilder requestBuilder) {
+        super.executeSingleRequest(requestBuilder);
+        int pages = getTempStore().get(0).getMeta().getNumPages().intValue();
+        Log.d(getTag(), "pages available " + pages);
+        return pages;
+    }
 
-	protected void retrieveMaxNPages(RequestBuilder requestBuilder, int n)
-			throws SyncServiceException {
-		final long startRemote = System.currentTimeMillis();
+    protected void retrieveMaxNPages(RequestBuilder requestBuilder, int n)
+            throws RestServiceException {
+        final long startRemote = System.currentTimeMillis();
 
-		// Server seems to count from 1...
-		Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
-		if (requestBuilder instanceof BaseNodesRequestBuilder)
-			((BaseNodesRequestBuilder) requestBuilder).paging(page);
+        // Server seems to count from 1...
+        Paging page = new Paging(DEFAULT_TEST_PAGE_SIZE, 1);
+        if (requestBuilder instanceof BaseNodesRequestBuilder) {
+            ((BaseNodesRequestBuilder) requestBuilder).paging(page);
+        }
 
-		int pages = executeSingleRequest(requestBuilder);
-		if (pages == 0)
-			return;
+        int pages = executeSingleRequest(requestBuilder);
+        if (pages == 0) {
+            return;
+        }
 
-		int pagesToRetrieve = n < pages ? n : pages;
-		int crrPage;
-		for (crrPage = 2; crrPage <= pagesToRetrieve; crrPage++) {
-			page.setPage(crrPage);
-			executeSingleRequest(requestBuilder);
-		}
+        int pagesToRetrieve = n < pages ? n : pages;
+        int crrPage;
+        for (crrPage = 2; crrPage <= pagesToRetrieve; crrPage++) {
+            page.setPage(crrPage);
+            executeSingleRequest(requestBuilder);
+        }
 
-		Log.i(getTag(), "remote sync took "
-				+ (System.currentTimeMillis() - startRemote) + "ms");
-	}
+        Log.i(getTag(), "remote sync took "
+                + (System.currentTimeMillis() - startRemote) + "ms");
+    }
 }

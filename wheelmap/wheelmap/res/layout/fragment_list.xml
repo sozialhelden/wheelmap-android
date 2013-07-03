@@ -22,22 +22,24 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_root"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+              android:id="@+id/fragment_root"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/pull_to_refresh_listview"
-        style="@style/Scrollable.List"
-        ptr:ptrShowIndicator="false" />
+            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pull_to_refresh_listview"
+            style="@style/Scrollable.List"
+            ptr:ptrShowIndicator="false"
+            ptr:ptrMode="pullFromStart"
+            ptr:ptrListViewExtrasEnabled="true"/>
 
     <ViewStub
-        android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout="@layout/empty" />
+            android:id="@android:id/empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout="@layout/empty"/>
 
 </LinearLayout>

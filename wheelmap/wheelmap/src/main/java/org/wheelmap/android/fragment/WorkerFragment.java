@@ -25,23 +25,24 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 public interface WorkerFragment {
-	public static final int LIST_CURSOR = 0;
-	public static final int MAP_CURSOR = 1;
 
-	public void registerDisplayFragment(DisplayFragment fragment);
+    public static final int LIST_CURSOR = 0;
+    public static final int MAP_CURSOR = 1;
 
-	public void unregisterDisplayFragment(DisplayFragment fragment);
+    public void registerDisplayFragment(DisplayFragment fragment);
 
-	public void requestUpdate(Bundle bundle);
+    public void unregisterDisplayFragment(DisplayFragment fragment);
 
-	public void requestSearch(Bundle bundle);
+    public void requestUpdate(Bundle bundle);
 
-	public Cursor getCursor(int id);
+    public void requestSearch(Bundle bundle);
 
-	public boolean isRefreshing();
+    public Cursor getCursor(int id);
 
-	public boolean isSearchMode();
+    public boolean isRefreshing();
 
-	public void setSearchMode(boolean isSearchMode);
+    public boolean isSearchMode();
+
+    public void setSearchMode(boolean isSearchMode);
 
 }

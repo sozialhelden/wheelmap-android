@@ -23,92 +23,98 @@ package org.wheelmap.android.model;
 
 // titel with one clickable text
 public class Info {
-	// resources ids
-	private int title;
-	private int text;
-	private String text_dynamic;
-	private int second_text;
 
-	private String url;
-	private String second_url;
+    // resources ids
+    private int title;
 
-	private InfoTypes infotype;
-	private String view;
+    private int text;
 
-	public Info(int title, int text, String url, InfoTypes infotype) {
-		this.title = title;
-		this.text = text;
-		this.second_text = -1;
-		this.url = url;
-		this.infotype = infotype;
-	}
+    private String text_dynamic;
 
-	public Info(int title, String text_dynamic, String url, InfoTypes infotype) {
-		this.title = title;
-		this.text_dynamic = text_dynamic;
-		this.second_text = -1;
-		this.url = url;
-		this.infotype = infotype;
-	}
+    private int second_text;
 
-	public Info(int title, int text, int second_text, String url,
-			InfoTypes infotype) {
-		this.title = title;
-		this.text = text;
-		this.second_text = second_text;
-		this.url = url;
-		this.infotype = infotype;
-	}
+    private String url;
 
-	public Info(int title, int text, String url, int second_text,
-			String second_url, InfoTypes infotype) {
-		this.title = title;
-		this.text = text;
-		this.second_text = second_text;
-		this.url = url;
-		this.second_url = second_url;
-		this.infotype = infotype;
-	}
+    private String second_url;
 
-	// Info with intent
-	public Info(int title, String view, InfoTypes infotype) {
-		this.title = title;
-		this.text = -1;
-		this.second_text = -1;
-		this.url = null;
-		this.view = view;
-		this.infotype = infotype;
-	}
+    private InfoTypes infotype;
 
-	public int getTitle() {
-		return title;
-	}
+    private String view;
 
-	public int getText() {
-		return text;
-	}
+    public Info(int title, int text, String url, InfoTypes infotype) {
+        this.title = title;
+        this.text = text;
+        this.second_text = -1;
+        this.url = url;
+        this.infotype = infotype;
+    }
 
-	public String getTextDynamic() {
-		return text_dynamic;
-	}
+    public Info(int title, String text_dynamic, String url, InfoTypes infotype) {
+        this.title = title;
+        this.text_dynamic = text_dynamic;
+        this.second_text = -1;
+        this.url = url;
+        this.infotype = infotype;
+    }
 
-	public int getSecondText() {
-		return second_text;
-	}
+    public Info(int title, int text, int second_text, String url,
+            InfoTypes infotype) {
+        this.title = title;
+        this.text = text;
+        this.second_text = second_text;
+        this.url = url;
+        this.infotype = infotype;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public Info(int title, int text, String url, int second_text,
+            String second_url, InfoTypes infotype) {
+        this.title = title;
+        this.text = text;
+        this.second_text = second_text;
+        this.url = url;
+        this.second_url = second_url;
+        this.infotype = infotype;
+    }
 
-	public String getSecondUrl() {
-		return second_url;
-	}
+    // Info with intent
+    public Info(int title, String view, InfoTypes infotype) {
+        this.title = title;
+        this.text = -1;
+        this.second_text = -1;
+        this.url = null;
+        this.view = view;
+        this.infotype = infotype;
+    }
 
-	public InfoTypes getInfoType() {
-		return infotype;
-	}
+    public int getTitle() {
+        return title;
+    }
 
-	public String getNextView() {
-		return view;
-	}
+    public int getText() {
+        return text;
+    }
+
+    public String getTextDynamic() {
+        return text_dynamic;
+    }
+
+    public int getSecondText() {
+        return second_text;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getSecondUrl() {
+        return second_url;
+    }
+
+    public InfoTypes getInfoType() {
+        return infotype;
+    }
+
+    public String getNextView() {
+        return view;
+    }
 }

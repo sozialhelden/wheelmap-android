@@ -22,13 +22,13 @@
 package org.wheelmap.android.fragment;
 
 import android.content.ContentValues;
-import android.location.Location;
 
 public interface DisplayFragment {
-	public String getTag();
 
-	public void onUpdate(WorkerFragment fragment);
+    public String getTag();
 
-	public void markItem(ContentValues values, boolean centerToItem);
+    public void onUpdate(WorkerFragment fragment);
+
+    public void markItem(ContentValues values, boolean centerToItem);
 
 }

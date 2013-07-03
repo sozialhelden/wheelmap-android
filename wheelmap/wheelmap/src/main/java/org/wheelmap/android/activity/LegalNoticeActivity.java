@@ -21,19 +21,20 @@
  */
 package org.wheelmap.android.activity;
 
+import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+@Activity.Addons(Activity.ADDON_SHERLOCK)
+public class LegalNoticeActivity extends Activity {
 
-public class LegalNoticeActivity extends SherlockFragmentActivity {
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_fragment_legalnotice);
-		if (getSupportActionBar() != null)
-			getSupportActionBar().setDisplayShowTitleEnabled(false);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fragment_legalnotice);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+    }
 }

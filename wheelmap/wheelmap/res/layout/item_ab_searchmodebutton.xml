@@ -22,11 +22,11 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content">
 
     <ImageButton
-        style="@style/IconLarge"
-        android:src="@drawable/ic_ab_searchmode_wheelmap" />
+            style="@style/IconLarge"
+            android:src="@drawable/ic_ab_searchmode_wheelmap"/>
 
 </FrameLayout>

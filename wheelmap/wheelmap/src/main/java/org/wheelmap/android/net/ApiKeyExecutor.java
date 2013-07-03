@@ -22,55 +22,61 @@
 package org.wheelmap.android.net;
 
 import com.google.inject.Inject;
-import org.wheelmap.android.modules.ICredentials;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.service.SyncServiceException;
 
-import roboguice.RoboGuice;
-import wheelmap.org.domain.apikey.AuthInfo;
-import wheelmap.org.request.AcceptType;
-import wheelmap.org.request.ApiKeyRequestBuilder;
+import org.wheelmap.android.mapping.apikey.AuthInfo;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.net.request.AcceptType;
+import org.wheelmap.android.net.request.ApiKeyRequestBuilder;
+import org.wheelmap.android.service.RestServiceException;
+
 import android.content.Context;
 import android.os.Bundle;
 
+import roboguice.RoboGuice;
+
 public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
-	private static final int MAX_RETRY_COUNT = 1;
 
-	private String mEmail;
-	private String mPassword;
-	private String mApiKey;
+    private static final int MAX_RETRY_COUNT = 1;
 
-	private final static int statusAuthFailed = 400;
-	private final static int statusOSMFailed = 403;
+    private String mEmail;
 
-	@Inject
-	private ICredentials mCredentials;
+    private String mPassword;
 
-	public ApiKeyExecutor(Context context, Bundle bundle) {
-		super(context, bundle, AuthInfo.class, MAX_RETRY_COUNT);
-		RoboGuice.injectMembers(context, this);
-	}
+    private String mApiKey;
 
-	@Override
-	public void prepareContent() {
-		mEmail = getBundle().getString(Extra.EMAIL);
-		mPassword = getBundle().getString(Extra.PASSWORD);
-	}
+    private final static int statusAuthFailed = 400;
 
-	@Override
-	public void execute() throws SyncServiceException {
+    private final static int statusOSMFailed = 403;
 
-		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(
-				getServer(), AcceptType.JSON);
-		requestBuilder.setCredentials(mEmail, mPassword);
+    @Inject
+    private ICredentials mCredentials;
 
-		AuthInfo authInfo = executeRequest(requestBuilder);
-		mApiKey = authInfo.getUser().getApiKey();
-	}
+    public ApiKeyExecutor(Context context, Bundle bundle) {
+        super(context, bundle, AuthInfo.class, MAX_RETRY_COUNT);
+        RoboGuice.injectMembers(context, this);
+    }
 
-	@Override
-	public void prepareDatabase() {
-		mCredentials.save(mApiKey, mEmail);
-	}
+    @Override
+    public void prepareContent() {
+        mEmail = getBundle().getString(Extra.EMAIL);
+        mPassword = getBundle().getString(Extra.PASSWORD);
+    }
+
+    @Override
+    public void execute() throws RestServiceException {
+
+        ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(
+                getServer(), AcceptType.JSON);
+        requestBuilder.setCredentials(mEmail, mPassword);
+
+        AuthInfo authInfo = executeRequest(requestBuilder);
+        mApiKey = authInfo.getUser().getApiKey();
+    }
+
+    @Override
+    public void prepareDatabase() {
+        mCredentials.save(mApiKey, mEmail);
+    }
 
 }

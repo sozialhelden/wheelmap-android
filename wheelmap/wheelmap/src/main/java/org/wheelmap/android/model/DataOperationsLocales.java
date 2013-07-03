@@ -21,59 +21,62 @@
  */
 package org.wheelmap.android.model;
 
-import java.util.Map;
-import java.util.Set;
-
+import org.wheelmap.android.mapping.locale.Locales;
 import org.wheelmap.android.model.Support.LocalesContent;
 
-import wheelmap.org.domain.locale.Locales;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 
-class Locale {
-	String id;
-	String name;
-}
+import java.util.Map;
+import java.util.Set;
 
-public class DataOperationsLocales extends DataOperations<Locales, Locale> {
-	private String[] mKeys;
-	private Locale locale = new Locale();
+public class DataOperationsLocales extends DataOperations<Locales, DataOperationsLocales.Locale> {
 
-	public DataOperationsLocales(ContentResolver resolver) {
-		super(resolver);
-	}
+    private String[] mKeys;
 
-	@Override
-	protected Locale getItem(Locales item, int i) {
-		locale.id = mKeys[i];
-		locale.name = item.getLocales().get(mKeys[i]);
-		return locale;
-	}
+    private Locale locale = new Locale();
 
-	@Override
-	protected void bulkInsert(Locales item) {
-		mKeys = getKeys(item.getLocales());
-		super.bulkInsert(item);
-	}
+    public DataOperationsLocales(ContentResolver resolver) {
+        super(resolver);
+    }
 
-	private String[] getKeys(Map<String, String> map) {
-		Set<String> keys = map.keySet();
-		String[] val = new String[keys.size()];
-		keys.toArray(val);
-		return val;
-	}
+    @Override
+    protected Locale getItem(Locales item, int i) {
+        locale.id = mKeys[i];
+        locale.name = item.getLocales().get(mKeys[i]);
+        return locale;
+    }
 
-	@Override
-	public void copyToValues(Locale item, ContentValues values) {
-		values.clear();
-		values.put(LocalesContent.LOCALE_ID, item.id);
-		values.put(LocalesContent.LOCALIZED_NAME, item.name);
-	}
+    @Override
+    protected void bulkInsert(Locales item) {
+        mKeys = getKeys(item.getLocales());
+        super.bulkInsert(item);
+    }
 
-	@Override
-	public Uri getUri() {
-		return LocalesContent.CONTENT_URI;
-	}
+    private String[] getKeys(Map<String, String> map) {
+        Set<String> keys = map.keySet();
+        String[] val = new String[keys.size()];
+        keys.toArray(val);
+        return val;
+    }
 
+    @Override
+    public void copyToValues(Locale item, ContentValues values) {
+        values.clear();
+        values.put(LocalesContent.LOCALE_ID, item.id);
+        values.put(LocalesContent.LOCALIZED_NAME, item.name);
+    }
+
+    @Override
+    public Uri getUri() {
+        return LocalesContent.CONTENT_URI;
+    }
+
+    static class Locale {
+
+        String id;
+
+        String name;
+    }
 }

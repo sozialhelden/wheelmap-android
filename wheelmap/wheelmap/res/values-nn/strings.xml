@@ -33,7 +33,9 @@
     <string name="info_webdevelopment">Web-utvikling:</string>
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
-    <string name="error_network_failure">Nettverket er ustabilt. Sjekk internetttilkoblinga di og prøv om att seinare.</string>
+    <string name="error_network_failure">Nettverket er ustabilt. Sjekk internetttilkoblinga di og
+        prøv om att seinare.
+    </string>
     <string name="error_internal_error">Ein ukjend feil oppstod. Start appen om att.</string>
     <string name="error_authorization_error">Manglar godkjenning for å endre.</string>
     <string name="info_webdevelopment_one">Christoph Bünte</string>
@@ -56,7 +58,8 @@
     <string name="legal_notice_springandroid">Spring Android</string>
     <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
     <string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
-    <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org</string>
+    <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org
+    </string>
     <string name="legal_notice_jackson">Jackson JSON Processor</string>
     <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
     <string name="legal_notice_commonsware">Two Modules</string>
@@ -64,14 +67,23 @@
     <string name="legal_notice_iconscollection">Map Icons Collection</string>
     <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>
     <string name="legal_notice_opensource">Dette er open source programvare</string>
-    <string name="legal_notice_opensource_copyright">https://github.com/sozialhelden/wheelmap-android</string>
+    <string name="legal_notice_opensource_copyright">
+        https://github.com/sozialhelden/wheelmap-android
+    </string>
     <string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
-    <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com</string>
-    <string name="legal_notice_intro">Denne programvara er basert på andre sitt arbeid. Deira opphavsrettsvilkår er som følgjer:</string>
+    <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com
+    </string>
+    <string name="legal_notice_intro">Denne programvara er basert på andre sitt arbeid. Deira
+        opphavsrettsvilkår er som følgjer:
+    </string>
     <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
-    <string name="ws_enabled">Ja: Inngang utan steg, alle rom utan steg og tilgjengeleg toalett</string>
-    <string name="ws_limited">Avgrensa: Inngang har steg (maks 7 cm høgt), dei fleste rom er utan steg, toalettet er ikkje tilgjengeleg</string>
-    <string name="ws_disabled">Nei: Inngang har høgt eller fleire steg, rom er ikkje tilgjengelege</string>
+    <string name="ws_enabled">Ja: Inngang utan steg, alle rom utan steg og tilgjengeleg toalett
+    </string>
+    <string name="ws_limited">Avgrensa: Inngang har steg (maks 7 cm høgt), dei fleste rom er utan
+        steg, toalettet er ikkje tilgjengeleg
+    </string>
+    <string name="ws_disabled">Nei: Inngang har høgt eller fleire steg, rom er ikkje tilgjengelege
+    </string>
     <string name="ws_unknown">Ukjend: Hjelp oss å kategorisera denne staden</string>
     <string name="ws_unknown_title">Ukjend status</string>
     <string name="ws_limited_title">Delvis rullestoltilgjengeleg</string>

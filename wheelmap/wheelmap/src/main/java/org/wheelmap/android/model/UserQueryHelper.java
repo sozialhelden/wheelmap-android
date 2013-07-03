@@ -21,17 +21,11 @@
  */
 package org.wheelmap.android.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support.CategoriesContent;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
-import wheelmap.org.WheelchairState;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -41,205 +35,225 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.squareup.otto.Bus;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
+import de.greenrobot.event.EventBus;
 
 public class UserQueryHelper {
-	private static final String TAG = UserQueryHelper.class.getSimpleName();
 
-	private static UserQueryHelper INSTANCE;
-	private Context mContext;
-	private String mCategoriesQuery;
-	private String mWheelchairQuery;
-	private static String mQuery;
-	private Bus mBus;
+    private static final String TAG = UserQueryHelper.class.getSimpleName();
 
-	private UserQueryHelper(Context context) {
-		mContext = context;
-		mBus = WheelmapApp.getBus();
-		mBus.register(this);
-		initCategoriesQuery();
-		initWheelstateQuery();
-		update(false);
-	}
+    private static UserQueryHelper INSTANCE;
 
-	public static void init(Context context) {
-		if (INSTANCE == null)
-			INSTANCE = new UserQueryHelper(context);
-	}
+    private Context mContext;
 
-	public static UserQueryHelper get() {
-		return INSTANCE;
-	}
+    private String mCategoriesQuery;
 
-	private void update(boolean post) {
-		mQuery = concatenateWhere(mCategoriesQuery, mWheelchairQuery);
-		Log.d(TAG, "update query = " + mQuery);
+    private String mWheelchairQuery;
 
-		if (post) {
-			Log.d(TAG, "update: posting UserQueryUpdateEvent on bus");
-			mBus.post(new UserQueryUpdateEvent());
-		}
-	}
+    private static String mQuery;
 
-	public static String getUserQuery() {
-		return mQuery;
-	}
+    private EventBus mBus;
 
-	private OnSharedPreferenceChangeListener prefsListener = new OnSharedPreferenceChangeListener() {
 
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences prefs,
-				String key) {
-			boolean oneKeyFound = false;
-			Map<WheelchairState, WheelchairAttributes> wsAttributes = SupportManager.wsAttributes;
-			for (Map.Entry<WheelchairState, WheelchairAttributes> item : wsAttributes
-					.entrySet()) {
-				if (item.getValue().prefsKey.equals(key)) {
-					oneKeyFound = true;
-				}
-			}
+    public static class UserQueryUpdateEvent {
 
-			if (oneKeyFound == false)
-				return;
+        public final String query;
 
-			calcWheelchairStateQuery(prefs);
-			update(true);
-		}
-	};
+        public UserQueryUpdateEvent(String query) {
+            this.query = query;
+        }
+    }
 
-	private void initWheelstateQuery() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
-		prefs.registerOnSharedPreferenceChangeListener(prefsListener);
-		calcWheelchairStateQuery(prefs);
-	}
+    private UserQueryHelper(Context context) {
+        mContext = context;
+        mBus = EventBus.getDefault();
+        mBus.register(this);
 
-	private List<WheelchairState> getWheelchairStateFromPrefs(
-			SharedPreferences prefs) {
-		ArrayList<WheelchairState> list = new ArrayList<WheelchairState>();
+        initCategoriesQuery();
+        initWheelstateQuery();
+        update(true);
+    }
 
-		Map<WheelchairState, WheelchairAttributes> wsAttributes = SupportManager.wsAttributes;
-		for (WheelchairState state : wsAttributes.keySet()) {
-			boolean prefState = prefs.getBoolean(
-					wsAttributes.get(state).prefsKey, true);
-			if (prefState)
-				list.add(state);
-		}
+    public static void init(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new UserQueryHelper(context);
+        }
+    }
 
-		return list;
-	}
+    private void update(boolean post) {
+        Log.d(TAG, "update query = " + mQuery);
+        mQuery = concatenateWhere(mCategoriesQuery, mWheelchairQuery);
+        Log.d(TAG, "update: posting UserQueryUpdateEvent on bus");
+        mBus.postSticky(new UserQueryUpdateEvent(mQuery));
+    }
 
-	private void calcWheelchairStateQuery(SharedPreferences prefs) {
-		Log.d(TAG, "calcWheelchairStateQuery starting");
+    public static String getUserQuery() {
+        return mQuery;
+    }
 
-		List<WheelchairState> list = getWheelchairStateFromPrefs(prefs);
+    private OnSharedPreferenceChangeListener prefsListener
+            = new OnSharedPreferenceChangeListener() {
 
-		StringBuilder wheelchair = new StringBuilder("");
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs,
+                String key) {
+            boolean oneKeyFound = false;
+            Map<WheelchairState, WheelchairAttributes> wsAttributes = SupportManager.wsAttributes;
+            for (Map.Entry<WheelchairState, WheelchairAttributes> item : wsAttributes
+                    .entrySet()) {
+                if (item.getValue().prefsKey.equals(key)) {
+                    oneKeyFound = true;
+                }
+            }
 
-		for (WheelchairState state : list) {
-			if (wheelchair.length() > 0)
-				wheelchair.append(" OR wheelchair=");
-			else
-				wheelchair.append(" wheelchair=");
-			wheelchair.append(state.getId());
-		}
+            if (oneKeyFound == false) {
+                return;
+            }
 
-		if (wheelchair.toString().length() == 0) {
-			for (WheelchairState state : WheelchairState.values()) {
-				if (wheelchair.length() > 0)
-					wheelchair.append(" AND NOT wheelchair=");
-				else
-					wheelchair.append(" NOT wheelchair=");
-				wheelchair.append(state.getId());
-			}
-		}
+            calcWheelchairStateQuery(prefs);
+            update(true);
+        }
+    };
 
-		Log.d(TAG, "query result = " + wheelchair.toString());
-		mWheelchairQuery = wheelchair.toString();
-	}
+    private void initWheelstateQuery() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(mContext);
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener);
+        calcWheelchairStateQuery(prefs);
+    }
 
-	private void initCategoriesQuery() {
-		Log.d(TAG, "initCategoriesQuery: starting");
-		calcCategoriesQuery();
-		mContext.getContentResolver().registerContentObserver(
-				CategoriesContent.CONTENT_URI, false, categoriesObserver);
+    private List<WheelchairState> getWheelchairStateFromPrefs(final SharedPreferences prefs) {
+        ArrayList<WheelchairState> list = new ArrayList<WheelchairState>();
 
-	}
+        Map<WheelchairState, WheelchairAttributes> wsAttributes = SupportManager.wsAttributes;
+        for (Map.Entry<WheelchairState, WheelchairAttributes> entry : wsAttributes
+                .entrySet()) {
+            boolean prefState = prefs.getBoolean(entry.getValue().prefsKey, true);
+            if (prefState) {
+                list.add(entry.getKey());
+            }
+        }
 
-	private ContentObserver categoriesObserver = new ContentObserver(
-			new Handler()) {
+        return list;
+    }
 
-		@Override
-		public boolean deliverSelfNotifications() {
-			return false;
-		}
+    private void calcWheelchairStateQuery(final SharedPreferences prefs) {
+        Log.d(TAG, "calcWheelchairStateQuery starting");
 
-		@Override
-		public void onChange(boolean selfChange) {
-			Log.d(TAG, "categoriesObserver onChanged fired");
-			calcCategoriesQuery();
-			update(true);
-		}
+        List<WheelchairState> list = getWheelchairStateFromPrefs(prefs);
 
-	};
+        StringBuilder wheelchair = new StringBuilder("");
 
-	private void calcCategoriesQuery() {
-		Cursor cursor = mContext.getContentResolver().query(
-				CategoriesContent.CONTENT_URI, null, null, null, null);
-		if (cursor == null)
-			return;
+        for (WheelchairState state : list) {
+            if (wheelchair.length() > 0) {
+                wheelchair.append(" OR wheelchair=");
+            } else {
+                wheelchair.append(" wheelchair=");
+            }
+            wheelchair.append(state.getId());
+        }
 
-		StringBuilder categories = new StringBuilder("");
+        if (wheelchair.toString().length() == 0) {
+            for (WheelchairState state : WheelchairState.values()) {
+                if (wheelchair.length() > 0) {
+                    wheelchair.append(" AND NOT wheelchair=");
+                } else {
+                    wheelchair.append(" NOT wheelchair=");
+                }
+                wheelchair.append(state.getId());
+            }
+        }
 
-		int selectedCount = 0;
-		if (cursor.moveToFirst()) {
-			do {
-				int id = CategoriesContent.getCategoryId(cursor);
-				if (CategoriesContent.getSelected(cursor)) {
-					selectedCount++;
-					if (categories.length() > 0)
-						categories.append(" OR ").append(POIs.CATEGORY_ID)
-								.append("=");
-					else
-						categories.append(POIs.CATEGORY_ID).append("=");
-					categories.append(Integer.valueOf(id));
+        Log.d(TAG, "query result = " + wheelchair.toString());
+        mWheelchairQuery = wheelchair.toString();
+    }
 
-				}
+    private void initCategoriesQuery() {
+        Log.d(TAG, "initCategoriesQuery: starting");
+        calcCategoriesQuery();
+        mContext.getContentResolver().registerContentObserver(
+                CategoriesContent.CONTENT_URI, false, categoriesObserver);
 
-			} while (cursor.moveToNext());
-		}
-		if (selectedCount == 0) {
-			if (cursor.moveToFirst()) {
-				do {
-					int id = CategoriesContent.getCategoryId(cursor);
-					if (categories.length() > 0)
-						categories.append(" AND NOT category_id=");
-					else
-						categories.append(" NOT category_id=");
+    }
 
-					categories.append(Integer.valueOf(id));
+    private ContentObserver categoriesObserver = new ContentObserver(
+            new Handler()) {
 
-				} while (cursor.moveToNext());
-			}
+        @Override
+        public boolean deliverSelfNotifications() {
+            return false;
+        }
 
-		}
+        @Override
+        public void onChange(boolean selfChange) {
+            Log.d(TAG, "categoriesObserver onChanged fired");
+            calcCategoriesQuery();
+            update(true);
+        }
 
-		cursor.close();
-		Log.d(TAG, "calcCategoriesQuery: result = " + categories.toString());
-		mCategoriesQuery = categories.toString();
-	}
+    };
 
-	private static String concatenateWhere(String a, String b) {
-		if (TextUtils.isEmpty(a)) {
-			return b;
-		}
-		if (TextUtils.isEmpty(b)) {
-			return a;
-		}
+    private void calcCategoriesQuery() {
+        Cursor cursor = mContext.getContentResolver().query(
+                CategoriesContent.CONTENT_URI, null, null, null, null);
+        if (cursor == null) {
+            return;
+        }
 
-		return "(" + a + ") AND (" + b + ")";
-	}
+        StringBuilder categories = new StringBuilder("");
 
+        int selectedCount = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                int id = CategoriesContent.getCategoryId(cursor);
+                if (CategoriesContent.getSelected(cursor)) {
+                    selectedCount++;
+                    if (categories.length() > 0) {
+                        categories.append(" OR ").append(POIs.CATEGORY_ID)
+                                .append("=");
+                    } else {
+                        categories.append(POIs.CATEGORY_ID).append("=");
+                    }
+                    categories.append(Integer.valueOf(id));
+
+                }
+
+            } while (cursor.moveToNext());
+        }
+        if (selectedCount == 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = CategoriesContent.getCategoryId(cursor);
+                    if (categories.length() > 0) {
+                        categories.append(" AND NOT category_id=");
+                    } else {
+                        categories.append(" NOT category_id=");
+                    }
+
+                    categories.append(Integer.valueOf(id));
+
+                } while (cursor.moveToNext());
+            }
+
+        }
+
+        cursor.close();
+        Log.d(TAG, "calcCategoriesQuery: result = " + categories.toString());
+        mCategoriesQuery = categories.toString();
+    }
+
+    private static String concatenateWhere(String a, String b) {
+        if (TextUtils.isEmpty(a)) {
+            return b;
+        }
+        if (TextUtils.isEmpty(b)) {
+            return a;
+        }
+
+        return "(" + a + ") AND (" + b + ")";
+    }
 }

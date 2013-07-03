@@ -22,31 +22,31 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/wheelchair_state_layout"
-    style="@style/Container.Pressable" >
+                android:id="@+id/wheelchair_state_layout"
+                style="@style/Container.Pressable">
 
     <ImageView
-        android:id="@+id/state_icon"
-        style="@style/IconLarge"
-        android:layout_alignParentLeft="true" >
+            android:id="@+id/state_icon"
+            style="@style/IconLarge"
+            android:layout_alignParentLeft="true">
     </ImageView>
 
     <TextView
-        android:id="@+id/state_text"
-        style="@style/WheelStateItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/edit_icon"
-        android:layout_toRightOf="@+id/state_icon" >
+            android:id="@+id/state_text"
+            style="@style/WheelStateItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/edit_icon"
+            android:layout_toRightOf="@+id/state_icon">
     </TextView>
 
     <ImageView
-        android:id="@+id/edit_icon"
-        style="@style/IconMedium"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_menu_edit_wheelmap_dark" />
+            android:id="@+id/edit_icon"
+            style="@style/IconMedium"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
 
 </RelativeLayout>

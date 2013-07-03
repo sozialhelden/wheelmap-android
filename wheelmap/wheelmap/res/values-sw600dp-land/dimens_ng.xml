@@ -23,8 +23,8 @@
 
 <resources>
 
-    
-	<dimen name="mp_list_width">330dp</dimen>
-	<dimen name="landscape_divider_margin">250dp</dimen>
-   
+
+    <dimen name="mp_list_width">330dp</dimen>
+    <dimen name="landscape_divider_margin">250dp</dimen>
+
 </resources>

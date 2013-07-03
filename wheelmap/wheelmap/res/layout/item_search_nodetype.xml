@@ -22,9 +22,9 @@
   -->
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/text"
-    style="?android:attr/spinnerDropDownItemStyle"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:paddingLeft="16dip"
-    android:background="@drawable/item_pressable_background" />
+          android:id="@id/text"
+          style="?android:attr/spinnerDropDownItemStyle"
+          android:layout_width="fill_parent"
+          android:layout_height="?android:attr/listPreferredItemHeight"
+          android:paddingLeft="16dip"
+          android:background="@drawable/item_pressable_background"/>

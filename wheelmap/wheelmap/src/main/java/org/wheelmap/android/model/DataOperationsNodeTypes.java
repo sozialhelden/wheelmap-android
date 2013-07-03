@@ -21,51 +21,49 @@
  */
 package org.wheelmap.android.model;
 
-import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.mapping.nodetype.NodeType;
+import org.wheelmap.android.mapping.nodetype.NodeTypes;
 import org.wheelmap.android.model.Support.NodeTypesContent;
-import org.wheelmap.android.model.Support.LastUpdateContent;
 
-import wheelmap.org.domain.nodetype.NodeType;
-import wheelmap.org.domain.nodetype.NodeTypes;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class DataOperationsNodeTypes extends
-		DataOperations<NodeTypes, NodeType> {
+        DataOperations<NodeTypes, NodeType> {
 
-	public DataOperationsNodeTypes(ContentResolver resolver) {
-		super(resolver);
-	}
+    public DataOperationsNodeTypes(ContentResolver resolver) {
+        super(resolver);
+    }
 
-	@Override
-	protected NodeType getItem(NodeTypes type, int i) {
-		return type.getNodeTypes().get(i);
-	}
+    @Override
+    protected NodeType getItem(NodeTypes type, int i) {
+        return type.getNodeTypes().get(i);
+    }
 
-	@Override
-	public void copyToValues(NodeType item, ContentValues values) {
-		values.clear();
-		BigDecimal id = item.getId();
-		if ( id != null )
-			values.put(NodeTypesContent.NODETYPE_ID, id.intValue());
+    @Override
+    public void copyToValues(NodeType item, ContentValues values) {
+        values.clear();
+        BigDecimal id = item.getId();
+        if (id != null) {
+            values.put(NodeTypesContent.NODETYPE_ID, id.intValue());
+        }
 
-		values.put(NodeTypesContent.IDENTIFIER, item.getIdentifier());
-		values.put(NodeTypesContent.ICON_URL, item.getIconUrl());
-		values.put(NodeTypesContent.LOCALIZED_NAME, item.getLocalizedName());
+        values.put(NodeTypesContent.IDENTIFIER, item.getIdentifier());
+        values.put(NodeTypesContent.ICON_URL, item.getIconUrl());
+        values.put(NodeTypesContent.LOCALIZED_NAME, item.getLocalizedName());
 
-		BigDecimal catId = item.getCategoryId();
-		if ( catId != null ) {
-			values.put(NodeTypesContent.CATEGORY_ID, catId.intValue());
-		}
-	}
+        BigDecimal catId = item.getCategoryId();
+        if (catId != null) {
+            values.put(NodeTypesContent.CATEGORY_ID, catId.intValue());
+        }
+    }
 
-	@Override
-	public Uri getUri() {
-		return NodeTypesContent.CONTENT_URI;
-	}
+    @Override
+    public Uri getUri() {
+        return NodeTypesContent.CONTENT_URI;
+    }
 
 }

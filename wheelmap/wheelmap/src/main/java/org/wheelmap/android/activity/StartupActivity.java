@@ -23,12 +23,11 @@ package org.wheelmap.android.activity;
 
 import com.google.inject.Inject;
 
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
-
 import net.hockeyapp.android.CheckUpdateTask;
 import net.hockeyapp.android.CheckUpdateTask.OnHockeyDoneListener;
 import net.hockeyapp.android.UpdateActivity;
 
+import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -36,8 +35,8 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.service.SyncService;
-import org.wheelmap.android.service.SyncServiceException;
+import org.wheelmap.android.service.RestService;
+import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
@@ -51,6 +50,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -60,71 +60,83 @@ import android.widget.ProgressBar;
 import java.util.List;
 
 import de.akquinet.android.androlog.Log;
+import roboguice.inject.ContentViewListener;
 
-public class StartupActivity extends RoboSherlockActivity implements
-		DetachableResultReceiver.Receiver, OnHockeyDoneListener {
-	private final static String TAG = StartupActivity.class.getSimpleName();
+@Activity.Addons("MyRoboguice")
+public class StartupActivity extends Activity implements
+        DetachableResultReceiver.Receiver, OnHockeyDoneListener {
 
-	@Inject
-	public IAppProperties appProperties;
+    private final static String TAG = StartupActivity.class.getSimpleName();
 
-	private State mState;
-	private SupportManager mSupportManager;
-	private ProgressBar mProgressBar;
-	private boolean mIsInForeground;
-	private CheckUpdateTask checkUpdateTask;
+    @Inject
+    ContentViewListener ignored;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate");
-		setContentView(R.layout.activity_startup);
-		FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
-		Animation anim = AnimationUtils.loadAnimation(this,
-				R.anim.zoom_in_animation);
-		LayoutAnimationController controller = new LayoutAnimationController(
-				anim, 0.0f);
-		layout.setLayoutAnimation(controller);
+    @Inject
+    public IAppProperties appProperties;
 
-		mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
-		mState = new State();
-		mState.mReceiver.setReceiver(this);
+    private State mState;
 
-		checkForHockeyUpdates();
-	}
+    private SupportManager mSupportManager;
 
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		Log.d(TAG, "onRestart");
-		finish();
-	}
+    private ProgressBar mProgressBar;
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mIsInForeground = true;
-		Log.d(TAG, "onResume isInForeground = " + mIsInForeground);
-	}
+    private boolean mIsInForeground;
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mIsInForeground = false;
-		Log.d(TAG, "onPause isInForeground = " + mIsInForeground);
-	}
+    private CheckUpdateTask checkUpdateTask;
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (mSupportManager != null)
-			mSupportManager.releaseReceiver();
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate");
+        Log.d(TAG, "addons: " + obtainAddonsList());
+        setContentView(R.layout.activity_startup);
+
+        FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
+        Animation anim = AnimationUtils.loadAnimation(this,
+                R.anim.zoom_in_animation);
+        LayoutAnimationController controller = new LayoutAnimationController(
+                anim, 0.0f);
+        layout.setLayoutAnimation(controller);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
+        mState = new State();
+        mState.mReceiver.setReceiver(this);
+
+        checkForHockeyUpdates();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mIsInForeground = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsInForeground = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSupportManager != null) {
+            mSupportManager.releaseReceiver();
+        }
+    }
 
     private void checkForHockeyUpdates() {
-        String hockeyURI = appProperties.get( IAppProperties.KEY_HOCKEY_URI );
-        Log.d( TAG, "hockeyURI = *" + hockeyURI + "*");
-        if ( TextUtils.isEmpty(hockeyURI)) {
+        String hockeyURI = appProperties.get(IAppProperties.KEY_HOCKEY_URI);
+        Log.d(TAG, "hockeyURI = *" + hockeyURI + "*");
+        if (TextUtils.isEmpty(hockeyURI)) {
             onHockeyDone();
             return;
         }
@@ -143,153 +155,160 @@ public class StartupActivity extends RoboSherlockActivity implements
             return;
         }
 
-
-        if (!startupPersistentStuff())
+        if (startupPersistentStuff()) {
             return;
+        }
 
-        if (needStartApp())
+        if (needStartApp()) {
             startupAppDelayed();
-        else
+        } else {
             finish();
+        }
     }
 
     private boolean startupPersistentStuff() {
-		mSupportManager = WheelmapApp.getSupportManager();
-		if (mSupportManager.needsReloading()) {
-			mSupportManager.reload(mState.mReceiver);
-			return true;
-		}
+        mSupportManager = WheelmapApp.getSupportManager();
+        if (mSupportManager.needsReloading()) {
+            mSupportManager.reload(mState.mReceiver);
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private boolean needStartApp() {
-		final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-		final List<RunningTaskInfo> tasksInfo = am.getRunningTasks(1024);
+    private boolean needStartApp() {
+        final ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        final List<RunningTaskInfo> tasksInfo = am.getRunningTasks(1024);
 
-		if (!tasksInfo.isEmpty()) {
-			final String ourAppPackageName = getPackageName();
-			RunningTaskInfo taskInfo;
-			final int size = tasksInfo.size();
-			for (int i = 0; i < size; i++) {
-				taskInfo = tasksInfo.get(i);
-				if (ourAppPackageName.equals(taskInfo.baseActivity
-						.getPackageName())) {
-					// continue application start only if there is the only
-					// Activity in the task
-					// (BTW in this case this is the StartupActivity)
-					return taskInfo.numActivities == 1;
-				}
-			}
-		}
+        if (!tasksInfo.isEmpty()) {
+            final String ourAppPackageName = getPackageName();
+            RunningTaskInfo taskInfo;
+            final int size = tasksInfo.size();
+            for (int i = 0; i < size; i++) {
+                taskInfo = tasksInfo.get(i);
+                if (ourAppPackageName.equals(taskInfo.baseActivity
+                        .getPackageName())) {
+                    // continue application start only if there is the only
+                    // Activity in the task
+                    // (BTW in this case this is the StartupActivity)
+                    return taskInfo.numActivities == 1;
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private void startupAppDelayed() {
-		Handler h = new Handler();
-		h.postDelayed(new Runnable() {
+    private void startupAppDelayed() {
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
 
-			@Override
-			public void run() {
-				startupApp();
-			}
+            @Override
+            public void run() {
+                startupApp();
+            }
 
-		}, 1000);
-	}
+        }, 1000);
+    }
 
-	private void startupApp() {
-		Intent intent;
+    private void startupApp() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
-		if (UtilsMisc.isTablet(getApplicationContext()))
-			intent = new Intent(getApplicationContext(),
-					MainMultiPaneActivity.class);
-		else
-			intent = new Intent(getApplicationContext(),
-					MainSinglePaneActivity.class);
+        Intent intent;
 
-		intent.putExtra(Extra.REQUEST, true);
-		startActivity(intent);
-		finish();
-		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-	}
+        if (UtilsMisc.isTablet(getApplicationContext())) {
+            intent = new Intent(getApplicationContext(),
+                    MainMultiPaneActivity.class);
+        } else {
+            intent = new Intent(getApplicationContext(),
+                    MainSinglePaneActivity.class);
+        }
 
-	@Override
-	public void onReceiveResult(int resultCode, Bundle resultData) {
+        intent.putExtra(Extra.REQUEST, true);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 
-		if (resultCode == SyncService.STATUS_FINISHED) {
-			int what = resultData.getInt(Extra.WHAT);
-			switch (what) {
-			case What.RETRIEVE_LOCALES:
-				mSupportManager.reloadStageTwo();
-				break;
-			case What.RETRIEVE_CATEGORIES:
-				mSupportManager.reloadStageThree();
-				break;
-			case What.RETRIEVE_NODETYPES:
-				mSupportManager.reloadStageFour();
-				startupAppDelayed();
-				break;
-			default:
-				// nothing to do
-			}
-		} else if (resultCode == SyncService.STATUS_ERROR) {
-			final SyncServiceException e = resultData
-					.getParcelable(Extra.EXCEPTION);
-			Log.w(TAG, e);
-			mProgressBar.setVisibility(View.GONE);
-			showErrorDialog(e);
-		}
-	}
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
 
-	private static class State {
-		public DetachableResultReceiver mReceiver;
+        if (resultCode == RestService.STATUS_FINISHED) {
+            int what = resultData.getInt(Extra.WHAT);
+            switch (what) {
+                case What.RETRIEVE_LOCALES:
+                    mSupportManager.reloadStageTwo();
+                    break;
+                case What.RETRIEVE_CATEGORIES:
+                    mSupportManager.reloadStageThree();
+                    break;
+                case What.RETRIEVE_NODETYPES:
+                    mSupportManager.reloadStageFour();
+                    startupAppDelayed();
+                    break;
+                default:
+                    // nothing to do
+            }
+        } else if (resultCode == RestService.STATUS_ERROR) {
+            final RestServiceException e = resultData
+                    .getParcelable(Extra.EXCEPTION);
+            Log.w(TAG, e);
+            mProgressBar.setVisibility(View.GONE);
+            showErrorDialog(e);
+        }
+    }
 
-		State() {
-			mReceiver = new DetachableResultReceiver(new Handler());
-		}
-	}
+    private static class State {
 
-	private void showDialogNotWorking() {
+        public DetachableResultReceiver mReceiver;
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setTitle(R.string.error_title_occurred);
-		builder.setMessage(getResources().getString(
-				R.string.error_not_enough_memory));
-		builder.setPositiveButton(R.string.btn_quit,
-				new DialogInterface.OnClickListener() {
+        State() {
+            mReceiver = new DetachableResultReceiver(new Handler());
+        }
+    }
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				});
-		final AlertDialog alert = builder.create();
-		alert.show();
-	}
+    private void showDialogNotWorking() {
 
-	private void showErrorDialog(SyncServiceException e) {
-		if (!mIsInForeground)
-			return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle(R.string.error_title_occurred);
+        builder.setMessage(getResources().getString(
+                R.string.error_not_enough_memory));
+        builder.setPositiveButton(R.string.btn_quit,
+                new DialogInterface.OnClickListener() {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		if (e.getErrorCode() == SyncServiceException.ERROR_NETWORK_FAILURE)
-			builder.setTitle(R.string.error_network_title);
-		else
-			builder.setTitle(R.string.error_title_occurred);
-		builder.setIcon(android.R.drawable.ic_dialog_alert);
-		builder.setMessage(e.getRessourceString());
-		builder.setPositiveButton(R.string.btn_quit,
-				new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
 
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				});
-		final AlertDialog alert = builder.create();
-		alert.show();
+    private void showErrorDialog(RestServiceException e) {
+        if (!mIsInForeground) {
+            return;
+        }
 
-	}
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (e.getErrorCode() == RestServiceException.ERROR_NETWORK_FAILURE) {
+            builder.setTitle(R.string.error_network_title);
+        } else {
+            builder.setTitle(R.string.error_title_occurred);
+        }
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setMessage(e.getRessourceString());
+        builder.setPositiveButton(R.string.btn_quit,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 }

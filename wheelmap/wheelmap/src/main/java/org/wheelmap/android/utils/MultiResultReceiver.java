@@ -21,74 +21,80 @@
  */
 package org.wheelmap.android.utils;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * Its important, that this {@link ResultReceiver} is intended to live at a
- * {@link Service} and a receiver is just registering there. So multiple
- * activities {@link Activity} can get info about the state of a single service.
+ * Its important, that this {@link ResultReceiver} is intended to live at a {@link Service} and a
+ * receiver is just registering there. So multiple activities {@link Activity} can get info about
+ * the state of a single service.
  */
 public class MultiResultReceiver extends ResultReceiver {
-	private static final String TAG = "MultiResultReceiver";
-	private Set<ResultReceiver> mReceivers;
 
-	private int mResultCode;
-	private Bundle mResultData;
+    private static final String TAG = "MultiResultReceiver";
 
-	public MultiResultReceiver(Handler handler) {
-		super(handler);
-		mReceivers = new HashSet<ResultReceiver>();
-	}
+    private Set<ResultReceiver> mReceivers;
 
-	public void clearReceiver() {
-		mReceivers.clear();
-	}
+    private int mResultCode;
 
-	public int getReceiverCount() {
-		return mReceivers.size();
-	}
+    private Bundle mResultData;
 
-	public boolean addReceiver(ResultReceiver receiver, boolean resendLast) {
-		boolean isAdded = false;
+    public MultiResultReceiver(Handler handler) {
+        super(handler);
+        mReceivers = new HashSet<ResultReceiver>();
+    }
 
-		if (receiver == null)
-			return false;
-		if (!mReceivers.contains(receiver)) {
-			mReceivers.add(receiver);
-			isAdded = true;
-		}
+    public void clearReceiver() {
+        mReceivers.clear();
+    }
 
-		if (resendLast)
-			receiver.send(mResultCode, mResultData);
+    public int getReceiverCount() {
+        return mReceivers.size();
+    }
 
-		return isAdded;
-	}
+    public boolean addReceiver(ResultReceiver receiver, boolean resendLast) {
+        boolean isAdded = false;
 
-	public void removeReceiver(ResultReceiver receiver) {
-		mReceivers.remove(receiver);
-	}
+        if (receiver == null) {
+            return false;
+        }
+        if (!mReceivers.contains(receiver)) {
+            mReceivers.add(receiver);
+            isAdded = true;
+        }
 
-	@Override
-	protected void onReceiveResult(int resultCode, Bundle resultData) {
-		boolean sentOnce = false;
+        if (resendLast) {
+            receiver.send(mResultCode, mResultData);
+        }
 
-		mResultCode = resultCode;
-		mResultData = resultData;
+        return isAdded;
+    }
 
-		for (ResultReceiver receiver : mReceivers) {
-			receiver.send(resultCode, resultData);
-			sentOnce = true;
-		}
+    public void removeReceiver(ResultReceiver receiver) {
+        mReceivers.remove(receiver);
+    }
 
-		if (!sentOnce)
-			Log.w(TAG, "Dropping result on floor for code " + resultCode + ": "
-					+ resultData.toString());
-	}
+    @Override
+    protected void onReceiveResult(int resultCode, Bundle resultData) {
+        boolean sentOnce = false;
+
+        mResultCode = resultCode;
+        mResultData = resultData;
+
+        for (ResultReceiver receiver : mReceivers) {
+            receiver.send(resultCode, resultData);
+            sentOnce = true;
+        }
+
+        if (!sentOnce) {
+            Log.w(TAG, "Dropping result on floor for code " + resultCode + ": "
+                    + resultData.toString());
+        }
+    }
 }

@@ -21,47 +21,44 @@
  */
 package org.wheelmap.android.model;
 
-import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.mapping.categories.Categories;
+import org.wheelmap.android.mapping.categories.Category;
 import org.wheelmap.android.model.Support.CategoriesContent;
-import org.wheelmap.android.model.Support.LastUpdateContent;
 
-import wheelmap.org.domain.categories.Categories;
-import wheelmap.org.domain.categories.Category;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 
 import java.math.BigInteger;
 
-import static org.wheelmap.android.model.Support.*;
-
 public class DataOperationsCategories extends
-		DataOperations<Categories, Category> {
+        DataOperations<Categories, Category> {
 
-	public DataOperationsCategories(ContentResolver resolver) {
-		super(resolver);
-	}
+    public DataOperationsCategories(ContentResolver resolver) {
+        super(resolver);
+    }
 
-	@Override
-	protected Category getItem(Categories item, int i) {
-		return item.getCategories().get(i);
-	}
+    @Override
+    protected Category getItem(Categories item, int i) {
+        return item.getCategories().get(i);
+    }
 
-	@Override
-	public void copyToValues(Category item, ContentValues values) {
-		values.clear();
-		BigInteger id = item.getId();
-		if ( id != null )
-			values.put(CategoriesContent.CATEGORY_ID, id.intValue());
+    @Override
+    public void copyToValues(Category item, ContentValues values) {
+        values.clear();
+        BigInteger id = item.getId();
+        if (id != null) {
+            values.put(CategoriesContent.CATEGORY_ID, id.intValue());
+        }
 
-		values.put(CategoriesContent.LOCALIZED_NAME, item.getLocalizedName());
-		values.put(CategoriesContent.IDENTIFIER, item.getIdentifier());
-		values.put(CategoriesContent.SELECTED, CategoriesContent.SELECTED_YES);
-	}
+        values.put(CategoriesContent.LOCALIZED_NAME, item.getLocalizedName());
+        values.put(CategoriesContent.IDENTIFIER, item.getIdentifier());
+        values.put(CategoriesContent.SELECTED, CategoriesContent.SELECTED_YES);
+    }
 
-	@Override
-	public Uri getUri() {
-		return CategoriesContent.CONTENT_URI;
-	}
+    @Override
+    public Uri getUri() {
+        return CategoriesContent.CONTENT_URI;
+    }
 
 }

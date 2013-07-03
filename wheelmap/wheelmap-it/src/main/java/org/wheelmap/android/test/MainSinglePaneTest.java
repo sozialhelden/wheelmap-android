@@ -1,216 +1,228 @@
 package org.wheelmap.android.test;
 
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
+
 import org.springframework.util.Assert;
 import org.wheelmap.android.activity.MainSinglePaneActivity;
+import org.wheelmap.android.activity.MyTabListener;
 import org.wheelmap.android.activity.POIDetailActivity;
 import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.*;
+import org.wheelmap.android.fragment.POIDetailEditableFragment;
+import org.wheelmap.android.fragment.POIDetailFragment;
+import org.wheelmap.android.fragment.POIsListFragment;
+import org.wheelmap.android.fragment.POIsListWorkerFragment;
+import org.wheelmap.android.fragment.POIsMapWorkerFragment;
+import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
-import org.wheelmap.android.utils.UtilsMisc;
-
 public class MainSinglePaneTest extends
-		ActivityInstrumentationTestCase2<MainSinglePaneActivity> {
+        ActivityInstrumentationTestCase2<MainSinglePaneActivity> {
 
-	private static final String TAG = MainSinglePaneTest.class.getSimpleName();
-	private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
-	private FragmentId[] ids;
+    private static final String TAG = MainSinglePaneTest.class.getSimpleName();
 
-	private static class FragmentId {
-		FragmentId(int tab, String displayTag, String workerTag) {
-			this.tab = tab;
-			this.displayTag = displayTag;
-			this.workerTag = workerTag;
-		}
+    private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
-		int tab;
-		String displayTag;
-		String workerTag;
-	}
+    private FragmentId[] ids;
 
-	private void clickOnActionbar( int resId) {
-		if ( UtilsMisc.hasHoneycomb())
-			solo.clickOnActionBarItem(resId);
-		else
-			solo.clickOnVisibleActionbarItem(resId);
-	}
+    private static class FragmentId {
 
-	private SoloCompatibilityAbs solo;
+        FragmentId(int tab, String displayTag, String workerTag) {
+            this.tab = tab;
+            this.displayTag = displayTag;
+            this.workerTag = workerTag;
+        }
 
-	public MainSinglePaneTest() {
-		super(MainSinglePaneActivity.class);
-	}
+        int tab;
 
-	@Override
-	public void setUp() throws Exception {
-		ids = new FragmentId[] {
-				new FragmentId(MainSinglePaneActivity.TAB_LIST,
-						POIsListFragment.TAG, POIsListWorkerFragment.TAG),
-				new FragmentId(MainSinglePaneActivity.TAB_MAP,
-						POIsMapsforgeFragment.TAG,
-						POIsMapsforgeWorkerFragment.TAG) };
-		solo = new SoloCompatibilityAbs(getInstrumentation(), getActivity());
-		super.setUp();
-	}
+        String displayTag;
 
-	@Override
-	public void tearDown() throws Exception {
-		solo.finishOpenedActivities();
-		super.tearDown();
-		solo = null;
-	}
+        String workerTag;
+    }
 
-	private void executeTabSelect(final int tabId) {
-		final MainSinglePaneActivity activity = (MainSinglePaneActivity) getActivity();
-		activity.runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				activity.getSupportActionBar().setSelectedNavigationItem(
-						ids[tabId].tab);
-			}
-		});
+    private void clickOnActionbar(int resId) {
+        if (UtilsMisc.hasHoneycomb()) {
+            solo.clickOnActionBarItem(resId);
+        } else {
+            solo.clickOnVisibleActionbarItem(resId);
+        }
+    }
 
-		Assert.isTrue(solo.waitForFragmentByTag(ids[tabId].displayTag));
-		Assert.isTrue(solo.waitForFragmentByTag(ids[tabId].workerTag));
-		Log.d(TAG, "tab with id = " + tabId + " selected");
-	}
+    private SoloCompatibilityAbs solo;
 
-	public void testAAASetupApp() {
-		getInstrumentation().runOnMainSync( new Runnable() {
-			@Override
-			public void run() {
-				getInstrumentation().callApplicationOnCreate(WheelmapApp.getApp());
-			}
-		});
-		getInstrumentation().waitForIdleSync();
-	}
+    public MainSinglePaneTest() {
+        super(MainSinglePaneActivity.class);
+    }
 
-	public void testAFragmentsGettingStarted() {
-		executeTabSelect(1);
-		executeTabSelect(0);
-		executeTabSelect(1);
-	}
+    @Override
+    public void setUp() throws Exception {
+        ids = new FragmentId[]{
+                new FragmentId(MyTabListener.TAB_LIST,
+                        POIsListFragment.TAG, POIsListWorkerFragment.TAG),
+                new FragmentId(MyTabListener.TAB_MAP,
+                        POIsMapsforgeFragment.TAG,
+                        POIsMapWorkerFragment.TAG)};
+        solo = new SoloCompatibilityAbs(getInstrumentation(), getActivity());
+        super.setUp();
+    }
 
-	public void testBListAndDetailFragment()
-			throws Exception {
-		executeTabSelect(0);
-		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
+    @Override
+    public void tearDown() throws Exception {
+        solo.finishOpenedActivities();
+        super.tearDown();
+        solo = null;
+    }
 
-		solo.clickInList(2);
-		solo.waitForActivity("POIDetailActivity");
-		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
-		solo.waitForFragmentByTag(POIDetailFragment.TAG);
+    private void executeTabSelect(final int tabId) {
+        final MainSinglePaneActivity activity = (MainSinglePaneActivity) getActivity();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.getSupportActionBar().setSelectedNavigationItem(
+                        ids[tabId].tab);
+            }
+        });
 
-		solo.goBack();
-		solo.waitForActivity("MainSinglePaneActivity");
-		solo.assertCurrentActivity("main activity",
-				MainSinglePaneActivity.class);
-		solo.finishOpenedActivities();
+        Assert.isTrue(solo.waitForFragmentByTag(ids[tabId].displayTag));
+        Assert.isTrue(solo.waitForFragmentByTag(ids[tabId].workerTag));
+        Log.d(TAG, "tab with id = " + tabId + " selected");
+    }
 
-	}
+    public void testAAASetupApp() {
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                getInstrumentation().callApplicationOnCreate(WheelmapApp.getApp());
+            }
+        });
+        getInstrumentation().waitForIdleSync();
+    }
 
-	public void testCMapListAndDetailFragment() throws Exception {
-		solo.waitForActivity("MainSinglePaneActivity" );
-		executeTabSelect(1);
-		solo.waitForFragmentByTag( POIsMapsforgeFragment.TAG);
-		clickOnActionbar(R.id.menu_location);
-		executeTabSelect(0);
-		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
-		solo.sleep(500);
+    public void testAFragmentsGettingStarted() {
+        executeTabSelect(1);
+        executeTabSelect(0);
+        executeTabSelect(1);
+    }
 
-		solo.clickInList(4);
-		solo.waitForActivity("POIDetailActivity");
-		solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
-		solo.waitForFragmentByTag(POIDetailFragment.TAG);
+    public void testBListAndDetailFragment()
+            throws Exception {
+        executeTabSelect(0);
+        RobotiumHelper.waitForListRefreshingDone(solo, POIsListWorkerFragment.TAG);
 
-		RobotiumHelper.selectWheelchairState(solo, "POIDetailActivity");
-		solo.waitForActivity("POIDetailActivity" );
-		solo.goBack();
-		solo.waitForActivity("MainSinglePaneActivity");
-		solo.assertCurrentActivity("main activity",
-		MainSinglePaneActivity.class);
-	}
+        solo.clickInList(2);
+        solo.waitForActivity("POIDetailActivity");
+        solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
+        solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
-	public void testDNewItem() throws Exception {
-		solo.waitForActivity("MainSinglePaneActivity" );
-		Log.d( TAG, "current activity 1 = " + solo.getCurrentActivity());
-		executeTabSelect(0);
-		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
+        solo.goBack();
+        solo.waitForActivity("MainSinglePaneActivity");
+        solo.assertCurrentActivity("main activity",
+                MainSinglePaneActivity.class);
+        solo.finishOpenedActivities();
 
-		clickOnActionbar(R.id.menu_new_poi);
-		solo.waitForActivity("POIDetailEditableActivity");
-		solo.assertCurrentActivity("want edit activity",
-				POIDetailEditableActivity.class);
+    }
 
-		RobotiumHelper.login(solo);
-		solo.sleep(500);
+    public void testCMapListAndDetailFragment() throws Exception {
+        solo.waitForActivity("MainSinglePaneActivity");
+        executeTabSelect(1);
+        solo.waitForFragmentByTag(POIsMapsforgeFragment.TAG);
+        clickOnActionbar(R.id.menu_location);
+        executeTabSelect(0);
+        RobotiumHelper.waitForListRefreshingDone(solo, POIsListWorkerFragment.TAG);
+        solo.sleep(500);
 
-		solo.clearEditText(0);
-		solo.enterText(0, "testtest");
+        solo.clickInList(4);
+        solo.waitForActivity("POIDetailActivity");
+        solo.assertCurrentActivity("detail activity", POIDetailActivity.class);
+        solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
-		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
-		RobotiumHelper.selectCategoryState(solo);
-		solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
-		solo.clickOnActionBarItem(R.id.menu_save);
-		solo.sleep(2000);
-		String buttonOkay = getActivity().getString(R.string.btn_okay);
-		solo.clickOnButton( buttonOkay );
-		solo.waitForDialogToClose(1000 );
+        RobotiumHelper.selectWheelchairState(solo, "POIDetailActivity");
+        solo.waitForActivity("POIDetailActivity");
+        solo.goBack();
+        solo.waitForActivity("MainSinglePaneActivity");
+        solo.assertCurrentActivity("main activity",
+                MainSinglePaneActivity.class);
+    }
 
-		RobotiumHelper.logout(solo, "MainSinglePaneActivity");
+    public void testDNewItem() throws Exception {
+        solo.waitForActivity("MainSinglePaneActivity");
+        Log.d(TAG, "current activity 1 = " + solo.getCurrentActivity());
+        executeTabSelect(0);
+        RobotiumHelper.waitForListRefreshingDone(solo, POIsListWorkerFragment.TAG);
 
-	}
+        clickOnActionbar(R.id.menu_new_poi);
+        solo.waitForActivity("POIDetailEditableActivity");
+        solo.assertCurrentActivity("want edit activity",
+                POIDetailEditableActivity.class);
 
-	public void testEEditItem() throws Exception {
+        RobotiumHelper.login(solo);
+        solo.sleep(500);
 
-		executeTabSelect(0);
-		RobotiumHelper.waitForListRefreshingDone( solo, POIsListWorkerFragment.TAG);
+        solo.clearEditText(0);
+        solo.enterText(0, "testtest");
 
-		solo.clickInList(4);
-		solo.waitForActivity("POIDetailActivity");
-		solo.assertCurrentActivity("want detail activity",
-				POIDetailActivity.class);
-		solo.waitForFragmentByTag(POIDetailFragment.TAG);
+        RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
+        RobotiumHelper.selectCategoryState(solo);
+        solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
+        solo.clickOnActionBarItem(R.id.menu_save);
+        solo.sleep(2000);
+        String buttonOkay = getActivity().getString(R.string.btn_okay);
+        solo.clickOnButton(buttonOkay);
+        solo.waitForDialogToClose(1000);
 
-		clickOnActionbar(R.id.menu_edit);
-		solo.sleep(500);
-		RobotiumHelper.login(solo);
+        RobotiumHelper.logout(solo, "MainSinglePaneActivity");
 
-		solo.waitForActivity("POIDetailEditableActivity");
-		solo.assertCurrentActivity("want edit activity",
-				POIDetailEditableActivity.class);
-		Log.d(TAG, "activity = " + solo.getCurrentActivity().toString());
-		solo.clearEditText(0);
-		solo.enterText(0, "testtest");
-		RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
-		RobotiumHelper.selectCategoryState(solo);
-		solo.waitForFragmentByTag( POIDetailEditableFragment.TAG );
-		clickOnActionbar(R.id.menu_save);
+    }
 
-		getInstrumentation().waitForIdleSync();
+    public void testEEditItem() throws Exception {
 
-		// solo.waitForActivity("POIDetailActivity");
-		// solo.assertCurrentActivity("Want detail activity",
-		//		POIDetailActivity.class);
-		solo.waitForText("testtest");
+        executeTabSelect(0);
+        RobotiumHelper.waitForListRefreshingDone(solo, POIsListWorkerFragment.TAG);
 
-		solo.goBack();
-		solo.waitForActivity("MainSinglePaneActivity");
-		solo.assertCurrentActivity("Want main activity",
-				MainSinglePaneActivity.class);
+        solo.clickInList(4);
+        solo.waitForActivity("POIDetailActivity");
+        solo.assertCurrentActivity("want detail activity",
+                POIDetailActivity.class);
+        solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
-		RobotiumHelper.logout(solo, "MainSinglePaneActivity");
+        clickOnActionbar(R.id.menu_edit);
+        solo.sleep(500);
+        RobotiumHelper.login(solo);
 
-	}
+        solo.waitForActivity("POIDetailEditableActivity");
+        solo.assertCurrentActivity("want edit activity",
+                POIDetailEditableActivity.class);
+        Log.d(TAG, "activity = " + solo.getCurrentActivity().toString());
+        solo.clearEditText(0);
+        solo.enterText(0, "testtest");
+        RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
+        RobotiumHelper.selectCategoryState(solo);
+        solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
+        clickOnActionbar(R.id.menu_save);
 
-	public void testFSearch() throws Exception {
+        getInstrumentation().waitForIdleSync();
 
-		RobotiumHelper.searchTestList(solo, POIsListWorkerFragment.TAG);
+        // solo.waitForActivity("POIDetailActivity");
+        // solo.assertCurrentActivity("Want detail activity",
+        //		POIDetailActivity.class);
+        solo.waitForText("testtest");
 
-	}
+        solo.goBack();
+        solo.waitForActivity("MainSinglePaneActivity");
+        solo.assertCurrentActivity("Want main activity",
+                MainSinglePaneActivity.class);
+
+        RobotiumHelper.logout(solo, "MainSinglePaneActivity");
+
+    }
+
+    public void testFSearch() throws Exception {
+
+        RobotiumHelper.searchTestList(solo, POIsListWorkerFragment.TAG);
+
+    }
 }

@@ -22,24 +22,24 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
     <FrameLayout
-        android:id="@+id/separator"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/separator_large"
-        android:background="@android:color/black" />
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_large"
+            android:background="@android:color/black"/>
 
     <Button
-        android:id="@+id/btn_map"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/separator"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="6dip"
-        android:layout_marginRight="6dip"
-        android:layout_marginTop="6dip"
-        android:text="@string/title_pois_map" />
+            android:id="@+id/btn_map"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/separator"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="6dip"
+            android:layout_marginRight="6dip"
+            android:layout_marginTop="6dip"
+            android:text="@string/title_pois_map"/>
 
 </RelativeLayout>

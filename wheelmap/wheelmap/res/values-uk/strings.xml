@@ -1,93 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="btn_cancel">ВІдмінити</string>
-	<string name="btn_legal_notice">Юридичне повідомлення</string>
-	<string name="btn_list">Список</string>
-	<string name="btn_okay">Добре</string>
-	<string name="btn_quit">Вийти</string>
-	<string name="description_edit">Редагувати</string>
-	<string name="description_filter">Фільтр</string>
-	<string name="description_gps">поточне місце розташування</string>
-	<string name="description_logo">Wheelmap</string>
-	<string name="description_map">Карта</string>
-	<string name="error_authorization_error">Немає належного дозволу доступностів для редагування.</string>
-	<string name="error_internal_error">Непередбачена внутрішня помилка. Будь ласка, перезапустіть додаток.</string>
-	<string name="error_network_failure">Мережа нестабільна. Будь ласка, перевірте підключення до Інтернету або повторіть спробу пізніше.</string>
-	<string name="error_network_title">Проблема з сіткою</string>
-	<string name="error_title_occurred">Виникла помилка</string>
-	<string name="info_a_project_of">Проект</string>
-	<string name="info_android_development">Розробка Android:</string>
-	<string name="info_android_development_one">Міхал Харакаль</string>
-	<string name="info_android_development_two">Міхаел Кроз</string>
-	<string name="info_icons">Закладки:</string>
-	<string name="info_kartendaten">Карта даних:</string>
-	<string name="info_kartendaten_one">www.openstreetmap.org</string>
-	<string name="info_kartendaten_two">© OpenStreetMap вкладчики, CC-BY-SA</string>
-	<string name="info_stiftung_text_one">Подяка першому фонду Donnersmarck</string>
-	<string name="info_web_version">Веб-версія:</string>
-	<string name="info_web_version_one">www.wheelmap.org</string>
-	<string name="info_webdevelopment">Веб програмування:</string>
-	<string name="info_webdevelopment_one">Крістоф Бюнте</string>
-	<string name="legal_notice_commonsware">Два модулі</string>
-	<string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
-	<string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
-	<string name="legal_notice_iconscollection">Колекція карт</string>
-	<string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com</string>
-	<string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0) </string>
-	<string name="legal_notice_intro">Це програмне забезпечення базується на інших роботах. Авторські виглядають наступним чином:</string>
-	<string name="legal_notice_jackson">Джексон JSON процессор</string>
-	<string name="legal_notice_jackson_copyright">(Apache License V2)</string>
-	<string name="legal_notice_mapsforge">Mapsforge </string>
-	<string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3) </string>
-	<string name="legal_notice_opensource">Це програмне забезпечення з відкритим вихідним кодом</string>
-	<string name="legal_notice_opensource_copyright">https://github.com/sozialhelden/wheelmap-android</string>
-	<string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
-	<string name="legal_notice_pulltorefresh">Потягніть для оновлення Віджет</string>
-	<string name="legal_notice_pulltorefresh_copyright">© Johan Nilsson (Apache License V2) </string>
-	<string name="legal_notice_springandroid">Spring Android
-</string>
-	<string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
-	<string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
-	<string name="legal_notice_springandroid_copyright_three">http://www.springframework.org</string>
-	<string name="menu_edit">Редагувати</string>
-	<string name="menu_save">Зберегти</string>
-	<string name="no_pois">Нема місць. які б відповідали вашим налаштуванням фільтра</string>
-	<string name="poi_new_default_name">Нові POI</string>
-	<string name="poi_property_address">Адреса</string>
-	<string name="poi_property_category">Категорія</string>
-	<string name="poi_property_comment">Коментарі</string>
-	<string name="poi_property_name">Ім\'я</string>
-	<string name="poi_property_nodetype">Тип</string>
-	<string name="poi_property_phone">Телефон</string>
-	<string name="poi_property_position">Розташування</string>
-	<string name="poi_property_website">Вебсайт</string>
-	<string name="pull_to_refresh_pull_label">Потягніть, щоб оновити ...</string>
-	<string name="pull_to_refresh_refreshing_label">Оновлення...</string>
-	<string name="pull_to_refresh_release_label">Опустіть, щоб оновити...</string>
-	<string name="settings_category_filter">Фільтр категорій</string>
-	<string name="settings_wheelchair_limited">Обмеження</string>
-	<string name="settings_wheelchair_no">Ні</string>
-	<string name="settings_wheelchair_state">Поточний стан інвалідної коляски</string>
-	<string name="settings_wheelchair_unknown">Невідомий</string>
-	<string name="settings_wheelchair_yes">Так</string>
-	<string name="support_category_unknown">Категорія невідома</string>
-	<string name="support_nodetype_unknown">Тип невідомиий</string>
-	<string name="title_category_select">Оберіть категорію для відображення</string>
-	<string name="title_info">Кредити</string>
-	<string name="title_legal_notice">Належне повідомлення</string>
-	<string name="title_please_wait">Зачекайте будь-ласка</string>
-	<string name="title_pois_detail">інформація</string>
-	<string name="title_pois_detail_edit">Змінити місце</string>
-	<string name="title_pois_list">Список</string>
-	<string name="title_pois_map">Карта</string>
-	<string name="title_pois_settings">Налаштування фільтру</string>
-	<string name="title_wheelchair_state">Чи є доступ для людини на інвалідному візку?</string>
-	<string name="ws_disabled">Ні: Вступ має крутий або декілька етапів, номера не доступні</string>
-	<string name="ws_disabled_title">Не доступно для інвалідних візків</string>
-	<string name="ws_enabled">Так: вхід без сходинок, всі номери без сходинок і доступний туалет</string>
-	<string name="ws_enabled_title">Візок для людей з інвалідністю</string>
-	<string name="ws_limited">Обмежено: Вступ має крок (максимальна висота 7 см), більшість номерів без сходів, туалет не доступний</string>
-	<string name="ws_limited_title">Частковий доступ для інвалідних візків</string>
-	<string name="ws_unknown">Невідомий: Допоможіть нам і відзначити це місце.</string>
-	<string name="ws_unknown_title">сатус невідомий</string>
+    <string name="btn_cancel">ВІдмінити</string>
+    <string name="btn_legal_notice">Юридичне повідомлення</string>
+    <string name="btn_list">Список</string>
+    <string name="btn_okay">Добре</string>
+    <string name="btn_quit">Вийти</string>
+    <string name="description_edit">Редагувати</string>
+    <string name="description_filter">Фільтр</string>
+    <string name="description_gps">поточне місце розташування</string>
+    <string name="description_logo">Wheelmap</string>
+    <string name="description_map">Карта</string>
+    <string name="error_authorization_error">Немає належного дозволу доступностів для редагування.
+    </string>
+    <string name="error_internal_error">Непередбачена внутрішня помилка. Будь ласка, перезапустіть
+        додаток.
+    </string>
+    <string name="error_network_failure">Мережа нестабільна. Будь ласка, перевірте підключення до
+        Інтернету або повторіть спробу пізніше.
+    </string>
+    <string name="error_network_title">Проблема з сіткою</string>
+    <string name="error_title_occurred">Виникла помилка</string>
+    <string name="info_a_project_of">Проект</string>
+    <string name="info_android_development">Розробка Android:</string>
+    <string name="info_android_development_one">Міхал Харакаль</string>
+    <string name="info_android_development_two">Міхаел Кроз</string>
+    <string name="info_icons">Закладки:</string>
+    <string name="info_kartendaten">Карта даних:</string>
+    <string name="info_kartendaten_one">www.openstreetmap.org</string>
+    <string name="info_kartendaten_two">© OpenStreetMap вкладчики, CC-BY-SA</string>
+    <string name="info_stiftung_text_one">Подяка першому фонду Donnersmarck</string>
+    <string name="info_web_version">Веб-версія:</string>
+    <string name="info_web_version_one">www.wheelmap.org</string>
+    <string name="info_webdevelopment">Веб програмування:</string>
+    <string name="info_webdevelopment_one">Крістоф Бюнте</string>
+    <string name="legal_notice_commonsware">Два модулі</string>
+    <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
+    <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
+    <string name="legal_notice_iconscollection">Колекція карт</string>
+    <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com
+    </string>
+    <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>
+    <string name="legal_notice_intro">Це програмне забезпечення базується на інших роботах.
+        Авторські виглядають наступним чином:
+    </string>
+    <string name="legal_notice_jackson">Джексон JSON процессор</string>
+    <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
+    <string name="legal_notice_mapsforge">Mapsforge</string>
+    <string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3)</string>
+    <string name="legal_notice_opensource">Це програмне забезпечення з відкритим вихідним кодом
+    </string>
+    <string name="legal_notice_opensource_copyright">
+        https://github.com/sozialhelden/wheelmap-android
+    </string>
+    <string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
+    <string name="legal_notice_pulltorefresh">Потягніть для оновлення Віджет</string>
+    <string name="legal_notice_pulltorefresh_copyright">© Johan Nilsson (Apache License V2)</string>
+    <string name="legal_notice_springandroid">Spring Android
+    </string>
+    <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
+    <string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
+    <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org
+    </string>
+    <string name="menu_edit">Редагувати</string>
+    <string name="menu_save">Зберегти</string>
+    <string name="no_pois">Нема місць. які б відповідали вашим налаштуванням фільтра</string>
+    <string name="poi_new_default_name">Нові POI</string>
+    <string name="poi_property_address">Адреса</string>
+    <string name="poi_property_category">Категорія</string>
+    <string name="poi_property_comment">Коментарі</string>
+    <string name="poi_property_name">Ім\'я</string>
+    <string name="poi_property_nodetype">Тип</string>
+    <string name="poi_property_phone">Телефон</string>
+    <string name="poi_property_position">Розташування</string>
+    <string name="poi_property_website">Вебсайт</string>
+    <string name="pull_to_refresh_pull_label">Потягніть, щоб оновити ...</string>
+    <string name="pull_to_refresh_refreshing_label">Оновлення...</string>
+    <string name="pull_to_refresh_release_label">Опустіть, щоб оновити...</string>
+    <string name="settings_category_filter">Фільтр категорій</string>
+    <string name="settings_wheelchair_limited">Обмеження</string>
+    <string name="settings_wheelchair_no">Ні</string>
+    <string name="settings_wheelchair_state">Поточний стан інвалідної коляски</string>
+    <string name="settings_wheelchair_unknown">Невідомий</string>
+    <string name="settings_wheelchair_yes">Так</string>
+    <string name="support_category_unknown">Категорія невідома</string>
+    <string name="support_nodetype_unknown">Тип невідомиий</string>
+    <string name="title_category_select">Оберіть категорію для відображення</string>
+    <string name="title_info">Кредити</string>
+    <string name="title_legal_notice">Належне повідомлення</string>
+    <string name="title_please_wait">Зачекайте будь-ласка</string>
+    <string name="title_pois_detail">інформація</string>
+    <string name="title_pois_detail_edit">Змінити місце</string>
+    <string name="title_pois_list">Список</string>
+    <string name="title_pois_map">Карта</string>
+    <string name="title_pois_settings">Налаштування фільтру</string>
+    <string name="title_wheelchair_state">Чи є доступ для людини на інвалідному візку?</string>
+    <string name="ws_disabled">Ні: Вступ має крутий або декілька етапів, номера не доступні</string>
+    <string name="ws_disabled_title">Не доступно для інвалідних візків</string>
+    <string name="ws_enabled">Так: вхід без сходинок, всі номери без сходинок і доступний туалет
+    </string>
+    <string name="ws_enabled_title">Візок для людей з інвалідністю</string>
+    <string name="ws_limited">Обмежено: Вступ має крок (максимальна висота 7 см), більшість номерів
+        без сходів, туалет не доступний
+    </string>
+    <string name="ws_limited_title">Частковий доступ для інвалідних візків</string>
+    <string name="ws_unknown">Невідомий: Допоможіть нам і відзначити це місце.</string>
+    <string name="ws_unknown_title">сатус невідомий</string>
 </resources>

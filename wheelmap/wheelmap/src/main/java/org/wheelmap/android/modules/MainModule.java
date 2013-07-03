@@ -21,27 +21,27 @@
  */
 package org.wheelmap.android.modules;
 
-import android.util.Log;
-
 import com.google.inject.AbstractModule;
 
-public class MainModule extends AbstractModule
-{
-	private final static String TAG = MainModule.class.getSimpleName();
+import android.util.Log;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.inject.AbstractModule#configure()
-	 */
-	@Override
-	protected void configure()
-	{
-		Log.d(TAG, "configuring begin");
-		bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();
-		bind(IHttpUserAgent.class).to(HttpUserAgent.class).asEagerSingleton();
-		bind(ICredentials.class).to(UserCredentials.class).asEagerSingleton();
-		Log.d( TAG, "configuring done" );
-		
-	}
+public class MainModule extends AbstractModule {
+
+    private final static String TAG = MainModule.class.getSimpleName();
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.google.inject.AbstractModule#configure()
+     */
+    @Override
+    protected void configure() {
+        Log.d(TAG, "configuring begin");
+        bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();
+        bind(IHttpUserAgent.class).to(HttpUserAgent.class).asEagerSingleton();
+        bind(ICredentials.class).to(UserCredentials.class).asEagerSingleton();
+        bind(IBundlePreferences.class).to(BundlePreferences.class).asEagerSingleton();
+        Log.d(TAG, "configuring done");
+
+    }
 }

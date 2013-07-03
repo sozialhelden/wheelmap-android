@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.adapter;
 
-import java.util.List;
-
 import org.wheelmap.android.model.Info;
 import org.wheelmap.android.model.InfoTypes;
 import org.wheelmap.android.online.R;
@@ -40,211 +38,221 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 class InfoSimpleView extends LinearLayout {
 
-	private TextView title;
-	protected TextView first;
-	protected Info info;
+    private TextView title;
 
-	public InfoSimpleView(Context context, Info info) {
-		super(context);
-		this.info = info;
-		this.initComponent(context);
-	}
+    protected TextView first;
 
-	protected int getLayout() {
-		return R.layout.item_info_simple;
-	}
+    protected Info info;
 
-	public InfoSimpleView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		this.initComponent(context);
-	}
+    public InfoSimpleView(Context context, Info info) {
+        super(context);
+        this.info = info;
+        this.initComponent(context);
+    }
 
-	protected void initComponent(Context context) {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		// inflating of partial layout ignores layout_widht and layout_height
-		// attributes
-		@SuppressWarnings("deprecation")
+    protected int getLayout() {
+        return R.layout.item_info_simple;
+    }
+
+    public InfoSimpleView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.initComponent(context);
+    }
+
+    protected void initComponent(Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        // inflating of partial layout ignores layout_widht and layout_height
+        // attributes
+        @SuppressWarnings("deprecation")
         LinearLayout.LayoutParams parametri = new LinearLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		View v = inflater.inflate(getLayout(), null, false);
-		this.addView(v, parametri);
+                LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        View v = inflater.inflate(getLayout(), null, false);
+        this.addView(v, parametri);
 
-		title = (TextView) findViewById(R.id.info_activity_title);
-		first = (TextView) findViewById(R.id.info_activity_first_line);
+        title = (TextView) findViewById(R.id.info_activity_title);
+        first = (TextView) findViewById(R.id.info_activity_first_line);
 
-		if (title != null)
-			title.setText(info.getTitle());
+        if (title != null) {
+            title.setText(info.getTitle());
+        }
 
-		if (first != null) {
-			if (info.getTextDynamic() != null)
-				first.setText(info.getTextDynamic());
-			else
-				first.setText(info.getText());
+        if (first != null) {
+            if (info.getTextDynamic() != null) {
+                first.setText(info.getTextDynamic());
+            } else {
+                first.setText(info.getText());
+            }
 
-		}
+        }
 
-	}
+    }
 }
 
 class InfoSimpleViewTwoLines extends InfoSimpleView {
 
-	protected TextView second;
+    protected TextView second;
 
-	public InfoSimpleViewTwoLines(Context context, Info info) {
-		super(context, info);
-	}
+    public InfoSimpleViewTwoLines(Context context, Info info) {
+        super(context, info);
+    }
 
-	@Override
-	protected int getLayout() {
-		return R.layout.item_info_simple_two_lines;
-	}
+    @Override
+    protected int getLayout() {
+        return R.layout.item_info_simple_two_lines;
+    }
 
-	@Override
-	protected void initComponent(Context context) {
-		super.initComponent(context);
-		second = (TextView) findViewById(R.id.info_activity_second_line);
-		if (second != null)
-			second.setText(info.getSecondText());
-	}
+    @Override
+    protected void initComponent(Context context) {
+        super.initComponent(context);
+        second = (TextView) findViewById(R.id.info_activity_second_line);
+        if (second != null) {
+            second.setText(info.getSecondText());
+        }
+    }
 }
 
 class InfoSimpleViewTwoUrls extends InfoSimpleViewTwoLines {
 
-	public InfoSimpleViewTwoUrls(Context context, Info info) {
-		super(context, info);
-	}
+    public InfoSimpleViewTwoUrls(Context context, Info info) {
+        super(context, info);
+    }
 
-	@Override
-	protected int getLayout() {
-		return R.layout.item_info_simple_two_urls;
-	}
+    @Override
+    protected int getLayout() {
+        return R.layout.item_info_simple_two_urls;
+    }
 
-	public void onFirstLinkClick(View V) {
-		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
-				.parse("http://fiwio.com"));
-		getContext().startActivity(intent);
-	}
+    public void onFirstLinkClick(View V) {
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+                .parse("http://fiwio.com"));
+        getContext().startActivity(intent);
+    }
 
-	public void onSecondLinkClick(View V) {
-		Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
-				.parse("http://harakalovci.net"));
-		getContext().startActivity(intent);
-	}
+    public void onSecondLinkClick(View V) {
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+                .parse("http://harakalovci.net"));
+        getContext().startActivity(intent);
+    }
 }
 
 class InfoSimpleViewActivity extends InfoSimpleView {
 
-	public InfoSimpleViewActivity(Context context, Info info) {
-		super(context, info);
-	}
+    public InfoSimpleViewActivity(Context context, Info info) {
+        super(context, info);
+    }
 
-	@Override
-	protected int getLayout() {
-		return R.layout.item_info_simple_activity;
-	}
+    @Override
+    protected int getLayout() {
+        return R.layout.item_info_simple_activity;
+    }
 }
 
 class InfoSimpleViewImage extends InfoSimpleView {
 
-	private ImageView image;
+    private ImageView image;
 
-	public InfoSimpleViewImage(Context context, Info info) {
-		super(context, info);
-	}
+    public InfoSimpleViewImage(Context context, Info info) {
+        super(context, info);
+    }
 
-	@Override
-	protected int getLayout() {
-		return R.layout.item_info_simple_image;
-	}
+    @Override
+    protected int getLayout() {
+        return R.layout.item_info_simple_image;
+    }
 
-	@Override
-	protected void initComponent(Context context) {
-		super.initComponent(context);
-		image = (ImageView) findViewById(R.id.info_activity_image);
-		if (image != null)
-			image.setImageResource(info.getText());
-	}
+    @Override
+    protected void initComponent(Context context) {
+        super.initComponent(context);
+        image = (ImageView) findViewById(R.id.info_activity_image);
+        if (image != null) {
+            image.setImageResource(info.getText());
+        }
+    }
 }
 
 public class InfoWidgetsAdapter extends BaseAdapter {
 
-	private Context context;
-	private List<Info> infoList;
+    private Context context;
 
-	public InfoWidgetsAdapter(Context context, List<Info> infoList) {
-		this.infoList = infoList;
-		this.context = context;
-	}
+    private List<Info> infoList;
 
-	@Override
-	public int getCount() {
-		return infoList.size();
-	}
+    public InfoWidgetsAdapter(Context context, List<Info> infoList) {
+        this.infoList = infoList;
+        this.context = context;
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return infoList.get(position);
-	}
+    @Override
+    public int getCount() {
+        return infoList.size();
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public Object getItem(int position) {
+        return infoList.get(position);
+    }
 
-	@Override
-	public boolean isEnabled(int position) {
-		if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS
-				|| (infoList.get(position).getUrl() != null && infoList
-						.get(position).getUrl().length() == 0))
-			return false;
-		else
-			return true;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	private OnClickListener mOnFirstClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			Info info = (Info) v.getTag();
-			Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
-					.parse(info.getUrl()));
-			context.startActivity(intent);
-		}
-	};
+    @Override
+    public boolean isEnabled(int position) {
+        if (infoList.get(position).getInfoType() == InfoTypes.WITH_TWO_LINKS
+                || (infoList.get(position).getUrl() != null && infoList
+                .get(position).getUrl().length() == 0)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-	private OnClickListener mOnSecondClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			Info info = (Info) v.getTag();
-			Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
-					.parse(info.getSecondUrl()));
-			context.startActivity(intent);
-		}
-	};
+    private OnClickListener mOnFirstClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Info info = (Info) v.getTag();
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+                    .parse(info.getUrl()));
+            context.startActivity(intent);
+        }
+    };
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		Info info = infoList.get(position);
-		switch (info.getInfoType()) {
-		case SIMPLE_TEXT:
-			return new InfoSimpleView(this.context, info);
-		case DOUBLE_TEXT:
-			return new InfoSimpleViewTwoLines(this.context, info);
-		case WITH_TWO_LINKS:
-			InfoSimpleViewTwoUrls result = new InfoSimpleViewTwoUrls(
-					this.context, info);
-			result.first.setOnClickListener(mOnFirstClickListener);
-			result.second.setOnClickListener(mOnSecondClickListener);
-			result.first.setTag(info);
-			result.second.setTag(info);
-			return result;
-		case NEXT_ACTIVITY:
-			return new InfoSimpleViewActivity(this.context, info);
-		case WITH_IMAGE:
-			return new InfoSimpleViewImage(this.context, info);
-		default:
-			return new InfoSimpleView(this.context, info);
-		}
-	}
+    private OnClickListener mOnSecondClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Info info = (Info) v.getTag();
+            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri
+                    .parse(info.getSecondUrl()));
+            context.startActivity(intent);
+        }
+    };
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Info info = infoList.get(position);
+        switch (info.getInfoType()) {
+            case SIMPLE_TEXT:
+                return new InfoSimpleView(this.context, info);
+            case DOUBLE_TEXT:
+                return new InfoSimpleViewTwoLines(this.context, info);
+            case WITH_TWO_LINKS:
+                InfoSimpleViewTwoUrls result = new InfoSimpleViewTwoUrls(
+                        this.context, info);
+                result.first.setOnClickListener(mOnFirstClickListener);
+                result.second.setOnClickListener(mOnSecondClickListener);
+                result.first.setTag(info);
+                result.second.setTag(info);
+                return result;
+            case NEXT_ACTIVITY:
+                return new InfoSimpleViewActivity(this.context, info);
+            case WITH_IMAGE:
+                return new InfoSimpleViewImage(this.context, info);
+            default:
+                return new InfoSimpleView(this.context, info);
+        }
+    }
 }

@@ -21,121 +21,121 @@
  */
 package org.wheelmap.android.test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.wheelmap.android.net.request.BoundingBox;
+import org.wheelmap.android.net.request.BoundingBox.Wgs84GeoCoordinates;
+import org.wheelmap.android.utils.GeoCoordinatesMath;
 
-import org.wheelmap.android.utils.GeocoordinatesMath;
-
-import wheelmap.org.BoundingBox;
-import wheelmap.org.BoundingBox.Wgs84GeoCoordinates;
 import android.location.Location;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
 public class GeocoordinatesMathTest extends AndroidTestCase {
 
-	private static final String TAG = GeocoordinatesMath.class.getSimpleName();
+    private static final String TAG = GeoCoordinatesMath.class.getSimpleName();
 
-	private static final double DELTA_ENV = 0.0001d;
+    private static final double DELTA_ENV = 0.0001d;
 
-	public void testBoundingBox() {
-		Wgs84GeoCoordinates pointOne = new Wgs84GeoCoordinates(0, 0);
-		GeocoordinatesMath.useAngloDistanceUnit(false);
+    public void testBoundingBox() {
+        Wgs84GeoCoordinates pointOne = new Wgs84GeoCoordinates(0, 0);
+        GeoCoordinatesMath.useAngloDistanceUnit(false);
 
-		double distanceOne = 10d;
-		BoundingBox bbOne = GeocoordinatesMath.calculateBoundingBox(pointOne,
-				distanceOne);
-		Log.d(TAG, "BoundingBox bbOne = " + bbOne.toString());
+        double distanceOne = 10d;
+        BoundingBox bbOne = GeoCoordinatesMath.calculateBoundingBox(pointOne,
+                distanceOne);
+        Log.d(TAG, "BoundingBox bbOne = " + bbOne.toString());
 
-		double distanceTwo = 2000d;
-		BoundingBox bbTwo = GeocoordinatesMath.calculateBoundingBox(pointOne,
-				distanceTwo);
-		Log.d(TAG, "BoundingBox bbTwo = " + bbTwo.toString());
-	}
+        double distanceTwo = 2000d;
+        BoundingBox bbTwo = GeoCoordinatesMath.calculateBoundingBox(pointOne,
+                distanceTwo);
+        Log.d(TAG, "BoundingBox bbTwo = " + bbTwo.toString());
+    }
 
-	public void testDistance() {
-		Location pointOne = new Location("");
-		pointOne.setLongitude(0);
-		pointOne.setLatitude(0);
-		GeocoordinatesMath.useAngloDistanceUnit(false);
+    public void testDistance() {
+        Location pointOne = new Location("");
+        pointOne.setLongitude(0);
+        pointOne.setLatitude(0);
+        GeoCoordinatesMath.useAngloDistanceUnit(false);
 
-		double expectedRoughDistOne = 14.164743972d;
+        double expectedRoughDistOne = 14.164743972d;
 
-		double pointNumOne = 0.09009009d;
-		Location pointDestOne = new Location("");
-		pointDestOne.setLatitude(-pointNumOne);
-		pointDestOne.setLongitude(-pointNumOne);
-		double distOne = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestOne);
-		Log.d(TAG, "distanceOne = " + distOne);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distOne));
+        double pointNumOne = 0.09009009d;
+        Location pointDestOne = new Location("");
+        pointDestOne.setLatitude(-pointNumOne);
+        pointDestOne.setLongitude(-pointNumOne);
+        double distOne = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestOne);
+        Log.d(TAG, "distanceOne = " + distOne);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distOne));
 
-		Location pointDestTwo = new Location("");
-		pointDestTwo.setLongitude(-pointNumOne);
-		pointDestTwo.setLatitude(pointNumOne);
+        Location pointDestTwo = new Location("");
+        pointDestTwo.setLongitude(-pointNumOne);
+        pointDestTwo.setLatitude(pointNumOne);
 
-		double distTwo = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestTwo);
-		Log.d(TAG, "distanceTwo = " + distTwo);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distTwo));
+        double distTwo = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestTwo);
+        Log.d(TAG, "distanceTwo = " + distTwo);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distTwo));
 
-		Location pointDestThree = new Location("");
-		pointDestThree.setLongitude(pointNumOne);
-		pointDestThree.setLatitude(-pointNumOne);
-		double distThree = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestThree);
-		Log.d(TAG, "distanceThree = " + distThree);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distThree));
+        Location pointDestThree = new Location("");
+        pointDestThree.setLongitude(pointNumOne);
+        pointDestThree.setLatitude(-pointNumOne);
+        double distThree = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestThree);
+        Log.d(TAG, "distanceThree = " + distThree);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distThree));
 
-		Location pointDestFour = new Location("");
-		pointDestFour.setLatitude(pointNumOne);
-		pointDestFour.setLongitude(pointNumOne);
+        Location pointDestFour = new Location("");
+        pointDestFour.setLatitude(pointNumOne);
+        pointDestFour.setLongitude(pointNumOne);
 
-		double distFour = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestFour);
-		Log.d(TAG, "distanceFour = " + distFour);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distFour));
+        double distFour = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestFour);
+        Log.d(TAG, "distanceFour = " + distFour);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distFour));
 
-		double expectedRoughDistTwo = 2809.19532927;
-		double pointNumTwo = 18.018018018d;
-		Location pointDestFive = new Location("");
-		pointDestFive.setLongitude(-pointNumTwo);
-		pointDestFive.setLatitude(-pointNumTwo);
-		double distFive = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestFive);
-		Log.d(TAG, "distanceFive = " + distFive);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distFive));
+        double expectedRoughDistTwo = 2809.19532927;
+        double pointNumTwo = 18.018018018d;
+        Location pointDestFive = new Location("");
+        pointDestFive.setLongitude(-pointNumTwo);
+        pointDestFive.setLatitude(-pointNumTwo);
+        double distFive = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestFive);
+        Log.d(TAG, "distanceFive = " + distFive);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distFive));
 
-		Location pointDestSix = new Location("");
-		pointDestSix.setLongitude(-pointNumTwo);
-		pointDestSix.setLatitude(pointNumTwo);
+        Location pointDestSix = new Location("");
+        pointDestSix.setLongitude(-pointNumTwo);
+        pointDestSix.setLatitude(pointNumTwo);
 
-		double distSix = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestSix);
-		Log.d(TAG, "distanceSix = " + distSix);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distSix));
+        double distSix = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestSix);
+        Log.d(TAG, "distanceSix = " + distSix);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distSix));
 
-		Location pointDestSeven = new Location("");
-		pointDestSeven.setLongitude(pointNumTwo);
-		pointDestSeven.setLatitude(-pointNumTwo);
-		double distSeven = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestSeven);
-		Log.d(TAG, "distanceSeven = " + distSeven);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distSeven));
+        Location pointDestSeven = new Location("");
+        pointDestSeven.setLongitude(pointNumTwo);
+        pointDestSeven.setLatitude(-pointNumTwo);
+        double distSeven = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestSeven);
+        Log.d(TAG, "distanceSeven = " + distSeven);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distSeven));
 
-		Location pointDestEight = new Location("");
-		pointDestEight.setLongitude(pointNumTwo);
-		pointDestEight.setLatitude(pointNumTwo);
+        Location pointDestEight = new Location("");
+        pointDestEight.setLongitude(pointNumTwo);
+        pointDestEight.setLatitude(pointNumTwo);
 
-		double distEight = GeocoordinatesMath.calculateDistance(pointOne,
-				pointDestEight);
-		Log.d(TAG, "distanceEight = " + distEight);
-		Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distEight));
-	}
+        double distEight = GeoCoordinatesMath.calculateDistance(pointOne,
+                pointDestEight);
+        Log.d(TAG, "distanceEight = " + distEight);
+        Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distEight));
+    }
 
-	public boolean isExpectedWithDelta(double expected, double actual) {
-		boolean result = Math.abs(expected - actual) <= DELTA_ENV;
-		if (!result)
-			Log.d(TAG, "expected = " + expected + " actual = " + actual);
-		return result;
-	}
+    public boolean isExpectedWithDelta(double expected, double actual) {
+        boolean result = Math.abs(expected - actual) <= DELTA_ENV;
+        if (!result) {
+            Log.d(TAG, "expected = " + expected + " actual = " + actual);
+        }
+        return result;
+    }
 }

@@ -21,36 +21,18 @@
  */
 package org.wheelmap.android.fragment;
 
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-import de.akquinet.android.androlog.Log;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.ListFragment;
+import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.adapter.POIsListCursorAdapter;
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
 import org.wheelmap.android.model.DirectionCursorWrapper;
@@ -60,349 +42,407 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
-public class POIsListFragment extends SherlockListFragment implements
-		DisplayFragment, OnSearchDialogListener, OnRefreshListener<ListView>,
-		OnExecuteBundle {
-	public static final String TAG = POIsListFragment.class.getSimpleName();
-	private WorkerFragment mWorkerFragment;
-	private PullToRefreshListView mPullToRefreshListView;
-	private int mFirstVisiblePosition = 0;
-	private int mCheckedItem;
-	private boolean mFirstStart;
-	private boolean mRefreshDisabled;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.view.ViewGroup;
 
-	private DisplayFragmentListener mListener;
-	private POIsListCursorAdapter mAdapter;
-	private Cursor mCursor;
-	private Bus mBus;
+import de.akquinet.android.androlog.Log;
+import de.greenrobot.event.EventBus;
 
-	private SensorManager mSensorManager;
-	private boolean mOrientationAvailable;
-	private Sensor mSensor;
-	private DirectionCursorWrapper mDirectionCursorWrapper;
+public class POIsListFragment extends ListFragment implements
+        DisplayFragment, OnSearchDialogListener, PullToRefreshBase.OnPullEventListener<ListView>,
+        OnExecuteBundle {
 
-	public static POIsListFragment newInstance(boolean createWorker,
-											   boolean disableSearch) {
-		POIsListFragment f = new POIsListFragment();
-		Bundle b = new Bundle();
-		b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
-		b.putBoolean(Extra.DISABLE_SEARCH, disableSearch);
+    public static final String TAG = POIsListFragment.class.getSimpleName();
 
-		f.setArguments(b);
-		return f;
-	}
+    private WorkerFragment mWorkerFragment;
 
-	public POIsListFragment() {
-		super();
-		Log.d(TAG, "constructor called " + hashCode());
-	}
+    private PullToRefreshListView mPullToRefreshListView;
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+    private int mFirstVisiblePosition = 0;
 
-		if (activity instanceof DisplayFragmentListener)
-			mListener = (DisplayFragmentListener) activity;
-	}
+    private int mCheckedItem;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate " + hashCode());
-		setHasOptionsMenu(true);
+    private boolean mFirstStart;
 
-		mSensorManager = (SensorManager) getActivity().getSystemService(
-				Context.SENSOR_SERVICE);
-		// noinspection deprecation
-		mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-		mOrientationAvailable = mSensor != null;
-	}
+    private boolean mRefreshDisabled;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView " + hashCode());
+    private DisplayFragmentListener mListener;
 
-		View v = inflater.inflate(R.layout.fragment_list, container, false);
-		mPullToRefreshListView = (PullToRefreshListView) v
-				.findViewById(R.id.pull_to_refresh_listview);
-		mPullToRefreshListView.setOnRefreshListener(this);
-		mAdapter = new POIsListCursorAdapter(getActivity(), null, false);
-		mPullToRefreshListView.getRefreshableView().setAdapter(mAdapter);
+    private POIsListCursorAdapter mAdapter;
 
-		mBus = WheelmapApp.getBus();
-		mBus.register(this);
+    private Cursor mCursor;
 
-		return v;
-	}
+    private EventBus mBus;
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		Log.d(TAG, "onActivityCreated: started " + hashCode());
+    private SensorManager mSensorManager;
 
-		executeSavedInstanceState(savedInstanceState);
+    private boolean mOrientationAvailable;
 
-		Fragment fragment = null;
-		if (getArguments() == null
-				|| getArguments()
-				.getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-			FragmentManager fm = getFragmentManager();
-			fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
-			Log.d(TAG, "Found worker fragment:" + fragment);
-			if (fragment == null) {
-				fragment = new POIsListWorkerFragment();
-				fm.beginTransaction().add(fragment, POIsListWorkerFragment.TAG)
-						.commit();
-			}
+    private Sensor mSensor;
 
-		} else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-				false)) {
-			Log.d(TAG, "Connecting to Combined Worker Fragment");
-			FragmentManager fm = getFragmentManager();
-			fragment = fm.findFragmentByTag(CombinedWorkerFragment.TAG);
+    private DirectionCursorWrapper mDirectionCursorWrapper;
 
-		}
+    private boolean mUseAngloDistanceUnit;
 
-		mWorkerFragment = (WorkerFragment) fragment;
-		mWorkerFragment.registerDisplayFragment(this);
-		Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+    public static POIsListFragment newInstance(boolean createWorker,
+            boolean disableSearch) {
+        POIsListFragment f = new POIsListFragment();
+        Bundle b = new Bundle();
+        b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
+        b.putBoolean(Extra.DISABLE_SEARCH, disableSearch);
 
-		if (UtilsMisc.isTablet(getActivity()))
-			mPullToRefreshListView.getRefreshableView().setChoiceMode(
-					ListView.CHOICE_MODE_SINGLE);
-	}
+        f.setArguments(b);
+        return f;
+    }
 
-	private void executeSavedInstanceState(Bundle savedInstanceState) {
-		mFirstStart = (savedInstanceState == null);
-		if (mFirstStart)
-			return;
+    public POIsListFragment() {
+        super();
+        Log.d(TAG, "constructor called " + hashCode());
+    }
 
-		mFirstVisiblePosition = savedInstanceState.getInt(
-				Extra.FIRST_VISIBLE_POSITION, 0);
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (mOrientationAvailable)
-			mSensorManager.registerListener(mSensorEventListener, mSensor,
-					SensorManager.SENSOR_DELAY_NORMAL);
-	}
+        if (activity instanceof DisplayFragmentListener) {
+            mListener = (DisplayFragmentListener) activity;
+        }
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		if (mOrientationAvailable)
-			mSensorManager.unregisterListener(mSensorEventListener);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate " + hashCode());
+        setHasOptionsMenu(true);
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		mWorkerFragment.unregisterDisplayFragment(this);
-		mBus.unregister(this);
-	}
+        mSensorManager = (SensorManager) getActivity().getSystemService(
+                Context.SENSOR_SERVICE);
+        // noinspection deprecation
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        mOrientationAvailable = mSensor != null;
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		mFirstVisiblePosition = mPullToRefreshListView.getRefreshableView()
-				.getFirstVisiblePosition();
-		outState.putInt(Extra.FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
-		super.onSaveInstanceState(outState);
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView " + hashCode());
 
-	@Override
-	public void executeBundle(Bundle bundle) {
-		Log.d(TAG, "executeState fragment is visible = " + isVisible());
-		if (bundle == null)
-			return;
+        View v = inflater.inflate(R.layout.fragment_list, container, false);
+        mPullToRefreshListView = (PullToRefreshListView) v
+                .findViewById(R.id.pull_to_refresh_listview);
+        mPullToRefreshListView.setOnPullEventListener(this);
+        mAdapter = new POIsListCursorAdapter(getActivity(), null, false, mUseAngloDistanceUnit);
+        mPullToRefreshListView.setAdapter(mAdapter);
+        // mPullToRefreshListView.getRefreshableView().setAdapter(mAdapter);
+        if (UtilsMisc.isTablet(getActivity())) {
+            mPullToRefreshListView.getRefreshableView().setChoiceMode(
+                    ListView.CHOICE_MODE_SINGLE);
+        }
+        return v;
+    }
 
-		if (bundle.getBoolean(Extra.REQUEST, false))
-			mWorkerFragment.requestUpdate(null);
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated: started " + hashCode());
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.ab_list_fragment, menu);
-		if (getArguments().containsKey(Extra.DISABLE_SEARCH))
-			menu.removeItem(R.id.menu_search);
-	}
+        mBus = EventBus.getDefault();
+        mBus.register(this);
+        executeSavedInstanceState(savedInstanceState);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
+        Fragment fragment = null;
+        if (getArguments() == null
+                || getArguments()
+                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+            FragmentManager fm = getFragmentManager();
+            fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
+            Log.d(TAG, "Found worker fragment:" + fragment);
+            if (fragment == null) {
+                fragment = new POIsListWorkerFragment();
+                fm.beginTransaction().add(fragment, POIsListWorkerFragment.TAG)
+                        .commit();
+            }
 
-		switch (id) {
-			case R.id.menu_search:
-				showSearch();
-				return true;
-			default:
-				// noop
-		}
+        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+                false)) {
+            Log.d(TAG, "Connecting to Combined Worker Fragment");
+            FragmentManager fm = getFragmentManager();
+            fragment = fm.findFragmentByTag(CombinedWorkerFragment.TAG);
+        }
 
-		return false;
-	}
+        mWorkerFragment = (WorkerFragment) fragment;
+        mWorkerFragment.registerDisplayFragment(this);
+        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+    }
 
-	@Override
-	public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-		Log.d(TAG, "onRefresh pulled");
-		mFirstVisiblePosition = 0;
-		if (mWorkerFragment != null)
-			mWorkerFragment.requestUpdate(null);
-	}
+    private void executeSavedInstanceState(Bundle savedInstanceState) {
+        mFirstStart = (savedInstanceState == null);
+        if (mFirstStart) {
+            return;
+        }
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Cursor cursor = (Cursor) l.getAdapter().getItem(position);
-		if (cursor == null)
-			return;
+        mFirstVisiblePosition = savedInstanceState.getInt(
+                Extra.FIRST_VISIBLE_POSITION, 0);
+    }
 
-		ContentValues values = new ContentValues();
-		DatabaseUtils.cursorRowToContentValues(cursor, values);
-		if (mListener != null)
-			mListener.onShowDetail(this, values);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mOrientationAvailable) {
+            mSensorManager.registerListener(mSensorEventListener, mSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
 
-	}
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mOrientationAvailable) {
+            mSensorManager.unregisterListener(mSensorEventListener);
+        }
+    }
 
-	private void setCursor(Cursor cursor) {
-		Log.d(TAG, "setCursor cursor "
-				+ ((cursor != null) ? cursor.hashCode() : "null") + " count = "
-				+ ((cursor != null) ? cursor.getCount() : "null")
-				+ " isNewCursor = " + (cursor != mCursor));
-		if (cursor == mCursor)
-			return;
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mWorkerFragment.unregisterDisplayFragment(this);
+        mBus.unregister(this);
+    }
 
-		mCursor = cursor;
-		if (mCursor != null) {
-			mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
-		} else {
-			mDirectionCursorWrapper = null;
-		}
-		mAdapter.swapCursor(mDirectionCursorWrapper);
-		markItemClear();
-		refreshListPosition();
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        mFirstVisiblePosition = mPullToRefreshListView.getRefreshableView()
+                .getFirstVisiblePosition();
+        outState.putInt(Extra.FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
+        super.onSaveInstanceState(outState);
+    }
 
-	private void setRefreshStatus(boolean isRefreshing) {
-		if (isRefreshing)
-			mPullToRefreshListView.setRefreshing();
-		else
-			mPullToRefreshListView.onRefreshComplete();
+    @Override
+    public void executeBundle(Bundle bundle) {
+        Log.d(TAG, "executeBundle: fragment is visible = " + isVisible());
+        if (bundle == null) {
+            return;
+        }
 
-		if (mListener != null)
-			mListener.onRefreshing(isRefreshing);
-	}
+        if (bundle.getBoolean(Extra.REQUEST, false)) {
+            mWorkerFragment.requestUpdate(null);
+        }
+    }
 
-	private void refreshListPosition() {
-		if (mFirstVisiblePosition != 0) {
-			if (mFirstVisiblePosition >= mAdapter.getCount())
-				mFirstVisiblePosition = mAdapter.getCount();
-			mPullToRefreshListView.getRefreshableView().setSelection(
-					mFirstVisiblePosition);
-		}
-	}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.ab_list_fragment, menu);
+        if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
+            menu.removeItem(R.id.menu_search);
+        }
+    }
 
-	private void showSearch() {
-		FragmentManager fm = getFragmentManager();
-		SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
-				true, false);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-		searchDialog.setTargetFragment(this, 0);
-		searchDialog.show(fm, SearchDialogFragment.TAG);
-	}
+        switch (id) {
+            case R.id.menu_search:
+                showSearch();
+                return true;
+            default:
+                // noop
+        }
 
-	@Override
-	public void onSearch(Bundle bundle) {
-		mWorkerFragment.requestSearch(bundle);
-	}
+        return false;
+    }
 
-	@Override
-	public void onUpdate(WorkerFragment fragment) {
-		setCursor(fragment.getCursor(WorkerFragment.LIST_CURSOR));
-		setRefreshStatus(fragment.isRefreshing());
-		setRefreshEnabled(fragment.isSearchMode());
-	}
+    @Override
+    public void onPullEvent(final PullToRefreshBase<ListView> refreshView,
+            PullToRefreshBase.State state, Mode direction) {
+        Log.d(TAG, "onPullEvent: state = " + state);
+        if (state == PullToRefreshBase.State.MANUAL_REFRESHING
+                || state == PullToRefreshBase.State.RESET) {
+            return;
+        }
 
-	private void setRefreshEnabled(boolean refreshDisabled) {
-		if (refreshDisabled == mRefreshDisabled)
-			return;
-		mRefreshDisabled = refreshDisabled;
-		Mode mode;
-		if (refreshDisabled)
-			mode = Mode.DISABLED;
-		else
-			mode = Mode.PULL_DOWN_TO_REFRESH;
+        Log.d(TAG, "onPullEvent pulled");
+        mFirstVisiblePosition = 0;
+        if (mWorkerFragment != null) {
+            mWorkerFragment.requestUpdate(null);
+        }
+    }
 
-		mPullToRefreshListView.setMode(mode);
-	}
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Cursor cursor = (Cursor) l.getAdapter().getItem(position);
+        if (cursor == null) {
+            return;
+        }
 
-	@Subscribe
-	public void onDistanceUnitChanged(DistanceUnitChangedEvent e) {
-		Log.d(TAG, "onDistanceUnitChanged");
-		mAdapter.changeAdapter();
-	}
+        ContentValues values = new ContentValues();
+        DatabaseUtils.cursorRowToContentValues(cursor, values);
+        if (mListener != null) {
+            mListener.onShowDetail(this, values);
+        }
 
-	public void markItem(ContentValues values, boolean centerToItem) {
-		Long id = values.getAsLong(POIs.POI_ID);
-		int pos;
-		for (pos = 0; pos < mAdapter.getCount(); pos++) {
-			Cursor c = (Cursor) mAdapter.getItem(pos);
-			if (POIHelper.getId(c) == id) {
-				mCheckedItem = pos + 1;
-				mPullToRefreshListView.getRefreshableView().setItemChecked(
-						mCheckedItem, true);
+    }
 
-				break;
-			}
-		}
+    private void setCursor(Cursor cursor) {
+        UtilsMisc.dumpCursorCompare(TAG, mCursor, cursor);
+        if (cursor == mCursor) {
+            return;
+        }
 
-		mPullToRefreshListView.getRefreshableView().setSelection(
-				mPullToRefreshListView.getRefreshableView()
-						.getCheckedItemPosition());
-	}
+        mCursor = cursor;
+        if (mCursor != null) {
+            mDirectionCursorWrapper = new DirectionCursorWrapper(mCursor);
+        } else {
+            mDirectionCursorWrapper = null;
+        }
+        mAdapter.swapCursor(mDirectionCursorWrapper);
+        markItemClear();
+        refreshListPosition();
+    }
 
-	public void markItemClear() {
-		mPullToRefreshListView.getRefreshableView().setItemChecked(
-				mCheckedItem, false);
-	}
+    private void setRefreshStatus(boolean isRefreshing) {
+        Log.d(TAG, "setRefreshStates: isRefreshing = " + isRefreshing);
+        if (isRefreshing) {
+            mPullToRefreshListView.setRefreshing(true);
+        } else {
+            mPullToRefreshListView.onRefreshComplete();
+        }
 
-	private SensorEventListener mSensorEventListener = new SensorEventListener() {
-		private static final float MIN_DIRECTION_DELTA = 10;
-		private float mDirection;
+        if (mListener != null) {
+            mListener.onRefreshing(isRefreshing);
+        }
+    }
 
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			float direction = event.values[0];
-			if (direction > 180)
-				direction -= 360;
+    private void refreshListPosition() {
+        if (mFirstVisiblePosition != 0) {
+            if (mFirstVisiblePosition >= mAdapter.getCount()) {
+                mFirstVisiblePosition = mAdapter.getCount();
+            }
+            mPullToRefreshListView.getRefreshableView().setSelection(
+                    mFirstVisiblePosition);
+        }
+    }
 
-			if (isAdded())
-				direction += UtilsMisc.calcRotationOffset(getActivity()
-						.getWindowManager().getDefaultDisplay());
+    private void showSearch() {
+        FragmentManager fm = getFragmentManager();
+        SearchDialogFragment searchDialog = SearchDialogFragment.newInstance(
+                true, false);
 
-			float lastDirection = mDirection;
-			if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA)
-				return;
+        searchDialog.setTargetFragment(this, 0);
+        searchDialog.show(fm, SearchDialogFragment.TAG);
+    }
 
-			updateDirection(direction);
-			mDirection = direction;
-		}
+    @Override
+    public void onSearch(Bundle bundle) {
+        mWorkerFragment.requestSearch(bundle);
+    }
 
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    @Override
+    public void onUpdate(WorkerFragment fragment) {
+        Log.d(TAG, "onUpdate");
+        setCursor(fragment.getCursor(WorkerFragment.LIST_CURSOR));
+        setRefreshStatus(fragment.isRefreshing());
+        setRefreshEnabled(fragment.isSearchMode());
+    }
 
-		}
-	};
+    private void setRefreshEnabled(boolean refreshDisabled) {
+        if (refreshDisabled == mRefreshDisabled) {
+            return;
+        }
+        mRefreshDisabled = refreshDisabled;
+        Mode mode;
+        if (refreshDisabled) {
+            mode = Mode.DISABLED;
+        } else {
+            mode = Mode.PULL_DOWN_TO_REFRESH;
+        }
 
-	private void updateDirection(float direction) {
-		if (mDirectionCursorWrapper == null)
-			return;
+        mPullToRefreshListView.setMode(mode);
+    }
 
-		mDirectionCursorWrapper.setDeviceDirection(direction);
-		mAdapter.notifyDataSetChanged();
+    public void onEventMainThread(DistanceUnitChangedEvent e) {
+        Log.d(TAG, "onDistanceUnitChanged");
+        mUseAngloDistanceUnit = e.useAngloDistanceUnit;
+        if (mAdapter != null) {
+            mAdapter.changeAdapter(e.useAngloDistanceUnit);
+        }
+    }
 
-	}
+    public void markItem(ContentValues values, boolean centerToItem) {
+        Long id = values.getAsLong(POIs.POI_ID);
+        int pos;
+        for (pos = 0; pos < mAdapter.getCount(); pos++) {
+            Cursor c = (Cursor) mAdapter.getItem(pos);
+            if (POIHelper.getId(c) == id) {
+                mCheckedItem = pos + 1;
+                mPullToRefreshListView.getRefreshableView().setItemChecked(
+                        mCheckedItem, true);
+
+                break;
+            }
+        }
+
+        mPullToRefreshListView.getRefreshableView().setSelection(
+                mPullToRefreshListView.getRefreshableView()
+                        .getCheckedItemPosition());
+    }
+
+    public void markItemClear() {
+        mPullToRefreshListView.getRefreshableView().setItemChecked(
+                mCheckedItem, false);
+    }
+
+    private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        private static final float MIN_DIRECTION_DELTA = 10;
+
+        private float mDirection;
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float direction = event.values[0];
+            if (direction > 180) {
+                direction -= 360;
+            }
+
+            if (isAdded()) {
+                direction += UtilsMisc.calcRotationOffset(getActivity()
+                        .getWindowManager().getDefaultDisplay());
+            }
+
+            float lastDirection = mDirection;
+            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
+                return;
+            }
+
+            updateDirection(direction);
+            mDirection = direction;
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
+
+    private void updateDirection(float direction) {
+        if (mDirectionCursorWrapper == null) {
+            return;
+        }
+
+        mDirectionCursorWrapper.setDeviceDirection(direction);
+        mAdapter.notifyDataSetChanged();
+    }
 
 }
