@@ -65,6 +65,10 @@ public class POIsCursorWrapper extends CursorWrapper {
 
     @Override
     public float getFloat(int columnIndex) {
+        if ( mLocation == null) {
+            return 0f;
+        }
+
         if (columnIndex == LOCATION_COLUMN_INDEX) {
             Location target = new Location("");
             target.setLatitude(POIHelper.getLatitude(this));
@@ -74,7 +78,7 @@ public class POIsCursorWrapper extends CursorWrapper {
             Location target = new Location("");
             target.setLatitude(POIHelper.getLatitude(this));
             target.setLongitude(POIHelper.getLongitude(this));
-            return (float) mLocation.bearingTo(target);
+            return mLocation.bearingTo(target);
         } else {
             return super.getFloat(columnIndex);
         }

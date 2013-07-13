@@ -61,6 +61,7 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -147,12 +148,15 @@ public class POIsMapsforgeFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mBus = EventBus.getDefault();
 
         mSensorManager = (SensorManager) getActivity().getSystemService(
                 Context.SENSOR_SERVICE);
         // noinspection deprecation
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mOrientationAvailable = mSensor != null;
+        attachWorkerFragment();
+        // retrieveInitialLocation();
     }
 
     @Override
@@ -194,33 +198,6 @@ public class POIsMapsforgeFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Fragment fragment = null;
-        if (getArguments() == null
-                || getArguments()
-                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-            mHeightFull = true;
-            FragmentManager fm = getFragmentManager();
-            fragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
-            Log.d(TAG, "Looking for Worker Fragment:" + fragment);
-            if (fragment == null) {
-                fragment = new POIsMapWorkerFragment();
-                fm.beginTransaction()
-                        .add(fragment, POIsMapWorkerFragment.TAG)
-                        .commit();
-
-            }
-
-        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-                false)) {
-            Log.d(TAG, "Connecting to Combined Worker Fragment");
-            FragmentManager fm = getFragmentManager();
-            fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
-        }
-
-        mWorkerFragment = (WorkerFragment) fragment;
-        mWorkerFragment.registerDisplayFragment(this);
-        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
-
         if (!hasExecuteBundle()) {
             if (savedInstanceState != null) {
                 executeBundle(savedInstanceState);
@@ -233,14 +210,14 @@ public class POIsMapsforgeFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus = EventBus.getDefault();
         mBus.register(this);
+        mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mBus.post(new MyLocationManager.UnregisterEvent());
+        mBus.post(MyLocationManager.UnregisterEvent.INSTANCE);
         mBus.unregister(this);
     }
 
@@ -269,6 +246,57 @@ public class POIsMapsforgeFragment extends Fragment implements
         mWorkerFragment.unregisterDisplayFragment(this);
         WheelmapApp.getSupportManager().cleanReferences();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        removeWorkerFragment();
+    }
+
+    private void retrieveInitialLocation() {
+        MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus.getStickyEvent(MyLocationManager.LocationEvent.class);
+        mLocation = event.location;
+    }
+
+    private void attachWorkerFragment() {
+        Fragment fragment = null;
+        if (getArguments() == null
+                || getArguments()
+                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+            mHeightFull = true;
+            FragmentManager fm = getFragmentManager();
+            fragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
+            Log.d(TAG, "Looking for Worker Fragment:" + fragment);
+            if (fragment == null) {
+                fragment = new POIsMapWorkerFragment();
+                fm.beginTransaction()
+                        .add(fragment, POIsMapWorkerFragment.TAG)
+                        .commit();
+
+            }
+
+        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+                false)) {
+            Log.d(TAG, "Connecting to Combined Worker Fragment");
+            FragmentManager fm = getFragmentManager();
+            fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
+        }
+
+        mWorkerFragment = (WorkerFragment) fragment;
+        mWorkerFragment.registerDisplayFragment(this);
+        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+    }
+
+    private void removeWorkerFragment() {
+        FragmentManager fm = getFragmentManager();
+        Fragment workerFragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (workerFragment != null) {
+            ft.remove(workerFragment);
+        }
+        ft.commit();
+    }
+
 
     @Override
     public void executeBundle(Bundle bundle) {
@@ -386,6 +414,11 @@ public class POIsMapsforgeFragment extends Fragment implements
         }
 
         return false;
+    }
+
+    @Override
+    public void onRefreshStarted() {
+        // do nothing
     }
 
     @Override

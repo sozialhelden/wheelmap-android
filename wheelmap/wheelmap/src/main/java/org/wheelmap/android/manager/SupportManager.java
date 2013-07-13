@@ -197,7 +197,6 @@ public class SupportManager {
         mContext = ctx;
 
         mBus = EventBus.getDefault();
-        mBus.register(this);
 
         fMarkerDimension = mContext.getResources().getDimension(R.dimen.mapmarker_halflength);
 

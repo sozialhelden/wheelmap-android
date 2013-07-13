@@ -51,17 +51,13 @@ import android.view.WindowManager.LayoutParams;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(Activity.ADDON_SHERLOCK)
+@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailEditableActivity extends MapActivity implements
         OnPOIDetailEditableListener, OnLoginDialogListener,
         OnEditPositionListener, OnNodetypeSelectListener,
         OnBackStackChangedListener, OnWheelchairState {
 
-    private final static String TAG = POIDetailEditableActivity.class
-            .getSimpleName();
-
-    @Inject
-    roboguice.inject.ContentViewListener ignored;
+    private final static String TAG = POIDetailEditableActivity.class.getSimpleName();
 
     private Fragment mFragment;
 
@@ -200,6 +196,16 @@ public class POIDetailEditableActivity extends MapActivity implements
         mFragment = fm.findFragmentById(R.id.content);
     }
 
+    @Override
+    public void requestExternalEditedState(POIDetailEditableFragment fragment) {
+        mExternalEditableState.setInFragment(fragment);
+    }
+
+    @Override
+    public void onStoring(boolean storing) {
+        setSupportProgressBarIndeterminateVisibility(storing);
+    }
+
     public static class ExternalEditableState {
 
         WheelchairState state = null;
@@ -243,16 +249,6 @@ public class POIDetailEditableActivity extends MapActivity implements
             fragment.setNodetype(nodetype);
             fragment.setGeolocation(latitude, longitude);
         }
-    }
-
-    @Override
-    public void requestExternalEditedState(POIDetailEditableFragment fragment) {
-        mExternalEditableState.setInFragment(fragment);
-    }
-
-    @Override
-    public void onStoring(boolean storing) {
-        setSupportProgressBarIndeterminateVisibility(storing);
     }
 
 }

@@ -24,9 +24,6 @@ package org.wheelmap.android.fragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -40,6 +37,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.online.R.id;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.ContentValues;
@@ -53,6 +51,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -60,14 +59,13 @@ import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
 
 public class POIsListFragment extends ListFragment implements
-        DisplayFragment, OnSearchDialogListener, PullToRefreshBase.OnPullEventListener<ListView>,
-        OnExecuteBundle {
+        DisplayFragment, OnSearchDialogListener, OnExecuteBundle {
 
     public static final String TAG = POIsListFragment.class.getSimpleName();
 
     private WorkerFragment mWorkerFragment;
 
-    private PullToRefreshListView mPullToRefreshListView;
+    private ListView mListView;
 
     private int mFirstVisiblePosition = 0;
 
@@ -95,6 +93,43 @@ public class POIsListFragment extends ListFragment implements
 
     private boolean mUseAngloDistanceUnit;
 
+    private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        private static final float MIN_DIRECTION_DELTA = 10;
+
+        private float mDirection;
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float direction = event.values[0];
+            if (direction > 180) {
+                direction -= 360;
+            }
+
+            if (isAdded()) {
+                direction += UtilsMisc.calcRotationOffset(getActivity()
+                        .getWindowManager().getDefaultDisplay());
+            }
+
+            float lastDirection = mDirection;
+            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
+                return;
+            }
+
+            updateDirection(direction);
+            mDirection = direction;
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
+
+    public POIsListFragment() {
+        super();
+        Log.d(TAG, "constructor called " + hashCode());
+    }
+
     public static POIsListFragment newInstance(boolean createWorker,
             boolean disableSearch) {
         POIsListFragment f = new POIsListFragment();
@@ -106,11 +141,6 @@ public class POIsListFragment extends ListFragment implements
         return f;
     }
 
-    public POIsListFragment() {
-        super();
-        Log.d(TAG, "constructor called " + hashCode());
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -118,6 +148,8 @@ public class POIsListFragment extends ListFragment implements
         if (activity instanceof DisplayFragmentListener) {
             mListener = (DisplayFragmentListener) activity;
         }
+
+        Log.d(TAG, "onAttach");
     }
 
     @Override
@@ -131,6 +163,7 @@ public class POIsListFragment extends ListFragment implements
         // noinspection deprecation
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mOrientationAvailable = mSensor != null;
+        attachWorkerFragment();
     }
 
     @Override
@@ -139,15 +172,15 @@ public class POIsListFragment extends ListFragment implements
         Log.d(TAG, "onCreateView " + hashCode());
 
         View v = inflater.inflate(R.layout.fragment_list, container, false);
-        mPullToRefreshListView = (PullToRefreshListView) v
-                .findViewById(R.id.pull_to_refresh_listview);
-        mPullToRefreshListView.setOnPullEventListener(this);
+        mListView = (ListView) v.findViewById(android.R.id.list);
         mAdapter = new POIsListCursorAdapter(getActivity(), null, false, mUseAngloDistanceUnit);
-        mPullToRefreshListView.setAdapter(mAdapter);
-        // mPullToRefreshListView.getRefreshableView().setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
         if (UtilsMisc.isTablet(getActivity())) {
-            mPullToRefreshListView.getRefreshableView().setChoiceMode(
-                    ListView.CHOICE_MODE_SINGLE);
+            mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
+
+        if ( mListener != null) {
+            mListener.refreshRegisterList(mListView);
         }
         return v;
     }
@@ -160,40 +193,6 @@ public class POIsListFragment extends ListFragment implements
         mBus = EventBus.getDefault();
         mBus.register(this);
         executeSavedInstanceState(savedInstanceState);
-
-        Fragment fragment = null;
-        if (getArguments() == null
-                || getArguments()
-                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-            FragmentManager fm = getFragmentManager();
-            fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
-            Log.d(TAG, "Found worker fragment:" + fragment);
-            if (fragment == null) {
-                fragment = new POIsListWorkerFragment();
-                fm.beginTransaction().add(fragment, POIsListWorkerFragment.TAG)
-                        .commit();
-            }
-
-        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-                false)) {
-            Log.d(TAG, "Connecting to Combined Worker Fragment");
-            FragmentManager fm = getFragmentManager();
-            fragment = fm.findFragmentByTag(CombinedWorkerFragment.TAG);
-        }
-
-        mWorkerFragment = (WorkerFragment) fragment;
-        mWorkerFragment.registerDisplayFragment(this);
-        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
-    }
-
-    private void executeSavedInstanceState(Bundle savedInstanceState) {
-        mFirstStart = (savedInstanceState == null);
-        if (mFirstStart) {
-            return;
-        }
-
-        mFirstVisiblePosition = savedInstanceState.getInt(
-                Extra.FIRST_VISIBLE_POSITION, 0);
     }
 
     @Override
@@ -221,11 +220,62 @@ public class POIsListFragment extends ListFragment implements
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        removeWorkerFragment();
+    }
+
+    private void attachWorkerFragment() {
+        Fragment fragment = null;
+        if (getArguments() == null
+                || getArguments()
+                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+            FragmentManager fm = getFragmentManager();
+            fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
+            Log.d(TAG, "Found worker fragment:" + fragment);
+            if (fragment == null) {
+                fragment = new POIsListWorkerFragment();
+                fm.beginTransaction().add(fragment, POIsListWorkerFragment.TAG)
+                        .commit();
+            }
+
+        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+                false)) {
+            Log.d(TAG, "Connecting to Combined Worker Fragment");
+            FragmentManager fm = getFragmentManager();
+            fragment = fm.findFragmentByTag(CombinedWorkerFragment.TAG);
+        }
+
+        mWorkerFragment = (WorkerFragment) fragment;
+        mWorkerFragment.registerDisplayFragment(this);
+        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+    }
+
+    private void removeWorkerFragment() {
+        FragmentManager fm = getFragmentManager();
+        Fragment workerFragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (workerFragment != null) {
+            ft.remove(workerFragment);
+        }
+        ft.commit();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
-        mFirstVisiblePosition = mPullToRefreshListView.getRefreshableView()
-                .getFirstVisiblePosition();
+        mFirstVisiblePosition = mListView.getFirstVisiblePosition();
         outState.putInt(Extra.FIRST_VISIBLE_POSITION, mFirstVisiblePosition);
         super.onSaveInstanceState(outState);
+    }
+
+    private void executeSavedInstanceState(Bundle savedInstanceState) {
+        mFirstStart = (savedInstanceState == null);
+        if (mFirstStart) {
+            return;
+        }
+
+        mFirstVisiblePosition = savedInstanceState.getInt(
+                Extra.FIRST_VISIBLE_POSITION, 0);
     }
 
     @Override
@@ -256,6 +306,9 @@ public class POIsListFragment extends ListFragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
+            case R.id.menu_refresh:
+                onRefreshStarted();
+                return true;
             default:
                 // noop
         }
@@ -263,16 +316,8 @@ public class POIsListFragment extends ListFragment implements
         return false;
     }
 
-    @Override
-    public void onPullEvent(final PullToRefreshBase<ListView> refreshView,
-            PullToRefreshBase.State state, Mode direction) {
-        Log.d(TAG, "onPullEvent: state = " + state);
-        if (state == PullToRefreshBase.State.MANUAL_REFRESHING
-                || state == PullToRefreshBase.State.RESET) {
-            return;
-        }
-
-        Log.d(TAG, "onPullEvent pulled");
+    public void onRefreshStarted() {
+        Log.d(TAG, "onRefreshStarted pulled");
         mFirstVisiblePosition = 0;
         if (mWorkerFragment != null) {
             mWorkerFragment.requestUpdate(null);
@@ -314,11 +359,6 @@ public class POIsListFragment extends ListFragment implements
 
     private void setRefreshStatus(boolean isRefreshing) {
         Log.d(TAG, "setRefreshStates: isRefreshing = " + isRefreshing);
-        if (isRefreshing) {
-            mPullToRefreshListView.setRefreshing(true);
-        } else {
-            mPullToRefreshListView.onRefreshComplete();
-        }
 
         if (mListener != null) {
             mListener.onRefreshing(isRefreshing);
@@ -330,8 +370,7 @@ public class POIsListFragment extends ListFragment implements
             if (mFirstVisiblePosition >= mAdapter.getCount()) {
                 mFirstVisiblePosition = mAdapter.getCount();
             }
-            mPullToRefreshListView.getRefreshableView().setSelection(
-                    mFirstVisiblePosition);
+            mListView.setSelection(mFirstVisiblePosition);
         }
     }
 
@@ -341,7 +380,7 @@ public class POIsListFragment extends ListFragment implements
                 true, false);
 
         searchDialog.setTargetFragment(this, 0);
-        searchDialog.show(fm, SearchDialogFragment.TAG);
+        searchDialog.show(fm);
     }
 
     @Override
@@ -358,18 +397,10 @@ public class POIsListFragment extends ListFragment implements
     }
 
     private void setRefreshEnabled(boolean refreshDisabled) {
-        if (refreshDisabled == mRefreshDisabled) {
-            return;
-        }
-        mRefreshDisabled = refreshDisabled;
-        Mode mode;
-        if (refreshDisabled) {
-            mode = Mode.DISABLED;
-        } else {
-            mode = Mode.PULL_DOWN_TO_REFRESH;
+        if ( mListener != null) {
+            mListener.onRefreshEnabled(!refreshDisabled);
         }
 
-        mPullToRefreshListView.setMode(mode);
     }
 
     public void onEventMainThread(DistanceUnitChangedEvent e) {
@@ -387,54 +418,19 @@ public class POIsListFragment extends ListFragment implements
             Cursor c = (Cursor) mAdapter.getItem(pos);
             if (POIHelper.getId(c) == id) {
                 mCheckedItem = pos + 1;
-                mPullToRefreshListView.getRefreshableView().setItemChecked(
+                mListView.setItemChecked(
                         mCheckedItem, true);
 
                 break;
             }
         }
 
-        mPullToRefreshListView.getRefreshableView().setSelection(
-                mPullToRefreshListView.getRefreshableView()
-                        .getCheckedItemPosition());
+        mListView.setSelection(mListView.getCheckedItemPosition());
     }
 
     public void markItemClear() {
-        mPullToRefreshListView.getRefreshableView().setItemChecked(
-                mCheckedItem, false);
+        mListView.setItemChecked(mCheckedItem, false);
     }
-
-    private SensorEventListener mSensorEventListener = new SensorEventListener() {
-        private static final float MIN_DIRECTION_DELTA = 10;
-
-        private float mDirection;
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            float direction = event.values[0];
-            if (direction > 180) {
-                direction -= 360;
-            }
-
-            if (isAdded()) {
-                direction += UtilsMisc.calcRotationOffset(getActivity()
-                        .getWindowManager().getDefaultDisplay());
-            }
-
-            float lastDirection = mDirection;
-            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
-                return;
-            }
-
-            updateDirection(direction);
-            mDirection = direction;
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
 
     private void updateDirection(float direction) {
         if (mDirectionCursorWrapper == null) {
@@ -444,5 +440,4 @@ public class POIsListFragment extends ListFragment implements
         mDirectionCursorWrapper.setDeviceDirection(direction);
         mAdapter.notifyDataSetChanged();
     }
-
 }

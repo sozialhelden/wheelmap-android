@@ -25,6 +25,7 @@ package org.wheelmap.android.modules;
 import com.google.inject.Inject;
 
 import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
+import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -42,7 +43,7 @@ public class UserCredentials implements ICredentials {
     private static final String PREFS_NAME = "credentials";
 
     // anonymous API key for changing wheelchair state (no access to OSM data)
-    protected static final String ANONYMOUNS_ACCESS_API_KEY = "jWeAsb34CJq4yVAryjtc";
+    protected static String ANONYMOUNS_ACCESS_API_KEY;
 
 
     private String mApiKey;
@@ -56,6 +57,7 @@ public class UserCredentials implements ICredentials {
     @Inject
     public UserCredentials(Context context) {
         mContext = context;
+        ANONYMOUNS_ACCESS_API_KEY = context.getString(R.string.wheelmap_common_apikey);
         load();
     }
 

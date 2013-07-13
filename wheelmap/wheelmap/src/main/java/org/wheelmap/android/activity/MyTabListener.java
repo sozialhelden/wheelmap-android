@@ -32,12 +32,15 @@ import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
+import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import de.akquinet.android.androlog.Log;
 
@@ -49,11 +52,9 @@ public class MyTabListener implements TabListener {
 
     public final static int TAB_MAP = 1;
 
-    private final static ArrayList<TabHolder> sIndexToTab;
+    private final static Map<String, TabHolder> sTagToTabHolder;
 
     private final Activity mActivity;
-
-    private Fragment mFragment;
 
     private OnStateListener mListener;
 
@@ -70,20 +71,27 @@ public class MyTabListener implements TabListener {
         }
     }
 
+    public TabHolder getTabHolder( String tag ) {
+        return sTagToTabHolder.get(tag);
+    }
+
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        TabHolder holder = sIndexToTab.get(tab.getPosition());
+        TabHolder holder = sTagToTabHolder.get(tab.getTag());
         Log.d(TAG, "onTabSelected tag = " + holder.tag);
 
-        if (mFragment == null) {
-            mFragment = Fragment.instantiate(holder.clazz, new Bundle());
-            ft.replace(android.R.id.content, mFragment, holder.tag).commit();
-        } else {
-            Log.d(TAG, "Fragment mFragment = " + mFragment.toString());
+        FragmentManager fm = mActivity.getSupportFragmentManager();
+        if (holder.fragment == null) {
+            Log.d( TAG, "Instantiating holder fragment");
+            holder.fragment = Fragment.instantiate( holder.clazz, new Bundle());
         }
+        Log.d(TAG, "Fragment holder.fragment = " + holder.fragment.toString());
+        FragmentTransaction t = fm.beginTransaction();
+        t.replace(R.id.content, holder.fragment, holder.tag);
+        t.commit();
 
-        if (holder.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
+        if (holder.hasExecuteBundle() && holder.fragment instanceof OnExecuteBundle) {
             Log.d(TAG, "onTabSelected: executing bundle");
-            ((OnExecuteBundle) mFragment).executeBundle(holder.getExecuteBundle());
+            ((OnExecuteBundle) holder.fragment).executeBundle(holder.getExecuteBundle());
         }
 
         if (mListener != null) {
@@ -92,37 +100,28 @@ public class MyTabListener implements TabListener {
     }
 
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-        TabHolder holder = sIndexToTab.get(tab.getPosition());
+        TabHolder holder = sTagToTabHolder.get(tab.getTag());
         Log.d(TAG, "onTabUnselected: tag = " + holder.tag);
-        if (mFragment == null) {
+        if (holder.fragment == null) {
             return;
         }
 
         Log.d(TAG, "removing tab");
-        ft.remove(mFragment);
-
-        FragmentManager fm = mActivity.getSupportFragmentManager();
-        Fragment workerFragment = (Fragment) fm.findFragmentByTag(holder.workerTag);
-        if (workerFragment != null) {
-            ft.remove(workerFragment);
-        }
-
-        ft.commit();
-        mFragment = null;
+        ft.remove(holder.fragment);
     }
 
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
-        TabHolder holder = sIndexToTab.get(tab.getPosition());
+        TabHolder holder = sTagToTabHolder.get(tab.getTag());
         Log.d(TAG, "onTabReselected: tag = " + holder.tag);
 
-        if (holder.hasExecuteBundle() && mFragment instanceof OnExecuteBundle) {
+        if (holder.hasExecuteBundle() && holder.fragment instanceof OnExecuteBundle) {
             Log.d(TAG, "onTabReselected: executing bundle");
-            ((OnExecuteBundle) mFragment).executeBundle(holder.getExecuteBundle());
+            ((OnExecuteBundle) holder.fragment).executeBundle(holder.getExecuteBundle());
         }
     }
 
-    public TabHolder getHolder(int index) {
-        return sIndexToTab.get(index);
+    public static TabHolder getHolder(String tag) {
+        return sTagToTabHolder.get(tag);
     }
 
     public interface OnStateListener {
@@ -132,18 +131,28 @@ public class MyTabListener implements TabListener {
 
     public static class TabHolder {
 
-        public Class<? extends Fragment> clazz;
+        public final Class<? extends Fragment> clazz;
 
-        public String tag;
+        public Fragment fragment;
 
-        public String workerTag;
+        public final int position;
+
+        public final String tag;
+
 
         private Bundle bundle;
 
-        public TabHolder(Class<? extends Fragment> clazz, String tag, String workerTag) {
+        private boolean active;
+
+        public TabHolder(Class<? extends Fragment> clazz, int position, String tag, boolean active) {
             this.clazz = clazz;
             this.tag = tag;
-            this.workerTag = workerTag;
+            this.position = position;
+            this.active = active;
+        }
+
+        public void setActive( boolean active ) {
+            this.active = active;
         }
 
         public Bundle getExecuteBundle() {
@@ -159,15 +168,26 @@ public class MyTabListener implements TabListener {
         public boolean hasExecuteBundle() {
             return bundle != null;
         }
+
+        public static TabHolder findActiveHolderByTab(int selectedTab) {
+            for( Entry<String, TabHolder> tabEntry: sTagToTabHolder.entrySet()) {
+                TabHolder holder = tabEntry.getValue();
+                if ( holder.active && holder.position == selectedTab) {
+                    return holder;
+                }
+            }
+
+            return null;
+        }
     }
 
     static {
-        sIndexToTab = new ArrayList<TabHolder>();
-        sIndexToTab.add(new TabHolder(POIsListFragment.class, POIsListFragment.TAG,
-                POIsListWorkerFragment.TAG));
-        sIndexToTab.add(new TabHolder(POIsMapsforgeFragment.class, POIsMapsforgeFragment.TAG,
-                POIsMapWorkerFragment.TAG));
-        sIndexToTab.add(new TabHolder(POIsOsmdroidFragment.class, POIsOsmdroidFragment.TAG,
-                POIsMapWorkerFragment.TAG));
+        sTagToTabHolder = new HashMap<String, TabHolder>();
+        sTagToTabHolder.put(POIsListFragment.TAG,
+                new TabHolder(POIsListFragment.class, 0, POIsListFragment.TAG, true));
+        sTagToTabHolder.put(POIsMapsforgeFragment.TAG,
+                new TabHolder(POIsMapsforgeFragment.class, 1, POIsMapsforgeFragment.TAG, false));
+        sTagToTabHolder.put(POIsOsmdroidFragment.TAG,
+                new TabHolder(POIsOsmdroidFragment.class, 1, POIsOsmdroidFragment.TAG, true));
     }
 }

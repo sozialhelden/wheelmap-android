@@ -190,4 +190,5 @@
     <string name="ws_limited_title">Partly wheelchair accessible</string>
     <string name="ws_unknown">Unknown: Help us and mark this location.</string>
     <string name="ws_unknown_title">Unknown Status</string>
+    <string name="menu_refresh">Refresh</string>
 </resources>

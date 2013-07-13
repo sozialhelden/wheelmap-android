@@ -75,6 +75,7 @@ import android.widget.TextView;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
+import roboguice.inject.ContentViewListener;
 import roboguice.inject.InjectView;
 
 public class POIDetailEditableFragment extends Fragment implements
@@ -90,6 +91,9 @@ public class POIDetailEditableFragment extends Fragment implements
     private static final int DIALOG_ID_NEWPOI = 1;
 
     private static final int DIALOG_ID_NETWORK_ERROR = 2;
+
+    @Inject
+    public ContentViewListener ignored;
 
     @Inject
     private ICredentials mCredentials;

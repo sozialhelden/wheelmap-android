@@ -24,6 +24,10 @@ public class MFMapView implements IMapView {
         mMapView = pMapView;
     }
 
+    public int getId() {
+        return mMapView.getId();
+    }
+
     public MFMapView(final Context pContext) {
         this(new org.mapsforge.android.maps.MapView(pContext));
     }

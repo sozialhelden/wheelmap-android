@@ -81,11 +81,13 @@ public class MyLocationManager {
     }
 
     public static class RegisterEvent {
+        public static final RegisterEvent INSTANCE = new RegisterEvent();
 
     }
 
     public static class UnregisterEvent {
 
+        public static final UnregisterEvent INSTANCE = new UnregisterEvent();
     }
 
     private MyLocationManager(Context context) {
@@ -128,7 +130,8 @@ public class MyLocationManager {
         sInstance = null;
     }
 
-    public void register() {
+    public void onEventMainThread(RegisterEvent e) {
+        Log.d(TAG, "onRegisterEvent: entity registered" );
         mSubscriber++;
 
         if (mSubscriber > 0) {
@@ -136,7 +139,9 @@ public class MyLocationManager {
         }
     }
 
-    public void unregister(UnregisterEvent e) {
+    public void onEventMainThread(UnregisterEvent e) {
+        Log.d(TAG, "onUnregisterEvent: entity unregistered" );
+
         mSubscriber--;
 
         if (mSubscriber > 0) {
@@ -273,9 +278,10 @@ public class MyLocationManager {
         }
     }
 
-    public void updateLocation(Location location) {
+    private void updateLocation(Location location) {
+        Log.d( TAG, "updateLocation: " + location);
         mCurrentBestLocation = location;
-        mBus.post(new LocationEvent(mCurrentBestLocation));
+        mBus.postSticky(new LocationEvent(mCurrentBestLocation));
     }
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;

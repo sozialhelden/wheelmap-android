@@ -31,4 +31,6 @@ public interface DisplayFragment {
 
     public void markItem(ContentValues values, boolean centerToItem);
 
+    public void onRefreshStarted();
+
 }

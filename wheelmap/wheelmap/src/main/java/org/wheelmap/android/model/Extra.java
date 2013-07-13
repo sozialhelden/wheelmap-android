@@ -71,6 +71,10 @@ public interface Extra {
     public final static String MOVABLE_VISIBLE = "MOVABLE_VISIBLE";
 
     public final static String IS_RESTARTED = "IS_RESTARTED";
+    /**
+     * Name of the File which is read to get the server url
+     */
+    String APP_PROPERTIES_ASSETS_FILE_NAME = "application.properties";
 
     public interface What {
 

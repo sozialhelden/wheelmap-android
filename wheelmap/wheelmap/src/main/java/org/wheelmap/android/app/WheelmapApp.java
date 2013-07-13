@@ -21,8 +21,8 @@
  */
 package org.wheelmap.android.app;
 
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
+import com.bugsense.trace.BugSenseHandler;
+
 import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.addon.AddonMyRoboguice;
 import org.holoeverywhere.app.Application;
@@ -49,20 +49,43 @@ import roboguice.RoboGuice;
 // v0.9 @ReportsCrashes(formKey = "dEl3ZHFJUkxYZnplcDRoN0RUZGNCUXc6MQ")
 // v0.99 @ReportsCrashes(formKey = "dDdKSUloUldNQlBVR3dWbG1FVU1xbEE6MQ")
 
-@ReportsCrashes(formUri = "http://www.bugsense.com/api/acra?api_key=56cc8f6f", formKey = "")
+// Bugsense Key for Sozialhelden Account: 56cc8f6f
+
 public class WheelmapApp extends Application {
 
     private final static String TAG = WheelmapApp.class.getSimpleName();
-
-    private static WheelmapApp INSTANCE;
-
-    private SupportManager mSupportManager;
 
     private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
 
     private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
 
-    private boolean isAcraInitCalled;
+    private static WheelmapApp INSTANCE;
+
+    private SupportManager mSupportManager;
+
+    private boolean isBugsenseInitCalled;
+
+    public static Context get() {
+        return INSTANCE.getApplicationContext();
+    }
+
+    public static WheelmapApp getApp() {
+        return INSTANCE;
+    }
+
+    public static SupportManager getSupportManager() {
+        if (INSTANCE == null || INSTANCE.mSupportManager == null) {
+            throw new NullPointerException(
+
+                    "instance is null or mSupportManager is null - need to terminated");
+        }
+
+        return INSTANCE.mSupportManager;
+    }
+
+    static {
+        HoloEverywhere.DEBUG = true;
+    }
 
     @Override
     public void onCreate() {
@@ -73,9 +96,9 @@ public class WheelmapApp extends Application {
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
         Log.d(TAG, "onCreate: creating App");
 
-        if (!getResources().getBoolean(R.bool.developbuild) && !isAcraInitCalled) {
-            ACRA.init(this);
-            isAcraInitCalled = true;
+        if (!getResources().getBoolean(R.bool.developbuild) && !isBugsenseInitCalled) {
+            BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));
+            isBugsenseInitCalled = true;
         }
 
         Support.init(getApplicationContext());
@@ -100,30 +123,8 @@ public class WheelmapApp extends Application {
         Log.d("lowmemory", "wheelmap app - onLowMemory");
     }
 
-    public static Context get() {
-        return INSTANCE.getApplicationContext();
-    }
-
-    public static WheelmapApp getApp() {
-        return INSTANCE;
-    }
-
-    public boolean isAcraInitCalled() {
-        return isAcraInitCalled;
-    }
-
-    public static SupportManager getSupportManager() {
-        if (INSTANCE == null || INSTANCE.mSupportManager == null) {
-            throw new NullPointerException(
-
-                    "instance is null or mSupportManager is null - need to terminated");
-        }
-
-        return INSTANCE.mSupportManager;
-    }
-
-    static {
-        HoloEverywhere.DEBUG = true;
+    public boolean isBugsenseInitCalled() {
+        return isBugsenseInitCalled;
     }
 
 }

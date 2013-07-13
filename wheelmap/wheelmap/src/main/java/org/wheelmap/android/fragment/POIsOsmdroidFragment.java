@@ -49,6 +49,7 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.online.R.string;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -67,6 +68,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -80,6 +82,18 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     public final static String TAG = POIsOsmdroidFragment.class
             .getSimpleName();
+
+    private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
+
+    private static final byte ZOOMLEVEL_MIN = 16;
+
+    private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
+
+    private static String baseUrl = "http://a.tiles.mapbox.com/v3/%s/";
+
+    private static String tileUrl;
+
+    private OnlineTileSourceBase mMapBoxTileSource;
 
     private WorkerFragment mWorkerFragment;
 
@@ -105,18 +119,6 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private int oldZoomLevel = MAP_ZOOM_DEFAULT;
 
-    private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
-
-    private static final byte ZOOMLEVEL_MIN = 16;
-
-    private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
-
-    private final OnlineTileSourceBase MAPBOX =
-            new XYTileSource("Mapbox", null, 3, 21, 256, ".png", tileUrl);
-
-    // private static final String tileUr = "http://a.tiles.mapbox.com/v3/chilibeta.map-knq7846c/";
-    private static final String tileUrl = "http://s.tiles.mapbox.com/v3/sozialhelden.map-iqt6py1k/";
-
     private Cursor mCursor;
 
     private SensorManager mSensorManager;
@@ -129,6 +131,14 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private EventBus mBus;
 
+    private boolean mDeferredInitialPosition;
+
+    private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
+
+    public POIsOsmdroidFragment() {
+        // noop
+    }
+
     public static POIsOsmdroidFragment newInstance(boolean createWorker,
             boolean disableSearch) {
         POIsOsmdroidFragment f = new POIsOsmdroidFragment();
@@ -138,10 +148,6 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         f.setArguments(b);
         return f;
-    }
-
-    public POIsOsmdroidFragment() {
-        // noop
     }
 
     @Override
@@ -157,11 +163,17 @@ public class POIsOsmdroidFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        tileUrl = String.format( baseUrl, getString(string.mapbox_key));
+        mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", tileUrl);
+        mBus = EventBus.getDefault();
+
         mSensorManager = (SensorManager) getActivity().getSystemService(
                 Context.SENSOR_SERVICE);
         // noinspection deprecation
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mOrientationAvailable = mSensor != null;
+        attachWorkerFragment();
+        retrieveInitialLocation();
     }
 
     @Override
@@ -172,7 +184,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                 .inflate(R.layout.fragment_osmdroid, container, false);
 
         mMapView = (MapView) v.findViewById(R.id.map);
-        mMapView.setTileSource(MAPBOX);
+        mMapView.setTileSource(mMapBoxTileSource);
         setHardwareAccelerationOff();
 
         // mMapView.setClickable(true);
@@ -195,34 +207,6 @@ public class POIsOsmdroidFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Fragment fragment = null;
-        if (getArguments() == null
-                || getArguments()
-                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-            mHeightFull = true;
-            FragmentManager fm = getFragmentManager();
-            fragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
-            Log.d(TAG, "Looking for Worker Fragment:" + fragment);
-            if (fragment == null) {
-                fragment = new POIsMapWorkerFragment();
-                fm.beginTransaction()
-                        .add(fragment, POIsMapWorkerFragment.TAG)
-                        .commit();
-
-            }
-
-        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-                false)) {
-            Log.d(TAG, "Connecting to Combined Worker Fragment");
-            FragmentManager fm = getFragmentManager();
-            fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
-        }
-
-        mWorkerFragment = (WorkerFragment) fragment;
-        mWorkerFragment.registerDisplayFragment(this);
-        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
-
         ((MapActivity) getActivity()).registerMapView(mMapView);
         executeConfig(savedInstanceState);
     }
@@ -230,8 +214,8 @@ public class POIsOsmdroidFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus = EventBus.getDefault();
         mBus.register(this);
+        mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
     }
 
     @Override
@@ -267,6 +251,57 @@ public class POIsOsmdroidFragment extends Fragment implements
         WheelmapApp.getSupportManager().cleanReferences();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        removeWorkerFragment();
+    }
+
+    private void retrieveInitialLocation() {
+        MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
+                .getStickyEvent(MyLocationManager.LocationEvent.class);
+        mLocation = event.location;
+    }
+
+    private void attachWorkerFragment() {
+        Fragment fragment = null;
+        if (getArguments() == null
+                || getArguments()
+                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
+            mHeightFull = true;
+            FragmentManager fm = getFragmentManager();
+            fragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
+            Log.d(TAG, "Looking for Worker Fragment:" + fragment);
+            if (fragment == null) {
+                fragment = new POIsMapWorkerFragment();
+                fm.beginTransaction()
+                        .add(fragment, POIsMapWorkerFragment.TAG)
+                        .commit();
+
+            }
+
+        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
+                false)) {
+            Log.d(TAG, "Connecting to Combined Worker Fragment");
+            FragmentManager fm = getFragmentManager();
+            fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
+        }
+
+        mWorkerFragment = (WorkerFragment) fragment;
+        mWorkerFragment.registerDisplayFragment(this);
+        Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
+    }
+
+    private void removeWorkerFragment() {
+        FragmentManager fm = getFragmentManager();
+        Fragment workerFragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (workerFragment != null) {
+            ft.remove(workerFragment);
+        }
+        ft.commit();
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setHardwareAccelerationOff() {
         // Turn off hardware acceleration here, or in manifest
@@ -291,6 +326,10 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
 
         Log.d(TAG, "executeConfig: initialized from defaults");
+        if (mLocation == null) {
+            mDeferredInitialPosition = true;
+            return;
+        }
         executeMapPositioning(new GeoPoint(mLocation), MAP_ZOOM_DEFAULT);
     }
 
@@ -373,7 +412,6 @@ public class POIsOsmdroidFragment extends Fragment implements
                 });
     }
 
-
     private void executeMapPositioning(GeoPoint geoPoint, int zoom) {
         if (geoPoint != null) {
             centerMap(geoPoint, true);
@@ -416,6 +454,11 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
 
         return false;
+    }
+
+    @Override
+    public void onRefreshStarted() {
+        // do nothing
     }
 
     @Override
@@ -554,7 +597,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                 false, true);
 
         searchDialog.setTargetFragment(this, 0);
-        searchDialog.show(fm, SearchDialogFragment.TAG);
+        searchDialog.show(fm);
     }
 
     @Override
@@ -580,7 +623,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         GeoPoint geoPoint = new GeoPoint(mLocation.getLatitude(),
                 mLocation.getLongitude());
 
-        if (mMapView != null && !isCentered) {
+        if (mMapView != null && (mDeferredInitialPosition || !isCentered)) {
             centerMap(geoPoint, false);
         }
 
@@ -601,8 +644,6 @@ public class POIsOsmdroidFragment extends Fragment implements
             centerMap(point, true);
         }
     }
-
-    private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
     private class MyLocationProvider implements IMyLocationProvider, SensorEventListener {
 

@@ -16,8 +16,8 @@ limitations under the License.
 -->
 
 <!--
-  THIS FILE IS AUTO GENERATION DURING MAVEN BUILD.
-  CHANGES HAVE TO BE DONE IN THE resources DIRECTORY.
+  THIS FILE IS AUTO GENERATED DURING MAVEN BUILD.
+  CHANGES HAVE TO BE DONE IN THE resources/android DIRECTORY.
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"

@@ -11,5 +11,7 @@
     <bool name="developbuild">${app.developbuild}</bool>
 
     <string name="versionName">${app.version.name}</string>
-
+    <string name="wheelmap_common_apikey">${wheelmap.common.apikey}</string>
+    <string name="mapbox_key">${mapbox.key}</string>
+    <string name="bugsense_key">${bugsense.key}</string>
 </resources>

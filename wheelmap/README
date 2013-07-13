@@ -3,20 +3,28 @@ The android maven plugin needs at least maven version >= 3.0.3
 
 Android apklib maven dependencies cant be automatically included into Eclipse, and
 Eclipse shows errors. Therefore its need to manually include apklib sources as
-regular Android Library Projects. 
+regular Android Library Projects. Look into the dependencies of the modules for the concrete apklibs.
 
-The needed projects are:
-https://github.com/JakeWharton/ActionBarSherlock.git
-https://github.com/chrisbanes/Android-PullToRefresh.git
-https://github.com/ChristopheVersieux/HoloEverywhere.git
+For services, that are used by the app, you need either appropriate credentials or remove these
+parts of the code.
+
+The credentials are included via generated string resources. All you need is to put the right values
+into the /wheelmap/credentials.properties file
+
+These are the entries in the properties file:
+mapbox.key=<mapbox_user>.map-<token>
+wheelmap.common.apikey=<wheelmap_apikey_used_for_basic_trieval_and_tagging>
+bugsense.key.testing=<bugsense_key_used_for_testing_profiles>
+bugsense.key.production=<bugsense_key_used_for_the_production_profile>
 
 In the top level directory
 --------------------------
+
 mvn install -P<profile>
     - compiles and builds in the wheelmap subdir
     - builds and executes integration tests in the wheelmap-it subdir
     - The default build configuration is develop, see the pom for details about its configuration
-      Other build config profiles are available: staging, life, production
+      Other build config profiles are available: staging, live, production
 
     - <x>-with/without-ga switches the googleanalytics on and off. Per default, no analytics is included
     - for a production build an alternative-signature is enforced - you need to also specify the alternative-signature profile
@@ -50,15 +58,15 @@ mvn android:run
   - the (installed) apk is executed on the available device
 
 mvn license:update-file-header
-  - an update of the copyright headers is done 
+  - an update of the copyright headers is done
 
 mvn clean install ghDownloads:upload
   - uploads apk to github
-  - needs a settings.xml with auth-information 
+  - needs a settings.xml with auth-information
     see: http://github.com/github/maven-plugins
 
 In the subdirectory (module) wheelmap-it
 -------------------------------
 mvn integration-test -P<profile>
-  - executes the instrumentation tests, the wheelmap.apk needs to be installed for that 
+  - executes the instrumentation tests, the wheelmap.apk needs to be installed for that
   - requires one of the profiles as in the parent directory

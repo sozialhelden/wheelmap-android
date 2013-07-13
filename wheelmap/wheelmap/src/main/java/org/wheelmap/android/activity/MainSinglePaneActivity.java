@@ -29,13 +29,16 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
+import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.fragment.DisplayFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
+import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -55,17 +58,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 @Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class MainSinglePaneActivity extends MapActivity implements
-        DisplayFragmentListener, WorkerFragmentListener, OnStateListener {
+        DisplayFragmentListener, WorkerFragmentListener, OnStateListener,
+        PullToRefreshAttacher.OnRefreshListener {
 
-    private static final String TAG = MainSinglePaneActivity.class
-            .getSimpleName();
+    private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
 
 
     @Inject
@@ -79,19 +84,22 @@ public class MainSinglePaneActivity extends MapActivity implements
 
     private TrackerWrapper mTrackerWrapper;
 
-
     public boolean mFirstStart;
+
+    private PullToRefreshAttacher mPullToRefreshHelper;
+
+    private TabHolder mActiveTabHolder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // FragmentManager.enableDebugLogging(true);
+        setContentView(R.layout.activity_frame_empty);
+        FragmentManager.enableDebugLogging(true);
 
         mTrackerWrapper = new TrackerWrapper(this);
 
@@ -108,30 +116,17 @@ public class MainSinglePaneActivity extends MapActivity implements
                 .setIcon(
                         getResources().getDrawable(
                                 R.drawable.ic_location_list_wheelmap))
-                .setTag(mTabListener.getHolder(MyTabListener.TAB_LIST).tag)
+                .setTag(POIsListFragment.TAG)
                 .setTabListener(mTabListener);
         actionBar.addTab(tab, MyTabListener.TAB_LIST, false);
 
-		/*
-        tab = actionBar
-				.newTab()
-				.setText(R.string.title_pois_map)
-				.setIcon(
-						getResources().getDrawable(
-								R.drawable.ic_location_map_wheelmap))
-
-				.setTag(mIndexToTab.get(TAB_MAP).name)
-				.setTag(mTabListener.getHolder(MyTabListener.TAB_MAP).tag)
-				.setTabListener(mTabListener);
-		actionBar.addTab(tab, MyTabListener. TAB_MAP, false);
-		*/
         tab = actionBar
                 .newTab()
                 .setText(R.string.title_pois_map)
                 .setIcon(
                         getResources().getDrawable(
                                 R.drawable.ic_location_map_wheelmap))
-                .setTag(mTabListener.getHolder(MyTabListener.TAB_MAP).tag)
+                .setTag(POIsOsmdroidFragment.TAG)
                 .setTabListener(mTabListener);
         actionBar.addTab(tab, MyTabListener.TAB_MAP, false);
 
@@ -141,6 +136,13 @@ public class MainSinglePaneActivity extends MapActivity implements
             executeDefaultInstanceState();
         }
 
+        configureRefresh();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -170,7 +172,9 @@ public class MainSinglePaneActivity extends MapActivity implements
         mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
         mFirstStart = false;
 
-        mTabListener.getHolder(mSelectedTab).setExecuteBundle(state);
+        TabHolder holder = TabHolder.findActiveHolderByTab(mSelectedTab);
+        holder.setExecuteBundle(state);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSelectedNavigationItem(mSelectedTab);
     }
@@ -179,7 +183,10 @@ public class MainSinglePaneActivity extends MapActivity implements
         mSelectedTab = DEFAULT_SELECTED_TAB;
         mFirstStart = true;
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setSelectedNavigationItem(mSelectedTab);
+        Log.d( TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
+        if ( actionBar.getSelectedNavigationIndex() != mSelectedTab) {
+            actionBar.setSelectedNavigationItem(mSelectedTab);
+        }
     }
 
     public void onStateChange(String tag) {
@@ -188,6 +195,7 @@ public class MainSinglePaneActivity extends MapActivity implements
         }
 
         Log.d(TAG, "onStateChange " + tag);
+        mActiveTabHolder = mTabListener.getTabHolder(tag);
 
         mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
         String readableName = tag.replaceAll("Fragment", "");
@@ -200,6 +208,24 @@ public class MainSinglePaneActivity extends MapActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(Extra.SELECTED_TAB, mSelectedTab);
         super.onSaveInstanceState(outState);
+    }
+
+    private void configureRefresh() {
+        // As we're modifying some of the options, create an instance of
+        // PullToRefreshAttacher.Options
+        PullToRefreshAttacher.Options ptrOptions = new PullToRefreshAttacher.Options();
+
+        // Here we make the refresh scroll distance to 75% of the GridView height
+        ptrOptions.refreshScrollDistance = 0.75f;
+
+        // Here we customise the animations which are used when showing/hiding the header view
+        // ptrOptions.headerInAnimation = R.anim.slide_in_top;
+        // ptrOptions.headerOutAnimation = R.anim.slide_out_top;
+
+        // Here we define a custom header layout which will be inflated and used
+        ptrOptions.headerLayout = R.layout.ptr_header;
+
+        mPullToRefreshHelper = new PullToRefreshAttacher(this, ptrOptions);
     }
 
     @Override
@@ -307,12 +333,30 @@ public class MainSinglePaneActivity extends MapActivity implements
     @Override
     public void onRefreshing(boolean isRefreshing) {
         Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
-        setSupportProgressBarIndeterminateVisibility(isRefreshing);
+        mPullToRefreshHelper.setRefreshing(isRefreshing);
     }
 
     @Override
     public void onSearchModeChange(boolean isSearchMode) {
         Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
         getSupportActionBar().setDisplayShowCustomEnabled(true);
+    }
+
+    @Override
+    public void refreshRegisterList(ListView listView) {
+        mPullToRefreshHelper.setRefreshableView(listView, this);
+    }
+
+    @Override
+    public void onRefreshEnabled(boolean refreshEnabled) {
+        mPullToRefreshHelper.setEnabled(refreshEnabled);
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        DisplayFragment f = (DisplayFragment) mActiveTabHolder.fragment;
+        if ( f != null) {
+            f.onRefreshStarted();
+        }
     }
 }

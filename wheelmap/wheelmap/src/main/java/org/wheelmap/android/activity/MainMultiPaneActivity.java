@@ -70,6 +70,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -498,5 +499,15 @@ public class MainMultiPaneActivity extends MapActivity implements
         anim.setDuration(MOVABLE_ANIMATION_DURATION);
         anim.addListener(mMovableAnimatorListener);
         anim.start();
+    }
+
+    @Override
+    public void onRefreshEnabled(boolean refreshEnabled) {
+
+    }
+
+    @Override
+    public void refreshRegisterList(ListView listView) {
+
     }
 }

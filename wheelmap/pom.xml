@@ -24,6 +24,7 @@
 
         <!-- Configuration Options -->
         <app.basepackage>org.wheelmap.android</app.basepackage>
+        <android.release>true</android.release>
 
         <!-- Default build configuration with develop settings -->
         <app.name>Wheelmap Dev</app.name>
@@ -52,10 +53,16 @@
         <!-- used for addons -->
         <platform.addon.version>4.1.1.4</platform.addon.version>
         <sherlock.version>4.3.1</sherlock.version>
+        <holoeverywhere.version>1.6.8</holoeverywhere.version>
 
         <app.asset.variant>development</app.asset.variant>
         <hockey.repository.url>ftp://storagerutton.de/</hockey.repository.url>
         <app.hockey.update.url>http://storagerutton.de/hockey/</app.hockey.update.url>
+
+        <!-- default key is testing key -->
+        <bugsense.key>${app.bugsense.testing}</bugsense.key>
+        <app.bugsense.testing>${bugsense.key.testing}</app.bugsense.testing>
+        <app.bugsense.production>${bugsense.key.production}</app.bugsense.production>
 
         <github.global.server>github</github.global.server>
         <github.downloads.repositoryName>wheelmap-android</github.downloads.repositoryName>
@@ -141,7 +148,15 @@
                     <inherited>true</inherited>
                     <executions>
                         <execution>
+                            <id>process_manifest</id>
                             <phase>initialize</phase>
+                            <goals>
+                                <goal>resources</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>process_all</id>
+                            <phase>process-resources</phase>
                             <goals>
                                 <goal>resources</goal>
                             </goals>
@@ -154,18 +169,6 @@
                     <version>3.6.0</version>
                     <inherited>true</inherited>
                     <extensions>true</extensions>
-                    <configuration>
-                        <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-                        <renameManifestPackage>${app.package}</renameManifestPackage>
-                        <assetsDirectory>${project.basedir}/assets</assetsDirectory>
-                        <manifestDebuggable>${app.enabledebug}</manifestDebuggable>
-                        <apkDebug>${app.enabledebug}</apkDebug>
-                        <sdk>
-                            <platform>${platform.core.code}</platform>
-                        </sdk>
-                        <undeployBeforeDeploy>false</undeployBeforeDeploy>
-                        <extractDuplicates>${project.extractDuplicates}</extractDuplicates>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -290,8 +293,39 @@
                     <configuration>
                         <androidManifestPath>${project.basedir}/resources/android/AndroidManifest.xml</androidManifestPath>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>1.0-alpha-1</version>
 
                 </plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.crashlytics</groupId>
+										<artifactId>crashlytics-maven</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>GenerateResources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -301,6 +335,23 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${project.basedir}/credentials.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -316,19 +367,21 @@
                 <asset.variant>development</asset.variant>
                 <hockey.update.url>${app.hockey.update.url}</hockey.update.url>
                 <app.enabledebug>true</app.enabledebug>
+                <bugsense.key>${app.bugsense.testing}</bugsense.key>
             </properties>
         </profile>
         <profile>
-            <id>life</id>
+            <id>live</id>
             <properties>
-                <app.name>Wheelmap Life</app.name>
+                <app.name>Wheelmap Live</app.name>
                 <app.developbuild>true</app.developbuild>
-                <app.type>LIFE</app.type>
-                <app.package>${app.basepackage}.life</app.package>
-                <app.icon>@drawable/ic_launcher_life</app.icon>
-                <asset.variant>life</asset.variant>
+                <app.type>LIVE</app.type>
+                <app.package>${app.basepackage}.live</app.package>
+                <app.icon>@drawable/ic_launcher_live</app.icon>
+                <asset.variant>live</asset.variant>
                 <hockey.update.url>${app.hockey.update.url}</hockey.update.url>
                 <app.enabledebug>true</app.enabledebug>
+                <bugsense.key>${app.bugsense.testing}</bugsense.key>
             </properties>
         </profile>
         <profile>
@@ -348,6 +401,7 @@
                 <asset.variant>production</asset.variant>
                 <hockey.update.url />
                 <app.enabledebug>false</app.enabledebug>
+                <bugsense.key>${app.bugsense.production}</bugsense.key>
             </properties>
             <build>
                 <plugins>
@@ -451,6 +505,11 @@
             <id>org.springframework.maven</id>
             <name>Spring Maven Repository</name>
             <url>http://repo.springsource.org/release</url>
+        </repository>
+        <repository>
+            <id>bugsense repo</id>
+            <name>The BugSense Repository</name>
+            <url>http://mvn.bugsense.com/</url>
         </repository>
         <repository>
             <id>crashlytics-repo</id>

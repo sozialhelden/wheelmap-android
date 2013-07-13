@@ -102,7 +102,8 @@ public class POIsListWorkerFragment extends Fragment implements
         mDistance = getDistanceFromPreferences();
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-
+        mBus = EventBus.getDefault();
+        retrieveInitialLocation();
     }
 
     @Override
@@ -114,14 +115,14 @@ public class POIsListWorkerFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus = EventBus.getDefault();
         mBus.register(this);
+        mBus.post(MyLocationManager.RegisterEvent.INSTANCE );
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mBus.post(new MyLocationManager.UnregisterEvent());
+        mBus.post(MyLocationManager.UnregisterEvent.INSTANCE);
         mBus.unregister(this);
     }
 
@@ -129,6 +130,11 @@ public class POIsListWorkerFragment extends Fragment implements
     public void onDestroy() {
         super.onDestroy();
         mReceiver.clearReceiver();
+    }
+
+    private void retrieveInitialLocation() {
+        MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus.getStickyEvent(MyLocationManager.LocationEvent.class);
+        mLocation = event.location;
     }
 
     @Override
@@ -249,7 +255,7 @@ public class POIsListWorkerFragment extends Fragment implements
 
     @Override
     public void requestUpdate(Bundle bundle) {
-        Log.d(TAG, "requestUpdate");
+        Log.d(TAG, "requestUpdate mLocation = " + mLocation + " mDistance = " + mDistance);
         RestServiceHelper.retrieveNodesByDistance(getActivity(), mLocation,
                 mDistance, mReceiver);
     }
@@ -321,6 +327,7 @@ public class POIsListWorkerFragment extends Fragment implements
         resetCursorLoaderUri();
 
         if (isNewDistanceFar()) {
+            Log.d( TAG, "updateLocation: isNewDistanceFar results true" );
             requestUpdate(null);
         }
     }

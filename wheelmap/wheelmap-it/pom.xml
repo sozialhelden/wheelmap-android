@@ -16,7 +16,6 @@
     <name>Wheelmap-it - Integration tests</name>
 
     <properties>
-        <MANIFEST_FILE_PATH>AndroidManifest.xml</MANIFEST_FILE_PATH>
         <test.app.package>${app.package.test}</test.app.package>
         <target.app.package>${app.package}</target.app.package>
         <android.core.groupid>${platform.core.groupid}</android.core.groupid>
@@ -108,6 +107,16 @@
                 <extensions>true</extensions>
                 <configuration>
                     <renameManifestPackage>${test.app.package}</renameManifestPackage>
+                    <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                    <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+                    <resourceDirectory>${project.basedir}/res</resourceDirectory>
+                    <manifestDebuggable>${app.enabledebug}</manifestDebuggable>
+                    <apkDebug>${app.enabledebug}</apkDebug>
+                    <sdk>
+                        <platform>${platform.core.code}</platform>
+                    </sdk>
+                    <undeployBeforeDeploy>false</undeployBeforeDeploy>
+                    <extractDuplicates>${project.extractDuplicates}</extractDuplicates>
                 </configuration>
             </plugin>
             <plugin>

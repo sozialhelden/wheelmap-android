@@ -23,6 +23,7 @@ package org.wheelmap.android.activity;
 
 import com.google.inject.Inject;
 
+import org.holoeverywhere.addon.AddonMyRoboguice;
 import org.holoeverywhere.app.Activity;
 import org.mapsforge.android.maps.MapContext;
 import org.mapsforge.android.maps.MapView;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.akquinet.android.androlog.Log;
+import roboguice.RoboGuice;
 
 public class MapActivity extends Activity implements MapContext {
 
@@ -53,6 +55,11 @@ public class MapActivity extends Activity implements MapContext {
 
     @Inject
     private IBundlePreferences bprefs;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     /**
      * method sets the size of the shared RAM cache in TileRAMCache
@@ -151,15 +158,25 @@ public class MapActivity extends Activity implements MapContext {
         mapViews.add(mapView);
     }
 
+    public int getId(IMapView mapView) {
+        if (mapView instanceof MFMapView) {
+            return ((MFMapView) mapView).getId();
+        } else {
+            return ((View) mapView).getId();
+        }
+    }
+
     public boolean loadPreferences(IMapView mapView) {
 
         if (mapViews == null) {
             return false;
         }
 
-        String id = String.valueOf(((View) mapView).getId()) + "_map";
-        if (bprefs.contains(id)) {
-            Bundle b = bprefs.retrieve(id);
+        int id = getId(mapView);
+        Log.d(TAG, "loadPreferences: mapView " + mapView + " id = " + id);
+        String mapId = String.valueOf(id) + "_map";
+        if (bprefs.contains(mapId)) {
+            Bundle b = bprefs.retrieve(mapId);
 
             String fileName = b.getString("mapFile");
             if (fileName != null) {
@@ -216,8 +233,9 @@ public class MapActivity extends Activity implements MapContext {
         b.putInt(Extra.LONGITUDE, mapCenter.getLongitudeE6());
         b.putInt(Extra.ZOOM_LEVEL, mapView.getZoomLevel());
 
-        String id = String.valueOf(((View) mapView).getId()) + "_map";
-        bprefs.store(id, b);
+        int id = getId( mapView );
+        String mapId = String.valueOf(id) + "_map";
+        bprefs.store(mapId, b);
     }
 
     /**

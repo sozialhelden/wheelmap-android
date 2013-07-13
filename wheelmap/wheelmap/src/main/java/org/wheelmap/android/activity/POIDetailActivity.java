@@ -51,7 +51,7 @@ import android.support.v4.app.FragmentManager;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(Activity.ADDON_SHERLOCK)
+@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailActivity extends MapActivity implements
         OnPOIDetailListener, OnErrorDialogListener, Receiver {
 

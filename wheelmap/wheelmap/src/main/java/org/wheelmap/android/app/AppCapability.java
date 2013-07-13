@@ -1,6 +1,7 @@
 package org.wheelmap.android.app;
 
-import org.acra.ACRA;
+import com.bugsense.trace.BugSenseHandler;
+
 import org.mapsforge.android.maps.MapActivity;
 
 import android.app.ActivityManager;
@@ -15,42 +16,6 @@ public class AppCapability {
 
     private final static long MAX_MEMORY_DIVISOR = 1024 * 1024;
 
-    static class MemoryLimits {
-
-        static int FULL = -1;
-
-        static int DEGRADED_MIN = -1;
-
-        static int DEGRADED_MAX = -1;
-    }
-
-    static class HighDensityMemoryLimits extends MemoryLimits {
-
-        HighDensityMemoryLimits() {
-            FULL = 28;
-            DEGRADED_MIN = 24;
-            DEGRADED_MAX = 20;
-        }
-    }
-
-    static class MediumDensityMemoryLimits extends MemoryLimits {
-
-        MediumDensityMemoryLimits() {
-            FULL = 24;
-            DEGRADED_MIN = 20;
-            DEGRADED_MAX = 16;
-        }
-    }
-
-    static class LowDensityMemoryLimits extends MemoryLimits {
-
-        LowDensityMemoryLimits() {
-            FULL = 20;
-            DEGRADED_MIN = 16;
-            DEGRADED_MAX = 12;
-        }
-    }
-
     private final static int MAPSFORGE_MEMCACHE_CAPACITY_MAX = 16;
 
     private final static int MAPSFORGE_MEMCACHE_CAPACITY_MED = 8;
@@ -62,10 +27,6 @@ public class AppCapability {
     private static int sMaxMemoryMB;
 
     private static Capability sCapability;
-
-    private enum Capability {
-        FULL, DEGRADED_MIN, DEGRADED_MAX, NOTWORKING
-    }
 
     public static void init(Context context) {
         getMemoryInfo(context);
@@ -129,15 +90,12 @@ public class AppCapability {
     }
 
     private static void setAcraData() {
-        if (!WheelmapApp.getApp().isAcraInitCalled()) {
+        if (!WheelmapApp.getApp().isBugsenseInitCalled()) {
             return;
         }
 
-        ACRA.getErrorReporter().putCustomData("memoryClass",
-                Integer.toString(sMemoryClass));
-
-        ACRA.getErrorReporter().putCustomData("maxMemoryMB",
-                Integer.toString(sMaxMemoryMB));
+        BugSenseHandler.addCrashExtraData("memoryClass", Integer.toString(sMemoryClass));
+        BugSenseHandler.addCrashExtraData("maxMemoryMB", Integer.toString(sMaxMemoryMB));
     }
 
     public static int getMemoryClass() {
@@ -154,5 +112,45 @@ public class AppCapability {
 
     public static boolean degradeLargeMapQuality() {
         return (sCapability == Capability.DEGRADED_MIN || sCapability == Capability.DEGRADED_MAX);
+    }
+
+    private enum Capability {
+        FULL, DEGRADED_MIN, DEGRADED_MAX, NOTWORKING
+    }
+
+    static class MemoryLimits {
+
+        static int FULL = -1;
+
+        static int DEGRADED_MIN = -1;
+
+        static int DEGRADED_MAX = -1;
+    }
+
+    static class HighDensityMemoryLimits extends MemoryLimits {
+
+        HighDensityMemoryLimits() {
+            FULL = 28;
+            DEGRADED_MIN = 24;
+            DEGRADED_MAX = 20;
+        }
+    }
+
+    static class MediumDensityMemoryLimits extends MemoryLimits {
+
+        MediumDensityMemoryLimits() {
+            FULL = 24;
+            DEGRADED_MIN = 20;
+            DEGRADED_MAX = 16;
+        }
+    }
+
+    static class LowDensityMemoryLimits extends MemoryLimits {
+
+        LowDensityMemoryLimits() {
+            FULL = 20;
+            DEGRADED_MIN = 16;
+            DEGRADED_MAX = 12;
+        }
     }
 }

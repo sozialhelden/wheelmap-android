@@ -11,6 +11,7 @@ import com.google.inject.util.Modules;
 import com.google.inject.util.Modules.OverriddenModuleBuilder;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.addon.IAddon.Addon;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Application;
 import org.holoeverywhere.app.Fragment;
@@ -50,6 +51,7 @@ import roboguice.inject.ViewListener;
 import roboguice.inject._HoloViewInjector;
 import roboguice.util.RoboContext;
 
+@Addon(inhert = true, weight = 30)
 public class AddonMyRoboguice extends IAddon {
 
     public static class AddonRoboguiceA extends IAddonActivity implements Provider<Activity> {

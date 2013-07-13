@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.wheelmap.android.app.Constants;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Application;
@@ -57,7 +57,7 @@ class AppProperties implements IAppProperties {
             final Application app = applicationProvider.get();
             try {
                 stream = new BufferedInputStream(app.getAssets().open(
-                        Constants.APP_PROPERTIES_ASSETS_FILE_NAME));
+                        Extra.APP_PROPERTIES_ASSETS_FILE_NAME));
                 try {
                     properties = new Properties();
                     properties.load(stream);

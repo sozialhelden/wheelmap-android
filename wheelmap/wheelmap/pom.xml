@@ -13,7 +13,6 @@
     <packaging>apk</packaging>
     <name>Wheelmap - App</name>
     <properties>
-        <!--  MANIFEST_FILE_PATH>AndroidManifest.xml</MANIFEST_FILE_PATH -->
         <android.core.groupid>${platform.core.groupid}</android.core.groupid>
         <proguard.disable>true</proguard.disable>
     </properties>
@@ -37,9 +36,9 @@
             <version>1.9.11</version>
         </dependency>
         <dependency>
-            <groupId>ch.acra</groupId>
-            <artifactId>acra</artifactId>
-            <version>4.5.0</version>
+            <groupId>com.bugsense.trace</groupId>
+            <artifactId>bugsense</artifactId>
+            <version>3.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.android</groupId>
@@ -62,27 +61,41 @@
             <version>1.6.1-RC1</version>
         </dependency>
         <dependency>
+            <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
+            <artifactId>library</artifactId>
+            <version>0.5</version>
+            <type>apklib</type>
+        </dependency>
+        <dependency>
+            <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
+            <artifactId>extra-abs</artifactId>
+            <version>0.5</version>
+            <type>apklib</type>
+        </dependency>
+        <!--
+        <dependency>
             <groupId>com.github.chrisbanes.pulltorefresh</groupId>
             <artifactId>library</artifactId>
             <version>2.1.2-SNAPSHOT</version>
             <type>apklib</type>
         </dependency>
+        -->
         <dependency>
             <groupId>org.holoeverywhere</groupId>
             <artifactId>library</artifactId>
-            <version>1.6.1</version>
+            <version>${holoeverywhere.version}</version>
             <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>org.holoeverywhere</groupId>
             <artifactId>addon-preferences</artifactId>
-            <version>1.6.1</version>
+            <version>${holoeverywhere.version}</version>
             <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>org.holoeverywhere</groupId>
             <artifactId>addon-roboguice</artifactId>
-            <version>2.0</version>
+            <version>[1.5.1,)</version>
             <type>apklib</type>
         </dependency>
         <dependency>
@@ -138,9 +151,10 @@
 
     </dependencies>
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${app.version.name}</finalName>
         <filters>
             <filter>buildNumber.properties</filter>
+            <filter>../credentials.properties</filter>
         </filters>
         <resources>
             <resource>
@@ -204,6 +218,19 @@
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
                 <extensions>true</extensions>
+                <configuration>
+                    <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                    <renameManifestPackage>${app.package}</renameManifestPackage>
+                    <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+                    <resourceDirectory>${project.basedir}/res</resourceDirectory>
+                    <manifestDebuggable>${app.enabledebug}</manifestDebuggable>
+                    <apkDebug>${app.enabledebug}</apkDebug>
+                    <sdk>
+                        <platform>${platform.core.code}</platform>
+                    </sdk>
+                    <undeployBeforeDeploy>false</undeployBeforeDeploy>
+                    <extractDuplicates>${project.extractDuplicates}</extractDuplicates>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.github</groupId>
@@ -224,15 +251,31 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${project.basedir}/buildNumber.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>1.0-beta-4</version>
                 <configuration>
                     <fromDir>${project.build.directory}</fromDir>
-                    <includes>
-                        ${project.artifactId}-${project.version}-${app.type}.apk,app.json,app.html
+                    <includes>${project.artifactId}-${app.version.name}.apk,app.json,app.html
                     </includes>
                     <url>${hockey.repository.url}</url>
-                    <toDir>${app.package}/${project.artifactId}${app.version.code}</toDir>
+                    <toDir>${app.package}/${project.artifactId}${buildNumber}</toDir>
                     <serverId>hockey-distribution</serverId>
                 </configuration>
                 <executions>

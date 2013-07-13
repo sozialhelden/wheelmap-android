@@ -21,14 +21,18 @@
  */
 package org.wheelmap.android.fragment;
 
+import com.google.inject.Inject;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Activity.Addons;
 import org.holoeverywhere.app.Fragment;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
@@ -76,6 +80,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
+import roboguice.inject.ContentViewListener;
 import roboguice.inject.InjectView;
 
 public class POIDetailFragment extends Fragment implements
@@ -88,6 +93,9 @@ public class POIDetailFragment extends Fragment implements
     private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
 
     private final static long FADE_IN_ANIMATION_DURATION = 500;
+
+    @Inject
+    public ContentViewListener ignored;
 
     @InjectView(R.id.title_container)
     private RelativeLayout title_container;
@@ -204,6 +212,7 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {

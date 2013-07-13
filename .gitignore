@@ -41,3 +41,4 @@ proguard-project.txt
 tmp
 .svn/
 wheelmap/wheelmap/res/values/com_crashlytics_export_strings.xml
+wheelmap/credentials.properties

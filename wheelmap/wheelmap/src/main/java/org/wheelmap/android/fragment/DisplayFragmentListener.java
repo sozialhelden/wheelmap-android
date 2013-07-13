@@ -23,10 +23,15 @@ package org.wheelmap.android.fragment;
 
 import android.content.ContentValues;
 import android.support.v4.app.Fragment;
+import android.widget.ListView;
 
 public interface DisplayFragmentListener {
 
     public void onShowDetail(Fragment fragment, ContentValues locationData);
 
     public void onRefreshing(boolean isRefreshing);
+
+    public void refreshRegisterList(ListView listView);
+
+    public void onRefreshEnabled( boolean refreshEnabled );
 }

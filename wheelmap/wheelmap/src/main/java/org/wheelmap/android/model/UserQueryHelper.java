@@ -71,7 +71,6 @@ public class UserQueryHelper {
     private UserQueryHelper(Context context) {
         mContext = context;
         mBus = EventBus.getDefault();
-        mBus.register(this);
 
         initCategoriesQuery();
         initWheelstateQuery();

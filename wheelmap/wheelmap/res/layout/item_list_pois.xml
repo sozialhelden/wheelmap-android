@@ -30,17 +30,19 @@
             style="@style/IconLarge"
             android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"/>
+            android:layout_marginTop="@dimen/margin_small"
+            android:src="@drawable/wheelie_yes"/>
 
     <TextView
             android:id="@+id/poi_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:layout_toLeftOf="@+id/poi_distance"
+            android:layout_marginRight="@dimen/margin_small"
             android:layout_toRightOf="@id/image"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_toLeftOf="@+id/compass"/>
 
     <LinearLayout
             android:layout_width="wrap_content"
@@ -48,10 +50,11 @@
             android:layout_alignLeft="@+id/poi_name"
             android:layout_below="@+id/poi_name"
             android:layout_toLeftOf="@+id/poi_distance"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignRight="@+id/poi_name">
 
         <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -86,7 +89,7 @@
         <View
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="0.81"/>
     </LinearLayout>
 
     <TextView
