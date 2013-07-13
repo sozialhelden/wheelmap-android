@@ -39,18 +39,6 @@ import android.content.Context;
 import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
 
-// Beta and PRE-RC key: "dGJWQW5PelRXWUFTbDh6VW5UYm94cXc6MQ"
-// RC1 - key: @ReportsCrashes(formKey = "dC1VVDdKenJLRUpZTC1MZXBVR3p6ZlE6MQ" )
-// RC2 - key: @ReportsCrashes(formKey = "dG1fUDltTlNiM3V4NmRvaVExT3dJclE6MQ" )
-// Release v0.7 @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
-// the first market version. @ReportsCrashes( formKey = "dGMzcTRSZjRMRG14c0JmU25ET1JLQmc6MQ")
-// the second market version @ReportsCrashes( formKey = "dEFLbUtHV1VlNEp2MHc0UXg3M0VyUnc6MQ")
-// v0.8: @ReportsCrashes( formKey = "dGEyal90UGZ2Mk0tSmROYnBsVk02THc6MQ")
-// v0.9 @ReportsCrashes(formKey = "dEl3ZHFJUkxYZnplcDRoN0RUZGNCUXc6MQ")
-// v0.99 @ReportsCrashes(formKey = "dDdKSUloUldNQlBVR3dWbG1FVU1xbEE6MQ")
-
-// Bugsense Key for Sozialhelden Account: 56cc8f6f
-
 public class WheelmapApp extends Application {
 
     private final static String TAG = WheelmapApp.class.getSimpleName();
