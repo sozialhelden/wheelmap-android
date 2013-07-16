@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wheelmap.android</groupId>
@@ -33,7 +35,7 @@
         <app.package>${app.basepackage}.develop</app.package>
         <app.icon>@drawable/ic_launcher_develop</app.icon>
         <asset.variant>development</asset.variant>
-        <hockey.update.url />
+        <hockey.update.url/>
         <app.enabledebug>true</app.enabledebug>
 
         <!-- Build and debug environment -->
@@ -44,11 +46,11 @@
 
         <!-- extracted by maven-android-sdk-deployer
          useful for debugging to match the version of the phone -->
-<!--
-        <platform.core.groupid>android</platform.core.groupid>
-        <platform.core.version>4.2.2_r2</platform.core.version>
-        <platform.core.code>17</platform.core.code>
--->
+        <!--
+                <platform.core.groupid>android</platform.core.groupid>
+                <platform.core.version>4.2.2_r2</platform.core.version>
+                <platform.core.code>17</platform.core.code>
+        -->
 
         <!-- used for addons -->
         <platform.addon.version>4.1.1.4</platform.addon.version>
@@ -80,8 +82,8 @@
         <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
         <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git
         </developerConnection>
-      <tag>wheelmap-parent-0.99.6</tag>
-  </scm>
+        <tag>wheelmap-parent-0.99.6</tag>
+    </scm>
 
     <dependencyManagement>
         <dependencies>
@@ -145,7 +147,6 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <inherited>true</inherited>
                     <executions>
                         <execution>
                             <id>process_manifest</id>
@@ -155,7 +156,6 @@
                             </goals>
                         </execution>
                         <execution>
-                            <id>process_all</id>
                             <phase>process-resources</phase>
                             <goals>
                                 <goal>resources</goal>
@@ -167,7 +167,6 @@
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
                     <version>3.6.0</version>
-                    <inherited>true</inherited>
                     <extensions>true</extensions>
                 </plugin>
                 <plugin>
@@ -184,7 +183,8 @@
                     <version>2.4.1</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <preparationGoals>clean verify versions:lock-snapshots buildnumber:create</preparationGoals>
+                        <preparationGoals>clean verify versions:lock-snapshots buildnumber:create
+                        </preparationGoals>
                         <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                     </configuration>
                 </plugin>
@@ -194,7 +194,7 @@
                     <inherited>true</inherited>
                     <configuration>
                         <removeExistingSignatures>true</removeExistingSignatures>
-                        <archiveDirectory />
+                        <archiveDirectory/>
                         <archive>
                             ${project.build.directory}/${project.build.finalName}.${project.packaging}
                         </archive>
@@ -260,8 +260,10 @@
                         </excludes>
                         <buildOutputDirectory>bin</buildOutputDirectory>
                         <classpathContainers>
-                            <classpathContainer>com.android.ide.eclipse.adt.ANDROID_FRAMEWORK</classpathContainer>
-                            <classpathContainer>org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER</classpathContainer>
+                            <classpathContainer>com.android.ide.eclipse.adt.ANDROID_FRAMEWORK
+                            </classpathContainer>
+                            <classpathContainer>org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER
+                            </classpathContainer>
                         </classpathContainers>
                         <additionalProjectnatures>
                             <projectnature>com.android.ide.eclipse.adt.AndroidNature</projectnature>
@@ -291,41 +293,42 @@
                     <artifactId>crashlytics-maven</artifactId>
                     <version>1.0.3</version>
                     <configuration>
-                        <androidManifestPath>${project.basedir}/resources/android/AndroidManifest.xml</androidManifestPath>
+                        <androidManifestPath>
+                            ${project.basedir}/resources/android/AndroidManifest.xml
+                        </androidManifestPath>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>properties-maven-plugin</artifactId>
-                    <version>1.0-alpha-1</version>
-
+                    <version>1.0-alpha-2</version>
                 </plugin>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.crashlytics</groupId>
-										<artifactId>crashlytics-maven</artifactId>
-										<versionRange>[1.0.0,)</versionRange>
-										<goals>
-											<goal>GenerateResources</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnIncremental>false</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.crashlytics</groupId>
+                                        <artifactId>crashlytics-maven</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>GenerateResources</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnIncremental>false</runOnIncremental>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -339,8 +342,10 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
+                <inherited>false</inherited>
                 <executions>
                     <execution>
+                        <id>process-credentials</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>read-project-properties</goal>
@@ -349,6 +354,7 @@
                             <files>
                                 <file>${project.basedir}/credentials.properties</file>
                             </files>
+                            <quiet>true</quiet>
                         </configuration>
                     </execution>
                 </executions>
@@ -399,7 +405,7 @@
                 <app.package>${app.basepackage}.online</app.package>
                 <app.icon>@drawable/ic_launcher</app.icon>
                 <asset.variant>production</asset.variant>
-                <hockey.update.url />
+                <hockey.update.url/>
                 <app.enabledebug>false</app.enabledebug>
                 <bugsense.key>${app.bugsense.production}</bugsense.key>
             </properties>

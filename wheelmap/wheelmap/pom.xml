@@ -154,7 +154,6 @@
         <finalName>${project.artifactId}-${app.version.name}</finalName>
         <filters>
             <filter>buildNumber.properties</filter>
-            <filter>../credentials.properties</filter>
         </filters>
         <resources>
             <resource>
@@ -193,7 +192,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <inherited>true</inherited>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -254,6 +252,7 @@
                 <artifactId>properties-maven-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>build-number</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>read-project-properties</goal>
@@ -318,6 +317,19 @@
         </extensions>
     </build>
     <profiles>
+        <profile>
+            <id>with-credentials</id>
+            <activation>
+                <file>
+                    <exists>../credential.properties</exists>
+                </file>
+            </activation>
+            <build>
+                <filters>
+                    <filter>../credential.properties</filter>
+                </filters>
+            </build>
+        </profile>
         <profile>
             <id>with-googleanalytics</id>
             <activation>
