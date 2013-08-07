@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[wheelmap-android.app_strings]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings.xml
+source_file = Wheelmap/wheelmap/res/values/strings.xml
+source_lang = en
+type = ANDROID
