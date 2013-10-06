@@ -14,6 +14,7 @@ import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.online.R.id;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -31,10 +33,10 @@ public class RobotiumHelper {
 
     private final static String TAG = RobotiumHelper.class.getSimpleName();
 
+    private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
+
     @Inject
     public ICredentials mCredentials;
-
-    private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
     static void clickOnActionbar(SoloCompatibilityAbs solo, int resId) {
         if (UtilsMisc.hasHoneycomb()) {
@@ -120,8 +122,7 @@ public class RobotiumHelper {
 
     static void selectWheelchairState(SoloCompatibilityAbs solo,
             String activityName) throws InterruptedException {
-        View wheelchairStateButton = lookupActivity(solo, activityName)
-                .findViewById(R.id.wheelchair_state_layout);
+        View wheelchairStateButton = RobotiumHelper.findViewById(solo, id.wheelchair_state_layout);
         Log.d(TAG, "wheelchairState Button " + wheelchairStateButton);
         solo.clickOnView(wheelchairStateButton);
 
@@ -198,6 +199,29 @@ public class RobotiumHelper {
         solo.waitForDialogToClose(1000);
         waitForListRefreshingDone(solo, workerTag);
 
+    }
+
+    // Method used to find View specified by its id
+    public static View findViewById(Solo solo, String id) {
+        return findViewById(solo, solo.getCurrentActivity().getResources()
+                .getIdentifier(id.replaceAll("\\.R\\.id\\.", ":id/"),
+                        null, null));
+    }
+
+    // Finds a view that was identified by the id attribute from the XML
+    public static View findViewById(Solo solo, int id) {
+        View view = solo.getView(id);
+        if (view != null) {
+            return view;
+        }
+
+        ArrayList<View> views = solo.getViews();
+        for (View v : views) {
+            if (v.getId() == id) {
+                return v;
+            }
+        }
+        return null;
     }
 
 }
