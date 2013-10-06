@@ -44,3 +44,6 @@ wheelmap/wheelmap/res/values/com_crashlytics_export_strings.xml
 wheelmap/wheelmap/crowdin.yaml
 wheelmap/credential.properties
 wheelmap/wheelmap/res/values/configs.xml
+
+# Transifex
+config
