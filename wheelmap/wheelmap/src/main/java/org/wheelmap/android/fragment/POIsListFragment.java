@@ -198,7 +198,7 @@ public class POIsListFragment extends ListFragment implements
     public void onStart() {
         super.onStart();
         mBus = EventBus.getDefault();
-        mBus.register(this);
+        mBus.registerSticky(this);
     }
 
     @Override

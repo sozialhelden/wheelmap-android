@@ -210,7 +210,7 @@ public class POIsMapsforgeFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus.register(this);
+        mBus.registerSticky(this);
         mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
     }
 
