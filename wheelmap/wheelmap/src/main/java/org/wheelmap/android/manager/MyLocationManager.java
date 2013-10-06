@@ -69,7 +69,7 @@ public class MyLocationManager {
 
     private int mSubscriber;
 
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
 
     public static class LocationEvent {
 
@@ -89,6 +89,13 @@ public class MyLocationManager {
 
         public static final UnregisterEvent INSTANCE = new UnregisterEvent();
     }
+
+    private Runnable mReleaseRunnable = new Runnable() {
+        @Override
+        public void run() {
+            releaseLocationUpdates();
+        }
+    };
 
     private MyLocationManager(Context context) {
         mBus = EventBus.getDefault();
@@ -136,6 +143,7 @@ public class MyLocationManager {
 
         if (mSubscriber > 0) {
             requestLocationUpdates();
+            mHandler.removeCallbacks(mReleaseRunnable);
         }
     }
 
@@ -148,13 +156,7 @@ public class MyLocationManager {
             return;
         }
 
-        mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                releaseLocationUpdates();
-            }
-        }, RELEASE_DELAY);
+        mHandler.postDelayed(mReleaseRunnable, RELEASE_DELAY);
     }
 
     public static Location getLastLocation() {

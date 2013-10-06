@@ -184,7 +184,6 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         return mCredentials.getApiKey();
     }
 
-    @SuppressWarnings("unchecked")
     protected T executeRequest(RequestBuilder requestBuilder)
             throws RestServiceException {
         T content = null;
@@ -233,7 +232,12 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                 }
             } catch (HttpClientErrorException e) {
                 HttpStatus status = e.getStatusCode();
-                if (status.value() == statusAuthRequired) {
+
+                checkApiCallClientErrors(e);
+
+                if (status.value() == statusAuthRequired ||
+                        (this instanceof ApiKeyExecutor &&
+                                status.value() == statusBadRequest)) {
                     Log.e(getTag(), "authorization failed - apikey not valid");
                     throw new RestServiceException(
                             RestServiceException.ERROR_AUTHORIZATION_FAILED, e);
@@ -272,5 +276,9 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         Log.d(getTag(), "executeRequest successful");
 
         return content;
+    }
+
+    protected void checkApiCallClientErrors(HttpClientErrorException e) throws RestServiceException {
+
     }
 }
