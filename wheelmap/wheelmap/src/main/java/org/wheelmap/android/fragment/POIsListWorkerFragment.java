@@ -116,7 +116,7 @@ public class POIsListWorkerFragment extends Fragment implements
     public void onStart() {
         super.onStart();
         mBus.register(this);
-        mBus.post(MyLocationManager.RegisterEvent.INSTANCE );
+        mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
     }
 
     @Override
@@ -133,7 +133,8 @@ public class POIsListWorkerFragment extends Fragment implements
     }
 
     private void retrieveInitialLocation() {
-        MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus.getStickyEvent(MyLocationManager.LocationEvent.class);
+        MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
+                .getStickyEvent(MyLocationManager.LocationEvent.class);
         mLocation = event.location;
     }
 
@@ -186,15 +187,13 @@ public class POIsListWorkerFragment extends Fragment implements
 
     private float getDistanceFromPreferences() {
         SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getActivity()
-                        .getApplicationContext());
+                .getDefaultSharedPreferences(getSupportActivity().getApplicationContext());
 
         float prefDist = prefs.getFloat(PrefKey.LIST_DISTANCE,
                 QUERY_DISTANCE_DEFAULT);
         return prefDist;
 
     }
-
 
     private boolean isNewDistanceFar() {
         float distance = GeoCoordinatesMath.calculateDistance(mLastLocation, mLocation);
@@ -327,7 +326,7 @@ public class POIsListWorkerFragment extends Fragment implements
         resetCursorLoaderUri();
 
         if (isNewDistanceFar()) {
-            Log.d( TAG, "updateLocation: isNewDistanceFar results true" );
+            Log.d(TAG, "updateLocation: isNewDistanceFar results true");
             requestUpdate(null);
         }
     }

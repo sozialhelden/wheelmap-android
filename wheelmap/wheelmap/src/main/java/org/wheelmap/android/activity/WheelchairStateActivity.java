@@ -26,6 +26,7 @@ import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.online.R;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class WheelchairStateActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_frame_empty);
         Log.d(TAG, "onCreate");
 
         if (getSupportActionBar() != null) {
@@ -65,7 +67,7 @@ public class WheelchairStateActivity extends Activity implements
                 .valueOf(stateId));
 
         fm.beginTransaction()
-                .add(android.R.id.content, mFragment,
+                .add(R.id.content, mFragment,
                         WheelchairStateFragment.TAG).commit();
     }
 

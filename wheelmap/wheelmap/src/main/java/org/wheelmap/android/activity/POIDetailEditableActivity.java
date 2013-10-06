@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.google.inject.Inject;
-
 import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
@@ -38,9 +36,9 @@ import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import android.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -67,6 +65,7 @@ public class POIDetailEditableActivity extends MapActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.activity_frame_empty);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -92,7 +91,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         mFragment = POIDetailEditableFragment.newInstance(poiID);
         fm.beginTransaction()
-                .add(android.R.id.content, mFragment,
+                .add(R.id.content, mFragment,
                         POIDetailEditableFragment.TAG).commit();
     }
 
@@ -128,7 +127,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         mFragment = WheelchairStateFragment.newInstance(state);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
+        ft.replace(R.id.content, mFragment, EditPositionFragment.TAG);
         ft.addToBackStack(null);
         ft.commit();
     }
@@ -169,7 +168,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(android.R.id.content, mFragment, NodetypeSelectFragment.TAG);
+        ft.replace(R.id.content, mFragment, NodetypeSelectFragment.TAG);
         ft.addToBackStack(null);
         ft.commit();
     }

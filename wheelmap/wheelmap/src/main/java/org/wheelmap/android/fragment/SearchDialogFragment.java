@@ -89,7 +89,7 @@ public class SearchDialogFragment extends DialogFragment implements
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
         builder.setTitle(R.string.title_search);
         builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
         builder.setNeutralButton(R.string.search_execute, this);
@@ -103,7 +103,7 @@ public class SearchDialogFragment extends DialogFragment implements
     }
 
     protected View createView() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search, null);
 
         return v;
@@ -119,7 +119,7 @@ public class SearchDialogFragment extends DialogFragment implements
 
         ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
                 .createTypesList(getActivity(), true);
-        mCategorySpinner.setAdapter(new TypesAdapter(getActivity(), searchTypes,
+        mCategorySpinner.setAdapter(new TypesAdapter(getSupportActivity(), searchTypes,
                 TypesAdapter.SEARCH_MODE));
         mCategorySpinner.setOnItemSelectedListener(this);
 
@@ -127,7 +127,7 @@ public class SearchDialogFragment extends DialogFragment implements
                 .findViewById(R.id.search_spinner_distance);
 
         ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
-                .createFromResource(getActivity(), R.array.distance_array,
+                .createFromResource(getSupportActivity(), R.array.distance_array,
                         R.layout.simple_spinner_item);
         distanceSpinnerAdapter
                 .setDropDownViewResource(R.layout.simple_spinner_dropdown_item);

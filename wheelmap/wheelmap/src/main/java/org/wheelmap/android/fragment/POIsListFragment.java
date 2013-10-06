@@ -163,7 +163,6 @@ public class POIsListFragment extends ListFragment implements
         // noinspection deprecation
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         mOrientationAvailable = mSensor != null;
-        attachWorkerFragment();
     }
 
     @Override
@@ -173,15 +172,17 @@ public class POIsListFragment extends ListFragment implements
 
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         mListView = (ListView) v.findViewById(android.R.id.list);
-        mAdapter = new POIsListCursorAdapter(getActivity(), null, false, mUseAngloDistanceUnit);
+        mAdapter = new POIsListCursorAdapter(getSupportActivity(), null, false, mUseAngloDistanceUnit);
         mListView.setAdapter(mAdapter);
-        if (UtilsMisc.isTablet(getActivity())) {
+        if (UtilsMisc.isTablet(getSupportActivity())) {
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
 
         if ( mListener != null) {
             mListener.refreshRegisterList(mListView);
         }
+        attachWorkerFragment();
+
         return v;
     }
 
@@ -190,9 +191,14 @@ public class POIsListFragment extends ListFragment implements
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated: started " + hashCode());
 
+        executeSavedInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mBus = EventBus.getDefault();
         mBus.register(this);
-        executeSavedInstanceState(savedInstanceState);
     }
 
     @Override
@@ -213,16 +219,15 @@ public class POIsListFragment extends ListFragment implements
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mWorkerFragment.unregisterDisplayFragment(this);
+    public void onStop() {
+        super.onStop();
         mBus.unregister(this);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        removeWorkerFragment();
+    public void onDestroyView() {
+        super.onDestroyView();
+        mWorkerFragment.unregisterDisplayFragment(this);
     }
 
     private void attachWorkerFragment() {
@@ -251,15 +256,7 @@ public class POIsListFragment extends ListFragment implements
         Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
     }
 
-    private void removeWorkerFragment() {
-        FragmentManager fm = getFragmentManager();
-        Fragment workerFragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (workerFragment != null) {
-            ft.remove(workerFragment);
-        }
-        ft.commit();
-    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

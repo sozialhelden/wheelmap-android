@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Dialog;
@@ -98,13 +99,13 @@ public class LoginDialogFragment extends DialogFragment implements
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
         builder.setTitle(R.string.title_login);
         builder.setIcon(R.drawable.ic_login_wheelmap);
         builder.setNeutralButton(R.string.login_submit, null);
         builder.setOnCancelListener(this);
 
-        View view = getActivity().getLayoutInflater().inflate(
+        View view = LayoutInflater.from(getSupportActivity()).inflate(
                 R.layout.fragment_dialog_login, null);
         builder.setView(view);
 

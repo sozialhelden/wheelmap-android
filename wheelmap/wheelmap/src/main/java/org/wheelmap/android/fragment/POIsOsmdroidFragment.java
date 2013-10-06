@@ -131,8 +131,6 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private EventBus mBus;
 
-    private boolean mDeferredInitialPosition;
-
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
     public POIsOsmdroidFragment() {
@@ -251,16 +249,11 @@ public class POIsOsmdroidFragment extends Fragment implements
         WheelmapApp.getSupportManager().cleanReferences();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        removeWorkerFragment();
-    }
-
     private void retrieveInitialLocation() {
         MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
                 .getStickyEvent(MyLocationManager.LocationEvent.class);
         mLocation = event.location;
+        Log.d( "retrieveInitialLocation: mLocation = " + mLocation);
     }
 
     private void attachWorkerFragment() {
@@ -292,16 +285,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
     }
 
-    private void removeWorkerFragment() {
-        FragmentManager fm = getFragmentManager();
-        Fragment workerFragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (workerFragment != null) {
-            ft.remove(workerFragment);
-        }
-        ft.commit();
-    }
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setHardwareAccelerationOff() {
         // Turn off hardware acceleration here, or in manifest
@@ -320,14 +303,13 @@ public class POIsOsmdroidFragment extends Fragment implements
             executeBundle(savedInstanceState);
             return;
         }
-        if (((MapActivity) getActivity()).loadPreferences(mMapView)) {
+        if (((MapActivity) getSupportActivity()).loadPreferences(mMapView)) {
             Log.d(TAG, "executeConfig: initialized from preferences");
             return;
         }
 
         Log.d(TAG, "executeConfig: initialized from defaults");
         if (mLocation == null) {
-            mDeferredInitialPosition = true;
             return;
         }
         executeMapPositioning(new GeoPoint(mLocation), MAP_ZOOM_DEFAULT);
@@ -623,12 +605,16 @@ public class POIsOsmdroidFragment extends Fragment implements
         GeoPoint geoPoint = new GeoPoint(mLocation.getLatitude(),
                 mLocation.getLongitude());
 
-        if (mMapView != null && (mDeferredInitialPosition || !isCentered)) {
+        if (mMapView != null && !isCentered) {
             centerMap(geoPoint, false);
         }
 
         mCurrentLocationGeoPoint = geoPoint;
         mMyLocationProvider.updateLocation(mLocation);
+    }
+
+    private Location getLocation() {
+        return mLocation;
     }
 
     @Override
@@ -653,14 +639,14 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         private float mDirection;
 
-        private IMyLocationConsumer mMyLocationConsumer;
+        private Location mProviderLocation;
 
-        private Location mLocation;
+        private IMyLocationConsumer mMyLocationConsumer;
 
         @Override
         public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
             mMyLocationConsumer = myLocationConsumer;
-            updateLocation(mLocation);
+            updateLocation(getLocation());
             return true;
         }
 
@@ -671,7 +657,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         @Override
         public Location getLastKnownLocation() {
-            return mLocation;
+            return mProviderLocation;
         }
 
         @Override
@@ -692,7 +678,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
             lastDirection = mDirection;
             mDirection = direction;
-            updateLocation(mLocation);
+            updateLocation(getLocation());
         }
 
         @Override
@@ -707,10 +693,10 @@ public class POIsOsmdroidFragment extends Fragment implements
                 return;
             }
 
-            mLocation = location;
-            mLocation.setBearing(mDirection + 90);
+            mProviderLocation = location;
+            mProviderLocation.setBearing(mDirection + 90);
             if (mMyLocationConsumer != null) {
-                mMyLocationConsumer.onLocationChanged(mLocation, this);
+                mMyLocationConsumer.onLocationChanged(mProviderLocation, this);
             }
         }
     }

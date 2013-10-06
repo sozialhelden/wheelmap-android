@@ -23,7 +23,7 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
     }
 
     protected View createView() {
-        return LayoutInflater.from(getActivity()).inflate(
+        return LayoutInflater.from(getSupportActivity()).inflate(
                 R.layout.fragment_dialog_search_combined, null);
     }
 

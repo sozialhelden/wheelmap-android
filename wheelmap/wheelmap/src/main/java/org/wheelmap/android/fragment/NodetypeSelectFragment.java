@@ -88,7 +88,7 @@ public class NodetypeSelectFragment extends ListFragment {
 
         ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
                 .createTypesList(getActivity(), false);
-        setListAdapter(new PickOnlyNodeTypesAdapter(getActivity(), types));
+        setListAdapter(new PickOnlyNodeTypesAdapter(getSupportActivity(), types));
 
         return view;
     }

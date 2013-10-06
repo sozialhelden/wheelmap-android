@@ -247,12 +247,6 @@ public class POIsMapsforgeFragment extends Fragment implements
         WheelmapApp.getSupportManager().cleanReferences();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        removeWorkerFragment();
-    }
-
     private void retrieveInitialLocation() {
         MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus.getStickyEvent(MyLocationManager.LocationEvent.class);
         mLocation = event.location;
@@ -286,17 +280,6 @@ public class POIsMapsforgeFragment extends Fragment implements
         mWorkerFragment.registerDisplayFragment(this);
         Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
     }
-
-    private void removeWorkerFragment() {
-        FragmentManager fm = getFragmentManager();
-        Fragment workerFragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (workerFragment != null) {
-            ft.remove(workerFragment);
-        }
-        ft.commit();
-    }
-
 
     @Override
     public void executeBundle(Bundle bundle) {

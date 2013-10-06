@@ -107,7 +107,16 @@ public class MyTabListener implements TabListener {
         }
 
         Log.d(TAG, "removing tab");
-        ft.remove(holder.fragment);
+        FragmentManager fm = mActivity.getSupportFragmentManager();
+        FragmentTransaction t = fm.beginTransaction();
+        if ( holder.fragment != null) {
+            ft.remove(holder.fragment);
+        }
+        Fragment workerFragment = (Fragment) fm.findFragmentByTag(holder.workerTag);
+        if ( workerFragment != null) {
+            t.remove(workerFragment);
+        }
+        t.commit();
     }
 
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
@@ -139,14 +148,16 @@ public class MyTabListener implements TabListener {
 
         public final String tag;
 
+        public final String workerTag;
 
         private Bundle bundle;
 
         private boolean active;
 
-        public TabHolder(Class<? extends Fragment> clazz, int position, String tag, boolean active) {
+        public TabHolder(Class<? extends Fragment> clazz, int position, String tag, String workerTag, boolean active) {
             this.clazz = clazz;
             this.tag = tag;
+            this.workerTag = workerTag;
             this.position = position;
             this.active = active;
         }
@@ -184,10 +195,10 @@ public class MyTabListener implements TabListener {
     static {
         sTagToTabHolder = new HashMap<String, TabHolder>();
         sTagToTabHolder.put(POIsListFragment.TAG,
-                new TabHolder(POIsListFragment.class, 0, POIsListFragment.TAG, true));
+                new TabHolder(POIsListFragment.class, 0, POIsListFragment.TAG, POIsListWorkerFragment.TAG, true));
         sTagToTabHolder.put(POIsMapsforgeFragment.TAG,
-                new TabHolder(POIsMapsforgeFragment.class, 1, POIsMapsforgeFragment.TAG, false));
+                new TabHolder(POIsMapsforgeFragment.class, 1, POIsMapsforgeFragment.TAG, POIsMapWorkerFragment.TAG, false));
         sTagToTabHolder.put(POIsOsmdroidFragment.TAG,
-                new TabHolder(POIsOsmdroidFragment.class, 1, POIsOsmdroidFragment.TAG, true));
+                new TabHolder(POIsOsmdroidFragment.class, 1, POIsOsmdroidFragment.TAG, POIsMapWorkerFragment.TAG, true));
     }
 }

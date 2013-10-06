@@ -78,8 +78,8 @@ public class NewSettingsFragment extends ListFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mAdapterCatList = new CategorySelectCursorAdapter(getActivity(), null,
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getSupportActivity());
+        mAdapterCatList = new CategorySelectCursorAdapter(getSupportActivity(), null,
                 false);
     }
 
@@ -90,7 +90,7 @@ public class NewSettingsFragment extends ListFragment implements
                 false);
 
         WheelchairStateSelectAdapter adapterWSList = new WheelchairStateSelectAdapter(
-                getActivity());
+                getSupportActivity());
 
         mAdapter = new MergeAdapter();
         mAdapter.addView(createSectionTitle(inflater,
