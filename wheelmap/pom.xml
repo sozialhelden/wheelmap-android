@@ -74,16 +74,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.basedir>${project.basedir}</main.basedir>
 
-
     </properties>
-
-    <scm>
-        <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
-        <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
-        <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git
-        </developerConnection>
-        <tag>wheelmap-parent-0.99.6</tag>
-    </scm>
 
     <dependencyManagement>
         <dependencies>

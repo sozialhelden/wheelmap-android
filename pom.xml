@@ -10,12 +10,30 @@
     <packaging>pom</packaging>
     <name>Wheelmap - root</name>
 
+    <scm>
+        <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
+        <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
+        <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git
+        </developerConnection>
+        <tag>wheelmap-parent-0.99.6</tag>
+    </scm>
+
     <modules>
         <module>wheelmap</module>
     </modules>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <preparationGoals>clean verify versions:lock-snapshots buildnumber:create
+                    </preparationGoals>
+                    <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.7</version>
