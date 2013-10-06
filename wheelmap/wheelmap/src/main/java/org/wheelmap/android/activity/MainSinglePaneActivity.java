@@ -248,6 +248,7 @@ public class MainSinglePaneActivity extends MapActivity implements
                 return true;
             case R.id.menu_new_poi:
                 createNewPoi();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -317,7 +318,7 @@ public class MainSinglePaneActivity extends MapActivity implements
             return;
         }
 
-        errorDialog.show(fm, ErrorDialogFragment.TAG);
+        errorDialog.show(fm);
     }
 
     @Override
