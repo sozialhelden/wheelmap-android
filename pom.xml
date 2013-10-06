@@ -15,7 +15,7 @@
         <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
         <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git
         </developerConnection>
-        <tag>wheelmap-parent-0.99.6</tag>
+        <tag>wheelmap-0.99.6-SNAPSHOT</tag>
     </scm>
 
     <modules>
