@@ -24,29 +24,29 @@ package org.wheelmap.android.test;
 import org.junit.Assert;
 import org.wheelmap.android.net.request.BoundingBox;
 import org.wheelmap.android.net.request.BoundingBox.Wgs84GeoCoordinates;
-import org.wheelmap.android.utils.GeoCoordinatesMath;
+import org.wheelmap.android.utils.GeoMath;
 
 import android.location.Location;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-public class GeocoordinatesMathTest extends AndroidTestCase {
+public class GeoMathTest extends AndroidTestCase {
 
-    private static final String TAG = GeoCoordinatesMath.class.getSimpleName();
+    private static final String TAG = GeoMath.class.getSimpleName();
 
     private static final double DELTA_ENV = 0.0001d;
 
     public void testBoundingBox() {
         Wgs84GeoCoordinates pointOne = new Wgs84GeoCoordinates(0, 0);
-        GeoCoordinatesMath.useAngloDistanceUnit(false);
+        GeoMath.useAngloDistanceUnit(false);
 
         double distanceOne = 10d;
-        BoundingBox bbOne = GeoCoordinatesMath.calculateBoundingBox(pointOne,
+        BoundingBox bbOne = GeoMath.calculateBoundingBox(pointOne,
                 distanceOne);
         Log.d(TAG, "BoundingBox bbOne = " + bbOne.toString());
 
         double distanceTwo = 2000d;
-        BoundingBox bbTwo = GeoCoordinatesMath.calculateBoundingBox(pointOne,
+        BoundingBox bbTwo = GeoMath.calculateBoundingBox(pointOne,
                 distanceTwo);
         Log.d(TAG, "BoundingBox bbTwo = " + bbTwo.toString());
     }
@@ -55,7 +55,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         Location pointOne = new Location("");
         pointOne.setLongitude(0);
         pointOne.setLatitude(0);
-        GeoCoordinatesMath.useAngloDistanceUnit(false);
+        GeoMath.useAngloDistanceUnit(false);
 
         double expectedRoughDistOne = 14.164743972d;
 
@@ -63,7 +63,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         Location pointDestOne = new Location("");
         pointDestOne.setLatitude(-pointNumOne);
         pointDestOne.setLongitude(-pointNumOne);
-        double distOne = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distOne = GeoMath.calculateDistance(pointOne,
                 pointDestOne);
         Log.d(TAG, "distanceOne = " + distOne);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distOne));
@@ -72,7 +72,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         pointDestTwo.setLongitude(-pointNumOne);
         pointDestTwo.setLatitude(pointNumOne);
 
-        double distTwo = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distTwo = GeoMath.calculateDistance(pointOne,
                 pointDestTwo);
         Log.d(TAG, "distanceTwo = " + distTwo);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distTwo));
@@ -80,7 +80,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         Location pointDestThree = new Location("");
         pointDestThree.setLongitude(pointNumOne);
         pointDestThree.setLatitude(-pointNumOne);
-        double distThree = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distThree = GeoMath.calculateDistance(pointOne,
                 pointDestThree);
         Log.d(TAG, "distanceThree = " + distThree);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distThree));
@@ -89,7 +89,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         pointDestFour.setLatitude(pointNumOne);
         pointDestFour.setLongitude(pointNumOne);
 
-        double distFour = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distFour = GeoMath.calculateDistance(pointOne,
                 pointDestFour);
         Log.d(TAG, "distanceFour = " + distFour);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistOne, distFour));
@@ -99,7 +99,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         Location pointDestFive = new Location("");
         pointDestFive.setLongitude(-pointNumTwo);
         pointDestFive.setLatitude(-pointNumTwo);
-        double distFive = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distFive = GeoMath.calculateDistance(pointOne,
                 pointDestFive);
         Log.d(TAG, "distanceFive = " + distFive);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distFive));
@@ -108,7 +108,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         pointDestSix.setLongitude(-pointNumTwo);
         pointDestSix.setLatitude(pointNumTwo);
 
-        double distSix = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distSix = GeoMath.calculateDistance(pointOne,
                 pointDestSix);
         Log.d(TAG, "distanceSix = " + distSix);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distSix));
@@ -116,7 +116,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         Location pointDestSeven = new Location("");
         pointDestSeven.setLongitude(pointNumTwo);
         pointDestSeven.setLatitude(-pointNumTwo);
-        double distSeven = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distSeven = GeoMath.calculateDistance(pointOne,
                 pointDestSeven);
         Log.d(TAG, "distanceSeven = " + distSeven);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distSeven));
@@ -125,7 +125,7 @@ public class GeocoordinatesMathTest extends AndroidTestCase {
         pointDestEight.setLongitude(pointNumTwo);
         pointDestEight.setLatitude(pointNumTwo);
 
-        double distEight = GeoCoordinatesMath.calculateDistance(pointOne,
+        double distEight = GeoMath.calculateDistance(pointOne,
                 pointDestEight);
         Log.d(TAG, "distanceEight = " + distEight);
         Assert.assertTrue(isExpectedWithDelta(expectedRoughDistTwo, distEight));

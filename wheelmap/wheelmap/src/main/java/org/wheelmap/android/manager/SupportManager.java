@@ -32,7 +32,7 @@ import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.GeoCoordinatesMath;
+import org.wheelmap.android.utils.GeoMath;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -223,7 +223,7 @@ public class SupportManager {
         mUseAngloDistanceUnit = prefs.getBoolean(PREFS_KEY_UNIT_PREFERENCE,
                 false);
         mBus.postSticky(new DistanceUnitChangedEvent(mUseAngloDistanceUnit));
-        GeoCoordinatesMath.useAngloDistanceUnit(mUseAngloDistanceUnit);
+        GeoMath.useAngloDistanceUnit(mUseAngloDistanceUnit);
     }
 
     public void releaseReceiver() {
@@ -628,7 +628,7 @@ public class SupportManager {
             if (key.equals(PREFS_KEY_UNIT_PREFERENCE)) {
                 mUseAngloDistanceUnit = prefs.getBoolean(
                         PREFS_KEY_UNIT_PREFERENCE, false);
-                GeoCoordinatesMath.useAngloDistanceUnit(mUseAngloDistanceUnit);
+                GeoMath.useAngloDistanceUnit(mUseAngloDistanceUnit);
 
                 mBus.postSticky(new DistanceUnitChangedEvent(mUseAngloDistanceUnit));
             }

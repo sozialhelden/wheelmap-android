@@ -26,7 +26,7 @@ import org.wheelmap.android.net.request.BoundingBox.Wgs84GeoCoordinates;
 
 import android.location.Location;
 
-public class GeoCoordinatesMath {
+public class GeoMath {
 
     private enum DistanceUnit {
         MILES, KILOMETRES

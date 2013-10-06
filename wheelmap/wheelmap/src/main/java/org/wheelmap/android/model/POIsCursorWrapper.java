@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.model;
 
-import org.wheelmap.android.utils.GeoCoordinatesMath;
+import org.wheelmap.android.utils.GeoMath;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
@@ -73,7 +73,7 @@ public class POIsCursorWrapper extends CursorWrapper {
             Location target = new Location("");
             target.setLatitude(POIHelper.getLatitude(this));
             target.setLongitude(POIHelper.getLongitude(this));
-            return GeoCoordinatesMath.calculateDistance(mLocation, target);
+            return GeoMath.calculateDistance(mLocation, target);
         } else if (columnIndex == DIRECTION_COLUMN_INDEX) {
             Location target = new Location("");
             target.setLatitude(POIHelper.getLatitude(this));

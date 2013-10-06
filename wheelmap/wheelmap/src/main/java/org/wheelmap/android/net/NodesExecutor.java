@@ -36,7 +36,7 @@ import org.wheelmap.android.net.request.NodesRequestBuilder;
 import org.wheelmap.android.net.request.Paging;
 import org.wheelmap.android.net.request.SearchNodesRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
-import org.wheelmap.android.utils.GeoCoordinatesMath;
+import org.wheelmap.android.utils.GeoMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.SearchManager;
@@ -79,7 +79,7 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
             float distance = getBundle().getFloat(Extra.DISTANCE_LIMIT);
             Location location = (Location) getBundle().getParcelable(
                     Extra.LOCATION);
-            mBoundingBox = GeoCoordinatesMath.calculateBoundingBox(
+            mBoundingBox = GeoMath.calculateBoundingBox(
                     new Wgs84GeoCoordinates(location.getLongitude(), location
                             .getLatitude()), distance);
             // Log.d(TAG,

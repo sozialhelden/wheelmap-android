@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
@@ -39,7 +40,7 @@ public class MyLocationManager {
 
     private static MyLocationManager sInstance;
 
-    private static final long TIME_DISTANCE_LIMIT = 1000 * 60 * 5; // 5 Minutes
+    private static final long TIME_DISTANCE_LIMIT = TimeUnit.MINUTES.toMillis(5); // 5 Minutes
 
     private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
 

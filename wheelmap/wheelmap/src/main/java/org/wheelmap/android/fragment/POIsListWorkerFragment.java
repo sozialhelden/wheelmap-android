@@ -36,7 +36,7 @@ import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.wheelmap.android.utils.GeoCoordinatesMath;
+import org.wheelmap.android.utils.GeoMath;
 
 import android.app.SearchManager;
 import android.content.SharedPreferences;
@@ -196,7 +196,7 @@ public class POIsListWorkerFragment extends Fragment implements
     }
 
     private boolean isNewDistanceFar() {
-        float distance = GeoCoordinatesMath.calculateDistance(mLastLocation, mLocation);
+        float distance = GeoMath.calculateDistance(mLastLocation, mLocation);
 
         if (distance > DISTANCE_TO_RELOAD) {
             return true;
