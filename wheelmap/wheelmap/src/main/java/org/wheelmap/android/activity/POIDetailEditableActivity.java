@@ -105,8 +105,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         params.width = 600;
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;
-        activity.getWindow().setAttributes(
-                (android.view.WindowManager.LayoutParams) params);
+        activity.getWindow().setAttributes(params);
     }
 
     private void setExternalEditableState(Bundle state) {
@@ -127,7 +126,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         mFragment = WheelchairStateFragment.newInstance(state);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content, mFragment, EditPositionFragment.TAG);
+        ft.replace(R.id.content, mFragment, WheelchairStateFragment.TAG);
         ft.addToBackStack(null);
         ft.commit();
     }
@@ -150,7 +149,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(android.R.id.content, mFragment, EditPositionFragment.TAG);
+        ft.replace(R.id.content, mFragment, EditPositionFragment.TAG);
         ft.addToBackStack(null);
         ft.commit();
     }
