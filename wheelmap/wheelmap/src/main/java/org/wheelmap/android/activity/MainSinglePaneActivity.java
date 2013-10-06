@@ -63,7 +63,7 @@ import android.widget.ListView;
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshAttacher;
 
 @Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class MainSinglePaneActivity extends MapActivity implements
@@ -225,7 +225,7 @@ public class MainSinglePaneActivity extends MapActivity implements
         // Here we define a custom header layout which will be inflated and used
         ptrOptions.headerLayout = R.layout.ptr_header;
 
-        mPullToRefreshHelper = new PullToRefreshAttacher(this, ptrOptions);
+        mPullToRefreshHelper = PullToRefreshAttacher.get(this, ptrOptions);
     }
 
     @Override
@@ -344,7 +344,7 @@ public class MainSinglePaneActivity extends MapActivity implements
 
     @Override
     public void refreshRegisterList(ListView listView) {
-        mPullToRefreshHelper.setRefreshableView(listView, this);
+        mPullToRefreshHelper.addRefreshableView(listView, this);
     }
 
     @Override

@@ -63,13 +63,13 @@
         <dependency>
             <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
             <artifactId>library</artifactId>
-            <version>0.5</version>
+            <version>0.6</version>
             <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>com.github.chrisbanes.actionbarpulltorefresh</groupId>
             <artifactId>extra-abs</artifactId>
-            <version>0.5</version>
+            <version>0.6</version>
             <type>apklib</type>
         </dependency>
         <!--
