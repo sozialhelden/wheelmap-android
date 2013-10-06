@@ -21,8 +21,8 @@
  */
 package org.wheelmap.android.net;
 
-import com.google.inject.Inject;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.wheelmap.android.mapping.apikey.AuthInfo;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.ICredentials;
@@ -30,53 +30,65 @@ import org.wheelmap.android.net.request.AcceptType;
 import org.wheelmap.android.net.request.ApiKeyRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
+import roboguice.RoboGuice;
 import android.content.Context;
 import android.os.Bundle;
 
-import roboguice.RoboGuice;
+import com.google.inject.Inject;
+import de.akquinet.android.androlog.Log;
 
 public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
 
-    private static final int MAX_RETRY_COUNT = 1;
+	private static final int MAX_RETRY_COUNT = 1;
 
-    private String mEmail;
+	private String mEmail;
 
-    private String mPassword;
+	private String mPassword;
 
-    private String mApiKey;
+	private String mApiKey;
 
-    private final static int statusAuthFailed = 400;
+	private final static int statusAuthFailed = 400;
 
-    private final static int statusOSMFailed = 403;
+	private final static int statusOSMFailed = 403;
 
-    @Inject
-    private ICredentials mCredentials;
+	@Inject
+	private ICredentials mCredentials;
 
-    public ApiKeyExecutor(Context context, Bundle bundle) {
-        super(context, bundle, AuthInfo.class, MAX_RETRY_COUNT);
-        RoboGuice.injectMembers(context, this);
-    }
+	public ApiKeyExecutor(Context context, Bundle bundle) {
+		super(context, bundle, AuthInfo.class, MAX_RETRY_COUNT);
+		RoboGuice.injectMembers(context, this);
+	}
 
-    @Override
-    public void prepareContent() {
-        mEmail = getBundle().getString(Extra.EMAIL);
-        mPassword = getBundle().getString(Extra.PASSWORD);
-    }
+	@Override
+	public void prepareContent() {
+		mEmail = getBundle().getString(Extra.EMAIL);
+		mPassword = getBundle().getString(Extra.PASSWORD);
+	}
 
-    @Override
-    public void execute() throws RestServiceException {
+	@Override
+	public void execute() throws RestServiceException {
 
-        ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(
-                getServer(), AcceptType.JSON);
-        requestBuilder.setCredentials(mEmail, mPassword);
+		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(getServer(), AcceptType.JSON);
+		requestBuilder.setCredentials(mEmail, mPassword);
 
-        AuthInfo authInfo = executeRequest(requestBuilder);
-        mApiKey = authInfo.getUser().getApiKey();
-    }
+		AuthInfo authInfo = executeRequest(requestBuilder);
+		mApiKey = authInfo.getUser().getApiKey();
+	}
 
-    @Override
-    public void prepareDatabase() {
-        mCredentials.save(mApiKey, mEmail);
-    }
+	@Override
+	public void prepareDatabase() {
+		mCredentials.save(mApiKey, mEmail);
+	}
 
+	@Override
+	protected void checkApiCallClientErrors(HttpClientErrorException e) throws RestServiceException {
+		HttpStatus status = e.getStatusCode();
+		if (status.value() == statusAuthFailed) {
+			Log.e(getTag(), "authorization failed - email or password not valid");
+			throw new RestServiceException(RestServiceException.ERROR_AUTHORIZATION_ERROR, e);
+		} else if (status.value() == statusOSMFailed) {
+			Log.e(getTag(), "osm failed");
+			throw new RestServiceException(RestServiceException.ERROR_NOT_OSM_CONNECTED, e);
+		}
+	}
 }
