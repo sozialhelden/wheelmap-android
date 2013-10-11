@@ -30,35 +30,37 @@ import java.math.BigInteger;
 @JsonAutoDetect
 public class Node {
 
+    protected BigInteger id;
+
     protected BigDecimal lat;
+
+    protected BigDecimal lon;
+
+    protected String name;
+
+    protected Category category;
 
     @JsonProperty(value = "node_type")
     protected NodeType nodeType;
 
-    protected String street;
-
-    protected String website;
-
     protected String wheelchair;
-
-    protected String housenumber;
 
     @JsonProperty(value = "wheelchair_description")
     protected String wheelchairDescription;
 
-    protected String name;
+    protected String street;
 
-    protected BigInteger id;
-
-    protected Category category;
-
-    protected String phone;
-
-    protected BigDecimal lon;
+    protected String housenumber;
 
     protected String city;
 
     protected String postcode;
+
+    protected String phone;
+
+    protected String website;
+
+    protected String icon;
 
     /**
      * Gets the value of the lat property.
@@ -304,6 +306,10 @@ public class Node {
     public void setPostcode(String value) {
         this.postcode = value;
     }
+
+    public String getIcon() { return postcode; }
+
+    public void setIcon(String value) { this.icon = value; };
 
     @Override
     public String toString() {

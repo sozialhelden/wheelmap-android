@@ -65,6 +65,7 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
         values.put(POIs.WHEELCHAIR,
                 WheelchairState.myValueOf(node.getWheelchair()).getId());
         values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
+        values.put(POIs.ICON, node.getIcon());
 
         org.wheelmap.android.mapping.node.Category cat = node.getCategory();
         if (cat != null) {

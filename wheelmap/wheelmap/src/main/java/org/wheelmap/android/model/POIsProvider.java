@@ -64,7 +64,7 @@ public class POIsProvider extends ContentProvider {
 
     private static final String DATABASE_NAME = "wheelmap.db";
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
 
     private static final String POIS_TABLE_NAME = "pois";
 
@@ -91,6 +91,7 @@ public class POIsProvider extends ContentProvider {
                     + POIs.CATEGORY_IDENTIFIER + " TEXT, "
                     + POIs.NODETYPE_ID + " INTEGER, "
                     + POIs.NODETYPE_IDENTIFIER + " TEXT, "
+                    + POIs.ICON + " ICON, "
 
                     + POIs.LATITUDE + " VARCHAR(15),"
                     + POIs.LONGITUDE + " VARCHAR(15),"
@@ -346,6 +347,7 @@ public class POIsProvider extends ContentProvider {
         final int websiteColumn = inserter.getColumnIndex(POIs.WEBSITE);
         final int wheelchairColumn = inserter.getColumnIndex(POIs.WHEELCHAIR);
         final int descriptionColumn = inserter.getColumnIndex(POIs.DESCRIPTION);
+        final int iconColumn = inserter.getColumnIndex(POIs.ICON);
         final int categoryIdColumn = inserter.getColumnIndex(POIs.CATEGORY_ID);
         final int categoryIdentifierColumn = inserter.getColumnIndex(POIs.CATEGORY_IDENTIFIER);
         final int nodeTypeIdColumn = inserter.getColumnIndex(POIs.NODETYPE_ID);
@@ -391,6 +393,8 @@ public class POIsProvider extends ContentProvider {
                         inserter.bind(wheelchairColumn, wheelchair);
                         String description = values.getAsString(POIs.DESCRIPTION);
                         inserter.bind(descriptionColumn, description);
+                        String icon = values.getAsString(POIs.ICON);
+                        inserter.bind(iconColumn, icon);
 
                         Integer categoryId = values.getAsInteger(POIs.CATEGORY_ID);
                         if (categoryId != null) {
@@ -617,6 +621,7 @@ public class POIsProvider extends ContentProvider {
         sPOIsProjectionMap.put(POIs.POSTCODE, POIs.POSTCODE);
         sPOIsProjectionMap.put(POIs.CITY, POIs.CITY);
         sPOIsProjectionMap.put(POIs.PHONE, POIs.PHONE);
+        sPOIsProjectionMap.put(POIs.ICON, POIs.ICON);
         sPOIsProjectionMap.put(POIs.WEBSITE, POIs.WEBSITE);
         sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR);
         sPOIsProjectionMap.put(POIs.DESCRIPTION, POIs.DESCRIPTION);
