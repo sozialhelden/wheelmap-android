@@ -75,8 +75,10 @@ public class MapActivity extends Activity implements MapContext {
         if (mapViews != null) {
             IMapView mapView;
             while (!mapViews.isEmpty()) {
-                mapView = mapViews.get(0);
+                int last = mapViews.size() - 1;
+                mapView = mapViews.get(last);
                 destroyMapViewSingle(mapView);
+                mapViews.remove(last);
             }
             mapViews.clear();
             mapViews = null;
