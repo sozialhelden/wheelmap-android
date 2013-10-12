@@ -22,6 +22,7 @@
 package org.wheelmap.android.mapping.nodetype;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.wheelmap.android.mapping.BaseDomain;
 import org.wheelmap.android.mapping.categories.Category;
@@ -30,6 +31,7 @@ import org.wheelmap.android.mapping.categories.Conditions;
 import java.util.List;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NodeTypes extends BaseDomain {
 
     protected Conditions conditions;

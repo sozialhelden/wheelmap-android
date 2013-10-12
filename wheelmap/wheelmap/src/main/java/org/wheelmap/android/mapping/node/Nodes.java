@@ -22,11 +22,13 @@
 package org.wheelmap.android.mapping.node;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.wheelmap.android.mapping.BaseDomain;
 
 import java.util.List;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Nodes extends BaseDomain {
 
     protected Conditions conditions;

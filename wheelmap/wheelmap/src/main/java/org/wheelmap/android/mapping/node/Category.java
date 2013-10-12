@@ -22,10 +22,12 @@
 package org.wheelmap.android.mapping.node;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.math.BigInteger;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Category {
 
     protected BigInteger id;

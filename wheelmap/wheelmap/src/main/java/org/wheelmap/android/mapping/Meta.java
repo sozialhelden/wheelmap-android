@@ -22,11 +22,13 @@
 package org.wheelmap.android.mapping;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.math.BigInteger;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Meta {
 
     @JsonProperty(value = "num_pages")

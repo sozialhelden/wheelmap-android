@@ -22,8 +22,10 @@
 package org.wheelmap.android.mapping.locale;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Conditions {
 
     protected String format;

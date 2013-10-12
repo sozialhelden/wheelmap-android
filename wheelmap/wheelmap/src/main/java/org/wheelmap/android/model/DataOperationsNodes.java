@@ -21,7 +21,9 @@
  */
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.mapping.node.Category;
 import org.wheelmap.android.mapping.node.Node;
+import org.wheelmap.android.mapping.node.NodeType;
 import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
@@ -65,15 +67,18 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
         values.put(POIs.WHEELCHAIR,
                 WheelchairState.myValueOf(node.getWheelchair()).getId());
         values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
-        values.put(POIs.ICON, node.getIcon());
+        String icon = node.getIcon();
+        if (icon != null) {
+            values.put(POIs.ICON, node.getIcon());
+        }
 
-        org.wheelmap.android.mapping.node.Category cat = node.getCategory();
+        Category cat = node.getCategory();
         if (cat != null) {
             values.put(POIs.CATEGORY_ID, cat.getId().intValue());
             values.put(POIs.CATEGORY_IDENTIFIER, cat.getIdentifier());
         }
 
-        org.wheelmap.android.mapping.node.NodeType nodeType = node.getNodeType();
+        NodeType nodeType = node.getNodeType();
         if (nodeType != null) {
             values.put(POIs.NODETYPE_ID, nodeType.getId().intValue());
             values.put(POIs.NODETYPE_IDENTIFIER, nodeType.getIdentifier());

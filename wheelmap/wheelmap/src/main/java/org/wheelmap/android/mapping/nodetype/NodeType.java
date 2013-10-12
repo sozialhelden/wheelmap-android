@@ -23,12 +23,14 @@ package org.wheelmap.android.mapping.nodetype;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.wheelmap.android.mapping.node.Category;
 
 import java.math.BigDecimal;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NodeType {
 
     private BigDecimal id;

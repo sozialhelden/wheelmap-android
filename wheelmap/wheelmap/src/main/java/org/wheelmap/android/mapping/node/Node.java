@@ -22,12 +22,14 @@
 package org.wheelmap.android.mapping.node;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Node {
 
     protected BigInteger id;
@@ -60,6 +62,7 @@ public class Node {
 
     protected String website;
 
+    @JsonProperty()
     protected String icon;
 
     /**

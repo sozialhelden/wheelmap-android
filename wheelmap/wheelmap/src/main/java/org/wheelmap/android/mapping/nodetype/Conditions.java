@@ -22,12 +22,14 @@
 package org.wheelmap.android.mapping.nodetype;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.math.BigInteger;
 
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Conditions {
 
     protected String format;

@@ -22,6 +22,7 @@
 package org.wheelmap.android.mapping.locale;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.wheelmap.android.mapping.BaseDomain;
 import org.wheelmap.android.mapping.categories.Conditions;
@@ -29,6 +30,7 @@ import org.wheelmap.android.mapping.categories.Conditions;
 import java.util.Map;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Locales extends BaseDomain {
 
     protected Conditions conditions;
