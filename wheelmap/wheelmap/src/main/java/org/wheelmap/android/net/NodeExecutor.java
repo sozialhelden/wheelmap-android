@@ -50,18 +50,17 @@ public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
     public void execute() throws RestServiceException {
         NodeRequestBuilder requestBuilder = null;
         if (mWMId == Extra.WM_ID_UNKNOWN) {
-            throw new RestServiceException(
-                    RestServiceException.ERROR_INTERNAL_ERROR,
-                    new IllegalArgumentException());
+            processException(RestServiceException.ERROR_INTERNAL_ERROR,
+                    new IllegalArgumentException(), true);
         }
 
         requestBuilder = new NodeRequestBuilder(getServer(), getApiKey(),
                 AcceptType.JSON, mWMId);
         int count = executeSingleRequest(requestBuilder);
         if (count == 0) {
-            throw new RestServiceException(
+            processException(
                     RestServiceException.ERROR_NETWORK_FAILURE,
-                    new NetworkErrorException());
+                    new NetworkErrorException(), true);
         }
     }
 

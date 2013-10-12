@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.net;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.HttpClientErrorException;
@@ -28,6 +30,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.Base;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
@@ -50,6 +53,8 @@ import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
 
 public abstract class AbstractExecutor<T extends Base> implements IExecutor {
+
+    protected final static RequestProcessor mRequestProcessor = new RequestProcessor();
 
     private final static int statusBadRequest = 400;
 
@@ -77,8 +82,6 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
     protected ICredentials mCredentials;
 
-    protected final static RequestProcessor mRequestProcessor = new RequestProcessor();
-
     public AbstractExecutor(Context context, Bundle bundle, Class<T> clazz,
             int maxRetryCount) {
         mContext = context;
@@ -87,47 +90,6 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         fMaxRetryCount = maxRetryCount;
         RoboGuice.injectMembers(context, this);
     }
-
-    @Override
-    public void setAppProperties(IAppProperties appProperties) {
-        mAppProperties = appProperties;
-    }
-
-    @Override
-    public void setCredentials(ICredentials credentials) {
-        mCredentials = credentials;
-    }
-
-    @Override
-    public void setUserAgent(String userAgent) {
-        mRequestProcessor.setUserAgent(userAgent);
-    }
-
-    protected String getEtag() {
-        return mRequestProcessor.getEtag();
-    }
-
-    protected void setEtag(String etag) {
-        mRequestProcessor.setEtag(etag);
-    }
-
-    protected Context getContext() {
-        return mContext;
-    }
-
-    protected ContentResolver getResolver() {
-        return mContext.getContentResolver();
-    }
-
-    protected Bundle getBundle() {
-        return mBundle;
-    }
-
-    public abstract void prepareContent();
-
-    public abstract void execute() throws RestServiceException;
-
-    public abstract void prepareDatabase() throws RestServiceException;
 
     public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties,
             ICredentials credentials, IHttpUserAgent httpUserAgent) {
@@ -172,6 +134,47 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
     }
 
     @Override
+    public void setAppProperties(IAppProperties appProperties) {
+        mAppProperties = appProperties;
+    }
+
+    @Override
+    public void setCredentials(ICredentials credentials) {
+        mCredentials = credentials;
+    }
+
+    @Override
+    public void setUserAgent(String userAgent) {
+        mRequestProcessor.setUserAgent(userAgent);
+    }
+
+    protected String getEtag() {
+        return mRequestProcessor.getEtag();
+    }
+
+    protected void setEtag(String etag) {
+        mRequestProcessor.setEtag(etag);
+    }
+
+    protected Context getContext() {
+        return mContext;
+    }
+
+    protected ContentResolver getResolver() {
+        return mContext.getContentResolver();
+    }
+
+    protected Bundle getBundle() {
+        return mBundle;
+    }
+
+    public abstract void prepareContent();
+
+    public abstract void execute() throws RestServiceException;
+
+    public abstract void prepareDatabase() throws RestServiceException;
+
+    @Override
     public String getServer() {
         return mAppProperties.get(IAppProperties.KEY_WHEELMAP_URI);
     }
@@ -188,13 +191,18 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             throws RestServiceException {
         T content = null;
 
-        String request;
+        String request = null;
         try {
             request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
                     "utf-8");
         } catch (UnsupportedEncodingException e) {
-            throw new RestServiceException(
-                    RestServiceException.ERROR_INTERNAL_ERROR, e);
+            processException(
+                    RestServiceException.ERROR_INTERNAL_ERROR, e, true);
+        }
+
+        if (request == null) {
+            // workaround for compiling not recognizing that request will be initialized
+            return null;
         }
 
         int retryCount = 0;
@@ -213,8 +221,8 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                 }
                 break;
             } catch (URISyntaxException e) {
-                throw new RestServiceException(
-                        RestServiceException.ERROR_INTERNAL_ERROR, e);
+                processException(
+                        RestServiceException.ERROR_INTERNAL_ERROR, e, true);
             } catch (ResourceAccessException e) {
                 retryCount++;
                 if (retryCount < fMaxRetryCount) {
@@ -227,8 +235,8 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                     }
                     continue;
                 } else {
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_NETWORK_FAILURE, e);
+                    processException(
+                            RestServiceException.ERROR_NETWORK_FAILURE, e, true);
                 }
             } catch (HttpClientErrorException e) {
                 HttpStatus status = e.getStatusCode();
@@ -239,38 +247,38 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                         (this instanceof ApiKeyExecutor &&
                                 status.value() == statusBadRequest)) {
                     Log.e(getTag(), "authorization failed - apikey not valid");
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_AUTHORIZATION_FAILED, e);
+                    processException(
+                            RestServiceException.ERROR_AUTHORIZATION_FAILED, e, true);
                 } else if (status.value() == statusRequestForbidden) {
                     Log.e(getTag(), "request forbidden");
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_REQUEST_FORBIDDEN, e);
+                    processException(
+                            RestServiceException.ERROR_REQUEST_FORBIDDEN, e, true);
                 } else if ((status.value() == statusBadRequest)
                         || (status.value() == statusNotFound)
                         || (status.value() == statusNotAcceptable)) {
                     Log.e(getTag(), "request error");
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_CLIENT_FAILURE, e);
+                    processException(
+                            RestServiceException.ERROR_CLIENT_FAILURE, e, true);
                 } else {
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_CLIENT_FAILURE, e);
+                    processException(
+                            RestServiceException.ERROR_CLIENT_FAILURE, e, true);
                 }
 
             } catch (HttpServerErrorException e) {
                 HttpStatus status = e.getStatusCode();
                 if (status.value() == statusDownMaintenance) {
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_SERVER_DOWN, e);
+                    processException(
+                            RestServiceException.ERROR_SERVER_DOWN, e, true);
                 } else {
-                    throw new RestServiceException(
-                            RestServiceException.ERROR_SERVER_FAILURE, e);
+                    processException(
+                            RestServiceException.ERROR_SERVER_FAILURE, e, true);
                 }
             } catch (HttpMessageConversionException e) {
-                throw new RestServiceException(
-                        RestServiceException.ERROR_NETWORK_FAILURE, e);
+                processException(
+                        RestServiceException.ERROR_NETWORK_FAILURE, e, true);
             } catch (RestClientException e) {
-                throw new RestServiceException(
-                        RestServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e);
+                processException(
+                        RestServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e, true);
             }
         }
         Log.d(getTag(), "executeRequest successful");
@@ -278,7 +286,16 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         return content;
     }
 
-    protected void checkApiCallClientErrors(HttpClientErrorException e) throws RestServiceException {
+    protected void checkApiCallClientErrors(HttpClientErrorException e)
+            throws RestServiceException {
 
+    }
+
+    protected void processException(int errorCode, Throwable t, boolean sendToBugsense)
+            throws RestServiceException {
+        if (sendToBugsense && WheelmapApp.getApp().isBugsenseInitCalled()) {
+            BugSenseHandler.sendException((Exception) t);
+        }
+        throw new RestServiceException(errorCode, t);
     }
 }

@@ -85,10 +85,10 @@ public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
 		HttpStatus status = e.getStatusCode();
 		if (status.value() == statusAuthFailed) {
 			Log.e(getTag(), "authorization failed - email or password not valid");
-			throw new RestServiceException(RestServiceException.ERROR_AUTHORIZATION_ERROR, e);
+            processException(RestServiceException.ERROR_AUTHORIZATION_ERROR, e, false);
 		} else if (status.value() == statusOSMFailed) {
 			Log.e(getTag(), "osm failed");
-			throw new RestServiceException(RestServiceException.ERROR_NOT_OSM_CONNECTED, e);
+			processException(RestServiceException.ERROR_NOT_OSM_CONNECTED, e, false);
 		}
 	}
 }
