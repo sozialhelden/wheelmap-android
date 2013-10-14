@@ -24,9 +24,11 @@ package wheelmap.org.domain.apikey;
 import java.math.BigDecimal;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonAutoDetect
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 	@JsonProperty( value = "api_key" )
 	protected String apiKey;
