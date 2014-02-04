@@ -11,11 +11,11 @@
     <name>Wheelmap - root</name>
 
     <scm>
-        <connection>scm:git:git@github.com:sozialhelden/wheelmap-android.git</connection>
-        <url>scm:git:git@github.com:sozialhelden/wheelmap-android.git</url>
-        <developerConnection>scm:git:git@github.com:sozialhelden/wheelmap-android.git
+        <connection>scm:git:git@github.com:smartmobilefactory/wheelmap-android.git</connection>
+        <url>scm:git:git@github.com:smartmobilefactory/wheelmap-android.git</url>
+        <developerConnection>scm:git:git@github.com:smartmobilefactory/wheelmap-android.git
         </developerConnection>
-        <tag>wheelmap-0.99.6-SNAPSHOT</tag>
+        <tag>master</tag>
     </scm>
 
     <modules>
