@@ -321,12 +321,12 @@
             <id>with-credentials</id>
             <activation>
                 <file>
-                    <exists>../credential.properties</exists>
+                    <exists>../credentials.properties</exists>
                 </file>
             </activation>
             <build>
                 <filters>
-                    <filter>../credential.properties</filter>
+                    <filter>../credentials.properties</filter>
                 </filters>
             </build>
         </profile>
