@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
@@ -68,6 +69,8 @@ public class POIDetailEditableActivity extends MapActivity implements
         setContentView(R.layout.activity_frame_empty);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setExternalEditableState(savedInstanceState);
 
@@ -93,6 +96,16 @@ public class POIDetailEditableActivity extends MapActivity implements
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         POIDetailEditableFragment.TAG).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showAsPopup(Activity activity) {

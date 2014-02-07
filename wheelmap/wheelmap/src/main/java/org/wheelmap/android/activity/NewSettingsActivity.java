@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.online.R;
 
@@ -35,6 +37,18 @@ public class NewSettingsActivity extends Activity {
         setContentView(R.layout.activity_fragment_settings);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

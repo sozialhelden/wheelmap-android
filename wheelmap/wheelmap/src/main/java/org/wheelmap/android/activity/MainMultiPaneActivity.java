@@ -124,6 +124,10 @@ public class MainMultiPaneActivity extends MapActivity implements
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_multipane);
 
         // FragmentManager.enableDebugLogging(true);
@@ -245,6 +249,10 @@ public class MainMultiPaneActivity extends MapActivity implements
                 return true;
             case R.id.menu_new_poi:
                 createNewPoi();
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

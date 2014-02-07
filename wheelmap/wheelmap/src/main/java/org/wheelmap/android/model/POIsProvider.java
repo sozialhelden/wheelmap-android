@@ -321,7 +321,7 @@ public class POIsProvider extends ContentProvider {
 
         }
 
-        Log.d(TAG, "setNotificationUri uri = " + uri.toString());
+        Log.d(TAG, "setNotificationUri uri = " + uri);
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }

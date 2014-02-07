@@ -33,12 +33,16 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
+import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
+import org.wheelmap.android.fragment.SearchDialogFragment;
+import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -48,6 +52,7 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.tracker.TrackerWrapper;
 
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.location.Location;
@@ -66,12 +71,11 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshAttacher;
 
 @Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
-public class MainSinglePaneActivity extends MapActivity implements
+public class  MainSinglePaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnStateListener,
         PullToRefreshAttacher.OnRefreshListener {
 
     private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
-
 
     @Inject
     IAppProperties appProperties;
@@ -96,7 +100,9 @@ public class MainSinglePaneActivity extends MapActivity implements
         Log.d(TAG, "onCreate");
 
         setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_frame_empty);
         FragmentManager.enableDebugLogging(true);
@@ -137,8 +143,8 @@ public class MainSinglePaneActivity extends MapActivity implements
         }
 
         configureRefresh();
-    }
 
+    }
 
     @Override
     protected void onResume() {
@@ -180,7 +186,7 @@ public class MainSinglePaneActivity extends MapActivity implements
     }
 
     private void executeDefaultInstanceState() {
-        mSelectedTab = DEFAULT_SELECTED_TAB;
+        mSelectedTab = getIntent().getIntExtra(Extra.SELECTED_TAB,DEFAULT_SELECTED_TAB);
         mFirstStart = true;
         ActionBar actionBar = getSupportActionBar();
         Log.d( TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
@@ -248,6 +254,9 @@ public class MainSinglePaneActivity extends MapActivity implements
                 return true;
             case R.id.menu_new_poi:
                 createNewPoi();
+                return true;
+            case android.R.id.home:
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

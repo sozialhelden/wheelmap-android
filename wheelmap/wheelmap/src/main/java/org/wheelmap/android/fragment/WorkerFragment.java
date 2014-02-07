@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 

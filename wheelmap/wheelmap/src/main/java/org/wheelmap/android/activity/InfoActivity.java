@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
@@ -41,6 +43,18 @@ public class InfoActivity extends Activity implements
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

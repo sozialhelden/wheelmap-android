@@ -23,6 +23,7 @@ package org.wheelmap.android.activity;
 
 import com.google.inject.Inject;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
@@ -76,10 +77,22 @@ public class POIDetailActivity extends MapActivity implements
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportProgressBarIndeterminateVisibility(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
         mFragment = (POIDetailFragment) fm
                 .findFragmentByTag(POIDetailFragment.TAG);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
