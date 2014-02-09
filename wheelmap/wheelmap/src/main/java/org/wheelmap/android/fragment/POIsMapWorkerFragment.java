@@ -99,7 +99,7 @@ public class POIsMapWorkerFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus.register(this);
+        mBus.registerSticky(this);
     }
 
     @Override
