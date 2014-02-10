@@ -39,18 +39,20 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Ort in der Nähe suchen"
+                android:hint="@string/dashboard_search_hint"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:singleLine="true"
                 android:imeOptions="actionSearch"
-                android:textColor="#576474" />
+                android:textColor="#576474"
+                android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/dashboard_search"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_menu_search_wheelmap_light" />
+                android:padding="5dp"
+                android:src="@drawable/start_zoom" />
         </LinearLayout>
 
         <View
@@ -71,7 +73,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_in_der_naehe"
                 android:gravity="center"
-                android:text="IN DER NÄHE" />
+                android:text="@string/dashboard_button_title_nearby"
+                android:textSize="15sp"    />
 
             <TextView
                 android:id="@+id/dashboard_btn_karte"
@@ -81,7 +84,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_karte"
                 android:gravity="center"
-                android:text="KARTE" />
+                android:text="@string/dashboard_button_title_map"
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -97,7 +101,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_kategorien"
                 android:gravity="center"
-                android:text="KATEGORIEN" />
+                android:text="@string/dashboard_button_title_categories"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/dashboard_btn_mithelfen"
@@ -107,7 +112,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_mithelfen"
                 android:gravity="center"
-                android:text="MITHELFEN" />
+                android:text="@string/dashboard_button_title_engage"
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <View

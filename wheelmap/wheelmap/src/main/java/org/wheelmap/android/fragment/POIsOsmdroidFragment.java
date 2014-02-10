@@ -53,6 +53,7 @@ import org.wheelmap.android.online.R.string;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
+import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.annotation.TargetApi;
@@ -72,6 +73,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.ImageButton;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
@@ -132,6 +134,8 @@ public class POIsOsmdroidFragment extends Fragment implements
     private EventBus mBus;
 
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
+
+    private ImageButton mBtnLocate;
 
     public POIsOsmdroidFragment() {
         // noop
@@ -199,6 +203,18 @@ public class POIsOsmdroidFragment extends Fragment implements
         mMapView.getOverlays().add(mPoisItemizedOverlay);
         mMapView.getOverlays().add(mCurrLocationOverlay);
         mMapView.setMapListener(this);
+
+        mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
+        mBtnLocate.setOnTouchListener(new PressSelector());
+        mBtnLocate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                centerMap(mCurrentLocationGeoPoint, true);
+                requestUpdate();
+            }
+        });
+
         return v;
     }
 
@@ -427,10 +443,10 @@ public class POIsOsmdroidFragment extends Fragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            case R.id.menu_location:
+            /*case R.id.menu_location:
                 centerMap(mCurrentLocationGeoPoint, true);
                 requestUpdate();
-                break;
+                break;*/
             default:
                 // noop
         }

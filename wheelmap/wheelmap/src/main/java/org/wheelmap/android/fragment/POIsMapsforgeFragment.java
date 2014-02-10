@@ -388,10 +388,10 @@ public class POIsMapsforgeFragment extends Fragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            case R.id.menu_location:
+            /*case R.id.menu_location:
                 centerMap(mCurrentLocationGeoPoint, true);
                 requestUpdate();
-                break;
+                break;*/
             default:
                 // noop
         }

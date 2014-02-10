@@ -85,6 +85,8 @@ public class DashboardActivity extends
             }
         });
 
+        findViewById(R.id.dashboard_search).setOnTouchListener(new PressSelector());
+
         findViewById(R.id.dashboard_search).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

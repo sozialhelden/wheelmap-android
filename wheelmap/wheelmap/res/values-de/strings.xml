@@ -189,4 +189,10 @@
     <string name="ws_limited_title">teilweise rollstuhlgerecht</string>
     <string name="ws_unknown">Unbekannt: Hilf mit und markiere diese Orte.</string>
     <string name="ws_unknown_title">Unbekannter Status</string>
+
+    <string name="dashboard_search_hint">Ort in der Nähe suchen</string>
+    <string name="dashboard_button_title_nearby">IN DER NÄHE</string>
+    <string name="dashboard_button_title_map">KARTE</string>
+    <string name="dashboard_button_title_categories">KATEGORIEN</string>
+    <string name="dashboard_button_title_engage">MITHELFEN</string>
 </resources>

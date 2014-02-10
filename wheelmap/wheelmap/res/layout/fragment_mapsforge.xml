@@ -42,4 +42,15 @@
             android:layout_marginLeft="@dimen/mapcompass_margin_horizontal"
             compass:color="@android:color/black"/>
 
+    <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/map_position_margin_vertical"
+            android:layout_marginLeft="@dimen/map_position_margin_horizontal"
+            android:background="@drawable/menue_ic_positon">
+
+    </LinearLayout>
+
 </RelativeLayout>
