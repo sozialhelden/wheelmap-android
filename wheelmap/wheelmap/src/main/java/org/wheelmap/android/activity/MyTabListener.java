@@ -89,6 +89,11 @@ public class MyTabListener implements TabListener {
         FragmentManager fm = mActivity.getSupportFragmentManager();
         if (holder.fragment == null) {
             Log.d( TAG, "Instantiating holder fragment");
+
+            if(holder.clazz == POIsListFragment.class){
+
+            }
+
             holder.fragment = Fragment.instantiate( holder.clazz, new Bundle());
         }
         Log.d(TAG, "Fragment holder.fragment = " + holder.fragment.toString());

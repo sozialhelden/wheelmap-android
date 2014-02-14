@@ -21,11 +21,13 @@
  */
 package org.wheelmap.android.app;
 
+import com.actionbarsherlock.widget.ShareActionProvider;
 import com.bugsense.trace.BugSenseHandler;
 
 import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.addon.AddonMyRoboguice;
 import org.holoeverywhere.app.Application;
+import org.holoeverywhere.preference.SharedPreferences;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Support;
@@ -114,5 +116,12 @@ public class WheelmapApp extends Application {
     public boolean isBugsenseInitCalled() {
         return isBugsenseInitCalled;
     }
+
+
+    public static SharedPreferences getCategoryChoosedPrefs(){
+        SharedPreferences prefs = INSTANCE.getSharedPreferences("wheelmap_category",0);
+        return prefs;
+    }
+
 
 }

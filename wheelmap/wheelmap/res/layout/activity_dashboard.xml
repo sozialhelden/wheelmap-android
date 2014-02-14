@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:padding="10dp">
 
         <LinearLayout
                 android:focusable="true"
@@ -18,6 +18,7 @@
                 android:layout_height="0dp"/>
 
         <ImageView
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -66,24 +67,24 @@
             android:orientation="horizontal"
             android:padding="10dp" >
 
-            <TextView
+            <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_in_der_naehe"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_in_der_naehe"
-                android:gravity="center"
+                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_nearby"
                 android:textSize="15sp"    />
 
-            <TextView
+            <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_karte"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_karte"
-                android:gravity="center"
+                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_map"
                 android:textSize="15sp"/>
         </LinearLayout>
@@ -94,24 +95,24 @@
             android:orientation="horizontal"
             android:padding="10dp" >
 
-            <TextView
+            <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_kategorien"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_kategorien"
-                android:gravity="center"
+                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_categories"
                 android:textSize="15sp" />
 
-            <TextView
+            <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_mithelfen"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/start_btn_mithelfen"
-                android:gravity="center"
+                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_engage"
                 android:textSize="15sp"/>
         </LinearLayout>

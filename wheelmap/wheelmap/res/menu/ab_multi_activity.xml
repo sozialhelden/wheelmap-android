@@ -4,26 +4,46 @@
     <item
             android:id="@+id/menu_search"
             android:icon="@drawable/ic_menu_search_wheelmap_light"
-            android:showAsAction="ifRoom"
+            android:showAsAction="always"
             android:title="@string/menu_search"/>
     <item
             android:id="@+id/menu_new_poi"
             android:menuCategory="secondary"
             android:orderInCategory="0"
-            android:showAsAction="never"
+            android:showAsAction="always"
+            android:icon="@drawable/map_navbar_btn_neu"
             android:title="@string/menu_new_poi"/>
     <item
             android:id="@+id/menu_filter"
             android:menuCategory="secondary"
             android:orderInCategory="1"
-            android:showAsAction="never"
+            android:showAsAction="always"
+            android:icon="@drawable/map_navbar_btn_filter"
             android:title="@string/menu_filter"/>
+
+
+    <item
+            android:id="@+id/menu_filter_kategorie"
+            android:menuCategory="secondary"
+            android:orderInCategory="1"
+            android:showAsAction="always"
+            android:icon="@drawable/map_navbar_btn_kategorie"
+            android:title="@string/menu_filter"/>
+
     <item
             android:id="@+id/menu_about"
             android:menuCategory="secondary"
             android:orderInCategory="2"
-            android:showAsAction="never"
-            android:title="@string/menu_about">
-    </item>
+            android:showAsAction="always"
+            android:icon="@drawable/start_ic_info"
+            android:title="@string/menu_about"/>
+
+    <item
+            android:id="@+id/menu_login"
+            android:menuCategory="secondary"
+            android:orderInCategory="2"
+            android:showAsAction="always"
+            android:icon="@drawable/map_navbar_btn_anmelden"
+            android:title="@string/menu_about"/>
 
 </menu>

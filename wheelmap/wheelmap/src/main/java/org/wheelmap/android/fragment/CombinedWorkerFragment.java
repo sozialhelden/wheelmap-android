@@ -4,6 +4,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.mapping.apikey.User;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
@@ -18,6 +19,7 @@ import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -134,7 +136,16 @@ public class CombinedWorkerFragment extends Fragment implements
             return;
         }
 
+        Log.d(TAG,"resuestUpdate: "+bundle);
+
         if (bundle == null) {
+            LocationManager myLocationManager = (LocationManager) getSystemService(
+                    getSupportApplication().LOCATION_SERVICE);
+
+            if(LocationManager.PASSIVE_PROVIDER != null && !LocationManager.PASSIVE_PROVIDER.equals("null")){
+                mLocation = myLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            }
+
             RestServiceHelper.retrieveNodesByDistance(getActivity(),
                     mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
         } else {
@@ -232,6 +243,9 @@ public class CombinedWorkerFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if(getActivity().getIntent().hasExtra(Extra.QUERY_CHANGED)) {
+            mUserQuery = UserQueryHelper.INSTANCE.getUserQuery();
+        }
         if (id == LOADER_MAP_ID) {
             Uri uri = POIs.CONTENT_URI_RETRIEVED;
             return new CursorLoader(getActivity(), uri, POIs.PROJECTION,
@@ -316,6 +330,7 @@ public class CombinedWorkerFragment extends Fragment implements
     public void onEventMainThread(UserQueryHelper.UserQueryUpdateEvent e) {
         Log.d(TAG, "onUserQueryChanged: received event");
         mUserQuery = e.query;
+
         getLoaderManager().restartLoader(LOADER_LIST_ID, null, this);
         getLoaderManager().restartLoader(LOADER_MAP_ID, null, this);
     }

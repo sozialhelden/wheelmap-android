@@ -9,10 +9,29 @@
             android:layout_height="0dp"
             android:layout_centerVertical="true"/>
 
+
+    <include
+            android:id="@+id/actionbar_bottom"
+            android:layout_width="match_parent"
+             android:layout_height="50dp"
+             layout="@layout/actionbar_tablet_bottom"
+            android:layout_alignParentBottom="true"/>
+
     <FrameLayout
+            android:layout_above="@+id/actionbar_bottom"
             android:id="@+id/map_layout"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent">
+    </FrameLayout>
+
+    <ImageButton
+            android:id="@+id/button_movable_resize"
+            style="@style/IconLarge"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="48dp"
+            android:src="@drawable/ic_detail_expand"/>
 
     <RelativeLayout
             android:id="@+id/movable_layout"
@@ -40,11 +59,13 @@
                 android:layout_height="fill_parent"
                 android:layout_toRightOf="@+id/center_horizontal_position"/>
 
+        <!--
         <ImageView
                 android:layout_width="@dimen/margin_huge"
                 android:layout_height="fill_parent"
                 android:layout_toLeftOf="@+id/center_horizontal_position"
                 android:src="@drawable/fragment_shadow_right"/>
+          -->
 
         <View
                 android:layout_width="fill_parent"
@@ -53,12 +74,5 @@
                 android:background="@android:color/black"/>
     </RelativeLayout>
 
-    <ImageButton
-            android:id="@+id/button_movable_resize"
-            style="@style/IconLarge"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="48dp"
-            android:src="@drawable/ic_detail_expand"/>
 
 </RelativeLayout>

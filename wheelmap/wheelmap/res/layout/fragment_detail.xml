@@ -58,6 +58,15 @@
                 android:layout_marginRight="@dimen/margin_large"
                 android:src="@android:color/transparent"
                 android:layout_alignParentRight="true"/>
+
+
+        <ImageView
+                android:id="@+id/titlebar_backbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/close_x"/>
     </RelativeLayout>
 
     <ScrollView style="@style/Scrollable.View">

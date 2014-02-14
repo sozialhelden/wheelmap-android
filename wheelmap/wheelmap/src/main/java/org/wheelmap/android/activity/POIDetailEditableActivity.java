@@ -65,18 +65,19 @@ public class POIDetailEditableActivity extends MapActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_frame_empty);
-        setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        setExternalEditableState(savedInstanceState);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             showAsPopup(this);
         }
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.activity_frame_empty);
+        setSupportProgressBarIndeterminateVisibility(false);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        setExternalEditableState(savedInstanceState);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(this);
@@ -96,6 +97,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         POIDetailEditableFragment.TAG).commit();
+
     }
 
     @Override

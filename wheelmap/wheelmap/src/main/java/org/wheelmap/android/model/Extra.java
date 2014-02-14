@@ -37,6 +37,7 @@ public interface Extra {
     public final static String ZOOM_LEVEL = "ZOOM_LEVEL";
     public final static String WHEELCHAIR_STATE = "WHEELCHAIR_STATE";
 
+    public final static String QUERY_CHANGED = "query_changed";
     public final static String SELECTED_TAB = "SELECTED_TAB";
     public final static String CENTER_MAP = "CENTER_MAP";
     public final static String FIRST_VISIBLE_POSITION = "FIRST_VISIBLE_POSITION";

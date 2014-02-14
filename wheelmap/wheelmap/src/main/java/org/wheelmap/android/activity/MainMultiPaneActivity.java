@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.LayoutParams;
+import com.actionbarsherlock.internal.view.menu.MenuItemImpl;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -34,10 +35,12 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.TextView;
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.fragment.POIsListFragment;
@@ -54,22 +57,28 @@ import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
+import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import de.akquinet.android.androlog.Log;
@@ -124,9 +133,7 @@ public class MainMultiPaneActivity extends MapActivity implements
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
 
         setContentView(R.layout.activity_multipane);
 
@@ -176,6 +183,12 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
 
         t.commit();
+
+        /*
+        LinearLayout layout = (LinearLayout) getWindowDecorView().getParent().getParent();
+        View view = layout.getChildAt(0);
+        layout.removeViewAt(0);
+        layout.addView(view);*/
     }
 
     @Override
@@ -228,18 +241,64 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.ab_multi_activity, menu);
+
+        boolean isPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        if(isPortraitMode){
+            ActionBar bar = getSupportActionBar();
+            //g.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View customView = inflater.inflate(R.layout.actionbar_tablet,
+                    null);
+
+            final ImageView switchView = (ImageView)  customView.findViewById(R.id.show_list);
+            switchView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleMovableResize();
+                }
+            });
+
+            LinearLayout l = (LinearLayout)findViewById(R.id.actionbar_bottom);
+            for(int i=0;i<l.getChildCount();i++){
+                l.getChildAt(i).setOnTouchListener(new PressSelector());
+            }
+
+                   //LayoutParams.MATCH_PARENT
+            bar.setCustomView(customView, new ActionBar.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
+                    Gravity.CENTER_VERTICAL | Gravity.RIGHT));
+            bar.setDisplayShowCustomEnabled(true);
+        }else{
+            MenuInflater inflaterMenu = getSupportMenuInflater();
+            inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
+        }
+
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+       boolean b = onOptionItemClicked(item.getItemId(),null,item);
+       return b ? b : super.onOptionsItemSelected(item);
+    }
+
+
+    public void onOptionItemBottomClicked(View v){
+        onOptionItemClicked(v.getId(),v,null);
+    }
+
+    /*
+     * combined method to handle actionbar menu and custom bottom menu
+     */
+    public boolean onOptionItemClicked(int id,View v, MenuItem item){
 
         switch (id) {
             case R.id.menu_search:
                 showSearch();
+                return true;
+            case R.id.menu_filter_kategorie:
+                showFilterSettings();
                 return true;
             case R.id.menu_filter:
                 showFilterSettings();
@@ -253,13 +312,23 @@ public class MainMultiPaneActivity extends MapActivity implements
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.menu_login:
+                FragmentManager fm = getSupportFragmentManager();
+                LoginDialogFragment loginDialog = new LoginDialogFragment();
+                loginDialog.show(fm);
+                return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return false;
         }
     }
 
+
     @SuppressLint("WrongViewCast")
     private void createSearchModeCustomView(final ActionBar bar) {
+        // not used anymore
+        if(true){
+           return;
+        }
         LayoutInflater inflater = LayoutInflater.from(this);
         View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
                 null);
@@ -341,7 +410,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 getContentResolver(), values, true);
         poiIdSelected = copyId;
 
-        if (!mMovableVisible && !mMovableGoneByButton) {
+        if (!mMovableVisible) {
             toggleMovableResize();
         }
         mDetailFragment.showDetail(poiIdSelected);
@@ -384,6 +453,11 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onShowLargeMapAt(GeoPoint point) {
         // noop
+    }
+
+    @Override
+    public void dismissDetailView() {
+        toggleMovableResize();
     }
 
     @Override
@@ -488,21 +562,31 @@ public class MainMultiPaneActivity extends MapActivity implements
         mMovableAnimationRunning = true;
         setCollapseButtonImage(!mMovableVisible);
 
+        boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        String change = land ? "translationX" : "translationY";
+
         float startValue;
         float endValue;
-
         if (mMovableVisible) {
             startValue = 0.0f;
-            endValue = -mMovableLayout.getHeight();
+            if(land){
+                endValue = -mMovableLayout.getWidth();
+            }else{
+                endValue = -mMovableLayout.getHeight();
+            }
             mMovableVisible = false;
         } else {
-            startValue = -mMovableLayout.getHeight();
+            if(land){
+                startValue = -mMovableLayout.getWidth();
+            }else{
+                startValue = -mMovableLayout.getHeight();
+            }
             endValue = 0.0f;
             mMovableVisible = true;
         }
 
         ObjectAnimator anim = ObjectAnimator.ofFloat(mMovableLayout,
-                "translationY", startValue, endValue);
+                change, startValue, endValue);
         anim.setInterpolator(SMOOTH_INTERPOLATOR);
         anim.setDuration(MOVABLE_ANIMATION_DURATION);
         anim.addListener(mMovableAnimatorListener);
@@ -517,5 +601,14 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void refreshRegisterList(ListView listView) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mMovableVisible && !mMovableAnimationRunning){
+            toggleMovableResize();
+            return;
+        }
+        super.onBackPressed();
     }
 }

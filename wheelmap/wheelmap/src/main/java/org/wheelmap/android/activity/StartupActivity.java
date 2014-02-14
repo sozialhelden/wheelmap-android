@@ -222,10 +222,9 @@ public class StartupActivity extends Activity implements
         } else {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
+            intent = new Intent(getApplicationContext(),
+                    DashboardActivity.class);
         }
-
-        intent = new Intent(getApplicationContext(),
-                DashboardActivity.class);
 
         intent.putExtra(Extra.REQUEST, true);
         startActivity(intent);

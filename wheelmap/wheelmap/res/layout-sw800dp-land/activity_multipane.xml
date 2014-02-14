@@ -7,12 +7,12 @@
             android:id="@+id/list_layout"
             android:layout_width="@dimen/mp_list_width"
             android:layout_height="fill_parent"/>
-
+                     <!--
     <ImageView
             android:layout_width="@dimen/margin_large"
             android:layout_height="fill_parent"
             android:layout_alignRight="@+id/list_layout"
-            android:src="@drawable/fragment_shadow_right"/>
+            android:src="@drawable/fragment_shadow_right"/>    -->
 
     <RelativeLayout
             android:layout_width="fill_parent"
@@ -32,19 +32,25 @@
 
         <FrameLayout
                 android:id="@+id/movable_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_above="@+id/center_position">
+                android:layout_width="400dp"
+                android:layout_height="fill_parent">
 
             <FrameLayout
                     android:id="@+id/detail_layout"
-                    android:layout_width="fill_parent"
+                    android:layout_width="400dp"
                     android:layout_height="fill_parent"/>
+                      <!--
+            <ImageView
+                    android:layout_width="@dimen/margin_large"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="right"
+                    android:src="@drawable/fragment_shadow_left"/>    -->
         </FrameLayout>
 
         <ImageButton
                 android:id="@+id/button_movable_resize"
                 style="@style/IconLarge"
+                android:visibility="gone"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/ic_detail_expand"/>

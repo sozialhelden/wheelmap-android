@@ -235,6 +235,11 @@ public class POIDetailActivity extends MapActivity implements
     }
 
     @Override
+    public void dismissDetailView() {
+        //not used
+    }
+
+    @Override
     public void onEdit(long poiId) {
         Intent intent = new Intent(this, POIDetailEditableActivity.class);
         intent.putExtra(Extra.POI_ID, poiId);

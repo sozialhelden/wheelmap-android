@@ -3,12 +3,17 @@ package org.wheelmap.android.activity;
 import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Support;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.SearchManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
@@ -22,7 +27,9 @@ import android.widget.TextView;
  */
 public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
-
+               //tablet 3h
+                //phone ui 3h
+                // filter 2h
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +144,7 @@ public class DashboardActivity extends
         }
         intent.putExtra(Extra.SELECTED_TAB,0);
         startActivity(intent);
+        resetFilter();
     }
 
     private void openMap(){
@@ -151,6 +159,7 @@ public class DashboardActivity extends
         }
         intent.putExtra(Extra.SELECTED_TAB,1);
         startActivity(intent);
+        resetFilter();
     }
 
     public void openMithelfen(){
@@ -158,8 +167,34 @@ public class DashboardActivity extends
     }
 
     public void openKategorien(){
-        Intent intent = new Intent(this,ChooseCategoryActivity.class);
+        Intent intent = new Intent(getApplicationContext(),
+                MainSinglePaneActivity.class);
+        //startActivity(intent);
+        intent = new Intent(this,ChooseCategoryActivity.class);
         startActivity(intent);
+    }
+
+
+    public void resetFilter(){
+        Uri mUri = Support.CategoriesContent.CONTENT_URI;
+        Cursor c = getContentResolver().query(mUri,
+                Support.CategoriesContent.PROJECTION, null, null,
+                Support.CategoriesContent.DEFAULT_SORT_ORDER);
+
+        for(int i=0;i<c.getCount();i++){
+            c.moveToPosition(i);
+            int catId = Support.CategoriesContent.getCategoryId(c);
+
+            ContentResolver resolver = getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(Support.CategoriesContent.SELECTED,
+                    Support.CategoriesContent.SELECTED_YES);
+
+            String whereClause = "( " + Support.CategoriesContent.CATEGORY_ID
+                    + " = ?)";
+            String[] whereValues = new String[]{Integer.toString(catId)};
+            resolver.update(mUri, values, whereClause, whereValues);
+        }
     }
 
 

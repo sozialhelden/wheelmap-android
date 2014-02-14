@@ -79,6 +79,9 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
             float distance = getBundle().getFloat(Extra.DISTANCE_LIMIT);
             Location location = (Location) getBundle().getParcelable(
                     Extra.LOCATION);
+            if(location == null){
+                location = new Location("gps");
+            }
             mBoundingBox = GeoMath.calculateBoundingBox(
                     new Wgs84GeoCoordinates(location.getLongitude(), location
                             .getLatitude()), distance);

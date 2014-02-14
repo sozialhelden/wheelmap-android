@@ -3,11 +3,18 @@ package org.wheelmap.android.activity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.holoeverywhere.app.ListActivity;
+import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.ArrayAdapter;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.Toast;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
+import org.wheelmap.android.utils.UtilsMisc;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,7 +52,36 @@ public class ChooseCategoryActivity extends ListActivity implements
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Toast.makeText(this,"TODO",Toast.LENGTH_SHORT).show();
+
+       // SharedPreferences prefs =  WheelmapApp.getCategoryChoosedPrefs();
+        Cursor c = adapter.getCursor();
+        for(int i=0;i<c.getCount();i++){
+            c.moveToPosition(i);
+            int catId = Support.CategoriesContent.getCategoryId(c);
+
+            ContentResolver resolver = getContentResolver();
+            ContentValues values = new ContentValues();
+            if (i != position) {
+                values.put(Support.CategoriesContent.SELECTED,
+                        Support.CategoriesContent.SELECTED_NO);
+            } else {
+                values.put(Support.CategoriesContent.SELECTED,
+                        Support.CategoriesContent.SELECTED_YES);
+            }
+            String whereClause = "( " + Support.CategoriesContent.CATEGORY_ID
+                    + " = ?)";
+            String[] whereValues = new String[]{Integer.toString(catId)};
+            resolver.update(mUri, values, whereClause, whereValues);
+
+        }
+
+        Intent intent = new Intent(getApplicationContext(),
+                    MainSinglePaneActivity.class);
+
+        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.QUERY_CHANGED,true);
+        startActivity(intent);
+
     }
 
     @Override
