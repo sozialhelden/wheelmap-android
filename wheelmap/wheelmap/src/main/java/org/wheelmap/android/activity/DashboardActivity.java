@@ -83,6 +83,10 @@ public class DashboardActivity extends
             }
         });
 
+        TextView txt_orte = (TextView) findViewById(R.id.dashboard_text_orte);
+        txt_orte.setText("... Orte");
+
+
         findViewById(R.id.dashboard_login).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

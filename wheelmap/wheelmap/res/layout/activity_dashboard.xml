@@ -45,8 +45,9 @@
                 android:paddingRight="5dp"
                 android:singleLine="true"
                 android:imeOptions="actionSearch"
-                android:textColor="#576474"
-                android:textSize="15sp" />
+                android:textColorHint="@color/dashboard_text_color"
+                android:textColor="@color/dashboard_text_color"
+                android:textSize="17sp" />
 
             <ImageView
                 android:id="@+id/dashboard_search"
@@ -71,22 +72,18 @@
                 android:id="@+id/dashboard_btn_in_der_naehe"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/start_btn_in_der_naehe"
-                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_nearby"
-                android:textSize="15sp"    />
+                style="@style/wheelmap_dasboard_button"    />
 
             <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_karte"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_weight="1"
                 android:background="@drawable/start_btn_karte"
-                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_map"
-                android:textSize="15sp"/>
+                style="@style/wheelmap_dasboard_button"/>
         </LinearLayout>
 
         <LinearLayout
@@ -99,22 +96,18 @@
                 android:id="@+id/dashboard_btn_kategorien"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/start_btn_kategorien"
-                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_categories"
-                android:textSize="15sp" />
+                style="@style/wheelmap_dasboard_button" />
 
             <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_mithelfen"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_weight="1"
                 android:background="@drawable/start_btn_mithelfen"
-                android:gravity="center|bottom"
                 android:text="@string/dashboard_button_title_engage"
-                android:textSize="15sp"/>
+                style="@style/wheelmap_dasboard_button"/>
         </LinearLayout>
 
         <View
@@ -142,8 +135,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text=""
-                android:textColor="#576474" />
+                android:textColor="@color/dashboard_text_color"
+                android:textSize="17sp"
+                android:text="Orte"/>
 
             <ImageView
                 android:id="@+id/dashboard_login"

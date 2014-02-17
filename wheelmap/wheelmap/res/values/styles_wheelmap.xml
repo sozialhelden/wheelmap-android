@@ -108,4 +108,11 @@
         <item name="android:dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
     </style>
 
+    <style name="wheelmap_dasboard_button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 </resources>

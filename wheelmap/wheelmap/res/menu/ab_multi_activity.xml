@@ -34,7 +34,7 @@
             android:id="@+id/menu_about"
             android:menuCategory="secondary"
             android:orderInCategory="2"
-            android:showAsAction="always"
+            android:showAsAction="never"
             android:icon="@drawable/start_ic_info"
             android:title="@string/menu_about"/>
 
@@ -42,8 +42,8 @@
             android:id="@+id/menu_login"
             android:menuCategory="secondary"
             android:orderInCategory="2"
-            android:showAsAction="always"
+            android:showAsAction="never"
             android:icon="@drawable/map_navbar_btn_anmelden"
-            android:title="@string/menu_about"/>
+            android:title="@string/menu_account"/>
 
 </menu>
