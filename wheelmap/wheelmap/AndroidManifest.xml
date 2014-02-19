@@ -23,7 +23,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="46"
+          android:versionCode="60"
           android:versionName="0.99.6-SNAPSHOT-DEVEL"
         >
 
