@@ -175,6 +175,7 @@ public class DashboardActivity extends
                 MainSinglePaneActivity.class);
         //startActivity(intent);
         intent = new Intent(this,ChooseCategoryActivity.class);
+        intent.putExtra(Extra.SELECTED_TAB,2);
         startActivity(intent);
     }
 

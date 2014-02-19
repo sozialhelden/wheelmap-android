@@ -326,7 +326,12 @@ public class  MainSinglePaneActivity extends MapActivity implements
         });
 
         TextView title = (TextView) customView.findViewById(R.id.title);
-        title.setText("");
+        if(mSelectedTab == 0)
+            title.setText("NEARBY");
+        else if(mSelectedTab == 1)
+            title.setText("MAP");
+        else
+            title.setText("WHEELMAP");
 
         bar.setCustomView(customView, new ActionBar.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
