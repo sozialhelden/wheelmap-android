@@ -162,36 +162,6 @@ public class  MainSinglePaneActivity extends MapActivity implements
 
         t.commit();
 
-        /*Tab tab = actionBar
-                .newTab()
-                .setText(R.string.title_pois_list)
-                .setIcon(
-                        getResources().getDrawable(
-                                R.drawable.ic_location_list_wheelmap))
-                .setTag(POIsListFragment.TAG)
-                .setTabListener(mTabListener);*/
-        //tabs[0]=tab;
-        //actionBar.addTab(tab, MyTabListener.TAB_LIST, false);
-
-        /*tab = actionBar
-                .newTab()
-                .setText(R.string.title_pois_map)
-                .setIcon(
-                        getResources().getDrawable(
-                                R.drawable.ic_location_map_wheelmap))
-                .setTag(POIsOsmdroidFragment.TAG)
-                .setTabListener(mTabListener);
-        tabs[1]=tab; */
-        //actionBar.addTab(tab, MyTabListener.TAB_MAP, false);
-
-        /*mListFragment = (POIsListFragment) fm
-                .findFragmentById(R.id.list_layout);
-        if (mListFragment == null) {
-            mListFragment = POIsListFragment.newInstance(false, true);
-            t.add(R.id.list_layout, mListFragment, POIsListFragment.TAG);
-        }   */
-
-
         if (savedInstanceState != null) {
             executeState(savedInstanceState);
         } else {
@@ -327,9 +297,9 @@ public class  MainSinglePaneActivity extends MapActivity implements
 
         TextView title = (TextView) customView.findViewById(R.id.title);
         if(mSelectedTab == 0)
-            title.setText("NEARBY");
+            title.setText(R.string.dashboard_button_title_nearby);
         else if(mSelectedTab == 1)
-            title.setText("MAP");
+            title.setText(R.string.dashboard_button_title_map);
         else
             title.setText("WHEELMAP");
 

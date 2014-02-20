@@ -49,6 +49,9 @@ public class ChooseCategoryActivity extends ListActivity implements
         setContentView(list);
 
 
+        setTitle(R.string.dashboard_button_title_categories);
+
+
         if(getSupportActionBar() != null){
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,6 +127,7 @@ public class ChooseCategoryActivity extends ListActivity implements
     @Override
     public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 
+        /*
         ActionBar bar = getSupportActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -137,6 +141,8 @@ public class ChooseCategoryActivity extends ListActivity implements
         bar.setCustomView(customView, new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
         bar.setDisplayShowCustomEnabled(true);
+          */
+
 
         return true;
     }
