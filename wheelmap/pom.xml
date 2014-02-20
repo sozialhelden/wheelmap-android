@@ -359,10 +359,38 @@
                 <app.name>Wheelmap Staging</app.name>
                 <app.developbuild>false</app.developbuild>
                 <app.type>STAGING</app.type>
-                <app.package>${app.basepackage}.staging</app.package>
+                <app.package>${app.basepackage}.stagingdev</app.package>
                 <app.icon>@drawable/ic_launcher_staging</app.icon>
                 <asset.variant>development</asset.variant>
                 <hockey.update.url>${app.hockey.update.url}</hockey.update.url>
+                <app.enabledebug>true</app.enabledebug>
+                <bugsense.key>${app.bugsense.testing}</bugsense.key>
+            </properties>
+        </profile>
+        <profile>
+            <id>stagingDevSMF</id>
+            <properties>
+                <app.name>Wheelmap Dev Staging</app.name>
+                <app.developbuild>false</app.developbuild>
+                <app.type>STAGING</app.type>
+                <app.package>${app.basepackage}.stagingdev</app.package>
+                <app.icon>@drawable/ic_launcher_dev</app.icon>
+                <asset.variant>development</asset.variant>
+                <hockey.update.url></hockey.update.url>
+                <app.enabledebug>true</app.enabledebug>
+                <bugsense.key>${app.bugsense.testing}</bugsense.key>
+            </properties>
+        </profile>
+        <profile>
+            <id>stagingBetaSMF</id>
+            <properties>
+                <app.name>Wheelmap Beta Staging</app.name>
+                <app.developbuild>false</app.developbuild>
+                <app.type>STAGING</app.type>
+                <app.package>${app.basepackage}.stagingbeta</app.package>
+                <app.icon>@drawable/ic_launcher_beta</app.icon>
+                <asset.variant>development</asset.variant>
+                <hockey.update.url></hockey.update.url>
                 <app.enabledebug>true</app.enabledebug>
                 <bugsense.key>${app.bugsense.testing}</bugsense.key>
             </properties>
