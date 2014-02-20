@@ -119,6 +119,7 @@
     <string name="menu_save">Save</string>
     <string name="menu_search">Search</string>
     <string name="menu_share">Share</string>
+    <string name="menu_account">Account</string>
     <string name="no_pois">no places found according your filter settings</string>
     <string name="poi_new_default_name">New POI</string>
     <string name="poi_property_address">Address</string>
@@ -191,4 +192,10 @@
     <string name="ws_unknown">Unknown: Help us and mark this location.</string>
     <string name="ws_unknown_title">Unknown Status</string>
     <string name="menu_refresh">Refresh</string>
+    
+    <string name="dashboard_search_hint">Search Nearby Locations</string>
+    <string name="dashboard_button_title_nearby">NEARBY</string>
+    <string name="dashboard_button_title_map">MAP</string>
+    <string name="dashboard_button_title_categories">CATEGORIES</string>
+    <string name="dashboard_button_title_engage">ENGAGE</string>
 </resources>

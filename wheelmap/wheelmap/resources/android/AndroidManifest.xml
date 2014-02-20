@@ -62,10 +62,13 @@ limitations under the License.
             </intent-filter>
         </activity>
         <activity
+                android:uiOptions="splitActionBarWhenNarrow"
+                android:screenOrientation="portrait"
                 android:name="org.wheelmap.android.activity.MainSinglePaneActivity"
                 android:label="">
         </activity>
         <activity
+                android:uiOptions="splitActionBarWhenNarrow"
                 android:name="org.wheelmap.android.activity.MainMultiPaneActivity"
                 android:label="">
         </activity>
@@ -113,6 +116,17 @@ limitations under the License.
                 android:name="org.wheelmap.android.activity.LegalNoticeActivity"
                 android:label="@string/title_legal_notice"
                 android:theme="@style/Theme.Wheelmap.SubActivity"/>
+
+        <activity
+                android:screenOrientation="portrait"
+                android:name="org.wheelmap.android.activity.DashboardActivity"
+                android:label=""
+                android:theme="@style/Holo.Theme.Light.NoActionBar">
+        </activity>
+        <activity
+                android:name="org.wheelmap.android.activity.ChooseCategoryActivity"
+                android:label="">
+        </activity>
 
         <activity
                 android:name="net.hockeyapp.android.UpdateActivity"/>

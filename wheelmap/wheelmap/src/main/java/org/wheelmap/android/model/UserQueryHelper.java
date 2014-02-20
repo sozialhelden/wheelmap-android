@@ -46,7 +46,7 @@ public class UserQueryHelper {
 
     private static final String TAG = UserQueryHelper.class.getSimpleName();
 
-    private static UserQueryHelper INSTANCE;
+    public static UserQueryHelper INSTANCE;
 
     private Context mContext;
 
@@ -197,6 +197,7 @@ public class UserQueryHelper {
     };
 
     private void calcCategoriesQuery() {
+
         Cursor cursor = mContext.getContentResolver().query(
                 CategoriesContent.CONTENT_URI, null, null, null, null);
         if (cursor == null) {

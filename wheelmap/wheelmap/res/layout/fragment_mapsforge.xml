@@ -34,6 +34,7 @@
 
     <org.wheelmap.android.view.CompassView
             android:id="@+id/compass"
+            android:visibility="gone"
             android:layout_width="@dimen/mapcompass_size"
             android:layout_height="@dimen/mapcompass_size"
             android:layout_alignParentBottom="true"
@@ -41,5 +42,19 @@
             android:layout_marginBottom="@dimen/mapcompass_margin_vertical"
             android:layout_marginLeft="@dimen/mapcompass_margin_horizontal"
             compass:color="@android:color/black"/>
+
+    <LinearLayout
+            android:id="@+id/my_location_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="@dimen/map_position_margin_horizontal"
+            android:background="@drawable/menue_ic_positon">
+
+        <!--android:layout_marginBottom="@dimen/map_position_margin_vertical" -->
+    </LinearLayout>
 
 </RelativeLayout>

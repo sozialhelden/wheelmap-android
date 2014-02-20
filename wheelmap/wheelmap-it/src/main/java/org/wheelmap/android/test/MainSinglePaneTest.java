@@ -119,7 +119,7 @@ public class MainSinglePaneTest extends
         executeTabSelect(0);
         executeTabSelect(1);
         solo.waitForFragmentByTag(POIsOsmdroidFragment.TAG);
-        clickOnActionbar(R.id.menu_location);
+        clickOnActionbar(R.id.map_btn_locate);
         executeTabSelect(0);
         RobotiumHelper.waitForListRefreshingDone(solo, POIsListWorkerFragment.TAG);
         solo.sleep(500);

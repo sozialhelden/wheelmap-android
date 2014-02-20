@@ -41,4 +41,6 @@
     <color name="position_marker_outline_blue_dark">#FF4F5C8C</color>
     <color name="position_marker_outline_blue_light">#FF848484</color>
 
+    <color name="dashboard_text_color">#FFafbed0</color>
+
 </resources>

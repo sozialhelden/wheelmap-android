@@ -146,6 +146,8 @@ public class POIDetailFragment extends Fragment implements
         void onEditWheelchairState(WheelchairState wState);
 
         void onShowLargeMapAt(GeoPoint point);
+
+        void dismissDetailView();
     }
 
     private OnPOIDetailListener mListener;
@@ -188,7 +190,8 @@ public class POIDetailFragment extends Fragment implements
 
     public static POIDetailFragment newInstance() {
         POIDetailFragment f = new POIDetailFragment();
-        f.setArguments(new Bundle());
+        Bundle bundle = new Bundle();
+        f.setArguments(bundle);
         return f;
     }
 
@@ -216,7 +219,15 @@ public class POIDetailFragment extends Fragment implements
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
+            v.findViewById(R.id.titlebar_backbutton).setVisibility(View.GONE);
             showMap(v);
+        }else{
+            v.findViewById(R.id.titlebar_backbutton).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.dismissDetailView();
+                }
+            });
         }
         return v;
     }
@@ -291,6 +302,11 @@ public class POIDetailFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        //don't add options in tablet-mode
+        if(!getArguments().containsKey(Extra.SHOW_MAP)){
+             return;
+        }
         Log.d(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.ab_detail_fragment, menu);
         createShareActionProvider(menu);
@@ -521,7 +537,7 @@ public class POIDetailFragment extends Fragment implements
             geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?z=17");
         }
 
-        Log.d(TAG, "geoURI = " + geoURI.toString());
+        Log.d(TAG, "geoURI = " + geoURI);
         Intent intent = createExternIntent(Intent.ACTION_VIEW);
         intent.setData(geoURI);
 

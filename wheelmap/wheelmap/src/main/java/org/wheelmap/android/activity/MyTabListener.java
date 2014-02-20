@@ -58,6 +58,8 @@ public class MyTabListener implements TabListener {
 
     private OnStateListener mListener;
 
+    private TabHolder currentTab;
+
     /**
      * Constructor used each time a new tab is created.
      *
@@ -71,17 +73,27 @@ public class MyTabListener implements TabListener {
         }
     }
 
+    public TabHolder getCurrentTab(){
+        return currentTab;
+    }
+
     public TabHolder getTabHolder( String tag ) {
         return sTagToTabHolder.get(tag);
     }
 
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         TabHolder holder = sTagToTabHolder.get(tab.getTag());
+        currentTab = holder;
         Log.d(TAG, "onTabSelected tag = " + holder.tag);
 
         FragmentManager fm = mActivity.getSupportFragmentManager();
         if (holder.fragment == null) {
             Log.d( TAG, "Instantiating holder fragment");
+
+            if(holder.clazz == POIsListFragment.class){
+
+            }
+
             holder.fragment = Fragment.instantiate( holder.clazz, new Bundle());
         }
         Log.d(TAG, "Fragment holder.fragment = " + holder.fragment.toString());

@@ -31,14 +31,21 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
+import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
+import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
+import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
+import org.wheelmap.android.fragment.SearchDialogFragment;
+import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -48,17 +55,23 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.tracker.TrackerWrapper;
 
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.ImageView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ViewFlipper;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -66,17 +79,16 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshAttacher;
 
 @Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
-public class MainSinglePaneActivity extends MapActivity implements
+public class  MainSinglePaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnStateListener,
         PullToRefreshAttacher.OnRefreshListener {
 
     private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
 
-
     @Inject
     IAppProperties appProperties;
 
-    private MyTabListener mTabListener;
+    //private MyTabListener mTabListener;
 
     private final static int DEFAULT_SELECTED_TAB = 0;
 
@@ -88,7 +100,14 @@ public class MainSinglePaneActivity extends MapActivity implements
 
     private PullToRefreshAttacher mPullToRefreshHelper;
 
-    private TabHolder mActiveTabHolder;
+    //private TabHolder mActiveTabHolder;
+
+    //private Fragment[] tabs = new Fragment[2];
+
+    private CombinedWorkerFragment mWorkerFragment;
+    private POIsListFragment mListFragment;
+    private POIsMapsforgeFragment mMapFragment;
+    private ViewFlipper flipper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,39 +115,52 @@ public class MainSinglePaneActivity extends MapActivity implements
         Log.d(TAG, "onCreate");
 
         setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setContentView(R.layout.activity_frame_empty);
+        setContentView(R.layout.activity_single_pane);
+
+        flipper = (ViewFlipper) findViewById(R.id.flipper);
+        flipper.setDisplayedChild(0);
+
         FragmentManager.enableDebugLogging(true);
 
         mTrackerWrapper = new TrackerWrapper(this);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
-        createSearchModeCustomView(actionBar);
+       // createSearchModeCustomView(actionBar);
+        View customNav = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
+        actionBar.setCustomView(customNav);
+       // mTabListener = new MyTabListener(this);
 
-        mTabListener = new MyTabListener(this);
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction t = fm.beginTransaction();
 
-        Tab tab = actionBar
-                .newTab()
-                .setText(R.string.title_pois_list)
-                .setIcon(
-                        getResources().getDrawable(
-                                R.drawable.ic_location_list_wheelmap))
-                .setTag(POIsListFragment.TAG)
-                .setTabListener(mTabListener);
-        actionBar.addTab(tab, MyTabListener.TAB_LIST, false);
+        mWorkerFragment = (CombinedWorkerFragment) fm
+                .findFragmentByTag(CombinedWorkerFragment.TAG);
+        if (mWorkerFragment == null) {
+            mWorkerFragment = new CombinedWorkerFragment();
+            t.add(mWorkerFragment, CombinedWorkerFragment.TAG);
+        }
 
-        tab = actionBar
-                .newTab()
-                .setText(R.string.title_pois_map)
-                .setIcon(
-                        getResources().getDrawable(
-                                R.drawable.ic_location_map_wheelmap))
-                .setTag(POIsOsmdroidFragment.TAG)
-                .setTabListener(mTabListener);
-        actionBar.addTab(tab, MyTabListener.TAB_MAP, false);
+        mListFragment = (POIsListFragment) fm
+                .findFragmentById(R.id.list_layout);
+        if (mListFragment == null) {
+            mListFragment = POIsListFragment.newInstance(false, true);
+            t.add(R.id.list_layout, mListFragment, POIsListFragment.TAG);
+        }
+
+        mMapFragment = (POIsMapsforgeFragment) fm
+                .findFragmentById(R.id.map_layout);
+        if (mMapFragment == null) {
+            mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
+            t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
+        }
+
+        t.commit();
 
         if (savedInstanceState != null) {
             executeState(savedInstanceState);
@@ -137,8 +169,8 @@ public class MainSinglePaneActivity extends MapActivity implements
         }
 
         configureRefresh();
-    }
 
+    }
 
     @Override
     protected void onResume() {
@@ -172,21 +204,29 @@ public class MainSinglePaneActivity extends MapActivity implements
         mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
         mFirstStart = false;
 
-        TabHolder holder = TabHolder.findActiveHolderByTab(mSelectedTab);
+        /*TabHolder holder = TabHolder.findActiveHolderByTab(mSelectedTab);
         holder.setExecuteBundle(state);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSelectedNavigationItem(mSelectedTab);
+        */
+
+        flipper.setDisplayedChild(mSelectedTab);
+
     }
 
     private void executeDefaultInstanceState() {
-        mSelectedTab = DEFAULT_SELECTED_TAB;
+        mSelectedTab = getIntent().getIntExtra(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
         mFirstStart = true;
         ActionBar actionBar = getSupportActionBar();
         Log.d( TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
-        if ( actionBar.getSelectedNavigationIndex() != mSelectedTab) {
+
+        flipper.setDisplayedChild(mSelectedTab);
+
+        //mTabListener.onTabSelected(tabs[mSelectedTab],null);
+        /*if ( actionBar.getSelectedNavigationIndex() != mSelectedTab) {
             actionBar.setSelectedNavigationItem(mSelectedTab);
-        }
+        } */
     }
 
     public void onStateChange(String tag) {
@@ -195,13 +235,13 @@ public class MainSinglePaneActivity extends MapActivity implements
         }
 
         Log.d(TAG, "onStateChange " + tag);
-        mActiveTabHolder = mTabListener.getTabHolder(tag);
+        //mActiveTabHolder = mTabListener.getTabHolder(tag);
 
-        mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
+        //mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
         String readableName = tag.replaceAll("Fragment", "");
         mTrackerWrapper.track(readableName);
 
-        getSupportActionBar().setDisplayShowCustomEnabled(false);
+       // getSupportActionBar().setDisplayShowCustomEnabled(false);
     }
 
     @Override
@@ -230,8 +270,43 @@ public class MainSinglePaneActivity extends MapActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.ab_main_activity, menu);
+        MenuInflater inflaterMenu = getSupportMenuInflater();
+        inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
+
+        ActionBar bar = getSupportActionBar();
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customView = inflater.inflate(R.layout.actionbar,
+                null);
+
+        final ImageView switchView = (ImageView)  customView.findViewById(R.id.switch_view);
+        int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+        switchView.setImageResource(switch_res);
+        switchView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSelectedTab = mSelectedTab == 0 ? 1: 0;
+                //Tab tab = tabs[mSelectedTab];
+                int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+                switchView.setImageResource(switch_res);
+                //mTabListener.onTabSelected(tab, null);
+                //flipper.setDisplayedChild(mSelectedTab);
+                flipper.showNext();
+            }
+        });
+
+        TextView title = (TextView) customView.findViewById(R.id.title);
+        if(mSelectedTab == 0)
+            title.setText(R.string.dashboard_button_title_nearby);
+        else if(mSelectedTab == 1)
+            title.setText(R.string.dashboard_button_title_map);
+        else
+            title.setText("WHEELMAP");
+
+        bar.setCustomView(customView, new ActionBar.LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        bar.setDisplayShowCustomEnabled(true);
+
         return true;
     }
 
@@ -240,6 +315,10 @@ public class MainSinglePaneActivity extends MapActivity implements
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.menu_search:
+                showSearch();
+                return true;
+            case R.id.menu_filter_kategorie:
             case R.id.menu_filter:
                 showFilterSettings();
                 return true;
@@ -249,12 +328,18 @@ public class MainSinglePaneActivity extends MapActivity implements
             case R.id.menu_new_poi:
                 createNewPoi();
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void createSearchModeCustomView(final ActionBar bar) {
+        if(true){
+               return;
+        }
         LayoutInflater inflater = LayoutInflater.from(this);
         View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
                 null);
@@ -303,6 +388,16 @@ public class MainSinglePaneActivity extends MapActivity implements
         startActivity(i);
     }
 
+
+    private void showSearch() {
+        FragmentManager fm = getSupportFragmentManager();
+        SearchDialogCombinedFragment searchDialog = SearchDialogCombinedFragment
+                .newInstance();
+
+        searchDialog.setTargetFragment(mWorkerFragment, 0);
+        searchDialog.show(fm, SearchDialogFragment.TAG);
+    }
+
     @Override
     public void onError(RestServiceException e) {
 
@@ -340,6 +435,7 @@ public class MainSinglePaneActivity extends MapActivity implements
     @Override
     public void onSearchModeChange(boolean isSearchMode) {
         Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
+        createSearchModeCustomView(getSupportActionBar());
         getSupportActionBar().setDisplayShowCustomEnabled(true);
     }
 
@@ -355,7 +451,7 @@ public class MainSinglePaneActivity extends MapActivity implements
 
     @Override
     public void onRefreshStarted(View view) {
-        DisplayFragment f = (DisplayFragment) mActiveTabHolder.fragment;
+        DisplayFragment f = (DisplayFragment) (flipper.getDisplayedChild() == 0 ? mListFragment : mMapFragment);
         if ( f != null) {
             f.onRefreshStarted();
         }

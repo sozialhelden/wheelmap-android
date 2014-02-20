@@ -78,7 +78,7 @@ public class StartupActivity extends Activity implements
 
     private SupportManager mSupportManager;
 
-    private ProgressBar mProgressBar;
+    //private ProgressBar mProgressBar;
 
     private boolean mIsInForeground;
 
@@ -90,16 +90,16 @@ public class StartupActivity extends Activity implements
 
         Log.d(TAG, "onCreate");
         Log.d(TAG, "addons: " + obtainAddonsList());
-        setContentView(R.layout.activity_startup);
+        setContentView(R.layout.activity_splashscreen);
 
-        FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
-        Animation anim = AnimationUtils.loadAnimation(this,
+        //FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
+        /*Animation anim = AnimationUtils.loadAnimation(this,
                 R.anim.zoom_in_animation);
         LayoutAnimationController controller = new LayoutAnimationController(
                 anim, 0.0f);
         layout.setLayoutAnimation(controller);
-
-        mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
+          */
+        //mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         mState = new State();
         mState.mReceiver.setReceiver(this);
 
@@ -222,6 +222,8 @@ public class StartupActivity extends Activity implements
         } else {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
+            intent = new Intent(getApplicationContext(),
+                    DashboardActivity.class);
         }
 
         intent.putExtra(Extra.REQUEST, true);
@@ -253,7 +255,7 @@ public class StartupActivity extends Activity implements
             final RestServiceException e = resultData
                     .getParcelable(Extra.EXCEPTION);
             Log.w(TAG, e);
-            mProgressBar.setVisibility(View.GONE);
+            //mProgressBar.setVisibility(View.GONE);
             showErrorDialog(e);
         }
     }

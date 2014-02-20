@@ -52,6 +52,7 @@ import org.wheelmap.android.view.CompassView;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -62,6 +63,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -189,6 +191,13 @@ public class POIsMapsforgeFragment extends Fragment implements
         mMapView.setMoveListener(this);
         mMapView.setZoomListener(this);
 
+        v.findViewById(R.id.my_location_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                centerMap(mCurrentLocationGeoPoint, true);
+                requestUpdate();
+            }
+        });
         mCompass = (CompassView) v.findViewById(R.id.compass);
 
         return v;
@@ -346,7 +355,8 @@ public class POIsMapsforgeFragment extends Fragment implements
                         if (center) {
                             executeMapPositioning(centerPoint, zoom);
                         }
-                        if (request) {
+                        if (request && mMapView.getWidth()>0) {
+                            centerMap(mCurrentLocationGeoPoint, true);
                             requestUpdate();
                         }
 
@@ -374,9 +384,9 @@ public class POIsMapsforgeFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.ab_map_fragment, menu);
+        //inflater.inflate(R.menu.ab_map_fragment, menu);
         if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
-            menu.removeItem(R.id.menu_search);
+           // menu.removeItem(R.id.menu_search);
         }
     }
 
@@ -388,10 +398,10 @@ public class POIsMapsforgeFragment extends Fragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            case R.id.menu_location:
+            /*case R.id.menu_location:
                 centerMap(mCurrentLocationGeoPoint, true);
                 requestUpdate();
-                break;
+                break;       */
             default:
                 // noop
         }
@@ -486,20 +496,32 @@ public class POIsMapsforgeFragment extends Fragment implements
             return;
         }
 
+        boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
         GeoPoint actualGeoPoint;
 
         if (mHeightFull) {
             actualGeoPoint = geoPoint;
         } else {
-            Projection projection = mMapView.getProjection();
-            Point point = new Point();
-            point = projection.toPixels(geoPoint, point);
-            int mVerticalOffset = mMapView.getHeight() / 4;
-            point.y -= mVerticalOffset;
-            actualGeoPoint = projection.fromPixels(point.x, point.y);
+            if(land){
+                Projection projection = mMapView.getProjection();
+                Point point = new Point();
+                point = projection.toPixels(geoPoint, point);
+                int horizontalOffset = mMapView.getWidth() / 4;
+                point.x -= horizontalOffset;
+                actualGeoPoint = projection.fromPixels(point.x, point.y);
+            }else{
+                Projection projection = mMapView.getProjection();
+                Point point = new Point();
+                point = projection.toPixels(geoPoint, point);
+                int mVerticalOffset = mMapView.getHeight() / 4;
+                point.y -= mVerticalOffset;
+                actualGeoPoint = projection.fromPixels(point.x, point.y);
+            }
         }
 
         mMapController.setCenter(actualGeoPoint);
+       // mMapController.setZoom(17);
         isCentered = true;
     }
 

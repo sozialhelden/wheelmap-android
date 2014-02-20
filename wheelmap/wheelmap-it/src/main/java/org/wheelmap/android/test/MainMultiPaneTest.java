@@ -70,7 +70,7 @@ public class MainMultiPaneTest extends
         RobotiumHelper.waitForListRefreshingDone(solo,
                 CombinedWorkerFragment.TAG);
 
-        solo.clickOnActionBarItem(R.id.menu_location);
+        solo.clickOnActionBarItem(R.id.map_btn_locate);
         solo.clickOnActionBarItem(R.id.menu_new_poi);
 
         solo.sleep(1000);

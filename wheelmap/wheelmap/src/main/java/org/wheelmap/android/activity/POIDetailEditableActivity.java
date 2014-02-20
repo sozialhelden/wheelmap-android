@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
@@ -64,16 +65,19 @@ public class POIDetailEditableActivity extends MapActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_frame_empty);
-        setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        setExternalEditableState(savedInstanceState);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             showAsPopup(this);
         }
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.activity_frame_empty);
+        setSupportProgressBarIndeterminateVisibility(false);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        setExternalEditableState(savedInstanceState);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(this);
@@ -93,6 +97,17 @@ public class POIDetailEditableActivity extends MapActivity implements
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         POIDetailEditableFragment.TAG).commit();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showAsPopup(Activity activity) {

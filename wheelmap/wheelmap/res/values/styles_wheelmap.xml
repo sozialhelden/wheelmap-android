@@ -62,7 +62,7 @@
         <item name="android:background">@drawable/ab_solid_wheelmap</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wheelmap</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wheelmap</item>
-        <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>
+        <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>                  °
     </style>
 
     <style name="wheelmap_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">
@@ -106,6 +106,13 @@
 
         <item name="android:popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+    </style>
+
+    <style name="wheelmap_dasboard_button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:layout_weight">1</item>
     </style>
 
 </resources>

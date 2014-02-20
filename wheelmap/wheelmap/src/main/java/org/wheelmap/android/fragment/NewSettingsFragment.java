@@ -29,6 +29,7 @@ import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
 import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support;
@@ -164,6 +165,8 @@ public class NewSettingsFragment extends ListFragment implements
             values.put(Support.CategoriesContent.SELECTED,
                     Support.CategoriesContent.SELECTED_YES);
         }
+
+       // WheelmapApp.getCategoryChoosedPrefs().edit().putBoolean(catId+"",selected);
 
         String whereClause = "( " + Support.CategoriesContent.CATEGORY_ID
                 + " = ?)";

@@ -23,6 +23,7 @@ package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -115,7 +116,7 @@ public class POIsListWorkerFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mBus.register(this);
+        mBus.registerSticky(this);
         mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
     }
 
@@ -289,7 +290,7 @@ public class POIsListWorkerFragment extends Fragment implements
         }
 
         bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-        RestServiceHelper.executeRequest(getActivity(), bundle);
+        RestServiceHelper.executeRequest(WheelmapApp.getApp(), bundle);
     }
 
     @Override

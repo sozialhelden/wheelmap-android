@@ -29,6 +29,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.ListView;
+import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.SupportManager.DistanceUnitChangedEvent;
@@ -40,6 +41,7 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.R.id;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -49,6 +51,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -183,6 +186,32 @@ public class POIsListFragment extends ListFragment implements
         }
         attachWorkerFragment();
 
+        if(getActivity().getIntent().hasExtra(SearchManager.QUERY)){
+            //showSearch();
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Bundle bundle = new Bundle();
+
+                    String keyword = getActivity().getIntent().getStringExtra(SearchManager.QUERY);
+                    if (keyword.length() > 0) {
+                        bundle.putString(SearchManager.QUERY, keyword);
+                    }
+                    bundle.putInt(Extra.CATEGORY, Extra.UNKNOWN);
+
+                    bundle.putBoolean(Extra.ENABLE_BOUNDING_BOX, true);
+
+                    if(getActivity() instanceof MainSinglePaneActivity){
+                        ((MainSinglePaneActivity)getActivity()).onSearchModeChange(true);
+                    }
+
+                    onSearch(bundle);
+                }
+            },1000);
+
+        }
+
         return v;
     }
 
@@ -291,7 +320,7 @@ public class POIsListFragment extends ListFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.ab_list_fragment, menu);
         if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
-            menu.removeItem(R.id.menu_search);
+          //  menu.removeItem(R.id.menu_search);
         }
     }
 
