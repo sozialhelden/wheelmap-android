@@ -88,7 +88,7 @@ public class RobotiumHelper {
         Log.d(TAG, "is logged in - logging out");
 
         solo.clickOnActionBarItem(R.id.menu_filter);
-        solo.waitForActivity("NewSettingsActivity");
+        solo.waitForActivity("OLDSettingsActivity");
         solo.sleep(2000);
 
         // This is to click the last item in the list, which is logout
