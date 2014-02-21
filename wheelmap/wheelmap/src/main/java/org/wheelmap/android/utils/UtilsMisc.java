@@ -53,7 +53,7 @@ public class UtilsMisc {
     }
 
     public static void dumpCursorCompare(String tag, Cursor oldCursor, Cursor newCursor) {
-        Log.d(TAG, "dumpCursorCompare cursor "
+        Log.d(TAG, tag+" dumpCursorCompare cursor "
                 + ((newCursor != null) ? newCursor.hashCode() : "null") + " count = "
                 + ((newCursor != null) ? newCursor.getCount() : "null")
                 + " isNewCursor = " + (newCursor != oldCursor));

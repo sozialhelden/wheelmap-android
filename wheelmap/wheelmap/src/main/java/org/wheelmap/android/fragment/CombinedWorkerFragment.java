@@ -243,9 +243,10 @@ public class CombinedWorkerFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if(getActivity().getIntent().hasExtra(Extra.QUERY_CHANGED)) {
+        /*if(getActivity().getIntent().hasExtra(Extra.QUERY_CHANGED)) {
             mUserQuery = UserQueryHelper.INSTANCE.getUserQuery();
-        }
+        }*/
+        mUserQuery = UserQueryHelper.INSTANCE.getUserQuery();
         if (id == LOADER_MAP_ID) {
             Uri uri = POIs.CONTENT_URI_RETRIEVED;
             return new CursorLoader(getActivity(), uri, POIs.PROJECTION,
@@ -328,11 +329,11 @@ public class CombinedWorkerFragment extends Fragment implements
     }
 
     public void onEventMainThread(UserQueryHelper.UserQueryUpdateEvent e) {
-        Log.d(TAG, "onUserQueryChanged: received event");
+        Log.d(TAG, "onUserQueryChanged: received event: Query"+e.query);
         mUserQuery = e.query;
 
-        getLoaderManager().restartLoader(LOADER_LIST_ID, null, this);
-        getLoaderManager().restartLoader(LOADER_MAP_ID, null, this);
+        getLoaderManager().restartLoader(LOADER_LIST_ID, new Bundle(), this);
+        getLoaderManager().restartLoader(LOADER_MAP_ID, new Bundle(), this);
     }
 
 }

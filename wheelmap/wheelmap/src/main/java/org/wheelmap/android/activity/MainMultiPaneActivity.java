@@ -21,6 +21,10 @@
  */
 package org.wheelmap.android.activity;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.preference.PreferenceManager;
 import com.google.inject.Inject;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -35,28 +39,24 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
 import org.mapsforge.android.maps.GeoPoint;
-import org.wheelmap.android.fragment.CombinedWorkerFragment;
-import org.wheelmap.android.fragment.DisplayFragmentListener;
-import org.wheelmap.android.fragment.ErrorDialogFragment;
-import org.wheelmap.android.fragment.LoginDialogFragment;
-import org.wheelmap.android.fragment.POIDetailFragment;
+import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
-import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment;
-import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
-import org.wheelmap.android.fragment.SearchDialogFragment;
-import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.popup.FilterWindow;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
+import org.wheelmap.android.utils.MapActivityUtils;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
 
@@ -85,6 +85,10 @@ import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import roboguice.inject.InjectView;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class MainMultiPaneActivity extends MapActivity implements
@@ -156,6 +160,7 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         mWorkerFragment = (CombinedWorkerFragment) fm
                 .findFragmentByTag(CombinedWorkerFragment.TAG);
+
         if (mWorkerFragment == null) {
             mWorkerFragment = new CombinedWorkerFragment();
             t.add(mWorkerFragment, CombinedWorkerFragment.TAG);
@@ -190,6 +195,11 @@ public class MainMultiPaneActivity extends MapActivity implements
         layout.removeViewAt(0);
         layout.addView(view);*/
     }
+
+    public WorkerFragment getWorkerFragment(){
+        return mWorkerFragment;
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -268,9 +278,13 @@ public class MainMultiPaneActivity extends MapActivity implements
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
                     Gravity.CENTER_VERTICAL | Gravity.RIGHT));
             bar.setDisplayShowCustomEnabled(true);
+            View v = findViewById(R.id.menu_filter);
+            MapActivityUtils.setFilterDrawable(this, null, v);
         }else{
             MenuInflater inflaterMenu = getSupportMenuInflater();
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
+            MenuItem item = menu.findItem(R.id.menu_filter);
+            MapActivityUtils.setFilterDrawable(this, item, null);
         }
 
         return true;
@@ -298,10 +312,16 @@ public class MainMultiPaneActivity extends MapActivity implements
                 showSearch();
                 return true;
             case R.id.menu_filter_kategorie:
-                showFilterSettings();
+                Intent intent = new Intent(this, NewSettingsActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_filter:
-                showFilterSettings();
+                View anchor = v;
+                if(anchor == null){
+                    anchor = item.getActionView();
+                }
+                showFilterSettings(item,v,anchor);
+                //MapActivityUtils.setFilterDrawable(this,item,v);
                 return true;
             case R.id.menu_about:
                 showInfo();
@@ -321,7 +341,6 @@ public class MainMultiPaneActivity extends MapActivity implements
                 return false;
         }
     }
-
 
     @SuppressLint("WrongViewCast")
     private void createSearchModeCustomView(final ActionBar bar) {
@@ -367,9 +386,11 @@ public class MainMultiPaneActivity extends MapActivity implements
         startActivity(intent);
     }
 
-    private void showFilterSettings() {
-        Intent intent = new Intent(this, NewSettingsActivity.class);
-        startActivity(intent);
+    private void showFilterSettings(MenuItem menuItem, View menuView,View anchor) {
+        //Intent intent = new Intent(this, NewSettingsActivity.class);
+        //startActivity(intent);
+        FilterWindow filter = new FilterWindow(this,menuView,menuItem);
+        filter.showAsDropDown(anchor);
     }
 
     private long insertNewPoi() {

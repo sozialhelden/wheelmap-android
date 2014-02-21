@@ -135,6 +135,7 @@ public class POIsListFragment extends ListFragment implements
 
     public static POIsListFragment newInstance(boolean createWorker,
             boolean disableSearch) {
+        createWorker = false;
         POIsListFragment f = new POIsListFragment();
         Bundle b = new Bundle();
         b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);

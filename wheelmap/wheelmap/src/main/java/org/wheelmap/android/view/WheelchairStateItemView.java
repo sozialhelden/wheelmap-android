@@ -36,7 +36,7 @@ public class WheelchairStateItemView extends FrameLayout {
 
     TextView mWheelStateText;
 
-    CheckBox mWheelStateCheckBox;
+    public CheckBox mWheelStateCheckBox;
 
     public WheelchairStateItemView(Context context) {
         super(context);

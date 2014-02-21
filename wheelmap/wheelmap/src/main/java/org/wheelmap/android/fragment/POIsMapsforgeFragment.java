@@ -128,6 +128,7 @@ public class POIsMapsforgeFragment extends Fragment implements
 
     public static POIsMapsforgeFragment newInstance(boolean createWorker,
             boolean disableSearch) {
+        createWorker = false;
         POIsMapsforgeFragment f = new POIsMapsforgeFragment();
         Bundle b = new Bundle();
         b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);

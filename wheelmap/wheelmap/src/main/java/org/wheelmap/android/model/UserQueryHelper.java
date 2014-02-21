@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.model;
 
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Support.CategoriesContent;
