@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.BaseDomain;
 
 import android.content.ContentResolver;
@@ -53,6 +54,7 @@ public abstract class DataOperations<T extends BaseDomain, U> {
         long insertStart = System.currentTimeMillis();
         for (T item : items) {
             Log.d(getTag(), "inserting page " + item.getMeta().getPage());
+            WheelmapApp.getDefaultPrefs().edit().putLong("ItemCountTotal",item.getMeta().getItemCountTotal().longValue()).commit();
             bulkInsert(item);
         }
         long insertEnd = System.currentTimeMillis();

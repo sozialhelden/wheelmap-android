@@ -28,6 +28,7 @@ import net.hockeyapp.android.CheckUpdateTask.OnHockeyDoneListener;
 import net.hockeyapp.android.UpdateActivity;
 
 import org.holoeverywhere.app.Activity;
+import org.json.JSONObject;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;

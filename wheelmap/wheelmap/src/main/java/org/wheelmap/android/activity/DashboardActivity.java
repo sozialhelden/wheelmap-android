@@ -1,6 +1,7 @@
 package org.wheelmap.android.activity;
 
 import org.holoeverywhere.widget.EditText;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
@@ -82,7 +83,12 @@ public class DashboardActivity extends
         });
 
         TextView txt_orte = (TextView) findViewById(R.id.dashboard_text_orte);
-        txt_orte.setText("... Orte");
+        long count = WheelmapApp.getDefaultPrefs().getLong("ItemCountTotal",-1);
+        if(count <= 0){
+            txt_orte.setText("... Orte");
+        }else{
+            txt_orte.setText(count+" Orte");
+        }
 
 
         findViewById(R.id.dashboard_login).setOnClickListener(new OnClickListener() {

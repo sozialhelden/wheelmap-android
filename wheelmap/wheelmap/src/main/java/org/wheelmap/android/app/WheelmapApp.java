@@ -123,5 +123,9 @@ public class WheelmapApp extends Application {
         return prefs;
     }
 
+    public static SharedPreferences getDefaultPrefs(){
+        return INSTANCE.getDefaultSharedPreferences();
+    }
+
 
 }
