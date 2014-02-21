@@ -29,10 +29,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Activity.Addons;
 import org.holoeverywhere.app.Fragment;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
@@ -59,6 +57,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,6 +75,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,43 +94,43 @@ public class POIDetailFragment extends Fragment implements
 
     private final static long FADE_IN_ANIMATION_DURATION = 500;
 
-    @Inject
+    //@Inject
     public ContentViewListener ignored;
 
-    @InjectView(R.id.title_container)
+    //@InjectView(R.id.title_container)
     private RelativeLayout title_container;
 
-    @InjectView(R.id.titlebar_title)
+    //@InjectView(R.id.titlebar_title)
     private TextView nameText;
 
-    @InjectView(R.id.titlebar_subtitle)
+    //@InjectView(R.id.titlebar_subtitle)
     private TextView categoryText;
 
-    @InjectView(R.id.titlebar_icon)
+    //@InjectView(R.id.titlebar_icon)
     private ImageView nodetypeIcon;
 
-    @InjectView(R.id.nodetype)
-    private TextView nodetypeText;
+    //@InjectView(R.id.nodetype)
+    //private TextView nodetypeText;
 
-    @InjectView(R.id.phone)
-    private TextView phoneText;
+    //@InjectView(R.id.phone)
+    //private TextView phoneText;
 
-    @InjectView(R.id.addr)
+    //@InjectView(R.id.addr)
     private TextView addressText;
 
-    @InjectView(R.id.comment)
+    //@InjectView(R.id.comment)
     private TextView commentText;
 
-    @InjectView(R.id.website)
-    private TextView websiteText;
+    //@InjectView(R.id.website)
+    //private TextView websiteText;
 
-    @InjectView(R.id.state_icon)
+    //@InjectView(R.id.state_icon)
     private ImageView stateIcon;
 
-    @InjectView(R.id.state_text)
+    //@InjectView(R.id.state_text)
     private TextView stateText;
 
-    @InjectView(R.id.wheelchair_state_layout)
+    //@InjectView(R.id.wheelchair_state_layout)
     private ViewGroup stateLayout;
 
     private Button mMapButton;
@@ -179,7 +179,6 @@ public class POIDetailFragment extends Fragment implements
         if (id == Extra.ID_UNKNOWN) {
             return null;
         }
-
         Bundle bundle = new Bundle();
         bundle.putLong(Extra.POI_ID, id);
         bundle.putBoolean(Extra.SHOW_MAP, true);
@@ -217,6 +216,17 @@ public class POIDetailFragment extends Fragment implements
             Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        title_container = (RelativeLayout)v.findViewById(R.id.title_container);
+        nameText = (TextView)v.findViewById(R.id.titlebar_title);
+        categoryText = (TextView)v.findViewById(R.id.titlebar_subtitle);
+        nodetypeIcon = (ImageView)v.findViewById(R.id.titlebar_icon);
+        addressText = (TextView)v.findViewById(R.id.addr);
+        commentText = (TextView)v.findViewById(R.id.comment);
+        //stateIcon = (ImageView)v.findViewById(R.id.state_icon);
+        stateText = (TextView)v.findViewById(R.id.state_text);
+        stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
+
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
             v.findViewById(R.id.titlebar_backbutton).setVisibility(View.GONE);
@@ -449,16 +459,17 @@ public class POIDetailFragment extends Fragment implements
 
         String category = sm.lookupCategory(categoryId).localizedName;
         categoryText.setText(category);
-        nodetypeText.setText(nodeType.localizedName);
-        nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
+        //nodetypeText.setText(nodeType.localizedName);
+        //nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
         commentText.setText(comment);
 
         String address = POIHelper.getAddress(c);
         addressText.setText(address);
 
-        String website = POIHelper.getWebsite(c);
-        websiteText.setText(website);
-        phoneText.setText(POIHelper.getPhone(c));
+        //String website = POIHelper.getWebsite(c);
+        address = address + " " + POIHelper.getWebsite(c) + " " + POIHelper.getPhone(c);
+        //websiteText.setText(website);
+        //phoneText.setText(POIHelper.getPhone(c));
 
         String street = POIHelper.getStreet(c);
         String houseNum = POIHelper.getHouseNumber(c);
@@ -468,7 +479,7 @@ public class POIDetailFragment extends Fragment implements
         fillDirectionsActionProvider(latitude, longitude, street, houseNum,
                 postCode, city);
         fillShareActionProvider(wmIdString, name, nodeType.localizedName,
-                comment, address, website);
+                comment, address);
 
         mShowMenu = true;
         getSupportActivity().invalidateOptionsMenu();
@@ -505,9 +516,26 @@ public class POIDetailFragment extends Fragment implements
         int stateColor = getResources().getColor(
                 mWSAttributes.get(newState).colorId);
 
-        title_container.setBackgroundColor(stateColor);
-        stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-        stateText.setTextColor(stateColor);
+        if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else if(mWheelchairState.getId() == WheelchairState.YES.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_green);
+        else if(mWheelchairState.getId() == WheelchairState.LIMITED.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_orange);
+        else if(mWheelchairState.getId() == WheelchairState.NO.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_red);
+        else if(mWheelchairState.getId() == WheelchairState.NO_PREFERENCE.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else
+            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+
+
+
+
+        //title_container.setBackgroundColor(stateColor);
+        //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
+        //stateText.setTextColor(stateColor);
+
         stateText.setText(mWSAttributes.get(newState).titleStringId);
 
     }
@@ -546,7 +574,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void fillShareActionProvider(String wmId, String name, String type,
-            String comment, String address, String website) {
+            String comment, String address) {
 
         StringBuilder sb = new StringBuilder();
         if (!TextUtils.isEmpty(name)) {
@@ -565,10 +593,10 @@ public class POIDetailFragment extends Fragment implements
             sb.append(address);
         }
 
-        if (!TextUtils.isEmpty(website)) {
-            sb.append(", ");
-            sb.append(website);
-        }
+        //if (!TextUtils.isEmpty(website)) {
+        //    sb.append(", ");
+        //    sb.append(website);
+        //}
 
         if (sb.length() > 0) {
             sb.append(", ");

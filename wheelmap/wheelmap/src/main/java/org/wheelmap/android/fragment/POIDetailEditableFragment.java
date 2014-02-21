@@ -129,8 +129,8 @@ public class POIDetailEditableFragment extends Fragment implements
     @InjectView(R.id.phone)
     private EditText phoneText;
 
-    @InjectView(R.id.state_icon)
-    private ImageView state_icon;
+    //@InjectView(R.id.state_icon)
+    //private ImageView state_icon;
 
     @InjectView(R.id.state_text)
     private TextView state_text;
@@ -513,7 +513,7 @@ public class POIDetailEditableFragment extends Fragment implements
                 mWSAttributes.get(state).colorId);
 
         title_container.setBackgroundColor(stateColor);
-        state_icon.setImageResource(mWSAttributes.get(state).drawableId);
+        //state_icon.setImageResource(mWSAttributes.get(state).drawableId);
         state_text.setTextColor(stateColor);
         state_text.setText(mWSAttributes.get(state).titleStringId);
     }
