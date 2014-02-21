@@ -77,6 +77,10 @@ public interface Extra {
      */
     String APP_PROPERTIES_ASSETS_FILE_NAME = "application.properties";
 
+    public final static String FILTER_WHEELCHAIRS = "FILTER_WHEELCHAIRS";
+    public final static String FILTER_CATEGORIES = "FILTER_CATEGORIES";
+    public final static String MAP_MODE_ENGAGE = "MAP_MODE_ENGAGE";
+
     public interface What {
 
         public final static int RETRIEVE_NODES = 0x1;

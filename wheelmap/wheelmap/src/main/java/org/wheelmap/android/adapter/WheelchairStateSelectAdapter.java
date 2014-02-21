@@ -64,7 +64,7 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public WheelchairAttributes getItem(int position) {
         return mItems.get(position);
     }
 
@@ -74,7 +74,7 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public WheelchairStateItemView getView(int position, View convertView, ViewGroup parent) {
         WheelchairStateItemView itemView;
         if (convertView != null) {
             itemView = (WheelchairStateItemView) convertView;

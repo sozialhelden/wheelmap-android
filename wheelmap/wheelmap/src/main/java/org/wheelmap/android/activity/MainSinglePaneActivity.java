@@ -21,6 +21,10 @@
  */
 package org.wheelmap.android.activity;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.widget.*;
 import com.google.inject.Inject;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -31,7 +35,9 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
@@ -48,10 +54,13 @@ import org.wheelmap.android.fragment.SearchDialogFragment;
 import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.popup.FilterWindow;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.tracker.TrackerWrapper;
 
@@ -68,18 +77,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.widget.ImageView;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ViewFlipper;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import org.wheelmap.android.utils.MapActivityUtils;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshAttacher;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 @Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
-public class  MainSinglePaneActivity extends MapActivity implements
+public class
+        MainSinglePaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnStateListener,
         PullToRefreshAttacher.OnRefreshListener {
 
@@ -170,6 +181,10 @@ public class  MainSinglePaneActivity extends MapActivity implements
 
         configureRefresh();
 
+    }
+
+    public WorkerFragment getWorkerFragment(){
+        return mWorkerFragment;
     }
 
     @Override
@@ -272,7 +287,8 @@ public class  MainSinglePaneActivity extends MapActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflaterMenu = getSupportMenuInflater();
         inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
-
+        MenuItem item = menu.findItem(R.id.menu_filter);
+        MapActivityUtils.setFilterDrawable(this, item, null);
         ActionBar bar = getSupportActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -319,8 +335,11 @@ public class  MainSinglePaneActivity extends MapActivity implements
                 showSearch();
                 return true;
             case R.id.menu_filter_kategorie:
+                showFilterCategories();
+                return true;
             case R.id.menu_filter:
-                showFilterSettings();
+                showFilterSettings(item);
+                //setFilterDrawable(item,null);
                 return true;
             case R.id.menu_about:
                 showInfo();
@@ -368,9 +387,16 @@ public class  MainSinglePaneActivity extends MapActivity implements
         startActivity(intent);
     }
 
-    private void showFilterSettings() {
-        Intent intent = new Intent(this, NewSettingsActivity.class);
+    private void showFilterCategories() {
+        Intent intent = new Intent(this, FilterActivity.class);
+        intent.putExtra(Extra.FILTER_CATEGORIES, true);
         startActivity(intent);
+    }
+
+    private void showFilterSettings(MenuItem item) {
+        View anchor = item.getActionView();
+        FilterWindow filterWindow = new FilterWindow(this,null,item);
+        filterWindow.showAsDropDown(anchor);
     }
 
     private long insertNewPoi() {

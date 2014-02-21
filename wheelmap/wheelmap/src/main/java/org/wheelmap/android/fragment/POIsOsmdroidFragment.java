@@ -143,6 +143,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     public static POIsOsmdroidFragment newInstance(boolean createWorker,
             boolean disableSearch) {
+        createWorker = false;
         POIsOsmdroidFragment f = new POIsOsmdroidFragment();
         Bundle b = new Bundle();
         b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);

@@ -128,6 +128,7 @@ public class POIsMapsforgeFragment extends Fragment implements
 
     public static POIsMapsforgeFragment newInstance(boolean createWorker,
             boolean disableSearch) {
+        createWorker = false;
         POIsMapsforgeFragment f = new POIsMapsforgeFragment();
         Bundle b = new Bundle();
         b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
@@ -194,6 +195,7 @@ public class POIsMapsforgeFragment extends Fragment implements
         v.findViewById(R.id.my_location_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mMapController.setZoom(17);
                 centerMap(mCurrentLocationGeoPoint, true);
                 requestUpdate();
             }

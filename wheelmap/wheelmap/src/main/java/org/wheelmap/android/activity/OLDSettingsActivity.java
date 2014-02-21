@@ -29,7 +29,7 @@ import org.wheelmap.android.online.R;
 import android.os.Bundle;
 
 @Activity.Addons("MyRoboguice")
-public class NewSettingsActivity extends Activity {
+public class OLDSettingsActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

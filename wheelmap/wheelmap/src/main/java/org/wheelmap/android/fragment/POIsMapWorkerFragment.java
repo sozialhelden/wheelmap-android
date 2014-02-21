@@ -45,6 +45,10 @@ import android.support.v4.content.Loader;
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
 
+/*
+    CombinedWorkerFragment instead
+ */
+@Deprecated
 public class POIsMapWorkerFragment extends Fragment implements
         WorkerFragment, Receiver, LoaderCallbacks<Cursor> {
 

@@ -135,6 +135,7 @@ public class POIsListFragment extends ListFragment implements
 
     public static POIsListFragment newInstance(boolean createWorker,
             boolean disableSearch) {
+        createWorker = false;
         POIsListFragment f = new POIsListFragment();
         Bundle b = new Bundle();
         b.putBoolean(Extra.CREATE_WORKER_FRAGMENT, createWorker);
@@ -318,7 +319,9 @@ public class POIsListFragment extends ListFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.ab_list_fragment, menu);
+        if(!UtilsMisc.isTablet(getSupportActivity())){
+            inflater.inflate(R.menu.ab_list_fragment, menu);
+        }
         if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
           //  menu.removeItem(R.id.menu_search);
         }
