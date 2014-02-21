@@ -27,9 +27,6 @@ import android.widget.TextView;
  */
 public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
-               //tablet 3h
-                //phone ui 3h
-                // filter 2h
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +145,7 @@ public class DashboardActivity extends
         }
         intent.putExtra(Extra.SELECTED_TAB,0);
         startActivity(intent);
-        resetFilter();
+        resetKategorieFilter();
     }
 
     private void openMap(){
@@ -163,7 +160,7 @@ public class DashboardActivity extends
         }
         intent.putExtra(Extra.SELECTED_TAB,1);
         startActivity(intent);
-        resetFilter();
+        resetKategorieFilter();
     }
 
     public void openMithelfen(){
@@ -179,8 +176,7 @@ public class DashboardActivity extends
         startActivity(intent);
     }
 
-
-    public void resetFilter(){
+    public void resetKategorieFilter(){
         Uri mUri = Support.CategoriesContent.CONTENT_URI;
         Cursor c = getContentResolver().query(mUri,
                 Support.CategoriesContent.PROJECTION, null, null,

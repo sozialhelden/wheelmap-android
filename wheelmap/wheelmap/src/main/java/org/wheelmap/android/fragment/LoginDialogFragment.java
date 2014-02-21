@@ -21,12 +21,14 @@
  */
 package org.wheelmap.android.fragment;
 
+import com.google.inject.Inject;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Dialog;
 import org.holoeverywhere.app.DialogFragment;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -99,6 +101,8 @@ public class LoginDialogFragment extends DialogFragment implements
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        //TODO check if already logged in
+        //TODO and show logout dialog if already logged in
         AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
         builder.setTitle(R.string.title_login);
         builder.setIcon(R.drawable.ic_login_wheelmap);
@@ -106,11 +110,12 @@ public class LoginDialogFragment extends DialogFragment implements
         builder.setOnCancelListener(this);
 
         View view = LayoutInflater.from(getSupportActivity()).inflate(
-                R.layout.fragment_dialog_login, null);
+                    R.layout.fragment_dialog_login, null);
         builder.setView(view);
 
         Dialog d = builder.create();
         return d;
+
     }
 
     @Override

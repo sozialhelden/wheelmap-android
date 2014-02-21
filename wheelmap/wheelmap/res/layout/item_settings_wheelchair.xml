@@ -36,7 +36,9 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="8dp"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
