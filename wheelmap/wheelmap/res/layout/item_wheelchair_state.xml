@@ -23,16 +23,18 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/wheelchair_state_layout"
+                android:layout_marginTop="10dp"
                 style="@style/Container.Pressable">
 
     <TextView
             android:id="@+id/state_text"
+            android:text="hallo"
             style="@style/WheelStateItem"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/edit_icon"
-            android:layout_toRightOf="@+id/state_icon">
+
+            android:textStyle="bold"
+            android:textColor="#FFFFFF">
     </TextView>
 
 </RelativeLayout>

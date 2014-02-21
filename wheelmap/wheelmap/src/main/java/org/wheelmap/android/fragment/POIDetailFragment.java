@@ -57,6 +57,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -74,6 +75,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -221,7 +223,7 @@ public class POIDetailFragment extends Fragment implements
         nodetypeIcon = (ImageView)v.findViewById(R.id.titlebar_icon);
         addressText = (TextView)v.findViewById(R.id.addr);
         commentText = (TextView)v.findViewById(R.id.comment);
-        stateIcon = (ImageView)v.findViewById(R.id.state_icon);
+        //stateIcon = (ImageView)v.findViewById(R.id.state_icon);
         stateText = (TextView)v.findViewById(R.id.state_text);
         stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
 
@@ -514,9 +516,26 @@ public class POIDetailFragment extends Fragment implements
         int stateColor = getResources().getColor(
                 mWSAttributes.get(newState).colorId);
 
+        if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else if(mWheelchairState.getId() == WheelchairState.YES.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_green);
+        else if(mWheelchairState.getId() == WheelchairState.LIMITED.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_orange);
+        else if(mWheelchairState.getId() == WheelchairState.NO.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_red);
+        else if(mWheelchairState.getId() == WheelchairState.NO_PREFERENCE.getId())
+            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else
+            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+
+
+
+
         //title_container.setBackgroundColor(stateColor);
         //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-        stateText.setTextColor(stateColor);
+        //stateText.setTextColor(stateColor);
+
         stateText.setText(mWSAttributes.get(newState).titleStringId);
 
     }

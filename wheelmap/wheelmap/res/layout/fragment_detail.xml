@@ -15,34 +15,32 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 >
             <LinearLayout
                     android:id="@+id/title_text_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_weight="2"
-                    android:layout_toLeftOf="@+id/titlebar_right_invisible_icon"
-                    android:layout_toRightOf="@+id/titlebar_icon"
-                    android:orientation="vertical">
 
-                <TextView style="@style/TitleBarTextNew.Title"/>
+                    android:orientation="horizontal">
 
-                <TextView style="@style/TitleBarTextNew.Subtitle"/>
+                <TextView android:text="hallo" android:layout_weight="1" android:layout_gravity="center_vertical" style="@style/TitleBarTextNew.Title"/>
+
+                <ImageView
+                        android:id="@+id/titlebar_backbutton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:src="@drawable/detail_ic_close"/>
+
             </LinearLayout>
 
+            <TextView android:text="hallo" style="@style/TitleBarTextNew.Subtitle"/>
 
-            <ImageView
-                    android:id="@+id/titlebar_backbutton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/close_x"/>
 
         </LinearLayout>
 
-        <include layout="@layout/item_wheelchair_state"/>
+        <include  layout="@layout/item_wheelchair_state"/>
 
 
         <TextView

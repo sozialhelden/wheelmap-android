@@ -64,7 +64,7 @@
     </style>
 
     <style name="TitleBarTextNew">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
 
         <item name="android:singleLine">false</item>
@@ -75,7 +75,7 @@
         <item name="android:id">@id/titlebar_title</item>
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:textColorPrimaryInverse</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <style name="TitleBarTextNew.Subtitle">
@@ -163,8 +163,7 @@
     </style>
 
     <style name="Container.Pressable">
-        <item name="android:layout_marginTop">@dimen/margin_small</item>
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+
         <item name="android:background">@drawable/item_pressable_background</item>
     </style>
 
