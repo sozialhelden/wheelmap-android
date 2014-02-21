@@ -312,8 +312,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 showSearch();
                 return true;
             case R.id.menu_filter_kategorie:
-                Intent intent = new Intent(this, NewSettingsActivity.class);
-                startActivity(intent);
+                showFilterCategories();
                 return true;
             case R.id.menu_filter:
                 View anchor = v;
@@ -383,6 +382,12 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private void showInfo() {
         Intent intent = new Intent(this, InfoActivity.class);
+        startActivity(intent);
+    }
+
+    private void showFilterCategories() {
+        Intent intent = new Intent(this, FilterActivity.class);
+        intent.putExtra(Extra.FILTER_CATEGORIES, true);
         startActivity(intent);
     }
 
