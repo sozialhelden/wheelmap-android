@@ -6,89 +6,161 @@
             android:fillViewport="true"
             android:background="#cfcfcf">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                >
+                android:padding="20dp">
+
             <LinearLayout
-                    android:id="@+id/title_text_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:orientation="horizontal">
-
-                <TextView android:text="hallo" android:layout_weight="1" android:layout_gravity="center_vertical" style="@style/TitleBarTextNew.Title"/>
-
-                <ImageView
-                        android:id="@+id/titlebar_backbutton"
+                    android:orientation="vertical"
+                    >
+                <LinearLayout
+                        android:id="@+id/title_text_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:src="@drawable/detail_ic_close"/>
+
+                        android:orientation="horizontal">
+
+                    <TextView android:layout_weight="1"
+                              android:layout_gravity="center_vertical"
+                              style="@style/TitleBarTextNew.Title"/>
+
+                    <ImageView
+                            android:id="@+id/titlebar_backbutton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:src="@drawable/detail_ic_close"/>
+
+                </LinearLayout>
+
+                <TextView style="@style/TitleBarTextNew.Subtitle"
+                        />
+
 
             </LinearLayout>
 
-            <TextView android:text="hallo" style="@style/TitleBarTextNew.Subtitle"/>
+            <include  layout="@layout/item_wheelchair_state"/>
 
+
+            <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:text="@string/poi_property_address"
+                    android:textStyle="bold"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+
+                          android:background="#eeeeee">
+                <LinearLayout android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:layout_margin="8dp">
+                    <TextView
+                            android:id="@+id/addr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    <TextView
+                            android:id="@+id/phone"
+                            android:autoLink="phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                    <TextView
+                            android:id="@+id/web"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+                <TextView
+                      android:layout_width="match_parent" android:layout_height="wrap_content"
+
+                      android:layout_marginTop="10dp"
+                      android:layout_marginBottom="2dp"
+                      android:text="@string/poi_property_comment"
+                      android:textStyle="bold"/>
+
+            <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="#eeeeee">
+                <TextView
+                        android:id="@+id/comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        />
+            </LinearLayout>
+
+            <TextView
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:text="@string/poi_property_comment"
+                    android:textStyle="bold"/>
+
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:background="#eeeeee">
+
+                <ListView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginBottom="10dp">
+
+                </ListView>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="0dp"
+                      android:orientation="horizontal"
+                      android:layout_weight="0"
+                      android:gravity="center_vertical|bottom">
+            <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+
+                    android:src="@drawable/detail_ic_foto"/>
+            <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+
+                    android:src="@drawable/detail_ic_edit"/>
+            <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+
+                    android:src="@drawable/detail_ic_route"/>
+            <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+
+                    android:src="@drawable/detail_ic_share"/>
 
         </LinearLayout>
 
-        <include  layout="@layout/item_wheelchair_state"/>
-
-
-        <TextView
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="2dp"
-                android:text="@string/poi_property_address"
-                android:textStyle="bold"/>
-
-        <TextView
-                android:id="@+id/addr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:background="#eeeeee"
-                />
-
-        <TextView
-              android:layout_width="match_parent" android:layout_height="wrap_content"
-
-              android:layout_marginTop="10dp"
-              android:layout_marginBottom="2dp"
-              android:text="@string/poi_property_comment"
-              android:textStyle="bold"/>
-
-        <TextView
-                android:id="@+id/comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:background="#eeeeee"
-                />
-
-        <TextView
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="2dp"
-                android:text="@string/poi_property_comment"
-                android:textStyle="bold"/>
-
-        <ListView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="10dp">
-
-                  </ListView>
-
+        <!--
         <ViewStub
                 android:id="@+id/stub_map"
                 android:layout_width="fill_parent"
@@ -102,7 +174,6 @@
                 android:layout_height="wrap_content"
                 android:inflatedId="@+id/sub_button"
                 android:layout="@layout/stub_detail_button"/>
-
-    </LinearLayout>
+         -->
 
 </ScrollView>

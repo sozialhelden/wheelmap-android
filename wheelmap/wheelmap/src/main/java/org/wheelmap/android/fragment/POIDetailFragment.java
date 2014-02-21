@@ -64,7 +64,9 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -82,6 +84,7 @@ import java.util.Map;
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 import roboguice.inject.InjectView;
+import sun.awt.image.ImageWatched;
 
 public class POIDetailFragment extends Fragment implements
         OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {
@@ -113,13 +116,15 @@ public class POIDetailFragment extends Fragment implements
     //private TextView nodetypeText;
 
     //@InjectView(R.id.phone)
-    //private TextView phoneText;
+    private TextView phoneText;
 
     //@InjectView(R.id.addr)
     private TextView addressText;
 
     //@InjectView(R.id.comment)
     private TextView commentText;
+
+    private TextView webText;
 
     //@InjectView(R.id.website)
     //private TextView websiteText;
@@ -226,6 +231,8 @@ public class POIDetailFragment extends Fragment implements
         //stateIcon = (ImageView)v.findViewById(R.id.state_icon);
         stateText = (TextView)v.findViewById(R.id.state_text);
         stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
+        webText = (TextView)v.findViewById(R.id.web);
+        phoneText = (TextView)v.findViewById(R.id.phone);
 
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
@@ -440,6 +447,62 @@ public class POIDetailFragment extends Fragment implements
         WheelchairState state = POIHelper.getWheelchair(c);
         String name = POIHelper.getName(c);
         String comment = POIHelper.getComment(c);
+
+
+        String website = POIHelper.getWebsite(c);
+        String phone = POIHelper.getPhone(c);
+
+        String street = POIHelper.getStreet(c);
+        String houseNum = POIHelper.getHouseNumber(c);
+        String postCode = POIHelper.getPostcode(c);
+        String city = POIHelper.getCity(c);
+
+        String address = "";
+
+        if(street != null){
+            address += street + " ";
+        }
+
+        if(houseNum != null){
+            address += houseNum + " ";
+        }
+
+        if(postCode != null){
+            address += "\n";
+            address += postCode + " ";
+        }
+
+        if(city != null){
+            address += city + " ";
+        }
+
+        if(address == ""){
+            addressText.setVisibility(View.GONE);
+        }
+        else{
+            addressText.setVisibility(View.VISIBLE);
+            addressText.setText(address);
+        }
+
+        if(phone != null){
+            phoneText.setVisibility(View.VISIBLE);
+            phoneText.setText(phone);
+        }else{
+            phoneText.setVisibility(View.GONE);
+        }
+
+        if(website != null){
+            webText.setVisibility(View.VISIBLE);
+            webText.setClickable(true);
+            webText.setMovementMethod(LinkMovementMethod.getInstance());
+            String text = "<a href=" + website + ">" + website + "</a>";
+            webText.setText(Html.fromHtml(text));
+        }else{
+            webText.setVisibility(View.GONE);
+        }
+
+
+
         final double latitude = POIHelper.getLatitude(c);
         final double longitude = POIHelper.getLongitude(c);
 
@@ -462,19 +525,6 @@ public class POIDetailFragment extends Fragment implements
         //nodetypeText.setText(nodeType.localizedName);
         //nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
         commentText.setText(comment);
-
-        String address = POIHelper.getAddress(c);
-        addressText.setText(address);
-
-        //String website = POIHelper.getWebsite(c);
-        address = address + " " + POIHelper.getWebsite(c) + " " + POIHelper.getPhone(c);
-        //websiteText.setText(website);
-        //phoneText.setText(POIHelper.getPhone(c));
-
-        String street = POIHelper.getStreet(c);
-        String houseNum = POIHelper.getHouseNumber(c);
-        String postCode = POIHelper.getPostcode(c);
-        String city = POIHelper.getCity(c);
 
         fillDirectionsActionProvider(latitude, longitude, street, houseNum,
                 postCode, city);
