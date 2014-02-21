@@ -56,6 +56,7 @@ import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.modules.IAppProperties;
@@ -120,6 +121,9 @@ public class
     private POIsMapsforgeFragment mMapFragment;
     private ViewFlipper flipper;
 
+    private MapModeType mapModeType;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +183,15 @@ public class
             executeDefaultInstanceState();
         }
 
+
+        Bundle extras = getIntent().getExtras();
+        if(extras.containsKey(Extra.MAP_MODE_ENGAGE)) {
+            mapModeType = MapModeType.MAP_MODE_ENGAGE;
+            MapActivityUtils.setWheelchairFilterToEngageMode(this);
+        } else {
+            mapModeType = MapModeType.MAP_MODE_NORMAL;
+        }
+
         configureRefresh();
 
     }
@@ -202,6 +215,9 @@ public class
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
+            MapActivityUtils.resetWheelchairFilter(this);
+        }
         Log.d(TAG, "onDestroy");
     }
 
@@ -287,8 +303,8 @@ public class
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflaterMenu = getSupportMenuInflater();
         inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
-        MenuItem item = menu.findItem(R.id.menu_filter);
-        MapActivityUtils.setFilterDrawable(this, item, null);
+        MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
+        MapActivityUtils.setFilterDrawable(this, itemFilterWheelChairs, null);
         ActionBar bar = getSupportActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -316,12 +332,23 @@ public class
 
         TextView title = (TextView) customView.findViewById(R.id.title);
         title.setOnClickListener(l);
-        int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
+        int title_res;
+        if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
+            title_res = R.string.title_engage;
+        } else {
+            title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
+        }
         title.setText(title_res);
 
         bar.setCustomView(customView, new ActionBar.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         bar.setDisplayShowCustomEnabled(true);
+
+        if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
+            MenuItem item = menu.findItem(R.id.menu_filter);
+            item.setEnabled(false);
+            //TODO Disable it - doesn't work yet
+        }
 
         return true;
     }

@@ -48,6 +48,7 @@ import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
@@ -129,6 +130,8 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     Long poiIdSelected = Extra.ID_UNKNOWN;
 
+    private MapModeType mapModeType;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,6 +141,7 @@ public class MainMultiPaneActivity extends MapActivity implements
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setLogo(R.drawable.title_logo_shadow_tablet);
 
         setContentView(R.layout.activity_multipane);
 
@@ -147,6 +151,13 @@ public class MainMultiPaneActivity extends MapActivity implements
             executeState(savedInstanceState);
         } else {
             executeDefaultInstanceState();
+        }
+
+        Bundle extras = getIntent().getExtras();
+        if(extras.containsKey(Extra.MAP_MODE_ENGAGE)) {
+            mapModeType = MapModeType.MAP_MODE_ENGAGE;
+        } else {
+            mapModeType = MapModeType.MAP_MODE_NORMAL;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -285,6 +296,12 @@ public class MainMultiPaneActivity extends MapActivity implements
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
             MenuItem item = menu.findItem(R.id.menu_filter);
             MapActivityUtils.setFilterDrawable(this, item, null);
+        }
+
+        if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
+            MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
+            itemFilterWheelChairs.setEnabled(false);
+            //TODO Disable it - doesn't work yet
         }
 
         return true;

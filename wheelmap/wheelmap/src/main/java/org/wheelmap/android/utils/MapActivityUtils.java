@@ -13,9 +13,11 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.widget.PopupWindow;
 import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.activity.MapActivity;
+import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.view.WheelchairStateItemView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -65,5 +67,36 @@ public class MapActivityUtils {
         if(v != null && v instanceof ImageView){
             ((ImageView)v).setImageDrawable(layerDrawable);
         }
+    }
+
+    public static void setWheelchairFilterToEngageMode(final MapActivity context) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Map<WheelchairState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
+
+        mPrefs.getBoolean(attributes.get(WheelchairState.YES).prefsKey, true);
+        SharedPreferences.Editor editor = mPrefs.edit();
+
+        editor.putBoolean(attributes.get(WheelchairState.YES).prefsKey, false);
+        editor.putBoolean(attributes.get(WheelchairState.NO).prefsKey, false);
+        editor.putBoolean(attributes.get(WheelchairState.LIMITED).prefsKey, false);
+        editor.putBoolean(attributes.get(WheelchairState.UNKNOWN).prefsKey, true);
+
+        editor.commit();
+    }
+
+    public static void resetWheelchairFilter(final MapActivity context) {
+
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = mPrefs.edit();
+
+        final WheelchairStateSelectAdapter adapter = new WheelchairStateSelectAdapter(context);
+
+        for(int i=0;i<adapter.getCount();i++){
+            final int pos = i;
+            SupportManager.WheelchairAttributes item = adapter.getItem(pos);
+            editor.putBoolean(item.prefsKey, true);
+        }
+
+        editor.commit();
     }
 }

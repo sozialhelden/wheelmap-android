@@ -180,7 +180,18 @@ public class DashboardActivity extends
     }
 
     public void openMithelfen(){
-        //TODO setze Filter
+        Intent intent;
+
+        if (UtilsMisc.isTablet(getApplicationContext())) {
+            intent = new Intent(getApplicationContext(),
+                    MainMultiPaneActivity.class);
+        } else {
+            intent = new Intent(getApplicationContext(),
+                    MainSinglePaneActivity.class);
+        }
+        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.MAP_MODE_ENGAGE, true);
+        startActivity(intent);
     }
 
     public void openKategorien(){
