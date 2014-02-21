@@ -165,6 +165,13 @@
                     android:layout="@layout/stub_detail_button"/>
              -->
 
+        <ViewStub
+                android:id="@+id/stub_map"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@+id/sub_map"
+                android:layout="@layout/stub_detail_map"/>
+
     </LinearLayout>
 
 </ScrollView>

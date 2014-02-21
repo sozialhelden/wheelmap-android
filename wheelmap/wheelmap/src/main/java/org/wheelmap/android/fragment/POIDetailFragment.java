@@ -84,7 +84,6 @@ import java.util.Map;
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 import roboguice.inject.InjectView;
-import sun.awt.image.ImageWatched;
 
 public class POIDetailFragment extends Fragment implements
         OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {
