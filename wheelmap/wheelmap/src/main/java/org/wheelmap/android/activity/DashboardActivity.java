@@ -4,6 +4,7 @@ import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
+import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
@@ -27,9 +28,6 @@ import android.widget.TextView;
  */
 public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
-               //tablet 3h
-                //phone ui 3h
-                // filter 2h
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +117,15 @@ public class DashboardActivity extends
         });
     }
 
+    private int getPoiCount(){
+        //doesnt work correctly
+        Uri uri = Wheelmap.POIs.CONTENT_URI_ALL;
+        Cursor c = getContentResolver().query(uri,null,null,null,null);
+        int count = c.getCount();
+        c.close();
+        return count;
+    }
+
     private void performSearch(){
         EditText search = (EditText) findViewById(R.id.dashboard_search_edit);
 
@@ -148,7 +155,7 @@ public class DashboardActivity extends
         }
         intent.putExtra(Extra.SELECTED_TAB,0);
         startActivity(intent);
-        resetFilter();
+        resetKategorieFilter();
     }
 
     private void openMap(){
@@ -163,7 +170,7 @@ public class DashboardActivity extends
         }
         intent.putExtra(Extra.SELECTED_TAB,1);
         startActivity(intent);
-        resetFilter();
+        resetKategorieFilter();
     }
 
     public void openMithelfen(){
@@ -190,8 +197,7 @@ public class DashboardActivity extends
         startActivity(intent);
     }
 
-
-    public void resetFilter(){
+    public void resetKategorieFilter(){
         Uri mUri = Support.CategoriesContent.CONTENT_URI;
         Cursor c = getContentResolver().query(mUri,
                 Support.CategoriesContent.PROJECTION, null, null,

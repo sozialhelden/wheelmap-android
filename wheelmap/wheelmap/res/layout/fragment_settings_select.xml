@@ -30,6 +30,8 @@
 
         <TextView
                 style="@style/TitleBarTextNew.Title"
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/white"
                 android:text="@string/title_pois_settings">
         </TextView>
     </LinearLayout>

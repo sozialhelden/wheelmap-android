@@ -250,7 +250,7 @@ public class
         mSelectedTab = getIntent().getIntExtra(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
         mFirstStart = true;
         ActionBar actionBar = getSupportActionBar();
-        Log.d( TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
+        Log.d(TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
 
         flipper.setDisplayedChild(mSelectedTab);
 
@@ -308,34 +308,37 @@ public class
         ActionBar bar = getSupportActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View customView = inflater.inflate(R.layout.actionbar,
+        final View customView = inflater.inflate(R.layout.actionbar,
                 null);
 
         final ImageView switchView = (ImageView)  customView.findViewById(R.id.switch_view);
         int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
         switchView.setImageResource(switch_res);
-        switchView.setOnClickListener(new OnClickListener() {
+         OnClickListener l = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSelectedTab = mSelectedTab == 0 ? 1: 0;
-                //Tab tab = tabs[mSelectedTab];
+
                 int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+                int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
                 switchView.setImageResource(switch_res);
-                //mTabListener.onTabSelected(tab, null);
-                //flipper.setDisplayedChild(mSelectedTab);
                 flipper.showNext();
+
+                TextView title = (TextView) customView.findViewById(R.id.title);
+                title.setText(title_res);
             }
-        });
+        };
+        switchView.setOnClickListener(l);
 
         TextView title = (TextView) customView.findViewById(R.id.title);
+        title.setOnClickListener(l);
+        int title_res;
         if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
-            title.setText(R.string.title_engage);
-        } else if(mSelectedTab == 0)
-            title.setText(R.string.dashboard_button_title_nearby);
-        else if(mSelectedTab == 1)
-            title.setText(R.string.dashboard_button_title_map);
-        else
-            title.setText("WHEELMAP");
+            title_res = R.string.title_engage;
+        } else {
+            title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
+        }
+        title.setText(title_res);
 
         bar.setCustomView(customView, new ActionBar.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
