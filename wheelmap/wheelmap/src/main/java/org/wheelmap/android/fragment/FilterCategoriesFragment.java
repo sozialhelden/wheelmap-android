@@ -81,7 +81,6 @@ public class FilterCategoriesFragment extends ListFragment implements
                 R.string.settings_category_filter));
         mAdapter.addAdapter(mAdapterCatList);
 
-
         return v;
     }
 

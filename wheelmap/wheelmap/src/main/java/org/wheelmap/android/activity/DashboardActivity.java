@@ -4,6 +4,7 @@ import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
+import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
@@ -114,6 +115,15 @@ public class DashboardActivity extends
                 return false;
             }
         });
+    }
+
+    private int getPoiCount(){
+        //doesnt work correctly
+        Uri uri = Wheelmap.POIs.CONTENT_URI_ALL;
+        Cursor c = getContentResolver().query(uri,null,null,null,null);
+        int count = c.getCount();
+        c.close();
+        return count;
     }
 
     private void performSearch(){
