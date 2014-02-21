@@ -66,7 +66,7 @@
     <style name="TitleBarTextNew">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center_horizontal</item>
+
         <item name="android:singleLine">false</item>
         <item name="android:ellipsize">end</item>
     </style>
@@ -120,9 +120,10 @@
 
     <style name="Scrollable.View">
         <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:paddingRight">@dimen/margin_huge</item>
         <item name="android:paddingLeft">@dimen/margin_huge</item>
+        <item name="android:fillViewport">true</item>
     </style>
 
     <style name="Scrollable.List">
