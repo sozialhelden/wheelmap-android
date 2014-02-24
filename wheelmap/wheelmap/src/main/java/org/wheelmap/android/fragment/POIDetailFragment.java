@@ -55,6 +55,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.drawable.Drawable;
@@ -245,6 +246,40 @@ public class POIDetailFragment extends Fragment implements
                 }
             });
         }
+
+        v.findViewById(R.id.detail_foto).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        v.findViewById(R.id.detail_edit).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onEdit(poiId);
+                }
+            }
+        });
+
+        v.findViewById(R.id.detail_route).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS),
+                            getString(R.string.menu_directions)));
+            }
+        });
+
+        v.findViewById(R.id.detail_share).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_SHARE),
+                            getString(R.string.menu_share)));
+                    return;
+            }
+        });
+
         return v;
     }
 
@@ -359,7 +394,7 @@ public class POIDetailFragment extends Fragment implements
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.menu_edit:
+            /*case R.id.menu_edit:
                 if (mListener != null) {
                     mListener.onEdit(poiId);
                 }
@@ -379,7 +414,7 @@ public class POIDetailFragment extends Fragment implements
                     startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_SHARE),
                             getString(R.string.menu_share)));
                     return true;
-                }
+                } */
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -400,6 +435,7 @@ public class POIDetailFragment extends Fragment implements
                     return;
                 }
                 break;
+
             default:
                 //
         }

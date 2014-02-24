@@ -28,7 +28,6 @@
 
     <TextView
             android:id="@+id/state_text"
-            android:text="hallo"
             style="@style/WheelStateItem"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
