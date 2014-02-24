@@ -31,6 +31,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+
 import org.holoeverywhere.app.Fragment;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
@@ -52,16 +53,21 @@ import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -85,6 +91,7 @@ import java.util.Map;
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 import roboguice.inject.InjectView;
+import sun.org.mozilla.javascript.internal.Context;
 
 public class POIDetailFragment extends Fragment implements
         OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {
@@ -140,6 +147,8 @@ public class POIDetailFragment extends Fragment implements
 
     private Button mMapButton;
 
+    private ImageView mTestImage;
+
     private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 
     private WheelchairState mWheelchairState;
@@ -176,6 +185,9 @@ public class POIDetailFragment extends Fragment implements
     private Menu currentMenu;
 
     private boolean mShowMenu;
+
+    private static final int DIALOG_ALERT = 10;
+
 
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -234,6 +246,8 @@ public class POIDetailFragment extends Fragment implements
         webText = (TextView)v.findViewById(R.id.web);
         phoneText = (TextView)v.findViewById(R.id.phone);
 
+        mTestImage = (ImageView)v.findViewById(R.id.detail_testimage);
+
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
             v.findViewById(R.id.titlebar_backbutton).setVisibility(View.GONE);
@@ -282,6 +296,8 @@ public class POIDetailFragment extends Fragment implements
 
         return v;
     }
+
+
 
     private void showMap(View v) {
         int stubId;
@@ -379,6 +395,7 @@ public class POIDetailFragment extends Fragment implements
         mShareActionProvider
                 .setShareHistoryFileName("ab_provider_share_history.xml");
         setIntentOnActionProvider(ACTION_PROVIDER_SHARE, mShareActionProvider);
+
         MenuItem menuItemDirection = menu.findItem(R.id.menu_directions);
         mDirectionsActionProvider = (ShareActionProvider) menuItemDirection
                 .getActionProvider();
