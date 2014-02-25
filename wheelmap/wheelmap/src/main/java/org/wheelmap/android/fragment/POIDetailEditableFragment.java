@@ -99,8 +99,8 @@ public class POIDetailEditableFragment extends Fragment implements
     @Inject
     private ICredentials mCredentials;
 
-    @InjectView(R.id.title_container)
-    private LinearLayout title_container;
+    //@InjectView(R.id.title_container)
+    //private LinearLayout title_container;
 
     @InjectView(R.id.name)
     private EditText nameText;
@@ -135,20 +135,20 @@ public class POIDetailEditableFragment extends Fragment implements
     @InjectView(R.id.state_text)
     private TextView state_text;
 
-    @InjectView(R.id.edit_position_text)
-    private TextView position_text;
+    //@InjectView(R.id.edit_position_text)
+    //private TextView position_text;
 
     @InjectView(R.id.wheelchair_state_layout)
     private RelativeLayout edit_state_container;
 
-    @InjectView(R.id.edit_geolocation)
-    private RelativeLayout edit_geolocation_touchable_container;
+    //@InjectView(R.id.edit_geolocation)
+    //private RelativeLayout edit_geolocation_touchable_container;
 
     @InjectView(R.id.edit_nodetype)
     private RelativeLayout edit_nodetype_container;
 
-    @InjectView(R.id.edit_geolocation_container)
-    private LinearLayout edit_geolocation_container;
+    //@InjectView(R.id.edit_geolocation_container)
+    //private LinearLayout edit_geolocation_container;
 
     private Long poiID = Extra.ID_UNKNOWN;
 
@@ -233,7 +233,7 @@ public class POIDetailEditableFragment extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         edit_state_container.setOnClickListener(this);
-        edit_geolocation_touchable_container.setOnClickListener(this);
+        //edit_geolocation_touchable_container.setOnClickListener(this);
         edit_nodetype_container.setOnClickListener(this);
 
     }
@@ -430,9 +430,9 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private void showGeolocationEditor(boolean show) {
         if (show) {
-            edit_geolocation_container.setVisibility(View.VISIBLE);
+            //edit_geolocation_container.setVisibility(View.VISIBLE);
         } else {
-            edit_geolocation_container.setVisibility(View.GONE);
+            //edit_geolocation_container.setVisibility(View.GONE);
         }
     }
 
@@ -512,7 +512,7 @@ public class POIDetailEditableFragment extends Fragment implements
         int stateColor = getResources().getColor(
                 mWSAttributes.get(state).colorId);
 
-        title_container.setBackgroundColor(stateColor);
+        //title_container.setBackgroundColor(stateColor);
         //state_icon.setImageResource(mWSAttributes.get(state).drawableId);
         state_text.setTextColor(stateColor);
         state_text.setText(mWSAttributes.get(state).titleStringId);
@@ -530,7 +530,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         String positionText = String.format("%s: (%.6f:%.6f)", getResources()
                 .getString(R.string.position_geopoint), mLatitude, mLongitude);
-        position_text.setText(positionText);
+        //position_text.setText(positionText);
     }
 
     public void setNodetype(int nodetype) {

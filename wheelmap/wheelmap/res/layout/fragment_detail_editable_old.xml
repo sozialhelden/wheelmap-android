@@ -21,55 +21,51 @@
   #L%
 -->
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:fillViewport="true"
-              android:background="#cfcfcf">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+    <LinearLayout style="@style/TitleBarNew.SingleLine">
 
+        <TextView
+                style="@style/TitleBarTextNew.Title"
+                android:text="@string/title_pois_detail_edit">
+        </TextView>
+    </LinearLayout>
 
+    <ScrollView style="@style/Scrollable.View">
 
         <LinearLayout
-                android:id="@+id/edit_title_text_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            <EditText android:layout_weight="1"
-                      android:id="@+id/name"
-                      android:layout_gravity="center_vertical"
-                      style="@style/DetailFontNew.Editable"
-                      android:hint="@string/poi_property_name"
-                      android:background="#eeeeee"/>
-            <!--
-            <ImageView
-                    android:id="@+id/edit_titlebar_backbutton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:src="@drawable/detail_ic_close"/>
-                    -->
-
-        </LinearLayout>
-
-        <RelativeLayout
-                android:id="@+id/edit_nodetype"
-                style="@style/Container.Pressable">
+                style="@style/Container.ScrollviewContent"
+                android:orientation="vertical">
 
             <EditText
-                    android:id="@+id/nodetype"
-                    style="@style/DetailFontNew"
-                    android:layout_centerVertical="true"
-                    android:hint="@string/poi_property_nodetype"
-                    android:background="#eeeeee"/>
-        </RelativeLayout>
-            <!--
+                    android:id="@+id/name"
+                    style="@style/DetailFontNew.Editable"
+                    android:hint="@string/poi_property_name"/>
+
+            <include layout="@layout/separator"/>
+
+            <RelativeLayout
+                    android:id="@+id/edit_nodetype"
+                    style="@style/Container.Pressable">
+
+                <TextView
+                        android:id="@+id/nodetype"
+                        style="@style/DetailFontNew"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/edit_nodetype_icon"
+                        android:hint="@string/poi_property_nodetype"/>
+
+                <ImageView
+                        android:id="@+id/edit_nodetype_icon"
+                        style="@style/IconMedium"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
+            </RelativeLayout>
+
             <LinearLayout
                     android:id="@+id/edit_geolocation_container"
                     android:layout_width="fill_parent"
@@ -98,9 +94,10 @@
                             android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
                 </RelativeLayout>
             </LinearLayout>
-            -->
 
-            <include  layout="@layout/item_wheelchair_state"/>
+            <include layout="@layout/separator"/>
+
+            <include layout="@layout/item_wheelchair_state"/>
 
             <include layout="@layout/separator"/>
 
@@ -175,5 +172,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/separator_large"
                     android:background="@android:color/black"/>
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
