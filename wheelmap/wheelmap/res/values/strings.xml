@@ -126,6 +126,9 @@
     <string name="poi_property_category">Category</string>
     <string name="poi_property_city">City</string>
     <string name="poi_property_comment">Comment</string>
+
+    <string name="poi_property_photos">Photos</string>
+
     <string name="poi_property_housenum">No</string>
     <string name="poi_property_name">Name</string>
     <string name="poi_property_nodetype">Type</string>

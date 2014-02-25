@@ -100,7 +100,7 @@
 
             android:layout_marginTop="10dp"
             android:layout_marginBottom="2dp"
-            android:text="@string/poi_property_comment"
+            android:text="@string/poi_property_photos"
             android:textStyle="bold"/>
 
 
@@ -113,38 +113,44 @@
                   android:layout_marginBottom="10dp">
 
             </ListView>
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_testimage"
+                    />
         </LinearLayout>
         <LinearLayout android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:gravity="center">
-            <ImageView
-
+            <ImageButton
+            android:id="@+id/detail_foto"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-
+            android:background="@null"
             android:src="@drawable/detail_ic_foto"/>
-            <ImageView
-
+            <ImageButton
+            android:id="@+id/detail_edit"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-
+            android:background="@null"
             android:src="@drawable/detail_ic_edit"/>
-            <ImageView
-
+            <ImageButton
+            android:id="@+id/detail_route"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-
+            android:background="@null"
             android:src="@drawable/detail_ic_route"/>
-            <ImageView
-
+            <ImageButton
+            android:id="@+id/detail_share"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-
+            android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
+            android:background="@null"
             android:src="@drawable/detail_ic_share"/>
 
         </LinearLayout>
@@ -163,14 +169,14 @@
                     android:layout_height="wrap_content"
                     android:inflatedId="@+id/sub_button"
                     android:layout="@layout/stub_detail_button"/>
-             -->
+
 
         <ViewStub
                 android:id="@+id/stub_map"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inflatedId="@+id/sub_map"
-                android:layout="@layout/stub_detail_map"/>
+                android:layout="@layout/stub_detail_map"/>        -->
 
     </LinearLayout>
 
