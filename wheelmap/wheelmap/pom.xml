@@ -54,6 +54,7 @@
             <groupId>org.osmdroid</groupId>
             <artifactId>osmdroid-android</artifactId>
             <version>3.0.10</version>
+            <!--  <version>4.1</version> -->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -138,15 +139,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- private hockey update mechanism
+             disabled in favor of hosted version
         <dependency>
             <groupId>net.hockeykit.android</groupId>
             <artifactId>library</artifactId>
             <version>1.0.0</version>
             <type>apklib</type>
         </dependency>
+        -->
         <dependency>
-            <groupId>com.crashlytics.android</groupId>
-            <artifactId>crashlytics</artifactId>
+            <groupId>net.hockeyapp.android</groupId>
+            <artifactId>HockeySDK</artifactId>
+            <version>3.0.1</version>
         </dependency>
 
     </dependencies>
@@ -283,25 +288,6 @@
                         <phase>deploy</phase>
                         <goals>
                             <goal>upload</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.crashlytics</groupId>
-                <artifactId>crashlytics-maven</artifactId>
-                <executions>
-                    <execution>
-                        <id>GenerateResources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>GenerateResources</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>CleanupResources</id>
-                        <goals>
-                            <goal>CleanupResources</goal>
                         </goals>
                     </execution>
                 </executions>

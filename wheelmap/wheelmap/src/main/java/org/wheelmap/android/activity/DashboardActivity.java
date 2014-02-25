@@ -1,5 +1,8 @@
 package org.wheelmap.android.activity;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.LoginDialogFragment;
@@ -18,6 +21,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -121,6 +125,15 @@ public class DashboardActivity extends
                 return false;
             }
         });
+
+
+        checkForUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkForCrashes();
     }
 
     private int getPoiCount(){
@@ -225,6 +238,20 @@ public class DashboardActivity extends
         }
     }
 
+    private void checkForCrashes() {
+        String appId = getString(R.string.hockeyapp_id);
+        if (TextUtils.isEmpty(appId)) {
+            return;
+        }
+        CrashManager.register(this, appId);
+    }
 
+    private void checkForUpdates() {
+        String appId = getString(R.string.hockeyapp_id);
+        if (TextUtils.isEmpty(appId)) {
+            return;
+        }
+        UpdateManager.register(this, appId);
+    }
 
 }

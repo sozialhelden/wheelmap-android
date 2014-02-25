@@ -23,12 +23,7 @@ package org.wheelmap.android.activity;
 
 import com.google.inject.Inject;
 
-import net.hockeyapp.android.CheckUpdateTask;
-import net.hockeyapp.android.CheckUpdateTask.OnHockeyDoneListener;
-import net.hockeyapp.android.UpdateActivity;
-
 import org.holoeverywhere.app.Activity;
-import org.json.JSONObject;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -50,13 +45,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import java.util.List;
 
@@ -65,7 +54,7 @@ import roboguice.inject.ContentViewListener;
 
 @Activity.Addons("MyRoboguice")
 public class StartupActivity extends Activity implements
-        DetachableResultReceiver.Receiver, OnHockeyDoneListener {
+        DetachableResultReceiver.Receiver {
 
     private final static String TAG = StartupActivity.class.getSimpleName();
 
@@ -83,7 +72,7 @@ public class StartupActivity extends Activity implements
 
     private boolean mIsInForeground;
 
-    private CheckUpdateTask checkUpdateTask;
+    // private CheckUpdateTask checkUpdateTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,14 +131,15 @@ public class StartupActivity extends Activity implements
             return;
         }
 
+        /*
         UpdateActivity.iconDrawableId = getApplicationInfo().icon;
         checkUpdateTask = new
                 CheckUpdateTask(this, appProperties.get(IAppProperties.KEY_HOCKEY_URI), null);
         checkUpdateTask.execute();
-
+        */
     }
 
-    @Override
+    // @Override
     public void onHockeyDone() {
         if (AppCapability.isNotWorking()) {
             showDialogNotWorking();

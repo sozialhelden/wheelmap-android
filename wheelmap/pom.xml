@@ -61,6 +61,9 @@
         <hockey.repository.url>ftp://storagerutton.de/</hockey.repository.url>
         <app.hockey.update.url>http://storagerutton.de/hockey/</app.hockey.update.url>
 
+        <!-- default hockey app id is empty - then no hockey is used -->
+        <hockeyapp.id></hockeyapp.id>
+
         <!-- default key is testing key -->
         <bugsense.key>${app.bugsense.testing}</bugsense.key>
         <app.bugsense.testing>${bugsense.key.testing}</app.bugsense.testing>
@@ -120,12 +123,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.crashlytics.android</groupId>
-                <artifactId>crashlytics</artifactId>
-                <version>[1.0.0,)</version>
             </dependency>
 
         </dependencies>
@@ -280,45 +277,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>com.crashlytics</groupId>
-                    <artifactId>crashlytics-maven</artifactId>
-                    <version>1.0.3</version>
-                    <configuration>
-                        <androidManifestPath>
-                            ${project.basedir}/resources/android/AndroidManifest.xml
-                        </androidManifestPath>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>properties-maven-plugin</artifactId>
                     <version>1.0-alpha-2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.crashlytics</groupId>
-                                        <artifactId>crashlytics-maven</artifactId>
-                                        <versionRange>[1.0.0,)</versionRange>
-                                        <goals>
-                                            <goal>GenerateResources</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <execute>
-                                            <runOnIncremental>false</runOnIncremental>
-                                        </execute>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -379,6 +340,7 @@
                 <hockey.update.url></hockey.update.url>
                 <app.enabledebug>true</app.enabledebug>
                 <bugsense.key>${app.bugsense.testing}</bugsense.key>
+                <hockeyapp.id>d076b4be1cf6f7d5130c4d766b6c7753</hockeyapp.id>
             </properties>
         </profile>
         <profile>
@@ -393,6 +355,7 @@
                 <hockey.update.url></hockey.update.url>
                 <app.enabledebug>true</app.enabledebug>
                 <bugsense.key>${app.bugsense.testing}</bugsense.key>
+                <hockeyapp.id>53b3b9ffa1473a9536e860791cfaa0b3</hockeyapp.id>
             </properties>
         </profile>
         <profile>
