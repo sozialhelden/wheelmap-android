@@ -230,7 +230,7 @@ public class POIDetailEditableFragment extends Fragment implements
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detail_editable, container, false);
 
-        v.findViewById(R.id.menu_save).setOnClickListener(new OnClickListener() {
+        v.findViewById(R.id.detail_save).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 save();
@@ -301,7 +301,7 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        /*
         switch (id) {
             case R.id.menu_save:
                 save();
@@ -309,7 +309,7 @@ public class POIDetailEditableFragment extends Fragment implements
             default:
                 // noop
         }
-
+        */
         return false;
     }
 
