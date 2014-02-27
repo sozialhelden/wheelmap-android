@@ -70,6 +70,8 @@
                         android:id="@+id/web"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autoLink="web"
+                        android:linksClickable="true"
                         />
 
             </LinearLayout>

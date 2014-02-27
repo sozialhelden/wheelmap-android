@@ -501,21 +501,37 @@ public class POIDetailEditableFragment extends Fragment implements
         return values;
     }
 
-    public void setWheelchairState(WheelchairState state) {
-        if (state == null) {
+    public void setWheelchairState(WheelchairState newState) {
+        if (newState == null) {
             return;
         }
 
-        // Log.d(TAG, "setWheelchairState state = " + state.name());
-        mWheelchairState = state;
+        mWheelchairState = newState;
 
         int stateColor = getResources().getColor(
-                mWSAttributes.get(state).colorId);
+                mWSAttributes.get(newState).colorId);
+
+        if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
+            state_text.setBackgroundResource(R.drawable.detail_button_grey);
+        else if(mWheelchairState.getId() == WheelchairState.YES.getId())
+            state_text.setBackgroundResource(R.drawable.detail_button_green);
+        else if(mWheelchairState.getId() == WheelchairState.LIMITED.getId())
+            state_text.setBackgroundResource(R.drawable.detail_button_orange);
+        else if(mWheelchairState.getId() == WheelchairState.NO.getId())
+            state_text.setBackgroundResource(R.drawable.detail_button_red);
+        else if(mWheelchairState.getId() == WheelchairState.NO_PREFERENCE.getId())
+            state_text.setBackgroundResource(R.drawable.detail_button_grey);
+        else
+            state_text.setBackgroundResource(R.drawable.detail_button_grey);
+
+
+
 
         //title_container.setBackgroundColor(stateColor);
-        //state_icon.setImageResource(mWSAttributes.get(state).drawableId);
-        state_text.setTextColor(stateColor);
-        state_text.setText(mWSAttributes.get(state).titleStringId);
+        //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
+        //stateText.setTextColor(stateColor);
+
+        state_text.setText(mWSAttributes.get(newState).titleStringId);
     }
 
     public void setGeolocation(double latitude, double longitude) {

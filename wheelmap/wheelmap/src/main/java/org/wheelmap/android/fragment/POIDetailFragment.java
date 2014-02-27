@@ -308,7 +308,8 @@ public class POIDetailFragment extends Fragment implements
         }
 
         ViewStub stub = (ViewStub) v.findViewById(stubId);
-        stub.inflate();
+        if(stub != null)
+            stub.inflate();
 
         if (AppCapability.degradeDetailMapAsButton()) {
             assignButton(v);
@@ -319,11 +320,12 @@ public class POIDetailFragment extends Fragment implements
 
     private void assignMapView(View v) {
         mapView = (MapView) v.findViewById(R.id.map);
-
-        mapView.setClickable(true);
-        mapView.setBuiltInZoomControls(true);
-        mapController = mapView.getController();
-        mapController.setZoom(18);
+        if(mapView != null){
+            mapView.setClickable(true);
+            mapView.setBuiltInZoomControls(true);
+            mapController = mapView.getController();
+            mapController.setZoom(18);
+        }
     }
 
     private void assignButton(View v) {
@@ -504,6 +506,8 @@ public class POIDetailFragment extends Fragment implements
         String website = POIHelper.getWebsite(c);
         String phone = POIHelper.getPhone(c);
 
+
+
         String street = POIHelper.getStreet(c);
         String houseNum = POIHelper.getHouseNumber(c);
         String postCode = POIHelper.getPostcode(c);
@@ -546,9 +550,11 @@ public class POIDetailFragment extends Fragment implements
         if(website != null){
             webText.setVisibility(View.VISIBLE);
             webText.setClickable(true);
-            webText.setMovementMethod(LinkMovementMethod.getInstance());
+
             String text = "<a href=" + website + ">" + website + "</a>";
             webText.setText(Html.fromHtml(text));
+
+            webText.setMovementMethod(LinkMovementMethod.getInstance());
         }else{
             webText.setVisibility(View.GONE);
         }
@@ -606,9 +612,12 @@ public class POIDetailFragment extends Fragment implements
             SingleItemOverlay overlay = new SingleItemOverlay(this);
             overlay.setItem(poiValues, nodeType, state);
             overlay.enableLowDrawQuality(true);
-            mapView.getOverlays().clear();
-            mapView.getOverlays().add(overlay);
+            if(mapView != null){
+                mapView.getOverlays().clear();
+                mapView.getOverlays().add(overlay);
+
             mapController.setCenter(new GeoPoint(latitude, longitude));
+            }
         }
     }
 

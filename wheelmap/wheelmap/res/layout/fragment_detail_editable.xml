@@ -33,20 +33,30 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_name"
+                android:textStyle="bold"/>
 
 
         <LinearLayout
                 android:id="@+id/edit_title_text_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="#eeeeee">
 
             <EditText android:layout_weight="1"
                       android:id="@+id/name"
                       android:layout_gravity="center_vertical"
                       style="@style/DetailFontNew.Editable"
                       android:hint="@string/poi_property_name"
-                      android:background="#eeeeee"/>
+
+                      />
             <!--
             <ImageView
                     android:id="@+id/edit_titlebar_backbutton"
@@ -58,58 +68,98 @@
 
         </LinearLayout>
 
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_nodetype"
+                android:textStyle="bold"/>
+
+
         <RelativeLayout
                 android:id="@+id/edit_nodetype"
-                style="@style/Container.Pressable">
+                style="@style/Container.Pressable"
 
-            <EditText
+                android:background="#eeeeee">
+
+            <TextView
                     android:id="@+id/nodetype"
-                    style="@style/DetailFontNew"
-                    android:layout_centerVertical="true"
-                    android:hint="@string/poi_property_nodetype"
-                    android:background="#eeeeee"/>
-        </RelativeLayout>
-            <!--
-            <LinearLayout
-                    android:id="@+id/edit_geolocation_container"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:hint="@string/poi_property_nodetype"
+                    />
+        </RelativeLayout>
 
-                <include layout="@layout/separator"/>
-
-                <RelativeLayout
-                        android:id="@+id/edit_geolocation"
-                        style="@style/Container.Pressable">
-
-                    <TextView
-                            android:id="@+id/edit_position_text"
-                            style="@style/DetailFontNew"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/edit_geolocation_icon"
-                            android:hint="@string/poi_property_position"/>
-
-                    <ImageView
-                            android:id="@+id/edit_geolocation_icon"
-                            style="@style/IconMedium"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
-                </RelativeLayout>
-            </LinearLayout>
-            -->
-
-            <include  layout="@layout/item_wheelchair_state"/>
+        <!--
+        <LinearLayout
+                android:id="@+id/edit_geolocation_container"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
 
             <include layout="@layout/separator"/>
 
-            <EditText
-                    android:id="@+id/comment"
-                    style="@style/DetailFontNew.Editable"
-                    android:hint="@string/poi_property_comment"/>
+            <RelativeLayout
+                    android:id="@+id/edit_geolocation"
+                    style="@style/Container.Pressable">
 
-            <include layout="@layout/separator"/>
+                <TextView
+                        android:id="@+id/edit_position_text"
+                        style="@style/DetailFontNew"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/edit_geolocation_icon"
+                        android:hint="@string/poi_property_position"/>
+
+                <ImageView
+                        android:id="@+id/edit_geolocation_icon"
+                        style="@style/IconMedium"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
+            </RelativeLayout>
+        </LinearLayout>
+        -->
+
+        <include  layout="@layout/item_wheelchair_state"/>
+
+        <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_comment"
+                android:textStyle="bold"/>
+        <LinearLayout
+                android:id="@+id/edit_title_text_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#eeeeee">
+                <EditText
+                        android:id="@+id/comment"
+                        style="@style/DetailFontNew.Editable"
+                        android:hint="@string/poi_property_comment"/>
+        </LinearLayout>
+
+
+        <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_address"
+                android:textStyle="bold"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#eeeeee"
+                android:orientation="vertical">
 
             <LinearLayout
                     android:layout_width="fill_parent"
@@ -133,6 +183,8 @@
                         android:hint="@string/poi_property_housenum"/>
             </LinearLayout>
 
+
+
             <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -155,25 +207,17 @@
                         android:hint="@string/poi_property_city"/>
             </LinearLayout>
 
-            <include layout="@layout/separator"/>
-
             <EditText
                     android:id="@+id/phone"
                     style="@style/DetailFontNew.Editable"
                     android:autoLink="phone"
                     android:hint="@string/poi_property_phone"/>
 
-            <include layout="@layout/separator"/>
-
             <EditText
                     android:id="@+id/website"
                     style="@style/DetailFontNew.Editable"
                     android:autoLink="web"
                     android:hint="@string/poi_property_website"/>
-
-            <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="@dimen/separator_large"
-                    android:background="@android:color/black"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
