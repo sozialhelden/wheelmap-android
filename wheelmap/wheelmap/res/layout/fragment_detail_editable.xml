@@ -219,5 +219,18 @@
                     android:autoLink="web"
                     android:hint="@string/poi_property_website"/>
         </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center">
+            <ImageButton
+                    android:id="@+id/detail_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/ic_menu_save_wheelmap"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -280,17 +280,21 @@ public class POIDetailFragment extends Fragment implements
         v.findViewById(R.id.detail_route).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                    startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS),
-                            getString(R.string.menu_directions)));
+                startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS),
+                        getString(R.string.menu_directions)));
+                return;
             }
         });
+
+
 
         v.findViewById(R.id.detail_share).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
                     startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_SHARE),
-                            getString(R.string.menu_share)));
-                    return;
+                        getString(R.string.menu_share)));
+                return;
             }
         });
 

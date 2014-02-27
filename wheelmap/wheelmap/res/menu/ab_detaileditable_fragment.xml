@@ -23,10 +23,14 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- enabled !! -->
+
     <item
             android:id="@+id/menu_save"
             android:icon="@drawable/ic_menu_save_wheelmap"
             android:showAsAction="ifRoom"
-            android:title="@string/menu_save"/>
+            android:title="@string/menu_save"
+            android:visible="false"
+            android:enabled="false"/>
 
 </menu>

@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
+import android.content.Intent;
 import com.google.inject.Inject;
 
 import com.actionbarsherlock.view.Menu;
@@ -30,6 +31,7 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Button;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
@@ -219,14 +221,25 @@ public class POIDetailEditableFragment extends Fragment implements
         poiID = getArguments().getLong(Extra.POI_ID);
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_detail_editable, container, false);
+
+        v.findViewById(R.id.menu_save).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
+                return;
+            }
+        });
+
         return inflater.inflate(R.layout.fragment_detail_editable, container,
                 false);
-
     }
 
     @Override
