@@ -70,6 +70,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -229,17 +230,16 @@ public class POIDetailEditableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detail_editable, container, false);
-
-        v.findViewById(R.id.detail_save).setOnClickListener(new OnClickListener() {
+        /*
+        v.findViewById(R.id.menu_save).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 save();
                 return;
             }
-        });
+        });    */
 
-        return inflater.inflate(R.layout.fragment_detail_editable, container,
-                false);
+        return v;
     }
 
     @Override
@@ -301,7 +301,7 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        /*
+
         switch (id) {
             case R.id.menu_save:
                 save();
@@ -309,7 +309,7 @@ public class POIDetailEditableFragment extends Fragment implements
             default:
                 // noop
         }
-        */
+
         return false;
     }
 

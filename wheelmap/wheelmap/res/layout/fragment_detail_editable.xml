@@ -220,6 +220,8 @@
                     android:hint="@string/poi_property_website"/>
         </LinearLayout>
 
+
+        <!--
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
@@ -231,6 +233,6 @@
                     android:layout_margin="5dp"
                     android:background="@null"
                     android:src="@drawable/ic_menu_save_wheelmap"/>
-        </LinearLayout>
+        </LinearLayout>  -->
     </LinearLayout>
 </ScrollView>

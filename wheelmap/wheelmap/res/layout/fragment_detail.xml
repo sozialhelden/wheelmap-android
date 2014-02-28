@@ -121,7 +121,8 @@
                     android:id="@+id/detail_testimage"
                     />
         </LinearLayout>
-        <LinearLayout android:layout_width="match_parent"
+        <LinearLayout
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:gravity="center">

@@ -24,6 +24,7 @@ package org.wheelmap.android.fragment;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.online.R;
 
 import android.content.pm.PackageInfo;
@@ -33,15 +34,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+
+
 public class InfoFragment extends Fragment {
 
     private OnInfoListener mListener;
+
+
 
     public interface OnInfoListener {
 
         public void onNextView(String view);
 
         public void onViewUri(Uri uri);
+
+        public void dismissInfoView();
     }
 
     @Override
@@ -64,6 +71,18 @@ public class InfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_credit_screen, container, false);
+
+
+
+
+
+        v.findViewById(R.id.credit_screen).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.dismissInfoView();
+            }
+        });
+
 
         return v;
     }

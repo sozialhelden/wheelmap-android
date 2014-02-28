@@ -46,6 +46,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -89,7 +90,25 @@ public class LoginDialogFragment extends DialogFragment implements
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
 
+
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_dialog_login, container, false);
+
+        v.findViewById(R.id.button_login).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+
+        return v;
+    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -104,9 +123,9 @@ public class LoginDialogFragment extends DialogFragment implements
         //TODO check if already logged in
         //TODO and show logout dialog if already logged in
         AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
-        builder.setTitle(R.string.title_login);
-        builder.setIcon(R.drawable.ic_login_wheelmap);
-        builder.setNeutralButton(R.string.login_submit, null);
+        //builder.setTitle(R.string.title_login);
+        //builder.setIcon(R.drawable.ic_login_wheelmap);
+        //builder.setNeutralButton(R.string.login_submit, null);
         builder.setOnCancelListener(this);
 
         View view = LayoutInflater.from(getSupportActivity()).inflate(
@@ -137,7 +156,7 @@ public class LoginDialogFragment extends DialogFragment implements
         mRegisterText.setText(spannedText);
         mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());
         load();
-        mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
+        //mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 
     }
 
@@ -191,9 +210,9 @@ public class LoginDialogFragment extends DialogFragment implements
 
     private void updateRefreshStatus() {
         if (mSyncing) {
-            mProgressBar.setVisibility(View.VISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
         } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
+            //mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 

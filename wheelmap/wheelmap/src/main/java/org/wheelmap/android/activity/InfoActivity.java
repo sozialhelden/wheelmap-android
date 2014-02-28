@@ -24,26 +24,55 @@ package org.wheelmap.android.activity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+
+import javax.naming.NameNotFoundException;
 
 
 @Activity.Addons(Activity.ADDON_SHERLOCK)
 public class InfoActivity extends Activity implements
         OnInfoListener {
 
+    private TextView txt_credit_version;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_info);
+
+        String versionName;
+        int versionCode;
+
+        PackageInfo pInfo;
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        txt_credit_version = (TextView)findViewById(R.id.credits_version);
+
+
+        try {
+            pInfo = getApplicationContext().getPackageManager().getPackageInfo(this.getPackageName(),0);
+
+            versionName = pInfo.versionName;
+            versionCode = pInfo.versionCode;
+
+            versionName = txt_credit_version.getText().toString() + ": " + versionName + " (Build " + versionCode + ")";
+
+            txt_credit_version.setText(versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -62,6 +91,12 @@ public class InfoActivity extends Activity implements
 
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         startActivity(intent);
+    }
+
+    @Override
+    public void dismissInfoView() {
+        //not used
+        finish();
     }
 
     @Override

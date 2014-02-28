@@ -63,6 +63,10 @@
     <string name="error_wheelchairstate_missing_title">No Wheelchair State given</string>
     <string name="helper_delim_dash">\ - \</string>
     <string name="info_a_project_of">a project of</string>
+    <string name="info_development">Development</string>
+    <string name="info_design">Design</string>
+    <string name="info_design_one">Simon Staib</string>
+    <string name="info_smf">Smart Mobile Factory GmbH</string>
     <string name="info_android_development">Android Development:</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
     <string name="info_android_development_two">Michael Kröz</string>
@@ -89,6 +93,7 @@
     <string name="legal_notice_intro">This Software is based on other works. Their copyright is as
         follows:
     </string>
+    <string name="legal_notice_entypo">Entypo pictograms by Daniel Bruce</string>
     <string name="legal_notice_jackson">Jackson JSON Processor</string>
     <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
     <string name="legal_notice_mapsforge">Mapsforge</string>
@@ -105,6 +110,10 @@
     <string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
     <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org
     </string>
+
+    <string name="login_text">Log in with your Wheelmap-Account.</string>
+    <string name="login_register_discription">New? Register now at OpenStreetmap and Wheelmap.org</string>
+
     <string name="login_email">Email</string>
     <string name="login_link_text">Register at Wheelmap.org</string>
     <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>

@@ -30,7 +30,6 @@
             android:icon="@drawable/ic_menu_save_wheelmap"
             android:showAsAction="ifRoom"
             android:title="@string/menu_save"
-            android:visible="false"
-            android:enabled="false"/>
+/>
 
 </menu>

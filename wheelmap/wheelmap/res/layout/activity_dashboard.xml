@@ -44,6 +44,8 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:singleLine="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:imeOptions="actionSearch"
                 android:textColorHint="@color/dashboard_text_color"
                 android:textColor="@color/dashboard_text_color"

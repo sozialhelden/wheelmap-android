@@ -237,6 +237,7 @@ public class POIDetailActivity extends MapActivity implements
     @Override
     public void dismissDetailView() {
         //not used
+        finish();
     }
 
     @Override

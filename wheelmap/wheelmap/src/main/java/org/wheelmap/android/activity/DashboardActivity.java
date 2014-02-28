@@ -33,6 +33,8 @@ import android.widget.TextView;
  */
 public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,10 +121,18 @@ public class DashboardActivity extends
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                     performSearch();
+
+                    performSearch();
                     return true;
                 }
                 return false;
+            }
+        });
+
+        search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                ((EditText)v.findViewById(R.id.dashboard_search_edit)).setHint("");
             }
         });
 
