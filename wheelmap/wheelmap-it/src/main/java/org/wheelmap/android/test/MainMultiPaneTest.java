@@ -96,7 +96,7 @@ public class MainMultiPaneTest extends
         RobotiumHelper.login(solo);
 
         solo.clickInList(2);
-        solo.clickOnActionBarItem(R.id.menu_edit);
+        // solo.clickOnActionBarItem(R.id.menu_edit);
 
         solo.waitForActivity("POIDetailEditableActivity");
         solo.assertCurrentActivity("detail activity",
@@ -109,7 +109,7 @@ public class MainMultiPaneTest extends
         solo.waitForActivity("MainMultiPaneActivity");
 
         solo.clickInList(5);
-        solo.clickOnActionBarItem(R.id.menu_edit);
+        // solo.clickOnActionBarItem(R.id.menu_edit);
 
         solo.waitForActivity("POIDetailEditableActivity");
         solo.assertCurrentActivity("detail activity",

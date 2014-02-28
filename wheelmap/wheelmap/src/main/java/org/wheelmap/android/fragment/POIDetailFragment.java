@@ -53,21 +53,13 @@ import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -84,14 +76,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 import roboguice.inject.InjectView;
-import sun.org.mozilla.javascript.internal.Context;
 
 public class POIDetailFragment extends Fragment implements
         OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {

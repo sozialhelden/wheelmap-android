@@ -180,7 +180,7 @@ public class MainSinglePaneTest extends
                 POIDetailActivity.class);
         solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
-        clickOnActionbar(R.id.menu_edit);
+        // clickOnActionbar(R.id.menu_edit);
         solo.sleep(500);
         RobotiumHelper.login(solo);
 
