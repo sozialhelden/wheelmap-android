@@ -96,7 +96,7 @@
                 android:layout_margin="8dp"
                 />
         </LinearLayout>
-
+        <!--
         <TextView
             android:layout_width="match_parent" android:layout_height="wrap_content"
 
@@ -121,18 +121,20 @@
                     android:id="@+id/detail_testimage"
                     />
         </LinearLayout>
+        -->
         <LinearLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:gravity="center">
+            <!--
             <ImageButton
             android:id="@+id/detail_foto"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:background="@null"
-            android:src="@drawable/detail_ic_foto"/>
+            android:src="@drawable/detail_ic_foto"/>-->
             <ImageButton
             android:id="@+id/detail_edit"
             android:layout_width="wrap_content"

@@ -236,7 +236,7 @@ public class POIDetailFragment extends Fragment implements
         webText = (TextView)v.findViewById(R.id.web);
         phoneText = (TextView)v.findViewById(R.id.phone);
 
-        mTestImage = (ImageView)v.findViewById(R.id.detail_testimage);
+        //mTestImage = (ImageView)v.findViewById(R.id.detail_testimage);
 
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
@@ -251,12 +251,12 @@ public class POIDetailFragment extends Fragment implements
             });
         }
 
-        v.findViewById(R.id.detail_foto).setOnClickListener(new OnClickListener() {
+        /*v.findViewById(R.id.detail_foto).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
+        });     */
 
         v.findViewById(R.id.detail_edit).setOnClickListener(new OnClickListener() {
             @Override
@@ -553,6 +553,8 @@ public class POIDetailFragment extends Fragment implements
             webText.setVisibility(View.GONE);
         }
 
+        if(comment == null)
+            commentText.setText("");
 
 
         final double latitude = POIHelper.getLatitude(c);
