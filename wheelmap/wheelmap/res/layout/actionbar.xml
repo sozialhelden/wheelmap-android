@@ -11,7 +11,8 @@
               android:layout_gravity="center"
               android:gravity="center"
               android:layout_weight="1"
-            android:textColor="@android:color/white" android:textStyle="bold"/>
+              android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white" android:textStyle="normal"/>
 
     <ImageView
             android:id="@+id/switch_view"

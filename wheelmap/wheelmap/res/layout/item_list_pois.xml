@@ -41,6 +41,7 @@
             android:layout_marginRight="@dimen/margin_small"
             android:layout_toRightOf="@id/image"
             android:singleLine="true"
+            android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:layout_toLeftOf="@+id/compass"/>
 
@@ -65,6 +66,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
+
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorSecondary"/>
 

@@ -26,14 +26,14 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical">
-
+    <!--
     <LinearLayout style="@style/TitleBarNew.SingleLine">
 
         <TextView
                 style="@style/TitleBarTextNew.Title"
                 android:text="@string/title_nodetype_edit">
         </TextView>
-    </LinearLayout>
+    </LinearLayout>  -->
 
     <ListView
             android:id="@+id/android:list"

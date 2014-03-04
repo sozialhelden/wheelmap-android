@@ -554,7 +554,7 @@ public class POIDetailFragment extends Fragment implements
         }
 
         if(comment == null)
-            commentText.setText("");
+            commentText.setVisibility(View.GONE);
 
 
         final double latitude = POIHelper.getLatitude(c);

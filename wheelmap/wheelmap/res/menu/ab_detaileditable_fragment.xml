@@ -23,7 +23,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- enabled !! -->
+    <!-- note enabled !! -->
 
     <item
             android:id="@+id/menu_save"
