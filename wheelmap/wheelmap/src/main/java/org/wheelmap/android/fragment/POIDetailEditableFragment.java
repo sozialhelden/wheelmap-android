@@ -230,14 +230,14 @@ public class POIDetailEditableFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detail_editable, container, false);
-        /*
-        v.findViewById(R.id.menu_save).setOnClickListener(new OnClickListener() {
+
+        v.findViewById(R.id.detail_save).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 save();
                 return;
             }
-        });    */
+        });
 
         return v;
     }
@@ -301,14 +301,14 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        /*
         switch (id) {
             case R.id.menu_save:
                 save();
                 break;
             default:
                 // noop
-        }
+        }  */
 
         return false;
     }

@@ -37,7 +37,7 @@
         <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/abs_logo_tablet"
+                android:src="@drawable/credits_logo"
                 android:gravity="center_horizontal"/>
 
         <TextView
@@ -49,7 +49,7 @@
 
         <EditText
                 android:id="@+id/login_email"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:freezesText="true"
                 android:hint="@string/login_email"
@@ -60,7 +60,7 @@
 
         <EditText
                 android:id="@+id/login_password"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:freezesText="true"
                 android:hint="@string/login_password"

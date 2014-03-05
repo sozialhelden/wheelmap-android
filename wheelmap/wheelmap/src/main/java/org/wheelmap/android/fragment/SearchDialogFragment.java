@@ -28,11 +28,13 @@ import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.AdapterView;
 import org.holoeverywhere.widget.AdapterView.OnItemSelectedListener;
 import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.RadioButton;
 import org.holoeverywhere.widget.Spinner;
 import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
+
 
 import android.app.SearchManager;
 import android.content.DialogInterface;
@@ -42,6 +44,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -90,9 +94,9 @@ public class SearchDialogFragment extends DialogFragment implements
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
-        builder.setTitle(R.string.title_search);
-        builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
-        builder.setNeutralButton(R.string.search_execute, this);
+        //builder.setTitle(R.string.title_search);
+        //builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
+        //builder.setNeutralButton(R.string.search_execute, this);
 
         View view = createView();
         builder.setView(view);
@@ -104,7 +108,9 @@ public class SearchDialogFragment extends DialogFragment implements
 
     protected View createView() {
         LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
-        View v = inflater.inflate(R.layout.fragment_dialog_search, null);
+        View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
+
+
 
         return v;
     }
@@ -170,6 +176,16 @@ public class SearchDialogFragment extends DialogFragment implements
 
     protected void setSearchMode(boolean enableBoundingBoxSearch) {
         Log.d(TAG, "enableBoundingBoxSearch = " + enableBoundingBoxSearch);
+
+        LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
+        View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
+
+        if(enableBoundingBoxSearch)
+            v.findViewById(R.id.search_spinner_distance_container).setEnabled(false);
+        else
+            v.findViewById(R.id.search_spinner_distance_container).setEnabled(true);
+
+
         mEnableBoundingBoxSearch = enableBoundingBoxSearch;
         mapHintContainer.setEnabled(mEnableBoundingBoxSearch);
         distanceContainer.setEnabled(!mEnableBoundingBoxSearch);

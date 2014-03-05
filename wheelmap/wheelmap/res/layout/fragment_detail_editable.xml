@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="10dp">
 
         <TextView
                 android:layout_width="match_parent"
@@ -135,7 +135,7 @@
                 android:text="@string/poi_property_comment"
                 android:textStyle="bold"/>
         <LinearLayout
-                android:id="@+id/edit_title_text_container"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -221,7 +221,12 @@
         </LinearLayout>
 
 
-        <!--
+
+        <View
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
@@ -232,7 +237,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:background="@null"
-                    android:src="@drawable/ic_menu_save_wheelmap"/>
-        </LinearLayout>  -->
+                    android:src="@drawable/detail_ic_edit"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

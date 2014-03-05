@@ -1,11 +1,13 @@
 package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.widget.RadioButton;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -35,6 +37,8 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
         group.setOnCheckedChangeListener(this);
 
         // TODO: hier radio button handling einbauen
+
+
     }
 
     @Override
