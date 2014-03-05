@@ -110,7 +110,7 @@ public class SearchDialogFragment extends DialogFragment implements
         LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
 
-
+         // clivk search
 
         return v;
     }
@@ -181,9 +181,9 @@ public class SearchDialogFragment extends DialogFragment implements
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
 
         if(enableBoundingBoxSearch)
-            v.findViewById(R.id.search_spinner_distance_container).setEnabled(false);
+            v.findViewById(R.id.search_spinner_distance).setClickable(false);
         else
-            v.findViewById(R.id.search_spinner_distance_container).setEnabled(true);
+            v.findViewById(R.id.search_spinner_distance).setClickable(true);
 
 
         mEnableBoundingBoxSearch = enableBoundingBoxSearch;
