@@ -11,8 +11,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:gravity="center_horizontal"
             android:padding="@dimen/padding_large">
-
+        <!--
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,9 +32,9 @@
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:text="@string/search_pick_map"
-                    android:gravity="center"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
-        </LinearLayout>
+                    android:gravity="center_horizontal"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout> -->
 
         <EditText
                 android:id="@+id/search_keyword"
@@ -44,44 +45,53 @@
                 android:hint="@string/search_hint_list"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal"
+                android:layout_margin="20dp"/>
+         <!--
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:text="@string/search_pick_category"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+                      >
 
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:text="@string/search_pick_category"
+                    android:layout_weight="1"
 
-
-        <Spinner
-                android:id="@+id/search_spinner_categorie_nodetype"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/search_pick_category"
-                holo:spinnerMode="dialog"/>
-
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <Spinner
+                    android:id="@+id/search_spinner_categorie_nodetype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/search_pick_category"
+                    android:layout_weight="9"
+                    holo:spinnerMode="dialog"/>
+        </LinearLayout>
         <RadioGroup
                 android:id="@+id/radioGroupSearchMode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            <RadioButton
-                    android:id="@+id/radioEnableDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/search_mode_distance"
-                    />
-
+                android:orientation="horizontal">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
             <LinearLayout
                     android:id="@+id/search_spinner_distance_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:orientation="horizontal">
+
+                <RadioButton
+                        android:id="@+id/radioEnableDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/search_mode_distance"
+                        />
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -104,8 +114,10 @@
                     android:text="@string/search_mode_map"
                     />
 
+        </LinearLayout>
+         -->
 
-        </RadioGroup>
+        <!--</RadioGroup>-->
 
         <Button android:id="@+id/button_search"
                 android:layout_width="match_parent"

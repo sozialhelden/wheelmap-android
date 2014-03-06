@@ -75,7 +75,7 @@
                 android:text="@string/login_submit"
                 android:layout_marginBottom="20dp"
                 android:clickable="true"
-                android:gravity="center_horizontal"/>
+                android:gravity="center"/>
 
         <TextView
                 android:layout_width="match_parent"

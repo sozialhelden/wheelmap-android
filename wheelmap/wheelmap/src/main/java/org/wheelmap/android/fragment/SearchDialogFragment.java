@@ -110,7 +110,7 @@ public class SearchDialogFragment extends DialogFragment implements
         LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
 
-         // clivk search
+
 
         return v;
     }
@@ -120,7 +120,7 @@ public class SearchDialogFragment extends DialogFragment implements
 
         mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
         mKeywordText.setOnEditorActionListener(this);
-
+        /*
         mCategorySpinner = (Spinner) v.findViewById(R.id.search_spinner_categorie_nodetype);
 
         ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
@@ -148,13 +148,13 @@ public class SearchDialogFragment extends DialogFragment implements
             mDistance = Float.valueOf(distance);
         } catch (NumberFormatException e) {
             mDistance = Extra.UNKNOWN;
-        }
+        }*/
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        enableContainerVisibility();
+        //enableContainerVisibility();
     }
 
     private View mapHintContainer;
@@ -177,18 +177,10 @@ public class SearchDialogFragment extends DialogFragment implements
     protected void setSearchMode(boolean enableBoundingBoxSearch) {
         Log.d(TAG, "enableBoundingBoxSearch = " + enableBoundingBoxSearch);
 
-        LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
-        View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
-
-        if(enableBoundingBoxSearch)
-            v.findViewById(R.id.search_spinner_distance).setClickable(false);
-        else
-            v.findViewById(R.id.search_spinner_distance).setClickable(true);
-
-
         mEnableBoundingBoxSearch = enableBoundingBoxSearch;
         mapHintContainer.setEnabled(mEnableBoundingBoxSearch);
         distanceContainer.setEnabled(!mEnableBoundingBoxSearch);
+
     }
 
     @Override
@@ -223,7 +215,7 @@ public class SearchDialogFragment extends DialogFragment implements
 
     }
 
-    private void sendSearchInstructions() {
+    protected void sendSearchInstructions() {
         Bundle b = createSearchBundle();
 
         OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
@@ -237,7 +229,7 @@ public class SearchDialogFragment extends DialogFragment implements
         if (keyword.length() > 0) {
             bundle.putString(SearchManager.QUERY, keyword);
         }
-
+        /*
         Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
                 + mNodeTypeSelected);
         if (mCategorySelected != Extra.UNKNOWN) {
@@ -253,7 +245,7 @@ public class SearchDialogFragment extends DialogFragment implements
         } else if (mDistance != Extra.UNKNOWN) {
             bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
         }
-
+        */
         return bundle;
     }
 

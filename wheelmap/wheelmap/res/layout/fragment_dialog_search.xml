@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/margin_medium"
                     android:text="@string/search_pick_map"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:gravity="center"/>
+                    android:gravity="center_horizontal"/>
         </LinearLayout>
 
         <EditText

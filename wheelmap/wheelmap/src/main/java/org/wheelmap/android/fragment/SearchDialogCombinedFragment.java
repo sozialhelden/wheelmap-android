@@ -2,6 +2,7 @@ package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.widget.RadioButton;
+import org.holoeverywhere.widget.Spinner;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
@@ -25,28 +26,65 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
     }
 
     protected View createView() {
-        return LayoutInflater.from(getSupportActivity()).inflate(
-                R.layout.fragment_dialog_search_combined, null);
+        LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
+        View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
+
+        v.findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendSearchInstructions();
+                dismiss();
+
+            }
+        });
+
+
+
+        return v;
     }
 
-    protected void bindViews(View v) {
+    protected void bindViews(final View v) {
         super.bindViews(v);
-
+        /*
         RadioGroup group = (RadioGroup) v
                 .findViewById(R.id.radioGroupSearchMode);
-        group.setOnCheckedChangeListener(this);
+        group.setOnCheckedChangeListener(this);*/
 
         // TODO: hier radio button handling einbauen
+        /*
 
+        ((RadioButton)v.findViewById(R.id.radioEnableDistance)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setSearchMode(false);
+                if(isChecked){
+                    v.findViewById(R.id.search_spinner_distance).setEnabled(true);
+                    ((RadioButton)v.findViewById(R.id.radioEnableBoundingBox)).setChecked(false);
+                }
+            }
+        });
+
+        ((RadioButton)v.findViewById(R.id.radioEnableBoundingBox)).setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView,
+                            boolean isChecked) {
+                        setSearchMode(true);
+                        if(isChecked){
+                            v.findViewById(R.id.search_spinner_distance).setEnabled(false);
+                            ((RadioButton)v.findViewById(R.id.radioEnableDistance)).setChecked(false);
+                        }
+                    }
+                });   */
 
     }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int id) {
-        if (id == R.id.radioEnableDistance) {
+        /*if (id == R.id.radioEnableDistance) {
             setSearchMode(false);
         } else if (id == R.id.radioEnableBoundingBox) {
             setSearchMode(true);
-        }
+        }*/
     }
 }
