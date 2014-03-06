@@ -7,6 +7,7 @@
             android:background="#cfcfcf">
 
     <LinearLayout
+            android:id="@+id/layout_detail_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -39,7 +40,7 @@
 
         <TextView
             android:layout_width="match_parent" android:layout_height="wrap_content"
-
+            android:id="@+id/addr_title"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="2dp"
             android:text="@string/poi_property_address"
@@ -74,13 +75,22 @@
                         android:linksClickable="true"
                         />
 
+                <TextView
+                        android:id="@+id/nothing"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No Point selected!"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        />
+
             </LinearLayout>
 
         </LinearLayout>
 
         <TextView
               android:layout_width="match_parent" android:layout_height="wrap_content"
-
+              android:id="@+id/comment_title"
               android:layout_marginTop="10dp"
               android:layout_marginBottom="2dp"
               android:text="@string/poi_property_comment"
@@ -137,14 +147,14 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:gravity="center">
-            <!--
+
             <ImageButton
             android:id="@+id/detail_foto"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:background="@null"
-            android:src="@drawable/detail_ic_foto"/>-->
+            android:src="@drawable/detail_ic_foto"/>
             <ImageButton
             android:id="@+id/detail_edit"
             android:layout_width="wrap_content"

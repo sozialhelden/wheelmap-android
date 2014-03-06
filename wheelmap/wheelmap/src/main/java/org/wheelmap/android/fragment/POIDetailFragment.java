@@ -29,6 +29,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 
@@ -60,10 +61,12 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Html;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -72,6 +75,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -118,10 +122,23 @@ public class POIDetailFragment extends Fragment implements
     //@InjectView(R.id.addr)
     private TextView addressText;
 
+    private TextView addressTitle;
+
     //@InjectView(R.id.comment)
     private TextView commentText;
 
+    private TextView commentTitle;
+
     private TextView webText;
+
+    private ImageView titlebarBackbutton;
+
+    private ImageButton buttonPhoto;
+    private ImageButton buttonEdit;
+    private ImageButton buttonRoute;
+    private ImageButton buttonShare;
+
+    private TextView nothing;
 
     //@InjectView(R.id.website)
     //private TextView websiteText;
@@ -178,6 +195,9 @@ public class POIDetailFragment extends Fragment implements
 
     private static final int DIALOG_ALERT = 10;
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
 
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -221,20 +241,28 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
 
         title_container = (RelativeLayout)v.findViewById(R.id.title_container);
         nameText = (TextView)v.findViewById(R.id.titlebar_title);
         categoryText = (TextView)v.findViewById(R.id.titlebar_subtitle);
         nodetypeIcon = (ImageView)v.findViewById(R.id.titlebar_icon);
+        addressTitle = (TextView)v.findViewById(R.id.addr_title);
         addressText = (TextView)v.findViewById(R.id.addr);
+        commentTitle = (TextView)v.findViewById(R.id.comment_title);
         commentText = (TextView)v.findViewById(R.id.comment);
         //stateIcon = (ImageView)v.findViewById(R.id.state_icon);
         stateText = (TextView)v.findViewById(R.id.state_text);
         stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
         webText = (TextView)v.findViewById(R.id.web);
         phoneText = (TextView)v.findViewById(R.id.phone);
+        titlebarBackbutton = (ImageView)v.findViewById(R.id.titlebar_backbutton);
+        buttonPhoto = (ImageButton)v.findViewById(R.id.detail_foto);
+        buttonEdit = (ImageButton)v.findViewById(R.id.detail_edit);
+        buttonRoute = (ImageButton)v.findViewById(R.id.detail_route);
+        buttonShare = (ImageButton)v.findViewById(R.id.detail_share);
+        nothing = (TextView)v.findViewById(R.id.nothing);
+
 
         //mTestImage = (ImageView)v.findViewById(R.id.detail_testimage);
 
@@ -251,14 +279,14 @@ public class POIDetailFragment extends Fragment implements
             });
         }
 
-        /*v.findViewById(R.id.detail_foto).setOnClickListener(new OnClickListener() {
+        buttonPhoto.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dispatchTakePictureIntent();
             }
-        });     */
+        });
 
-        v.findViewById(R.id.detail_edit).setOnClickListener(new OnClickListener() {
+        buttonEdit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
@@ -267,7 +295,7 @@ public class POIDetailFragment extends Fragment implements
             }
         });
 
-        v.findViewById(R.id.detail_route).setOnClickListener(new OnClickListener() {
+        buttonRoute.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS),
@@ -278,11 +306,11 @@ public class POIDetailFragment extends Fragment implements
 
 
 
-        v.findViewById(R.id.detail_share).setOnClickListener(new OnClickListener() {
+        buttonShare.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                    startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_SHARE),
+                startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_SHARE),
                         getString(R.string.menu_share)));
                 return;
             }
@@ -291,7 +319,12 @@ public class POIDetailFragment extends Fragment implements
         return v;
     }
 
-
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
 
     private void showMap(View v) {
         int stubId;
@@ -486,135 +519,179 @@ public class POIDetailFragment extends Fragment implements
 
     private void load(Cursor c) {
         if (c == null || c.getCount() < 1) {
-            return;
-        }
+            Log.d("");
 
-        c.moveToFirst();
-        poiId = POIHelper.getId(c);
-        String wmIdString = POIHelper.getWMId(c);
-        WheelchairState state = POIHelper.getWheelchair(c);
-        String name = POIHelper.getName(c);
-        String comment = POIHelper.getComment(c);
-
-
-        String website = POIHelper.getWebsite(c);
-        String phone = POIHelper.getPhone(c);
-
-
-
-        String street = POIHelper.getStreet(c);
-        String houseNum = POIHelper.getHouseNumber(c);
-        String postCode = POIHelper.getPostcode(c);
-        String city = POIHelper.getCity(c);
-
-        String address = "";
-
-        if(street != null){
-            address += street + " ";
-        }
-
-        if(houseNum != null){
-            address += houseNum + " ";
-        }
-
-        if(postCode != null){
-            address += "\n";
-            address += postCode + " ";
-        }
-
-        if(city != null){
-            address += city + " ";
-        }
-
-        if(address == ""){
+            titlebarBackbutton.setVisibility(View.GONE);
+            addressTitle.setVisibility(View.GONE);
             addressText.setVisibility(View.GONE);
-        }
-        else{
-            addressText.setVisibility(View.VISIBLE);
-            addressText.setText(address);
-        }
-
-        if(phone != null){
-            phoneText.setVisibility(View.VISIBLE);
-            phoneText.setText(phone);
-        }else{
-            phoneText.setVisibility(View.GONE);
-        }
-
-        if(website != null){
-            webText.setVisibility(View.VISIBLE);
-            webText.setClickable(true);
-
-            String text = "<a href=" + website + ">" + website + "</a>";
-            webText.setText(Html.fromHtml(text));
-
-            webText.setMovementMethod(LinkMovementMethod.getInstance());
-        }else{
-            webText.setVisibility(View.GONE);
-        }
-
-        if(comment == null)
             commentText.setVisibility(View.GONE);
+            commentTitle.setVisibility(View.GONE);
 
+            buttonPhoto.setVisibility(View.GONE);
+            buttonEdit.setVisibility(View.GONE);
+            buttonRoute.setVisibility(View.GONE);
+            buttonShare.setVisibility(View.GONE);
 
-        final double latitude = POIHelper.getLatitude(c);
-        final double longitude = POIHelper.getLongitude(c);
+            nameText.setVisibility(View.GONE);
+            categoryText.setVisibility(View.GONE);
+            stateText.setVisibility(View.GONE);
+            stateLayout.setVisibility(View.GONE);
+            webText.setVisibility(View.GONE);
+            phoneText.setVisibility(View.GONE);
 
-        int nodeTypeId = POIHelper.getNodeTypeId(c);
-        int categoryId = POIHelper.getCategoryId(c);
+            nothing.setVisibility(View.VISIBLE);
 
-        SupportManager sm = WheelmapApp.getSupportManager();
-
-        NodeType nodeType = sm.lookupNodeType(nodeTypeId);
-        stateLayout.setVisibility(View.VISIBLE);
-        setWheelchairState(state);
-        if (name != null && name.length() > 0) {
-            nameText.setText(name);
-        } else {
-            nameText.setText(nodeType.localizedName);
-        }
-
-        String category = sm.lookupCategory(categoryId).localizedName;
-        categoryText.setText(category);
-        //nodetypeText.setText(nodeType.localizedName);
-        //nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
-        commentText.setText(comment);
-
-        fillDirectionsActionProvider(latitude, longitude, street, houseNum,
-                postCode, city);
-        fillShareActionProvider(wmIdString, name, nodeType.localizedName,
-                comment, address);
-
-        mShowMenu = true;
-        getSupportActivity().invalidateOptionsMenu();
-
-        poiValues = new ContentValues();
-        DatabaseUtils.cursorRowToContentValues(c, poiValues);
-
-        if (!getArguments().containsKey(Extra.SHOW_MAP)) {
             return;
-        } else if (AppCapability.degradeDetailMapAsButton()) {
-            mMapButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onShowLargeMapAt(new GeoPoint(latitude,
-                                longitude));
+        }else{
+            titlebarBackbutton.setVisibility(View.VISIBLE);
+            addressTitle.setVisibility(View.VISIBLE);
+            addressText.setVisibility(View.VISIBLE);
+            commentText.setVisibility(View.VISIBLE);
+            commentTitle.setVisibility(View.VISIBLE);
+
+            buttonPhoto.setVisibility(View.VISIBLE);
+            buttonEdit.setVisibility(View.VISIBLE);
+            buttonRoute.setVisibility(View.VISIBLE);
+            buttonShare.setVisibility(View.VISIBLE);
+
+            nameText.setVisibility(View.VISIBLE);
+            categoryText.setVisibility(View.VISIBLE);
+            stateText.setVisibility(View.VISIBLE);
+            stateLayout.setVisibility(View.VISIBLE);
+            webText.setVisibility(View.VISIBLE);
+            phoneText.setVisibility(View.VISIBLE);
+
+            nothing.setVisibility(View.GONE);
+
+            c.moveToFirst();
+            poiId = POIHelper.getId(c);
+            String wmIdString = POIHelper.getWMId(c);
+            WheelchairState state = POIHelper.getWheelchair(c);
+            String name = POIHelper.getName(c);
+            String comment = POIHelper.getComment(c);
+
+
+            String website = POIHelper.getWebsite(c);
+            String phone = POIHelper.getPhone(c);
+
+
+
+            String street = POIHelper.getStreet(c);
+            String houseNum = POIHelper.getHouseNumber(c);
+            String postCode = POIHelper.getPostcode(c);
+            String city = POIHelper.getCity(c);
+
+            String address = "";
+
+            if(street != null){
+                address += street + " ";
+            }
+
+            if(houseNum != null){
+                address += houseNum + " ";
+            }
+
+            if(postCode != null){
+                address += "\n";
+                address += postCode + " ";
+            }
+
+            if(city != null){
+                address += city + " ";
+            }
+
+            if(address == ""){
+                addressText.setVisibility(View.GONE);
+            }
+            else{
+                addressText.setVisibility(View.VISIBLE);
+                addressText.setText(address);
+            }
+
+            if(phone != null){
+                phoneText.setVisibility(View.VISIBLE);
+                phoneText.setText(phone);
+            }else{
+                phoneText.setVisibility(View.GONE);
+            }
+
+            if(website != null){
+                webText.setVisibility(View.VISIBLE);
+                webText.setClickable(true);
+
+                String text = "<a href=" + website + ">" + website + "</a>";
+                webText.setText(Html.fromHtml(text));
+
+                webText.setMovementMethod(LinkMovementMethod.getInstance());
+            }else{
+                webText.setVisibility(View.GONE);
+            }
+
+            if(comment == null)
+                commentText.setVisibility(View.GONE);
+
+
+            final double latitude = POIHelper.getLatitude(c);
+            final double longitude = POIHelper.getLongitude(c);
+
+            int nodeTypeId = POIHelper.getNodeTypeId(c);
+            int categoryId = POIHelper.getCategoryId(c);
+
+            SupportManager sm = WheelmapApp.getSupportManager();
+
+            NodeType nodeType = sm.lookupNodeType(nodeTypeId);
+            stateLayout.setVisibility(View.VISIBLE);
+            setWheelchairState(state);
+            if (name != null && name.length() > 0) {
+                nameText.setText(name);
+            } else {
+                nameText.setText(nodeType.localizedName);
+            }
+
+            String category = sm.lookupCategory(categoryId).localizedName;
+            categoryText.setText(category);
+            //nodetypeText.setText(nodeType.localizedName);
+            //nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
+            commentText.setText(comment);
+
+            fillDirectionsActionProvider(latitude, longitude, street, houseNum,
+                    postCode, city);
+            fillShareActionProvider(wmIdString, name, nodeType.localizedName,
+                    comment, address);
+
+            mShowMenu = true;
+            getSupportActivity().invalidateOptionsMenu();
+
+            poiValues = new ContentValues();
+            DatabaseUtils.cursorRowToContentValues(c, poiValues);
+
+            if (!getArguments().containsKey(Extra.SHOW_MAP)) {
+                return;
+            } else if (AppCapability.degradeDetailMapAsButton()) {
+                mMapButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            mListener.onShowLargeMapAt(new GeoPoint(latitude,
+                                    longitude));
+                        }
+
                     }
+                });
+            } else {
+                SingleItemOverlay overlay = new SingleItemOverlay(this);
+                overlay.setItem(poiValues, nodeType, state);
+                overlay.enableLowDrawQuality(true);
+                if(mapView != null){
+                    mapView.getOverlays().clear();
+                    mapView.getOverlays().add(overlay);
 
+                    mapController.setCenter(new GeoPoint(latitude, longitude));
                 }
-            });
-        } else {
-            SingleItemOverlay overlay = new SingleItemOverlay(this);
-            overlay.setItem(poiValues, nodeType, state);
-            overlay.enableLowDrawQuality(true);
-            if(mapView != null){
-                mapView.getOverlays().clear();
-                mapView.getOverlays().add(overlay);
-
-            mapController.setCenter(new GeoPoint(latitude, longitude));
             }
         }
+
+
     }
 
     private void setWheelchairState(WheelchairState newState) {
