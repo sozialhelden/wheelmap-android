@@ -202,6 +202,17 @@ public class POIsMapsforgeFragment extends Fragment implements
         });
         mCompass = (CompassView) v.findViewById(R.id.compass);
 
+
+        if(savedInstanceState != null){
+            int la = savedInstanceState.getInt(Extra.LATITUDE);
+            int lo = savedInstanceState.getInt(Extra.LONGITUDE);
+
+            mCurrentLocationGeoPoint = new GeoPoint(la,lo);
+
+            centerMap(mCurrentLocationGeoPoint, true);
+
+        }
+
         return v;
     }
 
@@ -252,10 +263,13 @@ public class POIsMapsforgeFragment extends Fragment implements
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
         ((MapActivity) getActivity()).destroyMapView(mMapView);
         mWorkerFragment.unregisterDisplayFragment(this);
         WheelmapApp.getSupportManager().cleanReferences();
+
+
     }
 
     private void retrieveInitialLocation() {
@@ -382,6 +396,8 @@ public class POIsMapsforgeFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Extra.MAP_HEIGHT_FULL, mHeightFull);
+        outState.putInt(Extra.LATITUDE,mCurrentLocationGeoPoint.getLatitudeE6());
+        outState.putInt(Extra.LONGITUDE,mCurrentLocationGeoPoint.getLongitudeE6());
     }
 
     @Override
@@ -414,6 +430,7 @@ public class POIsMapsforgeFragment extends Fragment implements
     @Override
     public void onRefreshStarted() {
         // do nothing
+        Log.d("");
     }
 
     @Override

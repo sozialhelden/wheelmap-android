@@ -518,8 +518,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void load(Cursor c) {
-        if (c == null || c.getCount() < 1) {
-            Log.d("");
+        if (c == null || c.getCount() < 1 || getPoiId() == -1) {
 
             titlebarBackbutton.setVisibility(View.GONE);
             addressTitle.setVisibility(View.GONE);
