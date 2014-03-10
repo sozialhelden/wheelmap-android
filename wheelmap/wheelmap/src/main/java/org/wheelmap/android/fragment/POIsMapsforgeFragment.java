@@ -625,9 +625,15 @@ public class POIsMapsforgeFragment extends Fragment implements
     public void onEventMainThread(MyLocationManager.LocationEvent locationEvent) {
         mLocation = locationEvent.location;
 
+        float accuracy = mLocation.getAccuracy();
+
+        if(accuracy > 100){
+            accuracy = 100;
+        }
+
         GeoPoint geoPoint = new GeoPoint(mLocation.getLatitude(),
                 mLocation.getLongitude());
-        mCurrLocationOverlay.setLocation(geoPoint, mLocation.getAccuracy());
+        mCurrLocationOverlay.setLocation(geoPoint, accuracy);
         if (mMapView != null && !mMapView.hasInitializedCenter()) {
             centerMap(geoPoint, false);
         }
