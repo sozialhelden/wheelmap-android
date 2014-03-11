@@ -170,4 +170,21 @@ public class POIHelper {
 
     }
 
+    public static String getTakenOn(Cursor c) {
+        return c.getString(c.getColumnIndexOrThrow(POIs.TAKEN_ON));
+    }
+    public static String getType(Cursor c){
+        return c.getString(c.getColumnIndexOrThrow(POIs.TYPE));
+    }
+    public static String getWidth(Cursor c){
+        return c.getString(c.getColumnIndexOrThrow(POIs.WIDTH));
+    }
+    public static String getHeight(Cursor c){
+        return c.getString(c.getColumnIndexOrThrow(POIs.HEIGHT));
+    }
+    public static String getUrl(Cursor c){
+        return c.getString(c.getColumnIndexOrThrow(POIs.URL));
+    }
+
+
 }

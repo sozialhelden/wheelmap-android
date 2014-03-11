@@ -1,6 +1,7 @@
 package org.wheelmap.android.net;
 
 import org.wheelmap.android.mapping.node.SingleNode;
+import org.wheelmap.android.mapping.node.SinglePhoto;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.net.request.AcceptType;
@@ -15,13 +16,13 @@ import android.os.Bundle;
 /**
  * Created by SMF on 10/03/14.
  */
-public class PhotoExecutor extends SinglePageExecutor<SingleNode> implements
+public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
         IExecutor{
 
     private String mWMId = Extra.WM_ID_UNKNOWN;
 
     public PhotoExecutor(Context context, Bundle bundle) {
-        super(context, bundle, SingleNode.class);
+        super(context, bundle, SinglePhoto.class);
     }
 
     @Override

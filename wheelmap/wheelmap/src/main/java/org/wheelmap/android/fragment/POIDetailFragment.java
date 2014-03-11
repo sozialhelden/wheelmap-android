@@ -562,6 +562,9 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
+
+            String url = POIHelper.getUrl(c);
+
             c.moveToFirst();
             poiId = POIHelper.getId(c);
             String wmIdString = POIHelper.getWMId(c);

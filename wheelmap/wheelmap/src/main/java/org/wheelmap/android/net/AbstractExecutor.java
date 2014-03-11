@@ -123,7 +123,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             case What.RETRIEVE_APIKEY:
                 executor = new ApiKeyExecutor(context, bundle);
                 break;
-            case What.RETRIVE_PHOTO:
+            case What.RETRIEVE_PHOTO:
                 executor = new PhotoExecutor(context, bundle);
                 break;
             default:

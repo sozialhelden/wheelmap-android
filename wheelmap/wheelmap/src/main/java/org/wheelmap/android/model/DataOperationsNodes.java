@@ -86,6 +86,8 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
         values.put(POIs.TAG, POIs.TAG_RETRIEVED);
     }
 
+
+
     @Override
     protected Uri getUri() {
         return POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED);

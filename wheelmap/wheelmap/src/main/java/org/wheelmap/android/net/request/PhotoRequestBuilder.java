@@ -5,7 +5,9 @@ package org.wheelmap.android.net.request;
  */
 public class PhotoRequestBuilder extends RequestBuilder{
 
-    private static final String RESOURCE = "photos";
+    private static final String RESOURCE = "nodes";
+
+    private static final String PHOTOS = "photos";
 
     private String id;
 
@@ -24,7 +26,7 @@ public class PhotoRequestBuilder extends RequestBuilder{
 
     @Override
     protected String resourcePath() {
-        return String.format("%s/%s", RESOURCE, id);
+        return String.format("%s/%s/%s", RESOURCE, id, PHOTOS);
     }
 
     @Override

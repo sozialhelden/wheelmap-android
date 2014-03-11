@@ -94,5 +94,7 @@ public interface Extra {
         public final static int SEARCH_NODES = 0x9;
         public final static int LOCATION_MANAGER_UPDATE = 0x11;
 
+        public final static int RETRIEVE_PHOTO = 0x12;
+
     }
 }
