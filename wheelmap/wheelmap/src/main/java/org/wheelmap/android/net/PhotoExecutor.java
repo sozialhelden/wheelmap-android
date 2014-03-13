@@ -1,11 +1,9 @@
 package org.wheelmap.android.net;
 
-import org.wheelmap.android.mapping.node.SingleNode;
 import org.wheelmap.android.mapping.node.SinglePhoto;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.net.request.AcceptType;
-import org.wheelmap.android.net.request.NodeRequestBuilder;
 import org.wheelmap.android.net.request.PhotoRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
@@ -40,17 +38,21 @@ public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
 
         requestBuilder = new PhotoRequestBuilder(getServer(), getApiKey(),
                 AcceptType.JSON, mWMId);
+
         int count = executeSingleRequest(requestBuilder);
         if (count == 0) {
             processException(
                     RestServiceException.ERROR_NETWORK_FAILURE,
                     new NetworkErrorException(), true);
         }
+
+
+
     }
 
     @Override
     public void prepareDatabase() throws RestServiceException {
-        PrepareDatabaseHelper.insert(getResolver(), getTempStore().get(0));
+        PrepareDatabaseHelper.insertSinglePhoto(getResolver(), getTempStore().get(0));
         PrepareDatabaseHelper.replayChangedCopies(getResolver());
     }
 }

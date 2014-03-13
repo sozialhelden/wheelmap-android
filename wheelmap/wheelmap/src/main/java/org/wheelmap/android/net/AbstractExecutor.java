@@ -124,7 +124,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                 executor = new ApiKeyExecutor(context, bundle);
                 break;
             case What.RETRIEVE_PHOTO:
-                executor = new PhotoExecutor(context, bundle);
+                executor = new PhotosExecutor(context, bundle);
                 break;
             default:
                 return null; // noop no instruction, no operation;

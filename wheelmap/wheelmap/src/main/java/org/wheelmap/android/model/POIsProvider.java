@@ -115,7 +115,15 @@ public class POIsProvider extends ContentProvider {
                     + POIs.TAG + " NUMERIC, "
                     + POIs.STATE + " NUMERIC, "
                     + POIs.DIRTY + " NUMERIC, "
-                    + POIs.STORE_TIMESTAMP + " NUMERIC)");
+                    + POIs.STORE_TIMESTAMP + " NUMERIC"
+
+
+                    + POIs.PHOTO_ID + "NUMERIC"
+                    + POIs.TAKEN_ON + "NUMERIC"
+                    + POIs.TYPE + "TEXT"
+                    + POIs.WIDTH + "NUMERIC"
+                    + POIs.HEIGHT + "NUMERIC"
+                    + POIs.URL + "TEXT)");
             // @formatter:on
 
         }
@@ -329,6 +337,17 @@ public class POIsProvider extends ContentProvider {
     @Override
     public int bulkInsert(Uri uri, ContentValues[] valuesArray) {
         Log.v(TAG, "POISProvider.bulkInsert: uri=" + uri);
+
+        try{
+            if(valuesArray[0].size() <= 3){
+                   return bulkInsertPhoto(uri,valuesArray);
+            }
+        }catch(Exception ex){
+            Log.d(ex.getMessage());
+        }
+
+
+
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
 
@@ -430,7 +449,10 @@ public class POIsProvider extends ContentProvider {
                         count++;
                     }
                     db.setTransactionSuccessful();
-                } finally {
+                }catch(Exception ex){
+                   Log.d(ex.getMessage());
+                }
+                finally {
                     db.endTransaction();
                     inserter.close();
                 }
@@ -446,6 +468,80 @@ public class POIsProvider extends ContentProvider {
 
         }
     }
+
+    public int bulkInsertPhoto(Uri uri, ContentValues[] valuesArray) {
+        /*Log.v(TAG, "POISProvider.bulkInsert: uri=" + uri);
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+
+        DatabaseUtils.InsertHelper inserter = new DatabaseUtils.InsertHelper(
+                db, POIS_TABLE_NAME);
+
+
+        final int takenOnColumn = inserter.getColumnIndex(POIs.TAKEN_ON);
+        final int typeColumn = inserter.getColumnIndex(POIs.TYPE);
+        final int widthColumn = inserter.getColumnIndex(POIs.WIDTH);
+        final int heightColumn = inserter.getColumnIndex(POIs.HEIGHT);
+        final int urlColumn = inserter.getColumnIndex(POIs.URL);
+        final int photoIdColumn = inserter.getColumnIndex(POIs.PHOTO_ID);
+
+        switch (match) {
+            case POIS_RETRIEVED: {
+                int count = 0;
+                db.beginTransaction();
+                int i;
+                try {
+                    for (i = 0; i < valuesArray.length; i++) {
+                        ContentValues values = valuesArray[i];
+                        preCalculateLatLon(values);
+                        inserter.prepareForInsert();
+
+                        long photoId = values.getAsLong(POIs.PHOTO_ID);
+                        inserter.bind(photoIdColumn, photoId);
+                        long takenOn = values.getAsLong(POIs.TAKEN_ON);
+                        inserter.bind(takenOnColumn, takenOn);
+                        String type = values.getAsString(POIs.TYPE);
+                        inserter.bind(typeColumn, type);
+                        int width = values.getAsInteger(POIs.WIDTH);
+                        inserter.bind(widthColumn, width);
+                        int street = values.getAsInteger(POIs.HEIGHT);
+                        inserter.bind(heightColumn, street);
+                        String url = values.getAsString(POIs.URL);
+                        inserter.bind(urlColumn, url);
+
+
+
+
+                        long rowId = inserter.execute();
+
+                        if (rowId > 0) {
+                            // we ignore this here - notification makes no sense as
+                            // the record was just inserted
+                        }
+                        count++;
+                    }
+                    db.setTransactionSuccessful();
+                }catch(Exception ex){
+                    Log.d(ex.getMessage());
+                }
+                finally {
+                    db.endTransaction();
+                    inserter.close();
+                }
+
+                notifyCheck(uri);
+                return count;
+
+            }
+            default: {
+                throw new IllegalArgumentException("Unknown URI - only "
+                        + POIs.CONTENT_URI_RETRIEVED + " supported. " + uri);
+            }
+
+        }   */
+        return 0;
+    }
+
 
     private static class Location {
 
@@ -633,5 +729,6 @@ public class POIsProvider extends ContentProvider {
         sPOIsProjectionMap.put(POIs.STATE, POIs.STATE);
         sPOIsProjectionMap.put(POIs.DIRTY, POIs.DIRTY);
         sPOIsProjectionMap.put(POIs.STORE_TIMESTAMP, POIs.STORE_TIMESTAMP);
+
     }
 }

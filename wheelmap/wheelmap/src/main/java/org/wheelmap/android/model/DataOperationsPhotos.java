@@ -44,18 +44,29 @@ public class DataOperationsPhotos extends DataOperations<Photos, Photo> {
     public void copyToValues(Photo photo, ContentValues values) {
         values.clear();
         values.put(POIs.WM_ID, photo.getId().longValue());
-        values.put(POIs.NAME, photo.getName());
 
         values.put(POIs.TAKEN_ON, photo.getTakenOn().longValue());
-        values.put(POIs.TYPE, photo.getType());
-        values.put(POIs.WIDTH, photo.getWidth());
-        values.put(POIs.HEIGHT, photo.getHeight());
-        values.put(POIs.URL, photo.getUrl());
+
+
+        // ADD LOOP HERE: for images
+
+
+        //copyImagesToValues()
+
+
+
+        values.put(POIs.TAG, POIs.TAG_RETRIEVED);
     }
+     /*
+    public void copyImagesToValues(Image image, ContentValues values){
+
+    }   */
+
+
 
     @Override
     protected Uri getUri() {
         return POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED);
     }
-
 }
+

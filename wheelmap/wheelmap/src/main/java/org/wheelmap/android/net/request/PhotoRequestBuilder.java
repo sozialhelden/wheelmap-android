@@ -5,6 +5,8 @@ package org.wheelmap.android.net.request;
  */
 public class PhotoRequestBuilder extends RequestBuilder{
 
+    // TEST: wheelmap.org/api/nodes/927092067/photos?api_key=jWeAsb34CJq4yVAryjtc
+
     private static final String RESOURCE = "nodes";
 
     private static final String PHOTOS = "photos";

@@ -93,6 +93,13 @@ public class Wheelmap {
 
         public static final String STORE_TIMESTAMP = "store_timestamp";
 
+        public static final String PHOTO_ID = "id";
+        public static final String TAKEN_ON = "taken_on";
+        public static final String TYPE = "type";
+        public static final String WIDTH = "width";
+        public static final String HEIGHT = "height";
+        public static final String URL = "url";
+
     }
 
     public static final class POIs implements BaseColumns, POIsColumns {

@@ -168,6 +168,13 @@ public class POIHelper {
         values.put(POIs.WHEELCHAIR, getWheelchair(c).getId());
         values.put(POIs.DESCRIPTION, getComment(c));
 
+        values.put(POIs.PHOTO_ID, getPhotoID(c));
+        values.put(POIs.TAKEN_ON, getTakenOn(c));
+        values.put(POIs.TYPE, getType(c));
+        values.put(POIs.WIDTH, getWidth(c));
+        values.put(POIs.HEIGHT, getHeight(c));
+        values.put(POIs.URL, getUrl(c));
+
     }
 
     public static String getTakenOn(Cursor c) {
@@ -184,6 +191,10 @@ public class POIHelper {
     }
     public static String getUrl(Cursor c){
         return c.getString(c.getColumnIndexOrThrow(POIs.URL));
+    }
+
+    public static String getPhotoID(Cursor c){
+        return c.getString(c.getColumnIndexOrThrow(POIs.PHOTO_ID));
     }
 
 

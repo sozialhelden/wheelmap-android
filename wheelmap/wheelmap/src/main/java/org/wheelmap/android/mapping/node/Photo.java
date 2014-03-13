@@ -27,6 +27,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,53 +35,18 @@ public class Photo {
 
     protected BigInteger id;
 
+    @JsonProperty(value = "taken_on")
     protected BigInteger takenOn;
 
-    protected String name;
+    @JsonProperty(value = "images")
+    protected List<Image> images;
 
-    protected String type;
-
-    protected int width;
-
-    protected int height;
-
-    @JsonProperty(value = "url")
-    protected String url;
-
-    /**
-     * Gets the value of the name property.
-     *
-     * @return possible object is {@link String }
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the value of the name property.
-     *
-     * @param value allowed object is {@link String }
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
-
-    /**
-     * Gets the value of the id property.
-     *
-     * @return possible object is {@link java.math.BigInteger }
-     */
     public BigInteger getId() {
         return id;
     }
 
-    /**
-     * Sets the value of the id property.
-     *
-     * @param value allowed object is {@link java.math.BigInteger }
-     */
-    public void setId(BigInteger value) {
-        this.id = value;
+    public void setId(BigInteger id) {
+        this.id = id;
     }
 
     public BigInteger getTakenOn() {
@@ -91,45 +57,18 @@ public class Photo {
         this.takenOn = takenOn;
     }
 
-    public int getWidth() {
-        return width;
+    public List<Image> getImages() {
+        return images;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     @Override
     public String toString() {
-        return "Photo [id=" + id + ", takenOn=" + takenOn + ", name="
-                + name + ", url=" + url + ", with="
-                + width + ", height=" + height
-                + ", type=" + type + "]";
+        return "Photo [id=" + id + ", takenOn=" + takenOn + /*", images="
+                + images.toString() +*/ "]";
     }
 
 }

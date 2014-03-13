@@ -23,6 +23,7 @@ package org.wheelmap.android.model;
 
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.mapping.node.SingleNode;
+import org.wheelmap.android.mapping.node.SinglePhoto;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
 import android.content.ContentResolver;
@@ -255,6 +256,24 @@ public class PrepareDatabaseHelper {
                 whereClause, whereValues, values);
 
         createCopyIfNotExists(resolver, id, false);
+    }
+
+    public static void insertSinglePhoto(ContentResolver resolver, SinglePhoto photo) {
+        // add awesome stuff here
+        Log.v(TAG, "insert photo");
+
+        ContentValues values = new ContentValues();
+        DataOperationsPhotos don = new DataOperationsPhotos(null);
+        don.copyToValues(photo.getPhoto(), values);
+         /*String whereClause = "( " + POIs.WM_ID + " = ? )";
+        String whereValues[] = {photo.getPhoto().getId().toString()};
+
+        long id = insertOrUpdateContentValues(resolver,
+                Wheelmap.POIs.CONTENT_URI_RETRIEVED, Wheelmap.POIs.PROJECTION,
+                whereClause, whereValues, values);
+
+        createCopyIfNotExists(resolver, id, false);            */
+
     }
 
     public static long insertNew(ContentResolver resolver, String name,
