@@ -23,6 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             android:src="@drawable/start_logo_wheelmap_horizontal" />
 
         <LinearLayout
@@ -49,7 +51,10 @@
                 android:imeOptions="actionSearch"
                 android:textColorHint="@color/dashboard_text_color"
                 android:textColor="@color/dashboard_text_color"
+                android:textCursorDrawable="@null"
                 android:textSize="17sp" />
+
+
 
             <ImageView
                 android:id="@+id/dashboard_search"

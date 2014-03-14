@@ -15,31 +15,37 @@
         <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:src="@drawable/credits_logo"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
                 />
 
         <TextView
                 android:id="@+id/credits_version"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:text="@string/info_wheelmap_android_two"/>
 
         <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
                    android:src="@drawable/credits_bund"
                    android:layout_gravity="center"
+                   android:layout_marginBottom="20dp"
                    android:layout_marginTop="10dp"/>
+
 
         <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
                    android:src="@drawable/credits_sozialhelden"
                    android:layout_gravity="center"
                    android:layout_marginTop="10dp"
-                   android:layout_marginBottom="10dp"/>
+                   android:layout_marginBottom="20dp"/>
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
                       android:gravity="center_horizontal"
                       android:layout_marginTop="8dp"
-                      android:layout_marginBottom="8dp"
+                      android:layout_marginBottom="20dp"
                       >
 
 
@@ -99,7 +105,7 @@
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
-                      android:layout_marginTop="8dp"
+                      android:layout_marginTop="20dp"
                       >
 
             <LinearLayout android:layout_width="match_parent"
@@ -125,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/info_kartendaten_two"
                         android:gravity="center"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="20dp"/>
 
                 <include layout="@layout/separator"/>
 
@@ -135,13 +141,13 @@
                         android:text="@string/legal_notice_iconscollection"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:layout_marginTop="8dp"/>
+                        android:layout_marginTop="20dp"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/legal_notice_commonsware_copyright"
                         android:gravity="center"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="20dp"/>
 
                 <include layout="@layout/separator"/>
 
@@ -150,7 +156,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/legal_notice_entypo"
                         android:gravity="center"
-                        android:layout_marginTop="8dp"/>
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="15dp"/>
 
             </LinearLayout>
 

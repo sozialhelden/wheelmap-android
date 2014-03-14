@@ -60,6 +60,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -83,6 +84,7 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -131,6 +133,9 @@ public class POIDetailFragment extends Fragment implements
 
     //@InjectView(R.id.comment)
     private TextView commentText;
+
+    private TextView noCommentText;
+    private TextView noAdressText;
 
     private TextView commentTitle;
 
@@ -268,6 +273,9 @@ public class POIDetailFragment extends Fragment implements
         buttonShare = (ImageButton)v.findViewById(R.id.detail_share);
         nothing = (TextView)v.findViewById(R.id.nothing);
 
+        noCommentText = (TextView)v.findViewById(R.id.nocomment);
+        noAdressText = (TextView)v.findViewById(R.id.noadress);
+
 
         //mTestImage = (ImageView)v.findViewById(R.id.detail_testimage);
 
@@ -275,14 +283,14 @@ public class POIDetailFragment extends Fragment implements
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
             v.findViewById(R.id.titlebar_backbutton).setVisibility(View.GONE);
             showMap(v);
-        }else{
-            v.findViewById(R.id.titlebar_backbutton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.dismissDetailView();
-                }
-            });
         }
+
+        v.findViewById(R.id.titlebar_backbutton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.dismissDetailView();
+            }
+        });
 
         buttonPhoto.setOnClickListener(new OnClickListener() {
             @Override
@@ -545,6 +553,9 @@ public class POIDetailFragment extends Fragment implements
             webText.setVisibility(View.GONE);
             phoneText.setVisibility(View.GONE);
 
+            noCommentText.setVisibility(View.GONE);
+            noAdressText.setVisibility(View.GONE);
+
             nothing.setVisibility(View.VISIBLE);
 
             return;
@@ -569,23 +580,41 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
-            //Photos photos = (Photos)mbundle.getParcelable("Photos");
-
             Gson gson = new Gson();
+
+            Photos photos = null;
 
             try {
 
                 BufferedReader br = new BufferedReader(
-                        new FileReader("c:\\file.json"));
+                        new FileReader(getActivity().getApplicationContext().getFilesDir().getPath().toString() + "/file.json"));
 
                 //convert the json string back to object
-                Photos obj = gson.fromJson(br, Photos.class);
+                photos = gson.fromJson(br, Photos.class);
 
-                System.out.println(obj);
+                String s = photos.toString();
+
+                Log.d("photos");
 
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            } /*
+
+            if(photos != null){
+
+                try{
+
+
+                    URL newurl = new URL(photos.getPhotos().get(0).getImages().get(0).getUrl());
+                    Object obj = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                    //profile_photo.setImageBitmap(mIcon_val);
+
+                }catch(Exception ex){
+                    Log.d(ex.getMessage());
+                }
+
+            }  */
+
 
             //String s = POIHelper.getPhotoID(c);
 
@@ -599,8 +628,6 @@ public class POIDetailFragment extends Fragment implements
 
             String website = POIHelper.getWebsite(c);
             String phone = POIHelper.getPhone(c);
-
-
 
             String street = POIHelper.getStreet(c);
             String houseNum = POIHelper.getHouseNumber(c);
@@ -626,12 +653,16 @@ public class POIDetailFragment extends Fragment implements
                 address += city + " ";
             }
 
+            int checkIfAdress = 3;
+
             if(address == ""){
                 addressText.setVisibility(View.GONE);
+                checkIfAdress--;
             }
             else{
                 addressText.setVisibility(View.VISIBLE);
                 addressText.setText(address);
+
             }
 
             if(phone != null){
@@ -639,6 +670,7 @@ public class POIDetailFragment extends Fragment implements
                 phoneText.setText(phone);
             }else{
                 phoneText.setVisibility(View.GONE);
+                checkIfAdress--;
             }
 
             if(website != null){
@@ -651,10 +683,21 @@ public class POIDetailFragment extends Fragment implements
                 webText.setMovementMethod(LinkMovementMethod.getInstance());
             }else{
                 webText.setVisibility(View.GONE);
+                checkIfAdress--;
             }
 
-            if(comment == null)
+            if(checkIfAdress == 0)
+                noAdressText.setVisibility(View.VISIBLE);
+            else
+                noAdressText.setVisibility(View.GONE);
+
+            if(comment == null){
                 commentText.setVisibility(View.GONE);
+                noCommentText.setVisibility(View.VISIBLE);
+            }else{
+                commentText.setVisibility(View.VISIBLE);
+                noCommentText.setVisibility(View.GONE);
+            }
 
 
             final double latitude = POIHelper.getLatitude(c);

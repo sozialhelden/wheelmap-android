@@ -34,7 +34,7 @@ public class POIsListItemView extends RelativeLayout {
 
     private TextView poiName;
 
-    private TextView poiCategory;
+    //private TextView poiCategory;
 
     private TextView poiNodeType;
 
@@ -56,7 +56,7 @@ public class POIsListItemView extends RelativeLayout {
         inflater.inflate(R.layout.item_list_pois, this, true);
 
         poiName = (TextView) findViewById(R.id.poi_name);
-        poiCategory = (TextView) findViewById(R.id.poi_category);
+        //poiCategory = (TextView) findViewById(R.id.poi_category);
         poiNodeType = (TextView) findViewById(R.id.poi_nodetype);
         poiDistance = (TextView) findViewById(R.id.poi_distance);
         poiIcon = (ImageView) findViewById(R.id.image);
@@ -69,10 +69,10 @@ public class POIsListItemView extends RelativeLayout {
     public void setName(String text) {
         poiName.setText(text);
     }
-
+    /*
     public void setCategory(String text) {
         poiCategory.setText(text);
-    }
+    }    */
 
     public void setNodeType(String text) {
         poiNodeType.setText(text);

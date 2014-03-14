@@ -88,7 +88,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
             pliv.setName(nodeType.localizedName);
         }
         String category = manager.lookupCategory(categoryId).localizedName;
-        pliv.setCategory(category);
+        //pliv.setCategory(category);
         pliv.setNodeType(nodeType.localizedName);
 
         pliv.setDistance(mDistanceFormatter.format(distance));

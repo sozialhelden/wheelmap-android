@@ -7,6 +7,8 @@ import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import android.widget.ImageView;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -25,6 +27,10 @@ public class Image {
 
     @JsonProperty(value = "height")
     protected int height;
+
+
+    //protected ImageView image;
+
 
     public String getType() {
         return type;
@@ -57,6 +63,14 @@ public class Image {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    /*public ImageView getImage() {
+        return image;
+    }
+
+    public void setImage(ImageView image) {
+        this.image = image;
+    }*/
 
 
     @Override

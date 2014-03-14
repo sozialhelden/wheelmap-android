@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.net;
 
+import com.google.gson.Gson;
+
 import com.bugsense.trace.BugSenseHandler;
 
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.Base;
+import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.modules.IAppProperties;
@@ -45,6 +48,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -288,6 +294,33 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             }
         }
         Log.d(getTag(), "executeRequest successful");
+
+
+        if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
+            Log.d("Photos");
+
+            Gson gson = new Gson();
+
+            // convert java object to JSON format,
+            // and returned as JSON formatted string
+            String json = gson.toJson(((Photos)content));
+
+            try {
+                //write converted json data to a file named "file.json"
+                FileWriter writer = new FileWriter(getContext().getFilesDir().getPath().toString() + "/file.json");
+
+                writer.write(json);
+                writer.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String s = json.toString();
+
+            Log.d("Photos");
+
+        }
 
         return content;
     }
