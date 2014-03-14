@@ -82,6 +82,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
     protected ICredentials mCredentials;
 
+
     public AbstractExecutor(Context context, Bundle bundle, Class<T> clazz,
             int maxRetryCount) {
         mContext = context;
@@ -93,6 +94,8 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
     public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties,
             ICredentials credentials, IHttpUserAgent httpUserAgent) {
+
+
         if (bundle == null || !bundle.containsKey(Extra.WHAT)) {
             return null;
         }

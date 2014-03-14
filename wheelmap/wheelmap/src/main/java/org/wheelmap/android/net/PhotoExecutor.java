@@ -4,6 +4,7 @@ import org.wheelmap.android.mapping.node.SinglePhoto;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.net.request.AcceptType;
+
 import org.wheelmap.android.net.request.PhotoRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
@@ -53,6 +54,6 @@ public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
     @Override
     public void prepareDatabase() throws RestServiceException {
         PrepareDatabaseHelper.insertSinglePhoto(getResolver(), getTempStore().get(0));
-        PrepareDatabaseHelper.replayChangedCopies(getResolver());
+        //PrepareDatabaseHelper.replayChangedCopies(getResolver());
     }
 }

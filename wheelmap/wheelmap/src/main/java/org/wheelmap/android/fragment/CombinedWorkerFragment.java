@@ -148,6 +148,9 @@ public class CombinedWorkerFragment extends Fragment implements
 
             RestServiceHelper.retrieveNodesByDistance(getActivity(),
                     mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
+
+            RestServiceHelper.retrievePhotosByDinstance(getActivity(),
+                    mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
         } else {
             bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
             bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);

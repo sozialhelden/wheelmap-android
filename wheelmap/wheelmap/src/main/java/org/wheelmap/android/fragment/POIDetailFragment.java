@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.google.inject.Inject;
+import com.google.gson.Gson;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -43,6 +43,7 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.WheelchairState;
@@ -66,7 +67,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Html;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -80,12 +80,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
-import roboguice.inject.InjectView;
 
 public class POIDetailFragment extends Fragment implements
         OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {
@@ -97,6 +99,9 @@ public class POIDetailFragment extends Fragment implements
     private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
 
     private final static long FADE_IN_ANIMATION_DURATION = 500;
+
+
+
 
     //@Inject
     public ContentViewListener ignored;
@@ -198,7 +203,6 @@ public class POIDetailFragment extends Fragment implements
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
-
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
 
@@ -233,6 +237,7 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
         poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
@@ -363,6 +368,7 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         stateLayout.setOnClickListener(this);
         if (poiId == Extra.ID_UNKNOWN) {
             stateLayout.setVisibility(View.INVISIBLE);
@@ -373,6 +379,7 @@ public class POIDetailFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_CONTENT, null, this);
+
     }
 
     @Override
@@ -562,8 +569,25 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
+            //Photos photos = (Photos)mbundle.getParcelable("Photos");
 
-            String url = POIHelper.getUrl(c);
+            Gson gson = new Gson();
+
+            try {
+
+                BufferedReader br = new BufferedReader(
+                        new FileReader("c:\\file.json"));
+
+                //convert the json string back to object
+                Photos obj = gson.fromJson(br, Photos.class);
+
+                System.out.println(obj);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //String s = POIHelper.getPhotoID(c);
 
             c.moveToFirst();
             poiId = POIHelper.getId(c);

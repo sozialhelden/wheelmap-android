@@ -43,7 +43,7 @@ public class DataOperationsPhotos extends DataOperations<Photos, Photo> {
     @Override
     public void copyToValues(Photo photo, ContentValues values) {
         values.clear();
-        values.put(POIs.WM_ID, photo.getId().longValue());
+        values.put(POIs.PHOTO_ID, photo.getId().longValue());
 
         values.put(POIs.TAKEN_ON, photo.getTakenOn().longValue());
 

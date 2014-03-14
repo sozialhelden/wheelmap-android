@@ -86,7 +86,7 @@ public class PhotosExecutor extends MultiPageExecutor<Photos> implements
         //PrepareDatabaseHelper.deleteRetrievedData(getResolver());
         DataOperationsPhotos don = new DataOperationsPhotos(getResolver());
         don.insert(getTempStore());
-        PrepareDatabaseHelper.replayChangedCopies(getResolver());
+        //PrepareDatabaseHelper.replayChangedCopies(getResolver());
         clearTempStore();
     }
 
