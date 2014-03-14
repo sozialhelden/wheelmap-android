@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.google.gson.Gson;
+
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -579,7 +579,7 @@ public class POIDetailFragment extends Fragment implements
             phoneText.setVisibility(View.VISIBLE);
 
             nothing.setVisibility(View.GONE);
-
+            /*
             Gson gson = new Gson();
 
             Photos photos = null;

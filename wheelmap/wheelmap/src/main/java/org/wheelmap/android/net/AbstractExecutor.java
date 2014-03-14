@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.net;
 
-import com.google.gson.Gson;
+
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -294,7 +294,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             }
         }
         Log.d(getTag(), "executeRequest successful");
-
+        /*
         if(content != null){
             if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
                 Log.d("Photos");
@@ -321,7 +321,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                 Log.d("Photos");
 
             }
-        }
+        } */
 
         return content;
     }
