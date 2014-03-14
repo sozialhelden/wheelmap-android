@@ -579,6 +579,7 @@ public class POIDetailFragment extends Fragment implements
             phoneText.setVisibility(View.VISIBLE);
 
             nothing.setVisibility(View.GONE);
+
             /*
             Gson gson = new Gson();
 
