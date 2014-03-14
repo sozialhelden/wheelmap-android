@@ -237,7 +237,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:background="@null"
-                    android:src="@drawable/detail_ic_edit"/>
+                    android:src="@drawable/detail_ic_save"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

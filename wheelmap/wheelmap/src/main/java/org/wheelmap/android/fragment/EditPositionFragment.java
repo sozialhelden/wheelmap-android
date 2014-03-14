@@ -159,13 +159,14 @@ public class EditPositionFragment extends Fragment implements
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.menu_save:
+            /*case R.id.menu_save:
                 if (mListener != null) {
                     mListener.onEditPosition(mCrrLatitude, mCrrLongitude);
                 }
                 break;
             default:
                 // noop
+                */
         }
 
         return false;

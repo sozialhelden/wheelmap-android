@@ -295,31 +295,32 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         }
         Log.d(getTag(), "executeRequest successful");
 
+        if(content != null){
+            if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
+                Log.d("Photos");
 
-        if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
-            Log.d("Photos");
+                Gson gson = new Gson();
 
-            Gson gson = new Gson();
+                // convert java object to JSON format,
+                // and returned as JSON formatted string
+                String json = gson.toJson(((Photos)content));
 
-            // convert java object to JSON format,
-            // and returned as JSON formatted string
-            String json = gson.toJson(((Photos)content));
+                try {
+                    //write converted json data to a file named "file.json"
+                    FileWriter writer = new FileWriter(getContext().getFilesDir().getPath().toString() + "/file.json");
 
-            try {
-                //write converted json data to a file named "file.json"
-                FileWriter writer = new FileWriter(getContext().getFilesDir().getPath().toString() + "/file.json");
+                    writer.write(json);
+                    writer.close();
 
-                writer.write(json);
-                writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                String s = json.toString();
+
+                Log.d("Photos");
+
             }
-
-            String s = json.toString();
-
-            Log.d("Photos");
-
         }
 
         return content;
