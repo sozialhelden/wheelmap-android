@@ -159,7 +159,7 @@ public class MainSinglePaneTest extends
         RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
         RobotiumHelper.selectCategoryState(solo);
         solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
-        solo.clickOnActionBarItem(R.id.menu_save);
+        //solo.clickOnActionBarItem(R.id.menu_save);
         solo.sleep(2000);
         String buttonOkay = getActivity().getString(R.string.btn_okay);
         solo.clickOnButton(buttonOkay);
@@ -196,7 +196,7 @@ public class MainSinglePaneTest extends
         RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
         RobotiumHelper.selectCategoryState(solo);
         solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
-        clickOnActionbar(R.id.menu_save);
+        //clickOnActionbar(R.id.menu_save);
 
         getInstrumentation().waitForIdleSync();
 
