@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <string name="login_forgot_password">Passwort vergessen</string>
+    <string name="login_new_registration">Neu registrieren</string>
+    <string name="login_dont_have_account">Noch keinen Wheelmap-Account? Log dich auf Wheelmap.org mit Deinem OpenStreetMap-Account ein, klicke auf "Profil" und lege einen Wheelmap-Account an.</string>
+
+</resources>

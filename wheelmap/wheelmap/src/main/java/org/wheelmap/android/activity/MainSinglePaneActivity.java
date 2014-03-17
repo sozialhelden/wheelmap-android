@@ -130,9 +130,13 @@ public class
         Log.d(TAG, "onCreate");
 
         setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionbar = getSupportActionBar();
+        if(actionbar != null){
+            actionbar.setHomeButtonEnabled(true);
+            actionbar.setDisplayShowTitleEnabled(true);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+        }
 
         setContentView(R.layout.activity_single_pane);
 

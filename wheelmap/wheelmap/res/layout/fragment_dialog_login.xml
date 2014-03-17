@@ -24,6 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="#cfcfcf"
+            android:fillViewport="true"
             android:layout_gravity="center_horizontal">
 
     <LinearLayout
@@ -69,22 +70,52 @@
                 android:singleLine="true"
                 android:gravity="center_horizontal"/>
 
-        <Button android:id="@+id/button_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_submit"
-                android:layout_marginBottom="20dp"
-                android:clickable="true"
-                android:gravity="center"/>
+
+        <FrameLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="10dp"
+                      android:layout_marginBottom="20dp">
+
+
+            <TextView
+                    android:id="@+id/login_forgot_password"
+                    android:paddingLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_forgot_password"/>
+
+
+            <Button android:id="@+id/button_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_submit"
+                    android:clickable="true"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/infobox"
+                    android:layout_gravity="right"
+                    android:gravity="center"/>
+
+        </FrameLayout>
+
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/login_register_discription"
+                android:text="@string/login_dont_have_account"
                 android:layout_marginTop="12dp"
-                android:layout_margin="8dp"
-                android:gravity="center_horizontal"/>
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="left"/>
 
+        <TextView
+                android:id="@+id/login_login_2"
+                android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginRight="8dp"
+                  android:text="@string/login_submit"/>
+        
         <TextView
                 android:id="@+id/login_register"
                 android:layout_width="match_parent"
@@ -115,6 +146,13 @@
                     <!-- id/login-register was here -->
 
         <!--</LinearLayout>  -->
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_new_registration"
+                />
+
     </LinearLayout>
 
 </ScrollView>

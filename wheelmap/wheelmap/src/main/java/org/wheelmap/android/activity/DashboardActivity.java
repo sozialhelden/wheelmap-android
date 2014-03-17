@@ -100,9 +100,10 @@ public class DashboardActivity extends
         findViewById(R.id.dashboard_login).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-                LoginDialogFragment loginDialog = new LoginDialogFragment();
-                loginDialog.show(fm);
+                //FragmentManager fm = getSupportFragmentManager();
+                //LoginDialogFragment loginDialog = new LoginDialogFragment();
+                //loginDialog.show(fm);
+                account();
             }
         });
 
@@ -262,6 +263,11 @@ public class DashboardActivity extends
             return;
         }
         UpdateManager.register(this, appId);
+    }
+
+    private void account(){
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
     }
 
 }
