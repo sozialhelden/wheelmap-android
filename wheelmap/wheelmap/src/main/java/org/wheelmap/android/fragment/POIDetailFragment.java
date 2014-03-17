@@ -23,11 +23,15 @@ package org.wheelmap.android.fragment;
 
 
 
+import com.google.gson.Gson;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 
 import org.holoeverywhere.LayoutInflater;
@@ -38,11 +42,14 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.overlay.OverlayItem;
+import org.wheelmap.android.adapter.HorizontalImageAdapter;
+import org.wheelmap.android.adapter.HorizontalView;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.mapping.node.Photo;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
@@ -60,7 +67,9 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -85,7 +94,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
@@ -207,6 +218,10 @@ public class POIDetailFragment extends Fragment implements
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private List listImages;
+    private HorizontalImageAdapter imageAdapter;
+    private HorizontalView listView;
+
 
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -246,6 +261,8 @@ public class POIDetailFragment extends Fragment implements
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
         poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
+
+
     }
 
     @Override
@@ -276,8 +293,11 @@ public class POIDetailFragment extends Fragment implements
         noCommentText = (TextView)v.findViewById(R.id.nocomment);
         noAdressText = (TextView)v.findViewById(R.id.noadress);
 
+        listView = (HorizontalView)v.findViewById(R.id.gallery);
 
-        //mTestImage = (ImageView)v.findViewById(R.id.detail_testimage);
+
+
+        //mTestImage = (ImageView)v.findViewById(R.id.testImage);
 
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
@@ -329,7 +349,66 @@ public class POIDetailFragment extends Fragment implements
             }
         });
 
+
+
         return v;
+    }
+
+    private void setupUI() {
+        imageAdapter = new HorizontalImageAdapter(this.getActivity(), listImages);
+
+        listView.setAdapter(imageAdapter);
+
+    }
+
+    private void getImagesList(int id) {
+
+        // ONLY FOR TESTING --------------
+        Gson gson = new Gson();
+
+        Photos photos = null;
+
+        listImages = new ArrayList();
+
+        try {
+
+            // get data from json file
+            BufferedReader br = new BufferedReader(
+                    new FileReader(getActivity().getApplicationContext().getFilesDir().getPath().toString() + "/file.json"));
+            //convert the json string back to object
+            photos = gson.fromJson(br, Photos.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // ONLY FOR TESTING --------------
+
+        if(photos != null){
+
+            try{
+
+                List<Photo> listOfPhotos = photos.getPhotos();
+
+                for(Photo p : listOfPhotos){
+
+                    // always loads only the "original" photo
+                    String newurl = p.getImages().get(0).getUrl();
+                    String[] sList = newurl.split("\\?");
+                    String url = sList[0];
+
+                    listImages.add(url);
+
+                    Log.d("load photo with url");
+
+                }
+
+
+            }catch(Exception ex){
+                Log.d(ex.getMessage());
+            }
+
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -580,42 +659,8 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
-            /*
-            Gson gson = new Gson();
-
-            Photos photos = null;
-
-            try {
-
-                BufferedReader br = new BufferedReader(
-                        new FileReader(getActivity().getApplicationContext().getFilesDir().getPath().toString() + "/file.json"));
-
-                //convert the json string back to object
-                photos = gson.fromJson(br, Photos.class);
-
-                String s = photos.toString();
-
-                Log.d("photos");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } /*
-
-            if(photos != null){
-
-                try{
-
-
-                    URL newurl = new URL(photos.getPhotos().get(0).getImages().get(0).getUrl());
-                    Object obj = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-                    //profile_photo.setImageBitmap(mIcon_val);
-
-                }catch(Exception ex){
-                    Log.d(ex.getMessage());
-                }
-
-            }  */
-
+            getImagesList(0);
+            setupUI();
 
             //String s = POIHelper.getPhotoID(c);
 

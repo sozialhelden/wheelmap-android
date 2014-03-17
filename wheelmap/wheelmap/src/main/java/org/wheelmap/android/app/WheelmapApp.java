@@ -21,8 +21,11 @@
  */
 package org.wheelmap.android.app;
 
-import com.actionbarsherlock.widget.ShareActionProvider;
+
 import com.bugsense.trace.BugSenseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+
 
 import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.addon.AddonMyRoboguice;
@@ -85,6 +88,10 @@ public class WheelmapApp extends Application {
         INSTANCE = this;
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
         Log.d(TAG, "onCreate: creating App");
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+        .build();
+        ImageLoader.getInstance().init(config);
 
         if (!getResources().getBoolean(R.bool.developbuild) && !isBugsenseInitCalled) {
             BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));

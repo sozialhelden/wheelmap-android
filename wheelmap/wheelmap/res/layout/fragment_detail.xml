@@ -125,7 +125,7 @@
                         />
             </LinearLayout>
         </LinearLayout>
-         <!--
+
         <TextView
             android:layout_width="match_parent" android:layout_height="wrap_content"
 
@@ -140,18 +140,22 @@
                   android:orientation="vertical"
                   android:background="#eeeeee">
 
-            <ListView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="10dp">
+            <!--<RelativeLayout
+                    android:id="@+id/gallery_relative_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dip"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal" > -->
+                <org.wheelmap.android.adapter.HorizontalView
+                        android:id="@+id/gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"
+                        android:smoothScrollbar="true"
+                        android:spacing="20dip" >
+                </org.wheelmap.android.adapter.HorizontalView>
+            <!--</RelativeLayout>   -->
 
-            </ListView>
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/detail_testimage"
-                    />
-        </LinearLayout> -->
-
+        </LinearLayout>
 
         <View
                 android:layout_width="wrap_content"
