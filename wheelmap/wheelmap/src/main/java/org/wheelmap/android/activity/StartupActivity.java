@@ -129,7 +129,7 @@ public class StartupActivity extends Activity implements
     private void checkForHockeyUpdates() {
         String hockeyURI = appProperties.get(IAppProperties.KEY_HOCKEY_URI);
         Log.d(TAG, "hockeyURI = *" + hockeyURI + "*");
-        if (TextUtils.isEmpty(hockeyURI)) {
+        if (true || TextUtils.isEmpty(hockeyURI)) {
             onHockeyDone();
             return;
         }
