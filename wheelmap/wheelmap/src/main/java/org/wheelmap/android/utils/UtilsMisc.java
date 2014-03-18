@@ -187,7 +187,13 @@ public class UtilsMisc {
             display.getSize(size);
             width = size.x;
         }
-        width /= 2;
+
+        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            width *= 1d/2d;
+        }else{
+            width *= (2d/3d);
+        }
+
         params.width = width < 600 ? 600 : width;
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;

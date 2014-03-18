@@ -38,6 +38,9 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 
 import org.holoeverywhere.app.Fragment;
+import org.wheelmap.android.service.RestService;
+import org.wheelmap.android.service.RestServiceException;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.json.JSONObject;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
@@ -60,6 +63,7 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
+import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.ViewTool;
 
@@ -74,6 +78,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -105,7 +111,7 @@ import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 
 public class POIDetailFragment extends Fragment implements
-        OnClickListener, OnTapListener, LoaderCallbacks<Cursor>{
+        OnClickListener, OnTapListener, LoaderCallbacks<Cursor>, Receiver {
 
     public final static String TAG = POIDetailFragment.class.getSimpleName();
 
@@ -360,12 +366,13 @@ public class POIDetailFragment extends Fragment implements
         imageAdapter = new HorizontalImageAdapter(this.getActivity(), listImages);
 
         listView.setAdapter(imageAdapter);
+        listView.setOnItemClickListener(imageAdapter);
 
     }
 
-    private void getImagesList(long id) {
+    private void getImagesList() {
 
-        RestServiceHelper.retrievePhotosByDinstance(getActivity(),id);
+        //RestServiceHelper.retrievePhotosByDinstance(getActivity(),id);
 
         // ONLY FOR TESTING --------------
         Gson gson = new Gson();
@@ -669,8 +676,8 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
-            getImagesList(927092067);
-            setupUI();
+            //getImagesList(927092067);
+            //setupUI();
 
             c.moveToFirst();
             poiId = POIHelper.getId(c);
@@ -687,6 +694,10 @@ public class POIDetailFragment extends Fragment implements
             String houseNum = POIHelper.getHouseNumber(c);
             String postCode = POIHelper.getPostcode(c);
             String city = POIHelper.getCity(c);
+
+            try{
+                getPhotos(Long.valueOf(POIHelper.getWMId(c)));
+            }catch(Exception e){}
 
             String address = "";
 
@@ -932,8 +943,41 @@ public class POIDetailFragment extends Fragment implements
     }
 
     public void showDetail(long id) {
+        Log.d(TAG,"show id: "+id);
         poiId = id;
         getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
+    }
+
+    public void getPhotos(long wm_id){
+
+        if(imageAdapter != null){
+            imageAdapter.clear();
+        }
+        DetachableResultReceiver r = new DetachableResultReceiver(new Handler());
+        r.setReceiver(this);
+
+        RestServiceHelper.retrievePhotosById(getActivity(),wm_id,r);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
+        switch (resultCode) {
+            case RestService.STATUS_RUNNING: {
+                break;
+            }
+            case RestService.STATUS_FINISHED: {
+                getImagesList();
+                setupUI();
+                break;
+            }
+            case RestService.STATUS_ERROR: {
+                break;
+            }
+
+        }
     }
 
 }

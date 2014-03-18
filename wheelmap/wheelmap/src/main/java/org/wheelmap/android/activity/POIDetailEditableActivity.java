@@ -69,7 +69,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         super.onCreate(savedInstanceState);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
-            showAsPopup(this);
+            UtilsMisc.showAsPopup(this);
         }
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_frame_empty);
@@ -112,7 +112,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    private void showAsPopup(Activity activity) {
+    /*private void showAsPopup(Activity activity) {
         activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
         activity.getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_DIM_BEHIND,
@@ -134,7 +134,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;
         activity.getWindow().setAttributes(params);
-    }
+    }*/
 
     private void setExternalEditableState(Bundle state) {
         mExternalEditableState = new ExternalEditableState();

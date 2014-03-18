@@ -68,10 +68,11 @@ public class RestServiceHelper {
         context.startService(intent);
     }
 
-    public static void retrievePhotosByDinstance(Context context, long id) {
+    public static void retrievePhotosById(Context context, long id,ResultReceiver receiver) {
         Log.d(TAG, "retrievePhotosByDistance");
         final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
                 RestService.class);
+        intent.putExtra(Extra.STATUS_RECEIVER, receiver);
         intent.putExtra(Extra.WHAT, What.RETRIEVE_PHOTO);
         intent.putExtra(Extra.ID, id);
         context.startService(intent);
