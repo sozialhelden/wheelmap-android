@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment implements
         forgot_password.setLinksClickable(true);
         forgot_password.setMovementMethod(LinkMovementMethod.getInstance());
 
-        TextView login2 = (TextView)v.findViewById(R.id.login_login_2;
+        TextView login2 = (TextView)v.findViewById(R.id.login_login_2);
         String login2_format = "<a href=\""+getString(R.string.login_link_wheelmap)+"\">%s</a>";
         login2.setText(Html.fromHtml(
                 String.format(login2_format, login2.getText())));
