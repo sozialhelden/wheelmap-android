@@ -131,4 +131,8 @@ public class UserCredentials implements ICredentials {
     public String getUserName() {
         return mEmail;
     }
+
+    public String toString(){
+       return "User: "+mEmail;
+    }
 }

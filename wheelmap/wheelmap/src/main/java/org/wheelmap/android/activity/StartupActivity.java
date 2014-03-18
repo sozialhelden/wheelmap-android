@@ -29,6 +29,7 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
+import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
@@ -52,16 +53,16 @@ import java.util.List;
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 
-@Activity.Addons("MyRoboguice")
+//@Activity.Addons("MyRoboguice")
 public class StartupActivity extends Activity implements
         DetachableResultReceiver.Receiver {
 
     private final static String TAG = StartupActivity.class.getSimpleName();
 
-    @Inject
+    //@Inject
     ContentViewListener ignored;
 
-    @Inject
+    //@Inject
     public IAppProperties appProperties;
 
     private State mState;
@@ -77,6 +78,8 @@ public class StartupActivity extends Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        appProperties = AppProperties.getInstance(getApplication());
 
         Log.d(TAG, "onCreate");
         Log.d(TAG, "addons: " + obtainAddonsList());
@@ -126,7 +129,7 @@ public class StartupActivity extends Activity implements
     private void checkForHockeyUpdates() {
         String hockeyURI = appProperties.get(IAppProperties.KEY_HOCKEY_URI);
         Log.d(TAG, "hockeyURI = *" + hockeyURI + "*");
-        if (TextUtils.isEmpty(hockeyURI)) {
+        if (true || TextUtils.isEmpty(hockeyURI)) {
             onHockeyDone();
             return;
         }

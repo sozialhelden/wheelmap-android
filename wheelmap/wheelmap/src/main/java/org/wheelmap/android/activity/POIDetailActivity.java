@@ -52,14 +52,14 @@ import android.support.v4.app.FragmentManager;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
+//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailActivity extends MapActivity implements
         OnPOIDetailListener, OnErrorDialogListener, Receiver {
 
     private final static String TAG = POIDetailActivity.class.getSimpleName();
 
-    @Inject
-    roboguice.inject.ContentViewListener ignored;
+    //@Inject
+    //roboguice.inject.ContentViewListener ignored;
 
     // Definition of the one requestCode we use for receiving resuls.
     static final private int SELECT_WHEELCHAIRSTATE = 0;

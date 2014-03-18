@@ -40,17 +40,19 @@ import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Display;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
+//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailEditableActivity extends MapActivity implements
         OnPOIDetailEditableListener, OnLoginDialogListener,
         OnEditPositionListener, OnNodetypeSelectListener,
@@ -117,7 +119,18 @@ public class POIDetailEditableActivity extends MapActivity implements
                 WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         LayoutParams params = activity.getWindow().getAttributes();
         params.height = LayoutParams.WRAP_CONTENT;
-        params.width = 600;
+
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = 600;
+        if (android.os.Build.VERSION.SDK_INT < 13) {
+            width = display.getWidth();
+        } else {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+        }
+        width /= 2;
+        params.width = width < 600 ? 600 : width;
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;
         activity.getWindow().setAttributes(params);

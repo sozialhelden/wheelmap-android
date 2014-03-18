@@ -59,6 +59,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.popup.FilterWindow;
@@ -89,7 +90,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
+//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class
         MainSinglePaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnStateListener,
@@ -97,7 +98,7 @@ public class
 
     private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
 
-    @Inject
+    //@Inject
     IAppProperties appProperties;
 
     //private MyTabListener mTabListener;
@@ -127,12 +128,17 @@ public class
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appProperties = AppProperties.getInstance(getApplication());
         Log.d(TAG, "onCreate");
 
         setSupportProgressBarIndeterminateVisibility(false);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ActionBar actionbar = getSupportActionBar();
+        if(actionbar != null){
+            actionbar.setHomeButtonEnabled(true);
+            actionbar.setDisplayShowTitleEnabled(true);
+            actionbar.setDisplayHomeAsUpEnabled(true);
+        }
 
         setContentView(R.layout.activity_single_pane);
 

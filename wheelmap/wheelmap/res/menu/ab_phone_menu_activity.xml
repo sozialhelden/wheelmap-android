@@ -25,25 +25,25 @@
 
     <item
             android:id="@+id/menu_search"
-            android:showAsAction="always"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/map_navbar_btn_search"
             android:title="@string/menu_search"/>
 
     <item
             android:id="@+id/menu_filter"
-            android:showAsAction="always"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/map_navbar_btn_filter"
             android:title="@string/menu_filter"/>
     <item
             android:id="@+id/menu_filter_kategorie"
-            android:showAsAction="always"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/map_navbar_btn_kategorie"
             android:title="@string/menu_filter"/>
 
 
     <item
             android:id="@+id/menu_new_poi"
-            android:showAsAction="always"
+            android:showAsAction="ifRoom"
             android:icon="@drawable/map_navbar_btn_neu"
             android:title="@string/menu_new_poi"/>
 

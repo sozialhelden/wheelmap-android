@@ -29,7 +29,7 @@ import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 
-@Activity.Addons("MyRoboguice")
+//@Activity.Addons("MyRoboguice")
 public class FilterActivity extends Activity {
 
     @Override

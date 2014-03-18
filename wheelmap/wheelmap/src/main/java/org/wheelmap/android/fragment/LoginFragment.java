@@ -24,9 +24,9 @@ package org.wheelmap.android.fragment;
 import com.google.inject.Inject;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Dialog;
-import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.online.R;
@@ -56,11 +56,11 @@ import android.widget.TextView.OnEditorActionListener;
 
 import de.akquinet.android.androlog.Log;
 
-public class LoginDialogFragment extends DialogFragment implements
+public class LoginFragment extends Fragment implements
         OnClickListener, DetachableResultReceiver.Receiver,
         OnEditorActionListener {
 
-    public final static String TAG = LoginDialogFragment.class.getSimpleName();
+    public final static String TAG = LoginFragment.class.getSimpleName();
 
     private EditText mEmailText;
 
@@ -106,6 +106,33 @@ public class LoginDialogFragment extends DialogFragment implements
             }
         });
 
+        TextView forgot_password = (TextView)v.findViewById(R.id.login_forgot_password);
+        String forgot_password_format = "<a href=\"http://wheelmap.org/users/password/new\">%s</a>";
+        forgot_password.setText(Html.fromHtml(
+           String.format(forgot_password_format, forgot_password.getText())));
+        forgot_password.setLinksClickable(true);
+        forgot_password.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView login2 = (TextView)v.findViewById(R.id.login_login_2);
+        String login2_format = "<a href=\""+getString(R.string.login_link_wheelmap)+"\">%s</a>";
+        login2.setText(Html.fromHtml(
+                String.format(login2_format, login2.getText())));
+        login2.setLinksClickable(true);
+        login2.setMovementMethod(LinkMovementMethod.getInstance());
+
+        mEmailText = (EditText) v.findViewById(R.id.login_email);
+        mPasswordText = (EditText) v.findViewById(R.id.login_password);
+
+       // mEmailText.setText("");
+        //mPasswordText.setText("");
+
+        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+            View scrollView = v.findViewById(R.id.scrollView);
+            ViewGroup.LayoutParams params = scrollView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            scrollView.setLayoutParams(params);
+        }
+
         return v;
     }
 
@@ -119,81 +146,28 @@ public class LoginDialogFragment extends DialogFragment implements
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //TODO check if already logged in
-        //TODO and show logout dialog if already logged in
-        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
-        //builder.setTitle(R.string.title_login);
-        //builder.setIcon(R.drawable.ic_login_wheelmap);
-        //builder.setNeutralButton(R.string.login_submit, null);
-        builder.setOnCancelListener(this);
-
-        View view = LayoutInflater.from(getSupportActivity()).inflate(
-                    R.layout.fragment_dialog_login, null);
-        builder.setView(view);
-
-        Dialog d = builder.create();
-        return d;
-
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
+        /*
         AlertDialog dialog = (AlertDialog) getDialog();
         Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
         button.setOnClickListener(this);
-
-
-        TextView forgot_password = (TextView)dialog.findViewById(R.id.login_forgot_password);
-        String forgot_password_format = "<a href=\"http://wheelmap.org/users/password/new\">%s</a>";
-        forgot_password.setText(Html.fromHtml(
-                String.format(forgot_password_format, forgot_password.getText())));
-        forgot_password.setLinksClickable(true);
-        forgot_password.setMovementMethod(LinkMovementMethod.getInstance());
-
-        TextView login2 = (TextView)dialog.findViewById(R.id.login_login_2);
-        String login2_format = "<a href=\""+getString(R.string.login_link_wheelmap)+"\">%s</a>";
-        login2.setText(Html.fromHtml(
-                String.format(login2_format, login2.getText())));
-        login2.setLinksClickable(true);
-        login2.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-        mEmailText = (EditText) dialog.findViewById(R.id.login_email);
-        mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
-
-        mEmailText.setText("");
-        mPasswordText.setText("");
-
         mEmailText = (EditText) dialog.findViewById(R.id.login_email);
         mEmailText.setOnEditorActionListener(this);
         mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
         mPasswordText.setOnEditorActionListener(this);
-
-
-
-        /*
         String formattedHtml = UtilsMisc.formatHtmlLink(
                 getString(R.string.login_link_wheelmap),
                 getString(R.string.login_link_text));
         Spanned spannedText = Html.fromHtml(formattedHtml);
         mRegisterText = (TextView) dialog.findViewById(R.id.login_register);
         mRegisterText.setText(spannedText);
-        mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());     */
-        load();
+        mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());
+        */
+        //load();
         //mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
-
-        if (mListener != null) {
-            mListener.onLoginCancelled();
-        }
     }
 
     private void load() {
@@ -244,7 +218,9 @@ public class LoginDialogFragment extends DialogFragment implements
     }
 
     private void loginSuccessful() {
-        dismiss();
+
+        Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
+        getActivity().onBackPressed();
         if (mListener != null) {
             mListener.onLoginSuccessful();
         }

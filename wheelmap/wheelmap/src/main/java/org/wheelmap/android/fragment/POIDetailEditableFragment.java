@@ -32,6 +32,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
+import org.wheelmap.android.activity.LoginActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
@@ -44,6 +45,7 @@ import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -96,58 +98,58 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private static final int DIALOG_ID_NETWORK_ERROR = 2;
 
-    @Inject
-    public ContentViewListener ignored;
+    //@Inject
+    //public ContentViewListener ignored;
 
-    @Inject
+    //@Inject
     private ICredentials mCredentials;
 
     //@InjectView(R.id.title_container)
     //private LinearLayout title_container;
 
-    @InjectView(R.id.name)
+    //@InjectView(R.id.name)
     private EditText nameText;
 
-    @InjectView(R.id.nodetype)
+    //@InjectView(R.id.nodetype)
     private TextView nodetypeText;
 
-    @InjectView(R.id.comment)
+    //@InjectView(R.id.comment)
     private EditText commentText;
 
-    @InjectView(R.id.street)
+    //@InjectView(R.id.street)
     private EditText streetText;
 
-    @InjectView(R.id.housenum)
+    //@InjectView(R.id.housenum)
     private EditText housenumText;
 
-    @InjectView(R.id.postcode)
+    //@InjectView(R.id.postcode)
     private EditText postcodeText;
 
-    @InjectView(R.id.city)
+    //@InjectView(R.id.city)
     private EditText cityText;
 
-    @InjectView(R.id.website)
+    //@InjectView(R.id.website)
     private EditText websiteText;
 
-    @InjectView(R.id.phone)
+    //@InjectView(R.id.phone)
     private EditText phoneText;
 
     //@InjectView(R.id.state_icon)
     //private ImageView state_icon;
 
-    @InjectView(R.id.state_text)
+    //@InjectView(R.id.state_text)
     private TextView state_text;
 
     //@InjectView(R.id.edit_position_text)
     //private TextView position_text;
 
-    @InjectView(R.id.wheelchair_state_layout)
+    //@InjectView(R.id.wheelchair_state_layout)
     private RelativeLayout edit_state_container;
 
     //@InjectView(R.id.edit_geolocation)
     //private RelativeLayout edit_geolocation_touchable_container;
 
-    @InjectView(R.id.edit_nodetype)
+    //@InjectView(R.id.edit_nodetype)
     private RelativeLayout edit_nodetype_container;
 
     //@InjectView(R.id.edit_geolocation_container)
@@ -216,6 +218,8 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCredentials = new UserCredentials(getActivity().getApplicationContext());
+
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
@@ -223,7 +227,36 @@ public class POIDetailEditableFragment extends Fragment implements
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
 
+    }
 
+    public void initViews(View parent){
+        nameText = (EditText)parent.findViewById(R.id.name);
+        nodetypeText = (TextView) parent.findViewById(R.id.nodetype);
+        commentText = (EditText) parent.findViewById(R.id.comment);
+        streetText = (EditText) parent.findViewById(R.id.street);
+        housenumText = (EditText) parent.findViewById(R.id.housenum);
+        postcodeText = (EditText) parent.findViewById(R.id.postcode);
+        cityText = (EditText) parent.findViewById(R.id.city);
+        websiteText = (EditText) parent.findViewById(R.id.website);
+        phoneText = (EditText) parent.findViewById(R.id.phone);
+        state_text = (TextView) parent.findViewById(R.id.state_text);
+         /*
+
+        //@InjectView(R.id.state_icon)
+        //private ImageView state_icon;
+
+        //@InjectView(R.id.edit_position_text)
+        //private TextView position_text;
+                           */
+        //@InjectView(R.id.wheelchair_state_layout)
+        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_state_layout);
+
+        //@InjectView(R.id.edit_geolocation)
+        //private RelativeLayout edit_geolocation_touchable_container;
+
+        //@InjectView(R.id.edit_nodetype)
+        //private RelativeLayout edit_nodetype_container;
+        edit_nodetype_container = (RelativeLayout) parent.findViewById(R.id.edit_nodetype);
     }
 
     @Override
@@ -238,7 +271,7 @@ public class POIDetailEditableFragment extends Fragment implements
                 return;
             }
         });
-
+        initViews(v);
         return v;
     }
 
@@ -255,7 +288,6 @@ public class POIDetailEditableFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated");
-
         retrieve(savedInstanceState);
         if (!mCredentials.isLoggedIn()) {
             FragmentManager fm = getFragmentManager();

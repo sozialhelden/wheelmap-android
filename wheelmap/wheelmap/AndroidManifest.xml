@@ -137,6 +137,12 @@ limitations under the License.
                 android:name="org.wheelmap.android.activity.ChooseCategoryActivity"
                 android:label="">
         </activity>
+        <activity
+                android:name="org.wheelmap.android.activity.LoginActivity"
+                android:windowSoftInputMode="adjustPan"
+                android:theme="@style/Theme.Wheelmap.SubActivity"
+                android:label="">
+        </activity>
 
         <activity
                 android:name="net.hockeyapp.android.UpdateActivity"/>

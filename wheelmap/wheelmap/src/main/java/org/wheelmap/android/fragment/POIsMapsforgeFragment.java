@@ -206,10 +206,12 @@ public class POIsMapsforgeFragment extends Fragment implements
         if(savedInstanceState != null){
             int la = savedInstanceState.getInt(Extra.LATITUDE);
             int lo = savedInstanceState.getInt(Extra.LONGITUDE);
+            byte zoom = savedInstanceState.getByte(Extra.ZOOM_LEVEL);
 
             mCurrentLocationGeoPoint = new GeoPoint(la,lo);
 
             centerMap(mCurrentLocationGeoPoint, true);
+            setZoomIntern(zoom);
 
         }
 
@@ -251,6 +253,7 @@ public class POIsMapsforgeFragment extends Fragment implements
                     SensorManager.SENSOR_DELAY_NORMAL);
         }
         executeState(retrieveExecuteBundle());
+        mMapView.onResume();
     }
 
     @Override
@@ -259,6 +262,7 @@ public class POIsMapsforgeFragment extends Fragment implements
         if (mOrientationAvailable) {
             mSensorManager.unregisterListener(mSensorEventListener);
         }
+        mMapView.onPause();
     }
 
     @Override
@@ -396,8 +400,17 @@ public class POIsMapsforgeFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Extra.MAP_HEIGHT_FULL, mHeightFull);
-        outState.putInt(Extra.LATITUDE,mCurrentLocationGeoPoint.getLatitudeE6());
-        outState.putInt(Extra.LONGITUDE,mCurrentLocationGeoPoint.getLongitudeE6());
+
+        GeoPoint current_location = mMapView.getMapCenter();
+        byte zoomlevel = mMapView.getZoomLevel();
+
+        outState.putByte(Extra.ZOOM_LEVEL,zoomlevel);
+        outState.putInt(Extra.LATITUDE,current_location.getLatitudeE6());
+        outState.putInt(Extra.LONGITUDE, current_location.getLongitudeE6());
+
+
+        //outState.putInt(Extra.LATITUDE,mCurrentLocationGeoPoint.getLatitudeE6());
+        //outState.putInt(Extra.LONGITUDE, mCurrentLocationGeoPoint.getLongitudeE6());
     }
 
     @Override

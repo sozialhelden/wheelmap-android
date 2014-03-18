@@ -33,6 +33,7 @@ import org.osmdroid.api.IMapView;
 import org.osmdroid.mapsforge.wrapper.MFMapView;
 import org.osmdroid.util.GeoPoint;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.modules.BundlePreferences;
 import org.wheelmap.android.modules.IBundlePreferences;
 import org.wheelmap.android.overlays.ConfigureMapView;
 
@@ -53,12 +54,13 @@ public class MapActivity extends Activity implements MapContext {
 
     private List<IMapView> mapViews = new ArrayList<IMapView>(2);
 
-    @Inject
+    //@Inject
     private IBundlePreferences bprefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bprefs = new BundlePreferences(this);
     }
 
     /**
