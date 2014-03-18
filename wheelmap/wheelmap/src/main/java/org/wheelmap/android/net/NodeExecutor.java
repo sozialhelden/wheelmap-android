@@ -47,7 +47,7 @@ public class NodeExecutor extends SinglePageExecutor<SingleNode> implements
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         NodeRequestBuilder requestBuilder = null;
         if (mWMId == Extra.WM_ID_UNKNOWN) {
             processException(RestServiceException.ERROR_INTERNAL_ERROR,

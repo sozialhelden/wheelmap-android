@@ -38,6 +38,8 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import java.math.BigInteger;
+
 import roboguice.service.RoboIntentService;
 
 /**
@@ -83,6 +85,11 @@ public class RestService extends RoboIntentService {
         }
 
         int what = extras.getInt(Extra.WHAT);
+
+        long id = 0;
+        if(extras.getLong(Extra.ID) != 0)
+            id = extras.getLong(Extra.ID);
+
         final ResultReceiver receiver = extras
                 .getParcelable(Extra.STATUS_RECEIVER);
         if (receiver != null) {
@@ -95,7 +102,7 @@ public class RestService extends RoboIntentService {
                 extras, mAppProperties, mCredentials, mHttpUserAgent);
         executor.prepareContent();
         try {
-            executor.execute();
+            executor.execute(id);
             executor.prepareDatabase();
         } catch (RestServiceException e) {
 

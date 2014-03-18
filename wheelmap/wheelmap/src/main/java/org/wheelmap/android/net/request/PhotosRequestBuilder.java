@@ -9,12 +9,13 @@ public class PhotosRequestBuilder extends BasePhotosRequestBuilder{
 
     private static final String RESOURCE = "nodes";
     private static final String PHOTOS = "photos";
-    private String id = "927092067";
+    private long id = 927092067;
 
 
     public PhotosRequestBuilder(final String server, final String apiKey,
-            final AcceptType acceptType) {
+            final AcceptType acceptType, long id) {
         super(server, apiKey, acceptType);
+        this.id = id;
     }
 
     @Override

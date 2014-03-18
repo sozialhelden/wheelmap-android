@@ -21,6 +21,8 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 
+import java.math.BigInteger;
+
 import de.akquinet.android.androlog.Log;
 
 /**
@@ -67,11 +69,11 @@ public class PhotosExecutor extends MultiPageExecutor<Photos> implements
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         BasePhotosRequestBuilder requestBuilder;
 
             requestBuilder = new PhotosRequestBuilder(getServer(), getApiKey(),
-                    AcceptType.JSON);
+                    AcceptType.JSON, id);
 
         requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
                 mBoundingBox);

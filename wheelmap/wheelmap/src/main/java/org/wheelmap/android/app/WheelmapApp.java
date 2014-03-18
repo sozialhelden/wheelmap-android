@@ -33,6 +33,7 @@ import org.holoeverywhere.app.Application;
 import org.holoeverywhere.preference.SharedPreferences;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
@@ -132,6 +133,16 @@ public class WheelmapApp extends Application {
 
     public static SharedPreferences getDefaultPrefs(){
         return INSTANCE.getDefaultSharedPreferences();
+    }
+
+    Photos photos;
+
+    public Photos getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(Photos photos) {
+        this.photos = photos;
     }
 
 

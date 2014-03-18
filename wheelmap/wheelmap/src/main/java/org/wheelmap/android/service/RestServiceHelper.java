@@ -30,6 +30,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
+import java.math.BigInteger;
+
 import de.akquinet.android.androlog.Log;
 
 public class RestServiceHelper {
@@ -66,15 +68,12 @@ public class RestServiceHelper {
         context.startService(intent);
     }
 
-    public static void retrievePhotosByDinstance(Context context,
-            Location location, float distance, ResultReceiver receiver) {
+    public static void retrievePhotosByDinstance(Context context, long id) {
         Log.d(TAG, "retrievePhotosByDistance");
         final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
                 RestService.class);
         intent.putExtra(Extra.WHAT, What.RETRIEVE_PHOTO);
-        intent.putExtra(Extra.STATUS_RECEIVER, receiver);
-        intent.putExtra(Extra.LOCATION, location);
-        intent.putExtra(Extra.DISTANCE_LIMIT, distance);
+        intent.putExtra(Extra.ID, id);
         context.startService(intent);
     }
 

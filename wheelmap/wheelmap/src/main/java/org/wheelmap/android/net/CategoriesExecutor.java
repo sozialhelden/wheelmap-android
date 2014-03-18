@@ -62,7 +62,7 @@ public class CategoriesExecutor extends SinglePageExecutor<Categories> implement
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         CategoriesRequestBuilder requestBuilder = new CategoriesRequestBuilder(
                 getServer(), getApiKey(), AcceptType.JSON);
         if (mLocale != null) {

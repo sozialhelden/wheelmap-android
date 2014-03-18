@@ -32,7 +32,7 @@ public interface IExecutor {
 
     String getServer();
 
-    void execute() throws RestServiceException;
+    void execute(long id) throws RestServiceException;
 
     void prepareDatabase() throws RestServiceException;
 

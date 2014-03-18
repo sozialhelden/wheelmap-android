@@ -66,7 +66,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
         mCursor.moveToFirst();
     }
 
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
 
         if (mCursor == null) {
             throw new RestServiceException(
@@ -101,8 +101,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
             }
 
             executeRequest(requestBuilder);
-            long id = POIHelper.getId(mCursor);
-            PrepareDatabaseHelper.markDirtyAsClean(getResolver(), id);
+            long idPOI = POIHelper.getId(mCursor);
+            PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
             mCursor.moveToNext();
         }
 

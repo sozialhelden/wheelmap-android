@@ -109,7 +109,7 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         BaseNodesRequestBuilder requestBuilder;
         if (mCategory != Extra.UNKNOWN) {
             requestBuilder = new CategoryNodesRequestBuilder(getServer(),

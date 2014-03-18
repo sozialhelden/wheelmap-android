@@ -38,6 +38,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 
 import org.holoeverywhere.app.Fragment;
+import org.json.JSONObject;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -58,6 +59,7 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
+import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.ViewTool;
 
@@ -103,7 +105,7 @@ import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 
 public class POIDetailFragment extends Fragment implements
-        OnClickListener, OnTapListener, LoaderCallbacks<Cursor> {
+        OnClickListener, OnTapListener, LoaderCallbacks<Cursor>{
 
     public final static String TAG = POIDetailFragment.class.getSimpleName();
 
@@ -361,7 +363,9 @@ public class POIDetailFragment extends Fragment implements
 
     }
 
-    private void getImagesList(int id) {
+    private void getImagesList(long id) {
+
+        RestServiceHelper.retrievePhotosByDinstance(getActivity(),id);
 
         // ONLY FOR TESTING --------------
         Gson gson = new Gson();
@@ -370,15 +374,21 @@ public class POIDetailFragment extends Fragment implements
 
         listImages = new ArrayList();
 
+
         try {
 
+            WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+            photos = app.getPhotos();
+
+
+            /*
             // get data from json file
             BufferedReader br = new BufferedReader(
                     new FileReader(getActivity().getApplicationContext().getFilesDir().getPath().toString() + "/file.json"));
             //convert the json string back to object
             photos = gson.fromJson(br, Photos.class);
-
-        } catch (IOException e) {
+            */
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -659,10 +669,8 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
-            getImagesList(0);
+            getImagesList(927092067);
             setupUI();
-
-            //String s = POIHelper.getPhotoID(c);
 
             c.moveToFirst();
             poiId = POIHelper.getId(c);

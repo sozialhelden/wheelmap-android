@@ -53,7 +53,7 @@ public class LocalesExecutor extends SinglePageExecutor<Locales> implements
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         final LocalesRequestBuilder requestBuilder = new LocalesRequestBuilder(
                 getServer(), getApiKey(), AcceptType.JSON);
 

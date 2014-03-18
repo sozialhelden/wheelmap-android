@@ -30,7 +30,7 @@ public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         PhotoRequestBuilder requestBuilder = null;
         if (mWMId == Extra.WM_ID_UNKNOWN) {
             processException(RestServiceException.ERROR_INTERNAL_ERROR,

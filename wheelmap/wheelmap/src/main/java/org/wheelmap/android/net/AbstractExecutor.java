@@ -184,7 +184,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
     public abstract void prepareContent();
 
-    public abstract void execute() throws RestServiceException;
+    public abstract void execute(long id) throws RestServiceException;
 
     public abstract void prepareDatabase() throws RestServiceException;
 
@@ -308,13 +308,18 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                 String json = gson.toJson(((Photos)content));
 
                 try {
+                    /*
                     //write converted json data to a file named "file.json"
                     FileWriter writer = new FileWriter(getContext().getFilesDir().getPath().toString() + "/file.json");
 
                     writer.write(json);
                     writer.close();
+                    */
 
-                } catch (IOException e) {
+                    WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
+                    app.setPhotos((Photos)content);
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

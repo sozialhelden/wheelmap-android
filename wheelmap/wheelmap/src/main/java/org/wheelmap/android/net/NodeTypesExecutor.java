@@ -63,7 +63,7 @@ public class NodeTypesExecutor extends SinglePageExecutor<NodeTypes> implements
     }
 
     @Override
-    public void execute() throws RestServiceException {
+    public void execute(long id) throws RestServiceException {
         NodeTypesRequestBuilder requestBuilder = new NodeTypesRequestBuilder(
                 getServer(), getApiKey(), AcceptType.JSON);
         requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE));

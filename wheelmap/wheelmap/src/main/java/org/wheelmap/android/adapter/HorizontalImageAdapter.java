@@ -5,7 +5,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.wheelmap.android.online.R;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

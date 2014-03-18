@@ -66,7 +66,7 @@ public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
 	}
 
 	@Override
-	public void execute() throws RestServiceException {
+	public void execute(long id) throws RestServiceException {
 
 		ApiKeyRequestBuilder requestBuilder = new ApiKeyRequestBuilder(getServer(), AcceptType.JSON);
 		requestBuilder.setCredentials(mEmail, mPassword);
