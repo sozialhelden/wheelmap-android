@@ -21,16 +21,22 @@
  */
 package org.wheelmap.android.utils;
 
+import com.actionbarsherlock.view.Window;
+
+import org.holoeverywhere.app.Activity;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.Point;
 import android.os.Build;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -162,6 +168,30 @@ public class UtilsMisc {
             default:
                 return 0;
         }
+    }
+
+    public static void showAsPopup(Activity activity) {
+        activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        activity.getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        int width;
+        if (android.os.Build.VERSION.SDK_INT < 13) {
+            width = display.getWidth();
+        } else {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+        }
+        width /= 2;
+        params.width = width < 600 ? 600 : width;
+        params.alpha = 1.0f;
+        params.dimAmount = 0.5f;
+        activity.getWindow().setAttributes(params);
     }
 
 }

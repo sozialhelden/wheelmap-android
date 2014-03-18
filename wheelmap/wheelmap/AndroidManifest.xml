@@ -23,7 +23,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="123"
+          android:versionCode="125"
           android:versionName="2.0-SNAPSHOT-DEVEL"
         >
 
@@ -133,6 +133,8 @@ limitations under the License.
         </activity>
         <activity
                 android:name="org.wheelmap.android.activity.LoginActivity"
+                android:windowSoftInputMode="adjustPan"
+                android:theme="@style/Theme.Wheelmap.SubActivity"
                 android:label="">
         </activity>
 

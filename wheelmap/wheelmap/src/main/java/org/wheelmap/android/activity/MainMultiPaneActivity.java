@@ -349,13 +349,19 @@ public class MainMultiPaneActivity extends MapActivity implements
                 finish();
                 return true;
             case R.id.menu_login:
-                FragmentManager fm = getSupportFragmentManager();
-                LoginDialogFragment loginDialog = new LoginDialogFragment();
-                loginDialog.show(fm);
+                showAccount();
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void showAccount(){
+        /*FragmentManager fm = getSupportFragmentManager();
+        LoginDialogFragment loginDialog = new LoginDialogFragment();
+        loginDialog.show(fm);       */
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
     }
 
     @SuppressLint("WrongViewCast")

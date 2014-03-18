@@ -40,7 +40,7 @@ public class MyLocationManager {
 
     private static MyLocationManager sInstance;
 
-    private static final long TIME_DISTANCE_LIMIT = TimeUnit.MINUTES.toMillis(5); // 5 Minutes
+    private static final long TIME_DISTANCE_LIMIT = 5*60*1000;//TimeUnit.MINUTES.toMillis(5); // 5 Minutes
 
     private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
 

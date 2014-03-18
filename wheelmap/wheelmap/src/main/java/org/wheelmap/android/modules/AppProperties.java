@@ -42,12 +42,24 @@ import java.util.Properties;
  */
 
 @Singleton
-class AppProperties implements IAppProperties {
+public class AppProperties implements IAppProperties {
 
     private static final String LOG_TAG = AppProperties.class.getSimpleName();
 
     private Properties properties;
 
+    private static AppProperties instance;
+
+    public static AppProperties getInstance(Application app){
+       if(instance == null){
+          synchronized (AppProperties.class){
+              if(instance == null){
+                    instance = new AppProperties(app);
+              }
+          }
+       }
+       return instance;
+    }
 
     @Inject
     public AppProperties(Provider<Application> applicationProvider) {
@@ -69,6 +81,28 @@ class AppProperties implements IAppProperties {
                 Log.e(LOG_TAG, "exception by instatiating of app properties" + e);
             }
         }
+        instance = this;
+    }
+
+    public AppProperties(Application app){
+        final BufferedInputStream stream;
+
+        {
+            try {
+                stream = new BufferedInputStream(app.getAssets().open(
+                        Extra.APP_PROPERTIES_ASSETS_FILE_NAME));
+                try {
+                    properties = new Properties();
+                    properties.load(stream);
+                } finally {
+                    UtilsMisc.closeSilently(stream);
+                }
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "exception by instatiating of app properties" + e);
+            }
+        }
+        instance = this;
     }
 
 

@@ -144,17 +144,44 @@ public class LoginDialogFragment extends DialogFragment implements
         AlertDialog dialog = (AlertDialog) getDialog();
         Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
         button.setOnClickListener(this);
+
+
+        TextView forgot_password = (TextView)dialog.findViewById(R.id.login_forgot_password);
+        String forgot_password_format = "<a href=\"http://wheelmap.org/users/password/new\">%s</a>";
+        forgot_password.setText(Html.fromHtml(
+                String.format(forgot_password_format, forgot_password.getText())));
+        forgot_password.setLinksClickable(true);
+        forgot_password.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView login2 = (TextView)dialog.findViewById(R.id.login_login_2);
+        String login2_format = "<a href=\""+getString(R.string.login_link_wheelmap)+"\">%s</a>";
+        login2.setText(Html.fromHtml(
+                String.format(login2_format, login2.getText())));
+        login2.setLinksClickable(true);
+        login2.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+        mEmailText = (EditText) dialog.findViewById(R.id.login_email);
+        mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
+
+        mEmailText.setText("");
+        mPasswordText.setText("");
+
         mEmailText = (EditText) dialog.findViewById(R.id.login_email);
         mEmailText.setOnEditorActionListener(this);
         mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
         mPasswordText.setOnEditorActionListener(this);
+
+
+
+        /*
         String formattedHtml = UtilsMisc.formatHtmlLink(
                 getString(R.string.login_link_wheelmap),
                 getString(R.string.login_link_text));
         Spanned spannedText = Html.fromHtml(formattedHtml);
         mRegisterText = (TextView) dialog.findViewById(R.id.login_register);
         mRegisterText.setText(spannedText);
-        mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());
+        mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());     */
         load();
         //mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 

@@ -22,9 +22,10 @@
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:background="#cfcfcf"
-            android:fillViewport="true"
+            android:fillViewport="false"
+            android:id="@+id/scrollView"
             android:layout_gravity="center_horizontal">
 
     <LinearLayout
@@ -46,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_text"
                 android:layout_margin="8dp"
+                android:textSize="16dp"
                 android:gravity="center_horizontal"/>
 
         <EditText
@@ -80,6 +82,7 @@
             <TextView
                     android:id="@+id/login_forgot_password"
                     android:paddingLeft="10dp"
+                    android:textSize="16dp"
                     android:layout_width="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
@@ -104,18 +107,30 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_dont_have_account"
                 android:layout_marginTop="12dp"
+                android:textSize="16dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:gravity="left"/>
 
         <TextView
+                android:textSize="16dp"
                 android:id="@+id/login_login_2"
                 android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_marginLeft="8dp"
                   android:layout_marginRight="8dp"
                   android:text="@string/login_submit"/>
-        
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_new"
+                android:layout_marginTop="12dp"
+                android:textSize="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="left"/>
+
         <TextView
                 android:id="@+id/login_register"
                 android:layout_width="match_parent"

@@ -38,6 +38,8 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import java.awt.*;
+
 import roboguice.service.RoboIntentService;
 
 /**
@@ -118,10 +120,12 @@ public class RestService extends RoboIntentService {
             receiver.send(STATUS_FINISHED, bundle);
         }
 
+        android.database.Cursor c = PrepareDatabaseHelper.queryDirty(getContentResolver()) ;
         if (what != Extra.What.UPDATE_SERVER &&
-                PrepareDatabaseHelper.queryDirty(getContentResolver()).getCount() > 0) {
+                c.getCount() > 0) {
             Log.d(TAG, "retrying to send dirty items");
             RestServiceHelper.executeUpdateServer(this, null);
         }
+        c.close();
     }
 }

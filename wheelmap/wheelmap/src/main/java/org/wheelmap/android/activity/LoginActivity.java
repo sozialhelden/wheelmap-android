@@ -21,18 +21,33 @@
  */
 package org.wheelmap.android.activity;
 
+import com.google.inject.Inject;
+
+import com.actionbarsherlock.view.MenuItem;
+
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.fragment.LoginFragment;
+import org.wheelmap.android.fragment.LogoutFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.modules.ICredentials;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import de.akquinet.android.androlog.Log;
 
@@ -42,26 +57,70 @@ public class LoginActivity extends Activity {
     private final static String TAG = WheelchairStateActivity.class
             .getSimpleName();
 
+
+    private ICredentials mCredentials;
+
     private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frame_empty);
-        Log.d(TAG, "onCreate");
 
-        setTitle(getString(R.string.title_login));
+        mCredentials = new UserCredentials(getApplicationContext());
+
+        if (UtilsMisc.isTablet(getApplicationContext())) {
+            UtilsMisc.showAsPopup(this);
+        }else{
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+        setContentView(R.layout.activity_frame_empty);
+
+        Log.d(TAG, "onCreate");
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         FragmentManager fm = getSupportFragmentManager();
-        mFragment = new LoginFragment();
+
+        if(!mCredentials.isLoggedIn()){
+            mFragment = new LoginFragment();
+            setTitle(R.string.login_activity_title);
+        }else{
+            setTitle(R.string.logout_activity_title);
+            mFragment = new LogoutFragment();
+        }
 
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         LoginFragment.TAG).commit();
+
+        if(UtilsMisc.isTablet(getApplicationContext())){
+            View v = findViewById(R.id.content);
+            while(v != null && v instanceof ViewGroup){
+                v.setBackgroundColor(Color.TRANSPARENT);
+                if(v.getParent() instanceof View){
+                    v = (View) v.getParent();
+                }else{
+                    break;
+                }
+            }
+        }
+
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
 }

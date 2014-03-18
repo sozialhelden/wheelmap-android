@@ -32,6 +32,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
+import org.wheelmap.android.activity.LoginActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
@@ -96,8 +97,8 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private static final int DIALOG_ID_NETWORK_ERROR = 2;
 
-    @Inject
-    public ContentViewListener ignored;
+    //@Inject
+    //public ContentViewListener ignored;
 
     @Inject
     private ICredentials mCredentials;
@@ -223,7 +224,52 @@ public class POIDetailEditableFragment extends Fragment implements
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
 
+    }
 
+    public void initViews(View parent){
+        nameText = (EditText)parent.findViewById(R.id.name);
+         /*
+        @InjectView(R.id.nodetype)
+        private TextView nodetypeText;
+
+        @InjectView(R.id.comment)
+        private EditText commentText;
+
+        @InjectView(R.id.street)
+        private EditText streetText;
+
+        @InjectView(R.id.housenum)
+        private EditText housenumText;
+
+        @InjectView(R.id.postcode)
+        private EditText postcodeText;
+
+        @InjectView(R.id.city)
+        private EditText cityText;
+
+        @InjectView(R.id.website)
+        private EditText websiteText;
+
+        @InjectView(R.id.phone)
+        private EditText phoneText;
+
+        //@InjectView(R.id.state_icon)
+        //private ImageView state_icon;
+
+        @InjectView(R.id.state_text)
+        private TextView state_text;
+
+        //@InjectView(R.id.edit_position_text)
+        //private TextView position_text;
+                           */
+        //@InjectView(R.id.wheelchair_state_layout)
+        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_state_layout);
+
+        //@InjectView(R.id.edit_geolocation)
+        //private RelativeLayout edit_geolocation_touchable_container;
+
+        //@InjectView(R.id.edit_nodetype)
+        //private RelativeLayout edit_nodetype_container;
     }
 
     @Override
@@ -255,7 +301,6 @@ public class POIDetailEditableFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated");
-
         retrieve(savedInstanceState);
         if (!mCredentials.isLoggedIn()) {
             FragmentManager fm = getFragmentManager();

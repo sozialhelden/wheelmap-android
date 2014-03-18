@@ -4,5 +4,11 @@
     <string name="login_forgot_password">Passwort vergessen</string>
     <string name="login_new_registration">Neu registrieren</string>
     <string name="login_dont_have_account">Noch keinen Wheelmap-Account? Log dich auf Wheelmap.org mit Deinem OpenStreetMap-Account ein, klicke auf "Profil" und lege einen Wheelmap-Account an.</string>
+    <string name="login_new">Neu hier? Registriere Dich jetzt  in einem  Prozess bei OpenStreetMap und Wheelmap.org</string>
+    <string name="login_activity_title">Anmelden</string>
+    <string name="logout_activity_title">Ausloggen</string>
+    <string name="login_succesfully">Login erfolgreich</string>
 
+    <string name="logout_text">Eingeloggt als: %s</string>
+    <string name="logout">Ausloggen</string>
 </resources>

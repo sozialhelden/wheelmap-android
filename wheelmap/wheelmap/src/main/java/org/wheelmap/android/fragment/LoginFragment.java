@@ -24,10 +24,9 @@ package org.wheelmap.android.fragment;
 import com.google.inject.Inject;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Dialog;
-import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.online.R;
@@ -124,8 +123,15 @@ public class LoginFragment extends Fragment implements
         mEmailText = (EditText) v.findViewById(R.id.login_email);
         mPasswordText = (EditText) v.findViewById(R.id.login_password);
 
-        mEmailText.setText("");
-        mPasswordText.setText("");
+       // mEmailText.setText("");
+        //mPasswordText.setText("");
+
+        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+            View scrollView = v.findViewById(R.id.scrollView);
+            ViewGroup.LayoutParams params = scrollView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+            scrollView.setLayoutParams(params);
+        }
 
         return v;
     }
@@ -212,6 +218,8 @@ public class LoginFragment extends Fragment implements
     }
 
     private void loginSuccessful() {
+
+        Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
         getActivity().onBackPressed();
         if (mListener != null) {
             mListener.onLoginSuccessful();

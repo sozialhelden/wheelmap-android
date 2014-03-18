@@ -247,6 +247,7 @@ public class DashboardActivity extends
             String[] whereValues = new String[]{Integer.toString(catId)};
             resolver.update(mUri, values, whereClause, whereValues);
         }
+        c.close();
     }
 
     private void checkForCrashes() {

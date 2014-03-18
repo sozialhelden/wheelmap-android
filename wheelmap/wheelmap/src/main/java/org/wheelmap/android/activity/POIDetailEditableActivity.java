@@ -52,7 +52,7 @@ import android.view.WindowManager.LayoutParams;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
+//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailEditableActivity extends MapActivity implements
         OnPOIDetailEditableListener, OnLoginDialogListener,
         OnEditPositionListener, OnNodetypeSelectListener,
