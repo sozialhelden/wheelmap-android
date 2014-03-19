@@ -211,21 +211,24 @@ public class POIDetailActivity extends MapActivity implements
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        Uri uri = data.getData();
-        if (uri == null) {
-            Log.d(TAG, "uri has no data - cant extract wmID");
-            showErrorMessage(getString(R.string.error_noid_title),
-                    getString(R.string.error_noid_message));
-            return;
-        }
+        if(data != null){
+            Uri uri = data.getData();
+            if (uri == null) {
+                Log.d(TAG, "uri has no data - cant extract wmID");
+                showErrorMessage(getString(R.string.error_noid_title),
+                        getString(R.string.error_noid_message));
+                return;
+            }
 
-        wmID = uri.getLastPathSegment();
-        try {
-            Long.parseLong(wmID);
-        } catch (NumberFormatException e) {
-            Log.e(TAG, " wmID = " + wmID, e);
-            finish();
-            return;
+            wmID = uri.getLastPathSegment();
+            try {
+                Long.parseLong(wmID);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, " wmID = " + wmID, e);
+                finish();
+                return;
+            }
+
         }
 
         if (requestCode == SELECT_WHEELCHAIRSTATE) {
@@ -264,15 +267,26 @@ public class POIDetailActivity extends MapActivity implements
                         bitmap = Bitmap.createScaledBitmap(bitmap,
                                 100, 100, false);
                         // bmpDrawable = new BitmapDrawable(bitmapPreview);
-                        img_logo.setImageBitmap(bitmap);
+                        //img_logo.setImageBitmap(bitmap);
+
+                        RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
                     } else {
 
                         bmpDrawable = new BitmapDrawable(getResources(), data
                                 .getData().getPath());
-                        img_logo.setImageDrawable(bmpDrawable);
+                        //img_logo.setImageDrawable(bmpDrawable);
+
+
+
+
+                        // TO DO: Change ID at excecutor to the right id, still getting forbidden 403 error from server
+
+                        RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
+                        Toast.makeText(getApplicationContext(), "Implementation of uploading picture is not yet finished",
+                                Toast.LENGTH_SHORT).show();
                     }
 
-                    RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
+
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Cancelled",
@@ -316,7 +330,13 @@ public class POIDetailActivity extends MapActivity implements
                     //img_logo.setImageBitmap(bitmap);
 
 
+
+                    // TO DO: Change ID at excecutor to the right id, still getting forbidden 403 error from server
+
                     RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
+
+                    Toast.makeText(getApplicationContext(), "Implementation of uploading picture is not yet finished",
+                            Toast.LENGTH_SHORT).show();
                 } else if (data.getExtras() == null) {
 
                     Toast.makeText(getApplicationContext(),

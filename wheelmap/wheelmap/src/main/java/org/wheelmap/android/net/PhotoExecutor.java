@@ -32,13 +32,13 @@ public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
     @Override
     public void execute(long id) throws RestServiceException {
         PhotoRequestBuilder requestBuilder = null;
-        /*if (mWMId == Extra.WM_ID_UNKNOWN) {
+        if (mWMId == Extra.WM_ID_UNKNOWN) {
             processException(RestServiceException.ERROR_INTERNAL_ERROR,
                     new IllegalArgumentException(), true);
-        } */
+        }
 
         requestBuilder = new PhotoRequestBuilder(getServer(), getApiKey(),
-                AcceptType.JSON, id);
+                AcceptType.JSON, Long.parseLong(mWMId));
 
         int count = executeSingleRequest(requestBuilder);
         if (count == 0) {
