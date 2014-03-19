@@ -35,6 +35,8 @@ public abstract class RequestBuilder {
 
     public final static int REQUEST_PUT = 0x3;
 
+    public final static int REQUEST_PUT_PHOTO = 0x4;
+
     protected final String server;
 
     protected final String apiKey;

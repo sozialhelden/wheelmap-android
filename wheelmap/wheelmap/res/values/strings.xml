@@ -141,6 +141,7 @@
 
     <string name="poi_property_comment_no_comment">No comment</string>
     <string name="poi_property_comment_no_adress">No adress</string>
+    <string name="poi_property_comment_no_photos">No photos</string>
 
     <string name="poi_property_photos">Photos</string>
 

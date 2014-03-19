@@ -45,10 +45,17 @@ import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 
@@ -69,6 +76,14 @@ public class POIDetailActivity extends MapActivity implements
     private DetachableResultReceiver mReceiver;
 
     private String wmID;
+
+    ImageView img_logo;
+    protected static final int CAMERA_REQUEST = 65537;
+    protected static final int GALLERY_PICTURE = 65538;
+    private Intent pictureActionIntent = null;
+    Bitmap bitmap;
+
+    String selectedImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +208,26 @@ public class POIDetailActivity extends MapActivity implements
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Uri uri = data.getData();
+        if (uri == null) {
+            Log.d(TAG, "uri has no data - cant extract wmID");
+            showErrorMessage(getString(R.string.error_noid_title),
+                    getString(R.string.error_noid_message));
+            return;
+        }
+
+        wmID = uri.getLastPathSegment();
+        try {
+            Long.parseLong(wmID);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, " wmID = " + wmID, e);
+            finish();
+            return;
+        }
+
         if (requestCode == SELECT_WHEELCHAIRSTATE) {
             if (resultCode == RESULT_OK) {
                 // newly selected wheelchair state as action data
@@ -205,6 +240,102 @@ public class POIDetailActivity extends MapActivity implements
                     updateDatabase(poiID, state);
                     RestServiceHelper.executeUpdateServer(this, null);
                 }
+            }
+        }
+
+        if (requestCode == GALLERY_PICTURE) {
+
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    // our BitmapDrawable for the thumbnail
+                    BitmapDrawable bmpDrawable = null;
+                    // try to retrieve the image using the data from the intent
+                    Cursor cursor = getContentResolver().query(data.getData(),
+                            null, null, null, null);
+                    if (cursor != null) {
+
+                        cursor.moveToFirst();
+
+                        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                        String fileSrc = cursor.getString(idx);
+                        bitmap = BitmapFactory.decodeFile(fileSrc); // load
+                        // preview
+                        // image
+                        bitmap = Bitmap.createScaledBitmap(bitmap,
+                                100, 100, false);
+                        // bmpDrawable = new BitmapDrawable(bitmapPreview);
+                        img_logo.setImageBitmap(bitmap);
+                    } else {
+
+                        bmpDrawable = new BitmapDrawable(getResources(), data
+                                .getData().getPath());
+                        img_logo.setImageDrawable(bmpDrawable);
+                    }
+
+                    RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Cancelled",
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "Cancelled",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == CAMERA_REQUEST) {
+
+            if (resultCode == RESULT_OK) {
+                if (data.hasExtra("data")) {
+
+                    // retrieve the bitmap from the intent
+                    bitmap = (Bitmap) data.getExtras().get("data");
+
+
+                    Cursor cursor = getContentResolver()
+                            .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    new String[] {
+                                            MediaStore.Images.Media.DATA,
+                                            MediaStore.Images.Media.DATE_ADDED,
+                                            MediaStore.Images.ImageColumns.ORIENTATION },
+                                    MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                    if (cursor != null && cursor.moveToFirst()) {
+                        do {
+                            Uri ur = Uri.parse(cursor.getString(cursor
+                                    .getColumnIndex(MediaStore.Images.Media.DATA)));
+
+                        } while (cursor.moveToNext());
+                        cursor.close();
+                    }
+
+                    //Log.e("path of the image from camera ====> ", selectedImagePath);
+
+
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 100,
+                            100, false);
+                    // update the image view with the bitmap
+                    //img_logo.setImageBitmap(bitmap);
+
+
+                    RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
+                } else if (data.getExtras() == null) {
+
+                    Toast.makeText(getApplicationContext(),
+                            "No extras to retrieve!", Toast.LENGTH_SHORT)
+                            .show();
+
+                    BitmapDrawable thumbnail = new BitmapDrawable(
+                            getResources(), data.getData().getPath());
+
+                    // update the image view with the newly created drawable
+                    img_logo.setImageDrawable(thumbnail);
+
+                }
+
+
+
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "Cancelled",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }

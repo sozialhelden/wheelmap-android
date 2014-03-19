@@ -129,6 +129,10 @@
 
     <string name="poi_property_comment_no_comment">Kein Kommentar vorhanden</string>
     <string name="poi_property_comment_no_adress">Keine Adresse vorhanden</string>
+    <string name="poi_property_comment_no_photos">Keine Fotos vorhanden</string>
+
+    <string name="poi_property_photos">Fotos</string>
+
 
     <string name="poi_property_city">Stadt</string>
     <string name="poi_property_comment">Kommentar</string>

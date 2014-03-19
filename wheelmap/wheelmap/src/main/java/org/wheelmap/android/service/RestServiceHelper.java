@@ -78,6 +78,16 @@ public class RestServiceHelper {
         context.startService(intent);
     }
 
+    public static void executeUploadPhoto(Context context, long id,ResultReceiver receiver) {
+        Log.d(TAG, "retrievePhotosByDistance");
+        final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,
+                RestService.class);
+        intent.putExtra(Extra.STATUS_RECEIVER, receiver);
+        intent.putExtra(Extra.WHAT, What.UPDATE_PHOTO);
+        intent.putExtra(Extra.ID, id);
+        context.startService(intent);
+    }
+
     public static void executeUpdateServer(Context context,
             ResultReceiver receiver) {
         final Intent intent = new Intent(Intent.ACTION_SYNC, null, context,

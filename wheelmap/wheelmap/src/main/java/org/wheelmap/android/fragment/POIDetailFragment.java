@@ -37,6 +37,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -70,6 +71,7 @@ import org.wheelmap.android.utils.ViewTool;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -122,6 +124,15 @@ public class POIDetailFragment extends Fragment implements
     private final static long FADE_IN_ANIMATION_DURATION = 500;
 
 
+    ImageView img_logo;
+    protected static final int CAMERA_REQUEST = 1;
+    protected static final int GALLERY_PICTURE = 2;
+    private Intent pictureActionIntent = null;
+    Bitmap bitmap;
+
+    String selectedImagePath;
+
+
 
 
     //@Inject
@@ -155,6 +166,7 @@ public class POIDetailFragment extends Fragment implements
 
     private TextView noCommentText;
     private TextView noAdressText;
+    private TextView noPhotosText;
 
     private TextView commentTitle;
 
@@ -300,6 +312,7 @@ public class POIDetailFragment extends Fragment implements
 
         noCommentText = (TextView)v.findViewById(R.id.nocomment);
         noAdressText = (TextView)v.findViewById(R.id.noadress);
+        noPhotosText = (TextView)v.findViewById(R.id.nophotos);
 
         listView = (HorizontalView)v.findViewById(R.id.gallery);
 
@@ -323,7 +336,7 @@ public class POIDetailFragment extends Fragment implements
         buttonPhoto.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dispatchTakePictureIntent();
+                startDialog();
             }
         });
 
@@ -407,17 +420,26 @@ public class POIDetailFragment extends Fragment implements
 
                 List<Photo> listOfPhotos = photos.getPhotos();
 
-                for(Photo p : listOfPhotos){
+                if(listOfPhotos.isEmpty()){
+                    noPhotosText.setVisibility(View.VISIBLE);
+                    listView.setVisibility(View.GONE);
+                }
+                else{
+                    noPhotosText.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
 
-                    // always loads only the "original" photo
-                    String newurl = p.getImages().get(0).getUrl();
-                    String[] sList = newurl.split("\\?");
-                    String url = sList[0];
+                    for(Photo p : listOfPhotos){
 
-                    listImages.add(url);
+                        // always loads only the "original" photo
+                        String newurl = p.getImages().get(0).getUrl();
+                        String[] sList = newurl.split("\\?");
+                        String url = sList[0];
 
-                    Log.d("load photo with url");
+                        listImages.add(url);
 
+                        Log.d("load photo with url");
+
+                    }
                 }
 
 
@@ -651,6 +673,7 @@ public class POIDetailFragment extends Fragment implements
 
             noCommentText.setVisibility(View.GONE);
             noAdressText.setVisibility(View.GONE);
+            noPhotosText.setVisibility(View.GONE);
 
             nothing.setVisibility(View.VISIBLE);
 
@@ -981,5 +1004,53 @@ public class POIDetailFragment extends Fragment implements
 
         }
     }
+
+
+    private void startDialog() {
+        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
+        myAlertDialog.setTitle("Upload Pictures Option");
+        myAlertDialog.setMessage("How do you want to set your picture?");
+        /*
+        String[] itemsArray = {"Gallery","Camera"};
+
+        myAlertDialog.setItems(itemsArray, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // The 'which' argument contains the index position
+                // of the selected item
+
+                Log.d("");
+            }
+        });  */
+
+
+        myAlertDialog.setPositiveButton("Gallery",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        pictureActionIntent = new Intent(
+                                Intent.ACTION_GET_CONTENT, null);
+                        pictureActionIntent.setType("image/*");
+                        pictureActionIntent.putExtra("return-data", true);
+                        pictureActionIntent.putExtra(Extra.WM_ID, poiId);
+                        startActivityForResult(pictureActionIntent,
+                                GALLERY_PICTURE);
+
+                    }
+                });
+
+        myAlertDialog.setNegativeButton("Camera",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        pictureActionIntent = new Intent(
+                                android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        pictureActionIntent.putExtra(Extra.WM_ID, poiId);
+                        startActivityForResult(pictureActionIntent,
+                                CAMERA_REQUEST);
+
+                    }
+                });
+        myAlertDialog.create();
+        myAlertDialog.show();
+    }
+
 
 }

@@ -140,6 +140,15 @@
                   android:orientation="vertical"
                   android:background="#eeeeee">
 
+            <TextView
+                    android:id="@+id/nophotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/poi_property_comment_no_photos"
+                    android:textColor="#cfcfcf"
+                    android:layout_margin="8dp"
+                    />
+
             <!--<RelativeLayout
                     android:id="@+id/gallery_relative_layout"
                     android:layout_width="wrap_content"
@@ -149,7 +158,7 @@
                 <org.wheelmap.android.adapter.HorizontalView
                         android:id="@+id/gallery"
                         android:layout_width="match_parent"
-                        android:layout_height="75dp"
+                        android:layout_height="120dp"
                         android:smoothScrollbar="true"
                         android:spacing="20dip" >
                 </org.wheelmap.android.adapter.HorizontalView>

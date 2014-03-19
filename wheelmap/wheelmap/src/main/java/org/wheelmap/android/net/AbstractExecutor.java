@@ -137,6 +137,9 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             case What.RETRIEVE_PHOTO:
                 executor = new PhotosExecutor(context, bundle);
                 break;
+            case What.UPDATE_PHOTO:
+                executor = new PhotoExecutor(context, bundle);
+                break;
             default:
                 return null; // noop no instruction, no operation;
         }
@@ -229,7 +232,12 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                     Log.d(getTag(), "postRequest = *" + request + "*");
                     content = (T) mRequestProcessor.post(new URI(request),
                             null, mClazz);
-                } else {
+                } else if(requestBuilder.getRequestType() == RequestBuilder.REQUEST_PUT_PHOTO){
+                    Log.d(getTag(), "uploadPhoto = *" + request + "+");
+
+                    content = (T) mRequestProcessor.post(new URI(request),null,mClazz);
+                }
+                else {
                     Log.d(getTag(), "putRequest = *" + request + "*");
                     mRequestProcessor.put(new URI(request), null);
                 }

@@ -8,8 +8,8 @@
 
     <ImageView
             android:id="@+id/iconHList"
-            android:layout_width="72dp"
-            android:layout_height="75dp"
+            android:layout_width="118dp"
+            android:layout_height="120dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"/>
 
