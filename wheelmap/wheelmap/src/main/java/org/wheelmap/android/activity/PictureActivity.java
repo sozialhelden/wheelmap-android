@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.holoeverywhere.app.Activity;
@@ -50,4 +51,16 @@ public class PictureActivity extends Activity{
             }
         }
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

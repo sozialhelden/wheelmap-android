@@ -945,7 +945,9 @@ public class POIDetailFragment extends Fragment implements
     public void showDetail(long id) {
         Log.d(TAG,"show id: "+id);
         poiId = id;
-        getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
+
+        if(getLoaderManager() != null)
+            getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
     }
 
     public void getPhotos(long wm_id){

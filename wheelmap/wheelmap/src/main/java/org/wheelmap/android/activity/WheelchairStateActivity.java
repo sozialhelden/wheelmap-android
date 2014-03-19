@@ -21,6 +21,8 @@
  */
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
@@ -52,6 +54,10 @@ public class WheelchairStateActivity extends Activity implements
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         }
 
         FragmentManager fm = getSupportFragmentManager();
@@ -77,6 +83,16 @@ public class WheelchairStateActivity extends Activity implements
         intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
