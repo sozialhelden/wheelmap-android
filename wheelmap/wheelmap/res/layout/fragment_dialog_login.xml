@@ -163,6 +163,7 @@
         <!--</LinearLayout>  -->
 
         <Button
+                android:id="@+id/button_login_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_new_registration"

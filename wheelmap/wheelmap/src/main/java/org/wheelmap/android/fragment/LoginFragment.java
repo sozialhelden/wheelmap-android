@@ -37,6 +37,8 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -65,6 +67,8 @@ public class LoginFragment extends Fragment implements
     private EditText mEmailText;
 
     private EditText mPasswordText;
+
+    private Button mLoginRegister;
 
     private TextView mRegisterText;
 
@@ -122,6 +126,7 @@ public class LoginFragment extends Fragment implements
 
         mEmailText = (EditText) v.findViewById(R.id.login_email);
         mPasswordText = (EditText) v.findViewById(R.id.login_password);
+        mLoginRegister = (Button)v.findViewById(R.id.button_login_register);
 
        // mEmailText.setText("");
         //mPasswordText.setText("");
@@ -132,6 +137,15 @@ public class LoginFragment extends Fragment implements
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
             scrollView.setLayoutParams(params);
         }
+
+        mLoginRegister.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uriUrl = Uri.parse("http://api06.dev.openstreetmap.org/login");
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);
+            }
+        });
 
         return v;
     }
