@@ -100,7 +100,6 @@ limitations under the License.
         <activity
                 android:name="org.wheelmap.android.activity.POIDetailEditableActivity"
                 android:label="@string/title_editor"
-                android:screenOrientation="portrait"
                 android:theme="@style/Theme.Wheelmap.Editor"/>
         <activity
                 android:name="org.wheelmap.android.activity.OLDSettingsActivity"
