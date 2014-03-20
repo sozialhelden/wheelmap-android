@@ -90,10 +90,11 @@ public class DashboardActivity extends
 
         TextView txt_orte = (TextView) findViewById(R.id.dashboard_text_orte);
         long count = WheelmapApp.getDefaultPrefs().getLong("ItemCountTotal",-1);
+
         if(count <= 0){
-            txt_orte.setText("... Orte");
+            txt_orte.setText("... " + getString(R.string.dashboard_locations));
         }else{
-            txt_orte.setText(count+" Orte");
+            txt_orte.setText(count + " "+ getString(R.string.dashboard_locations));
         }
 
 

@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.net;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.BaseDomain;
 import org.wheelmap.android.net.request.BaseNodesRequestBuilder;
 import org.wheelmap.android.net.request.Paging;
@@ -43,6 +44,7 @@ public abstract class MultiPageExecutor<T extends BaseDomain> extends
     protected int executeSingleRequest(RequestBuilder requestBuilder) {
         super.executeSingleRequest(requestBuilder);
         int pages = getTempStore().get(0).getMeta().getNumPages().intValue();
+
         Log.d(getTag(), "pages available " + pages);
         return pages;
     }

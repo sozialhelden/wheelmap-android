@@ -144,7 +144,7 @@
                 android:gravity="center"
                 android:textColor="@color/dashboard_text_color"
                 android:textSize="17sp"
-                android:text="Orte"/>
+                android:text="@string/dashboard_locations"/>
 
             <ImageView
                 android:id="@+id/dashboard_login"

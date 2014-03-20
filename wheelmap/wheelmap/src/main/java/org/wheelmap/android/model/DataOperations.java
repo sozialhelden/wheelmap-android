@@ -67,6 +67,9 @@ public abstract class DataOperations<T extends BaseDomain, U> {
     public abstract void copyToValues(U item, ContentValues values);
 
     protected void bulkInsert(T item) {
+
+
+
         int size = item.getMeta().getItemCount().intValue();
         ContentValues[] contentValuesArray = new ContentValues[size];
         int i;

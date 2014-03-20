@@ -42,6 +42,8 @@ import org.wheelmap.android.online.R;
 
 import android.content.Context;
 
+import java.math.BigInteger;
+
 import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
 
@@ -58,6 +60,8 @@ public class WheelmapApp extends Application {
     private SupportManager mSupportManager;
 
     private boolean isBugsenseInitCalled;
+
+    BigInteger countPOIs;
 
     public static Context get() {
         return INSTANCE.getApplicationContext();
@@ -133,6 +137,13 @@ public class WheelmapApp extends Application {
 
     public static SharedPreferences getDefaultPrefs(){
         return INSTANCE.getDefaultSharedPreferences();
+    }
+
+    public BigInteger getCountPOIs(){
+        return this.countPOIs;
+    }
+    public void setCountPOIs(BigInteger countPOIs){
+        this.countPOIs = countPOIs;
     }
 
     Photos photos;

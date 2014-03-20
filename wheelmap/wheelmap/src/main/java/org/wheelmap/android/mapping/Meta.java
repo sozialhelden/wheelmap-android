@@ -75,6 +75,7 @@ public class Meta {
      * @param value allowed object is {@link BigInteger }
      */
     public void setItemCountTotal(BigInteger value) {
+
         this.itemCountTotal = value;
     }
 

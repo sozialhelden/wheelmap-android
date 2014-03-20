@@ -1007,21 +1007,48 @@ public class POIDetailFragment extends Fragment implements
 
 
     private void startDialog() {
-        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
+
+        final CharSequence[] items = {"Gallery","Camera"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+
+        builder.setTitle("Upload Pictures Option");
+        //builder.setIcon(R.drawable.detail_ic_foto);
+        builder.setCancelable(true);
+
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(which == 0){
+                    pictureActionIntent = new Intent(
+                            Intent.ACTION_GET_CONTENT, null);
+                    pictureActionIntent.setType("image/*");
+                    pictureActionIntent.putExtra("return-data", true);
+                    pictureActionIntent.putExtra(Extra.WM_ID, poiId);
+                    startActivityForResult(pictureActionIntent,
+                            GALLERY_PICTURE);
+                } else if(which == 1){
+                    pictureActionIntent = new Intent(
+                            android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(pictureActionIntent,
+                            CAMERA_REQUEST);
+                }
+
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+
+
+
+
+
+        /*AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
         myAlertDialog.setTitle("Upload Pictures Option");
         myAlertDialog.setMessage("How do you want to set your picture?");
-        /*
+
         String[] itemsArray = {"Gallery","Camera"};
-
-        myAlertDialog.setItems(itemsArray, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // The 'which' argument contains the index position
-                // of the selected item
-
-                Log.d("");
-            }
-        });  */
-
 
         myAlertDialog.setPositiveButton("Gallery",
                 new DialogInterface.OnClickListener() {
@@ -1042,14 +1069,13 @@ public class POIDetailFragment extends Fragment implements
                     public void onClick(DialogInterface arg0, int arg1) {
                         pictureActionIntent = new Intent(
                                 android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        pictureActionIntent.putExtra(Extra.WM_ID, poiId);
                         startActivityForResult(pictureActionIntent,
                                 CAMERA_REQUEST);
 
                     }
                 });
         myAlertDialog.create();
-        myAlertDialog.show();
+        myAlertDialog.show();    */
     }
 
 

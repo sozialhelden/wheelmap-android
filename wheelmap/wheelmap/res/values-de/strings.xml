@@ -207,4 +207,5 @@
     <string name="dashboard_button_title_map">KARTE</string>
     <string name="dashboard_button_title_categories">KATEGORIEN</string>
     <string name="dashboard_button_title_engage">MITHELFEN</string>
+    <string name="dashboard_locations">Orte</string>
 </resources>
