@@ -130,6 +130,7 @@
                 <artifactId>universal-image-loader-1.9.1</artifactId>
                 <scope>system</scope>
                 <version>1.0</version>
+                <systemPath>${project.basedir}\wheelmap\libs\universal-image-loader-1.9.1.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -137,6 +138,7 @@
                 <artifactId>gson-2.2.4</artifactId>
                 <scope>system</scope>
                 <version>1.0</version>
+                <systemPath>${project.basedir}\wheelmap\libs\gson-2.2.4.jar</systemPath>
             </dependency>
 
         </dependencies>
