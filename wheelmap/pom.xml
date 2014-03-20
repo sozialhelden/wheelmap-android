@@ -125,22 +125,6 @@
                 <version>4.11</version>
             </dependency>
 
-            <dependency>
-                <groupId>universal-image-loader-1.9.1</groupId>
-                <artifactId>universal-image-loader-1.9.1</artifactId>
-                <scope>system</scope>
-                <version>1.0</version>
-                <systemPath>${project.basedir}\wheelmap\libs\universal-image-loader-1.9.1.jar</systemPath>
-            </dependency>
-
-            <dependency>
-                <groupId>gson-2.2.4</groupId>
-                <artifactId>gson-2.2.4</artifactId>
-                <scope>system</scope>
-                <version>1.0</version>
-                <systemPath>${project.basedir}\wheelmap\libs\gson-2.2.4.jar</systemPath>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
