@@ -343,7 +343,7 @@ public class POIsProvider extends ContentProvider {
                    return bulkInsertPhoto(uri,valuesArray);
             }
         }catch(Exception ex){
-            Log.d(ex.getMessage());
+            //Log.d(ex.getMessage());
         }
 
 
