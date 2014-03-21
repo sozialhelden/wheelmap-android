@@ -96,6 +96,8 @@ public class POIsListFragment extends ListFragment implements
 
     private boolean mUseAngloDistanceUnit;
 
+    private long idOfSelectedListItem = 0;
+
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
         private static final float MIN_DIRECTION_DELTA = 10;
 
@@ -363,6 +365,10 @@ public class POIsListFragment extends ListFragment implements
 
         ContentValues values = new ContentValues();
         DatabaseUtils.cursorRowToContentValues(cursor, values);
+
+        // save id from values here - - - - - - - -
+        //idOfSelectedListItem = Long.parseLong((String) values.get("_id"));
+
         if (mListener != null) {
             mListener.onShowDetail(this, values);
         }
@@ -423,6 +429,12 @@ public class POIsListFragment extends ListFragment implements
         setCursor(fragment.getCursor(WorkerFragment.LIST_CURSOR));
         setRefreshStatus(fragment.isRefreshing());
         setRefreshEnabled(fragment.isSearchMode());
+
+        // set selected list item here - - - - - - - -
+        //if(idOfSelectedListItem != 0)
+            //markItem(idOfSelectedListItem);
+
+
     }
 
     private void setRefreshEnabled(boolean refreshDisabled) {
@@ -438,6 +450,17 @@ public class POIsListFragment extends ListFragment implements
         if (mAdapter != null) {
             mAdapter.changeAdapter(e.useAngloDistanceUnit);
         }
+    }
+
+    public void markItem(long id){
+       for(int pos = 0; pos < mAdapter.getCount(); pos++){
+           Cursor c = (Cursor)mAdapter.getItem(pos);
+           long poi_id = Long.parseLong(String.valueOf(POIHelper.getId(c)));
+           if(poi_id == id){
+               mCheckedItem = pos + 1;
+               mListView.setItemChecked(mCheckedItem,true);
+           }
+       }
     }
 
     public void markItem(ContentValues values, boolean centerToItem) {

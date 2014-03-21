@@ -39,6 +39,7 @@ import org.holoeverywhere.app.Activity;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
+import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
@@ -69,6 +70,8 @@ import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
+
+import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -94,9 +97,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Interpolator;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -1008,7 +1013,22 @@ public class POIDetailFragment extends Fragment implements
 
     private void startDialog() {
 
-        final CharSequence[] items = {"Gallery","Camera"};
+        final Item[] items = {new Item("Gallery",android.R.drawable.ic_menu_gallery),new Item("Take a Picture", android.R.drawable.ic_menu_camera)};
+
+        final ListAdapter adapter = new ArrayAdapter<Item>(this.getActivity(),android.R.layout.select_dialog_item,android.R.id.text1, items){
+            public View getView(int position, View convertView, ViewGroup parent){
+                View v = super.getView(position,convertView,parent);
+                TextView tv = (TextView)v.findViewById(android.R.id.text1);
+
+                tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon,0,0,0);
+
+                int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
+                tv.setCompoundDrawablePadding(dp5);
+
+                return v;
+            }
+
+        };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
@@ -1016,10 +1036,10 @@ public class POIDetailFragment extends Fragment implements
         //builder.setIcon(R.drawable.detail_ic_foto);
         builder.setCancelable(true);
 
-        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(which == 0){
+                if (which == 0) {
                     pictureActionIntent = new Intent(
                             Intent.ACTION_GET_CONTENT, null);
                     pictureActionIntent.setType("image/*");
@@ -1027,7 +1047,7 @@ public class POIDetailFragment extends Fragment implements
                     pictureActionIntent.putExtra(Extra.WM_ID, poiId);
                     startActivityForResult(pictureActionIntent,
                             GALLERY_PICTURE);
-                } else if(which == 1){
+                } else if (which == 1) {
                     pictureActionIntent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(pictureActionIntent,
@@ -1039,43 +1059,35 @@ public class POIDetailFragment extends Fragment implements
         AlertDialog alert = builder.create();
         alert.show();
 
+        /*
+        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
+        myAlertDialog.setTitle("Options");
+        myAlertDialog.setMessage("Choose a color.");
 
+        CharSequence[] items = {"RED","BLUE","GREEN"};
 
+        myAlertDialog.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // do stuff
+            }
+        });
 
+        myAlertDialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               // do stuff
+            }
+        });
+        myAlertDialog.setPositiveButton("YES",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               // do stuff
+            }
+        });
 
-
-        /*AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
-        myAlertDialog.setTitle("Upload Pictures Option");
-        myAlertDialog.setMessage("How do you want to set your picture?");
-
-        String[] itemsArray = {"Gallery","Camera"};
-
-        myAlertDialog.setPositiveButton("Gallery",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        pictureActionIntent = new Intent(
-                                Intent.ACTION_GET_CONTENT, null);
-                        pictureActionIntent.setType("image/*");
-                        pictureActionIntent.putExtra("return-data", true);
-                        pictureActionIntent.putExtra(Extra.WM_ID, poiId);
-                        startActivityForResult(pictureActionIntent,
-                                GALLERY_PICTURE);
-
-                    }
-                });
-
-        myAlertDialog.setNegativeButton("Camera",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        pictureActionIntent = new Intent(
-                                android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(pictureActionIntent,
-                                CAMERA_REQUEST);
-
-                    }
-                });
         myAlertDialog.create();
-        myAlertDialog.show();    */
+        myAlertDialog.show();   */
     }
 
 
