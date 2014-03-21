@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
 
-    <string name="login_forgot_password">Passwort vergessen</string>
-    <string name="login_new_registration">Neu registrieren</string>
-    <string name="login_dont_have_account">Noch keinen Wheelmap-Account? Log dich auf Wheelmap.org mit Deinem OpenStreetMap-Account ein, klicke auf "Profil" und lege einen Wheelmap-Account an.</string>
-    <string name="login_new">Neu hier? Registriere Dich jetzt  in einem  Prozess bei OpenStreetMap und Wheelmap.org</string>
-    <string name="login_activity_title">Anmelden</string>
-    <string name="logout_activity_title">Ausloggen</string>
-    <string name="login_succesfully">Login erfolgreich</string>
+    <string name="login_forgot_password">Forgot password</string>
+    <string name="login_new_registration">Register now</string>
+    <string name="login_dont_have_account">No Wheelmap Account? Log in with an OpenStreetmap Account on Wheelmap.org, click on your "Account" and creagte a new Wheelmap-Account.</string>
+    <string name="login_new">New? Register now at OpenStreetmap and Wheelmap.org</string>
+    <string name="login_activity_title">Login</string>
+    <string name="logout_activity_title">Logout</string>
+    <string name="login_succesfully">Login successfull</string>
 
-    <string name="logout_text">Eingeloggt als: %s</string>
-    <string name="logout">Ausloggen</string>
+    <string name="logout_text">Logged in as: %s</string>
+    <string name="logout">Logout</string>
 </resources>
