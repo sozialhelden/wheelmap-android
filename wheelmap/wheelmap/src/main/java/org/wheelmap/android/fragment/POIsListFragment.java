@@ -433,8 +433,6 @@ public class POIsListFragment extends ListFragment implements
         // set selected list item here - - - - - - - -
         //if(idOfSelectedListItem != 0)
             //markItem(idOfSelectedListItem);
-
-
     }
 
     private void setRefreshEnabled(boolean refreshDisabled) {
