@@ -54,7 +54,6 @@ public abstract class DataOperations<T extends BaseDomain, U> {
         long insertStart = System.currentTimeMillis();
         for (T item : items) {
             Log.d(getTag(), "inserting page " + item.getMeta().getPage());
-            WheelmapApp.getDefaultPrefs().edit().putLong("ItemCountTotal",item.getMeta().getItemCountTotal().longValue()).commit();
             bulkInsert(item);
         }
         long insertEnd = System.currentTimeMillis();

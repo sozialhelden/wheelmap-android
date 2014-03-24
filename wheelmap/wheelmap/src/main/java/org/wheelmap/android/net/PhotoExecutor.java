@@ -12,9 +12,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
 
-/**
- * Created by SMF on 10/03/14.
- */
 public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
         IExecutor{
 

@@ -50,9 +50,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -118,6 +115,9 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             case What.SEARCH_NODES:
             case What.SEARCH_NODES_IN_BOX:
                 executor = new NodesExecutor(context, bundle);
+                break;
+            case What.RETRIEVE_TOTAL_NODE_COUNT:
+                executor = new TotalNodeCountExecutor(context,bundle);
                 break;
             case What.RETRIEVE_LOCALES:
                 executor = new LocalesExecutor(context, bundle);
@@ -236,6 +236,10 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                     Log.d(getTag(), "uploadPhoto = *" + request + "+");
 
                     content = (T) mRequestProcessor.post(new URI(request),null,mClazz);
+                } else if(requestBuilder.getRequestType() == RequestBuilder.REQUEST_MAX_NODE_COUNT){
+                    Log.d(getTag(), "getTotalNodeCount = *" + request + "+");
+
+                    content = (T) mRequestProcessor.get(new URI(request),mClazz);
                 }
                 else {
                     Log.d(getTag(), "putRequest = *" + request + "*");

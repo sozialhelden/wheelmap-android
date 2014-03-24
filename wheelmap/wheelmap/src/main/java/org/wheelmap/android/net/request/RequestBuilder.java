@@ -37,6 +37,8 @@ public abstract class RequestBuilder {
 
     public final static int REQUEST_PUT_PHOTO = 0x4;
 
+    public final static int REQUEST_MAX_NODE_COUNT = 0x5;
+
     protected final String server;
 
     protected final String apiKey;

@@ -62,6 +62,10 @@ public class RequestProcessor {
                 new MappingJacksonHttpMessageConverter());
     }
 
+    public HttpComponentsClientHttpRequestFactory getRequestFactory(){
+        return mRequestFactory;
+    }
+
     public void setUserAgent(String userAgent) {
         mRequestFactory.getHttpClient().getParams()
                 .setParameter(CoreProtocolPNames.USER_AGENT, userAgent);

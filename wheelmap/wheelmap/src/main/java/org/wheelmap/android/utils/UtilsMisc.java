@@ -26,22 +26,28 @@ import com.actionbarsherlock.view.Window;
 import org.holoeverywhere.app.Activity;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class UtilsMisc {
 
@@ -198,6 +204,33 @@ public class UtilsMisc {
         params.alpha = 1.0f;
         params.dimAmount = 0.5f;
         activity.getWindow().setAttributes(params);
+    }
+
+
+   public static File createImageFile(Context context) throws IOException {
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "png_" + timeStamp + "_";
+        File image = File.createTempFile(
+                imageFileName,
+                ".png",
+                context.getCacheDir()
+        );
+        return image;
+    }
+
+    public static String getFilePathFromContentUri(Uri selectedVideoUri,
+            ContentResolver contentResolver) {
+        String filePath;
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+
+        Cursor cursor = contentResolver.query(selectedVideoUri, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
     }
 
 }

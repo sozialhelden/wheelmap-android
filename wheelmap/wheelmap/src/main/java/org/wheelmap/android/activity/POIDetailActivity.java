@@ -208,7 +208,6 @@ public class POIDetailActivity extends MapActivity implements
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if(data != null){
@@ -246,118 +245,6 @@ public class POIDetailActivity extends MapActivity implements
             }
         }
 
-        if (requestCode == GALLERY_PICTURE) {
-
-            if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    // our BitmapDrawable for the thumbnail
-                    BitmapDrawable bmpDrawable = null;
-                    // try to retrieve the image using the data from the intent
-                    Cursor cursor = getContentResolver().query(data.getData(),
-                            null, null, null, null);
-                    if (cursor != null) {
-
-                        cursor.moveToFirst();
-
-                        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                        String fileSrc = cursor.getString(idx);
-                        bitmap = BitmapFactory.decodeFile(fileSrc); // load
-                        // preview
-                        // image
-                        bitmap = Bitmap.createScaledBitmap(bitmap,
-                                100, 100, false);
-                        // bmpDrawable = new BitmapDrawable(bitmapPreview);
-                        //img_logo.setImageBitmap(bitmap);
-
-                        RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
-                    } else {
-
-                        bmpDrawable = new BitmapDrawable(getResources(), data
-                                .getData().getPath());
-                        //img_logo.setImageDrawable(bmpDrawable);
-
-
-
-
-                        // TO DO: Change ID at excecutor to the right id, still getting forbidden 403 error from server
-
-                        RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
-                        Toast.makeText(getApplicationContext(), "Implementation of uploading picture is not yet finished",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Cancelled",
-                            Toast.LENGTH_SHORT).show();
-                }
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), "Cancelled",
-                        Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == CAMERA_REQUEST) {
-
-            if (resultCode == RESULT_OK) {
-                if (data.hasExtra("data")) {
-
-                    // retrieve the bitmap from the intent
-                    bitmap = (Bitmap) data.getExtras().get("data");
-
-
-                    Cursor cursor = getContentResolver()
-                            .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                    new String[] {
-                                            MediaStore.Images.Media.DATA,
-                                            MediaStore.Images.Media.DATE_ADDED,
-                                            MediaStore.Images.ImageColumns.ORIENTATION },
-                                    MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
-                    if (cursor != null && cursor.moveToFirst()) {
-                        do {
-                            Uri ur = Uri.parse(cursor.getString(cursor
-                                    .getColumnIndex(MediaStore.Images.Media.DATA)));
-
-                        } while (cursor.moveToNext());
-                        cursor.close();
-                    }
-
-                    //Log.e("path of the image from camera ====> ", selectedImagePath);
-
-
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 100,
-                            100, false);
-                    // update the image view with the bitmap
-                    //img_logo.setImageBitmap(bitmap);
-
-
-
-                    // TO DO: Change ID at excecutor to the right id, still getting forbidden 403 error from server
-
-                    RestServiceHelper.executeUploadPhoto(this,Long.parseLong(wmID), null);
-
-                    Toast.makeText(getApplicationContext(), "Implementation of uploading picture is not yet finished",
-                            Toast.LENGTH_SHORT).show();
-                } else if (data.getExtras() == null) {
-
-                    Toast.makeText(getApplicationContext(),
-                            "No extras to retrieve!", Toast.LENGTH_SHORT)
-                            .show();
-
-                    BitmapDrawable thumbnail = new BitmapDrawable(
-                            getResources(), data.getData().getPath());
-
-                    // update the image view with the newly created drawable
-                    img_logo.setImageDrawable(thumbnail);
-
-                }
-
-
-
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), "Cancelled",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void updateDatabase(long id, WheelchairState state) {
