@@ -24,7 +24,6 @@ package org.wheelmap.android.fragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.sun.tools.internal.ws.resources.UtilMessages;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -37,7 +36,6 @@ import org.mapsforge.android.maps.MapView.OnMoveListener;
 import org.mapsforge.android.maps.MapView.OnZoomListener;
 import org.mapsforge.android.maps.Projection;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.activity.MapActivity;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
@@ -64,12 +62,9 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
