@@ -10,6 +10,7 @@
             android:id="@+id/iconHList"
             android:layout_width="118dp"
             android:layout_height="120dp"
+            android:src="@drawable/fallback_picture"
             android:layout_margin="5dp"/>
 
 </RelativeLayout>
