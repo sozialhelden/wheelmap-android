@@ -39,10 +39,7 @@ import org.holoeverywhere.app.Activity;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.LinearLayout;
-=======
 import org.holoeverywhere.app.ProgressDialog;
->>>>>>> a0960d5ef20b1043bf4e340d4828863e6d45c900
 import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.async.UploadPhotoTask;
 import org.wheelmap.android.model.Request;
@@ -108,6 +105,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
