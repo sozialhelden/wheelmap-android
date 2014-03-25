@@ -24,23 +24,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:gravity="center_horizontal">
 
-    <LinearLayout style="@style/TitleBarNew.SingleLine">
-
-        <TextView
-                style="@style/TitleBarTextNew.Title"
-                android:text="@string/title_pois_position_edit">
-        </TextView>
-    </LinearLayout>
-
-    <LinearLayout style="@style/Container.Content">
-
-        <org.mapsforge.android.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                ramCacheSize="0"/>
-    </LinearLayout>
-
+    <org.mapsforge.android.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"/>
+    <ImageButton
+            android:id="@+id/position_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:background="@null"
+            android:src="@drawable/detail_ic_save"
+            android:layout_weight="0.5"/>
 </LinearLayout>

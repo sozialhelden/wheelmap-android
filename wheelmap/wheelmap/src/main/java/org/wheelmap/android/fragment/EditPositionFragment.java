@@ -42,6 +42,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 public class EditPositionFragment extends Fragment implements
         OnTouchListener {
@@ -61,6 +62,8 @@ public class EditPositionFragment extends Fragment implements
     private final static int VERTICAL_DELTA = 20;
 
     private int mVerticalDelta;
+
+    private ImageButton positionSave;
 
     private OnEditPositionListener mListener;
 
@@ -128,6 +131,17 @@ public class EditPositionFragment extends Fragment implements
         mMapOverlay.enableUseOnlyOneBitmap(true);
         mMapView.getOverlays().add(mMapOverlay);
         mMapView.setOnTouchListener(this);
+
+        positionSave = (ImageButton) v.findViewById(R.id.position_save);
+
+        positionSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onEditPosition(mCrrLatitude, mCrrLongitude);
+                }
+            }
+        });
 
         return v;
     }

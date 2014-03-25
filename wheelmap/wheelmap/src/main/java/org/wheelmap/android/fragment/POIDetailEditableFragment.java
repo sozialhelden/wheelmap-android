@@ -140,6 +140,8 @@ public class POIDetailEditableFragment extends Fragment implements
     //@InjectView(R.id.state_text)
     private TextView state_text;
 
+    private TextView geolocation_text;
+
     //@InjectView(R.id.edit_position_text)
     //private TextView position_text;
 
@@ -151,6 +153,8 @@ public class POIDetailEditableFragment extends Fragment implements
 
     //@InjectView(R.id.edit_nodetype)
     private RelativeLayout edit_nodetype_container;
+
+    private RelativeLayout edit_geolocation_container;
 
     //@InjectView(R.id.edit_geolocation_container)
     //private LinearLayout edit_geolocation_container;
@@ -240,6 +244,7 @@ public class POIDetailEditableFragment extends Fragment implements
         websiteText = (EditText) parent.findViewById(R.id.website);
         phoneText = (EditText) parent.findViewById(R.id.phone);
         state_text = (TextView) parent.findViewById(R.id.state_text);
+        geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
          /*
 
         //@InjectView(R.id.state_icon)
@@ -257,6 +262,7 @@ public class POIDetailEditableFragment extends Fragment implements
         //@InjectView(R.id.edit_nodetype)
         //private RelativeLayout edit_nodetype_container;
         edit_nodetype_container = (RelativeLayout) parent.findViewById(R.id.edit_nodetype);
+        edit_geolocation_container = (RelativeLayout) parent.findViewById(R.id.edit_geolocation);
     }
 
     @Override
@@ -281,6 +287,7 @@ public class POIDetailEditableFragment extends Fragment implements
         edit_state_container.setOnClickListener(this);
         //edit_geolocation_touchable_container.setOnClickListener(this);
         edit_nodetype_container.setOnClickListener(this);
+        edit_geolocation_container.setOnClickListener(this);
 
     }
 
@@ -465,6 +472,8 @@ public class POIDetailEditableFragment extends Fragment implements
         websiteText.setText(POIHelper.getWebsite(cursor));
         phoneText.setText(POIHelper.getPhone(cursor));
 
+        //geolocation_text.setText("(" +POIHelper.getLatitude(cursor) + "," + POIHelper.getLongitude(cursor)+ ")");
+
         wmID = POIHelper.getWMId(cursor);
         if (TextUtils.isEmpty(wmID)) {
             showGeolocationEditor(true);
@@ -591,7 +600,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         String positionText = String.format("%s: (%.6f:%.6f)", getResources()
                 .getString(R.string.position_geopoint), mLatitude, mLongitude);
-        //position_text.setText(positionText);
+        geolocation_text.setText(positionText);
     }
 
     public void setNodetype(int nodetype) {

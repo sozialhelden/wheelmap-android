@@ -94,6 +94,32 @@
                     />
         </RelativeLayout>
 
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_position"
+                android:textStyle="bold"/>
+
+        <RelativeLayout
+                android:id="@+id/edit_geolocation"
+                style="@style/Container.Pressable"
+
+                android:background="#eeeeee">
+
+            <TextView
+                    android:id="@+id/geolocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:hint="@string/poi_property_position"
+                    />
+        </RelativeLayout>
+
         <!--
         <LinearLayout
                 android:id="@+id/edit_geolocation_container"
