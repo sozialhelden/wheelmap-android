@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.manager;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.PrefKey;
@@ -29,6 +30,7 @@ import org.wheelmap.android.model.Support.LastUpdateContent;
 import org.wheelmap.android.model.Support.LocalesContent;
 import org.wheelmap.android.model.Support.NodeTypesContent;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.net.MarkerIconExecutor;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -50,6 +52,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -212,7 +216,7 @@ public class SupportManager {
         mDefaultNodeType.stateDrawables = createDefaultDrawables();
 
         mNeedsReloading = false;
-        if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
+        if (!(checkForLocales() && checkForCategories() && checkForNodeTypes() && !MarkerIconExecutor.markerIconsDownloaded())) {
             mNeedsReloading = true;
         }
         Log.i(TAG, "Loading lookup data");
@@ -258,7 +262,7 @@ public class SupportManager {
 
     public void reloadStageThree() {
         initCategories();
-        retrieveNodeTypes();
+        retrieveMarkerIcons();
     }
 
     public void reloadStageFour() {
@@ -270,16 +274,18 @@ public class SupportManager {
         }
     }
 
+    public void reloadMarkerIcon(){
+        initMarkerIcon();
+        retrieveNodeTypes();
+    }
 
-    public void reloadStageFive() {
+    public void reloadTotalNodeCount() {
         initTotalNodeCount();
         mNeedsReloading = false;
     }
 
     public void retrieveTotalNodeCount(){
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(mContext);
-
+        Log.d(TAG,"retrieveTotalNodeCount");
         Intent nodeCountIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
                 RestService.class);
         nodeCountIntent.putExtra(Extra.WHAT, What.RETRIEVE_TOTAL_NODE_COUNT);
@@ -287,11 +293,26 @@ public class SupportManager {
         mContext.startService(nodeCountIntent);
     }
 
+    public void retrieveMarkerIcons(){
+        Log.d(TAG,"retrieveMarkerIcons");
+        Intent nodeCountIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
+                RestService.class);
+        nodeCountIntent.putExtra(Extra.WHAT, What.RETRIEVE_MARKER_ICONS);
+        nodeCountIntent.putExtra(Extra.STATUS_RECEIVER, mStatusSender);
+        mContext.startService(nodeCountIntent);
+    }
+
+    public void initMarkerIcon(){
+        //rest is loaded in initNodeType
+        mDefaultNodeType.stateDrawables = createDefaultDrawables();
+    }
+
     public void initTotalNodeCount(){
 
     }
 
     public void retrieveCategories() {
+        Log.d(TAG,"retrieveCategories");
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
@@ -306,6 +327,7 @@ public class SupportManager {
     }
 
     public void retrieveNodeTypes() {
+        Log.d(TAG,"retrieveNodeTypes");
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
         String locale = prefs.getString(PREFS_SERVICE_LOCALE, "");
@@ -321,7 +343,7 @@ public class SupportManager {
     }
 
 
-    private boolean checkIfUpdateDurationPassed(int module) {
+    private boolean  checkIfUpdateDurationPassed(int module) {
         Date date = LastUpdateContent.queryTimeStamp(mContext.getContentResolver(), module);
         if (date == null) {
             return true;
@@ -474,6 +496,7 @@ public class SupportManager {
     }
 
     public void initNodeTypes() {
+
         // Log.d(TAG, "SupportManager:initNodeTypes");
         ContentResolver resolver = mContext.getContentResolver();
         Cursor cursor = resolver.query(NodeTypesContent.CONTENT_URI,
@@ -539,7 +562,14 @@ public class SupportManager {
                     .valueOf(idx).toString().toLowerCase());
             Drawable drawable = null;
             try {
-                InputStream is = mAssetManager.open(path);
+                InputStream is=null;
+                if(MarkerIconExecutor.markerIconsDownloaded()){
+                    File dir = MarkerIconExecutor.getMarkerPath(mContext);
+                    File asset = new File(dir+"/"+path);
+                    is = new FileInputStream(asset);
+                }else{
+                    is = mAssetManager.open(path);
+                }
                 drawable = Drawable.createFromStream(is, null);
                 is.close();
             } catch (IOException e) {

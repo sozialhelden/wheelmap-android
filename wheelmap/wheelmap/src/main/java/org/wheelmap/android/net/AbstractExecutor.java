@@ -111,6 +111,9 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             case What.RETRIEVE_NODE:
                 executor = new NodeExecutor(context, bundle);
                 break;
+            case What.RETRIEVE_MARKER_ICONS:
+                executor = new MarkerIconExecutor(context,bundle);
+                break;
             case What.RETRIEVE_NODES:
             case What.SEARCH_NODES:
             case What.SEARCH_NODES_IN_BOX:

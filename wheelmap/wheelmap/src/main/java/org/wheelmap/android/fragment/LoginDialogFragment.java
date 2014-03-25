@@ -27,6 +27,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Dialog;
 import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.LinearLayout;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.online.R;
@@ -89,7 +90,6 @@ public class LoginDialogFragment extends DialogFragment implements
         setRetainInstance(true);
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-
 
     }
 

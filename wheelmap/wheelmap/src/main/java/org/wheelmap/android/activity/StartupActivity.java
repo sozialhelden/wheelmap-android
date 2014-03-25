@@ -57,6 +57,8 @@ import roboguice.inject.ContentViewListener;
 public class StartupActivity extends Activity implements
         DetachableResultReceiver.Receiver {
 
+    public static boolean LOAD_AGAIN_DEBUG = false;
+
     private final static String TAG = StartupActivity.class.getSimpleName();
 
     //@Inject
@@ -164,7 +166,7 @@ public class StartupActivity extends Activity implements
 
     private boolean startupPersistentStuff() {
         mSupportManager = WheelmapApp.getSupportManager();
-        if (mSupportManager.needsReloading()) {
+        if (LOAD_AGAIN_DEBUG || mSupportManager.needsReloading()) {
             startTime = System.currentTimeMillis();
             mSupportManager.reload(mState.mReceiver);
             return true;
@@ -225,8 +227,6 @@ public class StartupActivity extends Activity implements
                     MainMultiPaneActivity.class);
         } else {
             intent = new Intent(getApplicationContext(),
-                    MainSinglePaneActivity.class);
-            intent = new Intent(getApplicationContext(),
                     DashboardActivity.class);
         }
 
@@ -248,6 +248,9 @@ public class StartupActivity extends Activity implements
                 case What.RETRIEVE_CATEGORIES:
                     mSupportManager.reloadStageThree();
                     break;
+                case What.RETRIEVE_MARKER_ICONS:
+                    mSupportManager.reloadMarkerIcon();
+                    break;
                 case What.RETRIEVE_NODETYPES:
                     mSupportManager.reloadStageFour();
                     if(UtilsMisc.isTablet(getApplicationContext())){
@@ -255,7 +258,7 @@ public class StartupActivity extends Activity implements
                     }
                     break;
                 case What.RETRIEVE_TOTAL_NODE_COUNT:
-                    mSupportManager.reloadStageFive();
+                    mSupportManager.reloadTotalNodeCount();
                     startupAppDelayed();
                     break;
                 default:
