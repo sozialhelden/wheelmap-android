@@ -52,7 +52,9 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
     @Override
     public void execute(long id) throws RestServiceException {
-
+        if(true){
+           return;
+        }
         prefs = WheelmapApp.getDefaultPrefs();
 
         String request = "http://"+getServer()+"/api/assets?api_key="+getApiKey();

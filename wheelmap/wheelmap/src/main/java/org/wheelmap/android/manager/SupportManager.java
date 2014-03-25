@@ -216,7 +216,7 @@ public class SupportManager {
         mDefaultNodeType.stateDrawables = createDefaultDrawables();
 
         mNeedsReloading = false;
-        if (!(checkForLocales() && checkForCategories() && checkForNodeTypes() && !MarkerIconExecutor.markerIconsDownloaded())) {
+        if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
             mNeedsReloading = true;
         }
         Log.i(TAG, "Loading lookup data");

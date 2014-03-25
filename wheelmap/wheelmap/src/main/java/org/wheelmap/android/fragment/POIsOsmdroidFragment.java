@@ -39,6 +39,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.overlay.MyLocationOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
@@ -60,6 +61,7 @@ import org.wheelmap.android.utils.UtilsMisc;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -193,7 +195,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
         setHardwareAccelerationOff();
-
         // mMapView.setClickable(true);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
@@ -204,6 +205,10 @@ public class POIsOsmdroidFragment extends Fragment implements
         mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
         mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
                 mMapView);
+        MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getActivity(),mMapView);
+        myLocationOverlay.enableMyLocation();
+        mMapView.getOverlays().add(myLocationOverlay);
+
         mMyLocationProvider.startLocationProvider(mCurrLocationOverlay);
         mMapView.getOverlays().add(mPoisItemizedOverlay);
         mMapView.getOverlays().add(mCurrLocationOverlay);
@@ -228,8 +233,9 @@ public class POIsOsmdroidFragment extends Fragment implements
 
             mCurrentLocationGeoPoint = new GeoPoint(la,lo);
 
-            centerMap(mCurrentLocationGeoPoint, true);
             setZoomIntern(zoom);
+            centerMap(mCurrentLocationGeoPoint, true);
+            requestUpdate();
         }
 
         return v;
@@ -443,7 +449,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         Log.d(TAG, "onSaveInstanceState: executing");
         outState.putBoolean(Extra.MAP_HEIGHT_FULL, mHeightFull);
 
-
         IGeoPoint current_location = mMapView.getMapCenter();
         int zoomlevel = mMapView.getZoomLevel();
 
@@ -569,21 +574,32 @@ public class POIsOsmdroidFragment extends Fragment implements
         if (geoPoint == null) {
             return;
         }
+        boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        IGeoPoint actualGeoPoint;
+        IGeoPoint actualGeoPoint = geoPoint;
 
         if (mHeightFull) {
             actualGeoPoint = geoPoint;
         } else {
-            Projection projection = mMapView.getProjection();
-            Point point = new Point();
-            point = projection.toPixels(geoPoint, point);
-            int mVerticalOffset = mMapView.getHeight() / 4;
-            point.y -= mVerticalOffset;
-            actualGeoPoint = projection.fromPixels(point.x, point.y);
+
+            if(land){
+                Projection projection = mMapView.getProjection();
+                Point point = new Point();
+                point = projection.toPixels(geoPoint, point);
+                int horizontalOffset = mMapView.getWidth() / 4;
+                point.x -= horizontalOffset;
+                actualGeoPoint = projection.fromPixels(point.x, point.y);
+            }else{
+                Projection projection = mMapView.getProjection();
+                Point point = new Point();
+                point = projection.toPixels(geoPoint, point);
+                int mVerticalOffset = mMapView.getHeight() / 4;
+                point.y -= mVerticalOffset;
+                actualGeoPoint = projection.fromPixels(point.x, point.y);
+            }
         }
 
-        mMapController.setCenter(actualGeoPoint);
+        mMapController.setCenter(geoPoint);
         isCentered = true;
     }
 
@@ -606,6 +622,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         mCursor = cursor;
         mPoisItemizedOverlay.setCursor(mCursor);
+        mMapView.postInvalidate();
     }
 
     @Override
@@ -662,7 +679,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     @Override
     public void markItem(ContentValues values, boolean centerToItem) {
-        Log.d(TAG, "markItem");
+        Log.d(TAG, "markItem "+values);
         GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
                 values.getAsDouble(POIs.LONGITUDE));
         markItemIntern(point, centerToItem);
