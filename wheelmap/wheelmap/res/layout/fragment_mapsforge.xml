@@ -54,7 +54,31 @@
             android:layout_marginLeft="@dimen/map_position_margin_horizontal"
             android:background="@drawable/map_navbar_btn_fadenkreuz">
 
+
+
         <!--android:layout_marginBottom="@dimen/map_position_margin_vertical" -->
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/my_outofzoom_text_smartphone"
+                  android:layout_width="200dp"
+                  android:layout_marginTop="25dp"
+                  android:layout_centerHorizontal="true"
+                  android:layout_height="70dp"
+                  android:background="@drawable/border_rounded_corner"
+
+                  android:visibility="gone"
+                  android:gravity="center"
+                  android:clickable="true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:layout_margin="5dp"
+                android:textSize="18dp"
+                android:text="@string/to_far_away">
+
+        </TextView>
     </LinearLayout>
 
 </RelativeLayout>

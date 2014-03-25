@@ -24,6 +24,7 @@ package org.wheelmap.android.utils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 public class ViewTool {
@@ -65,5 +66,15 @@ public class ViewTool {
         Log.d("viewtool", "memory: totalMemory = " + totalMemory + " freeMemory = "
                 + freeMemory);
 
+    }
+
+    public static void setAlphaForView(View alphaView, float alpha) {
+
+        AlphaAnimation animation = new AlphaAnimation(alpha, alpha);
+
+        animation.setDuration(0);
+        animation.setFillAfter(true);
+
+        alphaView.startAnimation(animation);
     }
 }

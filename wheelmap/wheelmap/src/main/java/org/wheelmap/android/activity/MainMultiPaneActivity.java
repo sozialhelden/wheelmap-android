@@ -21,9 +21,12 @@
  */
 package org.wheelmap.android.activity;
 
+import android.animation.LayoutTransition;
+import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import com.google.inject.Inject;
 
@@ -144,6 +147,11 @@ public class MainMultiPaneActivity extends MapActivity implements
         getSupportActionBar().setLogo(R.drawable.title_logo_shadow_tablet);
 
         setContentView(R.layout.activity_multipane);
+
+        ViewGroup g = (ViewGroup) findViewById(R.id.layout_multi);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            g.getLayoutTransition().disableTransitionType(LayoutTransition.APPEARING);
+        }
 
         // FragmentManager.enableDebugLogging(true);
 

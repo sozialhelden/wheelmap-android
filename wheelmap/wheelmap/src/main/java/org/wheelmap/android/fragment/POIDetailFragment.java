@@ -39,6 +39,7 @@ import org.holoeverywhere.app.Activity;
 
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.LinearLayout;
 import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -177,7 +178,7 @@ public class POIDetailFragment extends Fragment implements
 
     private TextView webText;
 
-    private ImageView titlebarBackbutton;
+    private LinearLayout titlebarBackbutton;
 
     private ImageButton buttonPhoto;
     private ImageButton buttonEdit;
@@ -308,7 +309,7 @@ public class POIDetailFragment extends Fragment implements
         stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
         webText = (TextView)v.findViewById(R.id.web);
         phoneText = (TextView)v.findViewById(R.id.phone);
-        titlebarBackbutton = (ImageView)v.findViewById(R.id.titlebar_backbutton);
+        titlebarBackbutton = (LinearLayout)v.findViewById(R.id.titlebar_backbutton);
         buttonPhoto = (ImageButton)v.findViewById(R.id.detail_foto);
         buttonEdit = (ImageButton)v.findViewById(R.id.detail_edit);
         buttonRoute = (ImageButton)v.findViewById(R.id.detail_route);

@@ -208,4 +208,6 @@
     <string name="dashboard_button_title_categories">KATEGORIEN</string>
     <string name="dashboard_button_title_engage">MITHELFEN</string>
     <string name="dashboard_locations">Orte</string>
+
+    <string name="to_far_away">Zoome näher heran, um Orte zu sehen</string>
 </resources>
