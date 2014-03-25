@@ -104,6 +104,12 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
             marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
         }
 
+        marker.setBounds(-32, -64, 32, 0);
+
+        Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
+
+
+
         OverlayItem item = new OverlayItem(String.valueOf(id), name, name, new GeoPoint(lat, lng));
         item.setMarker(marker);
         return item;

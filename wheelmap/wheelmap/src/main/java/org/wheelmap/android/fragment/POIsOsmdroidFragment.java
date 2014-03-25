@@ -29,6 +29,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
@@ -105,7 +106,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private MapView mMapView;
 
-    private MapController mMapController;
+    private IMapController mMapController;
 
     private POIsCursorOsmdroidOverlay mPoisItemizedOverlay;
 
@@ -167,7 +168,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         tileUrl = String.format( baseUrl, getString(string.mapbox_key));
-        mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", tileUrl);
+        mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
         mBus = EventBus.getDefault();
 
         mSensorManager = (SensorManager) getActivity().getSystemService(
@@ -177,7 +178,10 @@ public class POIsOsmdroidFragment extends Fragment implements
         mOrientationAvailable = mSensor != null;
         attachWorkerFragment();
         retrieveInitialLocation();
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -212,9 +216,21 @@ public class POIsOsmdroidFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 centerMap(mCurrentLocationGeoPoint, true);
+                setZoomIntern(17);
                 requestUpdate();
             }
         });
+
+        if(savedInstanceState != null){
+            int la = savedInstanceState.getInt(Extra.LATITUDE);
+            int lo = savedInstanceState.getInt(Extra.LONGITUDE);
+            int zoom = savedInstanceState.getInt(Extra.ZOOM_LEVEL);
+
+            mCurrentLocationGeoPoint = new GeoPoint(la,lo);
+
+            centerMap(mCurrentLocationGeoPoint, true);
+            setZoomIntern(zoom);
+        }
 
         return v;
     }
@@ -426,6 +442,16 @@ public class POIsOsmdroidFragment extends Fragment implements
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState: executing");
         outState.putBoolean(Extra.MAP_HEIGHT_FULL, mHeightFull);
+
+
+        IGeoPoint current_location = mMapView.getMapCenter();
+        int zoomlevel = mMapView.getZoomLevel();
+
+        outState.putInt(Extra.ZOOM_LEVEL, zoomlevel);
+        outState.putInt(Extra.LATITUDE,current_location.getLatitudeE6());
+        outState.putInt(Extra.LONGITUDE, current_location.getLongitudeE6());
+
+
     }
 
     @Override
