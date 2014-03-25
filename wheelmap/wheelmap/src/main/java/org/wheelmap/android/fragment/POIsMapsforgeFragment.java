@@ -218,7 +218,7 @@ public class POIsMapsforgeFragment extends Fragment implements
         v.findViewById(R.id.my_location_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMapController.setZoom(18);
+                mMapController.setZoom(17);
                 centerMap(mCurrentLocationGeoPoint, true);
                 requestUpdate();
             }

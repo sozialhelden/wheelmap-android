@@ -53,8 +53,10 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.popup.FilterWindow;
@@ -94,7 +96,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
+//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class MainMultiPaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener,
         OnClickListener {
@@ -102,9 +104,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     private static final String TAG = MainMultiPaneActivity.class
             .getSimpleName();
 
-    static final private int SELECT_WHEELCHAIRSTATE = 0;
-
-    @Inject
+   // @Inject
     IAppProperties appProperties;
 
     private POIsListFragment mListFragment;
@@ -115,10 +115,10 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private CombinedWorkerFragment mWorkerFragment;
 
-    @InjectView(R.id.movable_layout)
+    //@InjectView(R.id.movable_layout)
     private ViewGroup mMovableLayout;
 
-    @InjectView(R.id.button_movable_resize)
+    //@InjectView(R.id.button_movable_resize)
     private ImageButton mResizeButton;
 
     private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
@@ -138,8 +138,8 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appProperties = new AppProperties(getApplication());
         Log.d(TAG, "onCreate");
-
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -147,6 +147,8 @@ public class MainMultiPaneActivity extends MapActivity implements
         getSupportActionBar().setLogo(R.drawable.title_logo_shadow_tablet);
 
         setContentView(R.layout.activity_multipane);
+        mMovableLayout = (ViewGroup) findViewById(R.id.movable_layout);
+        mResizeButton = (ImageButton) findViewById(R.id.button_movable_resize);
 
         ViewGroup g = (ViewGroup) findViewById(R.id.layout_multi);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
@@ -504,7 +506,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     public void onEditWheelchairState(WheelchairState wState) {
         Intent intent = new Intent(this, WheelchairStateActivity.class);
         intent.putExtra(Extra.WHEELCHAIR_STATE, wState.getId());
-        startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
+        startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
     }
 
     @Override
@@ -521,7 +523,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult: requestCode = " + requestCode
                 + " resultCode = " + resultCode);
-        if (requestCode == SELECT_WHEELCHAIRSTATE) {
+        if (requestCode == Request.SELECT_WHEELCHAIRSTATE) {
             if (resultCode == RESULT_OK) {
                 // newly selected wheelchair state as action data
                 if (data != null) {
@@ -534,6 +536,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 }
             }
         }
+        super.onActivityResult(requestCode,resultCode,data);
     }
 
     private void updateDatabase(long id, WheelchairState state) {

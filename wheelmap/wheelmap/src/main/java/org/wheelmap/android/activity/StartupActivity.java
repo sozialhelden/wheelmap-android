@@ -73,6 +73,8 @@ public class StartupActivity extends Activity implements
 
     private boolean mIsInForeground;
 
+    private long startTime;
+
     // private CheckUpdateTask checkUpdateTask;
 
     @Override
@@ -163,6 +165,7 @@ public class StartupActivity extends Activity implements
     private boolean startupPersistentStuff() {
         mSupportManager = WheelmapApp.getSupportManager();
         if (mSupportManager.needsReloading()) {
+            startTime = System.currentTimeMillis();
             mSupportManager.reload(mState.mReceiver);
             return true;
         }
@@ -194,15 +197,22 @@ public class StartupActivity extends Activity implements
     }
 
     private void startupAppDelayed() {
-        Handler h = new Handler();
-        h.postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-                startupApp();
-            }
+        long time_dif = System.currentTimeMillis()-startTime;
+        time_dif = Math.abs(time_dif);
+        if(time_dif < 1000){
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
 
-        }, 1000);
+                @Override
+                public void run() {
+                    startupApp();
+                }
+
+            }, 1000-time_dif);
+        } else{
+            startupApp();
+        }
     }
 
     private void startupApp() {
@@ -240,6 +250,12 @@ public class StartupActivity extends Activity implements
                     break;
                 case What.RETRIEVE_NODETYPES:
                     mSupportManager.reloadStageFour();
+                    if(UtilsMisc.isTablet(getApplicationContext())){
+                        startupAppDelayed();
+                    }
+                    break;
+                case What.RETRIEVE_TOTAL_NODE_COUNT:
+                    mSupportManager.reloadStageFive();
                     startupAppDelayed();
                     break;
                 default:

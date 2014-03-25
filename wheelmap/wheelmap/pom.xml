@@ -169,6 +169,13 @@
             <scope>compile</scope>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.apache.http.entity.mime</groupId>
+            <artifactId>httpmime-4.3.3</artifactId>
+            <version>4.3.3</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${app.version.name}</finalName>

@@ -40,7 +40,12 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.LinearLayout;
+=======
+import org.holoeverywhere.app.ProgressDialog;
+>>>>>>> a0960d5ef20b1043bf4e340d4828863e6d45c900
 import org.wheelmap.android.adapter.Item;
+import org.wheelmap.android.async.UploadPhotoTask;
+import org.wheelmap.android.model.Request;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
@@ -68,6 +73,7 @@ import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.SmoothInterpolator;
+import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
@@ -105,8 +111,11 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -131,14 +140,10 @@ public class POIDetailFragment extends Fragment implements
 
 
     ImageView img_logo;
-    protected static final int CAMERA_REQUEST = 1;
-    protected static final int GALLERY_PICTURE = 2;
     private Intent pictureActionIntent = null;
     Bitmap bitmap;
 
-    String selectedImagePath;
-
-
+    long wmID;
 
 
     //@Inject
@@ -247,6 +252,9 @@ public class POIDetailFragment extends Fragment implements
     private List listImages;
     private HorizontalImageAdapter imageAdapter;
     private HorizontalView listView;
+
+    private AlertDialog dialog;
+    private ProgressDialog progress;
 
 
     @SuppressLint("UseSparseArrays")
@@ -386,7 +394,6 @@ public class POIDetailFragment extends Fragment implements
 
         listView.setAdapter(imageAdapter);
         listView.setOnItemClickListener(imageAdapter);
-
     }
 
     private void getImagesList() {
@@ -725,7 +732,8 @@ public class POIDetailFragment extends Fragment implements
             String city = POIHelper.getCity(c);
 
             try{
-                getPhotos(Long.valueOf(POIHelper.getWMId(c)));
+                wmID =  Long.valueOf(POIHelper.getWMId(c));
+                getPhotos(wmID);
             }catch(Exception e){}
 
             String address = "";
@@ -994,6 +1002,12 @@ public class POIDetailFragment extends Fragment implements
      * {@inheritDoc}
      */
     public void onReceiveResult(int resultCode, Bundle resultData) {
+
+        //wrong result returned?
+        if(wmID != resultData.getLong(Extra.ID)){
+            //return;
+        }
+
         Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
         switch (resultCode) {
             case RestService.STATUS_RUNNING: {
@@ -1014,7 +1028,7 @@ public class POIDetailFragment extends Fragment implements
 
     private void startDialog() {
 
-        final Item[] items = {new Item("Gallery",android.R.drawable.ic_menu_gallery),new Item("Take a Picture", android.R.drawable.ic_menu_camera)};
+        final Item[] items = {new Item(getString(R.string.photo_upload_picker_gallery),android.R.drawable.ic_menu_gallery),new Item(getString(R.string.photo_upload_picker_take_new), android.R.drawable.ic_menu_camera)};
 
         final ListAdapter adapter = new ArrayAdapter<Item>(this.getActivity(),android.R.layout.select_dialog_item,android.R.id.text1, items){
             public View getView(int position, View convertView, ViewGroup parent){
@@ -1033,7 +1047,7 @@ public class POIDetailFragment extends Fragment implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
-        builder.setTitle("Upload Pictures Option");
+        builder.setTitle(R.string.photo_upload_picker_title);
         //builder.setIcon(R.drawable.detail_ic_foto);
         builder.setCancelable(true);
 
@@ -1041,55 +1055,101 @@ public class POIDetailFragment extends Fragment implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    pictureActionIntent = new Intent(
-                            Intent.ACTION_GET_CONTENT, null);
+                    pictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT);
                     pictureActionIntent.setType("image/*");
-                    pictureActionIntent.putExtra("return-data", true);
                     pictureActionIntent.putExtra(Extra.WM_ID, poiId);
                     startActivityForResult(pictureActionIntent,
-                            GALLERY_PICTURE);
+                            Request.REQUESTCODE_PHOTO);
                 } else if (which == 1) {
                     pictureActionIntent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(pictureActionIntent,
-                            CAMERA_REQUEST);
+                            Request.REQUESTCODE_PHOTO);
                 }
 
             }
         });
-        AlertDialog alert = builder.create();
-        alert.show();
+        dialog = builder.create();
+        dialog.show();
 
-        /*
-        AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(this.getActivity());
-        myAlertDialog.setTitle("Options");
-        myAlertDialog.setMessage("Choose a color.");
-
-        CharSequence[] items = {"RED","BLUE","GREEN"};
-
-        myAlertDialog.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // do stuff
-            }
-        });
-
-        myAlertDialog.setNegativeButton("NO",new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-               // do stuff
-            }
-        });
-        myAlertDialog.setPositiveButton("YES",new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-               // do stuff
-            }
-        });
-
-        myAlertDialog.create();
-        myAlertDialog.show();   */
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
 
+        if(requestCode != Request.REQUESTCODE_PHOTO){
+            return;
+        }
+
+
+        File photoFile=null;
+
+        if(data != null && data.getData() == null){
+            if(data.getExtras().get("data")!=null){
+                try{
+                    Bitmap image = (Bitmap) data.getExtras().get("data");
+                    photoFile = UtilsMisc.createImageFile(getActivity());
+                    FileOutputStream fOut = new FileOutputStream(photoFile);
+                    image.compress(Bitmap.CompressFormat.PNG,100, fOut);
+                    fOut.flush();
+                    fOut.close();
+                }catch(Exception e){}
+            }
+        }else if(data!=null && data.getData() != null ){
+            Uri photo = data.getData();
+            photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
+                    getActivity().getContentResolver()));
+
+        }
+
+        uploadPhoto(photoFile);
+    }
+
+    File photoFile;
+    public void uploadPhoto(File photoFile){
+        this.photoFile = photoFile;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(photoFile != null){
+             if(progress == null){
+                   progress = new ProgressDialog(getActivity());
+                   progress.setMessage(getString(R.string.photo_upload_progress_title));
+                   progress.show();
+             }else{
+                 if(progress.isShowing()){
+                     return;
+                 }
+                 progress.show();
+             }
+             if(dialog !=null){
+                dialog.dismiss();
+                dialog = null;
+             }
+             Log.d(TAG,"photo to upload: "+photoFile+"");
+             UploadPhotoTask upload = new UploadPhotoTask(getActivity().getApplication(),progress,wmID);
+             upload.execute(photoFile);
+             photoFile = null;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if(progress != null){
+            progress.dismiss();
+            progress = null;
+        }
+        if(dialog != null){
+            dialog.dismiss();
+            dialog = null;
+        }
+        super.onDestroy();
+    }
 }

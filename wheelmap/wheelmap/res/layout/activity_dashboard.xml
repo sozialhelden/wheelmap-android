@@ -130,7 +130,10 @@
 
             <ImageView
                 android:id="@+id/dashboard_info"
-                android:padding="5dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingRight="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
@@ -148,7 +151,10 @@
 
             <ImageView
                 android:id="@+id/dashboard_login"
-                android:padding="5dp"
+                android:paddingLeft="20dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:paddingRight="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"

@@ -33,6 +33,7 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeoMath;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -262,7 +263,32 @@ public class SupportManager {
 
     public void reloadStageFour() {
         initNodeTypes();
+        if(UtilsMisc.isTablet(mContext)){
+            mNeedsReloading = false;
+        }else{
+            retrieveTotalNodeCount();
+        }
+    }
+
+
+    public void reloadStageFive() {
+        initTotalNodeCount();
         mNeedsReloading = false;
+    }
+
+    public void retrieveTotalNodeCount(){
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(mContext);
+
+        Intent nodeCountIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
+                RestService.class);
+        nodeCountIntent.putExtra(Extra.WHAT, What.RETRIEVE_TOTAL_NODE_COUNT);
+        nodeCountIntent.putExtra(Extra.STATUS_RECEIVER, mStatusSender);
+        mContext.startService(nodeCountIntent);
+    }
+
+    public void initTotalNodeCount(){
+
     }
 
     public void retrieveCategories() {
