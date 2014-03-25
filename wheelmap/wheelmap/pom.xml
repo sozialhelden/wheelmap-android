@@ -169,12 +169,10 @@
             <scope>compile</scope>
         </dependency>
 
-
         <dependency>
-            <groupId>org.apache.http.entity.mime</groupId>
-            <artifactId>httpmime-4.3.3</artifactId>
-            <version>4.3.3</version>
-            <scope>compile</scope>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.0-alpha3</version>
         </dependency>
     </dependencies>
     <build>
