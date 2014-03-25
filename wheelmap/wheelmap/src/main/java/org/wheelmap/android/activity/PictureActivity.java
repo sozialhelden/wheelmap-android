@@ -39,6 +39,13 @@ public class PictureActivity extends Activity{
 
         setContentView(image);
 
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         if(UtilsMisc.isTablet(getApplicationContext())){
             View v = image;
             while(v != null && v instanceof ViewGroup){
