@@ -16,40 +16,46 @@
                 android:id="@+id/title_text_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal">
-
-            <TextView android:layout_weight="1"
-                      android:layout_gravity="center_vertical"
-                      style="@style/TitleBarTextNew.Title"/>
-
-            <ImageView
-                    android:id="@+id/titlebar_backbutton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:src="@drawable/detail_ic_close"/>
-
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_weight="2">
+                <TextView android:layout_gravity="center_vertical"
+                          style="@style/TitleBarTextNew.Title"/>
+                <TextView style="@style/TitleBarTextNew.Subtitle"
+                        />
+            </LinearLayout>
+            <LinearLayout android:layout_width="60dp"
+                          android:layout_height="40dp"
+                          android:id="@+id/titlebar_backbutton"
+                          android:clickable="true"
+                          android:layout_weight="0.1"
+                          >
+                <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/detail_ic_close"
+                        android:layout_gravity="center"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView style="@style/TitleBarTextNew.Subtitle"
-                />
 
         <include  layout="@layout/item_wheelchair_state"/>
 
 
         <TextView
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:id="@+id/addr_title"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/poi_property_address"
-            android:textStyle="bold"/>
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/addr_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_address"
+                android:textStyle="bold"/>
 
         <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
+                      android:layout_height="wrap_content"
 
-                  android:background="#eeeeee">
+                      android:background="#eeeeee">
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:orientation="vertical"
@@ -97,16 +103,16 @@
         </LinearLayout>
 
         <TextView
-              android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/comment_title"
-              android:layout_marginTop="10dp"
-              android:layout_marginBottom="2dp"
-              android:text="@string/poi_property_comment"
-              android:textStyle="bold"/>
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/comment_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_comment"
+                android:textStyle="bold"/>
 
         <LinearLayout android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="#eeeeee">
+                      android:layout_height="wrap_content"
+                      android:background="#eeeeee">
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:orientation="vertical"
@@ -127,18 +133,18 @@
         </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
 
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/poi_property_photos"
-            android:textStyle="bold"/>
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/poi_property_photos"
+                android:textStyle="bold"/>
 
 
         <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:background="#eeeeee">
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:background="#eeeeee">
 
             <TextView
                     android:id="@+id/nophotos"
@@ -155,13 +161,13 @@
                     android:layout_height="150dip"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal" > -->
-                <org.wheelmap.android.adapter.HorizontalView
-                        android:id="@+id/gallery"
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:smoothScrollbar="true"
-                        android:spacing="20dip" >
-                </org.wheelmap.android.adapter.HorizontalView>
+            <org.wheelmap.android.adapter.HorizontalView
+                    android:id="@+id/gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:smoothScrollbar="true"
+                    android:spacing="20dip" >
+            </org.wheelmap.android.adapter.HorizontalView>
             <!--</RelativeLayout>   -->
 
         </LinearLayout>
@@ -172,65 +178,66 @@
                 android:layout_weight="1" />
 
         <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:gravity="center">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
 
             <ImageButton
-            android:id="@+id/detail_foto"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@null"
-            android:src="@drawable/detail_ic_foto"/>
+                    android:id="@+id/detail_foto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_foto"/>
             <ImageButton
-            android:id="@+id/detail_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@null"
-            android:src="@drawable/detail_ic_edit"/>
+                    android:id="@+id/detail_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_edit"/>
             <ImageButton
-            android:id="@+id/detail_route"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@null"
-            android:src="@drawable/detail_ic_route"/>
+                    android:id="@+id/detail_route"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_route"/>
             <ImageButton
-            android:id="@+id/detail_share"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
-            android:background="@null"
-            android:src="@drawable/detail_ic_share"/>
+                    android:id="@+id/detail_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_share"/>
 
         </LinearLayout>
 
-            <!--
-            <ViewStub
-                    android:id="@+id/stub_map"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:inflatedId="@+id/sub_map"
-                    android:layout="@layout/stub_detail_map"/>
-
-            <ViewStub
-                    android:id="@+id/stub_button"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:inflatedId="@+id/sub_button"
-                    android:layout="@layout/stub_detail_button"/>
-
-
+        <!--
         <ViewStub
                 android:id="@+id/stub_map"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inflatedId="@+id/sub_map"
-                android:layout="@layout/stub_detail_map"/>        -->
+                android:layout="@layout/stub_detail_map"/>
+
+        <ViewStub
+                android:id="@+id/stub_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@+id/sub_button"
+                android:layout="@layout/stub_detail_button"/>
+
+
+    <ViewStub
+            android:id="@+id/stub_map"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/sub_map"
+            android:layout="@layout/stub_detail_map"/>        -->
+
 
     </LinearLayout>
 

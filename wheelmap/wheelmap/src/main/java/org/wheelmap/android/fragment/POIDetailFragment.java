@@ -105,6 +105,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -180,7 +181,7 @@ public class POIDetailFragment extends Fragment implements
 
     private TextView webText;
 
-    private ImageView titlebarBackbutton;
+    private LinearLayout titlebarBackbutton;
 
     private ImageButton buttonPhoto;
     private ImageButton buttonEdit;
@@ -314,7 +315,7 @@ public class POIDetailFragment extends Fragment implements
         stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
         webText = (TextView)v.findViewById(R.id.web);
         phoneText = (TextView)v.findViewById(R.id.phone);
-        titlebarBackbutton = (ImageView)v.findViewById(R.id.titlebar_backbutton);
+        titlebarBackbutton = (LinearLayout)v.findViewById(R.id.titlebar_backbutton);
         buttonPhoto = (ImageButton)v.findViewById(R.id.detail_foto);
         buttonEdit = (ImageButton)v.findViewById(R.id.detail_edit);
         buttonRoute = (ImageButton)v.findViewById(R.id.detail_route);

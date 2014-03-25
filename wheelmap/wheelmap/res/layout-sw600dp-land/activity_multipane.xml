@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:animateLayoutChanges="true">
 
     <FrameLayout
             android:id="@+id/list_layout"
@@ -18,7 +19,9 @@
     <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_toRightOf="@+id/list_layout">
+            android:layout_toRightOf="@+id/list_layout"
+            android:id="@+id/layout_multi"
+            android:animateLayoutChanges="true">
 
         <View
                 android:id="@+id/center_position"
@@ -49,6 +52,29 @@
                     android:src="@drawable/fragment_shadow_left"/>
                     -->
         </FrameLayout>
+
+        <LinearLayout android:id="@+id/my_outofzoom_text_tablet_landscape"
+                      android:layout_width="300dp"
+                      android:layout_marginTop="25dp"
+                      android:layout_centerHorizontal="true"
+                      android:layout_height="100dp"
+                      android:background="@drawable/border_rounded_corner"
+                      android:layout_toRightOf="@id/movable_layout"
+
+                      android:visibility="gone"
+                      android:gravity="center"
+                      android:clickable="true">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffff"
+                    android:layout_margin="5dp"
+                    android:textSize="25dp"
+                    android:text="@string/to_far_away">
+
+            </TextView>
+        </LinearLayout>
 
         <ImageButton
                 android:id="@+id/button_movable_resize"

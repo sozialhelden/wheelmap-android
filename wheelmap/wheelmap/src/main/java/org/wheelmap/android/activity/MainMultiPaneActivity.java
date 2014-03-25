@@ -21,9 +21,12 @@
  */
 package org.wheelmap.android.activity;
 
+import android.animation.LayoutTransition;
+import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import com.google.inject.Inject;
 
@@ -146,6 +149,11 @@ public class MainMultiPaneActivity extends MapActivity implements
         setContentView(R.layout.activity_multipane);
         mMovableLayout = (ViewGroup) findViewById(R.id.movable_layout);
         mResizeButton = (ImageButton) findViewById(R.id.button_movable_resize);
+
+        ViewGroup g = (ViewGroup) findViewById(R.id.layout_multi);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+            g.getLayoutTransition().disableTransitionType(LayoutTransition.APPEARING);
+        }
 
         // FragmentManager.enableDebugLogging(true);
 

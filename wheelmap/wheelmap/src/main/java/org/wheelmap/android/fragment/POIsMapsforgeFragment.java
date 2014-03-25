@@ -24,10 +24,12 @@ package org.wheelmap.android.fragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.sun.tools.internal.ws.resources.UtilMessages;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.LinearLayout;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -67,9 +69,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
+
+import static org.wheelmap.android.utils.ViewTool.setAlphaForView;
 
 public class POIsMapsforgeFragment extends Fragment implements
         DisplayFragment, OnMoveListener, OnZoomListener, OnTapListener,
@@ -81,6 +86,7 @@ public class POIsMapsforgeFragment extends Fragment implements
     private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 
     private static final byte ZOOMLEVEL_MIN = 16;
+    private static final byte ZOOMLEVEL_MAX = 15;
 
     private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
 
@@ -91,6 +97,8 @@ public class POIsMapsforgeFragment extends Fragment implements
     private Bundle mDeferredExecuteBundle;
 
     private MapView mMapView;
+
+    private LinearLayout txtOutOfZoom;
 
     private MapController mMapController;
 
@@ -170,6 +178,21 @@ public class POIsMapsforgeFragment extends Fragment implements
                 .inflate(R.layout.fragment_mapsforge, container, false);
 
         mMapView = (MapView) v.findViewById(R.id.map);
+        txtOutOfZoom = (LinearLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
+
+        if(UtilsMisc.isTablet(getActivity().getApplication())){
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                txtOutOfZoom.setVisibility(View.GONE);
+                txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
+            }
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                txtOutOfZoom.setVisibility(View.GONE);
+                txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
+            }
+        }
+
+        setAlphaForView(txtOutOfZoom,(float)0.5);
+
 
         mMapView.setClickable(true);
         mMapView.setBuiltInZoomControls(true);
@@ -200,6 +223,15 @@ public class POIsMapsforgeFragment extends Fragment implements
                 requestUpdate();
             }
         });
+
+        txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zoomInToMax();
+            }
+        });
+
+
         mCompass = (CompassView) v.findViewById(R.id.compass);
 
 
@@ -216,6 +248,14 @@ public class POIsMapsforgeFragment extends Fragment implements
         }
 
         return v;
+    }
+
+    public void zoomInToMax(){
+
+        txtOutOfZoom.setVisibility(View.GONE);
+        setZoomIntern(MAP_ZOOM_DEFAULT);
+        requestUpdate();
+
     }
 
     @Override
@@ -491,8 +531,16 @@ public class POIsMapsforgeFragment extends Fragment implements
 
     @Override
     public void onZoom(byte zoomLevel) {
-        Log.d(TAG, "onZoom");
+        Log.d(TAG, "------------- onZoom: " + zoomLevel + " ----------------");
         boolean isZoomedEnough = true;
+
+        if(zoomLevel <= ZOOMLEVEL_MAX){
+            txtOutOfZoom.setVisibility(View.VISIBLE);
+            Log.d(TAG, "------------- >=: " + zoomLevel + " ----------------");
+        }else{
+            txtOutOfZoom.setVisibility(View.GONE);
+            Log.d(TAG, "------------- <: " + zoomLevel + " ----------------");
+        }
 
         if (zoomLevel < ZOOMLEVEL_MIN) {
             isZoomedEnough = false;
