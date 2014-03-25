@@ -77,9 +77,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
+
+import static org.wheelmap.android.utils.PressSelector.setAlphaForView;
 
 public class POIsOsmdroidFragment extends Fragment implements
         DisplayFragment, MapListener, OnTapListener,
@@ -91,6 +94,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 
     private static final byte ZOOMLEVEL_MIN = 16;
+    private static final byte ZOOMLEVEL_MAX = 15;
 
     private static final int MAP_ZOOM_DEFAULT = 18; // Zoon 1 is world view
 
@@ -101,6 +105,8 @@ public class POIsOsmdroidFragment extends Fragment implements
     private OnlineTileSourceBase mMapBoxTileSource;
 
     private WorkerFragment mWorkerFragment;
+
+    private LinearLayout txtOutOfZoom;
 
     private DisplayFragmentListener mListener;
 
@@ -192,6 +198,29 @@ public class POIsOsmdroidFragment extends Fragment implements
         View v = inflater
                 .inflate(R.layout.fragment_osmdroid, container, false);
 
+        txtOutOfZoom = (LinearLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
+
+        if(UtilsMisc.isTablet(getActivity().getApplication())){
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                txtOutOfZoom.setVisibility(View.GONE);
+                txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
+            }
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                txtOutOfZoom.setVisibility(View.GONE);
+                txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
+            }
+        }
+
+        setAlphaForView(txtOutOfZoom,(float)0.5);
+
+        txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtOutOfZoom.setVisibility(View.GONE);
+                zoomInToMax();
+            }
+        });
+
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
         setHardwareAccelerationOff();
@@ -239,6 +268,12 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
 
         return v;
+    }
+
+    public void zoomInToMax(){
+        setZoomIntern(MAP_ZOOM_DEFAULT);
+        requestUpdate();
+
     }
 
     @Override
@@ -423,7 +458,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                         if (center) {
                             executeMapPositioning(centerPoint, zoom);
                         }
-                        if (request) {
+                        if (request){
                             requestUpdate();
                         }
 
@@ -518,8 +553,14 @@ public class POIsOsmdroidFragment extends Fragment implements
     @Override
     public boolean onZoom(ZoomEvent event) {
         int zoomLevel = event.getZoomLevel();
-        Log.d(TAG, "onZoom");
+        Log.d(TAG, "onZoom: " + zoomLevel);
         boolean isZoomedEnough = true;
+
+        if(zoomLevel <= ZOOMLEVEL_MAX){
+            txtOutOfZoom.setVisibility(View.VISIBLE);
+        }else{
+            txtOutOfZoom.setVisibility(View.GONE);
+        }
 
         if (zoomLevel < ZOOMLEVEL_MIN) {
             oldZoomLevel = zoomLevel;
