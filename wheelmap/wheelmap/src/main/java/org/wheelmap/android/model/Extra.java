@@ -98,6 +98,7 @@ public interface Extra {
         public final static int UPDATE_PHOTO = 0x13;
 
         public final static int RETRIEVE_TOTAL_NODE_COUNT = 0x14;
+        public final static int RETRIEVE_MARKER_ICONS = 0x15;
 
     }
 }

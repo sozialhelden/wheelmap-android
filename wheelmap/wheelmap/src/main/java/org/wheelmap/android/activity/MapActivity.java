@@ -39,6 +39,7 @@ import org.wheelmap.android.overlays.ConfigureMapView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,7 @@ public class MapActivity extends Activity implements MapContext {
         TileRAMCache.SHARED_CAPACITY = capacity;
     }
 
-    private void destroyMapViews() {
+    public void destroyMapViews() {
         if (mapViews != null) {
             IMapView mapView;
             while (!mapViews.isEmpty()) {
@@ -133,6 +134,7 @@ public class MapActivity extends Activity implements MapContext {
         super.onDestroy();
         destroyMapViews();
     }
+
 
     /**
      * Returns a unique MFMapView ID on each call.
@@ -217,7 +219,8 @@ public class MapActivity extends Activity implements MapContext {
     private void storeMapsforgeFile(MFMapView mapView, Bundle b) {
         if (!mapView.getMapViewMode().requiresInternetConnection()
                 && mapView.hasValidMapFile()) {
-            b.putString("mapFile", mapView.getMapFile());
+            //b.putString("mapFile", mapView.getMapFile());
+
         }
     }
 
