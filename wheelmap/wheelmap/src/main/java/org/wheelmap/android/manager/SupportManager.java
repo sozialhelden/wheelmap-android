@@ -222,6 +222,9 @@ public class SupportManager {
         mNeedsReloading = false;
         if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
             mNeedsReloading = true;
+        }else{
+            Log.i(TAG, "Loading lookup data");
+            initLookup();
         }
         Log.i(TAG, "Loading lookup data");
         //initLookup();
@@ -659,9 +662,6 @@ public class SupportManager {
                 drawable = Drawable.createFromStream(is, null);
                 Drawable bg = mDefaultNodeType.stateDrawables.get(WheelchairState
                         .valueOf(idx));
-
-                Rect rect = bg.getBounds();
-                Rect newR = new Rect();
 
                 float density = mContext.getResources().getDisplayMetrics().density;
 
