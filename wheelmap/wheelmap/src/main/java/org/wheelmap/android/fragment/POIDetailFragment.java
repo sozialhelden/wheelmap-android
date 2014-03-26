@@ -108,6 +108,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -327,7 +328,8 @@ public class POIDetailFragment extends Fragment implements
         noPhotosText = (TextView)v.findViewById(R.id.nophotos);
 
         listView = (HorizontalView)v.findViewById(R.id.gallery);
-
+        ScrollView scrollView = (ScrollView)v.findViewById(R.id.scrollView);
+        scrollView.requestDisallowInterceptTouchEvent(true);
 
 
         //mTestImage = (ImageView)v.findViewById(R.id.testImage);

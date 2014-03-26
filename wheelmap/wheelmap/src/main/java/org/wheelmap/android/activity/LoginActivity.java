@@ -65,7 +65,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setResult(RESULT_CANCELED);
         mCredentials = new UserCredentials(getApplicationContext());
 
         if (UtilsMisc.isTablet(getApplicationContext())) {

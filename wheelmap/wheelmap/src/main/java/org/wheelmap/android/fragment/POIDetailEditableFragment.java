@@ -87,6 +87,8 @@ import roboguice.inject.InjectView;
 public class POIDetailEditableFragment extends Fragment implements
         OnErrorDialogListener, Receiver, OnClickListener, LoaderCallbacks<Cursor> {
 
+    public static final int REQUEST_CODE_LOGIN = 1421;
+
     public final static String TAG = POIDetailEditableFragment.class
             .getSimpleName();
 
@@ -297,9 +299,22 @@ public class POIDetailEditableFragment extends Fragment implements
         Log.d(TAG, "onActivityCreated");
         retrieve(savedInstanceState);
         if (!mCredentials.isLoggedIn()) {
-            FragmentManager fm = getFragmentManager();
-            LoginDialogFragment loginDialog = new LoginDialogFragment();
-            loginDialog.show(fm);
+            //FragmentManager fm = getFragmentManager();
+            //LoginDialogFragment loginDialog = new LoginDialogFragment();
+            //loginDialog.show(fm);
+
+            Intent intent = new Intent(getActivity(),LoginActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_LOGIN){
+            if(resultCode != Activity.RESULT_OK){
+                  getActivity().onBackPressed();
+            }
         }
     }
 
@@ -321,7 +336,9 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        storeTemporary();
+        try{
+            storeTemporary();
+        }catch(Exception e){}
     }
 
     @Override
@@ -674,6 +691,12 @@ public class POIDetailEditableFragment extends Fragment implements
         } else {
             quit();
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        mCredentials = new UserCredentials(getActivity().getApplicationContext());
     }
 
     /**

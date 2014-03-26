@@ -36,7 +36,7 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
     private static final String MODIFIED_AT = "modified_at";
     private static final String TYPE = "type";
-    private static final String MARKER = "marker";
+    private static final String MARKER = "icons";
 
     public static final String CACHE_DIR = "filesdir";
 
@@ -52,9 +52,7 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
     @Override
     public void execute(long id) throws RestServiceException {
-        if(true){
-           return;
-        }
+
         prefs = WheelmapApp.getDefaultPrefs();
 
         String request = "http://"+getServer()+"/api/assets?api_key="+getApiKey();
@@ -75,15 +73,23 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
                          long modified_at = item.getLong(MODIFIED_AT);
                          long current_data = prefs.getLong(MARKER+MODIFIED_AT,-1);
 
-                         if(modified_at > current_data || StartupActivity.LOAD_AGAIN_DEBUG){
+                         if(modified_at != current_data || StartupActivity.LOAD_AGAIN_DEBUG){
                             boolean successfully = reloadMarkerAssets(item.getString("url"));
                             if(successfully){
                                prefs.edit().putLong(MARKER+MODIFIED_AT,modified_at).commit();
+                            }else{
+                                processException(
+                                        RestServiceException.ERROR_NETWORK_FAILURE,
+                                        new NetworkErrorException(), true);
                             }
                             break;
                          }
                     }
                 }
+            }else{
+                processException(
+                        RestServiceException.ERROR_NETWORK_FAILURE,
+                        new NetworkErrorException(), true);
             }
 
         }catch(Exception e){
@@ -100,13 +106,13 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
         File cachedir = context.getDir(CACHE_DIR, Context.MODE_PRIVATE);
 
-        File markerZip = new File(cachedir+"/marker.zip");
+        File markerZip = new File(cachedir+"/icons.zip");
         boolean download = downloadFile(markerZip,url);
         if(!download){
            return false;
         }
 
-        File marker_path = new File(cachedir+"/marker");
+        File marker_path = new File(cachedir+"/icons");
         try{
             unzipFile(markerZip,marker_path);
         }catch(Exception e){
@@ -126,7 +132,7 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
     public static File getMarkerPath(Context context){
         File cachedir = context.getDir(CACHE_DIR, Context.MODE_PRIVATE);
-        File marker_path = new File(cachedir+"/marker");
+        File marker_path = new File(cachedir+"/icons/icons");
         return marker_path;
     }
 
@@ -189,13 +195,15 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
         int count;
         while ((ze = zis.getNextEntry()) != null) {
             filename = ze.getName();
-            Log.d(getClass().getSimpleName(), "Full Issue Unzipping: " + filename);
 
             File file = new File(to +"/"+ filename);
 
             if(file.exists()){
                file.delete();
             }
+
+            Log.d(getClass().getSimpleName(), "Full Issue Unzipping: " + file);
+
 
             // make directory if necessary
             new File(file.getParent()).mkdirs();

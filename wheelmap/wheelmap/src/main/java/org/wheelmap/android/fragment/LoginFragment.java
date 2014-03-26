@@ -232,7 +232,7 @@ public class LoginFragment extends Fragment implements
     }
 
     private void loginSuccessful() {
-
+        getActivity().setResult(Activity.RESULT_OK);
         Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
         getActivity().onBackPressed();
         if (mListener != null) {
