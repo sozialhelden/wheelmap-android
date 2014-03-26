@@ -221,4 +221,5 @@
     <string name="dashboard_locations">Places</string>
 
     <string name="to_far_away">To far away to load new Points</string>
+    <string name="move_the_map">Please move the map by touching</string>
 </resources>

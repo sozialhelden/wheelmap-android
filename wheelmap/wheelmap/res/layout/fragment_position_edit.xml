@@ -21,27 +21,55 @@
   #L%
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical"
-              android:gravity="center_horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
 
-    <org.mapsforge.android.maps.MapView
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"/>
-    <TextView
+    <LinearLayout android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:orientation="vertical"
+                  android:gravity="center_horizontal">
+
+        <org.mapsforge.android.maps.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/position_edit_text"/>
+        <ImageButton
+                android:id="@+id/position_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:src="@drawable/detail_ic_save"
+                android:layout_weight="0.5"/>
+    </LinearLayout>
+
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/position_edit_text"/>
-    <ImageButton
-            android:id="@+id/position_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@null"
-            android:src="@drawable/detail_ic_save"
-            android:layout_weight="0.5"/>
-</LinearLayout>
+            android:layout_marginTop="20dp"
+            android:background="@drawable/border_rounded_corner"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/position_move_map"
+            android:alpha="0.5"
+            android:clickable="true">
+
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:layout_margin="5dp"
+                android:text="@string/move_the_map"
+
+                />
+    </LinearLayout>
+
+</RelativeLayout>

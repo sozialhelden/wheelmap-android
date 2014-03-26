@@ -210,4 +210,5 @@
     <string name="dashboard_locations">Orte</string>
 
     <string name="to_far_away">Zoome näher heran, um Orte zu sehen</string>
+    <string name="move_the_map">Karte mithilfe des Fingers verschieben</string>
 </resources>

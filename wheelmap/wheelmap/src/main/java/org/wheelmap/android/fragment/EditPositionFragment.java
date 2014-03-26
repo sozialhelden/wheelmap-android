@@ -51,6 +51,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.akquinet.android.androlog.Log;
@@ -72,7 +73,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     private DisplayFragmentListener mDisplayFramentListener;
 
-
+    private LinearLayout text_move_map;
 
     private TextView text_position;
 
@@ -169,6 +170,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
         mMapView = (MapView) v.findViewById(R.id.map);
         text_position = (TextView) v.findViewById(R.id.position_edit_text);
+        text_move_map = (LinearLayout) v.findViewById(R.id.position_move_map);
 
         mMapView.setClickable(true);
 
@@ -197,6 +199,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
                 }
             }
         });
+
+
+
 
         return v;
     }
@@ -244,6 +249,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
     @Override
     public void onMove(float vertical, float horizontal) {
         Log.d(TAG, "onMove");
+
+        text_move_map.setVisibility(View.GONE);
+
         GeoPoint centerLocation = mMapView.getMapCenter();
         int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
         int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
