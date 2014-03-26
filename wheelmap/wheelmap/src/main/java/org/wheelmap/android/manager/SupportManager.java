@@ -70,7 +70,6 @@ import java.util.Set;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
-import sun.launcher.resources.launcher_it;
 
 public class SupportManager {
 
