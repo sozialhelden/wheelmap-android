@@ -35,7 +35,7 @@
     <ImageButton
             android:id="@+id/position_save"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:background="@null"
             android:src="@drawable/detail_ic_save"
