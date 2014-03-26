@@ -179,14 +179,14 @@ public class POIsMapsforgeFragment extends Fragment implements
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
+                setAlphaForView(txtOutOfZoom,(float)0.5);
             }
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
+                setAlphaForView(txtOutOfZoom,(float)0.5);
             }
         }
-
-        setAlphaForView(txtOutOfZoom,(float)0.5);
 
 
         mMapView.setClickable(true);
@@ -249,6 +249,7 @@ public class POIsMapsforgeFragment extends Fragment implements
 
         txtOutOfZoom.setVisibility(View.GONE);
         setZoomIntern(MAP_ZOOM_DEFAULT);
+        //mMapView.postInvalidate();
         requestUpdate();
 
     }

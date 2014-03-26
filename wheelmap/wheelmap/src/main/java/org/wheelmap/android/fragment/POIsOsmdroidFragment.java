@@ -197,7 +197,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         View v = inflater
                 .inflate(R.layout.fragment_osmdroid, container, false);
-
+        /*
         txtOutOfZoom = (LinearLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
 
         if(UtilsMisc.isTablet(getActivity().getApplication())){
@@ -209,17 +209,17 @@ public class POIsOsmdroidFragment extends Fragment implements
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
             }
-        }
+        }  */
 
-        setAlphaForView(txtOutOfZoom,(float)0.5);
-
+        //setAlphaForView(txtOutOfZoom,(float)0.5);
+        /*
         txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 txtOutOfZoom.setVisibility(View.GONE);
                 zoomInToMax();
             }
-        });
+        });*/
 
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);

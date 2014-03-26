@@ -65,7 +65,7 @@
                   android:layout_centerHorizontal="true"
                   android:layout_height="70dp"
                   android:background="@drawable/border_rounded_corner"
-
+                  android:alpha="0.5"
                   android:visibility="gone"
                   android:gravity="center"
                   android:clickable="true">
