@@ -23,7 +23,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="166"
+          android:versionCode="169"
           android:versionName="2.0-SNAPSHOT-DEVEL"
         >
 
@@ -100,7 +100,7 @@ limitations under the License.
         <activity
                 android:name="org.wheelmap.android.activity.POIDetailEditableActivity"
                 android:label="@string/title_editor"
-                android:theme="@style/Theme.Wheelmap.Editor"/>
+                android:theme="@style/Theme.Wheelmap.SubActivity"/>
         <activity
                 android:name="org.wheelmap.android.activity.OLDSettingsActivity"
                 android:label="@string/title_pois_settings"

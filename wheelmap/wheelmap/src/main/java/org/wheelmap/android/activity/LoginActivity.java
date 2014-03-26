@@ -54,7 +54,7 @@ import de.akquinet.android.androlog.Log;
 @Activity.Addons(Activity.ADDON_SHERLOCK)
 public class LoginActivity extends Activity {
 
-    private final static String TAG = WheelchairStateActivity.class
+    private final static String TAG = LoginActivity.class
             .getSimpleName();
 
 

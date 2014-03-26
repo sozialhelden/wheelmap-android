@@ -70,6 +70,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             UtilsMisc.showAsPopup(this);
+
         }
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_frame_empty);
