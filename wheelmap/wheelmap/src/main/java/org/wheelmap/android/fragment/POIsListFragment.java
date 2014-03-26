@@ -238,7 +238,7 @@ public class POIsListFragment extends ListFragment implements
         super.onResume();
         if (mOrientationAvailable) {
             mSensorManager.registerListener(mSensorEventListener, mSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL);
+                    SensorManager.SENSOR_DELAY_UI);
         }
     }
 
