@@ -139,6 +139,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         appProperties = new AppProperties(getApplication());
         Log.d(TAG, "onCreate");
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);

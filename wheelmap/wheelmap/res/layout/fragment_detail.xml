@@ -4,7 +4,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            android:background="#cfcfcf">
+            android:background="#cfcfcf"
+        android:id="@+id/scrollView">
 
     <LinearLayout
             android:id="@+id/layout_detail_fragment"

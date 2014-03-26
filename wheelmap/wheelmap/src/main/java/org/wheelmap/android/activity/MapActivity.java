@@ -133,6 +133,7 @@ public class MapActivity extends Activity implements MapContext {
     protected void onDestroy() {
         super.onDestroy();
         destroyMapViews();
+        System.gc();
     }
 
 
