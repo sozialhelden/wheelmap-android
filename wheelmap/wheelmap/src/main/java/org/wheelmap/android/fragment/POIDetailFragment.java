@@ -392,10 +392,12 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void setupUI() {
-        imageAdapter = new HorizontalImageAdapter(this.getActivity(), listImages);
+        if(this.getActivity() != null){
+            imageAdapter = new HorizontalImageAdapter(this.getActivity(), listImages);
 
-        listView.setAdapter(imageAdapter);
-        listView.setOnItemClickListener(imageAdapter);
+            listView.setAdapter(imageAdapter);
+            listView.setOnItemClickListener(imageAdapter);
+        }
     }
 
     private void getImagesList() {

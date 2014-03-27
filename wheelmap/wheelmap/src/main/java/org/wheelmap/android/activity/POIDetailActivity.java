@@ -209,7 +209,7 @@ public class POIDetailActivity extends MapActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        /*
         if(data != null){
             Uri uri = data.getData();
             if (uri == null) {
@@ -229,7 +229,7 @@ public class POIDetailActivity extends MapActivity implements
             }
 
         }
-
+        */
         if (requestCode == SELECT_WHEELCHAIRSTATE) {
             if (resultCode == RESULT_OK) {
                 // newly selected wheelchair state as action data

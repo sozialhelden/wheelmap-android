@@ -179,12 +179,10 @@ public class POIsMapsforgeFragment extends Fragment implements
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
-                setAlphaForView(txtOutOfZoom,(float)0.5);
             }
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
-                setAlphaForView(txtOutOfZoom,(float)0.5);
             }
         }
 
@@ -532,6 +530,14 @@ public class POIsMapsforgeFragment extends Fragment implements
 
         if(zoomLevel <= ZOOMLEVEL_MAX){
             txtOutOfZoom.setVisibility(View.VISIBLE);
+            if(UtilsMisc.isTablet(getActivity().getApplication())){
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                    setAlphaForView(txtOutOfZoom,(float)0.5);
+                }
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                    setAlphaForView(txtOutOfZoom,(float)0.5);
+                }
+            }
             Log.d(TAG, "------------- >=: " + zoomLevel + " ----------------");
         }else{
             txtOutOfZoom.setVisibility(View.GONE);
