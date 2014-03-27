@@ -298,11 +298,7 @@ public class POIDetailFragment extends Fragment implements
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_detail, container, false);
-
+    public void initViews(View v){
         title_container = (RelativeLayout)v.findViewById(R.id.title_container);
         nameText = (TextView)v.findViewById(R.id.titlebar_title);
         categoryText = (TextView)v.findViewById(R.id.titlebar_subtitle);
@@ -328,11 +324,17 @@ public class POIDetailFragment extends Fragment implements
         noPhotosText = (TextView)v.findViewById(R.id.nophotos);
 
         listView = (HorizontalView)v.findViewById(R.id.gallery);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        initViews(v);
+
         ScrollView scrollView = (ScrollView)v.findViewById(R.id.scrollView);
         scrollView.requestDisallowInterceptTouchEvent(true);
-
-
-        //mTestImage = (ImageView)v.findViewById(R.id.testImage);
 
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
@@ -460,13 +462,6 @@ public class POIDetailFragment extends Fragment implements
                 Log.d(ex.getMessage());
             }
 
-        }
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
@@ -711,9 +706,6 @@ public class POIDetailFragment extends Fragment implements
             phoneText.setVisibility(View.VISIBLE);
 
             nothing.setVisibility(View.GONE);
-
-            //getImagesList(927092067);
-            //setupUI();
 
             c.moveToFirst();
             poiId = POIHelper.getId(c);
