@@ -33,6 +33,7 @@ import org.holoeverywhere.app.Application;
 import org.holoeverywhere.preference.SharedPreferences;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
@@ -161,5 +162,10 @@ public class WheelmapApp extends Application {
     public String getUriString(){ return uriString; }
     public void setUriString(String uriString){this.uriString = uriString; }
 
+
+    Node node;
+
+    public Node getNode(){ return node; }
+    public void setNode(Node node){this.node = node; }
 
 }

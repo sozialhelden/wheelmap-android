@@ -36,7 +36,9 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.Base;
+import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.mapping.node.Photos;
+import org.wheelmap.android.mapping.node.SingleNode;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.modules.IAppProperties;
@@ -321,6 +323,14 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            } else if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.SingleNode")){
+                Log.d("Node");
+                try{
+                    WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
+                    app.setNode(((SingleNode)content).getNode());
+                }catch(Exception ex){
+                    ex.printStackTrace();
                 }
             }
         }

@@ -24,13 +24,14 @@ package org.wheelmap.android.mapping.node;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.wheelmap.android.mapping.BaseDomain;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Node {
+public class Node extends BaseDomain {
 
     protected BigInteger id;
 

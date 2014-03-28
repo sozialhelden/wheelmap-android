@@ -2,10 +2,12 @@ package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.mapsforge.android.maps.GeoPoint;
+import org.mapsforge.android.maps.MapView;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.mapping.apikey.User;
+import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
@@ -16,6 +18,7 @@ import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
+import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.SearchManager;
 import android.database.Cursor;
@@ -28,6 +31,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -137,10 +141,10 @@ public class CombinedWorkerFragment extends Fragment implements
             return;
         }
 
-        Log.d(TAG,"resuestUpdate: "+bundle);
+        Log.d(TAG, "resuestUpdate: " + bundle);
 
         if (bundle == null) {
-
+            /*
             WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
             String uri = null;
             try{
@@ -153,7 +157,7 @@ public class CombinedWorkerFragment extends Fragment implements
                 // load one node, then all others near by this node
                 RestServiceHelper.retrieveNode(getActivity(),uri,mReceiver);
             }
-            else{
+            else{ */
 
                 LocationManager myLocationManager = (LocationManager) getSystemService(
                         getSupportApplication().LOCATION_SERVICE);
@@ -164,14 +168,61 @@ public class CombinedWorkerFragment extends Fragment implements
 
                 RestServiceHelper.retrieveNodesByDistance(getActivity(),
                         mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
-            }
+            //}
 
 
         } else {
-            bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
-            bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-            RestServiceHelper.executeRequest(getActivity(), bundle);
+            /*
+            WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+            Node node = null;
+            try{
+                node = app.getNode();
+            }catch (Exception ex){
+                // noop
+            }
+
+            if(node != null){
+
+                Bundle b = fillExtrasWithBoundingRect(node);
+                b.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
+                b.putInt(Extra.WHAT, What.RETRIEVE_NODE);
+
+                b.putSerializable(Extra.BOUNDING_BOX, boun);
+
+                RestServiceHelper.executeRequest(getActivity(),b);
+
+                Log.d("");
+
+            } else{*/
+
+                bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
+                bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
+                RestServiceHelper.executeRequest(getActivity(), bundle);
+
+            //}
+
         }
+    }
+
+    private Bundle fillExtrasWithBoundingRect(Node node) {
+        Bundle bundle = new Bundle();
+
+        BigDecimal bdLat = node.getLat();
+        BigDecimal bdLon = node.getLon();
+        int lat = bdLat.intValue();
+        int lon = bdLon.intValue();
+
+        int latE6 = lat * 1000000;
+        int lonE6 = lon * 1000000;
+
+        ParceableBoundingBox boundingBox = new ParceableBoundingBox(
+                latE6 + (5000 / 2), lonE6
+                + (5000 / 2),
+                latE6 - (5000 / 2), lonE6
+                - (5000 / 2));
+        bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
+
+        return bundle;
     }
 
     @Override

@@ -581,6 +581,8 @@ public class POIsMapsforgeFragment extends Fragment implements
                 + (lonSpan / 2),
                 center.getLatitudeE6() - (latSpan / 2), center.getLongitudeE6()
                 - (lonSpan / 2));
+        bundle.putInt("latSpan",latSpan);
+        bundle.putInt("lonSpan",lonSpan);
         bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
 
         return bundle;
