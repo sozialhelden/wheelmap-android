@@ -1,7 +1,7 @@
 package org.wheelmap.android.activity;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
+//import net.hockeyapp.android.CrashManager;
+//import net.hockeyapp.android.UpdateManager;
 
 import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.app.WheelmapApp;
@@ -256,7 +256,7 @@ public class DashboardActivity extends
         if (TextUtils.isEmpty(appId)) {
             return;
         }
-        CrashManager.register(this, appId);
+        //CrashManager.register(this, appId);
     }
 
     private void checkForUpdates() {
@@ -264,7 +264,7 @@ public class DashboardActivity extends
         if (TextUtils.isEmpty(appId)) {
             return;
         }
-        UpdateManager.register(this, appId);
+        //UpdateManager.register(this, appId);
     }
 
     private void account(){
