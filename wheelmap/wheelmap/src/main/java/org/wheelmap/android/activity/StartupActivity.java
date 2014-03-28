@@ -101,6 +101,8 @@ public class StartupActivity extends Activity implements
         mState.mReceiver.setReceiver(this);
 
         //checkForHockeyUpdates();
+        onHockeyDone();
+
     }
 
     @Override
