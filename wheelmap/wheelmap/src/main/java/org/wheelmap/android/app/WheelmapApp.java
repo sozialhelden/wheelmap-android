@@ -156,5 +156,10 @@ public class WheelmapApp extends Application {
         this.photos = photos;
     }
 
+    String uriString;
+
+    public String getUriString(){ return uriString; }
+    public void setUriString(String uriString){this.uriString = uriString; }
+
 
 }

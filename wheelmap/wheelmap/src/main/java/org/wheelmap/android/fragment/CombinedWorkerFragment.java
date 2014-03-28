@@ -2,6 +2,7 @@ package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.mapping.apikey.User;
@@ -139,17 +140,33 @@ public class CombinedWorkerFragment extends Fragment implements
         Log.d(TAG,"resuestUpdate: "+bundle);
 
         if (bundle == null) {
-            LocationManager myLocationManager = (LocationManager) getSystemService(
-                    getSupportApplication().LOCATION_SERVICE);
 
-            if(LocationManager.PASSIVE_PROVIDER != null && !LocationManager.PASSIVE_PROVIDER.equals("null")){
-                mLocation = myLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+            String uri = null;
+            try{
+                uri = app.getUriString();
+            }catch (Exception ex){
+                // noop
             }
 
-            RestServiceHelper.retrieveNodesByDistance(getActivity(),
-                    mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
+            if(uri != null){
+                // load one node, then all others near by this node
+                RestServiceHelper.retrieveNode(getActivity(),uri,mReceiver);
+            }
+            else{
 
-            //RestServiceHelper.retrievePhotosByDinstance(getActivity(),927092067);
+                LocationManager myLocationManager = (LocationManager) getSystemService(
+                        getSupportApplication().LOCATION_SERVICE);
+
+                if(LocationManager.PASSIVE_PROVIDER != null && !LocationManager.PASSIVE_PROVIDER.equals("null")){
+                    mLocation = myLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                }
+
+                RestServiceHelper.retrieveNodesByDistance(getActivity(),
+                        mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
+            }
+
+
         } else {
             bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
             bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);

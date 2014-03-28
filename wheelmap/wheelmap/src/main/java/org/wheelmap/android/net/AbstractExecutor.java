@@ -23,7 +23,7 @@ package org.wheelmap.android.net;
 
 
 
-import com.google.gson.Gson;
+
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -315,33 +315,13 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         if(content != null){
             if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
                 Log.d("Photos");
-
-                Gson gson = new Gson();
-
-                // convert java object to JSON format,
-                // and returned as JSON formatted string
-                String json = gson.toJson(((Photos)content));
-
                 try {
-                    /*
-                    //write converted json data to a file named "file.json"
-                    FileWriter writer = new FileWriter(getContext().getFilesDir().getPath().toString() + "/file.json");
-
-                    writer.write(json);
-                    writer.close();
-                    */
-
                     WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
                     app.setPhotos((Photos)content);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                String s = json.toString();
-
-                Log.d("Photos");
-
             }
         }
 

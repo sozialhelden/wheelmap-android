@@ -171,6 +171,9 @@ public class POIDetailFragment extends Fragment implements
 
     private TextView addressTitle;
 
+    private TextView photoTitle;
+    private LinearLayout photoLayout;
+
     //@InjectView(R.id.comment)
     private TextView commentText;
 
@@ -322,6 +325,9 @@ public class POIDetailFragment extends Fragment implements
         noCommentText = (TextView)v.findViewById(R.id.nocomment);
         noAdressText = (TextView)v.findViewById(R.id.noadress);
         noPhotosText = (TextView)v.findViewById(R.id.nophotos);
+
+        photoTitle = (TextView)v.findViewById(R.id.photo_text);
+        photoLayout = (LinearLayout)v.findViewById(R.id.photo_layout);
 
         listView = (HorizontalView)v.findViewById(R.id.gallery);
     }
@@ -681,6 +687,9 @@ public class POIDetailFragment extends Fragment implements
             webText.setVisibility(View.GONE);
             phoneText.setVisibility(View.GONE);
 
+            photoTitle.setVisibility(View.GONE);
+            photoLayout.setVisibility(View.GONE);
+
             noCommentText.setVisibility(View.GONE);
             noAdressText.setVisibility(View.GONE);
             noPhotosText.setVisibility(View.GONE);
@@ -706,6 +715,9 @@ public class POIDetailFragment extends Fragment implements
             stateLayout.setVisibility(View.VISIBLE);
             webText.setVisibility(View.VISIBLE);
             phoneText.setVisibility(View.VISIBLE);
+
+            photoTitle.setVisibility(View.VISIBLE);
+            photoLayout.setVisibility(View.VISIBLE);
 
             nothing.setVisibility(View.GONE);
 

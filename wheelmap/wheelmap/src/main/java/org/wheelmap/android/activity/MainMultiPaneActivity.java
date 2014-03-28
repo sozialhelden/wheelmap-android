@@ -24,6 +24,8 @@ package org.wheelmap.android.activity;
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
@@ -46,6 +48,7 @@ import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.Toast;
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -92,6 +95,8 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import roboguice.inject.InjectView;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -221,6 +226,27 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
 
         t.commit();
+
+
+
+        // SWITCH CODE TO WERE ALL POINTS ARE LOADED
+
+        /*
+        WheelmapApp app = (WheelmapApp) getApplication();
+
+        String s = null;
+
+        try{
+            s = app.getUriString();
+        }catch (Exception ex ){
+            // exception
+        }
+
+        if(s != null){
+            // load this point and all points near to it and show the points and de detailview of the point
+        } */
+
+
 
         /*
         LinearLayout layout = (LinearLayout) getWindowDecorView().getParent().getParent();

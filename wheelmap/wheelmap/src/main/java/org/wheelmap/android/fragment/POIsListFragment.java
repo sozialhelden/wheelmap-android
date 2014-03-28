@@ -78,7 +78,7 @@ public class POIsListFragment extends ListFragment implements
 
     private boolean mRefreshDisabled;
 
-    private DisplayFragmentListener mListener;
+    public DisplayFragmentListener mListener;
 
     private POIsListCursorAdapter mAdapter;
 

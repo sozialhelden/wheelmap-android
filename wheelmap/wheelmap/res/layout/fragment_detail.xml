@@ -135,7 +135,7 @@
 
         <TextView
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-
+                android:id="@+id/photo_text"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="2dp"
                 android:text="@string/poi_property_photos"
@@ -145,7 +145,8 @@
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      android:background="#eeeeee">
+                      android:background="#eeeeee"
+                      android:id="@+id/photo_layout">
 
             <TextView
                     android:id="@+id/nophotos"
