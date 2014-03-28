@@ -23,7 +23,6 @@ package org.wheelmap.android.fragment;
 
 
 
-import com.google.gson.Gson;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -408,34 +407,18 @@ public class POIDetailFragment extends Fragment implements
 
     private void getImagesList() {
 
-        //RestServiceHelper.retrievePhotosByDinstance(getActivity(),id);
-
-        // ONLY FOR TESTING --------------
-        Gson gson = new Gson();
-
         Photos photos = null;
 
         listImages = new ArrayList();
-
 
         try {
 
             WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
             photos = app.getPhotos();
 
-
-            /*
-            // get data from json file
-            BufferedReader br = new BufferedReader(
-                    new FileReader(getActivity().getApplicationContext().getFilesDir().getPath().toString() + "/file.json"));
-            //convert the json string back to object
-            photos = gson.fromJson(br, Photos.class);
-            */
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // ONLY FOR TESTING --------------
 
         if(photos != null){
 
