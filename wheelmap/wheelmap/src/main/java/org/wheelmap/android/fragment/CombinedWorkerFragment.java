@@ -144,7 +144,7 @@ public class CombinedWorkerFragment extends Fragment implements
         Log.d(TAG, "resuestUpdate: " + bundle);
 
         if (bundle == null) {
-            /*
+
             WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
             String uri = null;
             try{
@@ -157,7 +157,7 @@ public class CombinedWorkerFragment extends Fragment implements
                 // load one node, then all others near by this node
                 RestServiceHelper.retrieveNode(getActivity(),uri,mReceiver);
             }
-            else{ */
+            else{
 
                 LocationManager myLocationManager = (LocationManager) getSystemService(
                         getSupportApplication().LOCATION_SERVICE);
@@ -168,11 +168,11 @@ public class CombinedWorkerFragment extends Fragment implements
 
                 RestServiceHelper.retrieveNodesByDistance(getActivity(),
                         mLocation, QUERY_DISTANCE_DEFAULT, mReceiver);
-            //}
+            }
 
 
         } else {
-            /*
+
             WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
             Node node = null;
             try{
@@ -183,28 +183,30 @@ public class CombinedWorkerFragment extends Fragment implements
 
             if(node != null){
 
-                Bundle b = fillExtrasWithBoundingRect(node);
+
+                // doesn't work, maybe try with Location an byDistance
+                /*
+                Bundle b = fillExtrasWithBoundingRect(node, bundle.getInt("latSpan"), bundle.getInt("lonSpan"));
                 b.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
                 b.putInt(Extra.WHAT, What.RETRIEVE_NODE);
 
-                b.putSerializable(Extra.BOUNDING_BOX, boun);
 
                 RestServiceHelper.executeRequest(getActivity(),b);
 
-                Log.d("");
+                Log.d("");*/
 
-            } else{*/
+            } else{
 
                 bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
                 bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
                 RestServiceHelper.executeRequest(getActivity(), bundle);
 
-            //}
+            }
 
         }
     }
 
-    private Bundle fillExtrasWithBoundingRect(Node node) {
+    private Bundle fillExtrasWithBoundingRect(Node node,int latSpan,int lonSpan) {
         Bundle bundle = new Bundle();
 
         BigDecimal bdLat = node.getLat();
@@ -216,10 +218,10 @@ public class CombinedWorkerFragment extends Fragment implements
         int lonE6 = lon * 1000000;
 
         ParceableBoundingBox boundingBox = new ParceableBoundingBox(
-                latE6 + (5000 / 2), lonE6
-                + (5000 / 2),
-                latE6 - (5000 / 2), lonE6
-                - (5000 / 2));
+                latE6 + (latSpan / 2), lonE6
+                + (lonSpan / 2),
+                latE6 - (latSpan / 2), lonE6
+                - (lonSpan / 2));
         bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
 
         return bundle;
