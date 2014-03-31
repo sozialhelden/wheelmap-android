@@ -114,8 +114,8 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private POIsListFragment mListFragment;
 
-    private POIsMapsforgeFragment mMapFragment;
-    //private POIsOsmdroidFragment mMapFragment;
+    //private POIsMapsforgeFragment mMapFragment;
+    private POIsOsmdroidFragment mMapFragment;
 
     private POIDetailFragment mDetailFragment;
 
@@ -202,21 +202,21 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
 
 
-        mMapFragment = (POIsMapsforgeFragment) fm
+       /* mMapFragment = (POIsMapsforgeFragment) fm
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {
             mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
             t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
-        }
+        }   */
 
 
-        /*
+
         mMapFragment = (POIsOsmdroidFragment) fm
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {
             mMapFragment = POIsOsmdroidFragment.newInstance(false, true);
             t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
-        } */
+        }
 
         mDetailFragment = (POIDetailFragment) fm
                 .findFragmentById(R.id.detail_layout);

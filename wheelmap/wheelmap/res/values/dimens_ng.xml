@@ -51,5 +51,7 @@
     <dimen name="map_position_margin_horizontal">10dp</dimen>
     <dimen name="landscape_divider_margin">0dp</dimen>
     <dimen name="mapmarker_halflength">16dp</dimen>
+    <dimen name="mapmarker_height">32dp</dimen>
+    <dimen name="mapmarker_width">36dp</dimen>
 
 </resources>

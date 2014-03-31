@@ -68,4 +68,18 @@ public class MapController implements IMapController {
         // mController.zoomToSpan(pLatSpanE6, pLonSpanE6);
     }
 
+    @Override
+    public void stopPanning() {
+
+    }
+
+    @Override
+    public void stopAnimation(boolean jumpToFinish) {
+
+    }
+
+    @Override
+    public void scrollBy(int x, int y) {
+
+    }
 }

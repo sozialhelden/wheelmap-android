@@ -40,4 +40,14 @@ public class Projection implements IProjection {
         return 0;
         // TODO return mProjection.metersToEquatorPixels(meters);
     }
+
+    @Override
+    public IGeoPoint getNorthEast() {
+        return null;
+    }
+
+    @Override
+    public IGeoPoint getSouthWest() {
+        return null;
+    }
 }

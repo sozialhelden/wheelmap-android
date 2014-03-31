@@ -26,4 +26,13 @@ public class GeoPoint implements IGeoPoint {
         return mGeoPoint.getLongitudeE6();
     }
 
+    @Override
+    public double getLatitude() {
+        return mGeoPoint.getLatitude();
+    }
+
+    @Override
+    public double getLongitude() {
+        return mGeoPoint.getLongitude();
+    }
 }

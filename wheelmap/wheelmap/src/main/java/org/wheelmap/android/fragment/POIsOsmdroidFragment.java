@@ -197,7 +197,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         View v = inflater
                 .inflate(R.layout.fragment_osmdroid, container, false);
-        /*
+
         txtOutOfZoom = (LinearLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
 
         if(UtilsMisc.isTablet(getActivity().getApplication())){
@@ -209,17 +209,17 @@ public class POIsOsmdroidFragment extends Fragment implements
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
             }
-        }  */
+        }
 
         //setAlphaForView(txtOutOfZoom,(float)0.5);
-        /*
+
         txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 txtOutOfZoom.setVisibility(View.GONE);
                 zoomInToMax();
             }
-        });*/
+        });
 
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
@@ -227,6 +227,12 @@ public class POIsOsmdroidFragment extends Fragment implements
         // mMapView.setClickable(true);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
+        mMapView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestUpdate();
+            }
+        },1000);
 
         mMapController = mMapView.getController();
 
@@ -234,9 +240,10 @@ public class POIsOsmdroidFragment extends Fragment implements
         mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
         mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
                 mMapView);
-        MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getActivity(),mMapView);
-        myLocationOverlay.enableMyLocation();
-        mMapView.getOverlays().add(myLocationOverlay);
+        mCurrLocationOverlay.enableMyLocation();
+        //MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getActivity(),mMapView);
+        //myLocationOverlay.enableMyLocation();
+        //mMapView.getOverlays().add(myLocationOverlay);
 
         mMyLocationProvider.startLocationProvider(mCurrLocationOverlay);
         mMapView.getOverlays().add(mPoisItemizedOverlay);
@@ -273,7 +280,6 @@ public class POIsOsmdroidFragment extends Fragment implements
     public void zoomInToMax(){
         setZoomIntern(MAP_ZOOM_DEFAULT);
         requestUpdate();
-
     }
 
     @Override
@@ -306,6 +312,13 @@ public class POIsOsmdroidFragment extends Fragment implements
         if (mOrientationAvailable) {
             mSensorManager.unregisterListener(mMyLocationProvider);
         }
+
+    }
+
+    @Override
+    public void onDetach() {
+        mMapView.onDetach();
+        super.onDetach();
     }
 
     @Override
@@ -583,6 +596,9 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private void requestUpdate() {
         Bundle extras = fillExtrasWithBoundingRect();
+        if(extras == null){
+           return;
+        }
         mWorkerFragment.requestUpdate(extras);
     }
 
@@ -591,6 +607,10 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
         int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
+        if(latSpan <= 0 || lonSpan <= 0){
+            //mapview is not fully loaded
+            return null;
+        }
         IGeoPoint center = mMapView.getMapCenter();
         mLastRequestedPosition = center;
         ParceableBoundingBox boundingBox = new ParceableBoundingBox(
@@ -619,29 +639,84 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         IGeoPoint actualGeoPoint = geoPoint;
 
+
+
         if (mHeightFull) {
             actualGeoPoint = geoPoint;
         } else {
 
             if(land){
-                Projection projection = mMapView.getProjection();
+                /*Projection projection = mMapView.getProjection();
                 Point point = new Point();
-                point = projection.toPixels(geoPoint, point);
+                point = projection.toMapPixels(geoPoint,point);
+                //point = projection.toPixels(geoPoint, point);
                 int horizontalOffset = mMapView.getWidth() / 4;
                 point.x -= horizontalOffset;
                 actualGeoPoint = projection.fromPixels(point.x, point.y);
+                */
+
+                Point point = pointFromGeoPoint(geoPoint,mMapView);
+                int horizontalOffset = mMapView.getWidth() / 4;
+                point.x -= horizontalOffset;
+                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
+
             }else{
-                Projection projection = mMapView.getProjection();
+                /*Projection projection = mMapView.getProjection();
                 Point point = new Point();
                 point = projection.toPixels(geoPoint, point);
                 int mVerticalOffset = mMapView.getHeight() / 4;
                 point.y -= mVerticalOffset;
-                actualGeoPoint = projection.fromPixels(point.x, point.y);
+                actualGeoPoint = projection.fromPixels(point.x, point.y); */
+
+                Point point = pointFromGeoPoint(geoPoint,mMapView);
+                int mVerticalOffset = mMapView.getHeight() / 4;
+                point.y -= mVerticalOffset;
+                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
             }
         }
 
-        mMapController.setCenter(geoPoint);
+        mMapController.setCenter(actualGeoPoint);
         isCentered = true;
+    }
+
+    /**
+     *
+     * @param x  view coord relative to left
+     * @param y  view coord relative to top
+     * @param vw MapView
+     * @return GeoPoint
+     */
+    private GeoPoint geoPointFromScreenCoords(int x, int y, MapView vw){
+        // Get the top left GeoPoint
+        Projection projection = vw.getProjection();
+        GeoPoint geoPointTopLeft = (GeoPoint) projection.fromPixels(0, 0);
+        Point topLeftPoint = new Point();
+        // Get the top left Point (includes osmdroid offsets)
+        projection.toPixels(geoPointTopLeft, topLeftPoint);
+        // get the GeoPoint of any point on screen
+        GeoPoint rtnGeoPoint = (GeoPoint) projection.fromPixels(x, y);
+        return rtnGeoPoint;
+    }
+
+    /**
+     *
+     * @param gp GeoPoint
+     * @param vw Mapview
+     * @return a 'Point' in screen coords relative to top left
+     */
+    private Point pointFromGeoPoint(GeoPoint gp, MapView vw){
+
+        Point rtnPoint = new Point();
+        Projection projection = vw.getProjection();
+        projection.toPixels(gp, rtnPoint);
+        // Get the top left GeoPoint
+        GeoPoint geoPointTopLeft = (GeoPoint) projection.fromPixels(0, 0);
+        Point topLeftPoint = new Point();
+        // Get the top left Point (includes osmdroid offsets)
+        projection.toPixels(geoPointTopLeft, topLeftPoint);
+        rtnPoint.x-= topLeftPoint.x; // remove offsets
+        rtnPoint.y-= topLeftPoint.y;
+        return rtnPoint;
     }
 
     public void setHeightFull(boolean heightFull) {
@@ -672,6 +747,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         if (mListener != null) {
             mListener.onShowDetail(this, values);
         }
+
     }
 
     private void showSearch() {
