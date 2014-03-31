@@ -341,13 +341,19 @@ public class POIDetailFragment extends Fragment implements
         ScrollView scrollView = (ScrollView)v.findViewById(R.id.scrollView);
         scrollView.requestDisallowInterceptTouchEvent(true);
 
+        View closeButton = v.findViewById(R.id.titlebar_backbutton);
+
         mShowMenu = false;
         if (getArguments().containsKey(Extra.SHOW_MAP)) {
-            v.findViewById(R.id.titlebar_backbutton).setVisibility(View.GONE);
+            closeButton.setVisibility(View.INVISIBLE);
             showMap(v);
         }
 
-        v.findViewById(R.id.titlebar_backbutton).setOnClickListener(new OnClickListener() {
+        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+            closeButton.setVisibility(View.INVISIBLE);
+        }
+
+        closeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.dismissDetailView();
@@ -373,6 +379,7 @@ public class POIDetailFragment extends Fragment implements
         buttonRoute.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS),
                         getString(R.string.menu_directions)));
                 return;

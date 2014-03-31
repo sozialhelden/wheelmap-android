@@ -23,6 +23,7 @@ package org.wheelmap.android.app;
 
 
 import com.bugsense.trace.BugSenseHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -95,9 +96,18 @@ public class WheelmapApp extends Application {
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
         Log.d(TAG, "onCreate: creating App");
 
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-        .build();
+        // LazyLoading images.
+        // https://github.com/nostra13/Android-Universal-Image-Loader
+        int memoryCacheSize = 8 * 1024 * 1024;
+        int discCacheSize = 64 * 1024 * 1024;
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory().cacheOnDisc().build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                getApplicationContext()).memoryCacheSize(memoryCacheSize)
+                .discCacheSize(discCacheSize)
+                .defaultDisplayImageOptions(options).build();
         ImageLoader.getInstance().init(config);
+
 
         if (!getResources().getBoolean(R.bool.developbuild) && !isBugsenseInitCalled) {
             BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));

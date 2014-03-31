@@ -210,12 +210,11 @@ public class MainMultiPaneActivity extends MapActivity implements
         }   */
 
 
-
         mMapFragment = (POIsOsmdroidFragment) fm
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {
             mMapFragment = POIsOsmdroidFragment.newInstance(false, true);
-            t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
+            t.add(R.id.map_layout, mMapFragment, POIsOsmdroidFragment.TAG);
         }
 
         mDetailFragment = (POIDetailFragment) fm

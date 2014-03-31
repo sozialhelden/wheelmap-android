@@ -96,7 +96,7 @@ public class POIsListFragment extends ListFragment implements
 
     private boolean mUseAngloDistanceUnit;
 
-    private long idOfSelectedListItem = 0;
+    private String selectedItem_wmID=null;
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
         private static final float MIN_DIRECTION_DELTA = 10;
@@ -362,7 +362,7 @@ public class POIsListFragment extends ListFragment implements
         if (cursor == null) {
             return;
         }
-
+        selectedItem_wmID = POIHelper.getWMId(cursor);
         ContentValues values = new ContentValues();
         DatabaseUtils.cursorRowToContentValues(cursor, values);
 
@@ -388,8 +388,11 @@ public class POIsListFragment extends ListFragment implements
             mDirectionCursorWrapper = null;
         }
         mAdapter.swapCursor(mDirectionCursorWrapper);
-        markItemClear();
-        refreshListPosition();
+        //markItemClear();
+        //refreshListPosition();
+        if(selectedItem_wmID != null){
+            markItem(selectedItem_wmID);
+        }
     }
 
     private void setRefreshStatus(boolean isRefreshing) {
@@ -429,6 +432,9 @@ public class POIsListFragment extends ListFragment implements
         setCursor(fragment.getCursor(WorkerFragment.LIST_CURSOR));
         setRefreshStatus(fragment.isRefreshing());
         setRefreshEnabled(fragment.isSearchMode());
+        if(selectedItem_wmID != null){
+             markItem(selectedItem_wmID);
+        }
 
         // set selected list item here - - - - - - - -
         //if(idOfSelectedListItem != 0)
@@ -450,32 +456,37 @@ public class POIsListFragment extends ListFragment implements
         }
     }
 
-    public void markItem(long id){
-       for(int pos = 0; pos < mAdapter.getCount(); pos++){
-           Cursor c = (Cursor)mAdapter.getItem(pos);
-           long poi_id = Long.parseLong(String.valueOf(POIHelper.getId(c)));
-           if(poi_id == id){
-               mCheckedItem = pos + 1;
-               mListView.setItemChecked(mCheckedItem,true);
-           }
-       }
-    }
-
-    public void markItem(ContentValues values, boolean centerToItem) {
-        Long id = values.getAsLong(POIs.POI_ID);
+    public void markItem(String wmID){
+        boolean marked = false;
         int pos;
         for (pos = 0; pos < mAdapter.getCount(); pos++) {
             Cursor c = (Cursor) mAdapter.getItem(pos);
-            if (POIHelper.getId(c) == id) {
-                mCheckedItem = pos + 1;
+            if (POIHelper.getWMId(c).equals(wmID)) {
+                mCheckedItem = pos;
                 mListView.setItemChecked(
                         mCheckedItem, true);
-
+                marked = true;
                 break;
             }
         }
 
-        mListView.setSelection(mListView.getCheckedItemPosition());
+        if(!marked){
+            Log.d(TAG,"[markItem] deselect all items");
+            mListView.clearChoices();
+            mListView.requestLayout();
+        }else{
+            Log.d(TAG,"[markItem] Mark item: "+wmID);
+            mListView.setSelection(mListView.getCheckedItemPosition());
+            mListView.requestLayout();
+        }
+    }
+
+    @Override
+    public void markItem(ContentValues values, boolean centerToItem) {
+        Long id = values.getAsLong(POIs.POI_ID);
+        String wmID = values.getAsString(POIs.WM_ID);
+        selectedItem_wmID = wmID;
+        markItem(selectedItem_wmID);
     }
 
     public void markItemClear() {

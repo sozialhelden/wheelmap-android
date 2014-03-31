@@ -54,7 +54,7 @@ limitations under the License.
         <activity
                 android:name="org.wheelmap.android.activity.StartupActivity"
                 android:label="@string/app_name"
-                android:theme="@style/Holo.Theme.Light.NoActionBar.Fullscreen">
+                android:theme="@style/Holo.Theme.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

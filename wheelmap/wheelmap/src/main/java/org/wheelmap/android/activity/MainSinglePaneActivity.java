@@ -119,7 +119,8 @@ public class
 
     private CombinedWorkerFragment mWorkerFragment;
     private POIsListFragment mListFragment;
-    private POIsMapsforgeFragment mMapFragment;
+    //private POIsMapsforgeFragment mMapFragment;
+    private POIsOsmdroidFragment mMapFragment;
     private ViewFlipper flipper;
 
     private MapModeType mapModeType;
@@ -174,11 +175,18 @@ public class
             t.add(R.id.list_layout, mListFragment, POIsListFragment.TAG);
         }
 
-        mMapFragment = (POIsMapsforgeFragment) fm
+        /*mMapFragment = (POIsMapsforgeFragment) fm
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {
             mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
             t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
+        } */
+
+        mMapFragment = (POIsOsmdroidFragment) fm
+                .findFragmentById(R.id.map_layout);
+        if (mMapFragment == null) {
+            mMapFragment = POIsOsmdroidFragment.newInstance(false, true);
+            t.add(R.id.map_layout, mMapFragment, POIsOsmdroidFragment.TAG);
         }
 
         t.commit();

@@ -32,6 +32,8 @@ public interface Extra {
 
     public final static String CATEGORY = "CATEGORY";
     public final static String NODETYPE = "NODETYPE";
+    public final static String SELECTED_LATITUDE = "SELECTED_LATITUDE";
+    public final static String SELECTED_LONGITUDE = "SELECTED_LONGITUDE";
     public final static String LATITUDE = "LATITUDE";
     public final static String LONGITUDE = "LONGITUDE";
     public final static String ZOOM_LEVEL = "ZOOM_LEVEL";

@@ -2,6 +2,7 @@ package org.wheelmap.android.osmdroid;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.api.IMapView;
 import org.osmdroid.util.GeoPoint;
@@ -28,6 +29,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.location.Location;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -41,6 +43,9 @@ import java.util.LinkedList;
  *
  */
 public class MarkItemOverlay extends SafeDrawOverlay{
+
+    private static final String TAG = MarkItemOverlay.class.getSimpleName();
+
     // ===========================================================
     // Constants
     // ===========================================================
@@ -49,7 +54,8 @@ public class MarkItemOverlay extends SafeDrawOverlay{
     // Fields
     // ===========================================================
 
-    protected final SafePaint mPaint = new SafePaint();
+    protected Context mContext;
+
     protected final SafePaint mCirclePaint = new SafePaint();
 
     protected final Bitmap mPersonBitmap;
@@ -57,16 +63,10 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
     protected final MapView mMapView;
 
-    private final IMapController mMapController;
-    public IMyLocationProvider mMyLocationProvider;
-
     private final LinkedList<Runnable> mRunOnFirstFix = new LinkedList<Runnable>();
     private final Point mMapCoords = new Point();
 
     private Location mLocation;
-    private final GeoPoint mGeoPoint = new GeoPoint(0, 0); // for reuse
-    private boolean mIsLocationEnabled = false;
-    protected boolean mIsFollowing = false; // follow location updates
     protected boolean mDrawAccuracyEnabled = true;
 
     /** Coordinates the feet of the person are located scaled for display density. */
@@ -74,10 +74,6 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
     protected final double mDirectionArrowCenterX;
     protected final double mDirectionArrowCenterY;
-
-    public static final int MENU_MY_LOCATION = getSafeMenuId();
-
-    private boolean mOptionsMenuEnabled = true;
 
     // to avoid allocations during onDraw
     private final float[] mMatrixValues = new float[9];
@@ -91,6 +87,7 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
     public MarkItemOverlay(Context context,MapView mapView) {
         this(mapView, new DefaultResourceProxyImpl(context));
+        mContext = context;
     }
 
     public MarkItemOverlay(MapView mapView,
@@ -98,7 +95,6 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         super(resourceProxy);
 
         mMapView = mapView;
-        mMapController = mapView.getController();
         mCirclePaint.setARGB(0, 100, 100, 255);
         mCirclePaint.setAntiAlias(true);
 
@@ -115,7 +111,6 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
     @Override
     public void onDetach(MapView mapView) {
-        this.disableMyLocation();
         super.onDetach(mapView);
     }
 
@@ -128,65 +123,25 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         final MapView.Projection pj = mapView.getProjection();
         final int zoomDiff = MapViewConstants.MAXIMUM_ZOOMLEVEL - pj.getZoomLevel();
 
-        if (mDrawAccuracyEnabled) {
-            final float radius = lastFix.getAccuracy()
-                    / (float) TileSystem.GroundResolution(lastFix.getLatitude(),
-                    mapView.getZoomLevel());
+        //float radius = lastFix.getAccuracy()
+        //            / (float) TileSystem.GroundResolution(lastFix.getLatitude(),
+        //            mapView.getZoomLevel());
+        float radius = 10 * mContext.getResources().getDisplayMetrics().density;
 
-            mCirclePaint.setAlpha(50);
-            mCirclePaint.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(mMapCoords.x >> zoomDiff, mMapCoords.y >> zoomDiff, radius,
-                    mCirclePaint);
+        mCirclePaint.setAlpha(100);
+        mCirclePaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(mMapCoords.x >> zoomDiff, mMapCoords.y >> zoomDiff, radius,
+                mCirclePaint);
 
-            mCirclePaint.setAlpha(150);
-            mCirclePaint.setStyle(Paint.Style.STROKE);
-            canvas.drawCircle(mMapCoords.x >> zoomDiff, mMapCoords.y >> zoomDiff, radius,
-                    mCirclePaint);
-        }
+        mCirclePaint.setAlpha(150);
+        mCirclePaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(mMapCoords.x >> zoomDiff, mMapCoords.y >> zoomDiff, radius,
+        mCirclePaint);
+
 
         canvas.getMatrix(mMatrix);
         mMatrix.getValues(mMatrixValues);
 
-        if (DEBUGMODE) {
-            final float tx = (-mMatrixValues[Matrix.MTRANS_X] + 20)
-                    / mMatrixValues[Matrix.MSCALE_X];
-            final float ty = (-mMatrixValues[Matrix.MTRANS_Y] + 90)
-                    / mMatrixValues[Matrix.MSCALE_Y];
-            canvas.drawText("Lat: " + lastFix.getLatitude(), tx, ty + 5, mPaint);
-            canvas.drawText("Lon: " + lastFix.getLongitude(), tx, ty + 20, mPaint);
-            canvas.drawText("Alt: " + lastFix.getAltitude(), tx, ty + 35, mPaint);
-            canvas.drawText("Acc: " + lastFix.getAccuracy(), tx, ty + 50, mPaint);
-        }
-
-        // Calculate real scale including accounting for rotation
-        float scaleX = (float) Math.sqrt(mMatrixValues[Matrix.MSCALE_X]
-                * mMatrixValues[Matrix.MSCALE_X] + mMatrixValues[Matrix.MSKEW_Y]
-                * mMatrixValues[Matrix.MSKEW_Y]);
-        float scaleY = (float) Math.sqrt(mMatrixValues[Matrix.MSCALE_Y]
-                * mMatrixValues[Matrix.MSCALE_Y] + mMatrixValues[Matrix.MSKEW_X]
-                * mMatrixValues[Matrix.MSKEW_X]);
-        final double x = mMapCoords.x >> zoomDiff;
-        final double y = mMapCoords.y >> zoomDiff;
-        if (lastFix.hasBearing()) {
-            canvas.save();
-            // Rotate the icon
-            canvas.rotate(lastFix.getBearing(), x, y);
-            // Counteract any scaling that may be happening so the icon stays the same size
-            canvas.scale(1 / scaleX, 1 / scaleY, x, y);
-            // Draw the bitmap
-            canvas.drawBitmap(mDirectionArrowBitmap, x - mDirectionArrowCenterX, y
-                    - mDirectionArrowCenterY, mPaint);
-            canvas.restore();
-        } else {
-            canvas.save();
-            // Unrotate the icon if the maps are rotated so the little man stays upright
-            canvas.rotate(-mMapView.getMapOrientation(), x, y);
-            // Counteract any scaling that may be happening so the icon stays the same size
-            canvas.scale(1 / scaleX, 1 / scaleY, x, y);
-            // Draw the bitmap
-            canvas.drawBitmap(mPersonBitmap, x - mPersonHotspot.x, y - mPersonHotspot.y, mPaint);
-            canvas.restore();
-        }
     }
 
     protected Rect getMyLocationDrawingBounds(int zoomLevel, Location lastFix, Rect reuse) {
@@ -223,6 +178,49 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         return reuse;
     }
 
+    public void setLocation(IGeoPoint geoPoint){
+       Location location = new Location("gps");
+       location.setLatitude(geoPoint.getLatitude());
+       location.setLongitude(geoPoint.getLongitude());
+       setLocation(location);
+    }
+
+    public void setLocation(Location location){
+        mLocation = location;
+
+        TileSystem.LatLongToPixelXY(mLocation.getLatitude(), mLocation.getLongitude(),
+                MapViewConstants.MAXIMUM_ZOOMLEVEL, mMapCoords);
+        final int worldSize_2 = TileSystem.MapSize(MapViewConstants.MAXIMUM_ZOOMLEVEL) / 2;
+        mMapCoords.offset(-worldSize_2, -worldSize_2);
+
+
+         // Get new drawing bounds
+        this.getMyLocationDrawingBounds(mMapView.getZoomLevel(), mLocation, mMyLocationRect);
+
+        // If we had a previous location, merge in those bounds too
+        if (mLocation != null) {
+            mMyLocationRect.union(mMyLocationPreviousRect);
+        }
+
+        final int left = mMyLocationRect.left;
+        final int top = mMyLocationRect.top;
+        final int right = mMyLocationRect.right;
+        final int bottom = mMyLocationRect.bottom;
+
+        // Invalidate the bounds
+        mMapView.post(new Runnable() {
+            @Override
+            public void run() {
+                mMapView.invalidateMapCoordinates(left, top, right, bottom);
+            }
+        });
+
+        for (final Runnable runnable : mRunOnFirstFix) {
+            new Thread(runnable).start();
+        }
+        mRunOnFirstFix.clear();
+    }
+
     // ===========================================================
     // Methods from SuperClass/Interfaces
     // ===========================================================
@@ -232,6 +230,7 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         if (shadow)
             return;
 
+        Log.d(TAG,"drawSafe "+mLocation+" "+shadow);
         if (mLocation != null) {
             drawMyLocation(canvas, mapView, mLocation);
         }

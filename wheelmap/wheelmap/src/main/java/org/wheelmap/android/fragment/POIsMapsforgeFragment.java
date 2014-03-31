@@ -71,6 +71,7 @@ import de.greenrobot.event.EventBus;
 
 import static org.wheelmap.android.utils.ViewTool.setAlphaForView;
 
+@Deprecated
 public class POIsMapsforgeFragment extends Fragment implements
         DisplayFragment, OnMoveListener, OnZoomListener, OnTapListener,
         OnSearchDialogListener, OnExecuteBundle {

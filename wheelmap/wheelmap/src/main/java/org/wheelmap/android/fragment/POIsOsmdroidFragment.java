@@ -52,6 +52,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.R.string;
+import org.wheelmap.android.osmdroid.MarkItemOverlay;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -119,6 +120,8 @@ public class POIsOsmdroidFragment extends Fragment implements
     private POIsCursorOsmdroidOverlay mPoisItemizedOverlay;
 
     private MyLocationNewOverlay mCurrLocationOverlay;
+
+    private MarkItemOverlay markItemOverlay;
 
     private IGeoPoint mLastRequestedPosition;
 
@@ -246,6 +249,11 @@ public class POIsOsmdroidFragment extends Fragment implements
         //mMapView.getOverlays().add(myLocationOverlay);
 
         mMyLocationProvider.startLocationProvider(mCurrLocationOverlay);
+
+        markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
+
+        mMapView.getOverlays().add(markItemOverlay);
+
         mMapView.getOverlays().add(mPoisItemizedOverlay);
         mMapView.getOverlays().add(mCurrLocationOverlay);
         mMapView.setMapListener(this);
@@ -262,17 +270,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             }
         });
 
-        if(savedInstanceState != null){
-            int la = savedInstanceState.getInt(Extra.LATITUDE);
-            int lo = savedInstanceState.getInt(Extra.LONGITUDE);
-            int zoom = savedInstanceState.getInt(Extra.ZOOM_LEVEL);
-
-            mCurrentLocationGeoPoint = new GeoPoint(la,lo);
-
-            setZoomIntern(zoom);
-            centerMap(mCurrentLocationGeoPoint, true);
-            requestUpdate();
-        }
+        onRestoreInstanceState(savedInstanceState);
 
         return v;
     }
@@ -491,6 +489,32 @@ public class POIsOsmdroidFragment extends Fragment implements
         markItemIntern(geoPoint, false);
     }
 
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        if(savedInstanceState == null){
+            return;
+        }
+
+        int la = savedInstanceState.getInt(Extra.LATITUDE);
+        int lo = savedInstanceState.getInt(Extra.LONGITUDE);
+        int zoom = savedInstanceState.getInt(Extra.ZOOM_LEVEL);
+
+        mCurrentLocationGeoPoint = new GeoPoint(la,lo);
+
+        setZoomIntern(zoom);
+
+        centerMap(mCurrentLocationGeoPoint, true);
+
+        if(savedInstanceState.containsKey(Extra.SELECTED_LATITUDE)){
+            Location selectedLocation = new Location("gps");
+            selectedLocation.setLongitude(savedInstanceState.getDouble(Extra.SELECTED_LONGITUDE));
+            selectedLocation.setLatitude(savedInstanceState.getDouble(Extra.SELECTED_LATITUDE));
+            markItemOverlay.setLocation(selectedLocation);
+        }
+
+        requestUpdate();
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -504,6 +528,11 @@ public class POIsOsmdroidFragment extends Fragment implements
         outState.putInt(Extra.LATITUDE,current_location.getLatitudeE6());
         outState.putInt(Extra.LONGITUDE, current_location.getLongitudeE6());
 
+        GeoPoint selectedPOI = markItemOverlay.getLocation();
+        if(selectedPOI != null){
+            outState.putDouble(Extra.SELECTED_LATITUDE, selectedPOI.getLatitude());
+            outState.putDouble(Extra.SELECTED_LONGITUDE, selectedPOI.getLongitude());
+        }
 
     }
 
@@ -803,6 +832,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     private void markItemIntern(GeoPoint point, boolean centerToItem) {
+        markItemOverlay.setLocation(point);
         if (centerToItem) {
             centerMap(point, true);
         }
