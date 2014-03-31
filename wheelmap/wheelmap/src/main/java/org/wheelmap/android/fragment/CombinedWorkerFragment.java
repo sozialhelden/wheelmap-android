@@ -21,6 +21,7 @@ import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -188,12 +189,23 @@ public class CombinedWorkerFragment extends Fragment implements
 
                 double dlat = bdlat.doubleValue();
                 double dlon = bdlon.doubleValue();
-                /*
-                dlat *= 10000000.0;
-                dlon *= 10000000.0;
 
-                int lat = (int)dlat;
-                int lon = (int)dlon;   */
+                app.setNode(null);
+
+                for (DisplayFragment fragment : mListener) {
+                    if(fragment.getClass().toString().equals("class org.wheelmap.android.fragment.POIsOsmdroidFragment")){
+
+                        ContentValues cv = new ContentValues(2);
+
+                        cv.put(POIs.LATITUDE,dlat);
+                        cv.put(POIs.LONGITUDE,dlon);
+
+                        ((POIsOsmdroidFragment) fragment).markItem(cv,true);
+                        ((POIsOsmdroidFragment)fragment).requestUpdate();
+                    }
+                }
+
+
 
                 //GeoPoint newCurrent = new GeoPoint(lat, lon);
                 mLocation = new Location("reverseGeocoded");
@@ -206,16 +218,10 @@ public class CombinedWorkerFragment extends Fragment implements
 
                 RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
 
-                // doesn't work, maybe try with Location an byDistance
-                /*
-                Bundle b = fillExtrasWithBoundingRect(node, , );
-                b.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
-                b.putInt(Extra.WHAT, What.RETRIEVE_NODE);
+
+                // new requerstupdate, set points near
 
 
-                RestServiceHelper.executeRequest(getActivity(),b);
-*/
-                Log.d("");
 
             } else{
 

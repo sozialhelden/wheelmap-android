@@ -594,7 +594,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         return false;
     }
 
-    private void requestUpdate() {
+    protected void requestUpdate() {
         Bundle extras = fillExtrasWithBoundingRect();
         if(extras == null){
            return;

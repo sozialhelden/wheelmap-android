@@ -115,7 +115,7 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
     @Override
     public void onDetach(MapView mapView) {
-        this.disableMyLocation();
+        //this.disableMyLocation();
         super.onDetach(mapView);
     }
 
