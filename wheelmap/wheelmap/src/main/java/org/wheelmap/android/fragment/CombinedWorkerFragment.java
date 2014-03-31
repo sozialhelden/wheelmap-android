@@ -239,7 +239,7 @@ public class CombinedWorkerFragment extends Fragment implements
         Log.d(TAG, "requestSearch with bundle " + bundle.toString());
         if (bundle.containsKey(Extra.ENABLE_BOUNDING_BOX)) {
             Fragment f = (Fragment) getFragmentManager().findFragmentByTag(
-                    POIsMapsforgeFragment.TAG);
+                    POIsOsmdroidFragment.TAG);
             ((OnSearchDialogListener) f).onSearch(bundle);
 
         }

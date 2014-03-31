@@ -162,6 +162,7 @@ public class StartupActivity extends Activity implements
         if (needStartApp()) {
             startupAppDelayed();
         } else {
+            startupApp();
             finish();
         }
     }

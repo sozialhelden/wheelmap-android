@@ -47,7 +47,6 @@ import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
@@ -119,7 +118,7 @@ public class
 
     private CombinedWorkerFragment mWorkerFragment;
     private POIsListFragment mListFragment;
-    private POIsMapsforgeFragment mMapFragment;
+    private POIsOsmdroidFragment mMapFragment;
     private ViewFlipper flipper;
 
     private MapModeType mapModeType;
@@ -174,11 +173,11 @@ public class
             t.add(R.id.list_layout, mListFragment, POIsListFragment.TAG);
         }
 
-        mMapFragment = (POIsMapsforgeFragment) fm
+        mMapFragment = (POIsOsmdroidFragment) fm
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {
-            mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
-            t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
+            mMapFragment = POIsOsmdroidFragment.newInstance(false, true);
+            t.add(R.id.map_layout, mMapFragment, POIsOsmdroidFragment.TAG);
         }
 
         t.commit();
@@ -303,6 +302,8 @@ public class
         ptrOptions.headerLayout = R.layout.ptr_header;
 
         mPullToRefreshHelper = PullToRefreshAttacher.get(this, ptrOptions);
+
+
     }
 
     @Override

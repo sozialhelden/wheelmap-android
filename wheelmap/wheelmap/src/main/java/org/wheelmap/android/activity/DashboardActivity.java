@@ -41,105 +41,119 @@ public class DashboardActivity extends
 
         setContentView(R.layout.activity_dashboard);
 
-        View btn_in_der_naehe = findViewById(R.id.dashboard_btn_in_der_naehe);
-        btn_in_der_naehe.setOnTouchListener(new PressSelector());
-        btn_in_der_naehe.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openInDerNaehe();
-            }
-        });
-
-        View btn_karte = findViewById(R.id.dashboard_btn_karte);
-        btn_karte.setOnTouchListener(new PressSelector());
-        btn_karte.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openMap();
-            }
-        });
-        View btn_kategorien = findViewById(R.id.dashboard_btn_kategorien);
-        btn_kategorien.setOnTouchListener(new PressSelector());
-        btn_kategorien.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openKategorien();
-            }
-        });
-
-        View btn_mithelfen = findViewById(R.id.dashboard_btn_mithelfen);
-        btn_mithelfen.setOnTouchListener(new PressSelector());
-        btn_mithelfen.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openMithelfen();
-            }
-        });
-
-        findViewById(R.id.dashboard_info).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this,InfoActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        TextView txt_orte = (TextView) findViewById(R.id.dashboard_text_orte);
-        long count = WheelmapApp.getDefaultPrefs().getLong("ItemCountTotal",-1);
-
-        if(count <= 0){
-            txt_orte.setText("... " + getString(R.string.dashboard_locations));
-        }else{
-            txt_orte.setText(count + " "+ getString(R.string.dashboard_locations));
+        WheelmapApp app = (WheelmapApp)this.getApplication();
+        String uri = null;
+        try{
+            uri = app.getUriString();
+        }catch (Exception ex){
+            // noop
         }
 
+        if(uri != null){
+            openMap();
+        } else{
 
-        findViewById(R.id.dashboard_login).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //FragmentManager fm = getSupportFragmentManager();
-                //LoginDialogFragment loginDialog = new LoginDialogFragment();
-                //loginDialog.show(fm);
-                account();
-            }
-        });
+            View btn_in_der_naehe = findViewById(R.id.dashboard_btn_in_der_naehe);
+            btn_in_der_naehe.setOnTouchListener(new PressSelector());
+            btn_in_der_naehe.setOnClickListener(new OnClickListener() {
 
-        findViewById(R.id.dashboard_search).setOnTouchListener(new PressSelector());
-
-        findViewById(R.id.dashboard_search).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performSearch();
-            }
-        });
-
-        EditText search = (EditText) findViewById(R.id.dashboard_search_edit);
-        search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
-
-                    performSearch();
-                    return true;
+                @Override
+                public void onClick(View v) {
+                    openInDerNaehe();
                 }
-                return false;
+            });
+
+            View btn_karte = findViewById(R.id.dashboard_btn_karte);
+            btn_karte.setOnTouchListener(new PressSelector());
+            btn_karte.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    openMap();
+                }
+            });
+            View btn_kategorien = findViewById(R.id.dashboard_btn_kategorien);
+            btn_kategorien.setOnTouchListener(new PressSelector());
+            btn_kategorien.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    openKategorien();
+                }
+            });
+
+            View btn_mithelfen = findViewById(R.id.dashboard_btn_mithelfen);
+            btn_mithelfen.setOnTouchListener(new PressSelector());
+            btn_mithelfen.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    openMithelfen();
+                }
+            });
+
+            findViewById(R.id.dashboard_info).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(DashboardActivity.this,InfoActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            TextView txt_orte = (TextView) findViewById(R.id.dashboard_text_orte);
+            long count = WheelmapApp.getDefaultPrefs().getLong("ItemCountTotal",-1);
+
+            if(count <= 0){
+                txt_orte.setText("... " + getString(R.string.dashboard_locations));
+            }else{
+                txt_orte.setText(count + " "+ getString(R.string.dashboard_locations));
             }
-        });
-
-        search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                ((EditText)v.findViewById(R.id.dashboard_search_edit)).setHint("");
-            }
-        });
 
 
-        checkForUpdates();
+            findViewById(R.id.dashboard_login).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //FragmentManager fm = getSupportFragmentManager();
+                    //LoginDialogFragment loginDialog = new LoginDialogFragment();
+                    //loginDialog.show(fm);
+                    account();
+                }
+            });
+
+            findViewById(R.id.dashboard_search).setOnTouchListener(new PressSelector());
+
+            findViewById(R.id.dashboard_search).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch();
+                }
+            });
+
+            EditText search = (EditText) findViewById(R.id.dashboard_search_edit);
+            search.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if(actionId == EditorInfo.IME_ACTION_SEARCH){
+
+                        performSearch();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    ((EditText)v.findViewById(R.id.dashboard_search_edit)).setHint("");
+                }
+            });
+
+
+            checkForUpdates();
+
+        }
     }
 
     @Override

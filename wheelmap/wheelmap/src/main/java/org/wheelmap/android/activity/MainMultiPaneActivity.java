@@ -215,7 +215,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {
             mMapFragment = POIsOsmdroidFragment.newInstance(false, true);
-            t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
+            t.add(R.id.map_layout, mMapFragment, POIsOsmdroidFragment.TAG);
         }
 
         mDetailFragment = (POIDetailFragment) fm
@@ -226,27 +226,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
 
         t.commit();
-
-
-
-        // SWITCH CODE TO WERE ALL POINTS ARE LOADED
-
-        /*
-        WheelmapApp app = (WheelmapApp) getApplication();
-
-        String s = null;
-
-        try{
-            s = app.getUriString();
-        }catch (Exception ex ){
-            // exception
-        }
-
-        if(s != null){
-            // load this point and all points near to it and show the points and de detailview of the point
-        } */
-
-
 
         /*
         LinearLayout layout = (LinearLayout) getWindowDecorView().getParent().getParent();
