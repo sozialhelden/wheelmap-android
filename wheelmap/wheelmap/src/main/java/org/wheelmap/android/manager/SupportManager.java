@@ -559,30 +559,23 @@ public class SupportManager {
     private Map<WheelchairState, Drawable> createDefaultDrawables() {
 
         try{
-            InputStream is=null;
             Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
 
-            //Drawable.createFromStream(is, null)
-
-            is = mAssetManager.open("temp/marker_unknown.png");
             lookupMap.put(WheelchairState.UNKNOWN,
                     mContext.getResources().getDrawable(R.drawable.marker_unknown));
 
-            is = mAssetManager.open("temp/marker_limited.png");
             lookupMap.put(WheelchairState.LIMITED,
                     mContext.getResources().getDrawable(R.drawable.marker_limited));
 
-            is = mAssetManager.open("temp/marker_no.png");
             lookupMap.put(WheelchairState.NO,
                     mContext.getResources().getDrawable(R.drawable.marker_no));
 
-            is = mAssetManager.open("temp/marker_yes.png");
             lookupMap.put(WheelchairState.YES,
                     mContext.getResources().getDrawable(R.drawable.marker_yes));
             return lookupMap;
         }catch(Exception e){
             e.printStackTrace();
-            return createDrawableLookup2("marker/%s.png", true);
+            return null;
         }
     }
 
