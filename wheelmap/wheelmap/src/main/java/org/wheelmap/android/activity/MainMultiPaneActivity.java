@@ -210,7 +210,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         }   */
 
 
-
         mMapFragment = (POIsOsmdroidFragment) fm
                 .findFragmentById(R.id.map_layout);
         if (mMapFragment == null) {

@@ -13,11 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import de.akquinet.android.androlog.Log;
+
 
 /**
  * Created by SMF on 18/03/14.
  */
 public class PictureActivity extends Activity{
+
+    private static final String TAG = PictureActivity.class.getSimpleName();
 
     public static final String EXTRA_URL="extra_url";
 
@@ -35,7 +39,12 @@ public class PictureActivity extends Activity{
         ImageView image = new ImageView(this);
         image.setBackgroundColor(Color.TRANSPARENT);
         image.setAdjustViewBounds(true);
-        ImageLoader.getInstance().displayImage(extras.getString(EXTRA_URL),image);
+
+        String url = extras.getString(EXTRA_URL);
+
+        Log.d(TAG,"load image: "+url);
+
+        ImageLoader.getInstance().displayImage(url,image);
 
         setContentView(image);
 

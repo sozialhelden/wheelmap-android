@@ -110,7 +110,7 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
 
         marker.setBounds(-half, -2*half, half, 0);
 
-        Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
+        //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
 
 
 
