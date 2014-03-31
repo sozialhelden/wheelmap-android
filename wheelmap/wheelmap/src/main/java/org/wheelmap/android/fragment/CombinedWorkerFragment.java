@@ -183,17 +183,39 @@ public class CombinedWorkerFragment extends Fragment implements
 
             if(node != null){
 
+                BigDecimal bdlat = node.getLat();
+                BigDecimal bdlon = node.getLon();
+
+                double dlat = bdlat.doubleValue();
+                double dlon = bdlon.doubleValue();
+                /*
+                dlat *= 10000000.0;
+                dlon *= 10000000.0;
+
+                int lat = (int)dlat;
+                int lon = (int)dlon;   */
+
+                //GeoPoint newCurrent = new GeoPoint(lat, lon);
+                mLocation = new Location("reverseGeocoded");
+                mLocation.setLatitude(dlat);
+                mLocation.setLongitude(dlon);
+                //mLocation.setLatitude(newCurrent.getLatitudeE6() / 1e6);
+                //mLocation.setLongitude(newCurrent.getLongitudeE6() / 1e6);
+                mLocation.setAccuracy(3333);
+                mLocation.setBearing(333);
+
+                RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
 
                 // doesn't work, maybe try with Location an byDistance
                 /*
-                Bundle b = fillExtrasWithBoundingRect(node, bundle.getInt("latSpan"), bundle.getInt("lonSpan"));
+                Bundle b = fillExtrasWithBoundingRect(node, , );
                 b.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
                 b.putInt(Extra.WHAT, What.RETRIEVE_NODE);
 
 
                 RestServiceHelper.executeRequest(getActivity(),b);
-
-                Log.d("");*/
+*/
+                Log.d("");
 
             } else{
 
@@ -204,27 +226,6 @@ public class CombinedWorkerFragment extends Fragment implements
             }
 
         }
-    }
-
-    private Bundle fillExtrasWithBoundingRect(Node node,int latSpan,int lonSpan) {
-        Bundle bundle = new Bundle();
-
-        BigDecimal bdLat = node.getLat();
-        BigDecimal bdLon = node.getLon();
-        int lat = bdLat.intValue();
-        int lon = bdLon.intValue();
-
-        int latE6 = lat * 1000000;
-        int lonE6 = lon * 1000000;
-
-        ParceableBoundingBox boundingBox = new ParceableBoundingBox(
-                latE6 + (latSpan / 2), lonE6
-                + (lonSpan / 2),
-                latE6 - (latSpan / 2), lonE6
-                - (lonSpan / 2));
-        bundle.putSerializable(Extra.BOUNDING_BOX, boundingBox);
-
-        return bundle;
     }
 
     @Override
