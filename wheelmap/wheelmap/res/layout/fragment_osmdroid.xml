@@ -42,13 +42,13 @@
 
     </ImageButton>
 
-    <!--<LinearLayout android:id="@+id/my_outofzoom_text_smartphone"
+    <LinearLayout android:id="@+id/my_outofzoom_text_smartphone"
                   android:layout_width="200dp"
                   android:layout_marginTop="25dp"
                   android:layout_centerHorizontal="true"
                   android:layout_height="70dp"
                   android:background="@drawable/border_rounded_corner"
-
+                  android:alpha="0.5"
                   android:visibility="gone"
                   android:gravity="center"
                   android:clickable="true">
@@ -62,6 +62,6 @@
                 android:text="@string/to_far_away">
 
         </TextView>
-    </LinearLayout>   -->
+    </LinearLayout>
 
 </RelativeLayout>

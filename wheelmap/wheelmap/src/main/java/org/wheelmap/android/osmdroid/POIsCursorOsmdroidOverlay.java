@@ -104,7 +104,11 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
             marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
         }
 
-        marker.setBounds(-32, -64, 32, 0);
+        float density = mContext.getResources().getDisplayMetrics().density;
+
+        int half = (int)(16*density);
+
+        marker.setBounds(-half, -2*half, half, 0);
 
         Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
 
@@ -200,7 +204,7 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         /* Draw in backward cycle, so the items with the least index are on the front. */
         for (int i = size; i >= 0; i--) {
             final OverlayItem item = getItem(i);
-            pj.toMapPixels(item.mGeoPoint, mCurScreenCoords);
+            pj.toMapPixels(item.getPoint(), mCurScreenCoords);
 
             onDrawItem(canvas.getSafeCanvas(), item, mCurScreenCoords, canvasMatrix);
         }
