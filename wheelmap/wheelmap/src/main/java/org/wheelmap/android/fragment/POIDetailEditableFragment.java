@@ -33,6 +33,8 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
 import org.wheelmap.android.activity.LoginActivity;
+import org.wheelmap.android.activity.WheelchairStateActivity;
+import org.wheelmap.android.activity.WrapperActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.manager.SupportManager;
@@ -42,6 +44,7 @@ import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.ICredentials;
@@ -78,6 +81,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.sql.Wrapper;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
@@ -306,6 +310,8 @@ public class POIDetailEditableFragment extends Fragment implements
             Intent intent = new Intent(getActivity(),LoginActivity.class);
             startActivityForResult(intent, REQUEST_CODE_LOGIN);
         }
+
+
     }
 
     @Override
@@ -316,7 +322,57 @@ public class POIDetailEditableFragment extends Fragment implements
                   getActivity().onBackPressed();
             }
         }
+
+        if (requestCode == Request.SELECT_WHEELCHAIRSTATE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // newly selected wheelchair state as action data
+                if (data != null) {
+                    WheelchairState state = WheelchairState
+                            .valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
+                                    Extra.UNKNOWN));
+                    setWheelchairState(state);
+                    if(mListener != null){
+                        mListener.onEditWheelchairState(state);
+                    }
+                    /*updateDatabase(poiID, state);
+                    Log.d(TAG, "starting RestServiceHelper.executeUpdateServer");
+                    RestServiceHelper.executeUpdateServer(getActivity(), null); */
+                }
+            }
+        }
+
+        if(requestCode == Request.SELECT_GEOLOCATION && resultCode == Activity.RESULT_OK && data != null){
+            double latitude = data.getDoubleExtra(Extra.LATITUDE,mLatitude);
+            double longitude = data.getDoubleExtra(Extra.LONGITUDE,mLongitude);
+            setGeolocation(latitude,longitude);
+            if(mListener != null){
+               mListener.onEditGeolocation(latitude,longitude);
+            }
+        }
+
+        if(requestCode == Request.SELECT_NODETYPE && resultCode == Activity.RESULT_OK && data != null){
+            int nodeType = data.getIntExtra(Extra.NODETYPE,mNodeType);
+            setNodetype(nodeType);
+            if(mListener != null){
+                mListener.onEditNodetype(nodeType);
+            }
+        }
     }
+
+    /*private void updateDatabase(long id, WheelchairState state) {
+        if (id == Extra.ID_UNKNOWN || state == null) {
+            return;
+        }
+        Log.d(TAG,
+                "updating id = " + id + " state = "
+                        + state.asRequestParameter());
+
+        ContentValues values = new ContentValues();
+        values.put(POIs.WHEELCHAIR, state.getId());
+        values.put(POIs.DIRTY, POIs.DIRTY_STATE);
+
+        PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(), id, values);
+    }   */
 
     private void retrieve(Bundle bundle) {
         boolean loadTempStore = mTemporaryStored
@@ -376,21 +432,34 @@ public class POIDetailEditableFragment extends Fragment implements
         int id = v.getId();
         switch (id) {
             case R.id.wheelchair_state_layout: {
-                if (mListener != null) {
+                /* if (mListener != null) {
                     mListener.onEditWheelchairState(mWheelchairState);
-                }
+                }*/
+
+                Intent intent = new Intent(getActivity(), WheelchairStateActivity.class);
+                intent.putExtra(Extra.WHEELCHAIR_STATE, mWheelchairState.getId());
+                startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
                 break;
             }
             case R.id.edit_geolocation: {
-                if (mListener != null) {
+                /*if (mListener != null) {
                     mListener.onEditGeolocation(mLatitude, mLongitude);
-                }
+                } */
+                Intent intent = new Intent(getActivity(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,EditPositionFragment.class.getName());
+                intent.putExtra(Extra.LATITUDE,mLatitude);
+                intent.putExtra(Extra.LONGITUDE,mLongitude);
+                startActivityForResult(intent, Request.SELECT_GEOLOCATION);
                 break;
             }
             case R.id.edit_nodetype: {
-                if (mListener != null) {
+                /*if (mListener != null) {
                     mListener.onEditNodetype(mNodeType);
-                }
+                } */
+                Intent intent = new Intent(getActivity(), WrapperActivity.class);
+                intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,NodetypeSelectFragment.class.getName());
+                intent.putExtra(Extra.NODETYPE, mNodeType);
+                startActivityForResult(intent, Request.SELECT_NODETYPE);
                 break;
             }
 

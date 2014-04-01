@@ -42,6 +42,7 @@ import org.wheelmap.android.utils.UtilsMisc;
 import org.mapsforge.android.maps.MapView.OnMoveListener;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -194,9 +195,8 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         positionSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onEditPosition(mCrrLatitude, mCrrLongitude);
-                }
+
+                save();
             }
         });
 
@@ -204,6 +204,15 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
 
         return v;
+    }
+
+    public void save(){
+        Bundle b = new Bundle();
+        b.putDouble(Extra.LATITUDE,mCrrLatitude);
+        b.putDouble(Extra.LONGITUDE,mCrrLongitude);
+        Intent intent = getActivity().getIntent().putExtras(b);
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
     }
 
     @Override
@@ -301,6 +310,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
     }  */
 
     private void requestUpdate() {
+        if(true){
+           return;
+        }
         Bundle extras = fillExtrasWithBoundingRect();
         mWorkerFragment.requestUpdate(extras);
     }

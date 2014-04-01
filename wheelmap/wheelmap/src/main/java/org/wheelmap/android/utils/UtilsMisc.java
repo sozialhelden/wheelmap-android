@@ -34,6 +34,7 @@ import android.database.DatabaseUtils;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -209,14 +210,17 @@ public class UtilsMisc {
 
    public static File createImageFile(Context context) throws IOException {
         String timeStamp =
-                new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "png_" + timeStamp + "_";
-        File image = File.createTempFile(
+                new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
+        String imageFileName = "jpg_" + timeStamp + "_";
+        /* File image = File.createTempFile(
                 imageFileName,
                 ".png",
                 context.getCacheDir()
-        );
-        return image;
+        );  */
+        return new File(Environment.getExternalStoragePublicDirectory(
+               Environment.DIRECTORY_PICTURES), imageFileName+".jpg");
+
+       //return image;
     }
 
     public static String getFilePathFromContentUri(Uri selectedVideoUri,

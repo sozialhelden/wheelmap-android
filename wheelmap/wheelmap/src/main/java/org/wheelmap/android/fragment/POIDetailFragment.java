@@ -68,6 +68,7 @@ import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.FIleUtil;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
@@ -85,6 +86,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -340,7 +342,6 @@ public class POIDetailFragment extends Fragment implements
 
         ScrollView scrollView = (ScrollView)v.findViewById(R.id.scrollView);
         scrollView.requestDisallowInterceptTouchEvent(true);
-
         View closeButton = v.findViewById(R.id.titlebar_backbutton);
 
         mShowMenu = false;
@@ -1051,11 +1052,13 @@ public class POIDetailFragment extends Fragment implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    pictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    startGetPhotoFromGalleryIntent();
+                    /*pictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT);
                     pictureActionIntent.setType("image/*");
                     pictureActionIntent.putExtra(Extra.WM_ID, poiId);
+                    pictureActionIntent = getGetPhotoFromGalleryIntent();
                     startActivityForResult(pictureActionIntent,
-                            Request.REQUESTCODE_PHOTO);
+                            Request.REQUESTCODE_PHOTO);   */
                 } else if (which == 1) {
                     pictureActionIntent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1070,6 +1073,21 @@ public class POIDetailFragment extends Fragment implements
 
     }
 
+    public void startGetPhotoFromGalleryIntent(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            Intent intent = new Intent();
+            intent.setType("image/jpeg");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent,
+                    Request.REQUESTCODE_PHOTO);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/jpeg");
+            startActivityForResult(intent, Request.GALLERY_KITKAT_INTENT_CALLED);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1077,11 +1095,17 @@ public class POIDetailFragment extends Fragment implements
             return;
         }
 
-        if(requestCode != Request.REQUESTCODE_PHOTO){
+        if(requestCode == Request.REQUESTCODE_PHOTO
+                || requestCode == Request.GALLERY_KITKAT_INTENT_CALLED){
+            handlePhotoIntentResult(requestCode,resultCode,data);
             return;
         }
 
 
+    }
+
+    @SuppressLint("NewApi")
+    private void handlePhotoIntentResult(int requestCode, int resultCode, Intent data){
         File photoFile=null;
 
         if(data != null && data.getData() == null){
@@ -1089,17 +1113,28 @@ public class POIDetailFragment extends Fragment implements
                 try{
                     Bitmap image = (Bitmap) data.getExtras().get("data");
                     photoFile = UtilsMisc.createImageFile(getActivity());
+
                     FileOutputStream fOut = new FileOutputStream(photoFile);
-                    image.compress(Bitmap.CompressFormat.PNG,100, fOut);
+                    image.compress(Bitmap.CompressFormat.JPEG,100, fOut);
                     fOut.flush();
                     fOut.close();
                 }catch(Exception e){}
             }
         }else if(data!=null && data.getData() != null ){
             Uri photo = data.getData();
-            photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
-                    getActivity().getContentResolver()));
 
+            if(requestCode == Request.GALLERY_KITKAT_INTENT_CALLED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                final int takeFlags = data.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // Check for the freshest data.
+                getActivity().getContentResolver().takePersistableUriPermission(photo, takeFlags);
+
+            }
+
+            //photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
+              //      getActivity().getContentResolver()));
+            photoFile = new File(FIleUtil.getPath(getActivity(),photo));
         }
 
         uploadPhoto(photoFile);
@@ -1108,32 +1143,31 @@ public class POIDetailFragment extends Fragment implements
     File photoFile;
     public void uploadPhoto(File photoFile){
         this.photoFile = photoFile;
+        if(photoFile != null){
+            if(progress == null){
+                progress = new ProgressDialog(getActivity());
+                progress.setMessage(getString(R.string.photo_upload_progress_title));
+                progress.show();
+            }else{
+                if(progress.isShowing()){
+                    return;
+                }
+                progress.show();
+            }
+            if(dialog !=null){
+                dialog.dismiss();
+                dialog = null;
+            }
+            Log.d(TAG,"photo to upload: "+photoFile+"");
+            UploadPhotoTask upload = new UploadPhotoTask(getActivity().getApplication(),progress,wmID);
+            upload.execute(photoFile);
+            photoFile = null;
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if(photoFile != null){
-             if(progress == null){
-                   progress = new ProgressDialog(getActivity());
-                   progress.setMessage(getString(R.string.photo_upload_progress_title));
-                   progress.show();
-             }else{
-                 if(progress.isShowing()){
-                     return;
-                 }
-                 progress.show();
-             }
-             if(dialog !=null){
-                dialog.dismiss();
-                dialog = null;
-             }
-             Log.d(TAG,"photo to upload: "+photoFile+"");
-             UploadPhotoTask upload = new UploadPhotoTask(getActivity().getApplication(),progress,wmID);
-             upload.execute(photoFile);
-             photoFile = null;
-        }
     }
 
     @Override

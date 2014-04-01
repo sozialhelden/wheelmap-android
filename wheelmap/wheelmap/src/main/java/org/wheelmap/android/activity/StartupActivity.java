@@ -101,7 +101,13 @@ public class StartupActivity extends Activity implements
         mState.mReceiver.setReceiver(this);
 
         //checkForHockeyUpdates();
-        onHockeyDone();
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onHockeyDone();
+            }
+        },500);
 
     }
 

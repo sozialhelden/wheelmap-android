@@ -28,6 +28,7 @@ import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 
+@Deprecated
 @Activity.Addons("MyRoboguice")
 public class OLDSettingsActivity extends Activity {
 

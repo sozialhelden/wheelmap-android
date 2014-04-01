@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 
+@Deprecated
 public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
 
     private final static String TAG = POIsCursorMapsforgeOverlay.class

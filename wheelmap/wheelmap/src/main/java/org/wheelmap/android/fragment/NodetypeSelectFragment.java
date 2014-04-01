@@ -32,6 +32,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,16 +101,13 @@ public class NodetypeSelectFragment extends ListFragment {
         switch (item.type) {
             case NODETYPE:
                 mNodeTypeSelected = item.id;
-                // if (oldCheckedView != null)
-                // oldCheckedView.setChecked(false);
-                // CheckedTextView view = (CheckedTextView) v
-                // .findViewById(R.id.search_type);
-                // view.setChecked(true);
-                // oldCheckedView = view;
 
-                if (mListener != null) {
-                    mListener.onSelect(mNodeTypeSelected);
-                }
+                Intent intent = getActivity().getIntent();
+                intent.putExtra(Extra.NODETYPE, mNodeTypeSelected);
+                getActivity().setResult(android.app.Activity.RESULT_OK,intent);
+                getActivity().finish();
+
+
                 break;
             default:
                 //
