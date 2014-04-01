@@ -33,6 +33,7 @@ import android.graphics.Paint.Style;
 import java.util.HashSet;
 import java.util.Set;
 
+@Deprecated
 public class MyLocationOverlay extends CircleOverlay<OverlayCircle> {
 
     private Set<OverlayCircle> mCircles = new HashSet<OverlayCircle>();

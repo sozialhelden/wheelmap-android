@@ -27,6 +27,7 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 
 import android.graphics.drawable.Drawable;
 
+@Deprecated
 public class POILocationEditableOverlay extends ItemizedOverlay<OverlayItem> {
 
     private OverlayItem mItem;

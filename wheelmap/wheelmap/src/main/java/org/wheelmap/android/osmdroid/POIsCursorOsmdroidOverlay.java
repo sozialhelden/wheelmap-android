@@ -63,6 +63,10 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
             return;
         }
 
+        if(cursor == null){
+            return;
+        }
+
         mCursor = cursor;
 
         if (mCursor == null) {

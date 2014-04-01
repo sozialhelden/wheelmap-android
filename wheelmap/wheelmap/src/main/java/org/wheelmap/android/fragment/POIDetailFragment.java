@@ -29,8 +29,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 
 import org.holoeverywhere.LayoutInflater;
@@ -43,9 +41,7 @@ import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.async.UploadPhotoTask;
 import org.wheelmap.android.model.Request;
 import org.wheelmap.android.service.RestService;
-import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.json.JSONObject;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -68,13 +64,13 @@ import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.FileUtil;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
 
-import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -82,13 +78,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
-import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -109,14 +102,9 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1051,11 +1039,13 @@ public class POIDetailFragment extends Fragment implements
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    pictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                    startGetPhotoFromGalleryIntent();
+                    /*pictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT);
                     pictureActionIntent.setType("image/*");
                     pictureActionIntent.putExtra(Extra.WM_ID, poiId);
+                    pictureActionIntent = getGetPhotoFromGalleryIntent();
                     startActivityForResult(pictureActionIntent,
-                            Request.REQUESTCODE_PHOTO);
+                            Request.REQUESTCODE_PHOTO);   */
                 } else if (which == 1) {
                     pictureActionIntent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1070,6 +1060,22 @@ public class POIDetailFragment extends Fragment implements
 
     }
 
+    public void startGetPhotoFromGalleryIntent(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            Intent intent = new Intent();
+            intent.setType("image/jpeg");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent,
+                    Request.REQUESTCODE_PHOTO);
+        } else {
+            final String ACTION_OPEN_DOCUMENT = "android.intent.action.OPEN_DOCUMENT";
+            Intent intent = new Intent(ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/jpeg");
+            startActivityForResult(intent, Request.GALLERY_KITKAT_INTENT_CALLED);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1077,11 +1083,17 @@ public class POIDetailFragment extends Fragment implements
             return;
         }
 
-        if(requestCode != Request.REQUESTCODE_PHOTO){
+        if(requestCode == Request.REQUESTCODE_PHOTO
+                || requestCode == Request.GALLERY_KITKAT_INTENT_CALLED){
+            handlePhotoIntentResult(requestCode,resultCode,data);
             return;
         }
 
 
+    }
+
+    @SuppressLint("NewApi")
+    private void handlePhotoIntentResult(int requestCode, int resultCode, Intent data){
         File photoFile=null;
 
         if(data != null && data.getData() == null){
@@ -1089,51 +1101,72 @@ public class POIDetailFragment extends Fragment implements
                 try{
                     Bitmap image = (Bitmap) data.getExtras().get("data");
                     photoFile = UtilsMisc.createImageFile(getActivity());
+
                     FileOutputStream fOut = new FileOutputStream(photoFile);
-                    image.compress(Bitmap.CompressFormat.PNG,100, fOut);
+                    image.compress(Bitmap.CompressFormat.JPEG,100, fOut);
                     fOut.flush();
                     fOut.close();
                 }catch(Exception e){}
             }
         }else if(data!=null && data.getData() != null ){
             Uri photo = data.getData();
-            photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
-                    getActivity().getContentResolver()));
 
+            /*if(requestCode == Request.GALLERY_KITKAT_INTENT_CALLED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                final int takeFlags = data.getFlags()
+                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                // Check for the freshest data.
+                //getActivity().getContentResolver().takePersistableUriPermission(photo, takeFlags);
+
+            }*/
+
+
+            String path = FileUtil.getPath(getActivity(), photo);
+            if(path != null){
+                photoFile = new File(path);
+            }else{
+                try{
+                    photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
+                          getActivity().getContentResolver()));
+                }catch(Exception e){}
+            }
         }
 
-        uploadPhoto(photoFile);
+        if(photoFile != null){
+            uploadPhoto(photoFile);
+        }else{
+            //TODO but should never happen
+        }
     }
 
     File photoFile;
     public void uploadPhoto(File photoFile){
         this.photoFile = photoFile;
+        if(photoFile != null){
+            if(progress == null){
+                progress = new ProgressDialog(getActivity());
+                progress.setMessage(getString(R.string.photo_upload_progress_title));
+                progress.show();
+            }else{
+                if(progress.isShowing()){
+                    return;
+                }
+                progress.show();
+            }
+            if(dialog !=null){
+                dialog.dismiss();
+                dialog = null;
+            }
+            Log.d(TAG,"photo to upload: "+photoFile+"");
+            UploadPhotoTask upload = new UploadPhotoTask(getActivity().getApplication(),progress,wmID);
+            upload.execute(photoFile);
+            photoFile = null;
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if(photoFile != null){
-             if(progress == null){
-                   progress = new ProgressDialog(getActivity());
-                   progress.setMessage(getString(R.string.photo_upload_progress_title));
-                   progress.show();
-             }else{
-                 if(progress.isShowing()){
-                     return;
-                 }
-                 progress.show();
-             }
-             if(dialog !=null){
-                dialog.dismiss();
-                dialog = null;
-             }
-             Log.d(TAG,"photo to upload: "+photoFile+"");
-             UploadPhotoTask upload = new UploadPhotoTask(getActivity().getApplication(),progress,wmID);
-             upload.execute(photoFile);
-             photoFile = null;
-        }
     }
 
     @Override

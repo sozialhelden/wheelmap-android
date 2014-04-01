@@ -55,7 +55,6 @@ import de.akquinet.android.androlog.Log;
 //@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailEditableActivity extends MapActivity implements
         OnPOIDetailEditableListener, OnLoginDialogListener,
-        OnEditPositionListener, OnNodetypeSelectListener,
         OnBackStackChangedListener, OnWheelchairState {
 
     private final static String TAG = POIDetailEditableActivity.class.getSimpleName();
@@ -113,30 +112,6 @@ public class POIDetailEditableActivity extends MapActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    /*private void showAsPopup(Activity activity) {
-        activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        activity.getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND,
-                WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        LayoutParams params = activity.getWindow().getAttributes();
-        params.height = LayoutParams.WRAP_CONTENT;
-
-        Display display = getWindowManager().getDefaultDisplay();
-        int width = 600;
-        if (android.os.Build.VERSION.SDK_INT < 13) {
-            width = display.getWidth();
-        } else {
-            Point size = new Point();
-            display.getSize(size);
-            width = size.x;
-        }
-        width /= 2;
-        params.width = width < 600 ? 600 : width;
-        params.alpha = 1.0f;
-        params.dimAmount = 0.5f;
-        activity.getWindow().setAttributes(params);
-    }*/
-
     private void setExternalEditableState(Bundle state) {
         mExternalEditableState = new ExternalEditableState();
         if (state != null) {
@@ -152,19 +127,21 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public void onEditWheelchairState(WheelchairState state) {
-        mFragment = WheelchairStateFragment.newInstance(state);
+       /* mFragment = WheelchairStateFragment.newInstance(state);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.content, mFragment, WheelchairStateFragment.TAG);
         ft.addToBackStack(null);
         ft.commit();
+        */
+        onWheelchairStateSelect(state);
     }
 
     @Override
     public void onWheelchairStateSelect(WheelchairState state) {
         Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
         mExternalEditableState.state = state;
-        getSupportFragmentManager().popBackStack();
+        //getSupportFragmentManager().popBackStack();
     }
 
     @Override
@@ -174,37 +151,14 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public void onEditGeolocation(double latitude, double longitude) {
-        mFragment = EditPositionFragment.newInstance(latitude, longitude);
-
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content, mFragment, EditPositionFragment.TAG);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
-
-    @Override
-    public void onEditPosition(double latitude, double longitude) {
         mExternalEditableState.latitude = latitude;
         mExternalEditableState.longitude = longitude;
-        getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void onEditNodetype(int nodetype) {
-        mFragment = NodetypeSelectFragment.newInstance(nodetype);
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content, mFragment, NodetypeSelectFragment.TAG);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
-
-    @Override
-    public void onSelect(int nodetype) {
         mExternalEditableState.nodetype = nodetype;
-        getSupportFragmentManager().popBackStack();
     }
 
     @Override

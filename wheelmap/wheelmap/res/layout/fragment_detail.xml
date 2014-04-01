@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wheelmap.android.view.VerticalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
@@ -168,6 +168,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:smoothScrollbar="true"
+                    android:scrollbars="horizontal"
                     android:spacing="20dip" >
             </org.wheelmap.android.adapter.HorizontalView>
             <!--</RelativeLayout>   -->
@@ -243,4 +244,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</org.wheelmap.android.view.VerticalScrollView>

@@ -27,6 +27,7 @@ import org.wheelmap.android.model.WheelchairState;
 
 import android.graphics.drawable.Drawable;
 
+@Deprecated
 public class POIMapItem extends OverlayItem {
 
     /**

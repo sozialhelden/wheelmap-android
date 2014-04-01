@@ -28,10 +28,11 @@ limitations under the License.
         >
 
     <uses-sdk
-            android:minSdkVersion="7"
+            android:minSdkVersion="8"
             android:targetSdkVersion="16"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -99,6 +100,7 @@ limitations under the License.
         </activity>
         <activity
                 android:name="org.wheelmap.android.activity.POIDetailEditableActivity"
+                android:windowSoftInputMode="adjustPan"
                 android:label="@string/title_editor"
                 android:theme="@style/Theme.Wheelmap.SubActivity"/>
         <activity
@@ -115,6 +117,10 @@ limitations under the License.
                 android:theme="@style/Theme.Wheelmap.SubActivity"/>
         <activity
                 android:name="org.wheelmap.android.activity.WheelchairStateActivity"
+
+                android:theme="@style/Theme.Wheelmap.SubActivity"/>
+        <activity
+                android:name="org.wheelmap.android.activity.WrapperActivity"
 
                 android:theme="@style/Theme.Wheelmap.SubActivity"/>
         <activity
