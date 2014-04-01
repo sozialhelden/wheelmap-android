@@ -130,6 +130,7 @@ public class
         appProperties = AppProperties.getInstance(getApplication());
         Log.d(TAG, "onCreate");
 
+
         setSupportProgressBarIndeterminateVisibility(false);
 
         ActionBar actionbar = getSupportActionBar();
