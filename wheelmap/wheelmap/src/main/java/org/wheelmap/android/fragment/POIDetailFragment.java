@@ -29,8 +29,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 
 import org.holoeverywhere.LayoutInflater;
@@ -43,9 +41,7 @@ import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.async.UploadPhotoTask;
 import org.wheelmap.android.model.Request;
 import org.wheelmap.android.service.RestService;
-import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.json.JSONObject;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -68,14 +64,13 @@ import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.FIleUtil;
+import org.wheelmap.android.utils.FileUtil;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
 
-import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -83,14 +78,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
-import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -111,14 +102,9 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -342,6 +328,7 @@ public class POIDetailFragment extends Fragment implements
 
         ScrollView scrollView = (ScrollView)v.findViewById(R.id.scrollView);
         scrollView.requestDisallowInterceptTouchEvent(true);
+
         View closeButton = v.findViewById(R.id.titlebar_backbutton);
 
         mShowMenu = false;
@@ -1133,12 +1120,23 @@ public class POIDetailFragment extends Fragment implements
 
             }*/
 
-            //photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
-              //      getActivity().getContentResolver()));
-            photoFile = new File(FIleUtil.getPath(getActivity(),photo));
+
+            String path = FileUtil.getPath(getActivity(), photo);
+            if(path != null){
+                photoFile = new File(path);
+            }else{
+                try{
+                    photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
+                          getActivity().getContentResolver()));
+                }catch(Exception e){}
+            }
         }
 
-        uploadPhoto(photoFile);
+        if(photoFile != null){
+            uploadPhoto(photoFile);
+        }else{
+            //TODO but should never happen
+        }
     }
 
     File photoFile;

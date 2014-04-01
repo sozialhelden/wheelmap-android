@@ -13,10 +13,7 @@ import android.provider.MediaStore;
 
 import java.awt.*;
 
-/**
- * Created by torstenlemm on 01.04.14.
- */
-public class FIleUtil {
+public class FileUtil {
 
    /**
             * Get a file path from a Uri. This will get the the path for Storage Access
