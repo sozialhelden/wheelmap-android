@@ -1081,7 +1081,8 @@ public class POIDetailFragment extends Fragment implements
             startActivityForResult(intent,
                     Request.REQUESTCODE_PHOTO);
         } else {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            final String ACTION_OPEN_DOCUMENT = "android.intent.action.OPEN_DOCUMENT";
+            Intent intent = new Intent(ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("image/jpeg");
             startActivityForResult(intent, Request.GALLERY_KITKAT_INTENT_CALLED);
@@ -1123,14 +1124,14 @@ public class POIDetailFragment extends Fragment implements
         }else if(data!=null && data.getData() != null ){
             Uri photo = data.getData();
 
-            if(requestCode == Request.GALLERY_KITKAT_INTENT_CALLED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            /*if(requestCode == Request.GALLERY_KITKAT_INTENT_CALLED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
                 final int takeFlags = data.getFlags()
                         & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                         | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 // Check for the freshest data.
-                getActivity().getContentResolver().takePersistableUriPermission(photo, takeFlags);
+                //getActivity().getContentResolver().takePersistableUriPermission(photo, takeFlags);
 
-            }
+            }*/
 
             //photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
               //      getActivity().getContentResolver()));

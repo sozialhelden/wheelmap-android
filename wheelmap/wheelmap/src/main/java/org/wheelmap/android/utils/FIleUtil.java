@@ -30,7 +30,7 @@ public class FIleUtil {
    @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
 
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        final boolean isKitKat = Build.VERSION.SDK_INT >= 19;
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
