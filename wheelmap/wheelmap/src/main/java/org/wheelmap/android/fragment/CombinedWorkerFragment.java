@@ -182,48 +182,7 @@ public class CombinedWorkerFragment extends Fragment implements
                 // noop
             }
 
-            if(node != null){
-
-                BigDecimal bdlat = node.getLat();
-                BigDecimal bdlon = node.getLon();
-
-                double dlat = bdlat.doubleValue();
-                double dlon = bdlon.doubleValue();
-
-                app.setNode(null);
-
-                for (DisplayFragment fragment : mListener) {
-                    if(fragment.getClass().toString().equals("class org.wheelmap.android.fragment.POIsOsmdroidFragment")){
-
-                        ContentValues cv = new ContentValues(2);
-
-                        cv.put(POIs.LATITUDE,dlat);
-                        cv.put(POIs.LONGITUDE,dlon);
-
-                        ((POIsOsmdroidFragment) fragment).markItem(cv,true);
-                        ((POIsOsmdroidFragment)fragment).requestUpdate();
-                    }
-                }
-
-
-
-                //GeoPoint newCurrent = new GeoPoint(lat, lon);
-                mLocation = new Location("reverseGeocoded");
-                mLocation.setLatitude(dlat);
-                mLocation.setLongitude(dlon);
-                //mLocation.setLatitude(newCurrent.getLatitudeE6() / 1e6);
-                //mLocation.setLongitude(newCurrent.getLongitudeE6() / 1e6);
-                mLocation.setAccuracy(3333);
-                mLocation.setBearing(333);
-
-                RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
-
-
-                // new requerstupdate, set points near
-
-
-
-            } else{
+            if(node == null){
 
                 bundle.putInt(Extra.WHAT, What.RETRIEVE_NODES);
                 bundle.putParcelable(Extra.STATUS_RECEIVER, mReceiver);
@@ -232,6 +191,34 @@ public class CombinedWorkerFragment extends Fragment implements
             }
 
         }
+    }
+
+    public ContentValues getValues(Node node){
+        ContentValues values = new ContentValues(19);
+
+        values.put("nodetype_identifier",node.getNodeType().getIdentifier());
+        values.put("icon",node.getIcon());
+        values.put("phone", node.getPhone());
+        values.put("website",node.getWebsite());
+
+        values.put("street",node.getStreet());
+
+        values.put("category_id",node.getCategory().getId().toString());
+        values.put("postcode",node.getPostcode());
+        values.put("house_num",node.getHousenumber());
+        values.put("city",node.getCity());
+        values.put("category_identifier",node.getCategory().getIdentifier());
+        values.put("nodetype_id", node.getNodeType().getId().toString());
+
+        values.put("wheelchair",node.getWheelchair());
+        values.put("description",node.getWheelchairDescription());
+        values.put("name",node.getName());
+
+
+        values.put(POIs.LONGITUDE,node.getLon().toString());
+        values.put(POIs.LATITUDE, node.getLat().toString());
+        values.put("wm_id",node.getId().toString());
+        return values;
     }
 
     @Override
@@ -386,6 +373,53 @@ public class CombinedWorkerFragment extends Fragment implements
                 break;
             }
             case RestService.STATUS_FINISHED: {
+
+                if(resultData.get("WHAT").equals(What.RETRIEVE_NODE)){
+                    WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+                    Node node = null;
+                    try{
+                        node = app.getNode();
+                    }catch (Exception ex){
+                        // noop
+                    }
+
+                    if(node != null){
+
+                        BigDecimal bdlat = node.getLat();
+                        BigDecimal bdlon = node.getLon();
+
+                        double dlat = bdlat.doubleValue();
+                        double dlon = bdlon.doubleValue();
+
+                        app.setNode(null);
+                        app.setUriString(null);
+
+                        for (DisplayFragment fragment : mListener) {
+                            if(fragment.getClass().toString().equals("class org.wheelmap.android.fragment.POIsOsmdroidFragment")){
+
+                                ContentValues cv = getValues(node);
+
+                                ((POIsOsmdroidFragment) fragment).markItem(cv,true);
+                                ((POIsOsmdroidFragment)fragment).requestUpdate();
+                            }
+                        }
+
+
+
+                        //GeoPoint newCurrent = new GeoPoint(lat, lon);
+                        mLocation = new Location("reverseGeocoded");
+                        mLocation.setLatitude(dlat);
+                        mLocation.setLongitude(dlon);
+                        //mLocation.setLatitude(newCurrent.getLatitudeE6() / 1e6);
+                        //mLocation.setLongitude(newCurrent.getLongitudeE6() / 1e6);
+                        mLocation.setAccuracy(3333);
+                        mLocation.setBearing(333);
+
+                        RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
+
+                    }
+                }
+
                 setRefreshStatus(false);
                 break;
             }
