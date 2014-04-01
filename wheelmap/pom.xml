@@ -40,19 +40,19 @@
 
         <!-- Build and debug environment -->
         <!-- the publicly available dependency -->
-        <!--
+
         <platform.core.groupid>android</platform.core.groupid>
         <platform.core.version>4.4.2_r3</platform.core.version>
         <platform.core.code>19</platform.core.code>
-        ->
+
 
 
 
         <!-- Build and debug environment -->
         <!-- the publicly available dependency -->
-        <platform.core.groupid>com.google.android</platform.core.groupid>
+        <!--<platform.core.groupid>com.google.android</platform.core.groupid>
         <platform.core.version>4.1.1.4</platform.core.version>
-        <platform.core.code>16</platform.core.code>
+        <platform.core.code>16</platform.core.code> -->
         <!-- extracted by maven-android-sdk-deployer
          useful for debugging to match the version of the phone -->
         <!--
