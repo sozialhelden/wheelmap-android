@@ -25,6 +25,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
+import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.fragment.EditPositionFragment;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
@@ -36,10 +38,13 @@ import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,8 +52,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Display;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import de.akquinet.android.androlog.Log;
 
@@ -146,7 +156,30 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public void onEditSave() {
-        finish();
+        startDialog();
+    }
+
+    private void startDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(getResources().getString(R.string.dialog_close_editable));
+
+        builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                return;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
     }
 
     @Override
@@ -232,4 +265,31 @@ public class POIDetailEditableActivity extends MapActivity implements
         }
     }
 
+    public void goBack(){
+        super.onBackPressed();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(getResources().getString(R.string.dialog_close_editable));
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                goBack();
+            }
+        });
+        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                return;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }

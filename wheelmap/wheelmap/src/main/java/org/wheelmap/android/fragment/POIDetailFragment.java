@@ -897,11 +897,16 @@ public class POIDetailFragment extends Fragment implements
                 && !TextUtils.isEmpty(postCode) && !TextUtils.isEmpty(city)) {
             StringBuilder sb = new StringBuilder();
             sb.append(street).append("+").append(houseNum).append("+")
-                    .append(postCode).append(city);
+                    .append(postCode).append("+").append(city);
             geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?q="
                     + sb.toString().replace(" ", "+"));
         } else {
-            geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?z=17");
+            //geoURI = Uri.parse("geo:" + latitude + "," + longitude);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(latitude).append("+").append(longitude);
+            geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?q="
+                    + sb.toString().replace(" ", "+"));
         }
 
         Log.d(TAG, "geoURI = " + geoURI);

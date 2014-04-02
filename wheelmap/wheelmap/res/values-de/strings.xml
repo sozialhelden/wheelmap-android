@@ -13,6 +13,9 @@
     <string name="error_authorization_error">Email oder Passwort war falsch. Tut mir leid. Kein
         Login möglich.
     </string>
+
+    <string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>
+
     <string name="error_authorization_login_failed">Einloggen fehlgeschlagen</string>
     <string name="error_authorization_not_osm_connected">Ihr Wheelmap Account ist nicht mit
         Openstreetmap verbunden.
