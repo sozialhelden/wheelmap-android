@@ -206,6 +206,7 @@
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
+                        android:inputType="textShortMessage"
                         android:hint="@string/poi_property_housenum"/>
             </LinearLayout>
 
@@ -222,6 +223,7 @@
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
+                        android:inputType="number"
                         android:hint="@string/poi_property_postcode"/>
 
                 <EditText
@@ -237,12 +239,14 @@
                     android:id="@+id/phone"
                     style="@style/DetailFontNew.Editable"
                     android:autoLink="phone"
+                    android:inputType="phone"
                     android:hint="@string/poi_property_phone"/>
 
             <EditText
                     android:id="@+id/website"
                     style="@style/DetailFontNew.Editable"
                     android:autoLink="web"
+                    android:inputType="textWebEmailAddress"
                     android:hint="@string/poi_property_website"/>
         </LinearLayout>
 

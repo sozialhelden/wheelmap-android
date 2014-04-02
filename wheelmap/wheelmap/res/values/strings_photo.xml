@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="photo_upload_failed">Upload failed</string>
-<string name="photo_upload_successfully">Upload successfully, after reloading the picture will be visible</string>
+<string name="photo_upload_successfully">Upload successfully</string>
 
 <string name="photo_upload_picker_title">Upload Pictures Option</string>
 <string name="photo_upload_picker_gallery">Galery</string>

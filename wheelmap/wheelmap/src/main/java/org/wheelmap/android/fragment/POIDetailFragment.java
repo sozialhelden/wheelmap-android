@@ -131,6 +131,8 @@ public class POIDetailFragment extends Fragment implements
 
     long wmID;
 
+    Cursor mCursor;
+
 
     //@Inject
     public ContentViewListener ignored;
@@ -636,6 +638,7 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d(TAG, "onLoadFinished: poiid = " + poiId);
+        mCursor= cursor;
         load(cursor);
     }
 
@@ -644,7 +647,8 @@ public class POIDetailFragment extends Fragment implements
 
     }
 
-    private void load(Cursor c) {
+    public void load(Cursor c) {
+        mCursor = c;
         if (c == null || c.getCount() < 1 || getPoiId() == -1) {
 
             titlebarBackbutton.setVisibility(View.GONE);
@@ -1163,7 +1167,7 @@ public class POIDetailFragment extends Fragment implements
                 dialog = null;
             }
             Log.d(TAG,"photo to upload: "+photoFile+"");
-            UploadPhotoTask upload = new UploadPhotoTask(getActivity().getApplication(),progress,wmID);
+            UploadPhotoTask upload = new UploadPhotoTask(mCursor,this,getActivity().getApplication(),progress,wmID);
             upload.execute(photoFile);
             photoFile = null;
         }

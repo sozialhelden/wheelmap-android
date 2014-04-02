@@ -8,8 +8,11 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Toast;
+import org.wheelmap.android.fragment.POIDetailEditableFragment;
+import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.modules.ICredentials;
@@ -17,6 +20,7 @@ import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 
 import android.app.Application;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -30,11 +34,15 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
     ProgressDialog progress;
     long wmID;
     Application mContext;
+    Fragment mFragment;
+    Cursor mCursor;
 
-    public UploadPhotoTask(Application context,ProgressDialog d, long wmID){
+    public UploadPhotoTask(Cursor cursor,Fragment fragment,Application context,ProgressDialog d, long wmID){
         mContext = context;
         this.wmID = wmID;
         progress = d;
+        mCursor = cursor;
+        mFragment = fragment;
 
     }
 
@@ -87,6 +95,7 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
             Toast.makeText(mContext, R.string.photo_upload_failed,Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(mContext, R.string.photo_upload_successfully,Toast.LENGTH_LONG).show();
+            ((POIDetailFragment)mFragment).load(mCursor);
         }
     }
 }
