@@ -33,6 +33,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
 import org.wheelmap.android.activity.LoginActivity;
+import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
 import org.wheelmap.android.app.WheelmapApp;
@@ -187,7 +188,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     public interface OnPOIDetailEditableListener {
 
-        public void onEditSave();
+        public void onEditSave(boolean quit);
 
         public void onEditWheelchairState(WheelchairState state);
 
@@ -280,6 +281,7 @@ public class POIDetailEditableFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 save();
+                quit(true);
                 return;
             }
         });
@@ -487,11 +489,13 @@ public class POIDetailEditableFragment extends Fragment implements
         PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
                 poiID, values);
         RestServiceHelper.executeUpdateServer(getActivity(), mReceiver);
+
+
     }
 
-    private void quit() {
+    private void quit(boolean quit) {
         if (mListener != null) {
-            mListener.onEditSave();
+            mListener.onEditSave(quit);
         }
     }
 
@@ -499,7 +503,7 @@ public class POIDetailEditableFragment extends Fragment implements
     public void onErrorDialogClose(int id) {
         Log.d(TAG, "onErrorDialogClose");
         if (id == DIALOG_ID_NEWPOI || id == DIALOG_ID_NETWORK_ERROR) {
-            quit();
+            quit(false);
         }
     }
 
@@ -758,7 +762,7 @@ public class POIDetailEditableFragment extends Fragment implements
             showErrorMessage(getString(R.string.error_newpoi_title),
                     getString(R.string.error_newpoi_message), DIALOG_ID_NEWPOI);
         } else {
-            quit();
+            quit(false);
         }
     }
 

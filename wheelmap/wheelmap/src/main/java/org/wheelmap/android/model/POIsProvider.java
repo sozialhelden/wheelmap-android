@@ -207,10 +207,9 @@ public class POIsProvider extends ContentProvider {
             case POIS_COPY_ID:
             case POIS_TMP:
                 whereClause = concatenateWhere(whereClause, where);
-                if(values.get("wm_id") != null)
-                    count = db.update(POIS_TABLE_NAME, values, whereClause, whereArgs);
-                else
-                    count = 0;
+
+                count = db.update(POIS_TABLE_NAME, values, whereClause, whereArgs);
+
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

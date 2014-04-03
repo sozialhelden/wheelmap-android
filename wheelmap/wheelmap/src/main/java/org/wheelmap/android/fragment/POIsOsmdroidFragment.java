@@ -207,14 +207,16 @@ public class POIsOsmdroidFragment extends Fragment implements
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
+                setAlphaForView(txtOutOfZoom,(float)0.5);
             }
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
+                setAlphaForView(txtOutOfZoom,(float)0.5);
             }
         }
 
-        //setAlphaForView(txtOutOfZoom,(float)0.5);
+
 
         txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
             @Override

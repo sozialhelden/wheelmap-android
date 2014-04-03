@@ -155,8 +155,11 @@ public class POIDetailEditableActivity extends MapActivity implements
     }
 
     @Override
-    public void onEditSave() {
-        startDialog();
+    public void onEditSave(boolean quit) {
+        if(!quit)
+            startDialog();
+        else
+            goBack();
     }
 
     private void startDialog() {

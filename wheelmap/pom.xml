@@ -42,7 +42,7 @@
         <!-- the publicly available dependency -->
 
         <platform.core.groupid>android</platform.core.groupid>
-        <platform.core.version>4.4.2_r3</platform.core.version>
+        <platform.core.version>[4.4,)</platform.core.version>
         <platform.core.code>19</platform.core.code>
 
 
