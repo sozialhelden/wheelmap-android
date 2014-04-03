@@ -23,7 +23,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="207"
+          android:versionCode="211"
           android:versionName="2.0-SNAPSHOT-DEVEL"
         >
 
@@ -149,8 +149,8 @@ limitations under the License.
                 android:label="">
         </activity>
 
-        <!--<activity
-                android:name="net.hockeyapp.android.UpdateActivity"/>   -->
+        <activity
+                android:name="net.hockeyapp.android.UpdateActivity"/>
 
 
         <service android:name="org.wheelmap.android.service.RestService"
