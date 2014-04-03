@@ -55,6 +55,7 @@ import org.osmdroid.views.MapView.Projection;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -69,6 +70,8 @@ import android.widget.TextView;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
+
+import static org.wheelmap.android.utils.PressSelector.setAlphaForView;
 
 public class EditPositionFragment extends Fragment implements DisplayFragment,
         MapListener {
@@ -194,7 +197,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         text_position = (TextView) v.findViewById(R.id.position_edit_text);
         text_move_map = (LinearLayout) v.findViewById(R.id.position_move_map);
 
-
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
         mMapView.setBuiltInZoomControls(true);
@@ -291,12 +293,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
          mCrrLatitude = centerLocation.getLatitude();
          mCrrLongitude = centerLocation.getLongitude();
 
-
-         //
-
-         //mMapOverlay.setPosition(centerLocation);
-
-         //
          if (mLastRequestedPosition != null
                  && (Math.abs(mLastRequestedPosition.getLatitudeE6()
                  - centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
