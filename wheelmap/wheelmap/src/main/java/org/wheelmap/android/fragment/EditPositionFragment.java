@@ -30,16 +30,28 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
-import org.mapsforge.android.maps.MapView;
+
 import org.mapsforge.android.maps.overlay.OverlayItem;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.osmdroid.MarkItemOverlay;
+import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.overlays.ConfigureMapView;
 import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.POILocationEditableOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 import org.wheelmap.android.utils.UtilsMisc;
 import org.mapsforge.android.maps.MapView.OnMoveListener;
+
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.MapView.Projection;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -56,19 +68,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.akquinet.android.androlog.Log;
+import de.greenrobot.event.EventBus;
 
 public class EditPositionFragment extends Fragment implements DisplayFragment,
-        OnMoveListener {
+        MapListener {
 
     public static final String TAG = EditPositionFragment.class.getSimpleName();
 
-    private MapController mMapController;
 
 
+    private IMapController mMapController;
 
-    private static final byte ZOOMLEVEL_MIN = 16;
+    private static String baseUrl = "http://a.tiles.mapbox.com/v3/%s/";
 
-    private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
+    private static String tileUrl; private static final byte ZOOMLEVEL_MIN = 16;
+
+    private OnlineTileSourceBase mMapBoxTileSource; private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
+
+    private MapView mMapView;
+
+    private IGeoPoint mLastRequestedPosition;
+
+    private EventBus mBus;
+
+
 
     private WorkerFragment mWorkerFragment;
 
@@ -78,9 +101,8 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     private TextView text_position;
 
-    private MapView mMapView;
 
-    private POILocationEditableOverlay mMapOverlay;
+
 
     private double mCrrLatitude;
 
@@ -94,7 +116,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     private OnEditPositionListener mListener;
 
-    private GeoPoint mLastRequestedPosition;
+
 
     @Override
     public void onUpdate(WorkerFragment fragment) {
@@ -113,11 +135,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     }
 
-    public interface OnEditPositionListener {
-
+   public interface OnEditPositionListener {
         public void onEditPosition(double latitude, double longitude);
-    }
-
+   }
     public static EditPositionFragment newInstance(double latitude,
             double longitude) {
         Bundle b = new Bundle();
@@ -154,7 +174,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
             executeState(getArguments());
         }
 
-        mVerticalDelta = (int) TypedValue.applyDimension(
+        tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
+                mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
+                mBus = EventBus.getDefault();mVerticalDelta = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
                 getResources().getDisplayMetrics());
 
@@ -169,26 +191,26 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         View v = inflater.inflate(R.layout.fragment_position_edit, container,
                 false);
 
-        mMapView = (MapView) v.findViewById(R.id.map);
         text_position = (TextView) v.findViewById(R.id.position_edit_text);
         text_move_map = (LinearLayout) v.findViewById(R.id.position_move_map);
 
-        mMapView.setClickable(true);
+
+        mMapView = (MapView) v.findViewById(R.id.map);
+        mMapView.setTileSource(mMapBoxTileSource);
+        mMapView.setBuiltInZoomControls(true);
+        mMapView.setMultiTouchControls(true);
+
+        mMapController = mMapView.getController();
+
+
 
         mMapView.setBuiltInZoomControls(true);
-        ConfigureMapView.pickAppropriateMap(getActivity(), mMapView);
         mMapController = mMapView.getController();
         mMapController.setZoom(18);
-        mMapController.setCenter(new GeoPoint(mCrrLatitude, mCrrLongitude));
-        mMapOverlay = new POILocationEditableOverlay(mCrrLatitude,
-                mCrrLongitude, getResources().getDrawable(
-                R.drawable.ic_action_location_pin_wm));
-        mMapOverlay.enableLowDrawQuality(true);
-        mMapOverlay.enableUseOnlyOneBitmap(true);
-        mMapView.getOverlays().add(mMapOverlay);
-        mMapView.setMoveListener(this);
+        mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
 
-        //mMapView.setOnTouchListener(this);
+
+        mMapView.setMapListener(this);
 
         positionSave = (ImageButton) v.findViewById(R.id.position_save);
 
@@ -199,10 +221,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
                 save();
             }
         });
-
-
-
-
         return v;
     }
 
@@ -256,73 +274,69 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
     }
 
     @Override
-    public void onMove(float vertical, float horizontal) {
-        Log.d(TAG, "onMove");
+    public boolean onScroll(ScrollEvent event) {
+         Log.d(TAG, "onMove");
 
-        text_move_map.setVisibility(View.GONE);
+         text_move_map.setVisibility(View.GONE);
 
-        GeoPoint centerLocation = mMapView.getMapCenter();
-        int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
-        int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
+         IGeoPoint centerLocation = mMapView.getMapCenter();
+         int minimalLatitudeSpan = mMapView.getLatitudeSpan() / 3;
+         int minimalLongitudeSpan = mMapView.getLongitudeSpan() / 3;
 
-        String positionText = String.format("%s: (%.6f:%.6f)", getResources()
-                .getString(R.string.position_geopoint), centerLocation.getLatitude(), centerLocation.getLongitude());
+         String positionText = String.format("%s: (%.6f:%.6f)", getResources()
+                 .getString(R.string.position_geopoint), centerLocation.getLatitude(), centerLocation.getLongitude());
 
-        text_position.setText(positionText);
+         text_position.setText(positionText);
 
-        mCrrLatitude = centerLocation.getLatitude();
-        mCrrLongitude = centerLocation.getLongitude();
-        mMapOverlay.setPosition(centerLocation);
-
-        if (mLastRequestedPosition != null
-                && (Math.abs(mLastRequestedPosition.getLatitudeE6()
-                - centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
-                && (Math.abs(mLastRequestedPosition.getLongitudeE6()
-                - centerLocation.getLongitudeE6()) < minimalLongitudeSpan)) {
-            return;
-        }
+         mCrrLatitude = centerLocation.getLatitude();
+         mCrrLongitude = centerLocation.getLongitude();
 
 
+         //
 
-        if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN) {
-            return;
-        }
+         //mMapOverlay.setPosition(centerLocation);
+
+         //
+         if (mLastRequestedPosition != null
+                 && (Math.abs(mLastRequestedPosition.getLatitudeE6()
+                 - centerLocation.getLatitudeE6()) < minimalLatitudeSpan)
+                 && (Math.abs(mLastRequestedPosition.getLongitudeE6()
+                 - centerLocation.getLongitudeE6()) < minimalLongitudeSpan)) {
+             return false;
+         }
 
 
 
-        requestUpdate();
+         if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN) {
+             return false;
+         }
+
+
+
+         requestUpdate();
+         return false;
+
     }
-    /*
+
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-            //case MotionEvent.ACTION_MOVE:
-                GeoPoint geoPoint = mMapView.getProjection().fromPixels(
-                        (int) event.getX(), (int) event.getY() + mVerticalDelta);
-                mCrrLatitude = geoPoint.getLatitude();
-                mCrrLongitude = geoPoint.getLongitude();
-                mMapOverlay.setPosition(geoPoint);
-
-                return true;
-        }
+    public boolean onZoom(ZoomEvent event) {
         return false;
-    }  */
-
-    private void requestUpdate() {
-        if(true){
-           return;
-        }
-        Bundle extras = fillExtrasWithBoundingRect();
-        mWorkerFragment.requestUpdate(extras);
     }
+
+   private void requestUpdate() {
+       if(true){
+          return;
+       }
+       Bundle extras = fillExtrasWithBoundingRect();
+       mWorkerFragment.requestUpdate(extras);
+   }
 
     private Bundle fillExtrasWithBoundingRect() {
         Bundle bundle = new Bundle();
 
         int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
         int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
-        GeoPoint center = mMapView.getMapCenter();
+        IGeoPoint center = mMapView.getMapCenter();
         mLastRequestedPosition = center;
         ParceableBoundingBox boundingBox = new ParceableBoundingBox(
                 center.getLatitudeE6() + (latSpan / 2), center.getLongitudeE6()

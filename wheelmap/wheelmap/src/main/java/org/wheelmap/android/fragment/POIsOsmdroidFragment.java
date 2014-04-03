@@ -670,6 +670,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
 
 
+
         if (mHeightFull) {
             actualGeoPoint = geoPoint;
         } else {
