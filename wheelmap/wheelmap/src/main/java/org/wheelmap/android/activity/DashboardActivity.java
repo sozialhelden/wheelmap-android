@@ -28,6 +28,8 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import java.awt.*;
+
 /**
  * Created by tim on 07.02.14.
  */
@@ -90,6 +92,13 @@ public class DashboardActivity extends
             @Override
             public void onClick(View v) {
                 openMithelfen();
+            }
+        });
+
+        findViewById(R.id.dashboard_btn_news).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 openWebViewNews();
             }
         });
 
@@ -218,6 +227,10 @@ public class DashboardActivity extends
         intent.putExtra(Extra.SELECTED_TAB,1);
         startActivity(intent);
         resetKategorieFilter();
+    }
+
+    public void openWebViewNews(){
+        startActivity(new Intent(this.getApplicationContext(),WebViewNewsActivity.class));
     }
 
     public void openMithelfen(){

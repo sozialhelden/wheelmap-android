@@ -117,6 +117,21 @@
                 style="@style/wheelmap_dasboard_button"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+           <Button android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/dashboard_btn_news"
+                   android:text="@string/dashboard_button_title_news"
+                   android:background="@drawable/start_btn_karte"
+                   style="@style/wheelmap_dasboard_button"/>
+        </LinearLayout>
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
