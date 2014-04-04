@@ -209,4 +209,14 @@ public class WheelmapApp extends Application {
     public Node getNode(){ return node; }
     public void setNode(Node node){this.node = node; }
 
+    boolean saved = false;
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
+    }
+
 }

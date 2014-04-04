@@ -175,6 +175,9 @@ public class DashboardActivity extends
 
         Intent intent;
 
+        WheelmapApp app = (WheelmapApp) this.getApplicationContext();
+        app.setSaved(true);
+
         if (UtilsMisc.isTablet(getApplicationContext())) {
             intent = new Intent(getApplicationContext(),
                     MainMultiPaneActivity.class);

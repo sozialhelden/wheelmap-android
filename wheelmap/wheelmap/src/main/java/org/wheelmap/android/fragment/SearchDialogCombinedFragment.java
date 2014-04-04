@@ -3,6 +3,8 @@ package org.wheelmap.android.fragment;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.widget.RadioButton;
 import org.holoeverywhere.widget.Spinner;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 

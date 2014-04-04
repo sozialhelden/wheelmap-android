@@ -21,9 +21,12 @@
  */
 package org.wheelmap.android.activity;
 
+import android.content.ContentResolver;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.widget.*;
 import com.google.inject.Inject;
 
@@ -40,6 +43,7 @@ import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.MyTabListener.TabHolder;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
@@ -57,6 +61,7 @@ import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
+import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
@@ -516,5 +521,44 @@ public class
         if ( f != null) {
             f.onRefreshStarted();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        WheelmapApp app = (WheelmapApp) this.getApplicationContext();
+
+        if(app.isSaved()){
+            app.setSaved(false);
+            Intent intent = new Intent(getApplicationContext(),MainSinglePaneActivity.class);
+            intent.putExtra(Extra.SELECTED_TAB,1);
+            startActivity(intent);
+            super.onBackPressed();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    public void resetKategorieFilter(){
+        Uri mUri = Support.CategoriesContent.CONTENT_URI;
+        Cursor c = getContentResolver().query(mUri,
+                Support.CategoriesContent.PROJECTION, null, null,
+                Support.CategoriesContent.DEFAULT_SORT_ORDER);
+
+        for(int i=0;i<c.getCount();i++){
+            c.moveToPosition(i);
+            int catId = Support.CategoriesContent.getCategoryId(c);
+
+            ContentResolver resolver = getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(Support.CategoriesContent.SELECTED,
+                    Support.CategoriesContent.SELECTED_YES);
+
+            String whereClause = "( " + Support.CategoriesContent.CATEGORY_ID
+                    + " = ?)";
+            String[] whereValues = new String[]{Integer.toString(catId)};
+            resolver.update(mUri, values, whereClause, whereValues);
+        }
+        c.close();
     }
 }

@@ -131,6 +131,7 @@ public class CombinedWorkerFragment extends Fragment implements
     }
 
     public void update() {
+
         for (DisplayFragment fragment : mListener) {
             fragment.onUpdate(this);
         }

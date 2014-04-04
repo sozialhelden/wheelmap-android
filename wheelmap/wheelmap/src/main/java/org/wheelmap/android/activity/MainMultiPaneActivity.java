@@ -681,10 +681,21 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     @Override
     public void onBackPressed() {
-        if(mMovableVisible && !mMovableAnimationRunning){
-            toggleMovableResize();
-            return;
+        WheelmapApp app = (WheelmapApp) this.getApplicationContext();
+
+        if(app.isSaved()){
+            app.setSaved(false);
+            Intent intent = new Intent(getApplicationContext(),MainMultiPaneActivity.class);
+            intent.putExtra(Extra.REQUEST, true);
+            startActivity(intent);
+            super.onBackPressed();
+
+        }else{
+            if(mMovableVisible && !mMovableAnimationRunning){
+                toggleMovableResize();
+                return;
+            }
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 }

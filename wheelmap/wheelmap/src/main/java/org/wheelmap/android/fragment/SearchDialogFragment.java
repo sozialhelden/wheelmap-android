@@ -31,6 +31,7 @@ import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.RadioButton;
 import org.holoeverywhere.widget.Spinner;
 import org.wheelmap.android.adapter.TypesAdapter;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
@@ -217,6 +218,9 @@ public class SearchDialogFragment extends DialogFragment implements
 
     protected void sendSearchInstructions() {
         Bundle b = createSearchBundle();
+
+        WheelmapApp app = (WheelmapApp) this.getActivity().getApplicationContext();
+        app.setSaved(true);
 
         OnSearchDialogListener listener = (OnSearchDialogListener) getTargetFragment();
         listener.onSearch(b);
