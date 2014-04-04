@@ -404,45 +404,28 @@ public class POIDetailFragment extends Fragment implements
 
     private void getImagesList() {
 
-        Photos photos = null;
-
-        listImages = new ArrayList();
+        listImages = null;
 
         try {
 
             WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
-            photos = app.getPhotos();
+            listImages = app.getListImages();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(photos != null){
+        if(listImages != null){
 
             try{
 
-                List<Photo> listOfPhotos = photos.getPhotos();
-
-                if(listOfPhotos.isEmpty()){
+                if(listImages.isEmpty()){
                     noPhotosText.setVisibility(View.VISIBLE);
                     listView.setVisibility(View.GONE);
                 }
                 else{
                     noPhotosText.setVisibility(View.GONE);
                     listView.setVisibility(View.VISIBLE);
-
-                    for(Photo p : listOfPhotos){
-
-                        // always loads only the "original" photo
-                        String newurl = p.getImages().get(0).getUrl();
-                        String[] sList = newurl.split("\\?");
-                        String url = sList[0];
-
-                        listImages.add(url);
-
-                        Log.d("load photo with url");
-
-                    }
                 }
 
 
@@ -640,6 +623,11 @@ public class POIDetailFragment extends Fragment implements
         Log.d(TAG, "onLoadFinished: poiid = " + poiId);
         mCursor= cursor;
         load(cursor);
+
+        try{
+            wmID =  Long.valueOf(POIHelper.getWMId(cursor));
+            getPhotos(wmID);
+        }catch(Exception e){}
     }
 
     @Override
@@ -718,11 +706,6 @@ public class POIDetailFragment extends Fragment implements
             String houseNum = POIHelper.getHouseNumber(c);
             String postCode = POIHelper.getPostcode(c);
             String city = POIHelper.getCity(c);
-
-            try{
-                wmID =  Long.valueOf(POIHelper.getWMId(c));
-                getPhotos(wmID);
-            }catch(Exception e){}
 
             String address = "";
 

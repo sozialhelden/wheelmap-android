@@ -37,6 +37,7 @@ import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.Base;
 import org.wheelmap.android.mapping.node.Node;
+import org.wheelmap.android.mapping.node.Photo;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.mapping.node.SingleNode;
 import org.wheelmap.android.model.Extra;
@@ -318,6 +319,20 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
                 Log.d("Photos");
                 try {
+
+                    for(Photo p : ((Photos)content).getPhotos()){
+                        p.getImages().remove(9);
+                        p.getImages().remove(8);
+                        p.getImages().remove(7);
+                        p.getImages().remove(6);
+                        p.getImages().remove(5);
+
+                        p.getImages().remove(0);
+                        p.getImages().remove(0);
+                        p.getImages().remove(0);
+                        p.getImages().remove(0);
+                    }
+
                     WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
                     app.setPhotos((Photos)content);
 

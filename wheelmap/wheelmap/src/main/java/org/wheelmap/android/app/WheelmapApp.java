@@ -35,6 +35,7 @@ import org.holoeverywhere.preference.SharedPreferences;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.mapping.node.Node;
+import org.wheelmap.android.mapping.node.Photo;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
@@ -45,6 +46,8 @@ import org.wheelmap.android.online.R;
 import android.content.Context;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
@@ -62,6 +65,10 @@ public class WheelmapApp extends Application {
     private SupportManager mSupportManager;
 
     private boolean isBugsenseInitCalled;
+
+
+
+    private List listImages;
 
     BigInteger countPOIs;
 
@@ -157,14 +164,38 @@ public class WheelmapApp extends Application {
         this.countPOIs = countPOIs;
     }
 
-    Photos photos;
+    List<Photo> photos;
 
-    public Photos getPhotos() {
+    public List<Photo> getPhotos() {
         return photos;
     }
 
     public void setPhotos(Photos photos) {
-        this.photos = photos;
+        this.photos = photos.getPhotos();
+        listImages = new ArrayList();
+
+        for(Photo p : this.photos){
+
+            // always loads only the "original" photo
+            String newurl = p.getImages().get(0).getUrl();
+            String[] sList = newurl.split("\\?");
+            String url = sList[0];
+
+            this.listImages.add(url);
+
+            Log.d("load photo with url");
+
+        }
+
+
+    }
+
+    public List getListImages() {
+        return listImages;
+    }
+
+    public void setListImages(List listImages) {
+        this.listImages = listImages;
     }
 
     String uriString;
