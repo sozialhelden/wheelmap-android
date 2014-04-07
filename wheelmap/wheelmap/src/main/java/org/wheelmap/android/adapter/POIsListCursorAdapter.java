@@ -102,7 +102,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return new POIsListItemView(context);
+        return new POIsListItemView(context, POIHelper.getName(cursor));
     }
 
     private interface DistanceFormatter {

@@ -892,6 +892,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
             lastDirection = mDirection;
             mDirection = direction;
+            Log.d(TAG, "direction: " + direction);
             updateLocation(getLocation());
         }
 
@@ -901,8 +902,8 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
 
         public void updateLocation(Location location) {
-            Log.d(TAG, "updateLocation: location = " + location + " consumer = "
-                    + mMyLocationConsumer);
+            //Log.d(TAG, "updateLocation: location = " + location + " consumer = "
+            //        + mMyLocationConsumer);
             if (location == null) {
                 return;
             }

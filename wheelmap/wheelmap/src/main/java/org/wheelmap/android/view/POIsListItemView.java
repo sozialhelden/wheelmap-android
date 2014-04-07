@@ -24,11 +24,13 @@ package org.wheelmap.android.view;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 
 public class POIsListItemView extends RelativeLayout {
 
@@ -47,7 +49,7 @@ public class POIsListItemView extends RelativeLayout {
     /**
      * constructor creates a new line item of list
      */
-    public POIsListItemView(Context context) {
+    public POIsListItemView(Context context, String name) {
         super(context);
         // inflate rating
         LayoutInflater inflater = (LayoutInflater) context
@@ -61,6 +63,8 @@ public class POIsListItemView extends RelativeLayout {
         poiDistance = (TextView) findViewById(R.id.poi_distance);
         poiIcon = (ImageView) findViewById(R.id.image);
         poiCompass = (CompassView) findViewById(R.id.compass);
+        poiCompass.setName(name);
+
     }
 
     /**

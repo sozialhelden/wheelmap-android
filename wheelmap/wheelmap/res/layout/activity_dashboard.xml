@@ -128,7 +128,8 @@
                    android:layout_height="wrap_content"
                    android:id="@+id/dashboard_btn_news"
                    android:text="@string/dashboard_button_title_news"
-                   android:background="@drawable/start_btn_karte"
+                   android:background="@drawable/start_btn_news"
+
                    style="@style/wheelmap_dasboard_button"/>
         </LinearLayout>
 

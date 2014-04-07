@@ -1,12 +1,15 @@
 package org.wheelmap.android.view;
 
+import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.online.R;
 
+import android.database.Cursor;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 public class CompassView extends View {
@@ -20,6 +23,14 @@ public class CompassView extends View {
     private int mColor;
 
     private final static int DEFAULT_COLOR_RES = R.color.dark_grey_one;
+
+    private static String TAG = CompassView.TAG;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
 
     public CompassView(Context context) {
         super(context);
@@ -77,13 +88,14 @@ public class CompassView extends View {
         }
         canvas.drawCircle(cxCompass, cyCompass, radiusCompass, paint);
         if (!firstDraw) {
+            //Log.d("CompassView","id: " + name + " ---- d: " + direction);
             canvas.drawLine(
                     cxCompass,
                     cyCompass,
                     (float) (cxCompass + radiusCompass
-                            * Math.sin(Math.toRadians(direction))),
+                            * Math.cos(Math.toRadians(direction))),
                     (float) (cyCompass - radiusCompass
-                            * Math.cos(Math.toRadians(direction))), paint);
+                            * Math.sin(Math.toRadians(direction))), paint);
         }
 
     }
@@ -92,6 +104,8 @@ public class CompassView extends View {
         firstDraw = false;
         direction = dir;
         invalidate();
+
+        //Log.d("CompassView", "-------------------- new -----------------");
     }
 
 }

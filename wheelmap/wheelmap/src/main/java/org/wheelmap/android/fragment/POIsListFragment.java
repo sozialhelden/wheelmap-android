@@ -376,7 +376,7 @@ public class POIsListFragment extends ListFragment implements
     }
 
     private void setCursor(Cursor cursor) {
-        UtilsMisc.dumpCursorCompare(TAG, mCursor, cursor);
+        //UtilsMisc.dumpCursorCompare(TAG, mCursor, cursor);
         if (cursor == mCursor) {
             return;
         }
