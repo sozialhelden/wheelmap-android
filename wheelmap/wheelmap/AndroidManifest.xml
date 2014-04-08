@@ -23,13 +23,9 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-<<<<<<< HEAD
-          android:versionCode="239"
-=======
-          android:versionCode="236"
->>>>>>> 9d21d6009c254c57d8f2ed270164eba0934c473e
-          android:versionName="2.0-SNAPSHOT-DEVEL"
-        >
+
+          android:versionCode="239" >
+
 
     <uses-sdk
             android:minSdkVersion="8"
