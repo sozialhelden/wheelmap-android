@@ -21,6 +21,10 @@
  */
 package org.wheelmap.android.activity;
 
+
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.content.res.Resources;
@@ -231,6 +235,9 @@ public class MainMultiPaneActivity extends MapActivity implements
         View view = layout.getChildAt(0);
         layout.removeViewAt(0);
         layout.addView(view);*/
+
+
+        WheelmapApp.checkForUpdates(this);
     }
 
     public WorkerFragment getWorkerFragment(){
@@ -253,6 +260,8 @@ public class MainMultiPaneActivity extends MapActivity implements
             executeIntent(getIntent());
             setIntent(null);
         }
+
+        WheelmapApp.checkForCrashes(this);
     }
 
     @Override
@@ -698,4 +707,6 @@ public class MainMultiPaneActivity extends MapActivity implements
             super.onBackPressed();
         }
     }
+
+
 }

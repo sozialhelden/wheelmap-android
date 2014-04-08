@@ -28,8 +28,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.addon.AddonMyRoboguice;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Application;
 import org.holoeverywhere.preference.SharedPreferences;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -44,6 +48,7 @@ import org.wheelmap.android.modules.MainModule;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -217,6 +222,24 @@ public class WheelmapApp extends Application {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+    }
+
+
+
+    public static void checkForCrashes(android.app.Activity context) {
+        String appId = context.getString(R.string.hockeyapp_id);
+        if (TextUtils.isEmpty(appId)) {
+            return;
+        }
+        CrashManager.register(context, appId);
+    }
+
+    public static void checkForUpdates(android.app.Activity context) {
+        String appId = context.getString(R.string.hockeyapp_id);
+        if (TextUtils.isEmpty(appId)) {
+            return;
+        }
+        UpdateManager.register(context, appId);
     }
 
 }

@@ -160,14 +160,14 @@ public class DashboardActivity extends
             }
         });
 
-        checkForUpdates();
+        WheelmapApp.checkForUpdates(this);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkForCrashes();
+        WheelmapApp.checkForCrashes(this);
     }
 
     private int getPoiCount(){
@@ -278,22 +278,6 @@ public class DashboardActivity extends
             resolver.update(mUri, values, whereClause, whereValues);
         }
         c.close();
-    }
-
-    private void checkForCrashes() {
-        String appId = getString(R.string.hockeyapp_id);
-        if (TextUtils.isEmpty(appId)) {
-            return;
-        }
-        CrashManager.register(this, appId);
-    }
-
-    private void checkForUpdates() {
-        String appId = getString(R.string.hockeyapp_id);
-        if (TextUtils.isEmpty(appId)) {
-            return;
-        }
-        UpdateManager.register(this, appId);
     }
 
     private void account(){
