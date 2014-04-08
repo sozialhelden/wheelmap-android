@@ -80,6 +80,7 @@ public class SupportManager {
     private Context mContext;
 
     private Map<Integer, NodeType> mNodeTypeLookup;
+    private Map<Integer, NodeType> mNodeTypeLookupList;
 
     private Map<Integer, Category> mCategoryLookup;
 
@@ -90,6 +91,7 @@ public class SupportManager {
     private EventBus mBus;
 
     private NodeType mDefaultNodeType;
+    private NodeType mDefaultNodeTypeList;
 
     private Category mDefaultCategory;
 
@@ -210,6 +212,7 @@ public class SupportManager {
 
         mCategoryLookup = new HashMap<Integer, Category>();
         mNodeTypeLookup = new HashMap<Integer, NodeType>();
+        mNodeTypeLookupList = new HashMap<Integer, NodeType>();
         mAssetManager = mContext.getAssets();
 
         mDefaultCategory = new Category(UNKNOWN_TYPE, "unknown",
@@ -217,6 +220,11 @@ public class SupportManager {
         mDefaultNodeType = new NodeType(UNKNOWN_TYPE, "unknown",
                 mContext.getString(R.string.support_nodetype_unknown), 0);
         mDefaultNodeType.stateDrawables = createDefaultDrawables();
+
+
+        mDefaultNodeTypeList = new NodeType(UNKNOWN_TYPE, "unknown",
+                mContext.getString(R.string.support_nodetype_unknown), 0);
+        mDefaultNodeTypeList.stateDrawables = createDefaultDrawables();
 
         mNeedsReloading = false;
         if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
@@ -513,6 +521,7 @@ public class SupportManager {
 
         cursor.moveToFirst();
         mNodeTypeLookup.clear();
+        mNodeTypeLookupList.clear();
 
         while (!cursor.isAfterLast()) {
             int id = NodeTypesContent.getNodeTypeId(cursor);
@@ -525,8 +534,15 @@ public class SupportManager {
             NodeType nodeType = new NodeType(id, identifier, localizedName,
                     categoryId);
             nodeType.iconDrawable = createIconDrawable(iconPath);
-            nodeType.stateDrawables = createSpecificDrawables(iconPath);
+            nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeType);
             mNodeTypeLookup.put(id, nodeType);
+
+            nodeType = new NodeType(id, identifier, localizedName,
+                    categoryId);
+            nodeType.iconDrawable = createIconDrawable(iconPath);
+            nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeTypeList);
+            mNodeTypeLookupList.put(id, nodeType);
+
             cursor.moveToNext();
         }
 
@@ -625,12 +641,12 @@ public class SupportManager {
         return lookupMap;
     }
 
-    private Map<WheelchairState, Drawable> createSpecificDrawables(String assetPath) {
-        return createDrawableLookup((assetPath), false);
+    private Map<WheelchairState, Drawable> createSpecificDrawables(String assetPath,NodeType defaultNodes) {
+        return createDrawableLookup((assetPath), false,defaultNodes);
     }
 
     private Map<WheelchairState, Drawable> createDrawableLookup(String assetPathPattern,
-            boolean fileNotFoundIsFatal) {
+            boolean fileNotFoundIsFatal,NodeType defaultNodes) {
         Map<WheelchairState, Drawable> lookupMap = new HashMap<WheelchairState, Drawable>();
         Log.v(TAG, "SupportManager:createDrawableLookup loading " + assetPathPattern);
 
@@ -652,14 +668,18 @@ public class SupportManager {
                 }
                 // is = mAssetManager.open(path);
                 drawable = Drawable.createFromStream(is, null);
-                Drawable bg = mDefaultNodeType.stateDrawables.get(WheelchairState
+                Drawable bg = defaultNodes.stateDrawables.get(WheelchairState
                         .valueOf(idx));
 
                 float density = mContext.getResources().getDisplayMetrics().density;
 
                 Drawable[] layers = {bg,drawable};
                 LayerDrawable layerDrawable = new MyLayerDrawable(layers);
-                layerDrawable.setLayerInset(1,(int) (6*density),(int) (6*density),(int) (6*density),(int)(8*density));
+                if(defaultNodes == mDefaultNodeType){
+                    layerDrawable.setLayerInset(1,(int) (6*density),(int) (6*density),(int) (6*density),(int)(8*density));
+                }else{
+                    layerDrawable.setLayerInset(1,(int) (7*density),(int) (7*density),(int) (7*density),(int)(9*density));
+                }
                 drawable = layerDrawable;
 
                 is.close();
@@ -691,9 +711,16 @@ public class SupportManager {
     public void cleanReferences() {
         // Log.d(TAG, "clearing callbacks for mDefaultNodeType ");
         cleanReferences(mDefaultNodeType.stateDrawables);
+        cleanReferences(mDefaultNodeTypeList.stateDrawables);
 
         for (Integer nodeTypeId : mNodeTypeLookup.keySet()) {
             NodeType nodeType = mNodeTypeLookup.get(nodeTypeId);
+            // Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
+            cleanReferences(nodeType.stateDrawables);
+        }
+
+        for (Integer nodeTypeId : mNodeTypeLookupList.keySet()) {
+            NodeType nodeType = mNodeTypeLookupList.get(nodeTypeId);
             // Log.d(TAG, "clearing callbacks for " + nodeType.identifier);
             cleanReferences(nodeType.stateDrawables);
         }
@@ -719,6 +746,14 @@ public class SupportManager {
             return mNodeTypeLookup.get(id);
         } else {
             return mDefaultNodeType;
+        }
+    }
+
+    public NodeType lookupNodeTypeList(int id) {
+        if (mNodeTypeLookupList.containsKey(id)) {
+            return mNodeTypeLookupList.get(id);
+        } else {
+            return mDefaultNodeTypeList;
         }
     }
 

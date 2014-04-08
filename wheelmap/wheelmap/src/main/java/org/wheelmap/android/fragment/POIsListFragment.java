@@ -106,7 +106,6 @@ public class POIsListFragment extends ListFragment implements
         @Override
         public void onSensorChanged(SensorEvent event) {
             float direction = event.values[0];
-            direction += 180;cl
             if (direction > 180) {
                 direction -= 360;
             }

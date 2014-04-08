@@ -27,7 +27,10 @@
 
     <ImageView
             android:id="@id/image"
-            style="@style/IconLarge"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
