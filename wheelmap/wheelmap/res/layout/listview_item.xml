@@ -5,6 +5,12 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical" >
+    <ProgressBar
+            android:layout_margin="34dp"
+
+            android:id="@+id/progressbar_photo"
+            android:layout_width="59dp"
+            android:layout_height="60dp"/>
 
     <ImageView
             android:id="@+id/iconHList"
@@ -12,5 +18,6 @@
             android:layout_height="120dp"
             android:src="@drawable/fallback_picture"
             android:layout_margin="5dp"/>
+
 
 </RelativeLayout>

@@ -34,19 +34,17 @@ public class PictureActivity extends Activity{
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        setContentView(R.layout.activity_picture);
+
         Bundle extras = getIntent().getExtras();
 
-        ImageView image = new ImageView(this);
-        image.setBackgroundColor(Color.TRANSPARENT);
-        image.setAdjustViewBounds(true);
+        ImageView image = (ImageView)findViewById(R.id.image_picture);
 
         String url = extras.getString(EXTRA_URL);
 
         Log.d(TAG,"load image: "+url);
 
         ImageLoader.getInstance().displayImage(url,image);
-
-        setContentView(image);
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
