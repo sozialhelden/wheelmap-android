@@ -14,4 +14,5 @@ public class Request {
     public static final int GALLERY_PICTURE = 2;
     public static final int REQUESTCODE_PHOTO = 3;
     public static final int GALLERY_KITKAT_INTENT_CALLED = 4;
+    public static final int REQUEST_CODE_LOGIN = 5;
 }

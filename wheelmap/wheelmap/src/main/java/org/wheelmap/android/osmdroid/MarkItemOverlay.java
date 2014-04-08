@@ -36,12 +36,6 @@ import android.view.MotionEvent;
 
 import java.util.LinkedList;
 
-/**
- *
- * @author Marc Kurtz
- * @author Manuel Stahl
- *
- */
 public class MarkItemOverlay extends SafeDrawOverlay{
 
     private static final String TAG = MarkItemOverlay.class.getSimpleName();

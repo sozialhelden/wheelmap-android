@@ -65,8 +65,9 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setResult(RESULT_CANCELED);
+
         mCredentials = new UserCredentials(getApplicationContext());
+        setResult(mCredentials.isLoggedIn() ? RESULT_OK : RESULT_CANCELED);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             UtilsMisc.showAsPopup(this);

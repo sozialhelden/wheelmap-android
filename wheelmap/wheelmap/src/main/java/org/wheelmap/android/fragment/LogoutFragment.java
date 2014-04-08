@@ -8,6 +8,7 @@ import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class LogoutFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 mCredentials.logout();
+                getActivity().setResult(Activity.RESULT_CANCELED);
                 getActivity().finish();
             }
         });

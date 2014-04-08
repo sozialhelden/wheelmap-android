@@ -95,8 +95,15 @@ public class POIsListCursorAdapter extends CursorAdapter {
         pliv.setDirection(direction);
         // if (name != null && name.startsWith("Sweet"))
         // Log.d(TAG, "name = " + name + " direction = " + direction);
-        Drawable marker = context.getResources()
-                .getDrawable(SupportManager.wsAttributes.get(state).drawableId);
+        //Drawable marker = context.getResources()
+        //        .getDrawable(SupportManager.wsAttributes.get(state).drawableId);
+        Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+
+        float density = mContext.getResources().getDisplayMetrics().density;
+
+        int half = (int)(16*density);
+
+       // marker.setBounds(-half, -2*half, half, 0);
         pliv.setIcon(marker);
     }
 

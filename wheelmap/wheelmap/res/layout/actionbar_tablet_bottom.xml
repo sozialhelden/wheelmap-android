@@ -47,7 +47,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
             android:onClick="onOptionItemBottomClicked"
-            android:src="@drawable/map_navbar_btn_anmelden"/>
+            android:src="@drawable/start_ic_login"/>
 
 </LinearLayout>
