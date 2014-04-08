@@ -101,13 +101,6 @@ public class StartupActivity extends Activity implements
         mState.mReceiver.setReceiver(this);
 
         checkForHockeyUpdates();
-        Handler h = new Handler();
-        h.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onHockeyDone();
-            }
-        },500);
 
     }
 
@@ -208,7 +201,6 @@ public class StartupActivity extends Activity implements
     }
 
     private void startupAppDelayed() {
-
         long time_dif = System.currentTimeMillis()-startTime;
         time_dif = Math.abs(time_dif);
         if(time_dif < 1000){

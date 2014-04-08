@@ -23,7 +23,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="251"
+          android:versionCode="253"
           android:versionName="2.0-SNAPSHOT-DEVEL">
 
     <uses-sdk
@@ -46,6 +46,7 @@ limitations under the License.
             android:required="false"/>
 
     <application
+            android:hardwareAccelerated="true"
             android:name="org.wheelmap.android.app.WheelmapApp"
             android:icon="@drawable/ic_launcher_develop"
             android:label="@string/app_name"
@@ -79,7 +80,6 @@ limitations under the License.
         </activity>
         <activity
                 android:name="org.wheelmap.android.activity.WebViewNewsActivity"
-                android:screenOrientation="portrait"
                 android:label="">
         </activity>
         <activity
@@ -172,6 +172,7 @@ limitations under the License.
                 android:writePermission="org.wheelmap.android.support.Write"/>
         <meta-data android:name="com.crashlytics.ApiKey"
                    android:value="82852bdccfc411decbd4ba6dd1d309f0beae2875"/>
+
     </application>
 
 </manifest>

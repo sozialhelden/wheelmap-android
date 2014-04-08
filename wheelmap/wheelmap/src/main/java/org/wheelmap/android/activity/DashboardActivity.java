@@ -7,17 +7,22 @@ import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Wheelmap;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.awt.*;
@@ -36,10 +42,15 @@ import java.awt.*;
 public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
 
+    private static final int REQUEST_CODE_LOGIN = 0;
+
+    private UserCredentials mCredentials;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mCredentials = new UserCredentials(getApplicationContext());
 
         setContentView(R.layout.activity_dashboard);
 
@@ -164,6 +175,8 @@ public class DashboardActivity extends
 
         WheelmapApp.checkForUpdates(this);
 
+        boolean loggedIn = mCredentials.isLoggedIn();
+        onActivityResult(REQUEST_CODE_LOGIN,loggedIn?RESULT_OK:RESULT_CANCELED,null);
     }
 
     @Override
@@ -284,7 +297,21 @@ public class DashboardActivity extends
 
     private void account(){
         Intent intent = new Intent(this,LoginActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, Request.REQUEST_CODE_LOGIN);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+            Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Request.REQUEST_CODE_LOGIN){
+             if(resultCode == Activity.RESULT_OK){
+                 ImageView image = (ImageView) findViewById(R.id.dashboard_login);
+                 image.setImageResource(R.drawable.start_icon_logged_in);
+             }else{
+                 ImageView image = (ImageView) findViewById(R.id.dashboard_login);
+                 image.setImageResource(R.drawable.start_ic_login);
+             }
+        }
+    }
 }

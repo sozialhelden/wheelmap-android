@@ -135,6 +135,7 @@
     <string name="menu_photo">Photo</string>
 
     <string name="menu_account">Account</string>
+    <string name="menu_news">News</string>
     <string name="no_pois">no places found according your filter settings</string>
     <string name="poi_new_default_name">New POI</string>
     <string name="poi_property_address">Address</string>

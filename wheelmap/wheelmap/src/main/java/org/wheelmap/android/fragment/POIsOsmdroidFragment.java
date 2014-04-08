@@ -53,6 +53,7 @@ import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.R.string;
 import org.wheelmap.android.osmdroid.MarkItemOverlay;
+import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
@@ -250,14 +251,21 @@ public class POIsOsmdroidFragment extends Fragment implements
         //myLocationOverlay.enableMyLocation();
         //mMapView.getOverlays().add(myLocationOverlay);
 
-        mMyLocationProvider.startLocationProvider(mCurrLocationOverlay);
+        //mMyLocationProvider.startLocationProvider(mCurrLocationOverlay);
 
         markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
 
         mMapView.getOverlays().add(markItemOverlay);
 
         mMapView.getOverlays().add(mPoisItemizedOverlay);
-        mMapView.getOverlays().add(mCurrLocationOverlay);
+
+        MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
+                mMapView);
+        a.enableMyLocation();
+        mMyLocationProvider.startLocationProvider(a);
+        mMapView.getOverlays().add(a);
+
+        //mMapView.getOverlays().add(mCurrLocationOverlay);
         mMapView.setMapListener(this);
 
         mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);

@@ -65,6 +65,7 @@ import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.popup.FilterWindow;
 import org.wheelmap.android.service.RestServiceException;
@@ -72,6 +73,7 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.MapActivityUtils;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -326,11 +328,23 @@ public class MainMultiPaneActivity extends MapActivity implements
             bar.setDisplayShowCustomEnabled(true);
             View v = findViewById(R.id.menu_filter);
             MapActivityUtils.setFilterDrawable(this, null, v);
+
+            UserCredentials credentials = new UserCredentials(getApplicationContext());
+            ImageView image = (ImageView)findViewById(R.id.menu_login);
+            image.setImageResource(credentials.isLoggedIn()
+                                    ? R.drawable.start_icon_logged_in
+                                    : R.drawable.start_ic_login);
         }else{
             MenuInflater inflaterMenu = getSupportMenuInflater();
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
             MenuItem item = menu.findItem(R.id.menu_filter);
             MapActivityUtils.setFilterDrawable(this, item, null);
+            /*
+            loginMenuItem = menu.findItem(R.id.menu_login);
+            UserCredentials credentials = new UserCredentials(getApplicationContext());
+            loginMenuItem.setIcon(credentials.isLoggedIn()
+            ? getResources().getDrawable(R.drawable.start_icon_logged_in)
+            : getResources().getDrawable(R.drawable.start_icon_login));  */
         }
 
         if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
@@ -386,20 +400,24 @@ public class MainMultiPaneActivity extends MapActivity implements
             case R.id.menu_login:
                 showAccount();
                 return true;
+            case R.id.menu_news:
+                showNews();
+                return true;
             default:
                 return false;
         }
     }
 
-    private void showAccount(){
-        /*FragmentManager fm = getSupportFragmentManager();
-        LoginDialogFragment loginDialog = new LoginDialogFragment();
-        loginDialog.show(fm);       */
-        Intent intent = new Intent(this,LoginActivity.class);
+    private void showNews(){
+        Intent intent = new Intent(this,WebViewNewsActivity.class);
         startActivity(intent);
     }
 
-    @SuppressLint("WrongViewCast")
+    private void showAccount(){
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivityForResult(intent, Request.REQUEST_CODE_LOGIN);
+    }
+
     private void createSearchModeCustomView(final ActionBar bar) {
         // not used anymore
         if(true){
@@ -560,7 +578,16 @@ public class MainMultiPaneActivity extends MapActivity implements
                     RestServiceHelper.executeUpdateServer(this, null);
                 }
             }
+        } 
+        if(requestCode == Request.REQUEST_CODE_LOGIN){
+            ImageView image = (ImageView)findViewById(R.id.menu_login);
+            if(image!=null){
+                image.setImageResource(resultCode==RESULT_OK
+                        ? R.drawable.start_icon_logged_in
+                        : R.drawable.start_ic_login);
+            }
         }
+
         super.onActivityResult(requestCode,resultCode,data);
     }
 
