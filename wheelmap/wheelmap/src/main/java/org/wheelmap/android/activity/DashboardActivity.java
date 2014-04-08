@@ -95,7 +95,9 @@ public class DashboardActivity extends
             }
         });
 
-        findViewById(R.id.dashboard_btn_news).setOnClickListener(new OnClickListener() {
+        View news = findViewById(R.id.dashboard_btn_news);
+        news.setOnTouchListener(new PressSelector());
+        news.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                  openWebViewNews();
