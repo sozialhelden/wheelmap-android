@@ -249,6 +249,16 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
     }
 
     private int checkForItemHit(final MotionEvent event, final MapView mapView) {
+
+
+        //avoid NullPointerException
+        if(mCursor == null
+                || mapView == null
+                || event == null
+                || mapView.getProjection() == null){
+            return NO_HIT;
+        }
+
         final MapView.Projection pj = mapView.getProjection();
         final int eventX = (int) event.getX();
         final int eventY = (int) event.getY();
