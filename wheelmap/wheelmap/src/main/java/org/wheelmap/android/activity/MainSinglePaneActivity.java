@@ -314,6 +314,10 @@ public class
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        // required :
+        // reload | search | new | filter | kategorie-filter
+
         MenuInflater inflaterMenu = getSupportMenuInflater();
         inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
         MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
