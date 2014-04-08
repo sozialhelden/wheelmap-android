@@ -71,7 +71,15 @@ public class WheelmapApp extends Application {
 
     private boolean isBugsenseInitCalled;
 
+    public boolean isChangedText() {
+        return changedText;
+    }
 
+    public void setChangedText(boolean changedText) {
+        this.changedText = changedText;
+    }
+
+    private boolean changedText;
 
     private List listImages;
 

@@ -70,7 +70,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -83,6 +85,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.sql.Wrapper;
+import java.util.ArrayList;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
@@ -562,6 +565,42 @@ public class POIDetailEditableFragment extends Fragment implements
         websiteText.setText(POIHelper.getWebsite(cursor));
         phoneText.setText(POIHelper.getPhone(cursor));
 
+
+        TextWatcher textWatcher = new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //Toast.makeText(yourActivity.this,"changed",0).show();
+                changedEdit(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        ArrayList<EditText> firstList = new ArrayList<EditText>();
+        firstList.add(nameText);
+        firstList.add(commentText);
+        firstList.add(streetText);
+        firstList.add(housenumText);
+        firstList.add(cityText);
+        firstList.add(websiteText);
+        firstList.add(phoneText);
+
+        for(int i=0;i<firstList.size();i++)
+        {
+            firstList.get(i).addTextChangedListener(textWatcher);
+        }
+
+
+
         //geolocation_text.setText("(" +POIHelper.getLatitude(cursor) + "," + POIHelper.getLongitude(cursor)+ ")");
 
         wmID = POIHelper.getWMId(cursor);
@@ -570,6 +609,11 @@ public class POIDetailEditableFragment extends Fragment implements
         }
 
         retrieveExternalEditedState();
+    }
+
+    private void changedEdit(boolean changed){
+        WheelmapApp app = (WheelmapApp) this.getActivity().getApplicationContext();
+        app.setChangedText(changed);
     }
 
     private void showGeolocationEditor(boolean show) {

@@ -27,6 +27,7 @@ import com.actionbarsherlock.view.Window;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.wheelmap.android.adapter.Item;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.EditPositionFragment;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
@@ -37,6 +38,7 @@ import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditab
 import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairState;
@@ -72,6 +74,8 @@ public class POIDetailEditableActivity extends MapActivity implements
     private Fragment mFragment;
 
     private ExternalEditableState mExternalEditableState;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,25 +167,32 @@ public class POIDetailEditableActivity extends MapActivity implements
     }
 
     private void startDialog() {
+        WheelmapApp app = (WheelmapApp) this.getApplicationContext();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(app.isChangedText()){
+            app.setChangedText(false);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage(getResources().getString(R.string.dialog_close_editable));
+            builder.setMessage(getResources().getString(R.string.dialog_close_editable));
 
-        builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                finish();
-            }
-        });
-        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                return;
-            }
-        });
+            builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                    finish();
+                }
+            });
+            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    return;
+                }
+            });
 
-        AlertDialog dialog = builder.create();
+            AlertDialog dialog = builder.create();
+
+        }
+        else
+            goBack();
 
     }
 
@@ -269,30 +280,40 @@ public class POIDetailEditableActivity extends MapActivity implements
     }
 
     public void goBack(){
+        WheelmapApp app = (WheelmapApp) this.getApplicationContext();
+        app.setChangedText(false);
         super.onBackPressed();
     }
 
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        WheelmapApp app = (WheelmapApp) this.getApplicationContext();
 
-        builder.setMessage(getResources().getString(R.string.dialog_close_editable));
-        builder.setCancelable(true);
-        builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                goBack();
-            }
-        });
-        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-                return;
-            }
-        });
+        if(app.isChangedText()){
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setMessage(getResources().getString(R.string.dialog_close_editable));
+            builder.setCancelable(true);
+            builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+
+                    goBack();
+                }
+            });
+            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    return;
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else
+            goBack();
     }
 }
