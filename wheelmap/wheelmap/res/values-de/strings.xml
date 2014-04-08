@@ -14,7 +14,7 @@
         Login möglich.
     </string>
 
-    <string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>
+    <string name="dialog_close_editable">Möchten sie das Bearbeitungsfenster wirklich verlassen?</string>
 
     <string name="error_authorization_login_failed">Einloggen fehlgeschlagen</string>
     <string name="error_authorization_not_osm_connected">Ihr Wheelmap Account ist nicht mit
@@ -65,7 +65,14 @@
     <string name="error_wheelchairstate_missing_message">Bitte eine Rollstuhleignung angeben.
     </string>
     <string name="error_wheelchairstate_missing_title">Keine Rolltauglichkeit angegeben!</string>
+    <string name="helper_delim_dash">\ - \</string>
     <string name="info_a_project_of">ein Projekt der</string>
+
+    <string name="info_development">Development</string>
+    <string name="info_design">Design</string>
+    <string name="info_design_one">Simon Staib</string>
+    <string name="info_smf">Smart Mobile Factory GmbH</string>
+
     <string name="info_android_development">Android Entwicklung:</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
     <string name="info_android_development_two">Michael Kröz</string>
@@ -92,6 +99,8 @@
     <string name="legal_notice_intro">Diese Software basiert auf anderen Arbeiten. Deren Copyright
         ist wie folgt:
     </string>
+
+    <string name="legal_notice_entypo">Entypo pictograms by Daniel Bruce</string>
     <string name="legal_notice_jackson">Jackson JSON Processor</string>
     <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
     <string name="legal_notice_mapsforge">Mapsforge</string>
@@ -113,6 +122,7 @@
     <string name="login_register_discription">Neu hier? Registriere dich jetzt in einem Prozess bei OpenStreetMap und Wheelmap.org</string>
     <string name="login_email">Email</string>
     <string name="login_link_text">Registrieren bei Wheelmap.org</string>
+    <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
     <string name="login_password">Passwort</string>
     <string name="login_submit">Login</string>
     <string name="menu_about">Über</string>
@@ -124,21 +134,20 @@
     <string name="menu_save">Sichern</string>
     <string name="menu_search">Suche</string>
     <string name="menu_share">Teilen</string>
+    <string name="menu_photo">Foto</string>
+    <string name="poi_property_photos">Fotos</string>
+    <string name="menu_account">Account</string>
     <string name="no_pois">keine Orte entsprechend der gewählten Kriterien gefunden</string>
     <string name="poi_new_default_name">Neuer Ort</string>
     <string name="poi_property_address">Adresse</string>
     <string name="poi_property_category">Kategorie</string>
-
+    <string name="poi_property_city">Stadt</string>
+    <string name="poi_property_comment">Kommentar</string>
 
     <string name="poi_property_comment_no_comment">Kein Kommentar vorhanden</string>
     <string name="poi_property_comment_no_adress">Keine Adresse vorhanden</string>
     <string name="poi_property_comment_no_photos">Keine Fotos vorhanden</string>
 
-    <string name="poi_property_photos">Fotos</string>
-
-
-    <string name="poi_property_city">Stadt</string>
-    <string name="poi_property_comment">Kommentar</string>
     <string name="poi_property_housenum">Nr</string>
     <string name="poi_property_name">Name</string>
     <string name="poi_property_nodetype">Typ</string>
@@ -154,7 +163,7 @@
     <string name="search_distance">Entfernung</string>
     <string name="search_distance_unspecified">Egal</string>
     <string name="search_execute">Suche</string>
-    <string name="search_hint_list">Suchbegriff (optional)</string>
+    <string name="search_hint_list">Suchbegriff</string>
     <string name="search_mode_distance">Nach Entfernung</string>
     <string name="search_no_selection">Alle</string>
     <string name="search_pick_category">Wähle eine (Unter)Kategorie</string>
@@ -190,6 +199,7 @@
     <string name="title_pois_position_edit">Positionierung des Ortes</string>
     <string name="title_pois_settings">Filter setzen</string>
     <string name="title_search">Suche</string>
+    <string name="title_engage">Mithelfen</string>
     <string name="title_wheelchair_state">Rollstuhlgerecht?</string>
     <string name="ws_disabled">Nein: Eingang hat höhere oder mehrere Stufen, Räume nicht
         erreichbar.

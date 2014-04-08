@@ -8,7 +8,6 @@
     <string name="login_activity_title">Anmelden</string>
     <string name="logout_activity_title">Ausloggen</string>
     <string name="login_succesfully">Login erfolgreich</string>
-
     <string name="logout_text">Eingeloggt als: %s</string>
     <string name="logout">Ausloggen</string>
 </resources>

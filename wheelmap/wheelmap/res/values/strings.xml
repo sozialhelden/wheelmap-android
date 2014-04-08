@@ -66,10 +66,12 @@
     <string name="error_wheelchairstate_missing_title">No Wheelchair State given</string>
     <string name="helper_delim_dash">\ - \</string>
     <string name="info_a_project_of">a project of</string>
+
     <string name="info_development">Development</string>
     <string name="info_design">Design</string>
     <string name="info_design_one">Simon Staib</string>
     <string name="info_smf">Smart Mobile Factory GmbH</string>
+
     <string name="info_android_development">Android Development:</string>
     <string name="info_android_development_one">Michal Harakaľ</string>
     <string name="info_android_development_two">Michael Kröz</string>
@@ -96,6 +98,7 @@
     <string name="legal_notice_intro">This Software is based on other works. Their copyright is as
         follows:
     </string>
+
     <string name="legal_notice_entypo">Entypo pictograms by Daniel Bruce</string>
     <string name="legal_notice_jackson">Jackson JSON Processor</string>
     <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
@@ -116,7 +119,6 @@
 
     <string name="login_text">Log in with your Wheelmap-Account.</string>
     <string name="login_register_discription">New? Register now at OpenStreetmap and Wheelmap.org</string>
-
     <string name="login_email">Email</string>
     <string name="login_link_text">Register at Wheelmap.org</string>
     <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
@@ -131,9 +133,8 @@
     <string name="menu_save">Save</string>
     <string name="menu_search">Search</string>
     <string name="menu_share">Share</string>
-
     <string name="menu_photo">Photo</string>
-
+    <string name="poi_property_photos">Photos</string>
     <string name="menu_account">Account</string>
     <string name="no_pois">no places found according your filter settings</string>
     <string name="poi_new_default_name">New POI</string>
@@ -145,8 +146,6 @@
     <string name="poi_property_comment_no_comment">No comment</string>
     <string name="poi_property_comment_no_adress">No adress</string>
     <string name="poi_property_comment_no_photos">No photos</string>
-
-    <string name="poi_property_photos">Photos</string>
 
     <string name="poi_property_housenum">No</string>
     <string name="poi_property_name">Name</string>
@@ -163,7 +162,7 @@
     <string name="search_distance">Distance</string>
     <string name="search_distance_unspecified">Whatever</string>
     <string name="search_execute">Search</string>
-    <string name="search_hint_list">Keyword (optional)</string>
+    <string name="search_hint_list">Keyword</string>
     <string name="search_mode_distance">By Distance</string>
     <string name="search_no_selection">All</string>
     <string name="search_pick_category">Pick a (sub)category</string>
