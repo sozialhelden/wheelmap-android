@@ -59,7 +59,7 @@ public class WebViewNewsActivity extends Activity {
                 return true;
             }
         });
-        webView.loadUrl("http://wheelmap.org/blog/");
+        webView.loadUrl("http://wheelmap.org/category/news/");
 
         if(getSupportActionBar() != null){
             getSupportActionBar().setHomeButtonEnabled(true);
