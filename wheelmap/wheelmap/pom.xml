@@ -167,6 +167,13 @@
             <version>4.0-alpha3</version>
         </dependency>
 
+        <!--
+        <dependency>
+            <groupId>com.urbanairship</groupId>
+            <artifactId>datacube</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        -->
 
     </dependencies>
 
