@@ -6,7 +6,6 @@ import com.urbanairship.actions.LandingPageAction;
 import com.urbanairship.actions.OpenExternalUrlAction;
 import com.urbanairship.push.PushManager;          */
 
-import org.wheelmap.android.activity.StartupActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
