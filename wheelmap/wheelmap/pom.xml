@@ -166,14 +166,17 @@
             <artifactId>httpmime</artifactId>
             <version>4.0-alpha3</version>
         </dependency>
+
+        <!-- Urban Airship Library Dependency-->
+        <dependency>
+            <groupId>com.urbanairship</groupId>
+            <artifactId>java-client</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
     </dependencies>
 
-    <!-- Urban Airship Library Dependency-->
-    <dependency>
-        <groupId>com.urbanairship</groupId>
-        <artifactId>java-client</artifactId>
-        <version>4.0.1</version>
-    </dependency>
+
     <build>
         <finalName>${project.artifactId}-${app.version.name}</finalName>
         <filters>
