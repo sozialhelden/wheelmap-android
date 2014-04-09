@@ -170,8 +170,8 @@
         <!-- Urban Airship Library Dependency-->
         <dependency>
             <groupId>com.urbanairship</groupId>
-            <artifactId>java-client</artifactId>
-            <version>1.0</version>
+            <artifactId>datacube</artifactId>
+            <version>4.0.1</version>
         </dependency>
 
     </dependencies>
