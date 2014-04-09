@@ -26,9 +26,9 @@ import com.bugsense.trace.BugSenseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.urbanairship.AirshipConfigOptions;
+/*import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
-import com.urbanairship.push.PushManager;
+import com.urbanairship.push.PushManager; */
 
 
 import net.hockeyapp.android.CrashManager;
@@ -160,14 +160,14 @@ public class WheelmapApp extends Application {
         // or you can add these settings to a properties file
         // called airshipconfig.properties
         // and place it in your "assets" folder
-        AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
+        /*AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
         options.developmentAppKey = "Your development app key";
         options.productionAppKey = "Your production app key";
         options.inProduction = false; //determines which app key to use
 
         // Take off initializes the services
         UAirship.takeOff(this, options);
-        PushManager.shared().setIntentReceiver(IntentReceiver.class);
+        PushManager.shared().setIntentReceiver(IntentReceiver.class);       */
     }
 
     @Override
