@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="to_far_away">To far away to load new Points</string>
+    <string name="move_the_map">Please move the map by touching</string>
+
+    <string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>
+
+    <string name="error_authorization_login_failed">Login Failed</string>
+    <string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to
+    openstreetmap.
+    </string>
+    <string name="error_authorization_request_forbidden">Request forbidden</string>
+    <string name="error_authorization_request_failed">Authorization failed. The app does not have
+    proper access rights to the service. If you are logged in, your can try to log out.
+    Otherwise the app needs to be updated or the service has a problem.
+    </string>
+    <string name="error_authorization_required">Authorization required</string>
+    <string name="error_category_missing_message">Cannot store without a category for the
+    location.
+    </string>
+    <string name="error_category_missing_title">No category set!</string>
+    <string name="error_network_client_failure">This App cant communicate with the server. You need
+    an update. Sorry.
+    </string>
+    <string name="error_network_server_failure">The Wheelmap server has a problem. Please try again
+    later.
+    </string>
+    <string name="error_network_server_maintenance">The Wheelmap server is down for maintenance.
+    Please try again later
+    </string>
+    <string name="error_network_unknown_failure">An unknown network failure occurred. Sorry,
+    communication failed.
+    </string>
+    <string name="error_newpoi_message">The new location will be verified before it shows up in the
+    database. This will take some time.
+    </string>
+    <string name="error_newpoi_title">New Location created</string>
+    <string name="error_noid_message">Sorry, this link contains no identification to retrieve from
+    the Wheelmap servers. Unable to find the location.
+    </string>
+    <string name="error_noid_title">Link lacks node id</string>
+    <string name="error_not_enough_memory">Your phone does not provide enough memory for this
+    application. Sorry.
+    </string>
+    <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.
+    </string>
+    <string name="error_wheelchairstate_missing_title">No Wheelchair State given</string>
+
+    <string name="helper_delim_dash">\ - \</string>
+
+    <string name="info_development">Development</string>
+    <string name="info_design">Design</string>
+    <string name="info_design_one">Simon Staib</string>
+    <string name="info_smf">Smart Mobile Factory GmbH</string>
+    <string name="info_clientdevelopment">Android API Client</string>
+    <string name="info_clientdevelopment_one">Pat Lipp</string>
+    <string name="info_wheelmap_android_one">Wheelmap Android:</string>
+    <string name="info_wheelmap_android_two">Version</string>
+
+    <string name="legal_notice_entypo">Entypo pictograms by Daniel Bruce</string>
+
+    <string name="login_text">Log in with your Wheelmap-Account.</string>
+    <string name="login_register_discription">New? Register now at OpenStreetmap and Wheelmap.org</string>
+    <string name="login_email">Email</string>
+    <string name="login_link_text">Register at Wheelmap.org</string>
+    <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
+    <string name="login_password">Password</string>
+    <string name="login_submit">Login</string>
+
+    <string name="menu_about">About</string>
+    <string name="menu_directions">Navigation</string>
+    <string name="menu_filter">Filter Settings</string>
+    <string name="menu_mylocation">Move Here</string>
+    <string name="menu_new_poi">Create New POI</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_photo">Photo</string>
+    <string name="poi_property_photos">Photos</string>
+    <string name="menu_account">Account</string>
+    <string name="menu_news">News</string>
+
+    <string name="poi_property_city">City</string>
+    <string name="poi_property_comment_no_comment">No comment</string>
+    <string name="poi_property_comment_no_adress">No adress</string>
+    <string name="poi_property_comment_no_photos">No photos</string>
+    <string name="poi_property_housenum">No</string>
+    <string name="poi_property_postcode">Code</string>
+    <string name="poi_property_street">Street</string>
+    <string name="position_geopoint">Location</string>
+
+    <string name="search_distance">Distance</string>
+    <string name="search_distance_unspecified">Whatever</string>
+    <string name="search_execute">Search</string>
+    <string name="search_hint_list">Keyword</string>
+    <string name="search_mode_distance">By Distance</string>
+    <string name="search_no_selection">All</string>
+    <string name="search_pick_category">Pick a (sub)category</string>
+    <string name="search_pick_map">It is only searched within the selected map area.</string>
+    <string name="settings_login_delete">Click to delete this sign in.</string>
+    <string name="search_mode_map">By Map</string>
+    <string name="settings_login_information">Signed In?</string>
+    <string name="settings_login_notsignedin">You are not signed in.</string>
+    <string name="settings_login_signedinas">You are signed in as</string>
+    <string name="settings_unit_imperial">Imperial</string>
+    <string name="settings_unit_metric">Metric</string>
+    <string name="settings_unit_preference">Distance Unit</string>
+    <string name="title_editor">Editor</string>
+    <string name="title_login">Please Login!</string>
+    <string name="title_nodetype_edit">Pick a Type</string>
+    <string name="title_pois_detail_activity">Wheelmap Detail</string>
+    <string name="title_pois_position_edit">Location Positioning</string>
+    <string name="title_search">Search</string>
+    <string name="title_engage">Engage</string>
+    <string name="menu_refresh">Refresh</string>
+
+    <string name="dashboard_search_hint">Search Nearby Locations</string>
+    <string name="dashboard_button_title_nearby">NEARBY</string>
+    <string name="dashboard_button_title_map">MAP</string>
+    <string name="dashboard_button_title_categories">CATEGORIES</string>
+    <string name="dashboard_button_title_engage">ENGAGE</string>
+    <string name="dashboard_locations">Places</string>
+    <string name="dashboard_button_title_news">NEWS</string>
+
+</resources>
