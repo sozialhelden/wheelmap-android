@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Search -->
+
+    <string name="search_distance">Distance</string>
+    <string name="search_distance_unspecified">Whatever</string>
+    <string name="search_execute">Search</string>
+    <string name="search_hint_list">Keyword</string>
+    <string name="search_mode_distance">By Distance</string>
+    <string name="search_no_selection">All</string>
+    <string name="search_pick_category">Pick a (sub)category</string>
+    <string name="search_pick_map">It is only searched within the selected map area.</string>
+    <string name="settings_login_delete">Click to delete this sign in.</string>
+    <string name="search_mode_map">By Map</string>
+</resources>

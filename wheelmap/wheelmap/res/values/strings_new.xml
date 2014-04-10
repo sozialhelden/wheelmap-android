@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+
+    <!-- All new ones  which are included for Wheelmap Version 2.0 -->
+
+    <!--
     <string name="to_far_away">To far away to load new Points</string>
     <string name="move_the_map">Please move the map by touching</string>
 
@@ -120,5 +124,5 @@
     <string name="dashboard_button_title_engage">ENGAGE</string>
     <string name="dashboard_locations">Places</string>
     <string name="dashboard_button_title_news">NEWS</string>
-
+    -->
 </resources>
