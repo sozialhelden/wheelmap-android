@@ -13,7 +13,7 @@
 
     <string name="login_forgot_password">Forgot password</string>
     <string name="login_new_registration">Register now</string>
-    <string name="login_dont_have_account">No Wheelmap Account? Log in with an OpenStreetmap Account on Wheelmap.org, click on your "Account" and creagte a new Wheelmap-Account.</string>
+    <string name="login_dont_have_account">No Wheelmap Account? Log in with an OpenStreetmap Account on Wheelmap.org, click on your "Account" and create a new Wheelmap-Account.</string>
     <string name="login_new">New? Register now at OpenStreetmap and Wheelmap.org</string>
     <string name="login_activity_title">Login</string>
     <string name="logout_activity_title">Logout</string>
