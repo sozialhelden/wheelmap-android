@@ -38,12 +38,14 @@ import org.wheelmap.android.online.R;
 
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
@@ -110,8 +112,6 @@ public class SearchDialogFragment extends DialogFragment implements
     protected View createView() {
         LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
-
-
 
         return v;
     }

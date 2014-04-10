@@ -539,9 +539,10 @@ public class MainMultiPaneActivity extends MapActivity implements
     }
 
     @Override
-    public void onEdit(long poiId) {
+    public void onEdit(long poiId, int focus) {
         Intent intent = new Intent(this, POIDetailEditableActivity.class);
         intent.putExtra(Extra.POI_ID, poiId);
+        intent.putExtra("Focus", focus);
         startActivity(intent);
     }
 

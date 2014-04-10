@@ -1,21 +1,25 @@
 package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.RadioButton;
 import org.holoeverywhere.widget.Spinner;
+import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class SearchDialogCombinedFragment extends SearchDialogFragment
         implements OnCheckedChangeListener {
+
+    EditText editText;
 
     public final static SearchDialogCombinedFragment newInstance() {
         SearchDialogCombinedFragment f = new SearchDialogCombinedFragment();
@@ -40,7 +44,8 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
             }
         });
 
-
+        editText= (EditText) v.findViewById(R.id.search_keyword);
+        editText.requestFocus();
 
         return v;
     }

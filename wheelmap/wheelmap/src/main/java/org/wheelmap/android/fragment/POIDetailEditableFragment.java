@@ -108,6 +108,10 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private static final int DIALOG_ID_NETWORK_ERROR = 2;
 
+    private final static int FOCUS_TO_NOTHING = 0;
+    private final static int FOCUS_TO_ADRESS = 1;
+    private final static int FOCUS_TO_COMMENT = 2;
+
     //@Inject
     //public ContentViewListener ignored;
 
@@ -189,6 +193,8 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private DetachableResultReceiver mReceiver;
 
+    private int focus;
+
     public interface OnPOIDetailEditableListener {
 
         public void onEditSave(boolean quit);
@@ -206,9 +212,11 @@ public class POIDetailEditableFragment extends Fragment implements
 
     }
 
-    public static POIDetailEditableFragment newInstance(long poiId) {
+    public static POIDetailEditableFragment newInstance(long poiId, int focus) {
         Bundle b = new Bundle();
         b.putLong(Extra.POI_ID, poiId);
+        b.putInt("Focus",focus);
+
 
         POIDetailEditableFragment fragment = new POIDetailEditableFragment();
         fragment.setArguments(b);
@@ -238,6 +246,7 @@ public class POIDetailEditableFragment extends Fragment implements
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
         poiID = getArguments().getLong(Extra.POI_ID);
+        focus = getArguments().getInt("Focus");
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
 
@@ -289,6 +298,15 @@ public class POIDetailEditableFragment extends Fragment implements
             }
         });
         initViews(v);
+
+        if(focus == FOCUS_TO_NOTHING){
+           //noop
+        }else if(focus == FOCUS_TO_ADRESS){
+            streetText.requestFocus();
+        }else if(focus == FOCUS_TO_COMMENT){
+            commentText.requestFocus();
+        }
+
         return v;
     }
 

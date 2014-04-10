@@ -31,6 +31,7 @@ import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 
@@ -124,6 +125,10 @@ public class POIDetailFragment extends Fragment implements
 
     private final static long FADE_IN_ANIMATION_DURATION = 500;
 
+    private final static int FOCUS_TO_NOTHING = 0;
+    private final static int FOCUS_TO_ADRESS = 1;
+    private final static int FOCUS_TO_COMMENT = 2;
+
 
     ImageView img_logo;
     private Intent pictureActionIntent = null;
@@ -205,7 +210,7 @@ public class POIDetailFragment extends Fragment implements
 
     public interface OnPOIDetailListener {
 
-        void onEdit(long poiId);
+        void onEdit(long poiId, int focus);
 
         void onEditWheelchairState(WheelchairState wState);
 
@@ -247,6 +252,8 @@ public class POIDetailFragment extends Fragment implements
     private AlertDialog dialog;
     private ProgressDialog progress;
 
+    LinearLayout layoutComment;
+    LinearLayout layoutAdress;
 
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -319,6 +326,9 @@ public class POIDetailFragment extends Fragment implements
         photoLayout = (LinearLayout)v.findViewById(R.id.photo_layout);
 
         listView = (HorizontalView)v.findViewById(R.id.gallery);
+
+        layoutAdress = (LinearLayout)v.findViewById(R.id.layout_detail_adress);
+        layoutComment = (LinearLayout)v.findViewById(R.id.layout_detail_comment);
     }
 
     @Override
@@ -361,7 +371,7 @@ public class POIDetailFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onEdit(poiId);
+                    mListener.onEdit(poiId, FOCUS_TO_NOTHING);
                 }
             }
         });
@@ -388,7 +398,22 @@ public class POIDetailFragment extends Fragment implements
             }
         });
 
-
+        layoutComment.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onEdit(poiId, FOCUS_TO_COMMENT);
+                }
+            }
+        });
+        layoutAdress.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onEdit(poiId, FOCUS_TO_ADRESS);
+                }
+            }
+        });
 
         return v;
     }

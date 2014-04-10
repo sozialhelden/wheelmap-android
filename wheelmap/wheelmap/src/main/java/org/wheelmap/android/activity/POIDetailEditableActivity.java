@@ -109,7 +109,9 @@ public class POIDetailEditableActivity extends MapActivity implements
             return;
         }
 
-        mFragment = POIDetailEditableFragment.newInstance(poiID);
+        int focus = getIntent().getIntExtra("Focus",0);
+
+        mFragment = POIDetailEditableFragment.newInstance(poiID,focus);
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         POIDetailEditableFragment.TAG).commit();
