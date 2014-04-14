@@ -100,69 +100,77 @@
 
         <include layout="@layout/separator"/>
 
-
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_info"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="20dp"/>
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
-                      android:layout_marginTop="20dp"
-                      >
+                      android:gravity="center">
 
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical"
-                          android:gravity="center_horizontal"
-                          >
+                <LinearLayout android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:layout_marginRight="3dp">
 
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/info_POIData"
+                            android:gravity="right"/>
 
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/info_kartendaten"
-                        android:textStyle="bold"
-                        android:gravity="center"/>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/info_kartendaten_one"
-                        android:gravity="center"/>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/info_kartendaten_two"
-                        android:gravity="center"
-                        android:layout_marginBottom="20dp"/>
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/info_kartendaten"
+                            android:gravity="right"/>
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/legal_notice_iconscollection"
+                            android:gravity="right"/>
 
-                <include layout="@layout/separator"/>
+                </LinearLayout>
 
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/legal_notice_iconscollection"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginTop="20dp"/>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/legal_notice_commonsware_copyright"
-                        android:gravity="center"
-                        android:layout_marginBottom="20dp"/>
+                <LinearLayout android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:layout_marginLeft="3dp"
+                              >
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/openStreetMapLink"
+                            android:text="@string/info_kartendaten_points"
+                            android:gravity="left"/>
 
-                <include layout="@layout/separator"/>
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/openMapBox"
+                            android:text="@string/info_kartendaten_three"
+                            android:gravity="left"/>
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/linkNicolasMollet"
+                            android:text="@string/legal_notice_commonsware_copyright_nicolas"
+                            android:gravity="left"/>
 
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/legal_notice_entypo"
-                        android:gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="15dp"/>
-
-            </LinearLayout>
+                </LinearLayout>
 
 
         </LinearLayout>
-
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/legal_notice_entypo"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"/>
     </LinearLayout>
 </ScrollView>

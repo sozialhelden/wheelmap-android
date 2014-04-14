@@ -254,6 +254,7 @@ public class POIDetailFragment extends Fragment implements
 
     LinearLayout layoutComment;
     LinearLayout layoutAdress;
+    LinearLayout layoutPhoto;
 
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -329,6 +330,7 @@ public class POIDetailFragment extends Fragment implements
 
         layoutAdress = (LinearLayout)v.findViewById(R.id.layout_detail_adress);
         layoutComment = (LinearLayout)v.findViewById(R.id.layout_detail_comment);
+        layoutPhoto = (LinearLayout)v.findViewById(R.id.photo_layout);
     }
 
     @Override
@@ -412,6 +414,14 @@ public class POIDetailFragment extends Fragment implements
                 if (mListener != null) {
                     mListener.onEdit(poiId, FOCUS_TO_ADRESS);
                 }
+            }
+        });
+
+        layoutPhoto.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startDialog();
+
             }
         });
 

@@ -95,7 +95,7 @@
                         android:id="@+id/noadress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/poi_property_comment_no_adress"
+                        android:text="@string/poi_property_comment_add_adress"
                         android:textColor="#cfcfcf"
                         />
 
@@ -128,7 +128,7 @@
                         android:id="@+id/nocomment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/poi_property_comment_no_comment"
+                        android:text="@string/poi_property_comment_add_comment"
                         android:textColor="#cfcfcf"
                         />
             </LinearLayout>
@@ -153,7 +153,7 @@
                     android:id="@+id/nophotos"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:text="@string/poi_property_comment_no_photos"
+                    android:text="@string/poi_property_comment_add_photos"
                     android:textColor="#cfcfcf"
                     android:layout_margin="8dp"
                     />

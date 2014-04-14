@@ -10,4 +10,11 @@
     <string name="poi_property_postcode">Code</string>
     <string name="poi_property_street">Street</string>
     <string name="position_geopoint">Location</string>
+
+    <!-- NEW    -->
+    <!-- todo: add to transifex   -->
+
+    <string name="poi_property_comment_add_comment">Add comment</string>
+    <string name="poi_property_comment_add_adress">Add adress</string>
+    <string name="poi_property_comment_add_photos">Add photos</string>
 </resources>

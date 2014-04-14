@@ -31,6 +31,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -71,17 +73,38 @@ public class InfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_credit_screen, container, false);
+        TextView openStreetMapLink = (TextView)v.findViewById(R.id.openStreetMapLink);
+        TextView openMapBoxLink = (TextView)v.findViewById(R.id.openMapBox);
+        TextView openNicolasLink = (TextView)v.findViewById(R.id.linkNicolasMollet);
+
+        String linkOpenStreetMap = "https://www.openstreetmap.org/copyright";
+        String linkOpenMapBox = "http://mapbox.com/about/maps/";
+        String linkOpenNicolas = "http://mapicons.nicolasmollet.com";
 
 
+        openStreetMapLink.setClickable(true);
+        openMapBoxLink.setClickable(true);
+
+        String text = "<a href=" + linkOpenStreetMap + ">" + openStreetMapLink.getText() + "</a>";
+        openStreetMapLink.setText(Html.fromHtml(text));
+
+        String text1 = "<a href=" + linkOpenMapBox + ">" + openMapBoxLink.getText() + "</a>";
+        openMapBoxLink.setText(Html.fromHtml(text1));
+
+        String text2 = "<a href=" + linkOpenNicolas + ">" + openNicolasLink.getText() + "</a>";
+        openNicolasLink.setText(Html.fromHtml(text2));
+
+        openStreetMapLink.setMovementMethod(LinkMovementMethod.getInstance());
+        openMapBoxLink.setMovementMethod(LinkMovementMethod.getInstance());
+        openNicolasLink.setMovementMethod(LinkMovementMethod.getInstance());
 
 
-
-        v.findViewById(R.id.credit_screen).setOnClickListener(new View.OnClickListener() {
+        /*v.findViewById(R.id.credit_screen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.dismissInfoView();
             }
-        });
+        }); */
 
 
         return v;

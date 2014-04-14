@@ -36,7 +36,7 @@
     <string name="legal_notice_commonsware">Два модулі</string>
     <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
     <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
-    <string name="legal_notice_iconscollection">Колекція карт</string>
+    <string name="legal_notice_iconscollection">Колекція карт: </string>
     <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com
     </string>
     <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>

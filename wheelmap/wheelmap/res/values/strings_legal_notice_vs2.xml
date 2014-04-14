@@ -4,8 +4,9 @@
 
     <string name="legal_notice_commonsware">Two Modules</string>
     <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
+    <string name="legal_notice_commonsware_copyright_nicolas">© Nicolas Mollet, CC-BY-SA</string>
     <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
-    <string name="legal_notice_iconscollection">Map Icons Collection</string>
+    <string name="legal_notice_iconscollection">Map Icons Collection: </string>
     <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com
     </string>
     <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>

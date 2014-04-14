@@ -20,8 +20,11 @@
     <string name="info_android_development_two">Michael Kröz</string>
     <string name="info_icons">Icons:</string>
     <string name="info_kartendaten">Mapdata:</string>
+    <string name="info_POIData">POI Data:</string>
     <string name="info_kartendaten_one">www.openstreetmap.org</string>
-    <string name="info_kartendaten_two">© OpenStreetMap contributors, CC-BY-SA</string>
+    <string name="info_kartendaten_two">OpenStreetMap (ODbL)</string>
+    <string name="info_kartendaten_points">© OpenStreetMap contributors, ODbL</string>
+    <string name="info_kartendaten_three">© MapBox</string>
     <string name="info_stiftung_text_one">Thanks to Fürst Donnersmarck-Stiftung</string>
     <string name="info_web_version">Web-Version:</string>
     <string name="info_web_version_one">www.wheelmap.org</string>
