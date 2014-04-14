@@ -13,6 +13,7 @@ import org.wheelmap.android.online.R;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -45,9 +46,41 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
         });
 
         editText= (EditText) v.findViewById(R.id.search_keyword);
+
+        editText.setFocusableInTouchMode(true);
+        editText.setFocusable(true);
+
         editText.requestFocus();
 
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    showKeyboard();
+                } else{
+                    hideKeyboard();
+                }
+            }
+        });
+
         return v;
+    }
+
+    protected void showKeyboard(){
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    protected void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     protected void bindViews(final View v) {
