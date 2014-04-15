@@ -4,24 +4,20 @@
 <LinearLayout     xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/layout_detail_fragment"
         android:orientation="vertical">
 
-
-
-    <LinearLayout
-            android:id="@+id/layout_detail_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
         <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="150dp">
+                        android:layout_height="150dp"
+                        android:id="@+id/layout_map_detail"
+                        android:animateLayoutChanges="true">
             <org.osmdroid.views.MapView
+                    android:clickable="true"
                     android:id="@+id/map_detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
-             <!--
+
             <ImageButton
                     android:id="@+id/map_btn_locate"
                     android:layout_width="40dp"
@@ -30,7 +26,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="@dimen/map_position_margin_vertical"
                     android:layout_marginLeft="@dimen/map_position_margin_horizontal"
-                    android:background="@drawable/map_navbar_btn_fadenkreuz"/> -->
+                    android:background="@drawable/ic_detail_expand"/>
 
         </RelativeLayout>
 
@@ -278,6 +274,4 @@
 
             </LinearLayout>
         </org.wheelmap.android.view.VerticalScrollView>
-    </LinearLayout>
-
 </LinearLayout>

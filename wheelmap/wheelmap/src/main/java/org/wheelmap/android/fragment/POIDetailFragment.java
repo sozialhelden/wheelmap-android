@@ -24,6 +24,7 @@ package org.wheelmap.android.fragment;
 
 
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -100,6 +101,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -127,7 +129,7 @@ import de.greenrobot.event.EventBus;
 import roboguice.inject.ContentViewListener;
 
 public class POIDetailFragment extends Fragment implements
-        OnClickListener, OnTapListener, LoaderCallbacks<Cursor>, Receiver, MapListener {
+        OnTapListener, LoaderCallbacks<Cursor>, Receiver, OnClickListener {
 
     public final static String TAG = POIDetailFragment.class.getSimpleName();
 
@@ -175,6 +177,10 @@ public class POIDetailFragment extends Fragment implements
     private boolean isCentered;
 
     private ImageButton mBtnLocate;
+
+    private RelativeLayout layoutMapDetail;
+
+    boolean mapFocus = false;
 
 
 
@@ -260,13 +266,8 @@ public class POIDetailFragment extends Fragment implements
     private WheelchairState mWheelchairState;
 
     @Override
-    public boolean onScroll(ScrollEvent event) {
-        return false;
-    }
-
-    @Override
-    public boolean onZoom(ZoomEvent event) {
-        return false;
+    public void onClick(View v) {
+        return;
     }
 
     public interface OnPOIDetailListener {
@@ -401,6 +402,7 @@ public class POIDetailFragment extends Fragment implements
         layoutAdress = (LinearLayout)v.findViewById(R.id.layout_detail_adress);
         layoutComment = (LinearLayout)v.findViewById(R.id.layout_detail_comment);
         layoutPhoto = (LinearLayout)v.findViewById(R.id.photo_layout);
+        layoutMapDetail = (RelativeLayout)v.findViewById(R.id.layout_map_detail);
     }
 
     @Override
@@ -495,12 +497,12 @@ public class POIDetailFragment extends Fragment implements
             }
         });
 
+
+
         mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
         mMapView.setTileSource(mMapBoxTileSource);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
-
-        mMapController = mMapView.getController();
 
 
 
@@ -510,20 +512,39 @@ public class POIDetailFragment extends Fragment implements
         mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
 
 
-        mMapView.setMapListener(this);
-        /*
+
+
         mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
         mBtnLocate.setOnTouchListener(new PressSelector());
-        mBtnLocate.setOnClickListener(new View.OnClickListener() {
+        mBtnLocate.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                centerMap(mCurrentLocationGeoPoint, true);
+                /*centerMap(mCurrentLocationGeoPoint, true);
                 setZoomIntern(17);
-                requestUpdate();
-            }
-        });  */
+                requestUpdate();*/
 
+                if(mapFocus){
+                    //mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
+                    layoutMapDetail.getLayoutParams().height = 100;
+                    mapFocus = false;
+                }else if(!mapFocus){
+                    //mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
+                    layoutMapDetail.getLayoutParams().height = 1000;
+                    mapFocus = true;
+                }
+            }
+        });
+
+        v.findViewById(R.id.wheelchair_state_layout).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onEditWheelchairState(mWheelchairState);
+                    return;
+                }
+            }
+        });
 
         return v;
     }
@@ -715,24 +736,6 @@ public class POIDetailFragment extends Fragment implements
 
     public long getPoiId() {
         return poiId;
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-
-        switch (id) {
-            case R.id.wheelchair_state_layout:
-                if (mListener != null) {
-                    mListener.onEditWheelchairState(mWheelchairState);
-                    return;
-                }
-                break;
-
-            default:
-                //
-        }
-
     }
 
     @Override
