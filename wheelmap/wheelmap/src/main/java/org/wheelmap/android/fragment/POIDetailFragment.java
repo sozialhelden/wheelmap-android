@@ -38,6 +38,13 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.async.UploadPhotoTask;
 import org.wheelmap.android.model.Request;
@@ -66,6 +73,7 @@ import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.FileUtil;
+import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
@@ -76,9 +84,11 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -89,6 +99,7 @@ import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -112,10 +123,11 @@ import java.util.List;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
+import de.greenrobot.event.EventBus;
 import roboguice.inject.ContentViewListener;
 
 public class POIDetailFragment extends Fragment implements
-        OnClickListener, OnTapListener, LoaderCallbacks<Cursor>, Receiver {
+        OnClickListener, OnTapListener, LoaderCallbacks<Cursor>, Receiver, MapListener {
 
     public final static String TAG = POIDetailFragment.class.getSimpleName();
 
@@ -128,6 +140,45 @@ public class POIDetailFragment extends Fragment implements
     private final static int FOCUS_TO_NOTHING = 0;
     private final static int FOCUS_TO_ADRESS = 1;
     private final static int FOCUS_TO_COMMENT = 2;
+
+
+
+
+
+
+    private IMapController mMapController;
+
+    private static String baseUrl = "http://a.tiles.mapbox.com/v3/%s/";
+
+    private static String tileUrl;
+
+    private static final byte ZOOMLEVEL_MIN = 16;
+
+    private OnlineTileSourceBase mMapBoxTileSource; private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
+
+    private org.osmdroid.views.MapView mMapView;
+
+    private IGeoPoint mLastRequestedPosition;
+
+    private EventBus mBus;
+
+    private int mVerticalDelta;
+
+    private final static int VERTICAL_DELTA = 20;
+
+    private double mCrrLatitude;
+
+    private double mCrrLongitude;
+
+    private boolean mHeightFull = true;
+
+    private boolean isCentered;
+
+    private ImageButton mBtnLocate;
+
+
+
+
 
 
     ImageView img_logo;
@@ -207,6 +258,16 @@ public class POIDetailFragment extends Fragment implements
     private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 
     private WheelchairState mWheelchairState;
+
+    @Override
+    public boolean onScroll(ScrollEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean onZoom(ZoomEvent event) {
+        return false;
+    }
 
     public interface OnPOIDetailListener {
 
@@ -291,9 +352,18 @@ public class POIDetailFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
         poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
+
+        tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
+        mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
+        mBus = EventBus.getDefault();
+        mVerticalDelta = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
+                getResources().getDisplayMetrics());
 
 
     }
@@ -424,6 +494,36 @@ public class POIDetailFragment extends Fragment implements
 
             }
         });
+
+        mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
+        mMapView.setTileSource(mMapBoxTileSource);
+        mMapView.setBuiltInZoomControls(true);
+        mMapView.setMultiTouchControls(true);
+
+        mMapController = mMapView.getController();
+
+
+
+        mMapView.setBuiltInZoomControls(true);
+        mMapController = mMapView.getController();
+        mMapController.setZoom(18);
+        mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
+
+
+        mMapView.setMapListener(this);
+        /*
+        mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
+        mBtnLocate.setOnTouchListener(new PressSelector());
+        mBtnLocate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                centerMap(mCurrentLocationGeoPoint, true);
+                setZoomIntern(17);
+                requestUpdate();
+            }
+        });  */
+
 
         return v;
     }
@@ -703,6 +803,19 @@ public class POIDetailFragment extends Fragment implements
 
             return;
         }else{
+
+            c.moveToFirst();
+
+            mCrrLongitude = POIHelper.getLongitude(c);
+            mCrrLatitude = POIHelper.getLatitude(c);
+
+            org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
+                    mCrrLongitude);
+
+            if (mMapView != null && !isCentered) {
+                centerMap(geoPoint, false);
+            }
+
             titlebarBackbutton.setVisibility(View.VISIBLE);
             addressTitle.setVisibility(View.VISIBLE);
             addressText.setVisibility(View.VISIBLE);
@@ -726,7 +839,7 @@ public class POIDetailFragment extends Fragment implements
 
             nothing.setVisibility(View.GONE);
 
-            c.moveToFirst();
+
             poiId = POIHelper.getId(c);
             String wmIdString = POIHelper.getWMId(c);
             WheelchairState state = POIHelper.getWheelchair(c);
@@ -1207,5 +1320,102 @@ public class POIDetailFragment extends Fragment implements
             dialog = null;
         }
         super.onDestroy();
+    }
+
+    private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force) {
+        Log.d(TAG, "centerMap: force = " + force + " isCentered = "
+                + isCentered + " geoPoint = " + geoPoint);
+        if (force || !isCentered) {
+            setCenterWithOffset(geoPoint);
+        }
+    }
+
+    private void setCenterWithOffset(org.osmdroid.util.GeoPoint geoPoint) {
+        if (geoPoint == null) {
+            return;
+        }
+        boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+        IGeoPoint actualGeoPoint = geoPoint;
+
+
+
+
+        if (mHeightFull) {
+            actualGeoPoint = geoPoint;
+        } else {
+
+            if(land){
+                /*Projection projection = mMapView.getProjection();
+                Point point = new Point();
+                point = projection.toMapPixels(geoPoint,point);
+                //point = projection.toPixels(geoPoint, point);
+                int horizontalOffset = mMapView.getWidth() / 4;
+                point.x -= horizontalOffset;
+                actualGeoPoint = projection.fromPixels(point.x, point.y);
+                */
+
+                Point point = pointFromGeoPoint(geoPoint,mMapView);
+                int horizontalOffset = mMapView.getWidth() / 4;
+                point.x -= horizontalOffset;
+                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
+
+            }else{
+                /*Projection projection = mMapView.getProjection();
+                Point point = new Point();
+                point = projection.toPixels(geoPoint, point);
+                int mVerticalOffset = mMapView.getHeight() / 4;
+                point.y -= mVerticalOffset;
+                actualGeoPoint = projection.fromPixels(point.x, point.y); */
+
+                Point point = pointFromGeoPoint(geoPoint,mMapView);
+                int mVerticalOffset = mMapView.getHeight() / 4;
+                point.y -= mVerticalOffset;
+                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
+            }
+        }
+
+        mMapController.setCenter(actualGeoPoint);
+        isCentered = true;
+    }
+
+    /**
+     *
+     * @param x  view coord relative to left
+     * @param y  view coord relative to top
+     * @param vw MapView
+     * @return GeoPoint
+     */
+    private org.osmdroid.util.GeoPoint geoPointFromScreenCoords(int x, int y, org.osmdroid.views.MapView vw){
+        // Get the top left GeoPoint
+        org.osmdroid.views.MapView.Projection projection = vw.getProjection();
+        org.osmdroid.util.GeoPoint geoPointTopLeft = (org.osmdroid.util.GeoPoint) projection.fromPixels(0, 0);
+        Point topLeftPoint = new Point();
+        // Get the top left Point (includes osmdroid offsets)
+        projection.toPixels(geoPointTopLeft, topLeftPoint);
+        // get the GeoPoint of any point on screen
+        org.osmdroid.util.GeoPoint rtnGeoPoint = (org.osmdroid.util.GeoPoint) projection.fromPixels(x, y);
+        return rtnGeoPoint;
+    }
+
+    /**
+     *
+     * @param gp GeoPoint
+     * @param vw Mapview
+     * @return a 'Point' in screen coords relative to top left
+     */
+    private Point pointFromGeoPoint(org.osmdroid.util.GeoPoint gp, org.osmdroid.views.MapView vw){
+
+        Point rtnPoint = new Point();
+        org.osmdroid.views.MapView.Projection projection = vw.getProjection();
+        projection.toPixels(gp, rtnPoint);
+        // Get the top left GeoPoint
+        org.osmdroid.util.GeoPoint geoPointTopLeft = (org.osmdroid.util.GeoPoint) projection.fromPixels(0, 0);
+        Point topLeftPoint = new Point();
+        // Get the top left Point (includes osmdroid offsets)
+        projection.toPixels(geoPointTopLeft, topLeftPoint);
+        rtnPoint.x-= topLeftPoint.x; // remove offsets
+        rtnPoint.y-= topLeftPoint.y;
+        return rtnPoint;
     }
 }

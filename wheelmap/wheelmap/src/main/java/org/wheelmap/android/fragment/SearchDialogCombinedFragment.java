@@ -44,7 +44,7 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
 
             }
         });
-
+        /*
         editText= (EditText) v.findViewById(R.id.search_keyword);
 
         editText.setFocusableInTouchMode(true);
@@ -63,10 +63,10 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
                 }
             }
         });
-
+        */
         return v;
     }
-
+    /*
     protected void showKeyboard(){
         InputMethodManager imm = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -82,7 +82,7 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
-
+    */
     protected void bindViews(final View v) {
         super.bindViews(v);
         /*

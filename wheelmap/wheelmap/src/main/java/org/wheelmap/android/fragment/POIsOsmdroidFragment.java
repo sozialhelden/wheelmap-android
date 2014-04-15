@@ -217,8 +217,6 @@ public class POIsOsmdroidFragment extends Fragment implements
             }
         }
 
-
-
         txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

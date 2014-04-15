@@ -84,7 +84,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     private static String baseUrl = "http://a.tiles.mapbox.com/v3/%s/";
 
-    private static String tileUrl; private static final byte ZOOMLEVEL_MIN = 16;
+    private static String tileUrl;
+
+    private static final byte ZOOMLEVEL_MIN = 16;
 
     private OnlineTileSourceBase mMapBoxTileSource; private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 
@@ -179,7 +181,8 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
         tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
                 mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
-                mBus = EventBus.getDefault();mVerticalDelta = (int) TypedValue.applyDimension(
+                mBus = EventBus.getDefault();
+                mVerticalDelta = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
                 getResources().getDisplayMetrics());
 
