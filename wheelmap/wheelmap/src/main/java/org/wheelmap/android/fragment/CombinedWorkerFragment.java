@@ -382,10 +382,11 @@ public class CombinedWorkerFragment extends Fragment implements
 
                 if(resultData.get("WHAT").equals(What.SEARCH_NODES)){
                     if(app.isSearchSuccessfully() == false){
+                        app.setSearchSuccessfully(true);
 
                         Context context = this.getActivity().getApplicationContext();
                         CharSequence text = getString(R.string.search_mode_no_point_found);
-                        int duration = Toast.LENGTH_SHORT;
+                        int duration = Toast.LENGTH_LONG;
 
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();

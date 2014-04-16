@@ -287,7 +287,7 @@ public class WheelmapApp extends Application {
         this.isSearching = isSearching;
     }
 
-    boolean searchSuccessfully;
+    boolean searchSuccessfully = true;
 
     public boolean isSearchSuccessfully() {
         return searchSuccessfully;
