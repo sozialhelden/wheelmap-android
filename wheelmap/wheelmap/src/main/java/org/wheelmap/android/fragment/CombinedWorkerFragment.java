@@ -13,6 +13,7 @@ import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.POIsCursorWrapper;
 import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
@@ -22,6 +23,7 @@ import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -31,6 +33,7 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -375,8 +378,22 @@ public class CombinedWorkerFragment extends Fragment implements
             }
             case RestService.STATUS_FINISHED: {
 
+                WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+
+                if(resultData.get("WHAT").equals(What.SEARCH_NODES)){
+                    if(app.isSearchSuccessfully() == false){
+
+                        Context context = this.getActivity().getApplicationContext();
+                        CharSequence text = getString(R.string.search_mode_no_point_found);
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                }
+
                 if(resultData.get("WHAT").equals(What.RETRIEVE_NODE)){
-                    WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+
                     Node node = null;
                     try{
                         node = app.getNode();

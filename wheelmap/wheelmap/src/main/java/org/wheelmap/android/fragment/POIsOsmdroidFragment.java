@@ -166,6 +166,10 @@ public class POIsOsmdroidFragment extends Fragment implements
         return f;
     }
 
+    public void showToastNoPOIsFound(){
+
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

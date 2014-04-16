@@ -22,6 +22,8 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
 
     EditText editText;
 
+    WheelmapApp app;
+
     public final static SearchDialogCombinedFragment newInstance() {
         SearchDialogCombinedFragment f = new SearchDialogCombinedFragment();
         Bundle b = new Bundle();
@@ -35,12 +37,18 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
     protected View createView() {
         LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
+        app = (WheelmapApp) this.getActivity().getApplicationContext();
 
         v.findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                app.setSearching(true);
+
                 sendSearchInstructions();
                 dismiss();
+
+
 
             }
         });

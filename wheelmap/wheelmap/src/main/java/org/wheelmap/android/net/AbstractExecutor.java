@@ -37,6 +37,7 @@ import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.Base;
 import org.wheelmap.android.mapping.node.Node;
+import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.mapping.node.Photo;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.mapping.node.SingleNode;
@@ -316,6 +317,9 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         Log.d(getTag(), "executeRequest successful");
 
         if(content != null){
+
+            WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
+
             if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Photos")){
                 Log.d("Photos");
                 try {
@@ -333,7 +337,6 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                         p.getImages().remove(0);
                     }
 
-                    WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
                     app.setPhotos((Photos)content);
 
                 } catch (Exception e) {
@@ -342,13 +345,27 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             } else if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.SingleNode")){
                 Log.d("Node");
                 try{
-                    WheelmapApp app = (WheelmapApp) this.getContext().getApplicationContext();
                     app.setNode(((SingleNode)content).getNode());
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
+            } else if(content.getClass().toString().equals("class org.wheelmap.android.mapping.node.Nodes")){
+
+                 int size = ((Nodes)content).getNodes().size();
+
+
+                if(size == 0){
+
+                    if(app.isSearching() == true)
+                        app.setSearchSuccessfully(false);
+                    else
+                        app.setSearchSuccessfully(true);
+
+                }
             }
         }
+
+
 
         return content;
     }

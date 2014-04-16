@@ -12,4 +12,11 @@
     <string name="search_pick_map">It is only searched within the selected map area.</string>
     <string name="settings_login_delete">Click to delete this sign in.</string>
     <string name="search_mode_map">By Map</string>
+
+
+    <!-- New -->
+
+    <string name="search_mode_no_point_found">No Points found, click the back button!</string>
+
+
 </resources>

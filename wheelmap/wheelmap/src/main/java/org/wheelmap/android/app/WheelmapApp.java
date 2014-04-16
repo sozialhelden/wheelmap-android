@@ -277,4 +277,23 @@ public class WheelmapApp extends Application {
         UpdateManager.register(context, appId);
     }
 
+    boolean isSearching;
+
+    public boolean isSearching() {
+        return isSearching;
+    }
+
+    public void setSearching(boolean isSearching) {
+        this.isSearching = isSearching;
+    }
+
+    boolean searchSuccessfully;
+
+    public boolean isSearchSuccessfully() {
+        return searchSuccessfully;
+    }
+
+    public void setSearchSuccessfully(boolean searchSuccessfully) {
+        this.searchSuccessfully = searchSuccessfully;
+    }
 }
