@@ -21,40 +21,40 @@
  */
 package org.wheelmap.android.fragment;
 
-
-
-
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
-
-
-
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.async.UploadPhotoTask;
+import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.mapping.node.Image;
 import org.wheelmap.android.model.Request;
+import org.wheelmap.android.osmdroid.MarkItemOverlay;
+import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
+import org.wheelmap.android.osmdroid.OnTapListener;
+import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
-import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.adapter.HorizontalImageAdapter;
 import org.wheelmap.android.adapter.HorizontalView;
 import org.wheelmap.android.app.AppCapability;
@@ -62,14 +62,11 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.mapping.node.Photo;
-import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.overlays.OnTapListener;
 import org.wheelmap.android.overlays.SingleItemOverlay;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
@@ -90,6 +87,11 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -101,12 +103,13 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.view.animation.Transformation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -116,7 +119,6 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -181,6 +183,19 @@ public class POIDetailFragment extends Fragment implements
     private RelativeLayout layoutMapDetail;
 
     boolean mapFocus = false;
+
+    int mHeightLayout;
+
+    private POIsCursorOsmdroidOverlay mPoisItemizedOverlay;
+
+    private MyLocationNewOverlay mCurrLocationOverlay;
+
+    private MarkItemOverlay markItemOverlay;
+
+    private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
+
+    private Location mLocation;
+
 
 
 
@@ -270,6 +285,8 @@ public class POIDetailFragment extends Fragment implements
         return;
     }
 
+
+
     public interface OnPOIDetailListener {
 
         void onEdit(long poiId, int focus);
@@ -353,20 +370,23 @@ public class POIDetailFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
         poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
 
-        tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
-        mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
-        mBus = EventBus.getDefault();
-        mVerticalDelta = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
-                getResources().getDisplayMetrics());
+        if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
+            tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
+            mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
+            mBus = EventBus.getDefault();
+            mVerticalDelta = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
+                    getResources().getDisplayMetrics());
 
+            MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
+                    .getStickyEvent(MyLocationManager.LocationEvent.class);
+            mLocation = event.location;
+        }
     }
 
     public void initViews(View v){
@@ -402,13 +422,25 @@ public class POIDetailFragment extends Fragment implements
         layoutAdress = (LinearLayout)v.findViewById(R.id.layout_detail_adress);
         layoutComment = (LinearLayout)v.findViewById(R.id.layout_detail_comment);
         layoutPhoto = (LinearLayout)v.findViewById(R.id.photo_layout);
-        layoutMapDetail = (RelativeLayout)v.findViewById(R.id.layout_map_detail);
+        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+            layoutMapDetail = (RelativeLayout)v.findViewById(R.id.layout_map_detail);
+        }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_detail, container, false);
+        View v = null;
+        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+
+            v = inflater.inflate(R.layout.fragment_detail, container, false);
+        }
+
+        if(UtilsMisc.isTablet(getActivity().getApplicationContext())){
+            v = inflater.inflate(R.layout.fragment_detail_tablet, container, false);
+        }
 
         initViews(v);
 
@@ -497,44 +529,71 @@ public class POIDetailFragment extends Fragment implements
             }
         });
 
+        if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
 
-        mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
-        mMapView.setTileSource(mMapBoxTileSource);
-        mMapView.setBuiltInZoomControls(true);
-        mMapView.setMultiTouchControls(true);
+            mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
+            mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
 
-
-
-        mMapView.setBuiltInZoomControls(true);
-        mMapController = mMapView.getController();
-        mMapController.setZoom(18);
-        mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
+            mMapView.setTileSource(mMapBoxTileSource);
+            //mMapView.setBuiltInZoomControls(true);
+            mMapView.setMultiTouchControls(true);
 
 
 
+            //mMapView.setBuiltInZoomControls(true);
+            mMapController = mMapView.getController();
+            mMapController.setZoom(18);
+            mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
 
-        mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
-        mBtnLocate.setOnTouchListener(new PressSelector());
-        mBtnLocate.setOnClickListener(new OnClickListener() {
+            mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
+            mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
+                    mMapView);
+            mCurrLocationOverlay.enableMyLocation();
 
-            @Override
-            public void onClick(View v) {
-                /*centerMap(mCurrentLocationGeoPoint, true);
-                setZoomIntern(17);
-                requestUpdate();*/
+            markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
 
-                if(mapFocus){
-                    //mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
-                    layoutMapDetail.getLayoutParams().height = 100;
-                    mapFocus = false;
-                }else if(!mapFocus){
-                    //mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
-                    layoutMapDetail.getLayoutParams().height = 1000;
-                    mapFocus = true;
+            //mMapView.getOverlays().add(markItemOverlay);
+
+            mMapView.getOverlays().add(mPoisItemizedOverlay);
+
+            MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
+                    mMapView);
+            a.enableMyLocation();
+            mMyLocationProvider.startLocationProvider(a);
+            mMapView.getOverlays().add(a);
+
+
+
+            mBtnLocate.setOnTouchListener(new PressSelector());
+            mBtnLocate.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    /*centerMap(mCurrentLocationGeoPoint, true);
+                    setZoomIntern(17);
+                    requestUpdate();*/
+
+                    if(mapFocus){
+                        mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
+                        mapFocus = false;
+
+                        HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, layoutMapDetail.getHeight(), mHeightLayout);
+                        heightAnim.setDuration(1000);
+                        layoutMapDetail.startAnimation(heightAnim);
+
+
+                    }else if(!mapFocus){
+                        mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
+                        mapFocus = true;
+                        mHeightLayout = layoutMapDetail.getHeight();
+                        HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, mHeightLayout, (mHeightLayout+800));
+                        heightAnim.setDuration(1000);
+                        layoutMapDetail.startAnimation(heightAnim);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         v.findViewById(R.id.wheelchair_state_layout).setOnClickListener(new OnClickListener() {
             @Override
@@ -615,7 +674,7 @@ public class POIDetailFragment extends Fragment implements
         mapView = (MapView) v.findViewById(R.id.map);
         if(mapView != null){
             mapView.setClickable(true);
-            mapView.setBuiltInZoomControls(true);
+            //mapView.setBuiltInZoomControls(true);
             mapController = mapView.getController();
             mapController.setZoom(18);
         }
@@ -738,12 +797,12 @@ public class POIDetailFragment extends Fragment implements
         return poiId;
     }
 
+
     @Override
     public void onTap(OverlayItem item, ContentValues values) {
-
-        if (mListener != null) {
+        /*if (mListener != null) {
             mListener.onShowLargeMapAt(item.getPoint());
-        }
+        } */
     }
 
     @Override
@@ -766,6 +825,45 @@ public class POIDetailFragment extends Fragment implements
             wmID =  Long.valueOf(POIHelper.getWMId(cursor));
             getPhotos(wmID);
         }catch(Exception e){}
+
+        //mPoisItemizedOverlay.setCursor(mCursor);
+        //mMapView.postInvalidate();
+
+        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+            ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+
+            long id = POIHelper.getId(mCursor);
+            String name = POIHelper.getName(mCursor);
+            SupportManager manager = WheelmapApp.getSupportManager();
+            WheelchairState state = POIHelper.getWheelchair(mCursor);
+            double lat = POIHelper.getLatitude(mCursor);
+            double lng = POIHelper.getLongitude(mCursor);
+            int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
+            Drawable marker = null;
+            if (nodeTypeId != 0) {
+                marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
+            }
+
+            float density = getActivity().getResources().getDisplayMetrics().density;
+
+            int half = (int)(16*density);
+
+            marker.setBounds(-half, -2*half, half, 0);
+
+            //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
+
+            org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
+            OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
+            item.setMarker(marker);
+            overlayItemArray.add(item);
+
+            DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
+            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
+
+            mMapView.getOverlays().add(myItemizedIconOverlay);
+
+        }
+
     }
 
     @Override
@@ -808,15 +906,16 @@ public class POIDetailFragment extends Fragment implements
         }else{
 
             c.moveToFirst();
+            if(!UtilsMisc.isTablet(getActivity().getApplication())){
+                mCrrLongitude = POIHelper.getLongitude(c);
+                mCrrLatitude = POIHelper.getLatitude(c);
 
-            mCrrLongitude = POIHelper.getLongitude(c);
-            mCrrLatitude = POIHelper.getLatitude(c);
+                org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
+                        mCrrLongitude);
 
-            org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
-                    mCrrLongitude);
-
-            if (mMapView != null && !isCentered) {
-                centerMap(geoPoint, false);
+                if (mMapView != null && !isCentered) {
+                    centerMap(geoPoint, false);
+                }
             }
 
             titlebarBackbutton.setVisibility(View.VISIBLE);
@@ -958,6 +1057,7 @@ public class POIDetailFragment extends Fragment implements
             poiValues = new ContentValues();
             DatabaseUtils.cursorRowToContentValues(c, poiValues);
 
+            /*
             if (!getArguments().containsKey(Extra.SHOW_MAP)) {
                 return;
             } else if (AppCapability.degradeDetailMapAsButton()) {
@@ -981,7 +1081,7 @@ public class POIDetailFragment extends Fragment implements
 
                     mapController.setCenter(new GeoPoint(latitude, longitude));
                 }
-            }
+            }*/
         }
 
 
@@ -1421,4 +1521,109 @@ public class POIDetailFragment extends Fragment implements
         rtnPoint.y-= topLeftPoint.y;
         return rtnPoint;
     }
+
+    private Location getLocation() {
+        return mLocation;
+    }
+
+    private class MyLocationProvider implements IMyLocationProvider, SensorEventListener {
+
+        private static final float MIN_DIRECTION_DELTA = 10;
+
+        private float lastDirection;
+
+        private float mDirection;
+
+        private Location mProviderLocation;
+
+        private IMyLocationConsumer mMyLocationConsumer;
+
+        @Override
+        public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
+            mMyLocationConsumer = myLocationConsumer;
+            updateLocation(getLocation());
+            return true;
+        }
+
+        @Override
+        public void stopLocationProvider() {
+            mMyLocationConsumer = null;
+        }
+
+        @Override
+        public Location getLastKnownLocation() {
+            return mProviderLocation;
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float direction = event.values[0];
+            if (direction > 180) {
+                direction -= 360;
+            }
+
+            if (isAdded()) {
+                direction -= UtilsMisc.calcRotationOffset(getActivity()
+                        .getWindowManager().getDefaultDisplay());
+            }
+
+            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
+                return;
+            }
+
+            lastDirection = mDirection;
+            mDirection = direction;
+            Log.d(TAG, "direction: " + direction);
+            updateLocation(getLocation());
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+
+        public void updateLocation(Location location) {
+            //Log.d(TAG, "updateLocation: location = " + location + " consumer = "
+            //        + mMyLocationConsumer);
+            if (location == null) {
+                return;
+            }
+
+            mProviderLocation = location;
+            mProviderLocation.setBearing(mDirection + 90);
+            if (mMyLocationConsumer != null) {
+                mMyLocationConsumer.onLocationChanged(mProviderLocation, this);
+            }
+        }
+    }
 }
+
+/**
+ * an animation for resizing the view.
+ */
+
+class HeightAnimation extends Animation {
+    protected final int originalHeight;
+    protected final View view;
+    protected float perValue;
+
+    public HeightAnimation(View view, int fromHeight, int toHeight) {
+        this.view = view;
+        this.originalHeight = fromHeight;
+        this.perValue = (toHeight - fromHeight);
+    }
+
+    @Override
+    protected void applyTransformation(float interpolatedTime, Transformation t) {
+        view.getLayoutParams().height = (int) (originalHeight + perValue * interpolatedTime);
+        view.requestLayout();
+    }
+
+    @Override
+    public boolean willChangeBounds() {
+        return true;
+    }
+}
+
+
+

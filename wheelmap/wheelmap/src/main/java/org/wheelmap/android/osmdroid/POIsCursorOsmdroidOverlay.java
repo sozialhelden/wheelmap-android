@@ -11,6 +11,7 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.online.R;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -116,10 +117,10 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
 
         //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
 
-
-
-        OverlayItem item = new OverlayItem(String.valueOf(id), name, name, new GeoPoint(lat, lng));
+        GeoPoint geo = new GeoPoint(lat, lng);
+        OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
         item.setMarker(marker);
+        Log.d(TAG,item+" pos: "+geo);
         return item;
     }
 
