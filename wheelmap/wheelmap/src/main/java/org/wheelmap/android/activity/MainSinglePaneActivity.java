@@ -28,7 +28,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.widget.*;
-import com.google.inject.Inject;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.LayoutParams;

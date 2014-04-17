@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.google.inject.Inject;
-
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 

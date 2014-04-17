@@ -62,8 +62,8 @@ public class POIsListItemView extends RelativeLayout {
         poiNodeType = (TextView) findViewById(R.id.poi_nodetype);
         poiDistance = (TextView) findViewById(R.id.poi_distance);
         poiIcon = (ImageView) findViewById(R.id.image);
-        poiCompass = (CompassView) findViewById(R.id.compass);
-        poiCompass.setName(name);
+        //poiCompass = (CompassView) findViewById(R.id.compass);
+        //poiCompass.setName(name);
 
     }
 
@@ -90,7 +90,7 @@ public class POIsListItemView extends RelativeLayout {
         poiIcon.setImageDrawable(drawable);
     }
 
-    public void setDirection(float direction) {
+    /*public void setDirection(float direction) {
         poiCompass.updateDirection(direction);
-    }
+    }*/
 }

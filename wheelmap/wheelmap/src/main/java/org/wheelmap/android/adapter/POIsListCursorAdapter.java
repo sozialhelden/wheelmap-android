@@ -92,7 +92,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
         pliv.setNodeType(nodeType.localizedName);
 
         pliv.setDistance(mDistanceFormatter.format(distance));
-        pliv.setDirection(direction);
+        //pliv.setDirection(direction);
         // if (name != null && name.startsWith("Sweet"))
         // Log.d(TAG, "name = " + name + " direction = " + direction);
         //Drawable marker = context.getResources()

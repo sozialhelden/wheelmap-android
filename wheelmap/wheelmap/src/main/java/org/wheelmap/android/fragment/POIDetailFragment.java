@@ -34,6 +34,9 @@ import org.holoeverywhere.app.ProgressDialog;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -131,7 +134,7 @@ import de.greenrobot.event.EventBus;
 import roboguice.inject.ContentViewListener;
 
 public class POIDetailFragment extends Fragment implements
-        OnTapListener, LoaderCallbacks<Cursor>, Receiver, OnClickListener {
+        OnTapListener, LoaderCallbacks<Cursor>, Receiver, OnClickListener, MapListener {
 
     public final static String TAG = POIDetailFragment.class.getSimpleName();
 
@@ -178,7 +181,9 @@ public class POIDetailFragment extends Fragment implements
 
     private boolean isCentered;
 
+    private ImageButton mBtnExpand;
     private ImageButton mBtnLocate;
+
 
     private RelativeLayout layoutMapDetail;
 
@@ -282,9 +287,34 @@ public class POIDetailFragment extends Fragment implements
 
     @Override
     public void onClick(View v) {
-        return;
+        int id = v.getId();
+
+        switch (id) {
+            case R.id.wheelchair_state_layout:
+                if (mListener != null) {
+                    mListener.onEditWheelchairState(mWheelchairState);
+
+                    return;
+                }
+                break;
+
+            default:
+                //
+        }
+
     }
 
+    @Override
+    public boolean onScroll(ScrollEvent event) {
+        isCentered = false;
+        return false;
+    }
+
+    @Override
+    public boolean onZoom(ZoomEvent event) {
+        isCentered = false;
+        return false;
+    }
 
 
     public interface OnPOIDetailListener {
@@ -533,13 +563,14 @@ public class POIDetailFragment extends Fragment implements
 
 
             mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
+            mBtnExpand = (ImageButton) v.findViewById(R.id.map_btn_expand);
             mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
 
             mMapView.setTileSource(mMapBoxTileSource);
             //mMapView.setBuiltInZoomControls(true);
             mMapView.setMultiTouchControls(true);
 
-
+            mMapView.setMapListener(this);
 
             //mMapView.setBuiltInZoomControls(true);
             mMapController = mMapView.getController();
@@ -565,8 +596,8 @@ public class POIDetailFragment extends Fragment implements
 
 
 
-            mBtnLocate.setOnTouchListener(new PressSelector());
-            mBtnLocate.setOnClickListener(new OnClickListener() {
+            mBtnExpand.setOnTouchListener(new PressSelector());
+            mBtnExpand.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -575,7 +606,7 @@ public class POIDetailFragment extends Fragment implements
                     requestUpdate();*/
 
                     if(mapFocus){
-                        mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
+                        mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
                         mapFocus = false;
 
                         HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, layoutMapDetail.getHeight(), mHeightLayout);
@@ -584,7 +615,7 @@ public class POIDetailFragment extends Fragment implements
 
 
                     }else if(!mapFocus){
-                        mBtnLocate.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
+                        mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
                         mapFocus = true;
                         mHeightLayout = layoutMapDetail.getHeight();
                         HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, mHeightLayout, (mHeightLayout+800));
@@ -593,17 +624,20 @@ public class POIDetailFragment extends Fragment implements
                     }
                 }
             });
-        }
 
-        v.findViewById(R.id.wheelchair_state_layout).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onEditWheelchairState(mWheelchairState);
-                    return;
+            mBtnLocate.setOnTouchListener(new PressSelector());
+            mBtnLocate.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
+                            mCrrLongitude);
+
+                    if (mMapView != null && !isCentered) {
+                        centerMap(geoPoint, false);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return v;
     }
@@ -830,40 +864,48 @@ public class POIDetailFragment extends Fragment implements
         //mMapView.postInvalidate();
 
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
-            ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
 
-            long id = POIHelper.getId(mCursor);
-            String name = POIHelper.getName(mCursor);
-            SupportManager manager = WheelmapApp.getSupportManager();
-            WheelchairState state = POIHelper.getWheelchair(mCursor);
-            double lat = POIHelper.getLatitude(mCursor);
-            double lng = POIHelper.getLongitude(mCursor);
-            int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
-            Drawable marker = null;
-            if (nodeTypeId != 0) {
-                marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
-            }
-
-            float density = getActivity().getResources().getDisplayMetrics().density;
-
-            int half = (int)(16*density);
-
-            marker.setBounds(-half, -2*half, half, 0);
-
-            //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
-
-            org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
-            OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
-            item.setMarker(marker);
-            overlayItemArray.add(item);
-
-            DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
-            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
-
-            mMapView.getOverlays().add(myItemizedIconOverlay);
+            createPOIForDetailMap();
+            mMapView.postInvalidate();
 
         }
 
+
+
+    }
+
+    public void createPOIForDetailMap(){
+        ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+
+        long id = POIHelper.getId(mCursor);
+        String name = POIHelper.getName(mCursor);
+        SupportManager manager = WheelmapApp.getSupportManager();
+        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        double lat = POIHelper.getLatitude(mCursor);
+        double lng = POIHelper.getLongitude(mCursor);
+        int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
+        Drawable marker = null;
+        if (nodeTypeId != 0) {
+            marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
+        }
+
+        float density = getActivity().getResources().getDisplayMetrics().density;
+
+        int half = (int)(16*density);
+
+        marker.setBounds(-half, -2*half, half, 0);
+
+        //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
+
+        org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
+        OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
+        item.setMarker(marker);
+        overlayItemArray.add(item);
+
+        DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
+        ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
+
+        mMapView.getOverlays().add(myItemizedIconOverlay);
     }
 
     @Override

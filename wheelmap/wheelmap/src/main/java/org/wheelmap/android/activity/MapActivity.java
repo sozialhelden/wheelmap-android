@@ -21,9 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.google.inject.Inject;
-
-import org.holoeverywhere.addon.AddonMyRoboguice;
 import org.holoeverywhere.app.Activity;
 import org.mapsforge.android.maps.MapContext;
 import org.mapsforge.android.maps.MapView;
@@ -45,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.akquinet.android.androlog.Log;
-import roboguice.RoboGuice;
 
 public class MapActivity extends Activity implements MapContext {
 

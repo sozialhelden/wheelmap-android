@@ -104,18 +104,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/poi_name"
+            android:layout_centerInParent="true"
             android:singleLine="true"
             android:layout_marginRight="@dimen/margin_medium"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"/>
-
+    <!--
     <org.wheelmap.android.view.CompassView
             android:id="@+id/compass"
             style="@style/IconSmall"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"/>
+            android:layout_marginRight="@dimen/margin_medium"/>          -->
 
 </RelativeLayout>

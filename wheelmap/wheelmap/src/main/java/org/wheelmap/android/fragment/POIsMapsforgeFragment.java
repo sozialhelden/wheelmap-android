@@ -112,7 +112,7 @@ public class POIsMapsforgeFragment extends Fragment implements
 
     private int oldZoomLevel = 18;
 
-    private CompassView mCompass;
+    //private CompassView mCompass;
 
     private Cursor mCursor;
 
@@ -226,7 +226,7 @@ public class POIsMapsforgeFragment extends Fragment implements
         });
 
 
-        mCompass = (CompassView) v.findViewById(R.id.compass);
+        //mCompass = (CompassView) v.findViewById(R.id.compass);
 
 
         if(savedInstanceState != null){
@@ -760,7 +760,7 @@ public class POIsMapsforgeFragment extends Fragment implements
         }
 
         private void updateDirection(float direction) {
-            mCompass.updateDirection(direction);
+            //mCompass.updateDirection(direction);
         }
     };
 }
