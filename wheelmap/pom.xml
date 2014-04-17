@@ -394,7 +394,7 @@
                 <app.developbuild>false</app.developbuild>
                 <app.type>PRODUCTION</app.type>
                 <app.package>${app.basepackage}.online</app.package>
-                <app.icon>@drawable/ic_launcher</app.icon>
+                <app.icon>@drawable/ic_launcher_market</app.icon>
                 <asset.variant>production</asset.variant>
                 <hockey.update.url/>
                 <app.enabledebug>false</app.enabledebug>
