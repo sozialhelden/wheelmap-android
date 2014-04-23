@@ -42,8 +42,6 @@ import java.awt.*;
 public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
 
-    private static final int REQUEST_CODE_LOGIN = 0;
-
     private UserCredentials mCredentials;
 
     @Override
@@ -176,7 +174,7 @@ public class DashboardActivity extends
         WheelmapApp.checkForUpdates(this);
 
         boolean loggedIn = mCredentials.isLoggedIn();
-        onActivityResult(REQUEST_CODE_LOGIN,loggedIn?RESULT_OK:RESULT_CANCELED,null);
+        onActivityResult(Request.REQUEST_CODE_LOGIN,loggedIn?RESULT_OK:RESULT_CANCELED,null);
     }
 
     @Override
@@ -303,15 +301,16 @@ public class DashboardActivity extends
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
             Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == Request.REQUEST_CODE_LOGIN){
              if(resultCode == Activity.RESULT_OK){
                  ImageView image = (ImageView) findViewById(R.id.dashboard_login);
                  image.setImageResource(R.drawable.start_icon_logged_in);
              }else{
                  ImageView image = (ImageView) findViewById(R.id.dashboard_login);
-                 image.setImageResource(R.drawable.start_ic_login);
+                 image.setImageResource(R.drawable.start_icon_login);
              }
+        }else{
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

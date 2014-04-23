@@ -47,10 +47,6 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.preference.SharedPreferences;
-import org.holoeverywhere.widget.TextView;
-import org.holoeverywhere.widget.Toast;
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.*;
@@ -333,7 +329,7 @@ public class MainMultiPaneActivity extends MapActivity implements
             ImageView image = (ImageView)findViewById(R.id.menu_login);
             image.setImageResource(credentials.isLoggedIn()
                                     ? R.drawable.start_icon_logged_in
-                                    : R.drawable.start_ic_login);
+                                    : R.drawable.start_icon_login);
         }else{
             MenuInflater inflaterMenu = getSupportMenuInflater();
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
@@ -585,7 +581,7 @@ public class MainMultiPaneActivity extends MapActivity implements
             if(image!=null){
                 image.setImageResource(resultCode==RESULT_OK
                         ? R.drawable.start_icon_logged_in
-                        : R.drawable.start_ic_login);
+                        : R.drawable.start_icon_login);
             }
         }
 

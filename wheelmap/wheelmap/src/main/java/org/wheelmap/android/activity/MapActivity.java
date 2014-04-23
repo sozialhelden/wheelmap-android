@@ -21,6 +21,9 @@
  */
 package org.wheelmap.android.activity;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import org.holoeverywhere.app.Activity;
 import org.mapsforge.android.maps.MapContext;
 import org.mapsforge.android.maps.MapView;

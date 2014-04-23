@@ -64,7 +64,7 @@
         <!-- used for addons -->
         <platform.addon.version>4.1.1.4</platform.addon.version>
         <sherlock.version>4.4.0</sherlock.version>
-        <holoeverywhere.version>1.6.8</holoeverywhere.version>
+        <holoeverywhere.version>1.6.8</holoeverywhere.version>    <!--1.6.8-->
 
         <app.asset.variant>development</app.asset.variant>
         <hockey.repository.url>ftp://storagerutton.de/</hockey.repository.url>
@@ -102,6 +102,12 @@
                 <version>${platform.addon.version}</version>
             </dependency>
 
+            <!--<dependency>
+                <groupId>org.holoeverywhere</groupId>
+                <artifactId>library</artifactId>
+                <version>2.0.0</version>
+                <type>aar</type>
+            </dependency>   -->
             <dependency>
                 <groupId>com.actionbarsherlock</groupId>
                 <artifactId>actionbarsherlock</artifactId>
@@ -382,6 +388,20 @@
             </properties>
         </profile>
         <profile>
+            <id>liveSMF</id>
+            <properties>
+                <app.name>Wheelmap Live</app.name>
+                <app.developbuild>true</app.developbuild>
+                <app.type>LIVE</app.type>
+                <app.package>${app.basepackage}.live</app.package>
+                <app.icon>@drawable/ic_launcher_live</app.icon>
+                <asset.variant>live</asset.variant>
+                <hockey.update.url></hockey.update.url>
+                <app.enabledebug>true</app.enabledebug>
+                <bugsense.key>${app.bugsense.testing}</bugsense.key>
+            </properties>
+        </profile>
+        <profile>
             <id>production</id>
             <activation>
                 <property>
@@ -394,7 +414,7 @@
                 <app.developbuild>false</app.developbuild>
                 <app.type>PRODUCTION</app.type>
                 <app.package>${app.basepackage}.online</app.package>
-                <app.icon>@drawable/ic_launcher_market</app.icon>
+                <app.icon>@drawable/ic_launcher</app.icon>
                 <asset.variant>production</asset.variant>
                 <hockey.update.url/>
                 <app.enabledebug>false</app.enabledebug>
@@ -402,6 +422,7 @@
             </properties>
             <build>
                 <plugins>
+                    <!--
                     <plugin>
                         <artifactId>maven-enforcer-plugin</artifactId>
                         <executions>
@@ -454,6 +475,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    -->
                 </plugins>
             </build>
         </profile>

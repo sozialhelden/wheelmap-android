@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.utils;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 
 import org.holoeverywhere.app.Activity;
@@ -178,6 +179,36 @@ public class UtilsMisc {
     }
 
     public static void showAsPopup(Activity activity) {
+        activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        activity.getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        int width;
+        if (android.os.Build.VERSION.SDK_INT < 13) {
+            width = display.getWidth();
+        } else {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+        }
+
+        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            width *= 1d/2d;
+        }else{
+            width *= (2d/3d);
+        }
+
+        params.width = width < 600 ? 600 : width;
+        params.alpha = 1.0f;
+        params.dimAmount = 0.5f;
+        activity.getWindow().setAttributes(params);
+    }
+
+    public static void showAsPopup(SherlockFragmentActivity activity) {
         activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
         activity.getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_DIM_BEHIND,

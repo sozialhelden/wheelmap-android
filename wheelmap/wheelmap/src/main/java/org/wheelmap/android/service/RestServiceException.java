@@ -78,6 +78,9 @@ public class RestServiceException extends RuntimeException implements
     }
 
     public int getRessourceString() {
+        if(id >= errorString.length){
+          return errorString[ERROR_INTERNAL_ERROR];
+        }
         return errorString[id];
     }
 

@@ -102,6 +102,8 @@ public class StartupActivity extends Activity implements
 
         checkForHockeyUpdates();
 
+        Log.d(TAG,"Server: "+appProperties.get(IAppProperties.KEY_WHEELMAP_URI));
+
     }
 
     @Override

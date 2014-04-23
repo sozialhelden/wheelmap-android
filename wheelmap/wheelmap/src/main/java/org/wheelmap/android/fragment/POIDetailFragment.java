@@ -189,7 +189,7 @@ public class POIDetailFragment extends Fragment implements
 
     boolean mapFocus = false;
 
-    int mHeightLayout;
+    int mHeightLayout = -1;
 
     private POIsCursorOsmdroidOverlay mPoisItemizedOverlay;
 
@@ -617,7 +617,9 @@ public class POIDetailFragment extends Fragment implements
                     }else if(!mapFocus){
                         mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
                         mapFocus = true;
-                        mHeightLayout = layoutMapDetail.getHeight();
+                        if(mHeightLayout <= 0){
+                            mHeightLayout = layoutMapDetail.getHeight();
+                        }
                         HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, mHeightLayout, (mHeightLayout+800));
                         heightAnim.setDuration(1000);
                         layoutMapDetail.startAnimation(heightAnim);
@@ -886,12 +888,12 @@ public class POIDetailFragment extends Fragment implements
         int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
         Drawable marker = null;
         if (nodeTypeId != 0) {
-            marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
+            marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
         }
-
+        marker = marker.getConstantState().newDrawable();
         float density = getActivity().getResources().getDisplayMetrics().density;
 
-        int half = (int)(16*density);
+        int half = (int)(10*density);
 
         marker.setBounds(-half, -2*half, half, 0);
 
@@ -1346,7 +1348,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     public void startGetPhotoFromGalleryIntent(){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT < 19){
             Intent intent = new Intent();
             intent.setType("image/jpeg");
             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -1665,6 +1667,8 @@ class HeightAnimation extends Animation {
     public boolean willChangeBounds() {
         return true;
     }
+
+
 }
 
 

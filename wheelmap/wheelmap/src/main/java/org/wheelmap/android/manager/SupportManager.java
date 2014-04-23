@@ -678,7 +678,7 @@ public class SupportManager {
                 if(defaultNodes == mDefaultNodeType){
                     layerDrawable.setLayerInset(1,(int) (6*density),(int) (6*density),(int) (6*density),(int)(8*density));
                 }else{
-                    layerDrawable.setLayerInset(1,(int) (7*density),(int) (7*density),(int) (7*density),(int)(9*density));
+                    layerDrawable.setLayerInset(1,(int) (8*density),(int) (8*density),(int) (8*density),(int)(12*density));
                 }
                 drawable = layerDrawable;
 

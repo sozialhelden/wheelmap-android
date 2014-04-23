@@ -366,6 +366,12 @@ public class CombinedWorkerFragment extends Fragment implements
         loader.forceLoad();
     }
 
+    public void onResume(){
+       super.onResume();
+        mReceiver = new DetachableResultReceiver(new Handler());
+        mReceiver.setReceiver(this);
+    }
+
     /**
      * {@inheritDoc}
      */

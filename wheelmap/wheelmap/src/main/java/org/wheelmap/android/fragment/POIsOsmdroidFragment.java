@@ -400,6 +400,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             executeBundle(savedInstanceState);
             return;
         }
+
         if (((MapActivity) getSupportActivity()).loadPreferences(mMapView)) {
             Log.d(TAG, "executeConfig: initialized from preferences");
             return;

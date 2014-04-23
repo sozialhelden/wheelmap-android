@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
-                android:src="@drawable/start_ic_login" />
+                android:src="@drawable/start_icon_login" />
         </LinearLayout>
     </LinearLayout>
 

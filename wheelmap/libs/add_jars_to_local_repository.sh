@@ -2,5 +2,3 @@ mvn install:install-file -Dfile=libGoogleAnalytics.jar -DgroupId=org.wheelmap.an
     -DartifactId=googleanalytics -Dversion=1.0-SNAPSHOT -Dpackaging=jar
 mvn install:install-file -Dfile=mapsforge-map-0.2.4.jar -DgroupId=org.wheelmap.android \
     -DartifactId=mapsforge-map -Dversion=0.2.4 -Dpackaging=jar
-mvn install:install-file -Dfile=urbanairship-lib-4.0.1.jar -DgroupId=org.wheelmap.android \
-    -DartifactId=urbanairship-lib -Dversion=4.0.1 -Dpackaging=jar
