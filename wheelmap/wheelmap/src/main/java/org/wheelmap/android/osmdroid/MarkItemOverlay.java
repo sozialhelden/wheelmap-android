@@ -3,22 +3,13 @@ package org.wheelmap.android.osmdroid;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.api.IMapController;
-import org.osmdroid.api.IMapView;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.IOverlayMenuProvider;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.SafeDrawOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
-import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.safecanvas.ISafeCanvas;
 import org.osmdroid.views.safecanvas.SafePaint;
 import org.osmdroid.views.util.constants.MapViewConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,9 +21,6 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.util.FloatMath;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 
 import java.util.LinkedList;
 
@@ -118,9 +106,6 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         final MapView.Projection pj = mapView.getProjection();
         final int zoomDiff = MapViewConstants.MAXIMUM_ZOOMLEVEL - pj.getZoomLevel();
 
-        //float radius = lastFix.getAccuracy()
-        //            / (float) TileSystem.GroundResolution(lastFix.getLatitude(),
-        //            mapView.getZoomLevel());
         float radius = 10 * mContext.getResources().getDisplayMetrics().density;
 
         mCirclePaint.setAlpha(100);

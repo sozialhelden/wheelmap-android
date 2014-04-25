@@ -51,6 +51,5 @@ public class PhotoExecutor extends SinglePageExecutor<SinglePhoto> implements
     @Override
     public void prepareDatabase() throws RestServiceException {
         PrepareDatabaseHelper.insertSinglePhoto(getResolver(), getTempStore().get(0));
-        //PrepareDatabaseHelper.replayChangedCopies(getResolver());
     }
 }

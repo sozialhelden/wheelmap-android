@@ -1,20 +1,12 @@
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.holoeverywhere.app.ListActivity;
-import org.holoeverywhere.preference.SharedPreferences;
-import org.holoeverywhere.widget.ArrayAdapter;
 import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.TextView;
-import org.holoeverywhere.widget.Toast;
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -25,8 +17,6 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -122,28 +112,5 @@ public class ChooseCategoryActivity extends ListActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-
-        /*
-        ActionBar bar = getSupportActionBar();
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View customView = inflater.inflate(R.layout.actionbar,
-                null);
-
-        TextView title = (TextView) customView.findViewById(R.id.title);
-        title.setText("CATEGORIES");
-
-
-        bar.setCustomView(customView, new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
-        bar.setDisplayShowCustomEnabled(true);
-          */
-
-
-        return true;
     }
 }

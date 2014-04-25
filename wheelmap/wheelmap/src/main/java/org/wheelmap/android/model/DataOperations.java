@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.model;
 
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.BaseDomain;
 
 import android.content.ContentResolver;

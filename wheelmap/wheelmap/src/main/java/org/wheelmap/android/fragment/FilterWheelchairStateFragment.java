@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.google.inject.Inject;
-
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.ListView;
@@ -45,8 +43,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import de.akquinet.android.androlog.Log;
 
 public class FilterWheelchairStateFragment extends ListFragment implements
         LoaderCallbacks<Cursor> {

@@ -235,21 +235,6 @@ public class HorizontalView extends AdapterView {
         }
     }
 
- /*
-  * private void removeNonVisibleItems(final int dx) { View child =
-  * getChildAt(0); while(child != null && child.getRight() + dx <= 0) {
-  * mDisplayOffset += child.getMeasuredWidth();
-  * mRemovedViewQueue.offer(child); removeViewInLayout(child);
-  * mLeftViewIndex++; child = getChildAt(0);
-  *
-  * }
-  *
-  * child = getChildAt(getChildCount()-1); while(child != null &&
-  * child.getLeft() + dx >= getWidth()) { mRemovedViewQueue.offer(child);
-  * removeViewInLayout(child); mRightViewIndex--; child =
-  * getChildAt(getChildCount()-1); } }
-  */
-
     private void positionItems(final int dx) {
         if (getChildCount() > 0) {
             mDisplayOffset += dx;

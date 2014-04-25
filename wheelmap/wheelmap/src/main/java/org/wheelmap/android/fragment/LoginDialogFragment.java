@@ -21,28 +21,23 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.google.inject.Inject;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Dialog;
 import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.LinearLayout;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.text.Html;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -66,10 +61,6 @@ public class LoginDialogFragment extends DialogFragment implements
     private EditText mEmailText;
 
     private EditText mPasswordText;
-
-    private TextView mRegisterText;
-
-    private ProgressBar mProgressBar;
 
     private boolean mSyncing;
 
@@ -123,9 +114,6 @@ public class LoginDialogFragment extends DialogFragment implements
         //TODO check if already logged in
         //TODO and show logout dialog if already logged in
         AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
-        //builder.setTitle(R.string.title_login);
-        //builder.setIcon(R.drawable.ic_login_wheelmap);
-        //builder.setNeutralButton(R.string.login_submit, null);
         builder.setOnCancelListener(this);
 
         View view = LayoutInflater.from(getSupportActivity()).inflate(
@@ -172,18 +160,7 @@ public class LoginDialogFragment extends DialogFragment implements
         mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
         mPasswordText.setOnEditorActionListener(this);
 
-
-
-        /*
-        String formattedHtml = UtilsMisc.formatHtmlLink(
-                getString(R.string.login_link_wheelmap),
-                getString(R.string.login_link_text));
-        Spanned spannedText = Html.fromHtml(formattedHtml);
-        mRegisterText = (TextView) dialog.findViewById(R.id.login_register);
-        mRegisterText.setText(spannedText);
-        mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());     */
         load();
-        //mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
 
     }
 

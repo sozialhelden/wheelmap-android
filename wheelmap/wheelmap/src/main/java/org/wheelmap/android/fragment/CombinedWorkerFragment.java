@@ -2,8 +2,6 @@ package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
-import org.mapsforge.android.maps.GeoPoint;
-import org.mapsforge.android.maps.MapView;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -19,7 +17,6 @@ import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.wheelmap.android.utils.ParceableBoundingBox;
 
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -313,9 +310,6 @@ public class CombinedWorkerFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        /*if(getActivity().getIntent().hasExtra(Extra.QUERY_CHANGED)) {
-            mUserQuery = UserQueryHelper.INSTANCE.getUserQuery();
-        }*/
         mUserQuery = UserQueryHelper.INSTANCE.getUserQuery();
         if (id == LOADER_MAP_ID) {
             Uri uri = POIs.CONTENT_URI_RETRIEVED;
@@ -429,14 +423,9 @@ public class CombinedWorkerFragment extends Fragment implements
                             }
                         }
 
-
-
-                        //GeoPoint newCurrent = new GeoPoint(lat, lon);
                         mLocation = new Location("reverseGeocoded");
                         mLocation.setLatitude(dlat);
                         mLocation.setLongitude(dlon);
-                        //mLocation.setLatitude(newCurrent.getLatitudeE6() / 1e6);
-                        //mLocation.setLongitude(newCurrent.getLongitudeE6() / 1e6);
                         mLocation.setAccuracy(3333);
                         mLocation.setBearing(333);
 

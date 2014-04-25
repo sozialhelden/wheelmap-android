@@ -1,11 +1,7 @@
 package org.wheelmap.android.activity;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.LoginDialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.Support;
@@ -21,20 +17,14 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.awt.*;
 
 /**
  * Created by tim on 07.02.14.
@@ -134,9 +124,6 @@ public class DashboardActivity extends
         findViewById(R.id.dashboard_login).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //FragmentManager fm = getSupportFragmentManager();
-                //LoginDialogFragment loginDialog = new LoginDialogFragment();
-                //loginDialog.show(fm);
                 account();
             }
         });

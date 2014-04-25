@@ -21,9 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import android.content.Intent;
-import com.google.inject.Inject;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -31,9 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Button;
 import org.wheelmap.android.activity.LoginActivity;
-import org.wheelmap.android.activity.POIDetailEditableActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
 import org.wheelmap.android.app.WheelmapApp;
@@ -61,12 +56,12 @@ import org.wheelmap.android.utils.UtilsMisc;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -78,19 +73,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.sql.Wrapper;
 import java.util.ArrayList;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
-import roboguice.inject.ContentViewListener;
-import roboguice.inject.InjectView;
 
 public class POIDetailEditableFragment extends Fragment implements
         OnErrorDialogListener, Receiver, OnClickListener, LoaderCallbacks<Cursor> {
@@ -112,66 +101,35 @@ public class POIDetailEditableFragment extends Fragment implements
     private final static int FOCUS_TO_ADRESS = 1;
     private final static int FOCUS_TO_COMMENT = 2;
 
-    //@Inject
-    //public ContentViewListener ignored;
-
-    //@Inject
     private ICredentials mCredentials;
 
-    //@InjectView(R.id.title_container)
-    //private LinearLayout title_container;
-
-    //@InjectView(R.id.name)
     private EditText nameText;
 
-    //@InjectView(R.id.nodetype)
     private TextView nodetypeText;
 
-    //@InjectView(R.id.comment)
     private EditText commentText;
 
-    //@InjectView(R.id.street)
     private EditText streetText;
 
-    //@InjectView(R.id.housenum)
     private EditText housenumText;
 
-    //@InjectView(R.id.postcode)
     private EditText postcodeText;
 
-    //@InjectView(R.id.city)
     private EditText cityText;
 
-    //@InjectView(R.id.website)
     private EditText websiteText;
 
-    //@InjectView(R.id.phone)
     private EditText phoneText;
 
-    //@InjectView(R.id.state_icon)
-    //private ImageView state_icon;
-
-    //@InjectView(R.id.state_text)
     private TextView state_text;
 
     private TextView geolocation_text;
 
-    //@InjectView(R.id.edit_position_text)
-    //private TextView position_text;
-
-    //@InjectView(R.id.wheelchair_state_layout)
     private RelativeLayout edit_state_container;
 
-    //@InjectView(R.id.edit_geolocation)
-    //private RelativeLayout edit_geolocation_touchable_container;
-
-    //@InjectView(R.id.edit_nodetype)
     private RelativeLayout edit_nodetype_container;
 
     private RelativeLayout edit_geolocation_container;
-
-    //@InjectView(R.id.edit_geolocation_container)
-    //private LinearLayout edit_geolocation_container;
 
     private Long poiID = Extra.ID_UNKNOWN;
 
@@ -264,22 +222,9 @@ public class POIDetailEditableFragment extends Fragment implements
         phoneText = (EditText) parent.findViewById(R.id.phone);
         state_text = (TextView) parent.findViewById(R.id.state_text);
         geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
-         /*
 
-        //@InjectView(R.id.state_icon)
-        //private ImageView state_icon;
-
-        //@InjectView(R.id.edit_position_text)
-        //private TextView position_text;
-                           */
-        //@InjectView(R.id.wheelchair_state_layout)
         edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_state_layout);
 
-        //@InjectView(R.id.edit_geolocation)
-        //private RelativeLayout edit_geolocation_touchable_container;
-
-        //@InjectView(R.id.edit_nodetype)
-        //private RelativeLayout edit_nodetype_container;
         edit_nodetype_container = (RelativeLayout) parent.findViewById(R.id.edit_nodetype);
         edit_geolocation_container = (RelativeLayout) parent.findViewById(R.id.edit_geolocation);
     }
@@ -314,7 +259,7 @@ public class POIDetailEditableFragment extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         edit_state_container.setOnClickListener(this);
-        //edit_geolocation_touchable_container.setOnClickListener(this);
+
         edit_nodetype_container.setOnClickListener(this);
         edit_geolocation_container.setOnClickListener(this);
 
@@ -326,9 +271,6 @@ public class POIDetailEditableFragment extends Fragment implements
         Log.d(TAG, "onActivityCreated");
         retrieve(savedInstanceState);
         if (!mCredentials.isLoggedIn()) {
-            //FragmentManager fm = getFragmentManager();
-            //LoginDialogFragment loginDialog = new LoginDialogFragment();
-            //loginDialog.show(fm);
 
             Intent intent = new Intent(getActivity(),LoginActivity.class);
             startActivityForResult(intent, REQUEST_CODE_LOGIN);
@@ -357,9 +299,7 @@ public class POIDetailEditableFragment extends Fragment implements
                     if(mListener != null){
                         mListener.onEditWheelchairState(state);
                     }
-                    /*updateDatabase(poiID, state);
-                    Log.d(TAG, "starting RestServiceHelper.executeUpdateServer");
-                    RestServiceHelper.executeUpdateServer(getActivity(), null); */
+
                 }
             }
         }
@@ -381,22 +321,6 @@ public class POIDetailEditableFragment extends Fragment implements
             }
         }
     }
-
-    /*private void updateDatabase(long id, WheelchairState state) {
-        if (id == Extra.ID_UNKNOWN || state == null) {
-            return;
-        }
-        Log.d(TAG,
-                "updating id = " + id + " state = "
-                        + state.asRequestParameter());
-
-        ContentValues values = new ContentValues();
-        values.put(POIs.WHEELCHAIR, state.getId());
-        values.put(POIs.DIRTY, POIs.DIRTY_STATE);
-
-        PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(), id, values);
-    }   */
-
     private void retrieve(Bundle bundle) {
         boolean loadTempStore = mTemporaryStored
                 || (bundle != null && bundle
@@ -435,16 +359,6 @@ public class POIDetailEditableFragment extends Fragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        /*
-        switch (id) {
-            case R.id.menu_save:
-                save();
-                break;
-            default:
-                // noop
-        }  */
-
         return false;
     }
 
@@ -455,19 +369,12 @@ public class POIDetailEditableFragment extends Fragment implements
         int id = v.getId();
         switch (id) {
             case R.id.wheelchair_state_layout: {
-                /* if (mListener != null) {
-                    mListener.onEditWheelchairState(mWheelchairState);
-                }*/
-
                 Intent intent = new Intent(getActivity(), WheelchairStateActivity.class);
                 intent.putExtra(Extra.WHEELCHAIR_STATE, mWheelchairState.getId());
                 startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
                 break;
             }
             case R.id.edit_geolocation: {
-                /*if (mListener != null) {
-                    mListener.onEditGeolocation(mLatitude, mLongitude);
-                } */
                 Intent intent = new Intent(getActivity(), WrapperActivity.class);
                 intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,EditPositionFragment.class.getName());
                 intent.putExtra(Extra.LATITUDE,mLatitude);
@@ -476,9 +383,6 @@ public class POIDetailEditableFragment extends Fragment implements
                 break;
             }
             case R.id.edit_nodetype: {
-                /*if (mListener != null) {
-                    mListener.onEditNodetype(mNodeType);
-                } */
                 Intent intent = new Intent(getActivity(), WrapperActivity.class);
                 intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,NodetypeSelectFragment.class.getName());
                 intent.putExtra(Extra.NODETYPE, mNodeType);
@@ -617,10 +521,6 @@ public class POIDetailEditableFragment extends Fragment implements
             firstList.get(i).addTextChangedListener(textWatcher);
         }
 
-
-
-        //geolocation_text.setText("(" +POIHelper.getLatitude(cursor) + "," + POIHelper.getLongitude(cursor)+ ")");
-
         wmID = POIHelper.getWMId(cursor);
         if (TextUtils.isEmpty(wmID)) {
             showGeolocationEditor(true);
@@ -714,9 +614,6 @@ public class POIDetailEditableFragment extends Fragment implements
 
         mWheelchairState = newState;
 
-        int stateColor = getResources().getColor(
-                mWSAttributes.get(newState).colorId);
-
         if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         else if(mWheelchairState.getId() == WheelchairState.YES.getId())
@@ -730,13 +627,6 @@ public class POIDetailEditableFragment extends Fragment implements
         else
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
 
-
-
-
-        //title_container.setBackgroundColor(stateColor);
-        //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-        //stateText.setTextColor(stateColor);
-
         state_text.setText(mWSAttributes.get(newState).titleStringId);
     }
 
@@ -745,8 +635,6 @@ public class POIDetailEditableFragment extends Fragment implements
             return;
         }
 
-        // Log.d(TAG, "setGeolocation: latitude = " + latitude + " longitude = "
-        // + longitude);
         mLatitude = latitude;
         mLongitude = longitude;
 
@@ -760,7 +648,6 @@ public class POIDetailEditableFragment extends Fragment implements
             return;
         }
 
-        // Log.d(TAG, "setNodetype: nodetype = " + nodetype);
         mNodeType = nodetype;
         SupportManager manager = WheelmapApp.getSupportManager();
         NodeType nodeType = manager.lookupNodeType(nodetype);

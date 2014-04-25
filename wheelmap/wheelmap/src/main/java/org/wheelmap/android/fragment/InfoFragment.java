@@ -36,13 +36,9 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-
 public class InfoFragment extends Fragment {
 
     private OnInfoListener mListener;
-
-
 
     public interface OnInfoListener {
 
@@ -97,15 +93,6 @@ public class InfoFragment extends Fragment {
         openStreetMapLink.setMovementMethod(LinkMovementMethod.getInstance());
         openMapBoxLink.setMovementMethod(LinkMovementMethod.getInstance());
         openNicolasLink.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-        /*v.findViewById(R.id.credit_screen).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.dismissInfoView();
-            }
-        }); */
-
 
         return v;
     }

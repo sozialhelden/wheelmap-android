@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.net;
 
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.BaseDomain;
 import org.wheelmap.android.net.request.BaseNodesRequestBuilder;
 import org.wheelmap.android.net.request.Paging;

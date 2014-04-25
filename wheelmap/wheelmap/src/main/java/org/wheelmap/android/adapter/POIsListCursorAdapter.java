@@ -87,16 +87,10 @@ public class POIsListCursorAdapter extends CursorAdapter {
         } else {
             pliv.setName(nodeType.localizedName);
         }
-        String category = manager.lookupCategory(categoryId).localizedName;
-        //pliv.setCategory(category);
+
         pliv.setNodeType(nodeType.localizedName);
 
         pliv.setDistance(mDistanceFormatter.format(distance));
-        //pliv.setDirection(direction);
-        // if (name != null && name.startsWith("Sweet"))
-        // Log.d(TAG, "name = " + name + " direction = " + direction);
-        //Drawable marker = context.getResources()
-        //        .getDrawable(SupportManager.wsAttributes.get(state).drawableId);
         Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
 
         float density = mContext.getResources().getDisplayMetrics().density;

@@ -36,10 +36,8 @@ import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
-import org.osmdroid.views.overlay.MyLocationOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
@@ -74,7 +72,6 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -166,10 +163,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         return f;
     }
 
-    public void showToastNoPOIsFound(){
-
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -232,7 +225,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
         setHardwareAccelerationOff();
-        // mMapView.setClickable(true);
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
         mMapView.postDelayed(new Runnable() {
@@ -249,11 +241,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
                 mMapView);
         mCurrLocationOverlay.enableMyLocation();
-        //MyLocationOverlay myLocationOverlay = new MyLocationOverlay(getActivity(),mMapView);
-        //myLocationOverlay.enableMyLocation();
-        //mMapView.getOverlays().add(myLocationOverlay);
-
-        //mMyLocationProvider.startLocationProvider(mCurrLocationOverlay);
 
         markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
 
@@ -267,7 +254,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         mMyLocationProvider.startLocationProvider(a);
         mMapView.getOverlays().add(a);
 
-        //mMapView.getOverlays().add(mCurrLocationOverlay);
         mMapView.setMapListener(this);
 
         mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
@@ -565,10 +551,6 @@ public class POIsOsmdroidFragment extends Fragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            /*case R.id.menu_location:
-                centerMap(mCurrentLocationGeoPoint, true);
-                requestUpdate();
-                break;*/
             default:
                 // noop
         }
@@ -689,28 +671,12 @@ public class POIsOsmdroidFragment extends Fragment implements
         } else {
 
             if(land){
-                /*Projection projection = mMapView.getProjection();
-                Point point = new Point();
-                point = projection.toMapPixels(geoPoint,point);
-                //point = projection.toPixels(geoPoint, point);
-                int horizontalOffset = mMapView.getWidth() / 4;
-                point.x -= horizontalOffset;
-                actualGeoPoint = projection.fromPixels(point.x, point.y);
-                */
-
                 Point point = pointFromGeoPoint(geoPoint,mMapView);
                 int horizontalOffset = mMapView.getWidth() / 4;
                 point.x -= horizontalOffset;
                 actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
 
             }else{
-                /*Projection projection = mMapView.getProjection();
-                Point point = new Point();
-                point = projection.toPixels(geoPoint, point);
-                int mVerticalOffset = mMapView.getHeight() / 4;
-                point.y -= mVerticalOffset;
-                actualGeoPoint = projection.fromPixels(point.x, point.y); */
-
                 Point point = pointFromGeoPoint(geoPoint,mMapView);
                 int mVerticalOffset = mMapView.getHeight() / 4;
                 point.y -= mVerticalOffset;
@@ -913,8 +879,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
 
         public void updateLocation(Location location) {
-            //Log.d(TAG, "updateLocation: location = " + location + " consumer = "
-            //        + mMyLocationConsumer);
             if (location == null) {
                 return;
             }

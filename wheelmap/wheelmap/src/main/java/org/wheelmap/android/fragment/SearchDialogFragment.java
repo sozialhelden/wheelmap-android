@@ -28,31 +28,21 @@ import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.AdapterView;
 import org.holoeverywhere.widget.AdapterView.OnItemSelectedListener;
 import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.RadioButton;
 import org.holoeverywhere.widget.Spinner;
-import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
-
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-
-import java.util.ArrayList;
 
 import de.akquinet.android.androlog.Log;
 
@@ -60,8 +50,6 @@ public class SearchDialogFragment extends DialogFragment implements
         OnItemSelectedListener, OnClickListener, OnEditorActionListener {
 
     public final static String TAG = SearchDialogFragment.class.getSimpleName();
-
-    public final static int PERFORM_SEARCH = 1;
 
     private EditText mKeywordText;
 
@@ -97,9 +85,6 @@ public class SearchDialogFragment extends DialogFragment implements
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
-        //builder.setTitle(R.string.title_search);
-        //builder.setIcon(R.drawable.ic_menu_search_wheelmap_dark);
-        //builder.setNeutralButton(R.string.search_execute, this);
 
         View view = createView();
         builder.setView(view);
@@ -121,41 +106,11 @@ public class SearchDialogFragment extends DialogFragment implements
 
         mKeywordText = (EditText) v.findViewById(R.id.search_keyword);
         mKeywordText.setOnEditorActionListener(this);
-        /*
-        mCategorySpinner = (Spinner) v.findViewById(R.id.search_spinner_categorie_nodetype);
-
-        ArrayList<CategoryOrNodeType> searchTypes = CategoryOrNodeType
-                .createTypesList(getActivity(), true);
-        mCategorySpinner.setAdapter(new TypesAdapter(getSupportActivity(), searchTypes,
-                TypesAdapter.SEARCH_MODE));
-        mCategorySpinner.setOnItemSelectedListener(this);
-
-        mDistanceSpinner = (Spinner) v
-                .findViewById(R.id.search_spinner_distance);
-
-        ArrayAdapter<CharSequence> distanceSpinnerAdapter = ArrayAdapter
-                .createFromResource(getSupportActivity(), R.array.distance_array,
-                        R.layout.simple_spinner_item);
-        distanceSpinnerAdapter
-                .setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-        mDistanceSpinner.setAdapter(distanceSpinnerAdapter);
-        mDistanceSpinner.setOnItemSelectedListener(this);
-        mDistanceSpinner.setPromptId(R.string.search_distance);
-        int initialPosition = 3;
-        mDistanceSpinner.setSelection(initialPosition);
-        String distance = (String) mDistanceSpinner
-                .getItemAtPosition(initialPosition);
-        try {
-            mDistance = Float.valueOf(distance);
-        } catch (NumberFormatException e) {
-            mDistance = Extra.UNKNOWN;
-        }*/
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //enableContainerVisibility();
     }
 
     private View mapHintContainer;
@@ -233,23 +188,7 @@ public class SearchDialogFragment extends DialogFragment implements
         if (keyword.length() > 0) {
             bundle.putString(SearchManager.QUERY, keyword);
         }
-        /*
-        Log.d(TAG, "mCategory = " + mCategorySelected + " mNodeType = "
-                + mNodeTypeSelected);
-        if (mCategorySelected != Extra.UNKNOWN) {
-            bundle.putInt(Extra.CATEGORY, mCategorySelected);
-        } else if (mNodeTypeSelected != Extra.UNKNOWN) {
-            bundle.putInt(Extra.NODETYPE, mNodeTypeSelected);
-        } else {
-            bundle.putInt(Extra.CATEGORY, Extra.UNKNOWN);
-        }
 
-        if (mEnableBoundingBoxSearch) {
-            bundle.putBoolean(Extra.ENABLE_BOUNDING_BOX, true);
-        } else if (mDistance != Extra.UNKNOWN) {
-            bundle.putFloat(Extra.DISTANCE_LIMIT, mDistance);
-        }
-        */
         return bundle;
     }
 

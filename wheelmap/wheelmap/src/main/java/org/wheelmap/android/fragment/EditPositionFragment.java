@@ -29,9 +29,6 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.mapsforge.android.maps.GeoPoint;
-import org.mapsforge.android.maps.MapController;
-
-import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
@@ -39,30 +36,17 @@ import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.views.MapView;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.osmdroid.MarkItemOverlay;
-import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
-import org.wheelmap.android.overlays.ConfigureMapView;
-import org.wheelmap.android.overlays.OnTapListener;
-import org.wheelmap.android.overlays.POILocationEditableOverlay;
 import org.wheelmap.android.utils.ParceableBoundingBox;
-import org.wheelmap.android.utils.UtilsMisc;
-import org.mapsforge.android.maps.MapView.OnMoveListener;
-
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.MapView.Projection;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -71,14 +55,10 @@ import android.widget.TextView;
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
 
-import static org.wheelmap.android.utils.PressSelector.setAlphaForView;
-
 public class EditPositionFragment extends Fragment implements DisplayFragment,
         MapListener {
 
     public static final String TAG = EditPositionFragment.class.getSimpleName();
-
-
 
     private IMapController mMapController;
 
@@ -96,8 +76,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     private EventBus mBus;
 
-
-
     private WorkerFragment mWorkerFragment;
 
     private DisplayFragmentListener mDisplayFramentListener;
@@ -105,9 +83,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
     private LinearLayout text_move_map;
 
     private TextView text_position;
-
-
-
 
     private double mCrrLatitude;
 
@@ -120,7 +95,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
     private ImageButton positionSave;
 
     private OnEditPositionListener mListener;
-
 
 
     @Override
@@ -207,8 +181,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
         mMapController = mMapView.getController();
 
-
-
         mMapView.setBuiltInZoomControls(true);
         mMapController = mMapView.getController();
         mMapController.setZoom(18);
@@ -264,17 +236,6 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id) {
-            /*case R.id.menu_save:
-                if (mListener != null) {
-                    mListener.onEditPosition(mCrrLatitude, mCrrLongitude);
-                }
-                break;
-            default:
-                // noop
-                */
-        }
-
         return false;
     }
 
@@ -304,13 +265,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
              return false;
          }
 
-
-
          if (mMapView.getZoomLevel() < ZOOMLEVEL_MIN) {
              return false;
          }
-
-
 
          requestUpdate();
          return false;

@@ -21,10 +21,6 @@
  */
 package org.wheelmap.android.net;
 
-
-
-
-
 import com.bugsense.trace.BugSenseHandler;
 
 import org.springframework.http.HttpStatus;
@@ -36,7 +32,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.Base;
-import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.mapping.node.Photo;
 import org.wheelmap.android.mapping.node.Photos;

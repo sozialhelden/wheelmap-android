@@ -24,47 +24,26 @@ package org.wheelmap.android.activity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
-import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.EditPositionFragment;
-import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
-import org.wheelmap.android.fragment.NodetypeSelectFragment;
-import org.wheelmap.android.fragment.NodetypeSelectFragment.OnNodetypeSelectListener;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
-import org.wheelmap.android.fragment.WheelchairStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
-import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import android.support.v4.app.FragmentTransaction;
-import android.view.Display;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import de.akquinet.android.androlog.Log;
 
-//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailEditableActivity extends MapActivity implements
         OnPOIDetailEditableListener, OnLoginDialogListener,
         OnBackStackChangedListener, OnWheelchairState {
@@ -143,13 +122,6 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public void onEditWheelchairState(WheelchairState state) {
-       /* mFragment = WheelchairStateFragment.newInstance(state);
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content, mFragment, WheelchairStateFragment.TAG);
-        ft.addToBackStack(null);
-        ft.commit();
-        */
         onWheelchairStateSelect(state);
     }
 
@@ -157,7 +129,6 @@ public class POIDetailEditableActivity extends MapActivity implements
     public void onWheelchairStateSelect(WheelchairState state) {
         Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
         mExternalEditableState.state = state;
-        //getSupportFragmentManager().popBackStack();
     }
 
     @Override

@@ -11,7 +11,6 @@ import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.WheelchairState;
-import org.wheelmap.android.online.R;
 
 import android.content.ContentValues;
 import android.content.Context;

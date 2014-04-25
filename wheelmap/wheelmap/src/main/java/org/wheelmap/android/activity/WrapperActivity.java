@@ -24,13 +24,8 @@ package org.wheelmap.android.activity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.holoeverywhere.app.Activity;
-import org.wheelmap.android.fragment.WheelchairStateFragment;
-import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

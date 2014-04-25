@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.google.inject.Inject;
-
 import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
@@ -53,7 +51,6 @@ import java.util.List;
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 
-//@Activity.Addons("MyRoboguice")
 public class StartupActivity extends Activity implements
         DetachableResultReceiver.Receiver {
 
@@ -61,23 +58,17 @@ public class StartupActivity extends Activity implements
 
     private final static String TAG = StartupActivity.class.getSimpleName();
 
-    //@Inject
     ContentViewListener ignored;
 
-    //@Inject
     public IAppProperties appProperties;
 
     private State mState;
 
     private SupportManager mSupportManager;
 
-    //private ProgressBar mProgressBar;
-
     private boolean mIsInForeground;
 
     private long startTime;
-
-    // private CheckUpdateTask checkUpdateTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,14 +80,6 @@ public class StartupActivity extends Activity implements
         Log.d(TAG, "addons: " + obtainAddonsList());
         setContentView(R.layout.activity_splashscreen);
 
-        //FrameLayout layout = (FrameLayout) findViewById(R.id.startup_frame);
-        /*Animation anim = AnimationUtils.loadAnimation(this,
-                R.anim.zoom_in_animation);
-        LayoutAnimationController controller = new LayoutAnimationController(
-                anim, 0.0f);
-        layout.setLayoutAnimation(controller);
-          */
-        //mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         mState = new State();
         mState.mReceiver.setReceiver(this);
 
@@ -141,15 +124,8 @@ public class StartupActivity extends Activity implements
             return;
         }
 
-        /*
-        UpdateActivity.iconDrawableId = getApplicationInfo().icon;
-        checkUpdateTask = new
-                CheckUpdateTask(this, appProperties.get(IAppProperties.KEY_HOCKEY_URI), null);
-        checkUpdateTask.execute();
-        */
     }
 
-    // @Override
     public void onHockeyDone() {
         if (AppCapability.isNotWorking()) {
             showDialogNotWorking();
@@ -271,7 +247,6 @@ public class StartupActivity extends Activity implements
             final RestServiceException e = resultData
                     .getParcelable(Extra.EXCEPTION);
             Log.w(TAG, e);
-            //mProgressBar.setVisibility(View.GONE);
             showErrorDialog(e);
         }
     }

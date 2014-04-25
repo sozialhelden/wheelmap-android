@@ -21,20 +21,13 @@
  */
 package org.wheelmap.android.model;
 
-import org.wheelmap.android.mapping.node.Image;
 import org.wheelmap.android.mapping.node.Photo;
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.widget.ImageView;
-
-import java.net.URL;
-
-import de.akquinet.android.androlog.Log;
 
 public class DataOperationsPhotos extends DataOperations<Photos, Photo> {
 
@@ -53,40 +46,8 @@ public class DataOperationsPhotos extends DataOperations<Photos, Photo> {
         values.put(POIs.PHOTO_ID, photo.getId().longValue());
 
         values.put(POIs.TAKEN_ON, photo.getTakenOn().longValue());
-
-
-        // ADD LOOP HERE: for images
-        //copyImagesToValues()
-
-
-       /*
-        // TEST LOADING IMAGES FROM WEB ----------------------------
-        for(int i = 0; i < photo.getImages().size(); i++){
-            try{
-                Image image = photo.getImages().get(i);
-                URL newurl = new URL(image.getUrl());
-                Object obj = BitmapFactory
-                    .decodeStream(newurl.openConnection().getInputStream());
-                image.setImage((ImageView)obj);
-
-            }catch(Exception ex){
-                Log.d(ex.getMessage());
-            }
-        }  */
-
-
-        // TEST LOADING IMAGES FROM WEB ----------------------------
-
-
-
         values.put(POIs.TAG, POIs.TAG_RETRIEVED);
     }
-     /*
-    public void copyImagesToValues(Image image, ContentValues values){
-
-    }   */
-
-
 
     @Override
     protected Uri getUri() {

@@ -124,8 +124,6 @@ public class FilterCategoriesFragment extends ListFragment implements
                     Support.CategoriesContent.SELECTED_YES);
         }
 
-       // WheelmapApp.getCategoryChoosedPrefs().edit().putBoolean(catId+"",selected);
-
         String whereClause = "( " + Support.CategoriesContent.CATEGORY_ID
                 + " = ?)";
         String[] whereValues = new String[]{Integer.toString(catId)};

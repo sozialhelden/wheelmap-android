@@ -21,34 +21,20 @@
  */
 package org.wheelmap.android.activity;
 
-import android.content.ContentResolver;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.net.Uri;
-import android.widget.*;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.LayoutParams;
-import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.preference.SharedPreferences;
 import org.holoeverywhere.widget.TextView;
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
-import org.wheelmap.android.activity.MyTabListener.TabHolder;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
@@ -56,23 +42,24 @@ import org.wheelmap.android.fragment.SearchDialogFragment;
 import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Support;
-import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.popup.FilterWindow;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.tracker.TrackerWrapper;
+import org.wheelmap.android.utils.MapActivityUtils;
 
-import android.app.SearchManager;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -80,19 +67,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ViewFlipper;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import org.wheelmap.android.utils.MapActivityUtils;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshAttacher;
-
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 //@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class
@@ -105,8 +88,6 @@ public class
     //@Inject
     IAppProperties appProperties;
 
-    //private MyTabListener mTabListener;
-
     private final static int DEFAULT_SELECTED_TAB = 0;
 
     private int mSelectedTab = DEFAULT_SELECTED_TAB;
@@ -116,10 +97,6 @@ public class
     public boolean mFirstStart;
 
     private PullToRefreshAttacher mPullToRefreshHelper;
-
-    //private TabHolder mActiveTabHolder;
-
-    //private Fragment[] tabs = new Fragment[2];
 
     private CombinedWorkerFragment mWorkerFragment;
     private POIsListFragment mListFragment;
@@ -207,10 +184,6 @@ public class
 
     }
 
-    public WorkerFragment getWorkerFragment(){
-        return mWorkerFragment;
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -246,13 +219,6 @@ public class
         mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
         mFirstStart = false;
 
-        /*TabHolder holder = TabHolder.findActiveHolderByTab(mSelectedTab);
-        holder.setExecuteBundle(state);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setSelectedNavigationItem(mSelectedTab);
-        */
-
         flipper.setDisplayedChild(mSelectedTab);
 
     }
@@ -264,11 +230,6 @@ public class
         Log.d(TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
 
         flipper.setDisplayedChild(mSelectedTab);
-
-        //mTabListener.onTabSelected(tabs[mSelectedTab],null);
-        /*if ( actionBar.getSelectedNavigationIndex() != mSelectedTab) {
-            actionBar.setSelectedNavigationItem(mSelectedTab);
-        } */
     }
 
     public void onStateChange(String tag) {
@@ -277,13 +238,8 @@ public class
         }
 
         Log.d(TAG, "onStateChange " + tag);
-        //mActiveTabHolder = mTabListener.getTabHolder(tag);
-
-        //mSelectedTab = getSupportActionBar().getSelectedNavigationIndex();
         String readableName = tag.replaceAll("Fragment", "");
         mTrackerWrapper.track(readableName);
-
-       // getSupportActionBar().setDisplayShowCustomEnabled(false);
     }
 
     @Override
@@ -383,7 +339,6 @@ public class
                 return true;
             case R.id.menu_filter:
                 showFilterSettings(item);
-                //setFilterDrawable(item,null);
                 return true;
             case R.id.menu_about:
                 showInfo();

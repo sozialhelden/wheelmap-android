@@ -110,7 +110,7 @@ public class NodetypeSelectFragment extends ListFragment {
 
                 break;
             default:
-                //
+                //noop
         }
     }
 

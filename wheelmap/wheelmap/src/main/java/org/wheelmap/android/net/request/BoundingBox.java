@@ -23,8 +23,6 @@ package org.wheelmap.android.net.request;
 
 import android.location.Location;
 
-//import org.apache.commons.lang.Validate;
-
 public class BoundingBox {
 
     private final Wgs84GeoCoordinates westSouth;
@@ -33,8 +31,6 @@ public class BoundingBox {
 
     public BoundingBox(final Wgs84GeoCoordinates westSouth,
             final Wgs84GeoCoordinates eastNorth) {
-        // Validate.notNull(westSouth,"");
-        // Validate.notNull(eastNorth, "eastNorth");
         this.westSouth = westSouth;
         this.eastNorth = eastNorth;
     }
