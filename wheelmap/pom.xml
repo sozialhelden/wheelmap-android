@@ -64,7 +64,7 @@
         <!-- used for addons -->
         <platform.addon.version>4.1.1.4</platform.addon.version>
         <sherlock.version>4.4.0</sherlock.version>
-        <holoeverywhere.version>1.6.8</holoeverywhere.version>    <!--1.6.8-->
+        <holoeverywhere.version>1.6.1</holoeverywhere.version>    <!--1.6.8-->
 
         <app.asset.variant>development</app.asset.variant>
         <hockey.repository.url>ftp://storagerutton.de/</hockey.repository.url>
@@ -102,12 +102,12 @@
                 <version>${platform.addon.version}</version>
             </dependency>
 
-            <!--<dependency>
+            <dependency>
                 <groupId>org.holoeverywhere</groupId>
                 <artifactId>library</artifactId>
-                <version>2.0.0</version>
+                <version>${holoeverywhere.version}</version>
                 <type>aar</type>
-            </dependency>   -->
+            </dependency>
             <dependency>
                 <groupId>com.actionbarsherlock</groupId>
                 <artifactId>actionbarsherlock</artifactId>
