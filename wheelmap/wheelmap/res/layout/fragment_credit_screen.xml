@@ -108,64 +108,80 @@
                 android:gravity="center"
                 android:layout_marginTop="20dp"/>
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:gravity="center">
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:id="@+id/tableLayout1"
 
-                <LinearLayout android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:orientation="vertical"
-                              android:layout_marginRight="3dp">
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent" >
 
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/info_POIData"
-                            android:gravity="right"/>
+            <!-- 2 columns -->
+            <TableRow
+                    android:id="@+id/tableRow1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:padding="5dip" >
 
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/info_kartendaten"
-                            android:gravity="right"/>
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/legal_notice_iconscollection"
-                            android:gravity="right"/>
+                <TextView
 
-                </LinearLayout>
+                        android:layout_weight="1"
+                        android:text="@string/info_POIData"
+                        android:gravity="right"
+                        android:paddingRight="4dp"/>
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/openStreetMapLink"
+                        android:text="@string/info_kartendaten_points"
+                        android:gravity="left"/>
 
-                <LinearLayout android:layout_width="wrap_content"
-                              android:layout_height="wrap_content"
-                              android:orientation="vertical"
-                              android:layout_marginLeft="3dp"
-                              >
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/openStreetMapLink"
-                            android:text="@string/info_kartendaten_points"
-                            android:gravity="left"/>
+            </TableRow>
+            <!-- 2 columns -->
+            <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dip" >
 
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/openMapBox"
-                            android:text="@string/info_kartendaten_three"
-                            android:gravity="left"/>
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/linkNicolasMollet"
-                            android:text="@string/legal_notice_commonsware_copyright_nicolas"
-                            android:gravity="left"/>
+                <TextView
+                        android:layout_weight="1"
+                        android:text="@string/info_kartendaten"
+                        android:gravity="right"
+                        android:paddingRight="4dp"/>
 
-                </LinearLayout>
+                <TextView
+
+                        android:id="@+id/openMapBox"
+                        android:text="@string/info_kartendaten_three"
+                        android:layout_weight="1"
+                        android:gravity="left"/>
+
+            </TableRow>
+            <!-- 2 columns -->
+            <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="5dip" >
+
+                <TextView
+                        android:layout_weight="1"
+                        android:text="@string/legal_notice_iconscollection"
+                        android:gravity="right"
+                        android:paddingRight="4dp"/>
+
+                <TextView
+                        android:id="@+id/linkNicolasMollet"
+                        android:layout_weight="1"
+                        android:gravity="left"
+                        android:text="@string/legal_notice_commonsware_copyright_nicolas"/>
 
 
-        </LinearLayout>
+            </TableRow>
+
+        </TableLayout>
+
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
