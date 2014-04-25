@@ -247,6 +247,7 @@ public class DashboardActivity extends
     }
 
     public void openMithelfen(){
+        resetKategorieFilter();
         Intent intent;
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
@@ -262,10 +263,7 @@ public class DashboardActivity extends
     }
 
     public void openKategorien(){
-        Intent intent = new Intent(getApplicationContext(),
-                MainSinglePaneActivity.class);
-        //startActivity(intent);
-        intent = new Intent(this,ChooseCategoryActivity.class);
+        Intent intent = new Intent(this,ChooseCategoryActivity.class);
         intent.putExtra(Extra.SELECTED_TAB,2);
         startActivity(intent);
     }

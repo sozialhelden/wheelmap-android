@@ -216,6 +216,8 @@ public class POIDetailFragment extends Fragment implements
     Cursor mCursor;
 
 
+    View content;
+
     //@Inject
     public ContentViewListener ignored;
 
@@ -604,7 +606,6 @@ public class POIDetailFragment extends Fragment implements
                     /*centerMap(mCurrentLocationGeoPoint, true);
                     setZoomIntern(17);
                     requestUpdate();*/
-
                     if(mapFocus){
                         mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
                         mapFocus = false;
@@ -620,7 +621,7 @@ public class POIDetailFragment extends Fragment implements
                         if(mHeightLayout <= 0){
                             mHeightLayout = layoutMapDetail.getHeight();
                         }
-                        HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, mHeightLayout, (mHeightLayout+800));
+                        HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, mHeightLayout, content.getHeight());
                         heightAnim.setDuration(1000);
                         layoutMapDetail.startAnimation(heightAnim);
                     }
@@ -640,7 +641,7 @@ public class POIDetailFragment extends Fragment implements
                 }
             });
         }
-
+        content = v;
         return v;
     }
 
@@ -1643,7 +1644,7 @@ public class POIDetailFragment extends Fragment implements
 }
 
 /**
- * an animation for resizing the view.
+ * an animation for resizing the view.            ƒ
  */
 
 class HeightAnimation extends Animation {

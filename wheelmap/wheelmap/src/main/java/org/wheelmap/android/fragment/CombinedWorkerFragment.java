@@ -384,7 +384,7 @@ public class CombinedWorkerFragment extends Fragment implements
             }
             case RestService.STATUS_FINISHED: {
 
-                WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+                WheelmapApp app = WheelmapApp.getApp();
 
                 if(resultData.get("WHAT").equals(What.SEARCH_NODES)){
                     if(app.isSearchSuccessfully() == false){
