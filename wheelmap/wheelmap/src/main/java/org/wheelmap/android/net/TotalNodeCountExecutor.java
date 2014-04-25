@@ -22,27 +22,19 @@
 package org.wheelmap.android.net;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.mapping.node.SingleNode;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.net.request.AcceptType;
-import org.wheelmap.android.net.request.NodeRequestBuilder;
 import org.wheelmap.android.net.request.TotalNodeCountRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
-
-import java.util.List;
-
-import sun.net.www.http.HttpClient;
 
 public class TotalNodeCountExecutor extends SinglePageExecutor<SingleNode> implements
         IExecutor {

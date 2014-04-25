@@ -30,7 +30,6 @@ import org.wheelmap.android.fragment.OnExecuteBundle;
 import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
 import org.wheelmap.android.fragment.POIsMapWorkerFragment;
-import org.wheelmap.android.fragment.POIsMapsforgeFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.online.R;
 
@@ -208,8 +207,6 @@ public class MyTabListener implements TabListener {
         sTagToTabHolder = new HashMap<String, TabHolder>();
         sTagToTabHolder.put(POIsListFragment.TAG,
                 new TabHolder(POIsListFragment.class, 0, POIsListFragment.TAG, POIsListWorkerFragment.TAG, true));
-        sTagToTabHolder.put(POIsMapsforgeFragment.TAG,
-                new TabHolder(POIsMapsforgeFragment.class, 1, POIsMapsforgeFragment.TAG, POIsMapWorkerFragment.TAG, false));
         sTagToTabHolder.put(POIsOsmdroidFragment.TAG,
                 new TabHolder(POIsOsmdroidFragment.class, 1, POIsOsmdroidFragment.TAG, POIsMapWorkerFragment.TAG, true));
     }

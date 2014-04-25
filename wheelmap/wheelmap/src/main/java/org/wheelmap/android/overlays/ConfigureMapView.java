@@ -38,9 +38,6 @@ public class ConfigureMapView {
 
     private final static int MB_TO_BYTES_MULTIPLIER = 1000000;
 
-    // private final static MapViewMode defaultViewMode =
-    // MapViewMode.OSMARENDER_TILE_DOWNLOAD;
-
     private static MapPicker mMapPicker = new MapPickerSimple();
 
     public static void pickAppropriateMap(Context context, MapView mapView) {

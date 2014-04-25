@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.net.request;
 
-import org.wheelmap.android.model.WheelchairState;
-
 /**
  * Constructs the Uri of a <code>/api/nodes?bbox&wheelchair&page&per_page</code> request
  *

@@ -1,6 +1,13 @@
 package org.wheelmap.android.utils;
 
-import android.app.Activity;
+import com.actionbarsherlock.view.MenuItem;
+
+import org.wheelmap.android.activity.MapActivity;
+import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
+import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.online.R;
+
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -9,15 +16,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.actionbarsherlock.view.MenuItem;
-import org.holoeverywhere.widget.PopupWindow;
-import org.holoeverywhere.widget.TextView;
-import org.wheelmap.android.activity.MapActivity;
-import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
-import org.wheelmap.android.manager.SupportManager;
-import org.wheelmap.android.model.WheelchairState;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.view.WheelchairStateItemView;
 
 import java.util.LinkedList;
 import java.util.List;

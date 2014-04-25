@@ -24,7 +24,6 @@ package org.wheelmap.android.view;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -36,15 +35,11 @@ public class POIsListItemView extends RelativeLayout {
 
     private TextView poiName;
 
-    //private TextView poiCategory;
-
     private TextView poiNodeType;
 
     private TextView poiDistance;
 
     private ImageView poiIcon;
-
-    private CompassView poiCompass;
 
     /**
      * constructor creates a new line item of list
@@ -58,12 +53,9 @@ public class POIsListItemView extends RelativeLayout {
         inflater.inflate(R.layout.item_list_pois, this, true);
 
         poiName = (TextView) findViewById(R.id.poi_name);
-        //poiCategory = (TextView) findViewById(R.id.poi_category);
         poiNodeType = (TextView) findViewById(R.id.poi_nodetype);
         poiDistance = (TextView) findViewById(R.id.poi_distance);
         poiIcon = (ImageView) findViewById(R.id.image);
-        //poiCompass = (CompassView) findViewById(R.id.compass);
-        //poiCompass.setName(name);
 
     }
 
@@ -73,10 +65,6 @@ public class POIsListItemView extends RelativeLayout {
     public void setName(String text) {
         poiName.setText(text);
     }
-    /*
-    public void setCategory(String text) {
-        poiCategory.setText(text);
-    }    */
 
     public void setNodeType(String text) {
         poiNodeType.setText(text);
@@ -90,7 +78,4 @@ public class POIsListItemView extends RelativeLayout {
         poiIcon.setImageDrawable(drawable);
     }
 
-    /*public void setDirection(float direction) {
-        poiCompass.updateDirection(direction);
-    }*/
 }

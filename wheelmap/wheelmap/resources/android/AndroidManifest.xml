@@ -131,10 +131,6 @@ limitations under the License.
                 android:label="@string/title_editor"
                 android:theme="@style/Theme.Wheelmap.SubActivity"/>
         <activity
-                android:name="org.wheelmap.android.activity.OLDSettingsActivity"
-                android:label="@string/title_pois_settings"
-                android:theme="@style/Theme.Wheelmap.SubActivity"/>
-        <activity
                 android:name="org.wheelmap.android.activity.PictureActivity"
                 android:label=""
                 android:theme="@style/Theme.Wheelmap.SubActivity"/>

@@ -1,28 +1,16 @@
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 
-import org.holoeverywhere.widget.LinearLayout;
-import org.holoeverywhere.widget.ProgressBar;
-import org.wheelmap.android.fragment.LoginFragment;
-import org.wheelmap.android.fragment.LogoutFragment;
-import org.wheelmap.android.modules.UserCredentials;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.utils.UtilsMisc;
-
 import org.holoeverywhere.app.Activity;
-import android.content.pm.ActivityInfo;
+import org.holoeverywhere.widget.ProgressBar;
+import org.wheelmap.android.online.R;
+
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import de.akquinet.android.androlog.Log;
 
 /**
  * Created by SMF on 04/04/14.

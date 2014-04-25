@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
@@ -306,16 +305,10 @@ public class MyLocationManager {
         }
 
         // Check whether the new location fix is newer or older
-        // Log.d( TAG, "location.getTime = " + location.getTime() +
-        // " currentBestLocation.getTime() = " + currentBestLocation.getTime());
         long timeDelta = location.getTime() - currentBestLocation.getTime();
         boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
         boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
         boolean isNewer = timeDelta > 0;
-
-        // Log.d( TAG, "isSignificantlyNewer = " + isSignificantlyNewer +
-        // " isSignificantlyOlder = " + isSignificantlyOlder + " timeDelta = " +
-        // timeDelta );
 
         // If it's been more than two minutes since the current location, use
         // the new location
@@ -325,9 +318,6 @@ public class MyLocationManager {
             // If the new location is more than two minutes older, it must be
             // worse
         }
-        /*
-         * else if (isSignificantlyOlder) { return false; }
-		 */
 
         // Check whether the new location fix is more or less accurate
         int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation

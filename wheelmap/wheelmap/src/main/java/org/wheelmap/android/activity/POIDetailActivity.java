@@ -24,7 +24,6 @@ package org.wheelmap.android.activity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
-import org.holoeverywhere.app.Activity;
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
@@ -43,17 +42,10 @@ import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 
@@ -63,9 +55,6 @@ public class POIDetailActivity extends MapActivity implements
 
     private final static String TAG = POIDetailActivity.class.getSimpleName();
 
-    //@Inject
-    //roboguice.inject.ContentViewListener ignored;
-
     // Definition of the one requestCode we use for receiving resuls.
     static final private int SELECT_WHEELCHAIRSTATE = 0;
 
@@ -74,14 +63,6 @@ public class POIDetailActivity extends MapActivity implements
     private DetachableResultReceiver mReceiver;
 
     private String wmID;
-
-    ImageView img_logo;
-    protected static final int CAMERA_REQUEST = 65537;
-    protected static final int GALLERY_PICTURE = 65538;
-    private Intent pictureActionIntent = null;
-    Bitmap bitmap;
-
-    String selectedImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,27 +188,6 @@ public class POIDetailActivity extends MapActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*
-        if(data != null){
-            Uri uri = data.getData();
-            if (uri == null) {
-                Log.d(TAG, "uri has no data - cant extract wmID");
-                showErrorMessage(getString(R.string.error_noid_title),
-                        getString(R.string.error_noid_message));
-                return;
-            }
-
-            wmID = uri.getLastPathSegment();
-            try {
-                Long.parseLong(wmID);
-            } catch (NumberFormatException e) {
-                Log.e(TAG, " wmID = " + wmID, e);
-                finish();
-                return;
-            }
-
-        }
-        */
         if (requestCode == SELECT_WHEELCHAIRSTATE) {
             if (resultCode == RESULT_OK) {
                 // newly selected wheelchair state as action data

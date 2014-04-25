@@ -265,14 +265,6 @@ public class PrepareDatabaseHelper {
         ContentValues values = new ContentValues();
         DataOperationsPhotos don = new DataOperationsPhotos(null);
         don.copyToValues(photo.getPhoto(), values);
-         /*String whereClause = "( " + POIs.WM_ID + " = ? )";
-        String whereValues[] = {photo.getPhoto().getId().toString()};
-
-        long id = insertOrUpdateContentValues(resolver,
-                Wheelmap.POIs.CONTENT_URI_RETRIEVED, Wheelmap.POIs.PROJECTION,
-                whereClause, whereValues, values);
-
-        createCopyIfNotExists(resolver, id, false);            */
 
     }
 

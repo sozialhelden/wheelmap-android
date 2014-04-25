@@ -34,9 +34,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
-import javax.naming.NameNotFoundException;
-
-
 @Activity.Addons(Activity.ADDON_SHERLOCK)
 public class InfoActivity extends Activity implements
         OnInfoListener {

@@ -1,8 +1,6 @@
 package org.wheelmap.android.activity;
 
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.modules.AppProperties;
-import org.wheelmap.android.modules.IAppProperties;
 
 import android.app.Activity;
 import android.content.Intent;

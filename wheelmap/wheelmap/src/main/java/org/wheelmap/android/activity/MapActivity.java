@@ -21,9 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
 import org.holoeverywhere.app.Activity;
 import org.mapsforge.android.maps.MapContext;
 import org.mapsforge.android.maps.MapView;
@@ -39,7 +36,6 @@ import org.wheelmap.android.overlays.ConfigureMapView;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -219,7 +215,6 @@ public class MapActivity extends Activity implements MapContext {
     private void storeMapsforgeFile(MFMapView mapView, Bundle b) {
         if (!mapView.getMapViewMode().requiresInternetConnection()
                 && mapView.hasValidMapFile()) {
-            //b.putString("mapFile", mapView.getMapFile());
 
         }
     }

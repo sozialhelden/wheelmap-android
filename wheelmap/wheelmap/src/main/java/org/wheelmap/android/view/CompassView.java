@@ -1,15 +1,12 @@
 package org.wheelmap.android.view;
 
-import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.online.R;
 
-import android.database.Cursor;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 public class CompassView extends View {

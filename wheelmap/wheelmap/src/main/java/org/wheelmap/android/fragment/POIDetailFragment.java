@@ -26,11 +26,15 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.mapsforge.android.maps.GeoPoint;
+import org.mapsforge.android.maps.MapController;
+import org.mapsforge.android.maps.MapView;
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
@@ -44,35 +48,29 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.wheelmap.android.adapter.Item;
-import org.wheelmap.android.async.UploadPhotoTask;
-import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.mapping.node.Image;
-import org.wheelmap.android.model.Request;
-import org.wheelmap.android.osmdroid.MarkItemOverlay;
-import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
-import org.wheelmap.android.osmdroid.OnTapListener;
-import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
-import org.wheelmap.android.service.RestService;
-import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.mapsforge.android.maps.GeoPoint;
-import org.mapsforge.android.maps.MapController;
-import org.mapsforge.android.maps.MapView;
 import org.wheelmap.android.adapter.HorizontalImageAdapter;
 import org.wheelmap.android.adapter.HorizontalView;
+import org.wheelmap.android.adapter.Item;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.async.UploadPhotoTask;
+import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.overlays.SingleItemOverlay;
+import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
+import org.wheelmap.android.osmdroid.OnTapListener;
+import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
+import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.FileUtil;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
@@ -80,7 +78,6 @@ import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -124,6 +121,7 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -133,7 +131,6 @@ import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
-import roboguice.inject.ContentViewListener;
 
 public class POIDetailFragment extends Fragment implements
         OnTapListener, LoaderCallbacks<Cursor>, Receiver, OnClickListener, MapListener {
@@ -150,24 +147,17 @@ public class POIDetailFragment extends Fragment implements
     private final static int FOCUS_TO_ADRESS = 1;
     private final static int FOCUS_TO_COMMENT = 2;
 
-
-
-
-
-
     private IMapController mMapController;
 
     private static String baseUrl = "http://a.tiles.mapbox.com/v3/%s/";
 
     private static String tileUrl;
 
-    private static final byte ZOOMLEVEL_MIN = 16;
+    private OnlineTileSourceBase mMapBoxTileSource;
 
-    private OnlineTileSourceBase mMapBoxTileSource; private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
+    private static final float SPAN_ENLARGEMENT_FAKTOR = 1.3f;
 
     private org.osmdroid.views.MapView mMapView;
-
-    private IGeoPoint mLastRequestedPosition;
 
     private EventBus mBus;
 
@@ -197,45 +187,28 @@ public class POIDetailFragment extends Fragment implements
 
     private MyLocationNewOverlay mCurrLocationOverlay;
 
-    private MarkItemOverlay markItemOverlay;
-
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
     private Location mLocation;
 
+<<<<<<< HEAD
     ImageView img_logo;
+=======
+>>>>>>> b826e3fa905c9b96c983b5828349e2f17dc02a8b
     private Intent pictureActionIntent = null;
-    Bitmap bitmap;
 
     long wmID;
 
     Cursor mCursor;
 
-
     View content;
 
-    //@Inject
-    public ContentViewListener ignored;
-
-    //@InjectView(R.id.title_container)
-    private RelativeLayout title_container;
-
-    //@InjectView(R.id.titlebar_title)
     private TextView nameText;
 
-    //@InjectView(R.id.titlebar_subtitle)
     private TextView categoryText;
 
-    //@InjectView(R.id.titlebar_icon)
-    private ImageView nodetypeIcon;
-
-    //@InjectView(R.id.nodetype)
-    //private TextView nodetypeText;
-
-    //@InjectView(R.id.phone)
     private TextView phoneText;
 
-    //@InjectView(R.id.addr)
     private TextView addressText;
 
     private TextView addressTitle;
@@ -243,7 +216,6 @@ public class POIDetailFragment extends Fragment implements
     private TextView photoTitle;
     private LinearLayout photoLayout;
 
-    //@InjectView(R.id.comment)
     private TextView commentText;
 
     private TextView noCommentText;
@@ -263,21 +235,13 @@ public class POIDetailFragment extends Fragment implements
 
     private TextView nothing;
 
-    //@InjectView(R.id.website)
-    //private TextView websiteText;
-
-    //@InjectView(R.id.state_icon)
     private ImageView stateIcon;
 
-    //@InjectView(R.id.state_text)
     private TextView stateText;
 
-    //@InjectView(R.id.wheelchair_state_layout)
     private ViewGroup stateLayout;
 
     private Button mMapButton;
-
-    private ImageView mTestImage;
 
     private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
 
@@ -347,10 +311,6 @@ public class POIDetailFragment extends Fragment implements
     private Menu currentMenu;
 
     private boolean mShowMenu;
-
-    private static final int DIALOG_ALERT = 10;
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private List listImages;
     private HorizontalImageAdapter imageAdapter;
@@ -426,15 +386,12 @@ public class POIDetailFragment extends Fragment implements
     }
 
     public void initViews(View v){
-        title_container = (RelativeLayout)v.findViewById(R.id.title_container);
         nameText = (TextView)v.findViewById(R.id.titlebar_title);
         categoryText = (TextView)v.findViewById(R.id.titlebar_subtitle);
-        nodetypeIcon = (ImageView)v.findViewById(R.id.titlebar_icon);
         addressTitle = (TextView)v.findViewById(R.id.addr_title);
         addressText = (TextView)v.findViewById(R.id.addr);
         commentTitle = (TextView)v.findViewById(R.id.comment_title);
         commentText = (TextView)v.findViewById(R.id.comment);
-        //stateIcon = (ImageView)v.findViewById(R.id.state_icon);
         stateText = (TextView)v.findViewById(R.id.state_text);
         stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
         webText = (TextView)v.findViewById(R.id.web);
@@ -573,12 +530,10 @@ public class POIDetailFragment extends Fragment implements
             mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
 
             mMapView.setTileSource(mMapBoxTileSource);
-            //mMapView.setBuiltInZoomControls(true);
             mMapView.setMultiTouchControls(true);
 
             mMapView.setMapListener(this);
 
-            //mMapView.setBuiltInZoomControls(true);
             mMapController = mMapView.getController();
             mMapController.setZoom(18);
             mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
@@ -588,10 +543,6 @@ public class POIDetailFragment extends Fragment implements
                     mMapView);
             mCurrLocationOverlay.enableMyLocation();
 
-            markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
-
-            //mMapView.getOverlays().add(markItemOverlay);
-
             mMapView.getOverlays().add(mPoisItemizedOverlay);
 
             MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
@@ -600,16 +551,11 @@ public class POIDetailFragment extends Fragment implements
             mMyLocationProvider.startLocationProvider(a);
             mMapView.getOverlays().add(a);
 
-
-
             mBtnExpand.setOnTouchListener(new PressSelector());
             mBtnExpand.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    /*centerMap(mCurrentLocationGeoPoint, true);
-                    setZoomIntern(17);
-                    requestUpdate();*/
                     if(mapFocus){
                         mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
                         mapFocus = false;
@@ -714,7 +660,6 @@ public class POIDetailFragment extends Fragment implements
         mapView = (MapView) v.findViewById(R.id.map);
         if(mapView != null){
             mapView.setClickable(true);
-            //mapView.setBuiltInZoomControls(true);
             mapController = mapView.getController();
             mapController.setZoom(18);
         }
@@ -835,27 +780,7 @@ public class POIDetailFragment extends Fragment implements
         int id = item.getItemId();
 
         switch (id) {
-            /*case R.id.menu_edit:
-                if (mListener != null) {
-                    mListener.onEdit(poiId);
-                }
-                return true;
-            case R.id.menu_directions:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    return false;
-                } else {
-                    startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_DIRECTIONS),
-                            getString(R.string.menu_directions)));
-                    return true;
-                }
-            case R.id.menu_share:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    return false;
-                } else {
-                    startActivity(Intent.createChooser(intentSaved.get(ACTION_PROVIDER_SHARE),
-                            getString(R.string.menu_share)));
-                    return true;
-                } */
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -868,9 +793,7 @@ public class POIDetailFragment extends Fragment implements
 
     @Override
     public void onTap(OverlayItem item, ContentValues values) {
-        /*if (mListener != null) {
-            mListener.onShowLargeMapAt(item.getPoint());
-        } */
+
     }
 
     @Override
@@ -894,18 +817,12 @@ public class POIDetailFragment extends Fragment implements
             getPhotos(wmID);
         }catch(Exception e){}
 
-        //mPoisItemizedOverlay.setCursor(mCursor);
-        //mMapView.postInvalidate();
-
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
             createPOIForDetailMap();
             mMapView.postInvalidate();
 
         }
-
-
-
     }
 
     public void createPOIForDetailMap(){
@@ -928,8 +845,6 @@ public class POIDetailFragment extends Fragment implements
         int half = (int)(10*density);
 
         marker.setBounds(-half, -2*half, half, 0);
-
-        //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
 
         org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
         OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
@@ -1118,8 +1033,7 @@ public class POIDetailFragment extends Fragment implements
 
             String category = sm.lookupCategory(categoryId).localizedName;
             categoryText.setText(category);
-            //nodetypeText.setText(nodeType.localizedName);
-            //nodetypeIcon.setImageDrawable(nodeType.iconDrawable);
+
             commentText.setText(comment);
 
             fillDirectionsActionProvider(latitude, longitude, street, houseNum,
@@ -1132,44 +1046,19 @@ public class POIDetailFragment extends Fragment implements
 
             poiValues = new ContentValues();
             DatabaseUtils.cursorRowToContentValues(c, poiValues);
-
-            /*
-            if (!getArguments().containsKey(Extra.SHOW_MAP)) {
-                return;
-            } else if (AppCapability.degradeDetailMapAsButton()) {
-                mMapButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mListener != null) {
-                            mListener.onShowLargeMapAt(new GeoPoint(latitude,
-                                    longitude));
-                        }
-
-                    }
-                });
-            } else {
-                SingleItemOverlay overlay = new SingleItemOverlay(this);
-                overlay.setItem(poiValues, nodeType, state);
-                overlay.enableLowDrawQuality(true);
-                if(mapView != null){
-                    mapView.getOverlays().clear();
-                    mapView.getOverlays().add(overlay);
-
-                    mapController.setCenter(new GeoPoint(latitude, longitude));
-                }
-            }*/
         }
-
-
     }
 
     private void setWheelchairState(WheelchairState newState) {
         mWheelchairState = newState;
 
+<<<<<<< HEAD
         int stateColor = getResources().getColor(
                 mWSAttributes.get(newState).colorId);
 
         try{
+=======
+>>>>>>> b826e3fa905c9b96c983b5828349e2f17dc02a8b
         if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
         else if(mWheelchairState.getId() == WheelchairState.YES.getId())
@@ -1182,6 +1071,7 @@ public class POIDetailFragment extends Fragment implements
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
         else
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
+<<<<<<< HEAD
         }catch(OutOfMemoryError e){
             System.gc();
         }
@@ -1191,6 +1081,8 @@ public class POIDetailFragment extends Fragment implements
         //title_container.setBackgroundColor(stateColor);
         //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
         //stateText.setTextColor(stateColor);
+=======
+>>>>>>> b826e3fa905c9b96c983b5828349e2f17dc02a8b
 
         stateText.setText(mWSAttributes.get(newState).titleStringId);
 
@@ -1218,7 +1110,6 @@ public class POIDetailFragment extends Fragment implements
             geoURI = Uri.parse("geo:" + latitude + "," + longitude + "?q="
                     + sb.toString().replace(" ", "+"));
         } else {
-            //geoURI = Uri.parse("geo:" + latitude + "," + longitude);
 
             StringBuilder sb = new StringBuilder();
             sb.append(latitude).append("+").append(longitude);
@@ -1253,11 +1144,6 @@ public class POIDetailFragment extends Fragment implements
             sb.append(", ");
             sb.append(address);
         }
-
-        //if (!TextUtils.isEmpty(website)) {
-        //    sb.append(", ");
-        //    sb.append(website);
-        //}
 
         if (sb.length() > 0) {
             sb.append(", ");
@@ -1362,12 +1248,6 @@ public class POIDetailFragment extends Fragment implements
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
                     startGetPhotoFromGalleryIntent();
-                    /*pictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    pictureActionIntent.setType("image/*");
-                    pictureActionIntent.putExtra(Extra.WM_ID, poiId);
-                    pictureActionIntent = getGetPhotoFromGalleryIntent();
-                    startActivityForResult(pictureActionIntent,
-                            Request.REQUESTCODE_PHOTO);   */
                 } else if (which == 1) {
                     pictureActionIntent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1411,7 +1291,6 @@ public class POIDetailFragment extends Fragment implements
             return;
         }
 
-
     }
 
     @SuppressLint("NewApi")
@@ -1432,16 +1311,6 @@ public class POIDetailFragment extends Fragment implements
             }
         }else if(data!=null && data.getData() != null ){
             Uri photo = data.getData();
-
-            /*if(requestCode == Request.GALLERY_KITKAT_INTENT_CALLED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-                final int takeFlags = data.getFlags()
-                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                // Check for the freshest data.
-                //getActivity().getContentResolver().takePersistableUriPermission(photo, takeFlags);
-
-            }*/
-
 
             String path = FileUtil.getPath(getActivity(), photo);
             if(path != null){
@@ -1524,36 +1393,17 @@ public class POIDetailFragment extends Fragment implements
 
         IGeoPoint actualGeoPoint = geoPoint;
 
-
-
-
         if (mHeightFull) {
             actualGeoPoint = geoPoint;
         } else {
 
             if(land){
-                /*Projection projection = mMapView.getProjection();
-                Point point = new Point();
-                point = projection.toMapPixels(geoPoint,point);
-                //point = projection.toPixels(geoPoint, point);
-                int horizontalOffset = mMapView.getWidth() / 4;
-                point.x -= horizontalOffset;
-                actualGeoPoint = projection.fromPixels(point.x, point.y);
-                */
-
                 Point point = pointFromGeoPoint(geoPoint,mMapView);
                 int horizontalOffset = mMapView.getWidth() / 4;
                 point.x -= horizontalOffset;
                 actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
 
             }else{
-                /*Projection projection = mMapView.getProjection();
-                Point point = new Point();
-                point = projection.toPixels(geoPoint, point);
-                int mVerticalOffset = mMapView.getHeight() / 4;
-                point.y -= mVerticalOffset;
-                actualGeoPoint = projection.fromPixels(point.x, point.y); */
-
                 Point point = pointFromGeoPoint(geoPoint,mMapView);
                 int mVerticalOffset = mMapView.getHeight() / 4;
                 point.y -= mVerticalOffset;
@@ -1666,8 +1516,6 @@ public class POIDetailFragment extends Fragment implements
         }
 
         public void updateLocation(Location location) {
-            //Log.d(TAG, "updateLocation: location = " + location + " consumer = "
-            //        + mMyLocationConsumer);
             if (location == null) {
                 return;
             }
@@ -1682,7 +1530,7 @@ public class POIDetailFragment extends Fragment implements
 }
 
 /**
- * an animation for resizing the view.            ƒ
+ * an animation for resizing the view.
  */
 
 class HeightAnimation extends Animation {

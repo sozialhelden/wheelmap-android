@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.manager;
 
-import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.PrefKey;
@@ -48,7 +47,6 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -614,7 +612,6 @@ public class SupportManager {
                 if(MarkerIconExecutor.markerIconsDownloaded()){
                     File dir = MarkerIconExecutor.getMarkerPath(mContext);
                     File asset = new File(dir+"/"+path);
-                    //is = new FileInputStream(asset);
                 }else{
                     is = mAssetManager.open(path);
                 }

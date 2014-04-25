@@ -37,8 +37,6 @@ public class POIsCursorWrapper extends CursorWrapper {
 
     public final int DIRECTION_COLUMN_INDEX;
 
-    public final float[] distanceResult = new float[1];
-
     private Location mLocation;
 
     public POIsCursorWrapper(Cursor cursor, Location location) {

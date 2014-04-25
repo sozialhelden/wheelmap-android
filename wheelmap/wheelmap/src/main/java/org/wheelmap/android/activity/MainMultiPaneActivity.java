@@ -22,23 +22,8 @@
 package org.wheelmap.android.activity;
 
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
-import android.animation.LayoutTransition;
-import android.annotation.TargetApi;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import com.google.inject.Inject;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.LayoutParams;
-import com.actionbarsherlock.internal.view.menu.MenuItemImpl;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -49,10 +34,18 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.*;
+import org.wheelmap.android.fragment.CombinedWorkerFragment;
+import org.wheelmap.android.fragment.DisplayFragmentListener;
+import org.wheelmap.android.fragment.ErrorDialogFragment;
+import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
+import org.wheelmap.android.fragment.POIsListFragment;
+import org.wheelmap.android.fragment.POIsOsmdroidFragment;
+import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
+import org.wheelmap.android.fragment.SearchDialogFragment;
+import org.wheelmap.android.fragment.WorkerFragment;
+import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
@@ -69,14 +62,13 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.MapActivityUtils;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
-import org.wheelmap.android.utils.UtilsMisc;
 
-import android.annotation.SuppressLint;
+import android.animation.LayoutTransition;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -95,13 +87,6 @@ import android.widget.ListView;
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import roboguice.inject.InjectView;
-
-import java.io.IOError;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 //@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class MainMultiPaneActivity extends MapActivity implements
@@ -111,22 +96,19 @@ public class MainMultiPaneActivity extends MapActivity implements
     private static final String TAG = MainMultiPaneActivity.class
             .getSimpleName();
 
-   // @Inject
+
     IAppProperties appProperties;
 
     private POIsListFragment mListFragment;
 
-    //private POIsMapsforgeFragment mMapFragment;
     private POIsOsmdroidFragment mMapFragment;
 
     private POIDetailFragment mDetailFragment;
 
     private CombinedWorkerFragment mWorkerFragment;
 
-    //@InjectView(R.id.movable_layout)
     private ViewGroup mMovableLayout;
 
-    //@InjectView(R.id.button_movable_resize)
     private ImageButton mResizeButton;
 
     private static final Interpolator SMOOTH_INTERPOLATOR = new SmoothInterpolator();
@@ -202,15 +184,6 @@ public class MainMultiPaneActivity extends MapActivity implements
             mListFragment = POIsListFragment.newInstance(false, true);
             t.add(R.id.list_layout, mListFragment, POIsListFragment.TAG);
         }
-
-
-       /* mMapFragment = (POIsMapsforgeFragment) fm
-                .findFragmentById(R.id.map_layout);
-        if (mMapFragment == null) {
-            mMapFragment = POIsMapsforgeFragment.newInstance(false, true);
-            t.add(R.id.map_layout, mMapFragment, POIsMapsforgeFragment.TAG);
-        }   */
-
 
         mMapFragment = (POIsOsmdroidFragment) fm
                 .findFragmentById(R.id.map_layout);

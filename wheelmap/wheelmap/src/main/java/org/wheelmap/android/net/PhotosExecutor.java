@@ -1,27 +1,21 @@
 package org.wheelmap.android.net;
 
 
-
 import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.DataOperationsPhotos;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.net.request.AcceptType;
 import org.wheelmap.android.net.request.BasePhotosRequestBuilder;
 import org.wheelmap.android.net.request.BoundingBox;
-import org.wheelmap.android.net.request.BoundingBox.Wgs84GeoCoordinates;
 import org.wheelmap.android.net.request.Paging;
 import org.wheelmap.android.net.request.PhotosRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.GeoMath;
 import org.wheelmap.android.utils.ParceableBoundingBox;
-import android.app.SearchManager;
+
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-
-import java.math.BigInteger;
 
 import de.akquinet.android.androlog.Log;
 
@@ -59,11 +53,6 @@ public class PhotosExecutor extends MultiPageExecutor<Photos> implements
             mBoundingBox = GeoMath.calculateBoundingBox(
                     new BoundingBox.Wgs84GeoCoordinates(location.getLongitude(), location
                             .getLatitude()), distance);
-            // Log.d(TAG,
-            // "retrieving with current location = ("
-            // + location.getLongitude() + ","
-            // + location.getLatitude() + ") and distance = "
-            // + distance);
         }
 
     }
@@ -84,11 +73,8 @@ public class PhotosExecutor extends MultiPageExecutor<Photos> implements
     @Override
     public void prepareDatabase() {
         Log.d(getTag(), "prepareDatabase");
-        //PrepareDatabaseHelper.cleanupOldCopies(getResolver(), false);
-        //PrepareDatabaseHelper.deleteRetrievedData(getResolver());
         DataOperationsPhotos don = new DataOperationsPhotos(getResolver());
         don.insert(getTempStore());
-        //PrepareDatabaseHelper.replayChangedCopies(getResolver());
         clearTempStore();
     }
 
