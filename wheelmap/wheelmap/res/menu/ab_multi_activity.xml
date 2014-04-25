@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <item
             android:id="@+id/menu_filter"
-            android:menuCategory="secondary"
-            android:orderInCategory="1"
             android:showAsAction="always"
             android:icon="@drawable/map_navbar_btn_filter"
             android:title="@string/menu_filter"/>
 
     <item
             android:id="@+id/menu_filter_kategorie"
-            android:menuCategory="secondary"
-            android:orderInCategory="2"
             android:showAsAction="always"
             android:icon="@drawable/map_navbar_btn_kategorie"
             android:title="@string/menu_filter"/>
@@ -22,13 +17,10 @@
             android:id="@+id/menu_search"
             android:icon="@drawable/ic_menu_search_wheelmap_light"
             android:showAsAction="always"
-            android:orderInCategory="3"
             android:title="@string/menu_search"/>
-
     <item
             android:id="@+id/menu_new_poi"
             android:menuCategory="secondary"
-            android:orderInCategory="4"
             android:showAsAction="always"
             android:icon="@drawable/map_navbar_btn_neu"
             android:title="@string/menu_new_poi"/>
@@ -36,7 +28,6 @@
     <item
             android:id="@+id/menu_about"
             android:menuCategory="secondary"
-            android:orderInCategory="2"
             android:showAsAction="never"
             android:icon="@drawable/start_ic_info"
             android:title="@string/menu_about"/>
@@ -44,7 +35,6 @@
     <item
             android:id="@+id/menu_login"
             android:menuCategory="secondary"
-            android:orderInCategory="2"
             android:showAsAction="never"
             android:icon="@drawable/map_navbar_btn_anmelden"
             android:title="@string/menu_account"/>
@@ -52,7 +42,6 @@
     <item
             android:id="@+id/menu_news"
             android:menuCategory="secondary"
-            android:orderInCategory="3"
             android:showAsAction="never"
             android:title="@string/menu_news"/>
 
