@@ -38,6 +38,29 @@ limitations under the License.
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
+    <!-- TODO enable for push -->
+    <!-- REQUIRED PERMISSIONS (for Urban Airship GCM)
+    android.permission.GET_ACCOUNTS: GCM requires a Google account.
+    android.permission.WAKE_LOCK   : Keeps the processor from sleeping when a message is received.
+    com.google.android.c2dm.permission.RECEIVE: This app has permission to register with GCM and receive message
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+     -->
+    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
+    <permission android:name="${app.package}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="${app.package}.permission.C2D_MESSAGE" />   -->
+    <!-- The two elements above ensure that only this application can receive the messages and registration result -->
+
+    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
+    <permission android:name="${app.package}.permission.UA_DATA" android:protectionLevel="signature" />
+    <uses-permission android:name="${app.package}.permission.UA_DATA" />                        -->
+    <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
+
+
     <uses-feature
             android:name="android.hardware.location"
             android:required="true"/>
@@ -172,6 +195,61 @@ limitations under the License.
                 android:writePermission="org.wheelmap.android.support.Write"/>
         <meta-data android:name="com.crashlytics.ApiKey"
                    android:value="82852bdccfc411decbd4ba6dd1d309f0beae2875"/>
+
+        <!-- TODO enable for push -->
+        <!-- MODIFICATION REQUIRED
+            - Set or Remove the parent activity
+            - For more customization details, see com.urbanairship.actions.LandingPageActivity
+        <activity android:name="com.urbanairship.actions.LandingPageActivity" android:parentActivityName="de.stratmann.activities.StratmannActivity" android:exported="false">
+
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="de.stratmann.activities.StratmannActivity" />
+
+            <intent-filter>
+                <action android:name="com.urbanairship.actions.SHOW_LANDING_PAGE_INTENT_ACTION" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+         -->
+        <!-- REQUIRED for Urban Airship GCM
+        MODIFICATION REQUIRED - Use your package name as the category
+        REQUIRED for detecting when the application is upgraded so it can request a new GCM ID
+        <receiver android:name="com.urbanairship.CoreReceiver" />
+
+        <receiver android:name="com.urbanairship.push.GCMPushReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="${app.package}" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+              -->
+
+        <!-- Required for Actions
+        <activity android:name="com.urbanairship.actions.ActionActivity" />
+        <service android:name="com.urbanairship.actions.ActionService" />
+
+        <service android:name="com.urbanairship.push.PushService" android:label="Push Notification Service" />
+        <service android:name="com.urbanairship.analytics.EventService" android:label="Event Service" />
+        <service android:name="com.urbanairship.actions.ActionService" />
+         -->
+
+        <!-- This is required for persisting preferences related to push and location -->
+        <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
+        <provider android:name="com.urbanairship.UrbanAirshipProvider" android:authorities="${app.package}.urbanairship.provider" android:permission="${app.package}.permission.UA_DATA" android:exported="true" android:multiprocess="true" />
+        --><!-- END OF REQUIRED ITEMS -->
+
+
+        <!-- OPTIONAL, if you want to receive push, push opened and registration completed intents -->
+        <!-- Replace the receiver below with your package and class name
+        <receiver android:name="org.wheelmap.android.push.GCMIntentReceiver" /> -->
 
     </application>
 

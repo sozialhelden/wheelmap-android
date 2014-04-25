@@ -717,6 +717,7 @@ public class POIDetailEditableFragment extends Fragment implements
         int stateColor = getResources().getColor(
                 mWSAttributes.get(newState).colorId);
 
+        try{
         if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         else if(mWheelchairState.getId() == WheelchairState.YES.getId())
@@ -729,7 +730,9 @@ public class POIDetailEditableFragment extends Fragment implements
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         else
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
-
+        }catch(OutOfMemoryError e){
+            System.gc();
+        }
 
 
 

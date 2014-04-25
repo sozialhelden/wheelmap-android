@@ -83,6 +83,7 @@ import android.annotation.SuppressLint;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -94,6 +95,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -200,12 +202,6 @@ public class POIDetailFragment extends Fragment implements
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
     private Location mLocation;
-
-
-
-
-
-
 
     ImageView img_logo;
     private Intent pictureActionIntent = null;
@@ -367,6 +363,9 @@ public class POIDetailFragment extends Fragment implements
     LinearLayout layoutAdress;
     LinearLayout layoutPhoto;
 
+    SensorManager mSensorManager;
+    Sensor mSensor;
+
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
 
@@ -418,6 +417,11 @@ public class POIDetailFragment extends Fragment implements
             MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
                     .getStickyEvent(MyLocationManager.LocationEvent.class);
             mLocation = event.location;
+
+            mSensorManager = (SensorManager) getActivity().getSystemService(
+                    Context.SENSOR_SERVICE);
+
+            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         }
     }
 
@@ -614,7 +618,6 @@ public class POIDetailFragment extends Fragment implements
                         heightAnim.setDuration(1000);
                         layoutMapDetail.startAnimation(heightAnim);
 
-
                     }else if(!mapFocus){
                         mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
                         mapFocus = true;
@@ -749,6 +752,34 @@ public class POIDetailFragment extends Fragment implements
         anim.setInterpolator(SMOOTH_INTERPOLATOR);
         anim.setDuration(FADE_IN_ANIMATION_DURATION);
         anim.start();
+
+        if(mBus != null){
+            mBus.registerSticky(this);
+            mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(mBus != null){
+            mBus.post(new MyLocationManager.UnregisterEvent());
+            mBus.unregister(this);
+        }
+    }
+
+    public void onEventMainThread(MyLocationManager.LocationEvent locationEvent) {
+        mLocation = locationEvent.location;
+        Log.d(TAG, "updateLocation: " + mLocation);
+        org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mLocation.getLatitude(),
+                mLocation.getLongitude());
+
+        if (mMapView != null && !isCentered) {
+            centerMap(geoPoint, false);
+        }
+
+        mMyLocationProvider.updateLocation(mLocation);
     }
 
     @Override
@@ -1138,6 +1169,7 @@ public class POIDetailFragment extends Fragment implements
         int stateColor = getResources().getColor(
                 mWSAttributes.get(newState).colorId);
 
+        try{
         if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
         else if(mWheelchairState.getId() == WheelchairState.YES.getId())
@@ -1150,7 +1182,9 @@ public class POIDetailFragment extends Fragment implements
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
         else
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
-
+        }catch(OutOfMemoryError e){
+            System.gc();
+        }
 
 
 
@@ -1455,6 +1489,10 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+            mSensorManager.registerListener(mMyLocationProvider, mSensor,
+                SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override

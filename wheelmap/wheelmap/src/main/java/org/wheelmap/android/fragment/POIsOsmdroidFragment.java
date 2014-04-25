@@ -354,29 +354,8 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     private void attachWorkerFragment() {
-        Fragment fragment = null;
-        if (getArguments() == null
-                || getArguments()
-                .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-            mHeightFull = true;
-            FragmentManager fm = getFragmentManager();
-            fragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
-            Log.d(TAG, "Looking for Worker Fragment:" + fragment);
-            if (fragment == null) {
-                fragment = new POIsMapWorkerFragment();
-                fm.beginTransaction()
-                        .add(fragment, POIsMapWorkerFragment.TAG)
-                        .commit();
-
-            }
-
-        } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
-                false)) {
-            Log.d(TAG, "Connecting to Combined Worker Fragment");
-            FragmentManager fm = getFragmentManager();
-            fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
-        }
-
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
         mWorkerFragment = (WorkerFragment) fragment;
         mWorkerFragment.registerDisplayFragment(this);
         Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);

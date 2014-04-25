@@ -54,8 +54,7 @@
             android:layout_alignLeft="@+id/poi_name"
             android:layout_below="@+id/poi_name"
             android:layout_toLeftOf="@+id/poi_distance"
-            android:orientation="horizontal"
-            android:layout_alignRight="@+id/poi_name">
+            android:orientation="horizontal">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -64,9 +63,8 @@
 
             <TextView
                     android:id="@+id/poi_nodetype"
-                    android:layout_width="0px"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"

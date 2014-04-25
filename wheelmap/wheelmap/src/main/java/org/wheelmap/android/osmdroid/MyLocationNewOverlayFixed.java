@@ -1,5 +1,8 @@
 package org.wheelmap.android.osmdroid;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 import org.osmdroid.DefaultResourceProxyImpl;
@@ -22,19 +25,24 @@ import org.osmdroid.views.safecanvas.SafePaint;
 import org.osmdroid.views.util.constants.MapViewConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.location.Location;
+import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+
+import de.akquinet.android.androlog.Log;
 
 /**
  *
@@ -45,6 +53,7 @@ import android.view.MotionEvent;
 public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLocationConsumer,
         IOverlayMenuProvider, Snappable {
     private static final Logger logger = LoggerFactory.getLogger(MyLocationNewOverlayFixed.class);
+    private static final String TAG = MyLocationNewOverlayFixed.class.getSimpleName();
 
     // ===========================================================
     // Constants
@@ -94,18 +103,21 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
     // Constructors
     // ===========================================================
 
+    Context mContext;
+
     public MyLocationNewOverlayFixed(Context context, MapView mapView) {
         this(context, new GpsMyLocationProvider(context), mapView);
     }
 
     public MyLocationNewOverlayFixed(Context context, IMyLocationProvider myLocationProvider,
             MapView mapView) {
-        this(myLocationProvider, mapView, new DefaultResourceProxyImpl(context));
+        this(myLocationProvider, mapView, new DefaultResourceProxyImpl(context),context);
     }
 
     public MyLocationNewOverlayFixed(IMyLocationProvider myLocationProvider, MapView mapView,
-            ResourceProxy resourceProxy) {
+            ResourceProxy resourceProxy,Context context) {
         super(resourceProxy);
+        mContext = context;
 
         mMapView = mapView;
         mMapController = mapView.getController();
@@ -113,15 +125,54 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
         mCirclePaint.setAntiAlias(true);
 
         mPersonBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.person);
-        mDirectionArrowBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.direction_arrow);
 
-        mDirectionArrowCenterX = mDirectionArrowBitmap.getWidth() / 2.0 - 0.5;
-        mDirectionArrowCenterY = mDirectionArrowBitmap.getHeight() / 2.0 - 0.5;
+        //mDirectionArrowBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.direction_arrow);
+        mDirectionArrowBitmap = getBitmapDirectionArrow();
+        Log.d(TAG,mDirectionArrowBitmap.getDensity()+"");
+        //mDirectionArrowBitmap.getDensity();
+       // mDirectionArrowBitmap.setDensity((int)(mDirectionArrowBitmap.getDensity()*1.5));
+
+        mDirectionArrowCenterX = mDirectionArrowBitmap.getWidth() / 2.0;
+        mDirectionArrowCenterY = mDirectionArrowBitmap.getHeight() / 2.0;
 
         // Calculate position of person icon's feet, scaled to screen density
         mPersonHotspot = new PointF(24.0f * mScale + 0.5f, 39.0f * mScale + 0.5f);
 
         setMyLocationProvider(myLocationProvider);
+    }
+
+    public Bitmap getBitmapDirectionArrow(){
+        InputStream is = null;
+        try {
+            final String resName = "pfeil_position.png";
+            is = mContext.getAssets().open(resName);
+            if (is == null) {
+                throw new IllegalArgumentException("Resource not found: " + resName);
+            }
+            DisplayMetrics mDisplayMetrics =  mContext.getResources().getDisplayMetrics();
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            DisplayMetrics metrics = mContext.getApplicationContext().getResources().getDisplayMetrics();
+            options.inScreenDensity = metrics.densityDpi;
+            options.inTargetDensity =  metrics.densityDpi;
+            options.inDensity = DisplayMetrics.DENSITY_DEFAULT*2;
+
+            //BitmapFactory.decodeResource(mContext.getResources(), R.drawable.pfeil_position);
+            return BitmapFactory.decodeStream(is, null, options);
+        } catch (final Exception e) {
+            System.gc();
+            // there's not much we can do here
+            // - when we load a bitmap from resources we expect it to be found
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (final IOException ignore) {
+                }
+            }
+        }
     }
 
     @Override
@@ -336,7 +387,6 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
                 mResourceProxy.getString(ResourceProxy.string.my_location))
                 .setIcon(mResourceProxy.getDrawable(ResourceProxy.bitmap.ic_menu_mylocation))
                 .setCheckable(true);
-
         return true;
     }
 

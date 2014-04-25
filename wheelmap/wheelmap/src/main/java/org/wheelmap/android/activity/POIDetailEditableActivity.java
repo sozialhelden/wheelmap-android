@@ -284,7 +284,7 @@ public class POIDetailEditableActivity extends MapActivity implements
     public void goBack(){
         WheelmapApp app = (WheelmapApp) this.getApplicationContext();
         app.setChangedText(false);
-        super.onBackPressed();
+        finish();
     }
 
 

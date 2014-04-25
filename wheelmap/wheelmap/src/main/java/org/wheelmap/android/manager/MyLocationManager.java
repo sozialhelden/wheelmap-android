@@ -174,8 +174,10 @@ public class MyLocationManager {
         return false;
     }
 
-    private void requestLocationUpdates() {
+    protected void requestLocationUpdates() {
 
+        gpsExists = findProvider(LocationManager.GPS_PROVIDER);
+        networkExists = findProvider(LocationManager.NETWORK_PROVIDER);
         if (!doesRequestUpdates) {
             Log.d(TAG, "requestLocationUpdates");
 

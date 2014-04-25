@@ -82,6 +82,8 @@ public class CombinedWorkerFragment extends Fragment implements
         if (activity instanceof WorkerFragmentListener) {
             mFragmentListener = (WorkerFragmentListener) activity;
         }
+        mBus = EventBus.getDefault();
+        mBus.register(this);
     }
 
     @Override
@@ -99,8 +101,6 @@ public class CombinedWorkerFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "starting both loaders");
-        mBus = EventBus.getDefault();
-        mBus.register(this);
         getLoaderManager().initLoader(LOADER_LIST_ID, null, this);
         getLoaderManager().initLoader(LOADER_MAP_ID, null, this);
     }
@@ -368,8 +368,10 @@ public class CombinedWorkerFragment extends Fragment implements
 
     public void onResume(){
        super.onResume();
-        mReceiver = new DetachableResultReceiver(new Handler());
-        mReceiver.setReceiver(this);
+       mReceiver = new DetachableResultReceiver(new Handler());
+       mReceiver.setReceiver(this);
+       getLoaderManager().restartLoader(LOADER_LIST_ID, new Bundle(), this);
+       getLoaderManager().restartLoader(LOADER_MAP_ID, new Bundle(), this);
     }
 
     /**

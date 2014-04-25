@@ -721,6 +721,7 @@ public class MainMultiPaneActivity extends MapActivity implements
             Intent intent = new Intent(getApplicationContext(),MainMultiPaneActivity.class);
             intent.putExtra(Extra.REQUEST, true);
             startActivity(intent);
+            overridePendingTransition(0,0);
             super.onBackPressed();
 
         }else{

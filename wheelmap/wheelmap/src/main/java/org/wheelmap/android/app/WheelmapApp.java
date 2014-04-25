@@ -49,6 +49,7 @@ import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.modules.MainModule;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.push.GCMIntentReceiver;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -118,7 +119,7 @@ public class WheelmapApp extends Application {
         super.onCreate();
         INSTANCE = this;
 
-        setUpUrbanAirShip();
+       // setUpUrbanAirShip();
 
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
         Log.d(TAG, "onCreate: creating App");
@@ -154,6 +155,9 @@ public class WheelmapApp extends Application {
         if(true){
            return;
         }
+
+        // Todo modify Manifest
+
         // Configure your application
         //
         // This can be done in code as illustrated here,
@@ -161,13 +165,19 @@ public class WheelmapApp extends Application {
         // called airshipconfig.properties
         // and place it in your "assets" folder
         AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
-        options.developmentAppKey = "Your development app key";
-        options.productionAppKey = "Your production app key";
-        options.inProduction = false; //determines which app key to use
+        options.developmentAppKey = "app_key";
+        options.developmentAppSecret = "app_secret";
+        options.productionAppKey="app_key2";
+        options.productionAppSecret="app_secred2";
+        options.gcmSender="sender_id"; // PROJEKT ID in api console
+        options.transport="gcm";
+        options.inProduction = false;
 
         // Take off initializes the services
         UAirship.takeOff(this, options);
-        PushManager.shared().setIntentReceiver(IntentReceiver.class);
+        PushManager.init();
+        PushManager.enablePush();
+        PushManager.shared().setIntentReceiver(GCMIntentReceiver.class);
     }
 
     @Override
