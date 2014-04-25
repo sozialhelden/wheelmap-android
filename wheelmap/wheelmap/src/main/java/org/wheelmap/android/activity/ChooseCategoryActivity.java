@@ -105,7 +105,7 @@ public class ChooseCategoryActivity extends ListActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        adapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,cursor,new String[]{Support.CategoryColumns.LOCALIZED_NAME},new int[]{android.R.id.text1});
+        adapter = new SimpleCursorAdapter(this,R.layout.simple_list_item_category,cursor,new String[]{Support.CategoryColumns.LOCALIZED_NAME},new int[]{R.id.text_category});
         setListAdapter(adapter);
     }
 
