@@ -191,10 +191,7 @@ public class POIDetailFragment extends Fragment implements
 
     private Location mLocation;
 
-<<<<<<< HEAD
     ImageView img_logo;
-=======
->>>>>>> b826e3fa905c9b96c983b5828349e2f17dc02a8b
     private Intent pictureActionIntent = null;
 
     long wmID;
@@ -1052,13 +1049,10 @@ public class POIDetailFragment extends Fragment implements
     private void setWheelchairState(WheelchairState newState) {
         mWheelchairState = newState;
 
-<<<<<<< HEAD
         int stateColor = getResources().getColor(
                 mWSAttributes.get(newState).colorId);
 
         try{
-=======
->>>>>>> b826e3fa905c9b96c983b5828349e2f17dc02a8b
         if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
         else if(mWheelchairState.getId() == WheelchairState.YES.getId())
@@ -1071,7 +1065,6 @@ public class POIDetailFragment extends Fragment implements
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
         else
             stateText.setBackgroundResource(R.drawable.detail_button_grey);
-<<<<<<< HEAD
         }catch(OutOfMemoryError e){
             System.gc();
         }
@@ -1081,9 +1074,6 @@ public class POIDetailFragment extends Fragment implements
         //title_container.setBackgroundColor(stateColor);
         //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
         //stateText.setTextColor(stateColor);
-=======
->>>>>>> b826e3fa905c9b96c983b5828349e2f17dc02a8b
-
         stateText.setText(mWSAttributes.get(newState).titleStringId);
 
     }

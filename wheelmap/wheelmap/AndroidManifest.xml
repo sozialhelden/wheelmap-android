@@ -23,7 +23,7 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="313"
+          android:versionCode="315"
           android:versionName="2.0-SNAPSHOT-DEVEL">
 
     <uses-sdk
@@ -38,22 +38,26 @@ limitations under the License.
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
 
-    <!-- REQUIRED PERMISSIONS (for Urban Airship GCM)-->
+    <!-- TODO enable for push -->
+    <!-- REQUIRED PERMISSIONS (for Urban Airship GCM)
+    android.permission.GET_ACCOUNTS: GCM requires a Google account.
+    android.permission.WAKE_LOCK   : Keeps the processor from sleeping when a message is received.
+    com.google.android.c2dm.permission.RECEIVE: This app has permission to register with GCM and receive message
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /><!-- GCM requires a Google account. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />	<!-- Keeps the processor from sleeping when a message is received. -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /><!-- This app has permission to register with GCM and receive message -->
-
-    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+     -->
+    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
     <permission android:name="org.wheelmap.android.develop.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="org.wheelmap.android.develop.permission.C2D_MESSAGE" />
+    <uses-permission android:name="org.wheelmap.android.develop.permission.C2D_MESSAGE" />   -->
     <!-- The two elements above ensure that only this application can receive the messages and registration result -->
 
-    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name -->
+    <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
     <permission android:name="org.wheelmap.android.develop.permission.UA_DATA" android:protectionLevel="signature" />
-    <uses-permission android:name="org.wheelmap.android.develop.permission.UA_DATA" />
+    <uses-permission android:name="org.wheelmap.android.develop.permission.UA_DATA" />                        -->
     <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
 
 
@@ -188,7 +192,7 @@ limitations under the License.
         <meta-data android:name="com.crashlytics.ApiKey"
                    android:value="82852bdccfc411decbd4ba6dd1d309f0beae2875"/>
 
-
+        <!-- TODO enable for push -->
         <!-- MODIFICATION REQUIRED
             - Set or Remove the parent activity
             - For more customization details, see com.urbanairship.actions.LandingPageActivity
