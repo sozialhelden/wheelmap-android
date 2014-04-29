@@ -84,7 +84,7 @@ public class NodetypeSelectFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_nodetype_select,
+        View view = inflater.inflate(R.layout.fragment_nodetypes,
                 container, false);
 
         ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
