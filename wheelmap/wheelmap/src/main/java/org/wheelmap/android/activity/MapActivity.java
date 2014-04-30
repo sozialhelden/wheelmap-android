@@ -255,6 +255,12 @@ public class MapActivity extends Activity implements MapContext {
         if (mapViews != null) {
             mapViews.remove(mapView);
         }
+
+        if(mapView instanceof org.osmdroid.views.MapView){
+            ((org.osmdroid.views.MapView)mapView).getTileProvider().clearTileCache();
+            System.gc();
+        }
+
     }
 
 }

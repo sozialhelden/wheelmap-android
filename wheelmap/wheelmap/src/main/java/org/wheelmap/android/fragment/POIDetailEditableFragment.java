@@ -238,8 +238,14 @@ public class POIDetailEditableFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 save();
-                quit(true);
+                //quit(true);
                 return;
+            }
+        });
+        v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
             }
         });
         initViews(v);

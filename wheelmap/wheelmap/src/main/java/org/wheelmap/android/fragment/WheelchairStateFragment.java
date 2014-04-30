@@ -93,6 +93,21 @@ public class WheelchairStateFragment extends Fragment implements
             mRadioButtonsMap.get(state).setOnClickListener(this);
         }
 
+
+        v.findViewById(R.id.detail_save).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                  dismiss();
+            }
+        });
+
+        v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
         return v;
     }
 
@@ -132,7 +147,9 @@ public class WheelchairStateFragment extends Fragment implements
         DeselectAllRadioButtons();
         final RadioButton a = (RadioButton) v;
         a.setChecked(true);
+    }
 
+    private void dismiss(){
         if (mListener != null) {
             mListener.onWheelchairStateSelect(getWheelchairState());
         }

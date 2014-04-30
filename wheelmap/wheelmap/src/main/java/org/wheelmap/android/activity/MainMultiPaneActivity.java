@@ -344,7 +344,12 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         switch (id) {
             case R.id.menu_search:
-                showSearch();
+                if(mWorkerFragment.isSearchMode()){
+                    mWorkerFragment.setSearchMode(false);
+                    mWorkerFragment.requestUpdate(null);
+                }else{
+                    showSearch();
+                }
                 return true;
             case R.id.menu_filter_kategorie:
                 showFilterCategories();
@@ -691,12 +696,14 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         if(app.isSaved()){
             app.setSaved(false);
-            Intent intent = new Intent(getApplicationContext(),MainMultiPaneActivity.class);
+           /* Intent intent = new Intent(getApplicationContext(),MainMultiPaneActivity.class);
             intent.putExtra(Extra.REQUEST, true);
             startActivity(intent);
             overridePendingTransition(0,0);
             super.onBackPressed();
-
+           */
+           mWorkerFragment.setSearchMode(false);
+           mWorkerFragment.requestUpdate(null);
         }else{
             if(mMovableVisible && !mMovableAnimationRunning){
                 toggleMovableResize();

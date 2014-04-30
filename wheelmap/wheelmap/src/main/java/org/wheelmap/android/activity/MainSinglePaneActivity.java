@@ -253,8 +253,8 @@ public class
         // PullToRefreshAttacher.Options
         PullToRefreshAttacher.Options ptrOptions = new PullToRefreshAttacher.Options();
 
-        // Here we make the refresh scroll distance to 75% of the GridView height
-        ptrOptions.refreshScrollDistance = 0.75f;
+        // Here we make the refresh scroll distance to 50% of the GridView height
+        ptrOptions.refreshScrollDistance = 0.5f;
 
         // Here we customise the animations which are used when showing/hiding the header view
         // ptrOptions.headerInAnimation = R.anim.slide_in_top;
@@ -332,7 +332,12 @@ public class
 
         switch (id) {
             case R.id.menu_search:
-                showSearch();
+                if(mWorkerFragment.isSearchMode()){
+                    mWorkerFragment.setSearchMode(false);
+                    mWorkerFragment.requestUpdate(null);
+                }else{
+                    showSearch();
+                }
                 return true;
             case R.id.menu_filter_kategorie:
                 showFilterCategories();
@@ -489,10 +494,12 @@ public class
 
         if(app.isSaved()){
             app.setSaved(false);
-            Intent intent = new Intent(getApplicationContext(),MainSinglePaneActivity.class);
+            /*Intent intent = new Intent(getApplicationContext(),MainSinglePaneActivity.class);
             intent.putExtra(Extra.SELECTED_TAB,1);
             startActivity(intent);
-            super.onBackPressed();
+            super.onBackPressed(); */
+            mWorkerFragment.setSearchMode(false);
+            mWorkerFragment.requestUpdate(null);
         }else{
             super.onBackPressed();
         }

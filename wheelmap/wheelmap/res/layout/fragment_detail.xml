@@ -89,7 +89,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/detail_ic_close"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center"
+                                android:visibility="gone"/>
                     </LinearLayout>
                 </LinearLayout>
 

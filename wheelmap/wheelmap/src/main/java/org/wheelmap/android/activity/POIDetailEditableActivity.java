@@ -144,7 +144,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         if(app.isChangedText()){
             app.setChangedText(false);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setMessage(getResources().getString(R.string.dialog_close_editable));
 
@@ -161,8 +161,8 @@ public class POIDetailEditableActivity extends MapActivity implements
                 }
             });
 
-            AlertDialog dialog = builder.create();
-
+            AlertDialog dialog = builder.create();  */
+            goBack();
         }
         else
             goBack();

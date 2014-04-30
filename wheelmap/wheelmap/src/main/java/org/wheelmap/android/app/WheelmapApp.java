@@ -126,10 +126,10 @@ public class WheelmapApp extends Application {
 
         // LazyLoading images.
         // https://github.com/nostra13/Android-Universal-Image-Loader
-        int memoryCacheSize = 8 * 1024 * 1024;
+        int memoryCacheSize = 1 * 1024 * 1024;
         int discCacheSize = 64 * 1024 * 1024;
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .cacheInMemory().cacheOnDisc().build();
+                .cacheInMemory(false).cacheOnDisc(true).build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
                 getApplicationContext()).memoryCacheSize(memoryCacheSize)
                 .discCacheSize(discCacheSize)

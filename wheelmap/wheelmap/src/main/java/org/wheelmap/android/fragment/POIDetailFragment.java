@@ -48,6 +48,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.wheelmap.android.activity.MapActivity;
 import org.wheelmap.android.adapter.HorizontalImageAdapter;
 import org.wheelmap.android.adapter.HorizontalView;
 import org.wheelmap.android.adapter.Item;
@@ -439,22 +440,22 @@ public class POIDetailFragment extends Fragment implements
 
         View closeButton = v.findViewById(R.id.titlebar_backbutton);
 
-        mShowMenu = false;
-        if (getArguments().containsKey(Extra.SHOW_MAP)) {
-            closeButton.setVisibility(View.INVISIBLE);
-            showMap(v);
-        }
-
-        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
-            closeButton.setVisibility(View.INVISIBLE);
-        }
-
         closeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.dismissDetailView();
             }
         });
+
+        mShowMenu = false;
+        if (getArguments().containsKey(Extra.SHOW_MAP)) {
+            closeButton.setVisibility(View.GONE);
+            showMap(v);
+        }
+
+        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+            closeButton.setVisibility(View.GONE);
+        }
 
         buttonPhoto.setOnClickListener(new OnClickListener() {
             @Override
@@ -682,6 +683,16 @@ public class POIDetailFragment extends Fragment implements
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_CONTENT, null, this);
 
+        super.onActivityCreated(savedInstanceState);
+        ((MapActivity) getActivity()).registerMapView(mMapView);
+        executeConfig(savedInstanceState);
+    }
+
+    private void executeConfig(Bundle savedInstanceState) {
+        if (((MapActivity) getSupportActivity()).loadPreferences(mMapView)) {
+            Log.d(TAG, "executeConfig: initialized from preferences");
+            return;
+        }
     }
 
     @Override
@@ -727,11 +738,15 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        WheelmapApp.getSupportManager().cleanReferences();
+        //WheelmapApp.getSupportManager().cleanReferences();
+        ((MapActivity) getActivity()).unregisterMapView(mMapView);
         ViewTool.nullViewDrawables(getView());
         mapView = null;
         mapController = null;
+        System.gc();
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

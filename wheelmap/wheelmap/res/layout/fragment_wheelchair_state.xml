@@ -121,6 +121,27 @@
                         android:id="@+id/radio_unknown"
                         style="@style/RadioButtonWheelStateSelect"/>
             </RelativeLayout>
+
+            <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                <Button
+                        android:id="@+id/no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_cancel"/>
+
+                <Button android:id="@+id/detail_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/menu_save"/>
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
