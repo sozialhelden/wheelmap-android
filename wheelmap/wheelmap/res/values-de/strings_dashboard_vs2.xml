@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Dashboard-->
+  <string name="dashboard_search_hint">Suche Orte in der Nähe</string>
+  <string name="dashboard_button_title_nearby">In der Nähe</string>
+  <string name="dashboard_button_title_map">Karte</string>
+  <string name="dashboard_button_title_categories">Kategorien</string>
+  <string name="dashboard_button_title_engage">Mithelfen</string>
+  <string name="dashboard_locations">Orte</string>
+  <string name="dashboard_button_title_news">Neuigkeiten</string>
+</resources>

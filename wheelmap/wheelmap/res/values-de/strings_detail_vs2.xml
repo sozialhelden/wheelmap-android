@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Detail-->
+  <string name="poi_property_city">Stadt</string>
+  <string name="poi_property_comment_no_comment">Kein Kommentar</string>
+  <string name="poi_property_comment_no_adress">Keine Adresse</string>
+  <string name="poi_property_comment_no_photos">Keine Fotos</string>
+  <string name="poi_property_housenum">Hausnummer</string>
+  <string name="poi_property_postcode">PLZ</string>
+  <string name="poi_property_street">Straße</string>
+  <string name="position_geopoint">Position</string>
+</resources>

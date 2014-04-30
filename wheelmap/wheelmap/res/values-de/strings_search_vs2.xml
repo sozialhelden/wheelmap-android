@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Search-->
+  <string name="search_distance">Entfernung</string>
+  <string name="search_distance_unspecified">Egal</string>
+  <string name="search_execute">Suche</string>
+  <string name="search_hint_list">Suchwort</string>
+  <string name="search_mode_distance">Nach Entfernung</string>
+  <string name="search_no_selection">Alle</string>
+  <string name="search_pick_category">Wähle eine (Unter)Kategorie</string>
+  <string name="search_pick_map">Gesucht wird nur im gewählten Kartenausschnitt.</string>
+  <string name="settings_login_delete">Klicken sie, um diese Anmeldung zu löschen.</string>
+  <string name="search_mode_map">Nach Karte</string>
+</resources>
