@@ -684,8 +684,10 @@ public class POIDetailFragment extends Fragment implements
         getLoaderManager().initLoader(LOADER_CONTENT, null, this);
 
         super.onActivityCreated(savedInstanceState);
-        ((MapActivity) getActivity()).registerMapView(mMapView);
-        executeConfig(savedInstanceState);
+        if(mMapView != null){
+            ((MapActivity) getActivity()).registerMapView(mMapView);
+            executeConfig(savedInstanceState);
+        }
     }
 
     private void executeConfig(Bundle savedInstanceState) {
@@ -739,7 +741,9 @@ public class POIDetailFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         //WheelmapApp.getSupportManager().cleanReferences();
-        ((MapActivity) getActivity()).unregisterMapView(mMapView);
+        if(mMapView != null){
+            ((MapActivity) getActivity()).unregisterMapView(mMapView);
+        }
         ViewTool.nullViewDrawables(getView());
         mapView = null;
         mapController = null;
