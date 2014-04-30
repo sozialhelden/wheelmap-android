@@ -581,8 +581,8 @@ public class POIDetailFragment extends Fragment implements
                     org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
                             mCrrLongitude);
 
-                    if (mMapView != null && !isCentered) {
-                        centerMap(geoPoint, false);
+                    if (mMapView != null) {
+                        centerMap(geoPoint, true);
                     }
                 }
             });
@@ -717,7 +717,7 @@ public class POIDetailFragment extends Fragment implements
         org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mLocation.getLatitude(),
                 mLocation.getLongitude());
 
-        if (mMapView != null && !isCentered) {
+        if (mMapView != null) {
             centerMap(geoPoint, false);
         }
 
@@ -901,8 +901,8 @@ public class POIDetailFragment extends Fragment implements
                 org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
                         mCrrLongitude);
 
-                if (mMapView != null && !isCentered) {
-                    centerMap(geoPoint, false);
+                if (mMapView != null) {
+                    centerMap(geoPoint, true);
                 }
             }
 
@@ -1370,7 +1370,7 @@ public class POIDetailFragment extends Fragment implements
     private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force) {
         Log.d(TAG, "centerMap: force = " + force + " isCentered = "
                 + isCentered + " geoPoint = " + geoPoint);
-        if (force || !isCentered) {
+        if (force) {
             setCenterWithOffset(geoPoint);
         }
     }
