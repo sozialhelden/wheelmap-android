@@ -24,6 +24,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
+              android:background="#cfcfcf"
               android:orientation="vertical">
 
     <!--<LinearLayout style="@style/TitleBarNew.SingleLine">
@@ -122,7 +123,7 @@
                         style="@style/RadioButtonWheelStateSelect"/>
             </RelativeLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -139,6 +140,37 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/menu_save"/>
+
+            </LinearLayout>-->
+            <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+            <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+                <!--
+                <Button
+                        android:id="@+id/no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_cancel"/>   -->
+
+                <Button android:id="@+id/detail_save"
+                        android:background="@drawable/detail_ic_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        />
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/menu_save"
+                          android:gravity="center"
+                          android:layout_marginTop="-12dp"
+                        />
 
             </LinearLayout>
 

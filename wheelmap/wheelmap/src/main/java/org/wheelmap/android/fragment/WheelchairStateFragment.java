@@ -100,13 +100,13 @@ public class WheelchairStateFragment extends Fragment implements
                   dismiss();
             }
         });
-
+        /*
         v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
-        });
+        });     */
 
         return v;
     }

@@ -8,7 +8,7 @@
         android:orientation="vertical">
 
         <RelativeLayout android:layout_width="match_parent"
-                        android:layout_height="160dp"
+                        android:layout_height="80dp"
                         android:id="@+id/layout_map_detail"
                         android:animateLayoutChanges="true">
             <org.osmdroid.views.MapView
@@ -53,12 +53,18 @@
             android:layout_alignParentBottom="true"
             android:background="@android:color/black"/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:background="#cfcfcf">
+
         <org.wheelmap.android.view.VerticalScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:background="#cfcfcf"
-                android:id="@+id/scrollView">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true">
 
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
@@ -234,43 +240,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center">
 
-                    <ImageButton
-                            android:id="@+id/detail_foto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:background="@null"
-                            android:src="@drawable/detail_ic_foto"/>
-                    <ImageButton
-                            android:id="@+id/detail_edit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:background="@null"
-                            android:src="@drawable/detail_ic_edit"/>
-                    <ImageButton
-                            android:id="@+id/detail_route"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:background="@null"
-                            android:src="@drawable/detail_ic_route"/>
-                    <ImageButton
-                            android:id="@+id/detail_share"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
-                            android:background="@null"
-                            android:src="@drawable/detail_ic_share"/>
-
-                </LinearLayout>
 
                 <!--
                 <ViewStub
@@ -299,4 +269,49 @@
 
             </LinearLayout>
         </org.wheelmap.android.view.VerticalScrollView>
+
+        <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/separator_large"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/black"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+        <ImageButton
+                android:id="@+id/detail_foto"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:src="@drawable/detail_ic_foto"/>
+        <ImageButton
+                android:id="@+id/detail_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:src="@drawable/detail_ic_edit"/>
+        <ImageButton
+                android:id="@+id/detail_route"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:src="@drawable/detail_ic_route"/>
+        <ImageButton
+                android:id="@+id/detail_share"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
+                android:background="@null"
+                android:src="@drawable/detail_ic_share"/>
+
+    </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

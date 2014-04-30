@@ -242,12 +242,12 @@ public class POIDetailEditableFragment extends Fragment implements
                 return;
             }
         });
-        v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
+        /*v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
-        });
+        });    */
         initViews(v);
 
         if(focus == FOCUS_TO_NOTHING){
