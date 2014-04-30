@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Menu-->
+  <string name="menu_about">Über Wheelmap</string>
+  <string name="menu_directions">Navigation</string>
+  <string name="menu_filter">Filter Setzen</string>
+  <string name="menu_mylocation">Hierher</string>
+  <string name="menu_new_poi">Neuen Ort anlegen</string>
+  <string name="menu_search">Suche</string>
+  <string name="menu_share">Teilen</string>
+  <string name="menu_photo">Foto</string>
+  <string name="poi_property_photos">Fotoalbum</string>
+  <string name="menu_account">Benutzerkonto</string>
+  <string name="menu_news">News</string>
+  <string name="menu_refresh">Aktualisieren</string>
+</resources>
