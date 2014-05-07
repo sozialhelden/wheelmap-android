@@ -6,7 +6,7 @@
 
     <groupId>org.wheelmap.android</groupId>
     <artifactId>wheelmap-parent</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>Play Store Version 2.0</version>
     <packaging>pom</packaging>
     <name>Wheelmap - Parent</name>
 
@@ -19,9 +19,10 @@
 
         <app.name>Wheelmap</app.name>
         <app.version.code>${buildNumber}</app.version.code>
-        <app.version.name>${project.version}-${app.type}</app.version.name>
+        <app.version.name>${project.version}</app.version.name>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.
         </project.organization.name>
+
         <project.inceptionYear>2011</project.inceptionYear>
 
         <!-- Configuration Options -->

@@ -13,7 +13,7 @@
   <string name="error_authorization_error">Vi beklager e-mail eller adgangskode var forkerte, så vi kan ikke logge dig ind.</string>
   <string name="error_authorization_login_failed">Login fejlede</string>
   <string name="error_authorization_not_osm_connected">Din Wheelmap konto er ikke forbundet til OpenStreetMap.</string>
-  <string name="error_authorization_request_forbidden">Forespørgelse forbudt</string>
+  <string name="error_authorization_request_forbidden">Forespørgsel forbudt</string>
   <string name="error_authorization_request_failed">Autorisation mislykkes. App\'en har ikke korrekte rettigheder for at benytte servicen. Hvis du er logget ind, så kan du prøve at logge ud. Ellers behøver app\'en en opdatering eller servicen har et problem lige nu.</string>
   <string name="error_authorization_required">Autorisation påkrævet</string>
   <string name="error_category_missing_message">Kan ikke gemme uden at der er valgt en kategori for lokaliteten.</string>
@@ -63,7 +63,7 @@
   <string name="legal_notice_mapsforge">Mapsforge</string>
   <string name="legal_notice_mapsforge_copyright">© http://mapsforge.org (LGPL V3)</string>
   <string name="legal_notice_opensource">Denne software er Open Source</string>
-  <string name="legal_notice_opensource_copyright">https://github.com/sozialhelden/wheelmap-android</string>
+  <string name="legal_notice_opensource_copyright">\nhttps://github.com/sozialhelden/wheelmap-android</string>
   <string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
   <string name="legal_notice_pulltorefresh">PullToRefresh Widget</string>
   <string name="legal_notice_pulltorefresh_copyright">© Chris Banes (Apache License V2)</string>
@@ -81,7 +81,7 @@
   <string name="menu_edit">Ret</string>
   <string name="menu_filter">Filterindstillinger</string>
   <string name="menu_mylocation">Flyt her</string>
-  <string name="menu_new_poi">Lav ny POI</string>
+  <string name="menu_new_poi">Lav nyt POI</string>
   <string name="menu_save">Gem</string>
   <string name="menu_search">Søg</string>
   <string name="menu_share">Del</string>
@@ -115,7 +115,7 @@
   <string name="settings_login_delete">Klik for at slette dette login.</string>
   <string name="search_mode_map">Ved kort</string>
   <string name="settings_login_information">Logget ind?</string>
-  <string name="settings_login_notsignedin">Du er ikke logget ind</string>
+  <string name="settings_login_notsignedin">Du er ikke logget ind.</string>
   <string name="settings_login_signedinas">Du er logget ind som</string>
   <string name="settings_unit_imperial">Milesystemet</string>
   <string name="settings_unit_metric">Metersystemet</string>
@@ -129,8 +129,8 @@
   <string name="support_nodetype_unknown">Ukendt type</string>
   <string name="title_category_select">Vælg kategorier at vise</string>
   <string name="title_editor">Editor</string>
-  <string name="title_info">Kredit:</string>
-  <string name="title_legal_notice">Jurdisk note</string>
+  <string name="title_info">Kredit</string>
+  <string name="title_legal_notice">Juridisk note</string>
   <string name="title_login">Login venligst!</string>
   <string name="title_nodetype_edit">Vælg en type</string>
   <string name="title_please_wait">Vent et øjeblik</string>
@@ -151,4 +151,5 @@
   <string name="ws_limited_title">Delvis kørestolstilgængeligt</string>
   <string name="ws_unknown">Ukendt: Hjælp os med at få angivet status for denne lokation.</string>
   <string name="ws_unknown_title">Ukendt status</string>
+  <string name="menu_refresh">Opdaterer</string>
 </resources>

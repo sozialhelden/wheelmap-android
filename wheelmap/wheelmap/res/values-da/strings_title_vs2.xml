@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Title-->
+  <string name="title_editor">Editor</string>
+  <string name="title_login">Login venligst!</string>
+  <string name="title_nodetype_edit">Vælg en type</string>
+  <string name="title_pois_detail_activity">Wheelmap detaljer</string>
+  <string name="title_pois_position_edit">Placerings positionering</string>
+  <string name="title_search">Søg</string>
+  <string name="title_engage">Engager</string>
+</resources>

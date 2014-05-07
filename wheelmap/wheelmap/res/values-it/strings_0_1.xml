@@ -10,7 +10,7 @@
   <string name="description_gps">Posizione attuale</string>
   <string name="description_logo">Wheelmap</string>
   <string name="description_map">Mappa</string>
-  <string name="error_authorization_error">Email o password errate. Scusa. Impossibile effettuare accesso.</string>
+  <string name="error_authorization_error">E-mail o password errata. Scusa. Non è possibile accedere.\n</string>
   <string name="error_authorization_login_failed">Accesso fallito</string>
   <string name="error_authorization_not_osm_connected">Il tuo account wheelmap non è connesso a openstreetmap.</string>
   <string name="error_authorization_request_forbidden">Richiesta vietata</string>
@@ -18,11 +18,11 @@
   <string name="error_authorization_required">Autorizzazione necessaria</string>
   <string name="error_category_missing_message">Non può essere archiviata senza aver scelto una categoria per la location.</string>
   <string name="error_category_missing_title">Nessuna categoria selezionata!</string>
-  <string name="error_internal_error">Si è verificato un errore inaspettato. Per favore riavviare l\'applicazione. </string>
+  <string name="error_internal_error">Si è verificato un errore inaspettato. Perfavore riavviare l\'applicazione. </string>
   <string name="error_network_client_failure">Questa applicazione non può comunicare con il server. E\' necessario un aggiornamento. Scusate. </string>
   <string name="error_network_failure">Network instabile. Per favore controllare la connessione internet o riprovare più tardi. </string>
-  <string name="error_network_server_failure">Il server di wheelmap è giù ed ha bisogno di un tiramisù! Per favore riprovare più tardi</string>
-  <string name="error_network_server_maintenance">Il server di wheelmap ha un problema. Per favore riprovare più tardi.</string>
+  <string name="error_network_server_failure">Il server di wheelmap ha un problema. Per favore riprovare più tardi.</string>
+  <string name="error_network_server_maintenance">Il server di wheelmap è giù ed ha bisogno di un tiramisù! Per favore riprovare più tardi</string>
   <string name="error_network_title">Problema di connessione.</string>
   <string name="error_network_unknown_failure">Si è verificato un errore inaspettato. Scusate, comunicazione fallita.</string>
   <string name="error_newpoi_message">Il nuovo luogo sarà verificato prima di apparire nel database. La verifica richiederà un pò di tempo.</string>
@@ -33,7 +33,7 @@
   <string name="error_title_occurred">Si è verificato un errore</string>
   <string name="error_wheelchairstate_missing_message">Per favore selezionare il livello di accessibilità con sedia a rotelle.</string>
   <string name="error_wheelchairstate_missing_title">Non è stato assegnato un livello per l\'accesso con sedia a rotelle</string>
-  <string name="helper_delim_dash">\ - \ </string>
+  <string name="helper_delim_dash">\ - \</string>
   <string name="info_a_project_of">un progetto di</string>
   <string name="info_android_development">Android Development:</string>
   <string name="info_android_development_one">Michal Harakaľ</string>
@@ -50,7 +50,7 @@
   <string name="info_webdevelopment">Web Development:</string>
   <string name="info_webdevelopment_one">Christoph Bünte</string>
   <string name="info_wheelmap_android_one">Wheelmap Android:</string>
-  <string name="info_wheelmap_android_two">Version</string>
+  <string name="info_wheelmap_android_two">Versione</string>
   <string name="legal_notice_commonsware">Two Modules</string>
   <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
   <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
@@ -83,7 +83,7 @@
   <string name="menu_mylocation">Spostati qui</string>
   <string name="menu_new_poi">Creare nuovo punto di interesse</string>
   <string name="menu_save">Salva</string>
-  <string name="menu_search">Ricerca</string>
+  <string name="menu_search">Cerca</string>
   <string name="menu_share">Condividi</string>
   <string name="no_pois">Nessun luogo trovato usando i filtri selezionati</string>
   <string name="poi_new_default_name">Nuovo punto di interesse</string>
@@ -105,7 +105,7 @@
   <string name="pull_to_refresh_release_label">Togli per aggiornare...</string>
   <string name="search_distance">Distanza</string>
   <string name="search_distance_unspecified">Qualunque</string>
-  <string name="search_execute">Ricerca</string>
+  <string name="search_execute">Cerca</string>
   <string name="search_hint_list">Parola chiave (optional)</string>
   <string name="search_mode_distance">Per distanza</string>
   <string name="search_no_selection">Tutto</string>
@@ -151,4 +151,5 @@
   <string name="ws_limited_title">Accesso con sedia rotelle parziale</string>
   <string name="ws_unknown">Sconosciuto: Aiutaci ad avere maggiori informazioni su questo luogo.</string>
   <string name="ws_unknown_title">Status sconosciuto</string>
+  <string name="menu_refresh">Aggiorna</string>
 </resources>

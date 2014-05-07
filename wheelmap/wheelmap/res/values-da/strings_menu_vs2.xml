@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Menu-->
+  <string name="menu_about">Om</string>
+  <string name="menu_directions">Navigation</string>
+  <string name="menu_filter">Filterindstillinger</string>
+  <string name="menu_mylocation">Flyt her</string>
+  <string name="menu_new_poi">Lav ny POI</string>
+  <string name="menu_search">Søg</string>
+  <string name="menu_share">Del</string>
+  <string name="menu_photo">Foto</string>
+  <string name="poi_property_photos">Fotos</string>
+  <string name="menu_account">Konto</string>
+  <string name="menu_news">Blog</string>
+  <string name="menu_refresh">Opdaterer</string>
+</resources>

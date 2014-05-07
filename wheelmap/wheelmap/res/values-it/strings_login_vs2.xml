@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Login-->
+  <string name="login_text">Accesso senza Account Wheelmap</string>
+  <string name="login_register_discription">Nuovo? Registrati ora a OpenStreetmap e a Wheelmap.org</string>
+  <string name="login_email">E-mail</string>
+  <string name="login_link_text">Registrati a Wheelmap.org</string>
+  <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
+  <string name="login_password">Password</string>
+  <string name="login_submit">Login</string>
+  <string name="login_forgot_password">Password dimenticata</string>
+  <string name="login_new_registration">Registrati ora</string>
+  <string name="login_dont_have_account">Nessun Account Wheelmap ? Accedi con un Account OpenStreetmap su Wheelmap.org, clicca su \"Account\" e crea un nuovo Account Wheelmap.</string>
+  <string name="login_new">Nuovo? Registrati ora a OpenStreetmap e a Wheelmap.org</string>
+  <string name="login_activity_title">Login</string>
+  <string name="logout_activity_title">Logout</string>
+  <string name="login_succesfully">Login effettuato</string>
+  <string name="logout_text">Collegato come: %s</string>
+  <string name="logout">Logout</string>
+</resources>
