@@ -6,3 +6,84 @@ file_filter = Wheelmap/wheelmap/res/values-<lang>/strings.xml
 source_file = Wheelmap/wheelmap/res/values/strings.xml
 source_lang = en
 type = ANDROID
+
+
+[wheelmap-android.app_strings_credits]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_credits_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_credits_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_dashboard]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_dashboard_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_dashboard_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_detail]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_detail_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_detail_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_error]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_error_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_error_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_legal_notice]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_legal_notice.xml
+source_file = Wheelmap/wheelmap/res/values/strings_legal_notice.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_login]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_login_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_login_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_menu]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_menu_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_menu_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_new]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_new_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings_new_vs2.xml
+source_lang = en
+type = ANDROID
+
+
+[wheelmap-android.app_strings_photo]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_photo_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings.xml
+source_lang = en
+type = ANDROID
+
+[wheelmap-android.app_strings_search]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_search_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings.xml
+source_lang = en
+type = ANDROID
+
+[wheelmap-android.app_strings_settings]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_settings_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings.xml
+source_lang = en
+type = ANDROID
+
+[wheelmap-android.app_strings_title]
+file_filter = Wheelmap/wheelmap/res/values-<lang>/strings_title_vs2.xml
+source_file = Wheelmap/wheelmap/res/values/strings.xml
+source_lang = en
+type = ANDROID

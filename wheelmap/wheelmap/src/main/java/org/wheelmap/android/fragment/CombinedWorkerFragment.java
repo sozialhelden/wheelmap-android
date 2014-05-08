@@ -2,6 +2,8 @@ package org.wheelmap.android.fragment;
 
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -30,7 +32,6 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
