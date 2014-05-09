@@ -98,7 +98,9 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -126,6 +128,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -323,6 +326,8 @@ public class POIDetailFragment extends Fragment implements
 
     SensorManager mSensorManager;
     Sensor mSensor;
+
+    private File new_photo_file;
 
     @SuppressLint("UseSparseArrays")
     private final static Map<Integer, Intent> intentSaved = new HashMap<Integer, Intent>();
@@ -1258,10 +1263,18 @@ public class POIDetailFragment extends Fragment implements
                 if (which == 0) {
                     startGetPhotoFromGalleryIntent();
                 } else if (which == 1) {
-                    pictureActionIntent = new Intent(
+                    /*pictureActionIntent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(pictureActionIntent,
-                            Request.REQUESTCODE_PHOTO);
+                            Request.REQUESTCODE_PHOTO_FROM_CAMERA);
+                      */
+                    Intent intent = new Intent(
+                            android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    new_photo_file = new File(Environment.getExternalStorageDirectory() + "/DCIM/", "image" + new Date().getTime() + ".png");
+                    Uri pictureURI = Uri.fromFile(new_photo_file);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, pictureURI);
+                    startActivityForResult(intent,
+                            Request.REQUESTCODE_PHOTO_FROM_CAMERA);
                 }
 
             }
@@ -1298,6 +1311,13 @@ public class POIDetailFragment extends Fragment implements
                 || requestCode == Request.GALLERY_KITKAT_INTENT_CALLED){
             handlePhotoIntentResult(requestCode,resultCode,data);
             return;
+        }
+
+        if(requestCode == Request.REQUESTCODE_PHOTO_FROM_CAMERA){
+            if(new_photo_file != null){
+                uploadPhoto(new_photo_file);
+                new_photo_file = null;
+            }
         }
 
     }
