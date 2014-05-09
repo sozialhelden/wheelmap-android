@@ -276,42 +276,42 @@
                 android:layout_alignParentBottom="true"
                 android:background="@android:color/black"/>
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
 
-        <ImageButton
-                android:id="@+id/detail_foto"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:src="@drawable/detail_ic_foto"/>
-        <ImageButton
-                android:id="@+id/detail_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:src="@drawable/detail_ic_edit"/>
-        <ImageButton
-                android:id="@+id/detail_route"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:src="@drawable/detail_ic_route"/>
-        <ImageButton
-                android:id="@+id/detail_share"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
-                android:background="@null"
-                android:src="@drawable/detail_ic_share"/>
+            <ImageButton
+                    android:id="@+id/detail_foto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_foto"/>
+            <ImageButton
+                    android:id="@+id/detail_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_edit"/>
+            <ImageButton
+                    android:id="@+id/detail_route"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_route"/>
+            <ImageButton
+                    android:id="@+id/detail_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
+                    android:background="@null"
+                    android:src="@drawable/detail_ic_share"/>
 
-    </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

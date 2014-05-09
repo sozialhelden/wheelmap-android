@@ -148,9 +148,9 @@
                     android:layout_weight="1" />
             <LinearLayout
                     android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="vertical">
                 <!--
                 <Button
@@ -162,13 +162,11 @@
                 <Button android:id="@+id/detail_save"
                         android:background="@drawable/detail_ic_save"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_height="match_parent"
                         />
-                <TextView android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
                           android:text="@string/menu_save"
-                          android:gravity="center"
                           android:layout_marginTop="-12dp"
                         />
 
