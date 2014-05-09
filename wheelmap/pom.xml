@@ -19,7 +19,7 @@
 
         <app.name>Wheelmap</app.name>
         <app.version.code>${buildNumber}</app.version.code>
-        <app.version.name>${project.version}</app.version.name>
+        <app.version.name>${project.version}-${app.type}</app.version.name>
         <project.organization.name>Michal Harakal - Michael Kroez - Sozialhelden e.V.
         </project.organization.name>
 
