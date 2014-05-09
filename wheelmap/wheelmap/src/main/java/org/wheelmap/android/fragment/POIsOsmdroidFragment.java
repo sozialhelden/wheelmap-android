@@ -240,6 +240,8 @@ public class POIsOsmdroidFragment extends Fragment implements
         mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
         mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
                 mMapView);
+
+
         mCurrLocationOverlay.enableMyLocation();
 
         markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);

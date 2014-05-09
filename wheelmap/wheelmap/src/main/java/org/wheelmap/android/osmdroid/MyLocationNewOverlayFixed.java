@@ -228,14 +228,18 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
         final int zoomDiff = MapViewConstants.MAXIMUM_ZOOMLEVEL - pj.getZoomLevel();
 
         if (mDrawAccuracyEnabled) {
-            final float radius = lastFix.getAccuracy()
-                    / (float) TileSystem.GroundResolution(lastFix.getLatitude(),
-                    mapView.getZoomLevel());
+            //final float radius = lastFix.getAccuracy()
+            //        / (float) TileSystem.GroundResolution(lastFix.getLatitude(),
+            //        mapView.getZoomLevel());
+
+            final float radius = 100;
 
             mCirclePaint.setAlpha(50);
             mCirclePaint.setStyle(Style.FILL);
             canvas.drawCircle(mMapCoords.x >> zoomDiff, mMapCoords.y >> zoomDiff, radius,
                     mCirclePaint);
+
+            Log.d("RADIUS", "radius: " + radius);
 
             mCirclePaint.setAlpha(150);
             mCirclePaint.setStyle(Style.STROKE);
