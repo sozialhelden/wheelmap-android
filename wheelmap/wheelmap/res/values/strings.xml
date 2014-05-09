@@ -10,6 +10,7 @@
     <string name="description_gps">Current location</string>
     <string name="description_logo">Wheelmap</string>
     <string name="description_map">Map</string>
+    <string name="error_network_title">Network Error</string>
     <string name="error_authorization_error">Email or password was wrong. Sorry. Can\'t log you
         in.
     </string>
