@@ -26,10 +26,11 @@
               android:layout_height="wrap_content"
               android:orientation="vertical"
               android:background="#cfcfcf">
-    <ScrollView
+    <org.wheelmap.android.view.VerticalScrollView
                   android:layout_width="match_parent"
                   android:layout_height="0dp"
                   android:layout_weight="1"
+                  android:scrollbars="vertical"
                   android:fillViewport="true">
 
         <LinearLayout
@@ -263,7 +264,7 @@
                     android:layout_weight="1" />
 
         </LinearLayout>
-    </ScrollView>
+    </org.wheelmap.android.view.VerticalScrollView>
 
     <View
             android:layout_width="fill_parent"
