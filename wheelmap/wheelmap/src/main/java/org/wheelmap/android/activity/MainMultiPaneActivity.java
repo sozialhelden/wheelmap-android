@@ -64,6 +64,7 @@ import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
 
 import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -125,6 +126,7 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private MapModeType mapModeType;
 
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,7 +144,7 @@ public class MainMultiPaneActivity extends MapActivity implements
         mResizeButton = (ImageButton) findViewById(R.id.button_movable_resize);
 
         ViewGroup g = (ViewGroup) findViewById(R.id.layout_multi);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+        if(Build.VERSION.SDK_INT > 16){
             g.getLayoutTransition().disableTransitionType(LayoutTransition.APPEARING);
         }
 
