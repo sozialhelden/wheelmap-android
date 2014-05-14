@@ -380,6 +380,12 @@
                                     <goal>sign</goal>
                                     <goal>verify</goal>
                                 </goals>
+				<configuration>
+                                    <arguments>
+                                      <argument>-sigalg</argument><argument>MD5withRSA</argument>
+                                      <argument>-digestalg</argument><argument>SHA1</argument>
+                                    </arguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -418,6 +424,10 @@
                             <sign>
                                 <debug>false</debug>
                             </sign>
+			    <arguments>
+                                      <argument>-sigalg</argument><argument>MD5withRSA</argument>
+                                      <argument>-digestalg</argument><argument>SHA1</argument>
+                                    </arguments>
                             <proguard>
                                 <skip>${proguard.disable}</skip>
                             </proguard>
