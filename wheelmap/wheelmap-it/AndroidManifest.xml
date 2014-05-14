@@ -29,7 +29,7 @@ limitations under the License.
 
     <instrumentation
             android:name="org.wheelmap.android.test.MyInstrumentationTestRunner"
-            android:targetPackage="org.wheelmap.android.develop">
+            android:targetPackage="org.wheelmap.android.live">
     </instrumentation>
 
     <application

@@ -54,7 +54,7 @@ import roboguice.inject.ContentViewListener;
 public class StartupActivity extends Activity implements
         DetachableResultReceiver.Receiver {
 
-    public static boolean LOAD_AGAIN_DEBUG = false;
+    public static boolean LOAD_AGAIN_DEBUG = true;
 
     private final static String TAG = StartupActivity.class.getSimpleName();
 

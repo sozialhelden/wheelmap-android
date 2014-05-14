@@ -58,13 +58,11 @@ public class TotalNodeCountExecutor extends SinglePageExecutor<SingleNode> imple
             String request= UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
                     "utf-8");
 
-            org.apache.http.client.HttpClient client =  mRequestProcessor.getRequestFactory().getHttpClient();
-            HttpGet get = new HttpGet(request);
-            HttpResponse response = client.execute(get);
-            if(response.getStatusLine().getStatusCode() == 200){
-                String json = EntityUtils.toString(response.getEntity());
-                JSONObject jsonObject = new JSONObject(json);
-                long count = jsonObject.getJSONObject("meta").getLong("item_count_total");
+            long countTotal = requestNodeCountForURL(request);
+            long countUnknown=requestNodeCountForURL(request+"&wheelchair=unknown");
+
+            if(countTotal != -1 && countUnknown != -1 && countTotal > countUnknown){
+                long count = countTotal - countUnknown;
                 WheelmapApp.getDefaultPrefs().edit().putLong("ItemCountTotal",count).commit();
             }
 
@@ -74,6 +72,19 @@ public class TotalNodeCountExecutor extends SinglePageExecutor<SingleNode> imple
                     RestServiceException.ERROR_NETWORK_FAILURE,
                     new NetworkErrorException(), true);
         }
+    }
+
+    private long requestNodeCountForURL(String request) throws Exception{
+        org.apache.http.client.HttpClient client =  mRequestProcessor.getRequestFactory().getHttpClient();
+        HttpGet get = new HttpGet(request);
+        HttpResponse response = client.execute(get);
+        if(response.getStatusLine().getStatusCode() == 200){
+            String json = EntityUtils.toString(response.getEntity());
+            JSONObject jsonObject = new JSONObject(json);
+            long count = jsonObject.getJSONObject("meta").getLong("item_count_total");
+            return count;
+        }
+        return -1;
     }
 
     @Override
