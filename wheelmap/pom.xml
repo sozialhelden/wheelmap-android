@@ -532,21 +532,11 @@
             <url>http://mvn.bugsense.com/</url>
         </repository>
         <repository>
-            <id>crashlytics-repo</id>
-            <url>http://download.crashlytics.com/maven</url>
-        </repository>
-        <repository>
             <id>android-rome-feed-reader-repository</id>
             <name>Android ROME Feed Reader Repository</name>
             <url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>crashlytics-plugin-repo</id>
-            <url>http://download.crashlytics.com/maven</url>
-        </pluginRepository>
-    </pluginRepositories>
     <distributionManagement>
         <repository>
             <id>hockey-distribution</id>
