@@ -24,7 +24,7 @@ limitations under the License.
           package="org.wheelmap.android.online"
           android:installLocation="auto"
           android:versionCode="${app.version.code}"
-          android:versionName="2.0">
+          android:versionName="2.0.1">
 
     <uses-sdk
             android:minSdkVersion="8"
