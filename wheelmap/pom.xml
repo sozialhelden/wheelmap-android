@@ -420,6 +420,7 @@
                 <hockey.update.url/>
                 <app.enabledebug>false</app.enabledebug>
                 <bugsense.key>${app.bugsense.production}</bugsense.key>
+                <hockeyapp.id>1ede13fa382830c25625ec55f416ad06</hockeyapp.id>
             </properties>
             <build>
                 <plugins>
