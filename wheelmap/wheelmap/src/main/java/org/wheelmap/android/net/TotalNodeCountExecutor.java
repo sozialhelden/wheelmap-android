@@ -70,7 +70,7 @@ public class TotalNodeCountExecutor extends SinglePageExecutor<SingleNode> imple
             e.printStackTrace();
             processException(
                     RestServiceException.ERROR_NETWORK_FAILURE,
-                    new NetworkErrorException(), true);
+                    new NetworkErrorException(), false);
         }
     }
 

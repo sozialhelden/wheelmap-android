@@ -281,7 +281,7 @@ public class WheelmapApp extends Application {
 
     public static void checkForUpdates(android.app.Activity context) {
         String appId = context.getString(R.string.hockeyapp_id);
-        if (TextUtils.isEmpty(appId)) {
+        if (TextUtils.isEmpty(appId) || "org.wheelmap.android.online".equals(context.getPackageName())) {
             return;
         }
         UpdateManager.register(context, appId);
