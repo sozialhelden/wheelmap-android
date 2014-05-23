@@ -8,7 +8,7 @@
     <string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>
 
 
-
+    <string name="error_title_occurred">An Error occurred!</string>
     <string name="error_authorization_login_failed">Login Failed</string>
     <string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to
         openstreetmap.
