@@ -28,6 +28,8 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Toast;
+import org.wheelmap.android.activity.DashboardActivity;
 import org.wheelmap.android.activity.LoginActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
@@ -558,57 +560,67 @@ public class POIDetailEditableFragment extends Fragment implements
     private ContentValues retrieveContentValues() {
         ContentValues values = new ContentValues();
 
-        String name = nameText.getText().toString();
-        if (!TextUtils.isEmpty(name)) {
-            values.put(POIs.NAME, name);
-        }
+        try{
 
-        SupportManager sm = WheelmapApp.getSupportManager();
+            String name = nameText.getText().toString();
+            if (!TextUtils.isEmpty(name)) {
+                values.put(POIs.NAME, name);
+            }
 
-        if (mNodeType != SupportManager.UNKNOWN_TYPE) {
-            NodeType nodeType = sm.lookupNodeType(mNodeType);
-            Category category = sm.lookupCategory(nodeType.categoryId);
+            SupportManager sm = WheelmapApp.getSupportManager();
 
-            values.put(POIs.CATEGORY_ID, nodeType.categoryId);
-            values.put(POIs.CATEGORY_IDENTIFIER, category.identifier);
-            values.put(POIs.NODETYPE_IDENTIFIER, nodeType.identifier);
-            values.put(POIs.NODETYPE_ID, mNodeType);
+            if (mNodeType != SupportManager.UNKNOWN_TYPE) {
+                NodeType nodeType = sm.lookupNodeType(mNodeType);
+                Category category = sm.lookupCategory(nodeType.categoryId);
 
-        }
+                values.put(POIs.CATEGORY_ID, nodeType.categoryId);
+                values.put(POIs.CATEGORY_IDENTIFIER, category.identifier);
+                values.put(POIs.NODETYPE_IDENTIFIER, nodeType.identifier);
+                values.put(POIs.NODETYPE_ID, mNodeType);
 
-        values.put(POIs.LATITUDE, mLatitude);
-        values.put(POIs.LONGITUDE, mLongitude);
+            }
 
-        values.put(POIs.WHEELCHAIR, mWheelchairState.getId());
-        String description = commentText.getText().toString();
-        if (!TextUtils.isEmpty(description)) {
-            values.put(POIs.DESCRIPTION, description);
-        }
+            values.put(POIs.LATITUDE, mLatitude);
+            values.put(POIs.LONGITUDE, mLongitude);
 
-        String street = streetText.getText().toString();
-        if (!TextUtils.isEmpty(street)) {
-            values.put(POIs.STREET, street);
-        }
-        String housenum = housenumText.getText().toString();
-        if (!TextUtils.isEmpty(housenum)) {
-            values.put(POIs.HOUSE_NUM, housenum);
-        }
-        String postcode = postcodeText.getText().toString();
-        if (!TextUtils.isEmpty(postcode)) {
-            values.put(POIs.POSTCODE, postcode);
-        }
-        String city = cityText.getText().toString();
-        if (!TextUtils.isEmpty(city)) {
-            values.put(POIs.CITY, city);
-        }
+            values.put(POIs.WHEELCHAIR, mWheelchairState.getId());
+            String description = commentText.getText().toString();
+            if (!TextUtils.isEmpty(description)) {
+                values.put(POIs.DESCRIPTION, description);
+            }
 
-        String website = websiteText.getText().toString();
-        if (!TextUtils.isEmpty(website)) {
-            values.put(POIs.WEBSITE, website);
-        }
-        String phone = phoneText.getText().toString();
-        if (!TextUtils.isEmpty(phone)) {
-            values.put(POIs.PHONE, phone);
+            String street = streetText.getText().toString();
+            if (!TextUtils.isEmpty(street)) {
+                values.put(POIs.STREET, street);
+            }
+            String housenum = housenumText.getText().toString();
+            if (!TextUtils.isEmpty(housenum)) {
+                values.put(POIs.HOUSE_NUM, housenum);
+            }
+            String postcode = postcodeText.getText().toString();
+            if (!TextUtils.isEmpty(postcode)) {
+                values.put(POIs.POSTCODE, postcode);
+            }
+            String city = cityText.getText().toString();
+            if (!TextUtils.isEmpty(city)) {
+                values.put(POIs.CITY, city);
+            }
+
+            String website = websiteText.getText().toString();
+            if (!TextUtils.isEmpty(website)) {
+                values.put(POIs.WEBSITE, website);
+            }
+            String phone = phoneText.getText().toString();
+            if (!TextUtils.isEmpty(phone)) {
+                values.put(POIs.PHONE, phone);
+            }
+
+        }catch(NullPointerException npex){
+            Log.d("Tag:PoiDetailEditableFragment", "NullPointException occurred");
+
+            Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
+
+            this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
         }
         return values;
     }

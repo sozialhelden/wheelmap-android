@@ -6,7 +6,7 @@
     <string name="move_the_map">Please move the map by touching</string>
 
     <string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>
-
+    <string name="error_internal_error">An Error occurred. Please reopen the App.</string>
 
     <string name="error_title_occurred">An Error occurred!</string>
     <string name="error_authorization_login_failed">Login Failed</string>
