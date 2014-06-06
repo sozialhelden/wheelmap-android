@@ -51,7 +51,9 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
     public void setItem(ContentValues values, NodeType nodeType,
             WheelchairState state) {
         itemValues = values;
-        Drawable marker = nodeType.stateDrawables.get(state);
+        //Drawable marker = nodeType.stateDrawables.get(state);
+        Drawable marker = nodeType.getStateDrawable(state);
+
         item.setTitle(values.getAsString(POIs.NAME));
         item.setSnippet(values.getAsString(POIs.DESCRIPTION));
         item.setMarker(marker);

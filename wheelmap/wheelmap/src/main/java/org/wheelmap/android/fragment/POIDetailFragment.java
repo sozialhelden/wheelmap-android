@@ -866,7 +866,8 @@ public class POIDetailFragment extends Fragment implements
             int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
             Drawable marker = null;
             if (nodeTypeId != 0) {
-                marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+              //  marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+                marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
             }
             marker = marker.getConstantState().newDrawable();
             float density = getActivity().getResources().getDisplayMetrics().density;
