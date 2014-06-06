@@ -80,8 +80,6 @@ public class SupportManager {
 
     private Context mContext;
 
-
-    private Map<Integer, String> mNodeTypeLookupPath;
     private Map<Integer, NodeType> mNodeTypeLookup;
     private Map<Integer, NodeType> mNodeTypeLookupList;
 
