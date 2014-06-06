@@ -66,7 +66,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         }
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_frame_empty);
-        setSupportProgressBarIndeterminateVisibility(false);
+        //setSupportProgressBarIndeterminateVisibility(false);
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(true);

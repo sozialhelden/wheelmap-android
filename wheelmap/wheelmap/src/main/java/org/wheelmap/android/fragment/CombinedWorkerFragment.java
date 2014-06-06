@@ -175,13 +175,23 @@ public class CombinedWorkerFragment extends Fragment implements
 
 
         } else {
-
-            WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
+            WheelmapApp app = null;
             Node node = null;
+
+            try{
+                app = (WheelmapApp) this.getActivity().getApplication();
+            }catch(NullPointerException npex){
+                Log.d("Tag:CombinedWorkerFragment", "NullPointException occurred");
+
+                Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
+            }
+
             try{
                 node = app.getNode();
             }catch (Exception ex){
-                // noop
+                Log.d("Tag:CombinedWorkerFragment", "NullPointException occurred");
+
+                Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
             }
 
             if(node == null){

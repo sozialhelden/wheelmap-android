@@ -347,9 +347,9 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        try{
+        /*try{
             storeTemporary();
-        }catch(Exception e){}
+        }catch(Exception e){}   */
     }
 
     @Override
@@ -620,7 +620,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
             Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
 
-            this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
+            //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
         }
         return values;
     }

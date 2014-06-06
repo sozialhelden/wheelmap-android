@@ -21,17 +21,21 @@
  */
 package org.wheelmap.android.model;
 
+import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.mapping.node.Category;
 import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.mapping.node.NodeType;
 import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 
 import java.math.BigDecimal;
+
+import de.akquinet.android.androlog.Log;
 
 public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 
@@ -58,15 +62,44 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
         if (longitude != null) {
             values.put(POIs.LONGITUDE, longitude.doubleValue());
         }
-        values.put(POIs.STREET, node.getStreet());
-        values.put(POIs.HOUSE_NUM, node.getHousenumber());
-        values.put(POIs.POSTCODE, node.getPostcode());
-        values.put(POIs.CITY, node.getCity());
-        values.put(POIs.PHONE, node.getPhone());
-        values.put(POIs.WEBSITE, node.getWebsite());
-        values.put(POIs.WHEELCHAIR,
-                WheelchairState.myValueOf(node.getWheelchair()).getId());
-        values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
+        String street = node.getStreet();
+        if(street != null){
+            values.put(POIs.STREET, node.getStreet());
+        }
+
+        String houseNumber = node.getHousenumber();
+        if(houseNumber != null){
+            values.put(POIs.HOUSE_NUM, node.getHousenumber());
+        }
+
+        String postCode = node.getPostcode();
+        if(postCode != null){
+            values.put(POIs.POSTCODE, node.getPostcode());
+        }
+
+        String city = node.getCity();
+        if(city != null){
+            values.put(POIs.CITY, node.getCity());
+        }
+
+        String phone = node.getPhone();
+        if(phone != null){
+            values.put(POIs.PHONE, node.getPhone());
+        }
+
+        String website = node.getWebsite();
+        if(website != null){
+            values.put(POIs.WEBSITE, node.getWebsite());
+        }
+
+        try{
+            values.put(POIs.WHEELCHAIR,
+                    WheelchairState.myValueOf(node.getWheelchair()).getId());
+            values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
+        }catch(NullPointerException npex){
+            Log.d("Tag:DataOperationsNodes", "NullPointException occurred");
+        }
+
         String icon = node.getIcon();
         if (icon != null) {
             values.put(POIs.ICON, node.getIcon());

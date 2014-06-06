@@ -232,11 +232,18 @@ public class LoginFragment extends Fragment implements
     }
 
     private void loginSuccessful() {
-        getActivity().setResult(Activity.RESULT_OK);
-        Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
-        getActivity().onBackPressed();
-        if (mListener != null) {
-            mListener.onLoginSuccessful();
+
+        try{
+            getActivity().setResult(Activity.RESULT_OK);
+            Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
+            getActivity().onBackPressed();
+            if (mListener != null) {
+                mListener.onLoginSuccessful();
+            }
+        }catch(NullPointerException npex){
+            Log.d("Tag:LoginFragment", "NullPointException occurred");
+
+            Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
         }
     }
 

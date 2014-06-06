@@ -28,6 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Toast;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
@@ -205,22 +206,46 @@ public class POIsOsmdroidFragment extends Fragment implements
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
-                setAlphaForView(txtOutOfZoom,(float)0.5);
+                try{
+                    setAlphaForView(txtOutOfZoom,(float)0.5);
+                }catch(NullPointerException npex){
+                    Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
+
+                    Toast.makeText(this.getActivity().getApplicationContext(),
+                            getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
+                }
             }
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
-                setAlphaForView(txtOutOfZoom,(float)0.5);
+
+                try{
+                    setAlphaForView(txtOutOfZoom,(float)0.5);
+                }catch(NullPointerException npex){
+                    Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
+
+                    Toast.makeText(this.getActivity().getApplicationContext(),
+                            getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
+                }
             }
         }
 
-        txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtOutOfZoom.setVisibility(View.GONE);
-                zoomInToMax();
-            }
-        });
+        try{
+            txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    txtOutOfZoom.setVisibility(View.GONE);
+                    zoomInToMax();
+                }
+            });
+        }catch(NullPointerException npex){
+            Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
+
+            Toast.makeText(this.getActivity().getApplicationContext(),
+                    getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
+        }
+
+
 
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
