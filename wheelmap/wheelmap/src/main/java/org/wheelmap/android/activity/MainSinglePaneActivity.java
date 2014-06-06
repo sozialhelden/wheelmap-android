@@ -432,7 +432,11 @@ public class
     public void onError(RestServiceException e) {
 
         if (e.isNetworkError()) {
-            Crouton.makeText(this, e.getRessourceString(), Style.ALERT).show();
+            try{
+                Crouton.makeText(this, e.getRessourceString(), Style.ALERT).show();
+            }catch(Exception ex){
+                return;
+            }
             return;
         }
 
