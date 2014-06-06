@@ -784,6 +784,9 @@ public class SupportManager {
                 }
                 Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
                 drawable = mDefaultNodeType.getStateDrawable(state);
+            } catch (OutOfMemoryError ofe){
+                System.gc();
+                return null;
             }
             if (drawable != null) {
                 drawable.setBounds(-(int) fMarkerDimension, (int) (-fMarkerDimension * 2),
