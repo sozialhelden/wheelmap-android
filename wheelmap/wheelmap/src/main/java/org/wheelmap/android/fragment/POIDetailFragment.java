@@ -830,7 +830,11 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d(TAG, "onLoadFinished: poiid = " + poiId);
+        if(cursor == null){
+           return;
+        }
         mCursor= cursor;
+        mCursor.moveToFirst();
         load(cursor);
 
         try{
@@ -847,35 +851,40 @@ public class POIDetailFragment extends Fragment implements
     }
 
     public void createPOIForDetailMap(){
-        ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
 
-        long id = POIHelper.getId(mCursor);
-        String name = POIHelper.getName(mCursor);
-        SupportManager manager = WheelmapApp.getSupportManager();
-        WheelchairState state = POIHelper.getWheelchair(mCursor);
-        double lat = POIHelper.getLatitude(mCursor);
-        double lng = POIHelper.getLongitude(mCursor);
-        int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
-        Drawable marker = null;
-        if (nodeTypeId != 0) {
-            marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+
+        if(mCursor != null && mCursor.getCount() > 0){
+            mCursor.moveToFirst();
+            ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
+
+            long id = POIHelper.getId(mCursor);
+            String name = POIHelper.getName(mCursor);
+            SupportManager manager = WheelmapApp.getSupportManager();
+            WheelchairState state = POIHelper.getWheelchair(mCursor);
+            double lat = POIHelper.getLatitude(mCursor);
+            double lng = POIHelper.getLongitude(mCursor);
+            int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
+            Drawable marker = null;
+            if (nodeTypeId != 0) {
+                marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+            }
+            marker = marker.getConstantState().newDrawable();
+            float density = getActivity().getResources().getDisplayMetrics().density;
+
+            int half = (int)(10*density);
+
+            marker.setBounds(-half, -2*half, half, 0);
+
+            org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
+            OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
+            item.setMarker(marker);
+            overlayItemArray.add(item);
+
+            DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
+            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
+
+            mMapView.getOverlays().add(myItemizedIconOverlay);
         }
-        marker = marker.getConstantState().newDrawable();
-        float density = getActivity().getResources().getDisplayMetrics().density;
-
-        int half = (int)(10*density);
-
-        marker.setBounds(-half, -2*half, half, 0);
-
-        org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
-        OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
-        item.setMarker(marker);
-        overlayItemArray.add(item);
-
-        DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
-        ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
-
-        mMapView.getOverlays().add(myItemizedIconOverlay);
     }
 
     @Override
@@ -918,6 +927,7 @@ public class POIDetailFragment extends Fragment implements
         }else{
 
             c.moveToFirst();
+            if(getActivity() != null && getActivity().getApplication() != null)
             if(!UtilsMisc.isTablet(getActivity().getApplication())){
                 mCrrLongitude = POIHelper.getLongitude(c);
                 mCrrLatitude = POIHelper.getLatitude(c);

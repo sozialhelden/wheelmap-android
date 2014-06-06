@@ -219,6 +219,8 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                     RestServiceException.ERROR_INTERNAL_ERROR, e, true);
         }
 
+        Log.d("Executer",request);
+
         if (request == null) {
             // workaround for compiling not recognizing that request will be initialized
             return null;
@@ -372,6 +374,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
     protected void processException(int errorCode, Throwable t, boolean sendToBugsense)
             throws RestServiceException {
+        sendToBugsense = false;
         if (sendToBugsense && WheelmapApp.getApp().isBugsenseInitCalled()) {
             BugSenseHandler.sendException((Exception) t);
         }

@@ -94,7 +94,9 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
             Toast.makeText(mContext, R.string.photo_upload_failed,Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(mContext, R.string.photo_upload_successfully,Toast.LENGTH_LONG).show();
-            ((POIDetailFragment)mFragment).load(mCursor);
+            if(mFragment != null && mCursor != null && mCursor.getCount() > 0   ){
+                ((POIDetailFragment)mFragment).load(mCursor);
+            }
         }
     }
 }
