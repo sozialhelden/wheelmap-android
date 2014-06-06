@@ -117,7 +117,9 @@ public class ErrorDialogFragment extends DialogFragment implements
             }
             msg = title;
         }
-        builder.setTitle(title);
+        if(title != null){
+            builder.setTitle(title);
+        }
         builder.setMessage(msg);
         builder.setIcon(R.drawable.ic_dialog_alert_wheelmap);
         builder.setNeutralButton(R.string.btn_okay, this);

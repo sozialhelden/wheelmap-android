@@ -79,7 +79,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.akquinet.android.androlog.Log;
 
@@ -418,6 +420,21 @@ public class POIDetailEditableFragment extends Fragment implements
             return;
         }
 
+        if(values.containsKey(POIs.WEBSITE)){
+            String website = values.getAsString(POIs.WEBSITE);
+                website = website.toLowerCase(Locale.US);
+                if(!website.startsWith("http://") && !website.startsWith(
+                        "https://")){
+                    website = "http://"+website;
+                }
+
+            if(!android.util.Patterns.WEB_URL.matcher(website).matches()){
+                showErrorMessage(null,getString(android.R.string.httpErrorBadUrl),-1);
+                return;
+            }
+
+                values.put(POIs.WEBSITE,website);
+        }
         values.put(POIs.DIRTY, POIs.DIRTY_ALL);
         PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
                 poiID, values);
@@ -435,7 +452,7 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public void onErrorDialogClose(int id) {
         Log.d(TAG, "onErrorDialogClose");
-        if (id == DIALOG_ID_NEWPOI || id == DIALOG_ID_NETWORK_ERROR) {
+        if (id == DIALOG_ID_NEWPOI) {
             quit(false);
         }
     }
@@ -562,6 +579,10 @@ public class POIDetailEditableFragment extends Fragment implements
 
         try{
 
+            if(nameText == null){
+                return null;
+            }
+
             String name = nameText.getText().toString();
             if (!TextUtils.isEmpty(name)) {
                 values.put(POIs.NAME, name);
@@ -616,11 +637,15 @@ public class POIDetailEditableFragment extends Fragment implements
             }
 
         }catch(NullPointerException npex){
+<<<<<<< HEAD
             Log.d("Tag:PoiDetailEditableFragment", "NullPointException occurred");
 
             Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
 
             //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
+=======
+           return null;
+>>>>>>> 0f4c87d310d41c055b753b5300ba1e332a418e8f
         }
         return values;
     }
@@ -720,6 +745,9 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private void storeTemporary() {
         ContentValues values = retrieveContentValues();
+        if(values == null){
+           return;
+        }
         if (!TextUtils.isEmpty(wmID)) {
             values.put(POIs.WM_ID, wmID);
         }
@@ -746,6 +774,11 @@ public class POIDetailEditableFragment extends Fragment implements
         }
     }
 
+    private void showError(){
+        showErrorMessage(getString(R.string.error_title_occurred),
+                getString(R.string.error_network_unknown_failure), DIALOG_ID_NETWORK_ERROR);
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -769,7 +802,7 @@ public class POIDetailEditableFragment extends Fragment implements
             }
             case RestService.STATUS_ERROR: {
                 storingStatus(false);
-                showNewPoiOrQuit();
+                showError();
                 break;
             }
         }

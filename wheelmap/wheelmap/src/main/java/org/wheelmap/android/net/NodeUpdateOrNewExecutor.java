@@ -74,6 +74,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
                     new NullPointerException("Cursor is null"));
         }
 
+        boolean result = true;
+        RestServiceException to_throw=null;
         while (!mCursor.isAfterLast()) {
 
             String editApiKey = getApiKey();
@@ -100,13 +102,42 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
                                     "Cant find matching RequestBuilder for update request"));
             }
 
-            executeRequest(requestBuilder);
             long idPOI = POIHelper.getId(mCursor);
+
+            try{
+                Object response = executeRequest(requestBuilder);
+                if(response != null && response instanceof Message){
+                    if(!((Message) response).getMessage().equals("OK")){
+                        PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
+                        result = false;
+                    }
+                }
+            }catch(RestServiceException e) {
+                if(e.getMessage().contains("Bad Request")){
+                    PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
+                    result = false;
+                }else{
+                    to_throw = e;
+                    mCursor.moveToNext();
+                    continue;
+                }
+            }
             PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
             mCursor.moveToNext();
         }
 
         mCursor.close();
+
+        if(to_throw != null){
+           throw to_throw;
+        }
+
+        if(!result){
+            throw new RestServiceException(
+                    RestServiceException.ERROR_NETWORK_FAILURE,
+                    new RuntimeException(
+                            "REQUEST Failed"));
+        }
     }
 
     public void prepareDatabase() {
