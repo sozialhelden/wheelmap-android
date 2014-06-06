@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.manager;
 
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.PrefKey;
@@ -58,6 +59,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -65,6 +67,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
@@ -77,6 +80,8 @@ public class SupportManager {
 
     private Context mContext;
 
+
+    private Map<Integer, String> mNodeTypeLookupPath;
     private Map<Integer, NodeType> mNodeTypeLookup;
     private Map<Integer, NodeType> mNodeTypeLookupList;
 
@@ -148,9 +153,15 @@ public class SupportManager {
             this.categoryId = categoryId;
         }
 
-        public Drawable iconDrawable;
+        public NodeType base;
 
-        public Map<WheelchairState, Drawable> stateDrawables;
+        public String iconPath;
+
+        private WeakReference<Drawable> iconDrawable = new WeakReference<Drawable>(null);
+
+        private WeakHashMap<WheelchairState, Drawable> stateDrawables = new WeakHashMap<WheelchairState, Drawable>();
+
+        private Map<WheelchairState, Drawable> defaults;
 
         public int id;
 
@@ -159,6 +170,38 @@ public class SupportManager {
         public String localizedName;
 
         public int categoryId;
+
+        public Drawable getIconDrawable(){
+           if(iconDrawable.get() == null){
+                synchronized (this){
+                    if(iconDrawable.get() == null){
+                         iconDrawable = new WeakReference<Drawable>(WheelmapApp.getSupportManager().createIconDrawable(
+                                 iconPath));
+                    }
+                }
+           }
+           return iconDrawable.get();
+        }
+
+        public Drawable getStateDrawable(WheelchairState state){
+            if(defaults != null){
+               return defaults.get(state);
+            }
+            if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
+                 synchronized (this){
+                     if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
+                         Log.d(TAG,"load new: "+iconPath+" "+state);
+                         stateDrawables.put(state,WheelmapApp.getSupportManager().getStateDrawable(iconPath,false,base, state));
+                     }
+                 }
+            }
+            if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
+                 return base.getStateDrawable(state);
+            }
+            return stateDrawables.get(state);
+        }
+
+
     }
 
     public static class NodeTypeComparator implements Comparator<NodeType> {
@@ -217,12 +260,12 @@ public class SupportManager {
                 mContext.getString(R.string.support_category_unknown));
         mDefaultNodeType = new NodeType(UNKNOWN_TYPE, "unknown",
                 mContext.getString(R.string.support_nodetype_unknown), 0);
-        mDefaultNodeType.stateDrawables = createDefaultDrawables();
+        mDefaultNodeType.defaults = createDefaultDrawables();
 
 
         mDefaultNodeTypeList = new NodeType(UNKNOWN_TYPE, "unknown",
                 mContext.getString(R.string.support_nodetype_unknown), 0);
-        mDefaultNodeTypeList.stateDrawables = createDefaultDrawables();
+        mDefaultNodeTypeList.defaults = createDefaultDrawables();
 
         mNeedsReloading = false;
         if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
@@ -315,8 +358,8 @@ public class SupportManager {
     }
 
     public void initMarkerIcon(){
-        //rest is loaded in initNodeType
-        mDefaultNodeType.stateDrawables = createDefaultDrawables();
+        //rest is loaded in initNodeType    #
+        mDefaultNodeType.defaults = createDefaultDrawables();
     }
 
     public void initTotalNodeCount(){
@@ -531,14 +574,18 @@ public class SupportManager {
 
             NodeType nodeType = new NodeType(id, identifier, localizedName,
                     categoryId);
-            nodeType.iconDrawable = createIconDrawable(iconPath);
-            nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeType);
+            nodeType.iconPath = iconPath;
+            nodeType.base =  mDefaultNodeType;
+            //nodeType.iconDrawable = createIconDrawable(iconPath);
+            //nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeType);
             mNodeTypeLookup.put(id, nodeType);
 
             nodeType = new NodeType(id, identifier, localizedName,
                     categoryId);
-            nodeType.iconDrawable = createIconDrawable(iconPath);
-            nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeTypeList);
+            nodeType.iconPath = iconPath;
+            nodeType.base = mDefaultNodeTypeList;
+           // nodeType.iconDrawable = createIconDrawable(iconPath);
+           // nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeTypeList);
             mNodeTypeLookupList.put(id, nodeType);
 
             cursor.moveToNext();
@@ -548,7 +595,7 @@ public class SupportManager {
         Log.i(TAG, "NodeTypes count = " + mNodeTypeLookup.size());
     }
 
-    private Drawable createIconDrawable(String assetPath) {
+    Drawable createIconDrawable(String assetPath) {
         Bitmap bitmap;
         // Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
         try {
@@ -625,7 +672,7 @@ public class SupportManager {
                                     + " could not be found.");
                 }
                 Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
-                drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
+                drawable = mDefaultNodeType.getStateDrawable(WheelchairState
                         .valueOf(idx));
             }
             if (drawable != null) {
@@ -665,7 +712,7 @@ public class SupportManager {
                 }
                 // is = mAssetManager.open(path);
                 drawable = Drawable.createFromStream(is, null);
-                Drawable bg = defaultNodes.stateDrawables.get(WheelchairState
+                Drawable bg = defaultNodes.getStateDrawable(WheelchairState
                         .valueOf(idx));
 
                 float density = mContext.getResources().getDisplayMetrics().density;
@@ -687,7 +734,7 @@ public class SupportManager {
                                     + " could not be found.");
                 }
                 Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
-                drawable = mDefaultNodeType.stateDrawables.get(WheelchairState
+                drawable = mDefaultNodeType.getStateDrawable(WheelchairState
                         .valueOf(idx));
             }
             if (drawable != null) {
@@ -700,9 +747,55 @@ public class SupportManager {
         return lookupMap;
     }
 
+    Drawable getStateDrawable(String assetPathPattern,
+            boolean fileNotFoundIsFatal,NodeType defaultNodes, WheelchairState state){
+
+            String path = String.format(assetPathPattern, state.toString().toLowerCase());
+            path = path.replace(".png","@2x.png");
+            Drawable drawable = null;
+            try {
+                InputStream is=null;
+                if(MarkerIconExecutor.markerIconsDownloaded()){
+                    File dir = MarkerIconExecutor.getMarkerPath(mContext);
+                    File asset = new File(dir+"/"+path);
+                    is = new FileInputStream(asset);
+                }else{
+                    //is = mAssetManager.open(path);
+                }
+                // is = mAssetManager.open(path);
+                drawable = Drawable.createFromStream(is, null);
+                Drawable bg = defaultNodes.getStateDrawable(state);
+
+                float density = mContext.getResources().getDisplayMetrics().density;
+
+                Drawable[] layers = {bg,drawable};
+                LayerDrawable layerDrawable = new MyLayerDrawable(layers);
+                if(defaultNodes == mDefaultNodeType){
+                    layerDrawable.setLayerInset(1,(int) (6*density),(int) (6*density),(int) (6*density),(int)(8*density));
+                }else{
+                    layerDrawable.setLayerInset(1,(int) (8*density),(int) (8*density),(int) (8*density),(int)(12*density));
+                }
+                drawable = layerDrawable;
+
+                is.close();
+            } catch (IOException e) {
+                if (e instanceof FileNotFoundException && fileNotFoundIsFatal) {
+                    throw new IllegalStateException(
+                            "createDrawableLookup: This shouldnt happen. Asset " + path
+                                    + " could not be found.");
+                }
+                Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
+                drawable = mDefaultNodeType.getStateDrawable(state);
+            }
+            if (drawable != null) {
+                drawable.setBounds(-(int) fMarkerDimension, (int) (-fMarkerDimension * 2),
+                        (int) fMarkerDimension, 0);
+            }
+       return drawable;
+    }
 
     public Drawable getDefaultOverlayDrawable() {
-        return mDefaultNodeType.stateDrawables.get(WheelchairState.UNKNOWN);
+        return mDefaultNodeType.getStateDrawable(WheelchairState.UNKNOWN);
     }
 
     public void cleanReferences() {

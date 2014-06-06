@@ -105,7 +105,8 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
         Drawable marker = null;
         if (nodeTypeId != 0) {
-            marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
+            //marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
+            marker = manager.lookupNodeType(nodeTypeId).getStateDrawable(state);
         }
 
         float density = mContext.getResources().getDisplayMetrics().density;

@@ -91,7 +91,8 @@ public class POIsListCursorAdapter extends CursorAdapter {
         pliv.setNodeType(nodeType.localizedName);
 
         pliv.setDistance(mDistanceFormatter.format(distance));
-        Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+        //Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
+        Drawable marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
 
         float density = mContext.getResources().getDisplayMetrics().density;
 
