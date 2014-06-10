@@ -7,6 +7,7 @@ import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -14,6 +15,8 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
         implements OnCheckedChangeListener {
 
     WheelmapApp app;
+
+    private String adress = null;
 
     public final static SearchDialogCombinedFragment newInstance() {
         SearchDialogCombinedFragment f = new SearchDialogCombinedFragment();
@@ -26,9 +29,23 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
     }
 
     protected View createView() {
+
+        app = (WheelmapApp) this.getActivity().getApplicationContext();
+
+        try{
+            adress = app.getAddressString();
+        }catch(Exception ex){
+            // noop
+        }
+
         LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
-        app = (WheelmapApp) this.getActivity().getApplicationContext();
+
+
+        if(adress != null){
+            ((EditText)v.findViewById(R.id.search_keyword)).setText(adress);
+            app.setAddressString(null);
+        }
 
         v.findViewById(R.id.button_search).setOnClickListener(new View.OnClickListener() {
             @Override

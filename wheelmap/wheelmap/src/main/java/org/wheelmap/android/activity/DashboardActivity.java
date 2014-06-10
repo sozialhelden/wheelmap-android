@@ -33,6 +33,8 @@ public class DashboardActivity extends
         org.holoeverywhere.app.Activity {
 
     private UserCredentials mCredentials;
+    private String address = null;
+    WheelmapApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +44,18 @@ public class DashboardActivity extends
 
         setContentView(R.layout.activity_dashboard);
 
-        WheelmapApp app = (WheelmapApp)this.getApplication();
+        app = (WheelmapApp)this.getApplication();
         String uri = null;
+
         try{
             uri = app.getUriString();
         }catch (Exception ex){
+            // noop
+        }
+
+        try{
+            address = app.getAddressString();
+        }catch(Exception ex){
             // noop
         }
 
@@ -151,9 +160,19 @@ public class DashboardActivity extends
             }
         });
 
+        if(address != null){
+            //((EditText)findViewById(R.id.dashboard_search_edit)).requestFocus();
+            ((EditText)findViewById(R.id.dashboard_search_edit)).setText(address);
+            app.setAddressString(null);
+        }
+
         search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if(address != null){
+                    ((EditText)v.findViewById(R.id.dashboard_search_edit)).setText(address);
+                    app.setAddressString(null);
+                }else
                 ((EditText)v.findViewById(R.id.dashboard_search_edit)).setHint("");
             }
         });

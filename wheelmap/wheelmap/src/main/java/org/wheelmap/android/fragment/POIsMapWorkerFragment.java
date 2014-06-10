@@ -188,7 +188,8 @@ public class POIsMapWorkerFragment extends Fragment implements
         if (!bundle.containsKey(SearchManager.QUERY)
                 && !bundle.containsKey(Extra.CATEGORY)
                 && !bundle.containsKey(Extra.NODETYPE)
-                && !bundle.containsKey(Extra.WHEELCHAIR_STATE)) {
+                && !bundle.containsKey(Extra.WHEELCHAIR_STATE)
+                ) {
             return;
         }
 

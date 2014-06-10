@@ -391,57 +391,62 @@ public class CombinedWorkerFragment extends Fragment implements
             }
             case RestService.STATUS_FINISHED: {
 
+
                 WheelmapApp app = WheelmapApp.getApp();
 
-                if(resultData.get("WHAT").equals(What.SEARCH_NODES)){
-                    if(app.isSearchSuccessfully() == false){
-                        app.setSearchSuccessfully(true);
-                        CharSequence text = getString(R.string.search_mode_no_point_found);
-                        int duration = Toast.LENGTH_LONG;
-                        Toast toast = Toast.makeText(app, text, duration);
-                        toast.show();
-                    }
-                }
+                if(app != null){
 
-                if(resultData.get("WHAT").equals(What.RETRIEVE_NODE)){
-
-                    Node node = null;
-                    try{
-                        node = app.getNode();
-                    }catch (Exception ex){
-                        // noop
+                    if(resultData.get("WHAT").equals(What.SEARCH_NODES)){
+                        if(app.isSearchSuccessfully() == false){
+                            app.setSearchSuccessfully(true);
+                            CharSequence text = getString(R.string.search_mode_no_point_found);
+                            int duration = Toast.LENGTH_LONG;
+                            Toast toast = Toast.makeText(app, text, duration);
+                            toast.show();
+                        }
                     }
 
-                    if(node != null){
+                    if(resultData.get("WHAT").equals(What.RETRIEVE_NODE)){
 
-                        BigDecimal bdlat = node.getLat();
-                        BigDecimal bdlon = node.getLon();
-
-                        double dlat = bdlat.doubleValue();
-                        double dlon = bdlon.doubleValue();
-
-                        app.setNode(null);
-                        app.setUriString(null);
-
-                        for (DisplayFragment fragment : mListener) {
-                            if(fragment.getClass().toString().equals("class org.wheelmap.android.fragment.POIsOsmdroidFragment")){
-
-                                ContentValues cv = getValues(node);
-
-                                ((POIsOsmdroidFragment) fragment).markItem(cv,true);
-                                ((POIsOsmdroidFragment)fragment).requestUpdate();
-                            }
+                        Node node = null;
+                        try{
+                            node = app.getNode();
+                        }catch (Exception ex){
+                            // noop
                         }
 
-                        mLocation = new Location("reverseGeocoded");
-                        mLocation.setLatitude(dlat);
-                        mLocation.setLongitude(dlon);
-                        mLocation.setAccuracy(3333);
-                        mLocation.setBearing(333);
+                        if(node != null){
 
-                        RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
+                            BigDecimal bdlat = node.getLat();
+                            BigDecimal bdlon = node.getLon();
 
+                            double dlat = bdlat.doubleValue();
+                            double dlon = bdlon.doubleValue();
+
+                            app.setNode(null);
+                            app.setUriString(null);
+
+                            for (DisplayFragment fragment : mListener) {
+                                if(fragment.getClass().toString().equals("class org.wheelmap.android.fragment.POIsOsmdroidFragment")){
+
+                                    ContentValues cv = getValues(node);
+
+                                    ((POIsOsmdroidFragment) fragment).markItem(cv,true);
+                                    ((POIsOsmdroidFragment)fragment).requestUpdate();
+                                }
+                            }
+
+                            mLocation = new Location("reverseGeocoded");
+                            mLocation.setLatitude(dlat);
+                            mLocation.setLongitude(dlon);
+                            mLocation.setAccuracy(3333);
+                            mLocation.setBearing(333);
+
+                            RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
+
+                        }
                     }
+
                 }
 
                 setRefreshStatus(false);

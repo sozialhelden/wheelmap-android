@@ -637,15 +637,15 @@ public class POIDetailEditableFragment extends Fragment implements
             }
 
         }catch(NullPointerException npex){
-<<<<<<< HEAD
+
             Log.d("Tag:PoiDetailEditableFragment", "NullPointException occurred");
 
             Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
 
             //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
-=======
+
            return null;
->>>>>>> 0f4c87d310d41c055b753b5300ba1e332a418e8f
+
         }
         return values;
     }

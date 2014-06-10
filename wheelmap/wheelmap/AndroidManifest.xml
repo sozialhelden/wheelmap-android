@@ -115,14 +115,28 @@ limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT">
                 </category>
-                <category android:name="android.intent.category.BROWSABLE">
-                </category>
 
                 <data
                         android:host="*wheelmap.org"
                         android:pathPrefix="/nodes/"
                         android:scheme="http">
                 </data>
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name="org.wheelmap.android.activity.POIPermaLinkMapActivity"
+                android:label="@string/app_name"
+                android:theme="@style/Theme.Sherlock.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW">
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT">
+                </category>
+
+                <data android:scheme="geo" />
+
             </intent-filter>
         </activity>
         <activity
@@ -174,7 +188,6 @@ limitations under the License.
 
         <activity
                 android:name="net.hockeyapp.android.UpdateActivity"/>
-
 
         <service android:name="org.wheelmap.android.service.RestService"
                  android:exported="false"/>

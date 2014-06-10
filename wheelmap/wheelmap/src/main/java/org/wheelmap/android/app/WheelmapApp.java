@@ -249,6 +249,27 @@ public class WheelmapApp extends Application {
     }
 
     String uriString;
+    String geoString;
+    String addressString;
+
+    public String getGeoString() {
+        return geoString;
+    }
+
+    public void setGeoString(String geoString) {
+        this.geoString = geoString;
+    }
+
+
+    public String getAddressString() {
+        return addressString;
+    }
+
+    public void setAddressString(String adressString) {
+        this.addressString = adressString;
+    }
+
+
 
     public String getUriString(){ return uriString; }
     public void setUriString(String uriString){this.uriString = uriString; }
@@ -306,4 +327,6 @@ public class WheelmapApp extends Application {
     public void setSearchSuccessfully(boolean searchSuccessfully) {
         this.searchSuccessfully = searchSuccessfully;
     }
+
+
 }

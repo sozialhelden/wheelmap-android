@@ -126,6 +126,10 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private MapModeType mapModeType;
 
+    private WheelmapApp app;
+
+    private String address = null;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -211,6 +215,20 @@ public class MainMultiPaneActivity extends MapActivity implements
 
 
         WheelmapApp.checkForUpdates(this);
+
+        app = (WheelmapApp)this.getApplication();
+        String uri = null;
+
+        try{
+            address = app.getAddressString();
+        }catch(Exception ex){
+            // noop
+        }
+
+        if(address != null){
+            showSearch();
+        }
+
     }
 
     public WorkerFragment getWorkerFragment(){
