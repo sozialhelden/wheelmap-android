@@ -47,6 +47,9 @@ public class DashboardActivity extends
         app = (WheelmapApp)this.getApplication();
         String uri = null;
 
+        double lat = 0;
+        double lon = 0;
+
         try{
             uri = app.getUriString();
         }catch (Exception ex){
@@ -59,9 +62,27 @@ public class DashboardActivity extends
             // noop
         }
 
+        try{
+            lon = app.getGeoLon();
+            lat = app.getGeoLat();
+
+        }catch(Exception ex){
+            // noop
+        }
+
+
+
         if(uri != null){
             openMap();
 
+        }
+
+        if(lat != 0){
+            openMap();
+        }
+
+        if(lon != 0){
+            openMap();
         }
 
         View btn_in_der_naehe = findViewById(R.id.dashboard_btn_in_der_naehe);

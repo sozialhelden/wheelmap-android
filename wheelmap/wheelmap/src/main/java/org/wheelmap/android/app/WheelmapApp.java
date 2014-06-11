@@ -240,6 +240,16 @@ public class WheelmapApp extends Application {
 
     }
 
+    public boolean isNoItemToSelect() {
+        return noItemToSelect;
+    }
+
+    public void setNoItemToSelect(boolean noItemToSelect) {
+        this.noItemToSelect = noItemToSelect;
+    }
+
+    boolean noItemToSelect = false;
+
     public List getListImages() {
         return listImages;
     }
@@ -249,16 +259,27 @@ public class WheelmapApp extends Application {
     }
 
     String uriString;
-    String geoString;
+
+    public double getGeoLon() {
+        return geoLon;
+    }
+
+    public void setGeoLon(double geoLon) {
+        this.geoLon = geoLon;
+    }
+
+    double geoLon;
+
+    public double getGeoLat() {
+        return geoLat;
+    }
+
+    public void setGeoLat(double geoLat) {
+        this.geoLat = geoLat;
+    }
+
+    double geoLat;
     String addressString;
-
-    public String getGeoString() {
-        return geoString;
-    }
-
-    public void setGeoString(String geoString) {
-        this.geoString = geoString;
-    }
 
 
     public String getAddressString() {

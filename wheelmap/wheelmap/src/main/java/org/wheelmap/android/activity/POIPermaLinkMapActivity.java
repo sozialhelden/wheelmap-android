@@ -27,23 +27,33 @@ public class POIPermaLinkMapActivity extends Activity {
 
         uriArray = uri.split(":");
         uri = uriArray[1];
-        app.setGeoString(uri);
+        uriArray = uri.split(",");
+
+        double lat = Double.parseDouble(uriArray[0]);
+        double lon = Double.parseDouble(uriArray[1]);
+
+        app.setGeoLat(lat);
+        app.setGeoLon(lon);
+
+        //Test
+        //app.setGeoLat(52.6000000);
+        //app.setGeoLon(13.2000000);
 
         uriArray = uriAdress.split("=");
         uriAdress = uriArray[1];
         uri = uriAdress.replaceAll("\\+", " ");
 
-
-        byte ptext[] = uri.getBytes();
-
-        String s = null;
+        String result = null;
         try {
-            s = new String(ptext, "UTF-8");
+            result = java.net.URLDecoder.decode(uri, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        app.setAddressString(s);
+        app.setAddressString(result);
+
+        //TEST
+        //app.setAddressString(null);
 
         startActivity(new Intent(this, StartupActivity.class));
     }

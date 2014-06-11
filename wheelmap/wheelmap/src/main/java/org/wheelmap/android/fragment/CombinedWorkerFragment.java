@@ -415,6 +415,8 @@ public class CombinedWorkerFragment extends Fragment implements
                             // noop
                         }
 
+
+
                         if(node != null){
 
                             BigDecimal bdlat = node.getLat();
@@ -445,7 +447,50 @@ public class CombinedWorkerFragment extends Fragment implements
                             RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
 
                         }
+
+
                     }
+
+                    if(resultData.get("WHAT").equals(What.RETRIEVE_NODES)){
+                        double lat = 0;
+                        double lon = 0;
+
+                        lat = app.getGeoLat();
+                        lon = app.getGeoLon();
+
+                        if(lat != 0 && lon != 0){
+
+                            app.setGeoLat(0);
+                            app.setGeoLon(0);
+
+                            app.setNoItemToSelect(true);
+
+                            for (DisplayFragment fragment : mListener) {
+                                if(fragment.getClass().toString().equals("class org.wheelmap.android.fragment.POIsOsmdroidFragment")){
+
+                                    ContentValues cv = new ContentValues(2);
+
+                                    cv.put(POIs.LATITUDE, lat);
+                                    cv.put(POIs.LONGITUDE, lon);
+
+                                    ((POIsOsmdroidFragment) fragment).markItem(cv, true);
+                                    ((POIsOsmdroidFragment)fragment).requestUpdate();
+                                }
+                            }
+
+                            mLocation = new Location("reverseGeocoded");
+                            mLocation.setLatitude(lat);
+                            mLocation.setLongitude(lon);
+                            mLocation.setAccuracy(3333);
+                            mLocation.setBearing(333);
+
+                            RestServiceHelper.retrieveNodesByDistance(getActivity(),mLocation,QUERY_DISTANCE_DEFAULT,mReceiver);
+                        }
+
+
+                    }
+
+
 
                 }
 

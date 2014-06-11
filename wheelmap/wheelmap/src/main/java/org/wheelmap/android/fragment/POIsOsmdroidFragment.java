@@ -815,9 +815,14 @@ public class POIsOsmdroidFragment extends Fragment implements
         GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
                 values.getAsDouble(POIs.LONGITUDE));
         markItemIntern(point, centerToItem);
+        WheelmapApp app = (WheelmapApp)this.getActivity().getApplication();
+        boolean b = app.isNoItemToSelect();
+        app.setNoItemToSelect(false);
+        if(!b){
 
-        if (mListener != null) {
-            mListener.onShowDetail(this, values);
+            if (mListener != null) {
+                mListener.onShowDetail(this, values);
+            }
         }
     }
 
