@@ -241,6 +241,14 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     @Override
     public boolean onScroll(ScrollEvent event) {
+
+         try{
+             getResources();
+         }catch(Exception e){
+             //not attached
+             return false;
+         }
+
          Log.d(TAG, "onMove");
 
          text_move_map.setVisibility(View.GONE);

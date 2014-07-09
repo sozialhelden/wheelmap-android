@@ -32,6 +32,7 @@
     <string name="info_webdevelopment">Web Development:</string>
     <string name="info_webdevelopment_one">Christoph Bünte</string>
 
+    <string name="error_network_failure">Network failure</string>
 
     <string name="menu_edit">Edit</string>
     <string name="menu_save">Save</string>

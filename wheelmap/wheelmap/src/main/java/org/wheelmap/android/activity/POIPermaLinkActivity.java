@@ -15,7 +15,13 @@ public class POIPermaLinkActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(getIntent() == null) {
+             return;
+        }
         String uri  = this.getIntent().getDataString();
+        if(uri == null){
+            finish();
+        }
         String[]  uriArray = uri.split("/");
 
         uri = uriArray[uriArray.length-1];

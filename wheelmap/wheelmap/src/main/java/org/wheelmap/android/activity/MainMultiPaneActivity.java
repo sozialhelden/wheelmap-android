@@ -486,7 +486,11 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onError(RestServiceException e) {
         if (e.isNetworkError()) {
-            Crouton.makeText(this, e.getRessourceString(), Style.ALERT).show();
+            String error = getString(R.string.error_network_failure);
+            try{
+                error = getString(e.getRessourceString());
+            }catch(Exception ex){}
+            Crouton.makeText(this, error, Style.ALERT).show();
             return;
         }
 

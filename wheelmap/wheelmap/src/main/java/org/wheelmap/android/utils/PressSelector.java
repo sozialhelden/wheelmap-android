@@ -19,6 +19,9 @@ public class PressSelector implements OnTouchListener{
 
 
 	public static void setAlphaForView(View alphaView, float alpha) {
+        if(alphaView == null){
+            return;
+        }
 		AlphaAnimation animation = new AlphaAnimation(alpha, alpha);
 		animation.setDuration(0);
 		animation.setFillAfter(true);
