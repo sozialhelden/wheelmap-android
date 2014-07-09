@@ -24,7 +24,7 @@ limitations under the License.
           package="org.wheelmap.android.online"
           android:installLocation="auto"
           android:versionCode="355"
-          android:versionName="2.0.3">
+          android:versionName="2.0.1">
 
     <uses-sdk
             android:minSdkVersion="8"
@@ -51,13 +51,13 @@ limitations under the License.
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
      -->
     <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
-    <permission android:name="org.wheelmap.android.develop.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="org.wheelmap.android.develop.permission.C2D_MESSAGE" />   -->
+    <permission android:name="org.wheelmap.android.online.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="org.wheelmap.android.online.permission.C2D_MESSAGE" />   -->
     <!-- The two elements above ensure that only this application can receive the messages and registration result -->
 
     <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
-    <permission android:name="org.wheelmap.android.develop.permission.UA_DATA" android:protectionLevel="signature" />
-    <uses-permission android:name="org.wheelmap.android.develop.permission.UA_DATA" />                        -->
+    <permission android:name="org.wheelmap.android.online.permission.UA_DATA" android:protectionLevel="signature" />
+    <uses-permission android:name="org.wheelmap.android.online.permission.UA_DATA" />                        -->
     <!-- The two elements above ensure that only this application has access to the Urban Airship provider -->
 
 
@@ -71,7 +71,7 @@ limitations under the License.
     <application
             android:hardwareAccelerated="true"
             android:name="org.wheelmap.android.app.WheelmapApp"
-            android:icon="@drawable/ic_launcher_develop"
+            android:icon="@drawable/ic_launcher_market"
             android:label="@string/app_name"
             android:logo="@drawable/title_logo_shadow"
             android:theme="@style/Theme.wheelmap_fixed">
@@ -115,28 +115,14 @@ limitations under the License.
 
                 <category android:name="android.intent.category.DEFAULT">
                 </category>
+                <category android:name="android.intent.category.BROWSABLE">
+                </category>
 
                 <data
                         android:host="*wheelmap.org"
                         android:pathPrefix="/nodes/"
                         android:scheme="http">
                 </data>
-            </intent-filter>
-        </activity>
-
-        <activity
-                android:name="org.wheelmap.android.activity.POIPermaLinkMapActivity"
-                android:label="@string/app_name"
-                android:theme="@style/Theme.Sherlock.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW">
-                </action>
-
-                <category android:name="android.intent.category.DEFAULT">
-                </category>
-
-                <data android:scheme="geo" />
-
             </intent-filter>
         </activity>
         <activity
@@ -189,6 +175,7 @@ limitations under the License.
         <activity
                 android:name="net.hockeyapp.android.UpdateActivity"/>
 
+
         <service android:name="org.wheelmap.android.service.RestService"
                  android:exported="false"/>
 
@@ -231,7 +218,7 @@ limitations under the License.
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="org.wheelmap.android.develop" />
+                <category android:name="org.wheelmap.android.online" />
             </intent-filter>
 
             <intent-filter>
@@ -252,7 +239,7 @@ limitations under the License.
 
         <!-- This is required for persisting preferences related to push and location -->
         <!-- MODIFICATION REQUIRED - Replace "com.urbanairship.push.sample" with your package name
-        <provider android:name="com.urbanairship.UrbanAirshipProvider" android:authorities="org.wheelmap.android.develop.urbanairship.provider" android:permission="org.wheelmap.android.develop.permission.UA_DATA" android:exported="true" android:multiprocess="true" />
+        <provider android:name="com.urbanairship.UrbanAirshipProvider" android:authorities="org.wheelmap.android.online.urbanairship.provider" android:permission="org.wheelmap.android.online.permission.UA_DATA" android:exported="true" android:multiprocess="true" />
         --><!-- END OF REQUIRED ITEMS -->
 
 
