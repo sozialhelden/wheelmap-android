@@ -407,6 +407,9 @@ public class POIDetailEditableFragment extends Fragment implements
 
     public void save() {
         ContentValues values = retrieveContentValues();
+        if(values == null){
+            return;
+        }
         if (!values.containsKey(POIs.NODETYPE_ID)) {
             showErrorMessage(getString(R.string.error_category_missing_title),
                     getString(R.string.error_category_missing_message),

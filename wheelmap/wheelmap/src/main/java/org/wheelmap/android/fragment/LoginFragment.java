@@ -243,6 +243,10 @@ public class LoginFragment extends Fragment implements
         }catch(NullPointerException npex){
             Log.d("Tag:LoginFragment", "NullPointException occurred");
 
+            if(getActivity() == null){
+                  return;
+            }
+
             Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
         }
     }

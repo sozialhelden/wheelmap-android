@@ -100,14 +100,23 @@ public class RestServiceException extends RuntimeException implements
     @Override
     public void writeToParcel(final Parcel out, final int arg1) {
         out.writeInt(this.id);
-        out.writeSerializable(getCause());
+        try{
+            out.writeSerializable(getCause());
+        }catch(Exception e){
+            out.writeSerializable("");
+        }
     }
 
     private static RestServiceException readFromParcel(final Parcel in) {
         final int errorId = in.readInt();
-        final Throwable t = (Throwable) in.readSerializable();
-
-        return new RestServiceException(errorId, t);
+        Serializable s = in.readSerializable();
+        if(s != null && s.equals("")){
+            return new RestServiceException(errorId,null);
+        } else if(s != null){
+            final Throwable t = (Throwable) in.readSerializable();
+            return new RestServiceException(errorId, t);
+        }
+        return new RestServiceException(errorId,null);
     }
 
     @Override
