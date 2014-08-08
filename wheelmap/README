@@ -25,9 +25,8 @@ bugsense.key.production=<bugsense_key_used_for_the_production_profile>
 In the top level directory
 --------------------------
 
-mvn install -P<profile>
+mvn clean package -P<build_profile>
     - compiles and builds in the wheelmap subdir
-    - builds and executes integration tests in the wheelmap-it subdir
     - The default build configuration is develop, see the pom for details about its configuration
       Other build config profiles are available: staging, live, production
 
@@ -35,7 +34,8 @@ mvn install -P<profile>
     - for a production build an alternative-signature is enforced - you need to also specify the alternative-signature profile
 
 To sign the build with an alternative key than the debug key and to zipalign it use
-mvn -Palternative-signature \
+mvn clean package -P <build_profile> \
+    -Palternative-signature \
     -Dsign.keystore=<keystore-file> \
     -Dsign.alias=<alias> \
     -Dsign.storepass=<storepass> \
@@ -52,7 +52,7 @@ Per default google analytics is disabled
 
 In the subdirectory (module) wheelmap
 -----------------------------
-mvn install -P<profile>
+mvn package -P<profile>
   - compiles and builds
   - requires one of the profiles as in the parent directory
 
