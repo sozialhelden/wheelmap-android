@@ -1,5 +1,10 @@
 // Preliminaries:
-The android maven plugin needs at least maven version >= 3.0.3
+The android maven plugin needs at most maven <= 3.0.5
+
+As IDE the Community Edition of Intellij is used. If Intellij shows errors for resources, its helpful to reset the
+standard paths in the project structure for the wheelmap module
+
+- File->Project Structure->Modules, pick the wheelmap module, in the Android-Subtab click on "Reset paths to Defaults"-Button
 
 Android apklib maven dependencies cant be automatically included into Eclipse, and
 Eclipse shows errors. Therefore its need to manually include apklib sources as
