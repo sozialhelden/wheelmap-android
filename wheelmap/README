@@ -41,6 +41,14 @@ mvn clean package -P <build_profile> \
     -Dsign.storepass=<storepass> \
     -Dsign.keypass=<keypass>
 
+Example:
+mvn clean package -Pstaging \
+        -Palternative-signature \
+        -Dsign.keystore=$PWD/your.keystore \
+        -Dsign.alias=test \
+        -Dsign.storepass='123' \
+        -Dsign.keypass='123'
+
 Proguard (but only little tested) can be enabled during release with
     -Dproguard.disable=false
 Proguard issues a lot of warnings because of "duplicate definition" of actionbarsherlock stuff. They can be ignored. Instrumentation-Tests in wheelmap-it will fail, as related classes in the wheelmap app are obfuscated by proguard. A release can be also build in the wheelmap subdirectory.
