@@ -40,11 +40,11 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
         // suite.addTestSuite(POIServiceDatabaseTest.class);
 
         // suite.addTestSuite(SupportDataTest.class);
-        if (UtilsMisc.isTablet(getContext())) {
-            suite.addTestSuite(MainMultiPaneTest.class);
-        } else {
-            suite.addTestSuite(MainSinglePaneTest.class);
-        }
+        // if (UtilsMisc.isTablet(getContext())) {
+        //    suite.addTestSuite(MainMultiPaneTest.class);
+        // } else {
+        //    suite.addTestSuite(MainSinglePaneTest.class);
+        // }
         return suite;
     }
 
