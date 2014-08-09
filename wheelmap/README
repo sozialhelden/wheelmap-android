@@ -1,6 +1,12 @@
 // Preliminaries:
 The android maven plugin needs at most maven <= 3.0.5
 
+You need to install the android 4.4 sdk jar in the local maven repository. Use the following command:
+
+mvn install:install-file -Dfile=${ANDROID_HOME}/platforms/android-19/android.jar
+                         -DgroupId=android -DartifactId=android -Dversion=4.4.2_r3
+                         -Dpackaging=jar -DgeneratePom=true
+
 As IDE the Community Edition of Intellij is used. If Intellij shows errors for resources, its helpful to reset the
 standard paths in the project structure for the wheelmap module
 
