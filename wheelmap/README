@@ -28,6 +28,9 @@ wheelmap.common.apikey=<wheelmap_apikey_used_for_basic_trieval_and_tagging>
 bugsense.key.testing=<bugsense_key_used_for_testing_profiles>
 bugsense.key.production=<bugsense_key_used_for_the_production_profile>
 
+For a release build the zipalign binary from the build-tools can not be found by the latest android-maven-plugin. Until
+this is really fixed, a symlink from ./build-tools/20.0.0/zipalign to ./tools/zipalign is needed
+
 In the top level directory
 --------------------------
 
