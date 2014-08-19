@@ -1,3 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
+  <string name="login_email">ईमेल</string>
+  <string name="login_password">पासवर्ड</string>
+  <string name="menu_save">सेव, बचाएं</string>
+  <string name="menu_search">खोजें, ढूंढें</string>
+  <string name="search_execute">खोजें, ढूंढें</string>
+  <string name="settings_wheelchair_unknown">अज्ञात</string>
+  <string name="title_search">खोजें, ढूंढें</string>
+  <string name="title_wheelchair_state">व्हीलचेयर सुलभ?</string>
+  <string name="ws_enabled_title">व्हीलचेयर सुलभ </string>
 </resources>
