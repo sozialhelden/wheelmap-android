@@ -1,4 +1,8 @@
 language: java
+cache:
+  - $HOME/.m2
+  - apt
+
 jdk:
   - openjdk7
 before_install:
