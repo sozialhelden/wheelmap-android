@@ -13,8 +13,8 @@ before_install:
   - tar xzf android-sdk_r23.0.2-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  - android update sdk --no-ui -t platform
-  - android update sdk --no-ui -t platform-tools
+  - '( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui -t platform'
+  - '( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui -t platform-tools'
   - mvn install:install-file -Dfile=${ANDROID_HOME}/platforms/android-19/android.jar -DgroupId=android -DartifactId=android -Dversion=4.4.2_r3 -Dpackaging=jar -DgeneratePom=true
 branches:
   only:
