@@ -8,6 +8,10 @@ jdk:
 before_install:
   - sudo apt-get update -qq
   - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch; fi
+
+  # Downgrade maven to make android maven plugin work again
+  - 'wget http://apache.mirror.iphh.net/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz && tar xfz apache-maven-3.0.5-bin.tar.gz && sudo mv apache-maven-3.0.5 /usr/local/maven-3.0.5 && sudo rm -f /usr/local/maven && sudo ln -s /usr/local/maven-3.0.5 /usr/local/maven'
+
   # download the latest android sdk and unzip
   - wget http://dl.google.com/android/android-sdk_r23.0.2-linux.tgz
   - tar xzf android-sdk_r23.0.2-linux.tgz
