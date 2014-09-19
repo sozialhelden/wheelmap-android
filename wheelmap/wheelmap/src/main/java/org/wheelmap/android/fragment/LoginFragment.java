@@ -141,7 +141,7 @@ public class LoginFragment extends Fragment implements
         mLoginRegister.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uriUrl = Uri.parse("http://api06.dev.openstreetmap.org/login");
+                Uri uriUrl = Uri.parse("http://wheelmap.org/en/oauth/register_osm");
                 Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
                 startActivity(launchBrowser);
             }
