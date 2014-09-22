@@ -23,11 +23,11 @@ limitations under the License.
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.wheelmap.android.online"
           android:installLocation="auto"
-          android:versionCode="356"
-          android:versionName="2.0.3">
+          android:versionCode="377"
+          android:versionName="2.0.4">
 
     <uses-sdk
-            android:minSdkVersion="8"
+              android:minSdkVersion="8"
             android:targetSdkVersion="16"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

@@ -24,10 +24,10 @@ limitations under the License.
           package="org.wheelmap.android.online"
           android:installLocation="auto"
           android:versionCode="${app.version.code}"
-          android:versionName="2.0.3">
+          android:versionName="2.0.4">
 
     <uses-sdk
-            android:minSdkVersion="8"
+              android:minSdkVersion="8"
             android:targetSdkVersion="16"/>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
