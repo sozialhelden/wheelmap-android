@@ -56,6 +56,12 @@
             <!-- version>3.0.10</version -->
             <version>4.1</version>
         </dependency>
+        <!--dependency>
+            <groupId>com.mapbox.mapboxsdk</groupId>
+            <artifactId>mapbox-android-sdk</artifactId>
+            <version>0.7.0</version>
+        </dependency-->
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-android</artifactId>
