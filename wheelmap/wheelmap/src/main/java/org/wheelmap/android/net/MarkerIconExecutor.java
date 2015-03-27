@@ -55,44 +55,45 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
         prefs = WheelmapApp.getDefaultPrefs();
 
-        String request = "http://"+getServer()+"/api/assets?api_key="+getApiKey();
+        String request = "http://" + getServer() + "/api/assets?api_key=" + getApiKey();
 
-        try{
-            org.apache.http.client.HttpClient client =  mRequestProcessor.getRequestFactory().getHttpClient();
+        try {
+            org.apache.http.client.HttpClient client = mRequestProcessor.getRequestFactory().getHttpClient();
             HttpGet get = new HttpGet(request);
             HttpResponse response = client.execute(get);
-            if(response.getStatusLine().getStatusCode() == 200){
+            if (response.getStatusLine().getStatusCode() == 200) {
                 String json = EntityUtils.toString(response.getEntity());
                 JSONObject jsonObject = new JSONObject(json);
                 JSONArray assets = jsonObject.getJSONArray("assets");
-                for(int i=0;i<assets.length();i++){
+                for (int i = 0; i < assets.length(); i++) {
                     JSONObject item = assets.getJSONObject(i);
 
                     //search marker
-                    if(item.optString(TYPE,item.optString("name","")).equals(MARKER)){
-                         long modified_at = item.getLong(MODIFIED_AT);
-                         long current_data = prefs.getLong(MARKER+MODIFIED_AT,-1);
+                    if (item.optString(TYPE, item.optString("name", "")).equals(MARKER)) {
+                        long modified_at = item.getLong(MODIFIED_AT);
+                        long current_data = prefs.getLong(MARKER + MODIFIED_AT, -1);
 
-                         if(modified_at != current_data || StartupActivity.LOAD_AGAIN_DEBUG){
-                            boolean successfully = reloadMarkerAssets(item.getString("url"));
-                            if(successfully){
-                               prefs.edit().putLong(MARKER+MODIFIED_AT,modified_at).commit();
-                            }else{
+                        if (modified_at != current_data || StartupActivity.LOAD_AGAIN_DEBUG) {
+                            String requestUrl = "http://" + getServer() + item.getString("url");
+                            boolean successfully = reloadMarkerAssets(requestUrl);
+                            if (successfully) {
+                                prefs.edit().putLong(MARKER + MODIFIED_AT, modified_at).commit();
+                            } else {
                                 processException(
                                         RestServiceException.ERROR_NETWORK_FAILURE,
                                         new NetworkErrorException(), true);
                             }
                             break;
-                         }
+                        }
                     }
                 }
-            }else{
+            } else {
                 processException(
                         RestServiceException.ERROR_NETWORK_FAILURE,
                         new NetworkErrorException(), true);
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             processException(
                     RestServiceException.ERROR_NETWORK_FAILURE,
@@ -100,22 +101,22 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
         }
     }
 
-    private boolean reloadMarkerAssets(String url){
+    private boolean reloadMarkerAssets(String url) {
 
         Context context = getContext();
 
         File cachedir = context.getDir(CACHE_DIR, Context.MODE_PRIVATE);
 
-        File markerZip = new File(cachedir+"/icons.zip");
-        boolean download = downloadFile(markerZip,url);
-        if(!download){
-           return false;
+        File markerZip = new File(cachedir + "/icons.zip");
+        boolean download = downloadFile(markerZip, url);
+        if (!download) {
+            return false;
         }
 
-        File marker_path = new File(cachedir+"/icons");
-        try{
-            unzipFile(markerZip,marker_path);
-        }catch(Exception e){
+        File marker_path = new File(cachedir + "/icons");
+        try {
+            unzipFile(markerZip, marker_path);
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -126,63 +127,58 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
     }
 
-    public static boolean markerIconsDownloaded(){
-        return WheelmapApp.getDefaultPrefs().getLong(MARKER+MODIFIED_AT,-1) > 0;
+    public static boolean markerIconsDownloaded() {
+        return WheelmapApp.getDefaultPrefs().getLong(MARKER + MODIFIED_AT, -1) > 0;
     }
 
-    public static File getMarkerPath(Context context){
+    public static File getMarkerPath(Context context) {
         File cachedir = context.getDir(CACHE_DIR, Context.MODE_PRIVATE);
-        File marker_path = new File(cachedir+"/icons/icons");
+        File marker_path = new File(cachedir + "/icons/icons");
         return marker_path;
     }
 
 
-    private boolean downloadFile(File to,String fromUrl){
+    private boolean downloadFile(File to, String fromUrl) {
 
-            try
-            {
-                URL url = new URL(fromUrl);
+        try {
+            URL url = new URL(fromUrl);
 
-                URLConnection ucon = url.openConnection();
-                ucon.setReadTimeout(5000);
-                ucon.setConnectTimeout(10000);
+            URLConnection ucon = url.openConnection();
+            ucon.setReadTimeout(5000);
+            ucon.setConnectTimeout(10000);
 
-                InputStream is = ucon.getInputStream();
-                BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
+            InputStream is = ucon.getInputStream();
+            BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
 
-                File file = to;
+            File file = to;
 
-                if (file.exists())
-                {
-                    file.delete();
-                }
-                file.createNewFile();
-
-                FileOutputStream outStream = new FileOutputStream(file);
-                byte[] buff = new byte[5 * 1024];
-
-                int len;
-                while ((len = inStream.read(buff)) != -1)
-                {
-                    outStream.write(buff, 0, len);
-                }
-
-                outStream.flush();
-                outStream.close();
-                inStream.close();
-
+            if (file.exists()) {
+                file.delete();
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                return false;
+            file.createNewFile();
+
+            FileOutputStream outStream = new FileOutputStream(file);
+            byte[] buff = new byte[5 * 1024];
+
+            int len;
+            while ((len = inStream.read(buff)) != -1) {
+                outStream.write(buff, 0, len);
             }
 
-            return true;
+            outStream.flush();
+            outStream.close();
+            inStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
 
-    private void unzipFile(File zipfile, File to) throws Exception{
+    private void unzipFile(File zipfile, File to) throws Exception {
         FileInputStream is;
         ZipInputStream zis;
 
@@ -196,10 +192,10 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
         while ((ze = zis.getNextEntry()) != null) {
             filename = ze.getName();
 
-            File file = new File(to +"/"+ filename);
+            File file = new File(to + "/" + filename);
 
-            if(file.exists()){
-               file.delete();
+            if (file.exists()) {
+                file.delete();
             }
 
             Log.d(getClass().getSimpleName(), "Full Issue Unzipping: " + file);
