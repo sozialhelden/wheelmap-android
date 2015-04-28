@@ -18,6 +18,6 @@
     <string name="login_activity_title">Login</string>
     <string name="logout_activity_title">Logout</string>
     <string name="login_succesfully">Login successfull</string>
-    <string name="logout_text">Logged in as: %s</string>
+    <string name="logout_text">Logged in</string>
     <string name="logout">Logout</string>
 </resources>

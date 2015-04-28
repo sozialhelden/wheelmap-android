@@ -31,7 +31,8 @@ public class LogoutFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_logout,container,false);
 
         TextView user = (TextView) v.findViewById(R.id.logout_user);
-        user.setText(String.format(user.getText().toString(),mCredentials.getUserName()));
+//        user.setText(String.format(user.getText().toString(),mCredentials.getUserName()));
+        user.setText(getResources().getString(R.string.logout_text));
 
         v.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override

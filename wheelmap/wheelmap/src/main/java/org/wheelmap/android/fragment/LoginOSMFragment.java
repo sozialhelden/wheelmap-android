@@ -55,6 +55,10 @@ public class LoginOSMFragment extends Fragment {
                     view.stopLoading();
                     loginSuccessful(url);
                 }
+                else if(url.startsWith("wheelmap://error")){
+                    view.stopLoading();
+                    loginError();
+                }
             }
 
             @Override
@@ -82,7 +86,7 @@ public class LoginOSMFragment extends Fragment {
             pInfo = null;
             e.printStackTrace();
         }
-        ;
+
         final StringBuilder sb = new StringBuilder(application.getPackageName());
         if (pInfo != null) {
             sb.append("/");
@@ -96,7 +100,7 @@ public class LoginOSMFragment extends Fragment {
         try{
             Uri uri = Uri.parse(url);
             UserCredentials mCredentials = new UserCredentials(getActivity().getApplicationContext());
-            mCredentials.save(uri.getQueryParameter("token"), uri.getQueryParameter("email"));
+            mCredentials.save(uri.getQueryParameter("token"), "OSMUser");
             getActivity().setResult(Activity.RESULT_OK);
             Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
             getActivity().onBackPressed();
@@ -110,5 +114,10 @@ public class LoginOSMFragment extends Fragment {
 
             Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void loginError(){
+        //close webView
+        getActivity().onBackPressed();
     }
 }
