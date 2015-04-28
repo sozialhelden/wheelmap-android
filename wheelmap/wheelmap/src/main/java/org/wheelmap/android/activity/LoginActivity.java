@@ -28,10 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.Toast;
-import org.wheelmap.android.fragment.LoginFragment;
-import org.wheelmap.android.fragment.LoginOSMFragment;
-import org.wheelmap.android.fragment.LogoutFragment;
-import org.wheelmap.android.fragment.WheelchairStateFragment;
+import org.wheelmap.android.fragment.*;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairState;
@@ -89,7 +86,8 @@ public class LoginActivity extends Activity {
 
         if(!mCredentials.isLoggedIn()){
             //mFragment = new LoginFragment();
-            mFragment = new LoginOSMFragment();
+            //mFragment = new LoginOSMFragment();
+            mFragment = new LoginDescriptionFragment();
             setTitle(R.string.login_activity_title);
         }else{
             setTitle(R.string.logout_activity_title);
@@ -98,7 +96,7 @@ public class LoginActivity extends Activity {
 
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
-                        LoginOSMFragment.TAG).commit();
+                        LoginDescriptionFragment.TAG).commit();
 
         if(UtilsMisc.isTablet(getApplicationContext())){
             View v = findViewById(R.id.content);
