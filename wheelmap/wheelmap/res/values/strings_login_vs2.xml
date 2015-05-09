@@ -20,4 +20,12 @@
     <string name="login_succesfully">Login successfull</string>
     <string name="logout_text">Logged in</string>
     <string name="logout">Logout</string>
+    <string name="why_osm_account">Why do I need an OSM user account?</string>
+    <string name="describe_why_osm_account">Wheelmap.org is based on Openstreetmap. All the data you see on the map is coming from the Openstreetmap database. Hence, to be able to add or change information you need an Openstreetmap user account.</string>
+    <string name="login_over_osm_text">You need an Openstreetmap user account to be able to log in on Wheelmap.org.</string>
+    <string name="login_over_osm">Go to OSM Login</string>
+    <string name="osm_account">You don’t have an OSM user account yet?</string>
+    <string name="steps_to_osm_account">Four steps to log in:\n1. Click on “OSM Registration” and register your OSM user account\n2. Open your email client and click on the activation link\n3. Open the Wheelmap app\n4Log in with your OSM user account (username &amp; password)</string>
+    <string name="osm_registration">OSM Registration</string>
+    <string name="osm_understood">Ok, understood!</string>
 </resources>

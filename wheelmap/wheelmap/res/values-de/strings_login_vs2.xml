@@ -17,4 +17,12 @@
   <string name="login_succesfully">Login erfolgreich</string>
   <string name="logout_text">Eingeloggt</string>
   <string name="logout">Logout</string>
+    <string name="why_osm_account">Warum ist ein OSM-Nutzerkonto notwendig?</string>
+    <string name="describe_why_osm_account">Alle Orte und Informationen auf Wheelmap.org sind in der OSM gespeichert. Um neue Informationen oder neue Orte einzutragen, ist deshalb ein OpenStreetmap-Konto nötig, mit dem man sich auf Wheelmap einloggen kann.</string>
+    <string name="login_over_osm_text">Um dich bei bei Wheelmap einzuloggen, benötigst Du ein Nutzerkonto der Openstreetmap (OSM).</string>
+    <string name="login_over_osm">Weiter zum OSM-Login</string>
+    <string name="osm_account">Noch kein OSM-Nutzerkonto?</string>
+    <string name="steps_to_osm_account">Vier Schritte zum Login:\n1. Auf  “Weiter zur OSM” klicken und dort OSM-Nutzerkonto anlegen\n2. Email-Programm öffnen und Bestätigungslink klicken\n3. Wheelmap-App öffnen\n4. Mit dem OSM-Nutzerkonto (Nutzernamen &amp; Passwort) einloggen</string>
+    <string name="osm_registration">OSM-Registrierung</string>
+    <string name="osm_understood">Ok, verstanden!</string>
 </resources>
