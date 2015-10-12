@@ -29,6 +29,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -85,7 +86,7 @@ public class StartupActivity extends Activity implements
 
         checkForHockeyUpdates();
 
-        Log.d(TAG,"Server: "+appProperties.get(IAppProperties.KEY_WHEELMAP_URI));
+        Log.d(TAG,"Server: "+ BuildConfig.API_BASE_URL);
 
     }
 

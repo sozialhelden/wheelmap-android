@@ -45,6 +45,7 @@ import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.modules.MainModule;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
 import java.math.BigInteger;
@@ -278,7 +279,7 @@ public class WheelmapApp extends Application {
 
 
     public static void checkForCrashes(android.app.Activity context) {
-        String appId = context.getString(R.string.hockeyapp_id);
+        String appId = BuildConfig.HOCKEY_APP_ID;
         if (TextUtils.isEmpty(appId)) {
             return;
         }
@@ -286,8 +287,8 @@ public class WheelmapApp extends Application {
     }
 
     public static void checkForUpdates(android.app.Activity context) {
-        String appId = context.getString(R.string.hockeyapp_id);
-        if (TextUtils.isEmpty(appId) || "org.wheelmap.android.online".equals(context.getPackageName())) {
+        String appId = BuildConfig.HOCKEY_APP_ID;
+        if (TextUtils.isEmpty(appId) || BuildConfig.DEBUG) {
             return;
         }
         UpdateManager.register(context, appId);

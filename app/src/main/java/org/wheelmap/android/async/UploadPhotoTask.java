@@ -16,6 +16,7 @@ import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
 import android.app.Application;
@@ -55,8 +56,7 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
 
     @Override
     protected Boolean doInBackground(File... params) {
-        AppProperties mAppProperties = new AppProperties(mContext);
-        String server  = mAppProperties.get(IAppProperties.KEY_WHEELMAP_URI);
+        String server  = BuildConfig.API_BASE_URL;
         ICredentials credentials = new UserCredentials(mContext);
         String url = "http://"+server+"/api/nodes/"+wmID+"/photos?api_key="+credentials.getApiKey();
         Log.d(TAG,url);

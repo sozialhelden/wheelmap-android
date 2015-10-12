@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.net;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.client.HttpClientErrorException;
@@ -43,6 +41,7 @@ import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.IHttpUserAgent;
 import org.wheelmap.android.net.request.RequestBuilder;
 import org.wheelmap.android.net.request.RequestProcessor;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.service.RestServiceException;
 
 import android.content.ContentResolver;
@@ -195,7 +194,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
     @Override
     public String getServer() {
-        return mAppProperties.get(IAppProperties.KEY_WHEELMAP_URI);
+        return BuildConfig.API_BASE_URL;
     }
 
     protected String getTag() {

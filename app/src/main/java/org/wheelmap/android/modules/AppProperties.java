@@ -27,6 +27,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Application;
@@ -112,6 +113,13 @@ public class AppProperties implements IAppProperties {
     public String get(final String key) {
         if (key == null) {
             return null;
+        }
+
+        switch (key) {
+            case IAppProperties.KEY_HOCKEY_URI:
+                return BuildConfig.HOCKEY_APP_ID;
+            case IAppProperties.KEY_WHEELMAP_URI:
+                return BuildConfig.API_BASE_URL;
         }
 
         if (properties == null) {
