@@ -32,8 +32,9 @@
     </style>
 
     <style name="Theme.wheelmap_fixed" parent="@style/Theme.wheelmap">
-        <item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>
-        <item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>
+        <!--<item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>-->
+        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_mtrl_alpha</item>
+        <!--<item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>-->
     </style>
 
     <style name="DetailView">
@@ -230,9 +231,11 @@
 
     <style name="Widget.PullToRefresh.ProgressBar.Horizontal.Center"
            parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/ptr_progress_horizontal_holo_center</item>
+        <!--<item name="android:progressDrawable">@drawable/ptr_progress_horizontal_holo_center</item>-->
+        <item name="android:progressDrawable">@drawable/progress_bg_wheelmap</item>
         <item name="android:indeterminateDrawable">
-            @drawable/ptr_progress_indeterminate_horizontal_holo
+            @drawable/progress_bg_wheelmap
+            <!--@drawable/ptr_progress_indeterminate_horizontal_holo-->
         </item>
         <item name="android:minHeight">4dip</item>
         <item name="android:maxHeight">4dip</item>

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="photo_upload_failed">Hochladen fehlgeschlagen</string>
   <string name="photo_upload_successfully">Hochladen erfolgreich</string>

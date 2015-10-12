@@ -16,7 +16,7 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
     <!-- Theme.Sherlock.Light.Dialog -->
-    <style name="Theme.Wheelmap.Dialog" parent="@style/Holo.Theme.Dialog.Light">
+    <style name="Theme.Wheelmap.Dialog" parent="@android:style/Theme.Dialog">
         <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>

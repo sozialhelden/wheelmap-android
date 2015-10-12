@@ -41,7 +41,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="@dimen/mapcompass_margin_vertical"
             android:layout_marginLeft="@dimen/mapcompass_margin_horizontal"
-            compass:color="@android:color/black"/>
+            compass:compassview_color="@android:color/black"/>
 
     <LinearLayout
             android:id="@+id/my_location_button"

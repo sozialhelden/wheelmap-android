@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- NEW    -->
     <!-- todo: add to transifex   -->
 
-    <string name="search_mode_no_point_found">No Points found, click the back button!</string>
+    <!--<string name="search_mode_no_point_found">No Points found, click the back button!</string>-->
 
-    <string name="poi_property_comment_add_comment">Add comment</string>
-    <string name="poi_property_comment_add_adress">Add adress</string>
-    <string name="poi_property_comment_add_photos">Add photos</string>
+    <!--<string name="poi_property_comment_add_comment">Add comment</string>-->
+    <!--<string name="poi_property_comment_add_adress">Add adress</string>-->
+    <!--<string name="poi_property_comment_add_photos">Add photos</string>-->
 </resources>

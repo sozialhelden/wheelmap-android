@@ -1,11 +1,11 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Title-->
-  <string name="title_editor">Editor</string>
-  <string name="title_login">Per favore accedere!</string>
-  <string name="title_nodetype_edit">Seleziona un tipo</string>
-  <string name="title_pois_detail_activity">Detagli Wheelmap</string>
-  <string name="title_pois_position_edit">Posizionamente del luogo</string>
-  <string name="title_search">Ricerca</string>
+  <!--<string name="title_editor">Editor</string>-->
+  <!--<string name="title_login">Per favore accedere!</string>-->
+  <!--<string name="title_nodetype_edit">Seleziona un tipo</string>-->
+  <!--<string name="title_pois_detail_activity">Detagli Wheelmap</string>-->
+  <!--<string name="title_pois_position_edit">Posizionamente del luogo</string>-->
+  <!--<string name="title_search">Ricerca</string>-->
   <string name="title_engage">Engage</string>
 </resources>

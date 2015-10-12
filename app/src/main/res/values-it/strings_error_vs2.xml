@@ -1,26 +1,26 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Error-->
   <string name="to_far_away">Troppo distante per caricare nuovi Luoghi</string>
   <string name="move_the_map">Muovere la mappa toccando lo schermo</string>
   <string name="dialog_close_editable">Vuoi davvero chiudere chiudere \"Modifiche schermo\"</string>
-  <string name="error_authorization_login_failed">Accesso fallito</string>
-  <string name="error_authorization_not_osm_connected">Il tuo account wheelmap non è connesso a openstreetmap.</string>
-  <string name="error_authorization_request_forbidden">Richiesta vietata</string>
-  <string name="error_authorization_request_failed">Autorizzazione fallita. La applicazione non ha l\'autorizzazione di accedere al servizio. Se hai eseguito l\'accesso, prova a fare logout. L\'applicazione deve essere aggiornata o il servizio potrebbe avere un problema.</string>
-  <string name="error_authorization_required">Autorizzazione necessaria</string>
-  <string name="error_category_missing_message">Non può essere archiviata senza aver scelto una categoria per la location.</string>
-  <string name="error_category_missing_title">Nessuna categoria selezionata!</string>
-  <string name="error_network_client_failure">Questa applicazione non può comunicare con il server. E\' necessario un aggiornamento. Scusate. </string>
-  <string name="error_network_server_failure">Il server di wheelmap ha un problema. Per favore riprovare più tardi.</string>
-  <string name="error_network_server_maintenance">Il server di wheelmap è fuori servizio per modifiche del sistema. Per favore riprovare più tardi</string>
-  <string name="error_network_unknown_failure">Si è verificato un errore inaspettato. Scusate, comunicazione fallita.</string>
-  <string name="error_newpoi_message">Il nuovo luogo sarà verificato prima di apparire nel database. La verifica richiederà un pò di tempo.</string>
-  <string name="error_newpoi_title">Nuovo luogo creato</string>
-  <string name="error_noid_message">Scusate, questo link non contiene nessun tipo di identificazione. Impossibile trovare il luogo.</string>
-  <string name="error_noid_title">Al link manca il node ID</string>
-  <string name="error_not_enough_memory">Il tuo cellulare non ha abbastanza memoria per questa applicazione. Scusa.</string>
-  <string name="error_wheelchairstate_missing_message">Per favore selezionare il livello di accessibilità con sedia a rotelle.</string>
-  <string name="error_wheelchairstate_missing_title">Non è stato assegnato un livello per l\'accesso con sedia a rotelle</string>
-  <string name="helper_delim_dash">\ - \</string>
+  <!--<string name="error_authorization_login_failed">Accesso fallito</string>-->
+  <!--<string name="error_authorization_not_osm_connected">Il tuo account wheelmap non è connesso a openstreetmap.</string>-->
+  <!--<string name="error_authorization_request_forbidden">Richiesta vietata</string>-->
+  <!--<string name="error_authorization_request_failed">Autorizzazione fallita. La applicazione non ha l\'autorizzazione di accedere al servizio. Se hai eseguito l\'accesso, prova a fare logout. L\'applicazione deve essere aggiornata o il servizio potrebbe avere un problema.</string>-->
+  <!--<string name="error_authorization_required">Autorizzazione necessaria</string>-->
+  <!--<string name="error_category_missing_message">Non può essere archiviata senza aver scelto una categoria per la location.</string>-->
+  <!--<string name="error_category_missing_title">Nessuna categoria selezionata!</string>-->
+  <!--<string name="error_network_client_failure">Questa applicazione non può comunicare con il server. E\' necessario un aggiornamento. Scusate. </string>-->
+  <!--<string name="error_network_server_failure">Il server di wheelmap ha un problema. Per favore riprovare più tardi.</string>-->
+  <!--<string name="error_network_server_maintenance">Il server di wheelmap è fuori servizio per modifiche del sistema. Per favore riprovare più tardi</string>-->
+  <!--<string name="error_network_unknown_failure">Si è verificato un errore inaspettato. Scusate, comunicazione fallita.</string>-->
+  <!--<string name="error_newpoi_message">Il nuovo luogo sarà verificato prima di apparire nel database. La verifica richiederà un pò di tempo.</string>-->
+  <!--<string name="error_newpoi_title">Nuovo luogo creato</string>-->
+  <!--<string name="error_noid_message">Scusate, questo link non contiene nessun tipo di identificazione. Impossibile trovare il luogo.</string>-->
+  <!--<string name="error_noid_title">Al link manca il node ID</string>-->
+  <!--<string name="error_not_enough_memory">Il tuo cellulare non ha abbastanza memoria per questa applicazione. Scusa.</string>-->
+  <!--<string name="error_wheelchairstate_missing_message">Per favore selezionare il livello di accessibilità con sedia a rotelle.</string>-->
+  <!--<string name="error_wheelchairstate_missing_title">Non è stato assegnato un livello per l\'accesso con sedia a rotelle</string>-->
+  <!--<string name="helper_delim_dash">\ - \</string>-->
 </resources>

@@ -1,26 +1,26 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Error-->
-  <string name="to_far_away">To far away to load new Points</string>
-  <string name="move_the_map">Please move the map by touching</string>
-  <string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>
-  <string name="error_authorization_login_failed">Login Failed</string>
-  <string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to\n        openstreetmap.\n    </string>
-  <string name="error_authorization_request_forbidden">Request forbidden</string>
-  <string name="error_authorization_request_failed">Authorization failed. The app does not have\n        proper access rights to the service. If you are logged in, your can try to log out.\n        Otherwise the app needs to be updated or the service has a problem.\n    </string>
-  <string name="error_authorization_required">Authorization required</string>
-  <string name="error_category_missing_message">Cannot store without a category for the\n        location.\n    </string>
-  <string name="error_category_missing_title">No category set!</string>
-  <string name="error_network_client_failure">This App cant communicate with the server. You need\n        an update. Sorry.\n    </string>
-  <string name="error_network_server_failure">The Wheelmap server has a problem. Please try again\n        later.\n    </string>
-  <string name="error_network_server_maintenance">The Wheelmap server is down for maintenance.\n        Please try again later\n    </string>
-  <string name="error_network_unknown_failure">An unknown network failure occurred. Sorry,\n        communication failed.\n    </string>
-  <string name="error_newpoi_message">The new location will be verified before it shows up in the\n        database. This will take some time.\n    </string>
-  <string name="error_newpoi_title">New Location created</string>
-  <string name="error_noid_message">Sorry, this link contains no identification to retrieve from\n        the Wheelmap servers. Unable to find the location.\n    </string>
-  <string name="error_noid_title">Link lacks node id</string>
-  <string name="error_not_enough_memory">Your phone does not provide enough memory for this\n        application. Sorry.\n    </string>
-  <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.\n    </string>
-  <string name="error_wheelchairstate_missing_title">No Wheelchair State given</string>
-  <string name="helper_delim_dash">\ - \</string>
+  <!--<string name="to_far_away">To far away to load new Points</string>-->
+  <!--<string name="move_the_map">Please move the map by touching</string>-->
+  <!--<string name="dialog_close_editable">Do you really wanna close the Editscreen?</string>-->
+  <!--<string name="error_authorization_login_failed">Login Failed</string>-->
+  <!--<string name="error_authorization_not_osm_connected">Your wheelmap account is not connected to\n        openstreetmap.\n    </string>-->
+  <!--<string name="error_authorization_request_forbidden">Request forbidden</string>-->
+  <!--<string name="error_authorization_request_failed">Authorization failed. The app does not have\n        proper access rights to the service. If you are logged in, your can try to log out.\n        Otherwise the app needs to be updated or the service has a problem.\n    </string>-->
+  <!--<string name="error_authorization_required">Authorization required</string>-->
+  <!--<string name="error_category_missing_message">Cannot store without a category for the\n        location.\n    </string>-->
+  <!--<string name="error_category_missing_title">No category set!</string>-->
+  <!--<string name="error_network_client_failure">This App cant communicate with the server. You need\n        an update. Sorry.\n    </string>-->
+  <!--<string name="error_network_server_failure">The Wheelmap server has a problem. Please try again\n        later.\n    </string>-->
+  <!--<string name="error_network_server_maintenance">The Wheelmap server is down for maintenance.\n        Please try again later\n    </string>-->
+  <!--<string name="error_network_unknown_failure">An unknown network failure occurred. Sorry,\n        communication failed.\n    </string>-->
+  <!--<string name="error_newpoi_message">The new location will be verified before it shows up in the\n        database. This will take some time.\n    </string>-->
+  <!--<string name="error_newpoi_title">New Location created</string>-->
+  <!--<string name="error_noid_message">Sorry, this link contains no identification to retrieve from\n        the Wheelmap servers. Unable to find the location.\n    </string>-->
+  <!--<string name="error_noid_title">Link lacks node id</string>-->
+  <!--<string name="error_not_enough_memory">Your phone does not provide enough memory for this\n        application. Sorry.\n    </string>-->
+  <!--<string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility.\n    </string>-->
+  <!--<string name="error_wheelchairstate_missing_title">No Wheelchair State given</string>-->
+  <!--<string name="helper_delim_dash">\ - \</string>-->
 </resources>

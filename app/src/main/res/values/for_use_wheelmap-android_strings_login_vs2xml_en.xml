@@ -1,20 +1,20 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Login-->
-  <string name="login_text">Log in with your Wheelmap-Account.</string>
-  <string name="login_register_discription">New? Register now at OpenStreetmap and Wheelmap.org</string>
-  <string name="login_email">Email</string>
-  <string name="login_link_text">Register at Wheelmap.org</string>
-  <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
-  <string name="login_password">Password</string>
-  <string name="login_submit">Login</string>
-  <string name="login_forgot_password">Forgot password</string>
-  <string name="login_new_registration">Register now</string>
-  <string name="login_dont_have_account">No Wheelmap Account? Log in with an OpenStreetmap Account on Wheelmap.org, click on your \"Account\" and create a new Wheelmap-Account.</string>
-  <string name="login_new">New? Register now at OpenStreetmap and Wheelmap.org</string>
-  <string name="login_activity_title">Login</string>
-  <string name="logout_activity_title">Logout</string>
-  <string name="login_succesfully">Login successfull</string>
-  <string name="logout_text">Logged in as: %s</string>
-  <string name="logout">Logout</string>
+  <!--<string name="login_text">Log in with your Wheelmap-Account.</string>-->
+  <!--<string name="login_register_discription">New? Register now at OpenStreetmap and Wheelmap.org</string>-->
+  <!--<string name="login_email">Email</string>-->
+  <!--<string name="login_link_text">Register at Wheelmap.org</string>-->
+  <!--<string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>-->
+  <!--<string name="login_password">Password</string>-->
+  <!--<string name="login_submit">Login</string>-->
+  <!--<string name="login_forgot_password">Forgot password</string>-->
+  <!--<string name="login_new_registration">Register now</string>-->
+  <!--<string name="login_dont_have_account">No Wheelmap Account? Log in with an OpenStreetmap Account on Wheelmap.org, click on your \"Account\" and create a new Wheelmap-Account.</string>-->
+  <!--<string name="login_new">New? Register now at OpenStreetmap and Wheelmap.org</string>-->
+  <!--<string name="login_activity_title">Login</string>-->
+  <!--<string name="logout_activity_title">Logout</string>-->
+  <!--<string name="login_succesfully">Login successfull</string>-->
+  <!--<string name="logout_text">Logged in as: %s</string>-->
+  <!--<string name="logout">Logout</string>-->
 </resources>

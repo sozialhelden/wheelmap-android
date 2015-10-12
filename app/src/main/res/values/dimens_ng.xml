@@ -29,12 +29,12 @@
     <dimen name="icon_size_small">24dp</dimen>
     <dimen name="icon_size_medium">32dp</dimen>
     <dimen name="icon_size_large">48dp</dimen>
-    <dimen name="margin_very_small">2dp</dimen>
+    <!--<dimen name="margin_very_small">2dp</dimen>-->
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_huge">16dp</dimen>
-    <dimen name="margin_very_huge">24dp</dimen>
+    <!--<dimen name="margin_very_huge">24dp</dimen>-->
     <dimen name="margin_vertical_section">16dp</dimen>
     <dimen name="separator_small">1dp</dimen>
     <dimen name="separator_large">4dp</dimen>
@@ -42,7 +42,7 @@
     <dimen name="detail_mapview_height">235dip</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
-    <dimen name="text_size_large">22sp</dimen>
+    <!--<dimen name="text_size_large">22sp</dimen>-->
     <dimen name="mp_list_width">400dp</dimen>
     <dimen name="mapcompass_margin_vertical">32dp</dimen>
     <dimen name="mapcompass_margin_horizontal">4dp</dimen>
@@ -51,7 +51,7 @@
     <dimen name="map_position_margin_horizontal">10dp</dimen>
     <dimen name="landscape_divider_margin">0dp</dimen>
     <dimen name="mapmarker_halflength">16dp</dimen>
-    <dimen name="mapmarker_height">32dp</dimen>
-    <dimen name="mapmarker_width">36dp</dimen>
+    <!--<dimen name="mapmarker_height">32dp</dimen>-->
+    <!--<dimen name="mapmarker_width">36dp</dimen>-->
 
 </resources>

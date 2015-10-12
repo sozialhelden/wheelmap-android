@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Dashboard-->
   <string name="dashboard_search_hint">Søg lokaliteter i nærheden</string>

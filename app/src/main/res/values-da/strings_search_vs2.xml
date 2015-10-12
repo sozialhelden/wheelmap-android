@@ -1,14 +1,14 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Search-->
-  <string name="search_distance">Afstand</string>
-  <string name="search_distance_unspecified">Alt uanset</string>
-  <string name="search_execute">Søg</string>
-  <string name="search_hint_list">Nøgleord</string>
-  <string name="search_mode_distance">Afstand</string>
-  <string name="search_no_selection">Alle</string>
-  <string name="search_pick_category">Vælg en (under)kategori</string>
-  <string name="search_pick_map">Der søges kun i det valgte kortområde.</string>
-  <string name="settings_login_delete">Klik for at slette dette login.</string>
-  <string name="search_mode_map">Ved kort</string>
+  <!--<string name="search_distance">Afstand</string>-->
+  <!--<string name="search_distance_unspecified">Alt uanset</string>-->
+  <!--<string name="search_execute">Søg</string>-->
+  <!--<string name="search_hint_list">Nøgleord</string>-->
+  <!--<string name="search_mode_distance">Afstand</string>-->
+  <!--<string name="search_no_selection">Alle</string>-->
+  <!--<string name="search_pick_category">Vælg en (under)kategori</string>-->
+  <!--<string name="search_pick_map">Der søges kun i det valgte kortområde.</string>-->
+  <!--<string name="settings_login_delete">Klik for at slette dette login.</string>-->
+  <!--<string name="search_mode_map">Ved kort</string>-->
 </resources>

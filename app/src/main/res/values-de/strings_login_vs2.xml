@@ -1,13 +1,13 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Login-->
   <string name="login_text">Log Dich mit Deinem Wheelmap-Account ein.</string>
-  <string name="login_register_discription">Neu hier? Registriere Dich jetzt in einem Prozess bei OpenStreetMap und Wheelmap.org</string>
-  <string name="login_email">E-mail</string>
-  <string name="login_link_text">Registrieren bei Wheelmap.org</string>
-  <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
-  <string name="login_password">Passwort</string>
-  <string name="login_submit">Login</string>
+  <!--<string name="login_register_discription">Neu hier? Registriere Dich jetzt in einem Prozess bei OpenStreetMap und Wheelmap.org</string>-->
+  <!--<string name="login_email">E-mail</string>-->
+  <!--<string name="login_link_text">Registrieren bei Wheelmap.org</string>-->
+  <!--<string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>-->
+  <!--<string name="login_password">Passwort</string>-->
+  <!--<string name="login_submit">Login</string>-->
   <string name="login_forgot_password">Passwort vergessen?</string>
   <string name="login_new_registration">Neu registrieren</string>
   <string name="login_dont_have_account">Noch keinen Wheelmap-Account? Log dich auf Wheelmap.org mit Deinem OpenStreetMap-Account ein, klicke auf “Profil” und lege einen Wheelmap-Account an.</string>

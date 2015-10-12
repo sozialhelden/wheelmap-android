@@ -1,12 +1,12 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!--Detail-->
-  <string name="poi_property_city">Città</string>
-  <string name="poi_property_comment_no_comment">Nessun commento</string>
-  <string name="poi_property_comment_no_adress">Nessun indirizzo</string>
-  <string name="poi_property_comment_no_photos">Nessuna foto</string>
-  <string name="poi_property_housenum">No</string>
-  <string name="poi_property_postcode">CAP</string>
-  <string name="poi_property_street">Via</string>
-  <string name="position_geopoint">Luogo</string>
+  <!--<string name="poi_property_city">Città</string>-->
+  <!--<string name="poi_property_comment_no_comment">Nessun commento</string>-->
+  <!--<string name="poi_property_comment_no_adress">Nessun indirizzo</string>-->
+  <!--<string name="poi_property_comment_no_photos">Nessuna foto</string>-->
+  <!--<string name="poi_property_housenum">No</string>-->
+  <!--<string name="poi_property_postcode">CAP</string>-->
+  <!--<string name="poi_property_street">Via</string>-->
+  <!--<string name="position_geopoint">Luogo</string>-->
 </resources>
