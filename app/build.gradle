@@ -4,6 +4,8 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
+    enforceUniquePackageName false
+
     defaultConfig {
         applicationId "android.wheelmap.org.wheelmap_android"
         minSdkVersion 11
@@ -46,7 +48,11 @@ dependencies {
     compile 'org.osmdroid:osmdroid-android:4.1'
     compile 'org.slf4j:slf4j-simple:1.6.1'
 
-    compile(name: 'holoeverywhere-1.6.1', ext: 'aar')
+    compile(name: 'holoeverywhere-library-1.6.1', ext: 'aar')
+    //https://github.com/Dahlgren/holoeverywhere-aar/blob/master/org/holoeverywhere/preferences/1.6.2-SNAPSHOT/preferences-1.6.2-SNAPSHOT.aar
+    compile(name: 'holoeverywhere-addon-preferences-1.6.2', ext: 'aar');
+
+
     compile(name: 'actionbarsherlock-4.4.0', ext: 'aar')
 //            {
 //        exclude module: 'android'
