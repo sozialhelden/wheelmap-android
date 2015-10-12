@@ -132,7 +132,7 @@ public class WheelmapApp extends Application {
 
 
         if (!getResources().getBoolean(R.bool.developbuild) && !isBugsenseInitCalled) {
-            BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));
+            //BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));
             isBugsenseInitCalled = true;
         }
 

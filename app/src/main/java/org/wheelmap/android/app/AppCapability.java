@@ -1,6 +1,6 @@
 package org.wheelmap.android.app;
 
-import com.bugsense.trace.BugSenseHandler;
+//import com.bugsense.trace.BugSenseHandler;
 
 import org.mapsforge.android.maps.MapActivity;
 
@@ -94,8 +94,8 @@ public class AppCapability {
             return;
         }
 
-        BugSenseHandler.addCrashExtraData("memoryClass", Integer.toString(sMemoryClass));
-        BugSenseHandler.addCrashExtraData("maxMemoryMB", Integer.toString(sMaxMemoryMB));
+        //BugSenseHandler.addCrashExtraData("memoryClass", Integer.toString(sMemoryClass));
+        //BugSenseHandler.addCrashExtraData("maxMemoryMB", Integer.toString(sMaxMemoryMB));
     }
 
     public static int getMemoryClass() {

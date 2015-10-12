@@ -375,7 +375,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             throws RestServiceException {
         sendToBugsense = false;
         if (sendToBugsense && WheelmapApp.getApp().isBugsenseInitCalled()) {
-            BugSenseHandler.sendException((Exception) t);
+            //BugSenseHandler.sendException((Exception) t);
         }
         throw new RestServiceException(errorCode, t);
     }
