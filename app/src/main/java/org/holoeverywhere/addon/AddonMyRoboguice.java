@@ -312,18 +312,14 @@ public class AddonMyRoboguice extends IAddon {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Context & RoboContext> T getContext(Activity activity) {
-        if (activity instanceof RoboContext) {
-            return (T) activity;
-        } else {
-            return (T) getInjector(activity).mContext;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     public static <T extends Context & RoboContext> T getContext(Context context) {
         if (context instanceof Activity) {
-            return getContext((Activity) context);
+            Activity activity = (Activity) context;
+            if (activity instanceof RoboContext) {
+                return (T) activity;
+            } else {
+                return (T) getInjector(activity).mContext;
+            }
         }
         if (context instanceof RoboContext) {
             return (T) context;
