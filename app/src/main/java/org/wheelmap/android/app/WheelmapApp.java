@@ -22,21 +22,18 @@
 package org.wheelmap.android.app;
 
 
-import com.bugsense.trace.BugSenseHandler;
+import android.content.Context;
+import android.text.TextUtils;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.urbanairship.AirshipConfigOptions;
-import com.urbanairship.UAirship;
-import com.urbanairship.push.PushManager;
-
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
 import org.holoeverywhere.HoloEverywhere;
 import org.holoeverywhere.addon.AddonMyRoboguice;
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Application;
 import org.holoeverywhere.preference.SharedPreferences;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -49,10 +46,6 @@ import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.modules.MainModule;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.push.GCMIntentReceiver;
-
-import android.content.Context;
-import android.text.TextUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -149,35 +142,6 @@ public class WheelmapApp extends Application {
 
         mSupportManager = new SupportManager(getApplicationContext());
         UserQueryHelper.init(getApplicationContext());
-    }
-
-    private void setUpUrbanAirShip(){
-        if(true){
-           return;
-        }
-
-        // Todo modify Manifest
-
-        // Configure your application
-        //
-        // This can be done in code as illustrated here,
-        // or you can add these settings to a properties file
-        // called airshipconfig.properties
-        // and place it in your "assets" folder
-        AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(this);
-        options.developmentAppKey = "app_key";
-        options.developmentAppSecret = "app_secret";
-        options.productionAppKey="app_key2";
-        options.productionAppSecret="app_secred2";
-        options.gcmSender="sender_id"; // PROJEKT ID in api console
-        options.transport="gcm";
-        options.inProduction = false;
-
-        // Take off initializes the services
-        UAirship.takeOff(this, options);
-        PushManager.init();
-        PushManager.enablePush();
-        PushManager.shared().setIntentReceiver(GCMIntentReceiver.class);
     }
 
     @Override
