@@ -51,7 +51,7 @@ public class CompassView extends View {
                 R.styleable.CompassView);
         try {
 
-            mColor = a.getColor(R.styleable.CompassView_color, getContext()
+            mColor = a.getColor(R.styleable.CompassView_compassview_color, getContext()
                     .getResources().getColor(DEFAULT_COLOR_RES));
         } finally {
             a.recycle();
