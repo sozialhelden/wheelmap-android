@@ -103,6 +103,6 @@ dependencies {
         exclude group: 'com.google.android', module: 'support-v4'
     }
 
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.9'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abs:0.9.9'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.8'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:extra-abs:0.8'
 }
