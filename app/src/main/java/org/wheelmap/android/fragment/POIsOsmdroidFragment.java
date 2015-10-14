@@ -290,7 +290,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 centerMap(mCurrentLocationGeoPoint, true);
-                setZoomIntern(17);
+                setZoomIntern(MAP_ZOOM_DEFAULT);
                 requestUpdate();
             }
         });
