@@ -337,9 +337,6 @@ public class POIsListFragment extends ListFragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            case R.id.menu_refresh:
-                onRefreshStarted();
-                return true;
             default:
                 // noop
         }

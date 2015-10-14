@@ -15,7 +15,8 @@
             android:textColor="@android:color/white" android:textStyle="normal"/>
 
     <ImageView
-            android:id="@+id/switch_view"
-            android:layout_width="wrap_content" android:layout_height="match_parent"
-            android:src="@drawable/map_navbar_btn_map"/>
+        android:id="@+id/menu_new_poi"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/map_navbar_btn_neu"/>
 </LinearLayout>

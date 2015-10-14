@@ -39,7 +39,6 @@ import org.wheelmap.android.fragment.POIsMapWorkerFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
-import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -271,9 +270,6 @@ public class
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // required :
-        // reload | search | new | filter | kategorie-filter
-
         MenuInflater inflaterMenu = getSupportMenuInflater();
         inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
         MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
@@ -284,27 +280,16 @@ public class
         final View customView = inflater.inflate(R.layout.actionbar,
                 null);
 
-        final ImageView switchView = (ImageView)  customView.findViewById(R.id.switch_view);
-        int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
-        switchView.setImageResource(switch_res);
+        ImageView addItem = (ImageView)  customView.findViewById(R.id.menu_new_poi);
          OnClickListener l = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSelectedTab = mSelectedTab == 0 ? 1: 0;
-
-                int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
-                int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
-                switchView.setImageResource(switch_res);
-                flipper.showNext();
-
-                TextView title = (TextView) customView.findViewById(R.id.title);
-                title.setText(title_res);
+                createNewPoi();
             }
         };
-        switchView.setOnClickListener(l);
+        addItem.setOnClickListener(l);
 
         TextView title = (TextView) customView.findViewById(R.id.title);
-        title.setOnClickListener(l);
         int title_res;
         if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
             title_res = R.string.title_engage;
@@ -322,6 +307,9 @@ public class
             item.setEnabled(false);
             //TODO Disable it - doesn't work yet
         }
+
+        MenuItem listMapToggle = menu.findItem(R.id.switch_view);
+        initMapSwitchListOptionsItem(listMapToggle, title);
 
         return true;
     }
@@ -348,15 +336,33 @@ public class
             case R.id.menu_about:
                 showInfo();
                 return true;
-            case R.id.menu_new_poi:
-                createNewPoi();
-                return true;
             case android.R.id.home:
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void initMapSwitchListOptionsItem(final MenuItem listMapToggle, final TextView title){
+        int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+        listMapToggle.setIcon(switch_res);
+        MenuItem.OnMenuItemClickListener l = new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                mSelectedTab = mSelectedTab == 0 ? 1: 0;
+
+                int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+                int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
+                listMapToggle.setIcon(switch_res);
+                flipper.showNext();
+
+                title.setText(title_res);
+
+                return true;
+            }
+        };
+        listMapToggle.setOnMenuItemClickListener(l);
     }
 
     private void createSearchModeCustomView(final ActionBar bar) {

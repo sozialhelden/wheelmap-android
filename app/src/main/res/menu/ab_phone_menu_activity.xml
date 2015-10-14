@@ -23,25 +23,18 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- TODO - Add title-String -->
+    <item
+            android:id="@+id/switch_view"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/map_navbar_btn_list"
+            android:title=""/>
 
     <item
-            android:id="@+id/menu_refresh"
-            android:icon="@drawable/ic_menu_refresh_wheelmap"
-            android:showAsAction="ifRoom"
-            android:title="@string/menu_refresh" />
-
-    <item
-            android:id="@+id/menu_search"
-            android:showAsAction="ifRoom"
-            android:icon="@drawable/map_navbar_btn_search"
-            android:title="@string/menu_search"/>
-
-
-    <item
-            android:id="@+id/menu_new_poi"
-            android:showAsAction="ifRoom"
-            android:icon="@drawable/map_navbar_btn_neu"
-            android:title="@string/menu_new_poi"/>
+        android:id="@+id/menu_search"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/map_navbar_btn_search"
+        android:title="@string/menu_search"/>
 
     <item
             android:id="@+id/menu_filter"
@@ -55,6 +48,11 @@
             android:icon="@drawable/map_navbar_btn_kategorie"
             android:title="@string/menu_filter"/>
 
-
+    <!-- TODO - Add title-String -->
+    <item
+        android:id="@+id/dummy_wc"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_wc"
+        android:title=""/>
 
 </menu>
