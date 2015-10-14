@@ -14,12 +14,14 @@ import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.activity.MainMultiPaneActivity;
 import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.activity.MapActivity;
+import org.wheelmap.android.adapter.WcSelectAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.MapActivityUtils;
 import org.wheelmap.android.view.WheelchairStateItemView;
 
@@ -47,7 +49,13 @@ public class FilterWindow extends PopupWindow {
         LinearLayout l = new LinearLayout(context);
         l.setOrientation(LinearLayout.VERTICAL);
         l.setBackgroundColor(Color.WHITE);
-        final WheelchairStateSelectAdapter adapter = new WheelchairStateSelectAdapter(context);
+        WheelchairStateSelectAdapter selectedAdapter;
+        if(menuItem != null && menuItem.getItemId() == R.id.menu_filter){
+            selectedAdapter = new WheelchairStateSelectAdapter(context);
+        } else {
+            selectedAdapter = new WcSelectAdapter(context);
+        }
+        final WheelchairStateSelectAdapter adapter = selectedAdapter;
         for(int i=0;i<adapter.getCount();i++){
             final int pos = i;
             final WheelchairStateItemView view = adapter.getView(i,null,null);

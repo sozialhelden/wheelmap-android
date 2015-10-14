@@ -272,8 +272,13 @@ public class
 
         MenuInflater inflaterMenu = getSupportMenuInflater();
         inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
+
         MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
         MapActivityUtils.setFilterDrawable(this, itemFilterWheelChairs, null);
+
+//        MenuItem itemWc = menu.findItem(R.id.menu_wc);
+//        MapActivityUtils.setWcFilterOptionsDrawable(this, itemWc, null);
+
         ActionBar bar = getSupportActionBar();
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -309,7 +314,9 @@ public class
         }
 
         MenuItem listMapToggle = menu.findItem(R.id.switch_view);
-        initMapSwitchListOptionsItem(listMapToggle, title);
+        if(listMapToggle != null) {
+            initMapSwitchListOptionsItem(listMapToggle, title);
+        }
 
         return true;
     }
@@ -331,7 +338,8 @@ public class
                 showFilterCategories();
                 return true;
             case R.id.menu_filter:
-                showFilterSettings(item);
+//            case R.id.menu_wc:
+                showSelectionDropDown(item);
                 return true;
             case R.id.menu_about:
                 showInfo();
@@ -403,7 +411,7 @@ public class
         startActivity(intent);
     }
 
-    private void showFilterSettings(MenuItem item) {
+    private void showSelectionDropDown(MenuItem item) {
         View anchor = item.getActionView();
         FilterWindow filterWindow = new FilterWindow(this,null,item);
         filterWindow.showAsDropDown(anchor);

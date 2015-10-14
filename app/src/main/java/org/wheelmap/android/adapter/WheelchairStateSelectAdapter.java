@@ -41,7 +41,8 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
 
     private Context mContext;
 
-    private List<WheelchairAttributes> mItems;
+//    private List<WheelchairAttributes> mItems;
+    protected List<WheelchairAttributes> mItems;
 
     private SharedPreferences mPrefs;
 

@@ -50,7 +50,7 @@
 
     <!-- TODO - Add title-String -->
     <item
-        android:id="@+id/dummy_wc"
+        android:id="@+id/menu_wc"
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_wc"
         android:title=""/>
