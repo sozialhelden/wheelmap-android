@@ -912,22 +912,22 @@ public class SupportManager {
         wsAttributes.put(WheelchairState.YES, new WheelchairAttributes(
                 R.string.ws_enabled_title, R.string.ws_enabled,
                 R.string.settings_wheelchair_yes,
-                R.drawable.wheelie_yes, R.color.wheel_enabled,
+                R.drawable.marker_yes, R.color.wheel_enabled,
                 PrefKey.WHEELCHAIR_STATE_YES));
         wsAttributes.put(WheelchairState.LIMITED, new WheelchairAttributes(
                 R.string.ws_limited_title, R.string.ws_limited,
                 R.string.settings_wheelchair_limited,
-                R.drawable.wheelie_limited, R.color.wheel_limited,
+                R.drawable.marker_limited, R.color.wheel_limited,
                 PrefKey.WHEELCHAIR_STATE_LIMITED));
         wsAttributes.put(WheelchairState.NO, new WheelchairAttributes(
                 R.string.ws_disabled_title, R.string.ws_disabled,
                 R.string.settings_wheelchair_no,
-                R.drawable.wheelie_no, R.color.wheel_disabled,
+                R.drawable.marker_no, R.color.wheel_disabled,
                 PrefKey.WHEELCHAIR_STATE_NO));
         wsAttributes.put(WheelchairState.UNKNOWN, new WheelchairAttributes(
                 R.string.ws_unknown_title, R.string.ws_unknown,
                 R.string.settings_wheelchair_unknown,
-                R.drawable.wheelie_unknown, R.color.wheel_unknown,
+                R.drawable.marker_unknown, R.color.wheel_unknown,
                 PrefKey.WHEELCHAIR_STATE_UNKNOWN));
 
     }

@@ -52,7 +52,7 @@
                         android:id="@+id/wheelchair_state_enabled_icon"
                         style="@style/IconLarge.WheelStateSelect"
                         android:layout_alignParentLeft="true"
-                        android:src="@drawable/wheelie_yes"/>
+                        android:src="@drawable/marker_yes"/>
 
                 <TextView
                         style="@style/FontWheelStateSelect"
@@ -71,7 +71,7 @@
                         android:id="@+id/wheelchair_state_limited_icon"
                         style="@style/IconLarge.WheelStateSelect"
                         android:layout_alignParentLeft="true"
-                        android:src="@drawable/wheelie_limited">
+                        android:src="@drawable/marker_limited">
                 </ImageView>
 
                 <TextView
@@ -91,7 +91,7 @@
                         android:id="@+id/wheelchair_state_disabled_icon"
                         style="@style/IconLarge.WheelStateSelect"
                         android:layout_alignParentLeft="true"
-                        android:src="@drawable/wheelie_no"/>
+                        android:src="@drawable/marker_no"/>
 
                 <TextView
                         style="@style/FontWheelStateSelect"
@@ -110,7 +110,7 @@
                         android:id="@+id/wheelchair_state_unknown_icon"
                         style="@style/IconLarge.WheelStateSelect"
                         android:layout_alignParentLeft="true"
-                        android:src="@drawable/wheelie_unknown"/>
+                        android:src="@drawable/marker_unknown"/>
 
                 <TextView
                         style="@style/FontWheelStateSelect"
