@@ -21,9 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
@@ -46,10 +43,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.view.MenuItem;
+import android.view.Window;
 
 import de.akquinet.android.androlog.Log;
 
-//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class POIDetailActivity extends MapActivity implements
         OnPOIDetailListener, OnErrorDialogListener, Receiver {
 
@@ -66,9 +64,10 @@ public class POIDetailActivity extends MapActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportProgressBarIndeterminateVisibility(false);
         getSupportActionBar().setHomeButtonEnabled(true);

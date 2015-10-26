@@ -36,8 +36,11 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+//import android.widget.CursorAdapter;
 
 public class POIsListCursorAdapter extends CursorAdapter {
+
+    private Context mContext;
 
     private final static String TAG = POIsListCursorAdapter.class
             .getSimpleName();
@@ -48,6 +51,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
             boolean autorequery, boolean useAngloDistanceUnit) {
         super(context, cursor, autorequery);
         changeAdapter(useAngloDistanceUnit);
+        mContext = context;
     }
 
     public void changeAdapter(boolean useAngloDistanceUnit) {
@@ -94,6 +98,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
         //Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
         Drawable marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
 
+//        float density = mContext.getResources().getDisplayMetrics().density;
         float density = mContext.getResources().getDisplayMetrics().density;
 
         int half = (int)(16*density);

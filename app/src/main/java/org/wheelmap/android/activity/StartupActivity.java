@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -36,6 +35,7 @@ import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
@@ -78,7 +78,7 @@ public class StartupActivity extends Activity implements
         appProperties = AppProperties.getInstance(getApplication());
 
         Log.d(TAG, "onCreate");
-        Log.d(TAG, "addons: " + obtainAddonsList());
+//        Log.d(TAG, "addons: " + obtainAddonsList());
         setContentView(R.layout.activity_splashscreen);
 
         mState = new State();

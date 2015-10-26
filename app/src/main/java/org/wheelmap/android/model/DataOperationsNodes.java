@@ -21,13 +21,11 @@
  */
 package org.wheelmap.android.model;
 
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.mapping.node.Category;
 import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.mapping.node.NodeType;
 import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;

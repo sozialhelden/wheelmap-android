@@ -41,15 +41,15 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
 
     private Context mContext;
 
-//    private List<WheelchairAttributes> mItems;
-    protected List<WheelchairAttributes> mItems;
+    protected List<SupportManager.AccessFilterAttributes> mItems;
 
     private SharedPreferences mPrefs;
 
     public WheelchairStateSelectAdapter(Context context) {
         super();
         mContext = context;
-        mItems = new ArrayList<WheelchairAttributes>();
+
+        mItems = new ArrayList();
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         Map<WheelchairState, WheelchairAttributes> attributes = SupportManager.wsAttributes;
 
@@ -65,7 +65,7 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
     }
 
     @Override
-    public WheelchairAttributes getItem(int position) {
+    public SupportManager.AccessFilterAttributes getItem(int position) {
         return mItems.get(position);
     }
 
@@ -83,13 +83,15 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
             itemView = new WheelchairStateItemView(mContext);
         }
 
-        WheelchairAttributes attributes = mItems.get(position);
+        SupportManager.AccessFilterAttributes attributes = mItems.get(position);
+
         itemView.setIcon(attributes.drawableId);
         itemView.setText(mContext.getString(attributes.settingsStringId));
         itemView.setTextColor(mContext.getResources().getColor(
                 attributes.colorId));
         itemView.setCheckboxChecked(mPrefs
                 .getBoolean(attributes.prefsKey, true));
+
         return itemView;
 
     }

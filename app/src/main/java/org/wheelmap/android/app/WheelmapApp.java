@@ -22,7 +22,9 @@
 package org.wheelmap.android.app;
 
 
+import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -32,10 +34,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
-import org.holoeverywhere.HoloEverywhere;
-import org.holoeverywhere.addon.AddonMyRoboguice;
-import org.holoeverywhere.app.Application;
-import org.holoeverywhere.preference.SharedPreferences;
+import org.holoeverywhere.preference.PreferenceManagerHelper;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.mapping.node.Node;
@@ -44,7 +43,7 @@ import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
-import org.wheelmap.android.modules.MainModule;
+//import org.wheelmap.android.modules.MainModule;
 import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
@@ -101,15 +100,15 @@ public class WheelmapApp extends Application {
         return INSTANCE.mSupportManager;
     }
 
-    static {
-        HoloEverywhere.DEBUG = true;
-    }
+//    static {
+//        HoloEverywhere.DEBUG = true;
+//    }
 
     @Override
     public void onCreate() {
 
         RoboGuice.setModulesResourceId(R.array.roboguice_modules);
-        AddonMyRoboguice.addModule(MainModule.class);
+//        AddonMyRoboguice.addModule(MainModule.class);
         super.onCreate();
         INSTANCE = this;
 
@@ -170,6 +169,10 @@ public class WheelmapApp extends Application {
 
     public static SharedPreferences getDefaultPrefs(){
         return INSTANCE.getDefaultSharedPreferences();
+    }
+
+    private SharedPreferences getDefaultSharedPreferences(){
+        return PreferenceManagerHelper.getDefaultSharedPreferences(INSTANCE.getApplicationContext());
     }
 
     public BigInteger getCountPOIs(){

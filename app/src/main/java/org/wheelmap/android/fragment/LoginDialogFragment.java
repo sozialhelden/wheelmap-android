@@ -21,11 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Dialog;
-import org.holoeverywhere.app.DialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
@@ -33,20 +28,24 @@ import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -113,10 +112,10 @@ public class LoginDialogFragment extends DialogFragment implements
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //TODO check if already logged in
         //TODO and show logout dialog if already logged in
-        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setOnCancelListener(this);
 
-        View view = LayoutInflater.from(getSupportActivity()).inflate(
+        View view = LayoutInflater.from(getActivity()).inflate(
                     R.layout.fragment_dialog_login, null);
         builder.setView(view);
 
@@ -198,7 +197,7 @@ public class LoginDialogFragment extends DialogFragment implements
                 final RestServiceException e = resultData
                         .getParcelable(Extra.EXCEPTION);
 
-                FragmentManager fm = getFragmentManager();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
                 ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
                         Extra.UNKNOWN);
                 if (errorDialog == null) {

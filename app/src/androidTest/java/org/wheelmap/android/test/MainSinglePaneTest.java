@@ -2,7 +2,6 @@ package org.wheelmap.android.test;
 
 import com.jayway.android.robotium.solo.SoloCompatibilityAbs;
 
-import org.holoeverywhere.widget.EditText;
 import org.springframework.util.Assert;
 import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.activity.MyTabListener;
@@ -18,9 +17,9 @@ import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import android.app.Instrumentation;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import android.widget.EditText;
 
 public class MainSinglePaneTest extends
         ActivityInstrumentationTestCase2<MainSinglePaneActivity> {
@@ -71,7 +70,8 @@ public class MainSinglePaneTest extends
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activity.getSupportActionBar().setSelectedNavigationItem(
+//                activity.getSupportActionBar().setSelectedNavigationItem(
+                activity.getActionBar().setSelectedNavigationItem(
                         ids[tabId].tab);
             }
         });

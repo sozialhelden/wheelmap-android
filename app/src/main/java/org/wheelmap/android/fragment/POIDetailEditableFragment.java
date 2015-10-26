@@ -21,15 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Toast;
-import org.wheelmap.android.activity.DashboardActivity;
 import org.wheelmap.android.activity.LoginActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
@@ -55,6 +46,7 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -63,6 +55,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -70,6 +63,10 @@ import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -77,11 +74,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import de.akquinet.android.androlog.Log;
 
@@ -643,7 +640,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
             Log.d("Tag:PoiDetailEditableFragment", "NullPointException occurred");
 
-            Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getActivity().getApplicationContext(), getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
 
             //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
 
@@ -714,7 +711,7 @@ public class POIDetailEditableFragment extends Fragment implements
     }
 
     public void showErrorMessage(String title, String message, int id) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
                 title, message, id);
         if (errorDialog == null) {

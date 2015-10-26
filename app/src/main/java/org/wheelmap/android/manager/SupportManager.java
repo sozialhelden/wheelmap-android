@@ -110,11 +110,7 @@ public class SupportManager {
 
     public final static int UNKNOWN_TYPE = 0;
 
-    public final static Map<WheelchairState, WheelchairAttributes> wsAttributes
-            = new HashMap<WheelchairState, WheelchairAttributes>();
-
-    public static class WheelchairAttributes {
-
+    public static class AccessFilterAttributes{
         public final int titleStringId;
 
         public final int stringId;
@@ -127,15 +123,58 @@ public class SupportManager {
 
         public final String prefsKey;
 
-        WheelchairAttributes(int titleStringId, int stringId,
-                int settingsStringId, int drawableId, int colorId,
-                String prefsKey) {
+        AccessFilterAttributes(int titleStringId, int stringId,
+                     int settingsStringId, int drawableId, int colorId,
+                     String prefsKey) {
             this.titleStringId = titleStringId;
             this.stringId = stringId;
             this.settingsStringId = settingsStringId;
             this.drawableId = drawableId;
             this.colorId = colorId;
             this.prefsKey = prefsKey;
+        }
+
+        public int getTitleStringId(){
+            return titleStringId;
+        };
+        public int getStringId(){
+            return stringId;
+        };
+        public int getSettingsStringId(){
+            return settingsStringId;
+        };
+        public int getDrawableId(){
+            return drawableId;
+        };
+        public int getColorId(){
+            return colorId;
+        };
+        public String getPrefsKey(){
+            return prefsKey;
+        };
+    }
+
+    public final static Map<WheelchairState, WheelchairAttributes> wsAttributes
+            = new HashMap<WheelchairState, WheelchairAttributes>();
+
+    public static class WheelchairAttributes extends AccessFilterAttributes{
+
+        WheelchairAttributes(int titleStringId, int stringId,
+                int settingsStringId, int drawableId, int colorId,
+                String prefsKey) {
+            super(titleStringId, stringId, settingsStringId, drawableId, colorId, prefsKey);
+        }
+    }
+
+    public final static Map<WheelchairState, WcAttributes> wcAttributes
+            = new HashMap<WheelchairState, WcAttributes>();
+
+    public static class WcAttributes extends AccessFilterAttributes{
+
+        WcAttributes(int titleStringId, int stringId,
+                             int settingsStringId, int drawableId, int colorId,
+                             String prefsKey) {
+            super(titleStringId, stringId, settingsStringId, drawableId, colorId, prefsKey);
         }
     }
 
@@ -929,7 +968,23 @@ public class SupportManager {
                 R.string.settings_wheelchair_unknown,
                 R.drawable.marker_unknown, R.color.wheel_unknown,
                 PrefKey.WHEELCHAIR_STATE_UNKNOWN));
-
     }
 
+    static{
+        wcAttributes.put(WheelchairState.YES, new WcAttributes(
+                R.string.ws_enabled_title, R.string.ws_enabled,
+                R.string.settings_wheelchair_yes,
+                R.drawable.marker_yes, R.color.wheel_enabled,
+                PrefKey.WHEELCHAIR_STATE_YES));
+        wcAttributes.put(WheelchairState.NO, new WcAttributes(
+                R.string.ws_disabled_title, R.string.ws_disabled,
+                R.string.settings_wheelchair_no,
+                R.drawable.marker_no, R.color.wheel_disabled,
+                PrefKey.WHEELCHAIR_STATE_NO));
+        wcAttributes.put(WheelchairState.UNKNOWN, new WcAttributes(
+                R.string.ws_unknown_title, R.string.ws_unknown,
+                R.string.settings_wheelchair_unknown,
+                R.drawable.marker_unknown, R.color.wheel_unknown,
+                PrefKey.WHEELCHAIR_STATE_UNKNOWN));
+    }
 }

@@ -21,14 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.google.inject.Inject;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.FrameLayout;
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -36,16 +29,17 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Html;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -55,6 +49,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 
@@ -70,9 +65,9 @@ public class LoginFragment extends Fragment implements
 
     private Button mLoginRegister;
 
-    private TextView mRegisterText;
-
-    private ProgressBar mProgressBar;
+//    private TextView mRegisterText;
+//
+//    private ProgressBar mProgressBar;
 
     private boolean mSyncing;
 
@@ -209,7 +204,7 @@ public class LoginFragment extends Fragment implements
                 final RestServiceException e = resultData
                         .getParcelable(Extra.EXCEPTION);
 
-                FragmentManager fm = getFragmentManager();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
                 ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
                         Extra.UNKNOWN);
                 if (errorDialog == null) {
@@ -235,7 +230,7 @@ public class LoginFragment extends Fragment implements
 
         try{
             getActivity().setResult(Activity.RESULT_OK);
-            Toast.makeText(getActivity(),R.string.login_succesfully,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.login_succesfully, Toast.LENGTH_SHORT).show();
             getActivity().onBackPressed();
             if (mListener != null) {
                 mListener.onLoginSuccessful();

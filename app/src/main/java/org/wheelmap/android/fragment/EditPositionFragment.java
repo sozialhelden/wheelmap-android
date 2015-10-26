@@ -21,13 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
 import org.mapsforge.android.maps.GeoPoint;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
@@ -41,11 +34,17 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -318,7 +317,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
                 || getArguments()
                 .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
             //mHeightFull = true;
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
             fragment = (Fragment) fm.findFragmentByTag(POIsMapWorkerFragment.TAG);
             Log.d(TAG, "Looking for Worker Fragment:" + fragment);
             if (fragment == null) {
@@ -332,7 +331,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         } else if (!getArguments().getBoolean(Extra.CREATE_WORKER_FRAGMENT,
                 false)) {
             Log.d(TAG, "Connecting to Combined Worker Fragment");
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
             fragment = (Fragment) fm.findFragmentByTag(CombinedWorkerFragment.TAG);
         }
 

@@ -21,14 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Toast;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
@@ -60,6 +52,7 @@ import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -72,12 +65,18 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
@@ -363,7 +362,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
                 .getStickyEvent(MyLocationManager.LocationEvent.class);
         mLocation = event.location;
-        Log.d( "retrieveInitialLocation: mLocation = " + mLocation);
+        Log.d("retrieveInitialLocation: mLocation = " + mLocation);
     }
 
     private void attachWorkerFragment() {
@@ -393,7 +392,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             return;
         }
 
-        if (((MapActivity) getSupportActivity()).loadPreferences(mMapView)) {
+        if (((MapActivity) getActivity()).loadPreferences(mMapView)) {
             Log.d(TAG, "executeConfig: initialized from preferences");
             return;
         }
@@ -771,7 +770,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                 false, true);
 
         searchDialog.setTargetFragment(this, 0);
-        searchDialog.show(fm);
+        searchDialog.show(fm, getTag());
     }
 
     @Override

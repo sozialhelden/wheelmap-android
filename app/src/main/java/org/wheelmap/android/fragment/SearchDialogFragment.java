@@ -21,28 +21,28 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Dialog;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.AdapterView;
-import org.holoeverywhere.widget.AdapterView.OnItemSelectedListener;
-import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.Spinner;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import de.akquinet.android.androlog.Log;
 
@@ -84,7 +84,7 @@ public class SearchDialogFragment extends DialogFragment implements
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         View view = createView();
         builder.setView(view);
@@ -95,7 +95,7 @@ public class SearchDialogFragment extends DialogFragment implements
     }
 
     protected View createView() {
-        LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
 
         return v;

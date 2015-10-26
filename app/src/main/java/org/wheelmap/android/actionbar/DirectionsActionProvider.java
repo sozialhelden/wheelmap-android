@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.actionbar;
 
-import com.actionbarsherlock.widget.ShareActionProvider;
+//import com.actionbarsherlock.widget.ShareActionProvider;
 
 import org.wheelmap.android.online.R;
 
@@ -29,19 +29,20 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
-public class DirectionsActionProvider extends ShareActionProvider {
+//public class DirectionsActionProvider extends ShareActionProvider {
+public class DirectionsActionProvider {
 
-    public DirectionsActionProvider(Context context) {
-        super(context);
-    }
-
-    @Override
-    public View onCreateActionView() {
-        View view = super.onCreateActionView();
-        ImageView image = (ImageView) view.findViewById(R.id.abs__image);
-        image.setImageResource(R.drawable.ic_menu_directions_wheelmap);
-        return view;
-    }
+//    public DirectionsActionProvider(Context context) {
+//        super(context);
+//    }
+//
+//    @Override
+//    public View onCreateActionView() {
+//        View view = super.onCreateActionView();
+//        ImageView image = (ImageView) view.findViewById(R.id.abs__image);
+//        image.setImageResource(R.drawable.ic_menu_directions_wheelmap);
+//        return view;
+//    }
 
 
 }

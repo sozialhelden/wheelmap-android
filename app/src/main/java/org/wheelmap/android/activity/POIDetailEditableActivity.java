@@ -21,10 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-
-import org.holoeverywhere.app.AlertDialog;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
@@ -36,11 +32,14 @@ import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.view.MenuItem;
+import android.view.Window;
 
 import de.akquinet.android.androlog.Log;
 
@@ -58,15 +57,18 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         super.onCreate(savedInstanceState);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             UtilsMisc.showAsPopup(this);
 
         }
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+//        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_frame_empty);
-        //setSupportProgressBarIndeterminateVisibility(false);
+        setSupportProgressBarIndeterminateVisibility(false);
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(true);

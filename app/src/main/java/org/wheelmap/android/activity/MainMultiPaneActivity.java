@@ -22,12 +22,6 @@
 package org.wheelmap.android.activity;
 
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.LayoutParams;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -76,14 +70,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.LayoutParams;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -133,12 +134,17 @@ public class MainMultiPaneActivity extends MapActivity implements
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         super.onCreate(savedInstanceState);
 
-        appProperties = new AppProperties(getApplication());
+        appProperties = new AppProperties(WheelmapApp.getApp());
         Log.d(TAG, "onCreate");
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
+        setProgressBarIndeterminate(true);
         setSupportProgressBarIndeterminateVisibility(false);
+
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
         getSupportActionBar().setLogo(R.drawable.title_logo_shadow_tablet);
@@ -151,8 +157,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         if(Build.VERSION.SDK_INT > 16){
             g.getLayoutTransition().disableTransitionType(LayoutTransition.APPEARING);
         }
-
-        // FragmentManager.enableDebugLogging(true);
 
         if (savedInstanceState != null) {
             executeState(savedInstanceState);
@@ -169,6 +173,7 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+
         createSearchModeCustomView(actionBar);
 
         mResizeButton.setOnClickListener(this);
@@ -316,7 +321,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                     Gravity.CENTER_VERTICAL | Gravity.RIGHT));
             bar.setDisplayShowCustomEnabled(true);
             View v = findViewById(R.id.menu_filter);
-            MapActivityUtils.setFilterDrawable(this, null, v);
+            MapActivityUtils.setAccessFilterOptionDrawable(this, null, v);
 
             UserCredentials credentials = new UserCredentials(getApplicationContext());
             ImageView image = (ImageView)findViewById(R.id.menu_login);
@@ -324,10 +329,10 @@ public class MainMultiPaneActivity extends MapActivity implements
                                     ? R.drawable.start_icon_logged_in
                                     : R.drawable.start_icon_login);
         }else{
-            MenuInflater inflaterMenu = getSupportMenuInflater();
+            MenuInflater inflaterMenu = getMenuInflater();
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
             MenuItem item = menu.findItem(R.id.menu_filter);
-            MapActivityUtils.setFilterDrawable(this, item, null);
+            MapActivityUtils.setAccessFilterOptionDrawable(this, item, null);
             /*
             loginMenuItem = menu.findItem(R.id.menu_login);
             UserCredentials credentials = new UserCredentials(getApplicationContext());
@@ -380,7 +385,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                     anchor = item.getActionView();
                 }
                 showFilterSettings(item,v,anchor);
-                //MapActivityUtils.setFilterDrawable(this,item,v);
+                //MapActivityUtils.setAccessFilterOptionDrawable(this,item,v);
                 return true;
             case R.id.menu_about:
                 showInfo();
@@ -464,7 +469,8 @@ public class MainMultiPaneActivity extends MapActivity implements
     private void showFilterSettings(MenuItem menuItem, View menuView,View anchor) {
         //Intent intent = new Intent(this, NewSettingsActivity.class);
         //startActivity(intent);
-        FilterWindow filter = new FilterWindow(this,menuView,menuItem);
+
+        FilterWindow filter = new FilterWindow(this, null, menuView);
         filter.showAsDropDown(anchor);
     }
 
@@ -527,13 +533,13 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onRefreshing(boolean isRefreshing) {
         Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
-        setSupportProgressBarIndeterminateVisibility(isRefreshing);
+        setProgressBarIndeterminateVisibility(isRefreshing);
     }
 
     @Override
     public void onSearchModeChange(boolean isSearchMode) {
         Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getActionBar().setDisplayShowCustomEnabled(true);
     }
 
     @Override

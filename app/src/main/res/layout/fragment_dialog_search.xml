@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/padding_large">
-        
+
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:prompt="@string/search_pick_category"
                 android:gravity="center_horizontal"
-                holo:spinnerMode="dialog"/>
+                android:spinnerMode="dialog"/>
 
         <LinearLayout
                 android:id="@+id/search_spinner_distance_container"
@@ -103,7 +103,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/search_distance"
-                    holo:spinnerMode="dialog"/>
+                    android:spinnerMode="dialog"/>
         </LinearLayout>
 
         <Button android:id="@+id/button_search"

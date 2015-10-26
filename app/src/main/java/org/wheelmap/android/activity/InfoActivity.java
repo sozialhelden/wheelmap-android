@@ -21,22 +21,19 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.TextView;
 
-@Activity.Addons(Activity.ADDON_SHERLOCK)
-public class InfoActivity extends Activity implements
-        OnInfoListener {
+public class InfoActivity extends Activity implements OnInfoListener {
 
     private TextView txt_credit_version;
 
@@ -50,10 +47,10 @@ public class InfoActivity extends Activity implements
 
         PackageInfo pInfo;
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getActionBar() != null) {
+            getActionBar().setDisplayShowTitleEnabled(false);
+            getActionBar().setHomeButtonEnabled(true);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         txt_credit_version = (TextView)findViewById(R.id.credits_version);

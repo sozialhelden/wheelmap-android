@@ -3,19 +3,16 @@ package org.wheelmap.android.net;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
-import org.holoeverywhere.preference.SharedPreferences;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.util.UriUtils;
 import org.wheelmap.android.activity.StartupActivity;
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.mapping.Base;
 import org.wheelmap.android.mapping.node.SingleNode;
-import org.wheelmap.android.net.request.TotalNodeCountRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,8 +25,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import roboguice.RoboGuice;
 
 public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implements
         IExecutor {

@@ -1,7 +1,5 @@
 package org.wheelmap.android.utils;
 
-import com.actionbarsherlock.view.MenuItem;
-
 import org.wheelmap.android.activity.MapActivity;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
 import org.wheelmap.android.manager.SupportManager;
@@ -13,6 +11,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,72 +21,70 @@ import java.util.List;
 import java.util.Map;
 
 public class MapActivityUtils {
-    public static void setFilterDrawable(MapActivity context, MenuItem item,View v) {
+    public static void setAccessFilterOptionDrawable(MapActivity context, MenuItem item, View v) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         Map<WheelchairState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
         Resources r = context.getResources();
         List<Drawable> layers = new LinkedList<Drawable>();
-        layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter));
+        layers.add(r.getDrawable(R.drawable.ic_status));
         if (mPrefs.getBoolean(attributes.get(WheelchairState.YES).prefsKey, true)) {
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_green));
+            layers.add(r.getDrawable(R.drawable.ic_status_green));
         }
         if(mPrefs.getBoolean(attributes.get(WheelchairState.LIMITED).prefsKey, true)){
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_orange));
+            layers.add(r.getDrawable(R.drawable.ic_status_orange));
         }
         if (mPrefs.getBoolean(attributes.get(WheelchairState.NO).prefsKey, true)) {
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_red));
+            layers.add(r.getDrawable(R.drawable.ic_status_red));
         }
         if (mPrefs.getBoolean(attributes.get(WheelchairState.UNKNOWN).prefsKey, true)) {
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_grey));
+            layers.add(r.getDrawable(R.drawable.ic_status_grey));
         }
         LayerDrawable layerDrawable = new LayerDrawable(layers.toArray(new Drawable[layers.size()]));
-
-        setOptionsItemLayerDrawable(context, item, layerDrawable);
 
         if(v != null && v instanceof ImageView){
             ((ImageView)v).setImageDrawable(layerDrawable);
         }
+
+        setOptionsItemLayerDrawable(context, item, layerDrawable);
     }
 
     //TODO - rewrite for wc-filter-entries (images & co)
-    public static void setWcFilterOptionsDrawable(MapActivity context, MenuItem item,View v) {
+    public static void setWcFilterOptionsDrawable(MapActivity context, MenuItem item, View v) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Map<WheelchairState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
+        Map<WheelchairState, SupportManager.WcAttributes> attributes = SupportManager.wcAttributes;
         Resources r = context.getResources();
         List<Drawable> layers = new LinkedList<Drawable>();
         layers.add(r.getDrawable(R.drawable.ic_wc));
+
         if (mPrefs.getBoolean(attributes.get(WheelchairState.YES).prefsKey, true)) {
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_green));
+            layers.add(r.getDrawable(R.drawable.ic_wc_green));
         }
-//        if(mPrefs.getBoolean(attributes.get(WheelchairState.LIMITED).prefsKey, true)){
-//            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_orange));
-//        }
         if (mPrefs.getBoolean(attributes.get(WheelchairState.NO).prefsKey, true)) {
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_red));
+            layers.add(r.getDrawable(R.drawable.ic_wc_red));
         }
         if (mPrefs.getBoolean(attributes.get(WheelchairState.UNKNOWN).prefsKey, true)) {
-            layers.add(r.getDrawable(R.drawable.map_navbar_btn_filter_grey));
+            layers.add(r.getDrawable(R.drawable.ic_wc_grey));
         }
-        LayerDrawable layerDrawable = new LayerDrawable(layers.toArray(new Drawable[layers.size()]));
 
-        setOptionsItemLayerDrawable(context, item, layerDrawable);
+        LayerDrawable layerDrawable = new LayerDrawable(layers.toArray(new Drawable[layers.size()]));
 
         if(v != null && v instanceof ImageView){
             ((ImageView)v).setImageDrawable(layerDrawable);
         }
+
+        setOptionsItemLayerDrawable(context, item, layerDrawable);
     }
 
     private static void setOptionsItemLayerDrawable(final MapActivity context, final MenuItem item, LayerDrawable layerDrawable){
 
         if(item != null){
-
             ImageView image;
             if(item.getActionView() != null){
                 image = (ImageView) item.getActionView();
                 image.setImageDrawable(layerDrawable);
             }else{
                 image = new ImageView(context);
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 image.setLayoutParams(params);
                 image.setPadding(5, 5, 5, 5);
                 image.setImageDrawable(layerDrawable);
@@ -126,7 +123,7 @@ public class MapActivityUtils {
 
         for(int i=0;i<adapter.getCount();i++){
             final int pos = i;
-            SupportManager.WheelchairAttributes item = adapter.getItem(pos);
+            SupportManager.WheelchairAttributes item = (SupportManager.WheelchairAttributes)adapter.getItem(pos);
             editor.putBoolean(item.prefsKey, true);
         }
 

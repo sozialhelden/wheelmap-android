@@ -21,18 +21,15 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(Activity.ADDON_SHERLOCK)
 public class WrapperActivity extends MapActivity{
 
     private final static String TAG = WrapperActivity.class

@@ -1,8 +1,5 @@
 package org.wheelmap.android.fragment;
 
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
@@ -10,6 +7,8 @@ import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;

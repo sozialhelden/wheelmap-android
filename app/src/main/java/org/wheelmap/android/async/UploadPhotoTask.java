@@ -8,21 +8,19 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.app.ProgressDialog;
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.fragment.POIDetailFragment;
-import org.wheelmap.android.modules.AppProperties;
-import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -91,7 +89,7 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
         }
 
         if(!b){
-            Toast.makeText(mContext, R.string.photo_upload_failed,Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.photo_upload_failed, Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(mContext, R.string.photo_upload_successfully,Toast.LENGTH_LONG).show();
             if(mFragment != null && mCursor != null && mCursor.getCount() > 0   ){

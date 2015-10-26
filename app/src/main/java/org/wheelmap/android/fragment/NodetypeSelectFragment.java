@@ -21,22 +21,22 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.ListFragment;
-import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.adapter.TypesAdapter;
 import org.wheelmap.android.fragment.EditPositionFragment.OnEditPositionListener;
 import org.wheelmap.android.model.CategoryOrNodeType;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
+import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -89,7 +89,7 @@ public class NodetypeSelectFragment extends ListFragment {
 
         ArrayList<CategoryOrNodeType> types = CategoryOrNodeType
                 .createTypesList(getActivity(), false);
-        setListAdapter(new PickOnlyNodeTypesAdapter(getSupportActivity(), types));
+        setListAdapter(new PickOnlyNodeTypesAdapter(getActivity(), types));
 
         return view;
     }

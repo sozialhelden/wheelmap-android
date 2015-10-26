@@ -1,9 +1,5 @@
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -20,15 +16,17 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.widget.Toast;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -162,8 +160,8 @@ public class CombinedWorkerFragment extends Fragment implements
             }
             else{
 
-                LocationManager myLocationManager = (LocationManager) getSystemService(
-                        getSupportApplication().LOCATION_SERVICE);
+                LocationManager myLocationManager = (LocationManager) getActivity().getSystemService(
+                        WheelmapApp.getApp().LOCATION_SERVICE);
 
                 if(LocationManager.PASSIVE_PROVIDER != null && !LocationManager.PASSIVE_PROVIDER.equals("null")){
                     mLocation = myLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
@@ -183,7 +181,7 @@ public class CombinedWorkerFragment extends Fragment implements
             }catch(NullPointerException npex){
                 Log.d("Tag:CombinedWorkerFragment", "NullPointException occurred");
 
-                Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getActivity().getApplicationContext(), getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
             }
 
             try{

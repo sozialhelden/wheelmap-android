@@ -21,17 +21,8 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.app.ProgressDialog;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -79,6 +70,9 @@ import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -101,13 +95,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -696,7 +697,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void executeConfig(Bundle savedInstanceState) {
-        if (((MapActivity) getSupportActivity()).loadPreferences(mMapView)) {
+        if (((MapActivity) getActivity()).loadPreferences(mMapView)) {
             Log.d(TAG, "executeConfig: initialized from preferences");
             return;
         }
@@ -780,15 +781,13 @@ public class POIDetailFragment extends Fragment implements
 
     private void createShareActionProvider(Menu menu) {
         MenuItem menuItemShare = menu.findItem(R.id.menu_share);
-        mShareActionProvider = (ShareActionProvider) menuItemShare
-                .getActionProvider();
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
         mShareActionProvider
                 .setShareHistoryFileName("ab_provider_share_history.xml");
         setIntentOnActionProvider(ACTION_PROVIDER_SHARE, mShareActionProvider);
 
         MenuItem menuItemDirection = menu.findItem(R.id.menu_directions);
-        mDirectionsActionProvider = (ShareActionProvider) menuItemDirection
-                .getActionProvider();
+        mDirectionsActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemDirection);
         mDirectionsActionProvider
                 .setShareHistoryFileName("ab_provider_directions_history.xml");
         setIntentOnActionProvider(ACTION_PROVIDER_DIRECTIONS,
@@ -1074,7 +1073,7 @@ public class POIDetailFragment extends Fragment implements
                     comment, address);
 
             mShowMenu = true;
-            getSupportActivity().invalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
 
             poiValues = new ContentValues();
             DatabaseUtils.cursorRowToContentValues(c, poiValues);

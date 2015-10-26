@@ -1,8 +1,10 @@
 package org.wheelmap.android.utils;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AlphaAnimation;
+
 public class PressSelector implements OnTouchListener{
 
 	@Override

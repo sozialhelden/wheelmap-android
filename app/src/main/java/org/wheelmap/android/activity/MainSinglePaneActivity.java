@@ -21,17 +21,9 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.LayoutParams;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.widget.TextView;
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
-import org.wheelmap.android.fragment.DisplayFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
@@ -63,24 +55,27 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.LayoutParams;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshAttacher;
 
-//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class
         MainSinglePaneActivity extends MapActivity implements
-        DisplayFragmentListener, WorkerFragmentListener, OnStateListener,
-        PullToRefreshAttacher.OnRefreshListener {
+        DisplayFragmentListener, WorkerFragmentListener, OnStateListener {
 
     private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
 
@@ -95,8 +90,6 @@ public class
 
     public boolean mFirstStart;
 
-    private PullToRefreshAttacher mPullToRefreshHelper;
-
     private CombinedWorkerFragment mWorkerFragment;
     private POIsListFragment mListFragment;
     private POIsOsmdroidFragment mMapFragment;
@@ -107,8 +100,16 @@ public class
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+
         super.onCreate(savedInstanceState);
-        appProperties = AppProperties.getInstance(getApplication());
+
+        setContentView(R.layout.activity_single_pane);
+
+
+        //        appProperties = AppProperties.getInstance(getApplication());
+        appProperties = AppProperties.getInstance(WheelmapApp.getApp());
         Log.d(TAG, "onCreate");
 
 
@@ -121,7 +122,6 @@ public class
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
 
-        setContentView(R.layout.activity_single_pane);
 
         flipper = (ViewFlipper) findViewById(R.id.flipper);
         flipper.setDisplayedChild(0);
@@ -130,6 +130,7 @@ public class
 
         mTrackerWrapper = new TrackerWrapper(this);
 
+
         ActionBar actionBar = getSupportActionBar();
         //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -137,6 +138,7 @@ public class
         View customNav = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
         actionBar.setCustomView(customNav);
        // mTabListener = new MyTabListener(this);
+
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction t = fm.beginTransaction();
@@ -248,21 +250,21 @@ public class
     }
 
     private void configureRefresh() {
-        // As we're modifying some of the options, create an instance of
-        // PullToRefreshAttacher.Options
-        PullToRefreshAttacher.Options ptrOptions = new PullToRefreshAttacher.Options();
-
-        // Here we make the refresh scroll distance to 50% of the GridView height
-        ptrOptions.refreshScrollDistance = 0.5f;
-
-        // Here we customise the animations which are used when showing/hiding the header view
-        // ptrOptions.headerInAnimation = R.anim.slide_in_top;
-        // ptrOptions.headerOutAnimation = R.anim.slide_out_top;
-
-        // Here we define a custom header layout which will be inflated and used
-        ptrOptions.headerLayout = R.layout.ptr_header;
-
-        mPullToRefreshHelper = PullToRefreshAttacher.get(this, ptrOptions);
+//        // As we're modifying some of the options, create an instance of
+//        // PullToRefreshAttacher.Options
+//        PullToRefreshAttacher.Options ptrOptions = new PullToRefreshAttacher.Options();
+//
+//        // Here we make the refresh scroll distance to 50% of the GridView height
+//        ptrOptions.refreshScrollDistance = 0.5f;
+//
+//        // Here we customise the animations which are used when showing/hiding the header view
+//        // ptrOptions.headerInAnimation = R.anim.slide_in_top;
+//        // ptrOptions.headerOutAnimation = R.anim.slide_out_top;
+//
+//        // Here we define a custom header layout which will be inflated and used
+//        ptrOptions.headerLayout = R.layout.ptr_header;
+//
+//        mPullToRefreshHelper = PullToRefreshAttacher.get(this, ptrOptions);
 
 
     }
@@ -270,14 +272,12 @@ public class
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuInflater inflaterMenu = getSupportMenuInflater();
-        inflaterMenu.inflate(R.menu.ab_phone_menu_activity, menu);
+        View filterWheelChairs = findViewById(R.id.menu_filter);
+        MapActivityUtils.setAccessFilterOptionDrawable(this, null, filterWheelChairs);
 
-        MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
-        MapActivityUtils.setFilterDrawable(this, itemFilterWheelChairs, null);
+        View filterWc = findViewById(R.id.menu_wc);
+        MapActivityUtils.setWcFilterOptionsDrawable(this, null, filterWc);
 
-//        MenuItem itemWc = menu.findItem(R.id.menu_wc);
-//        MapActivityUtils.setWcFilterOptionsDrawable(this, itemWc, null);
 
         ActionBar bar = getSupportActionBar();
 
@@ -307,13 +307,7 @@ public class
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         bar.setDisplayShowCustomEnabled(true);
 
-        if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
-            MenuItem item = menu.findItem(R.id.menu_filter);
-            item.setEnabled(false);
-            //TODO Disable it - doesn't work yet
-        }
-
-        MenuItem listMapToggle = menu.findItem(R.id.switch_view);
+        ImageView listMapToggle = (ImageView)findViewById(R.id.switch_view);
         if(listMapToggle != null) {
             initMapSwitchListOptionsItem(listMapToggle, title);
         }
@@ -323,7 +317,11 @@ public class
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        boolean b = onOptionItemClicked(item.getItemId(),null,item);
+        return b ? b : super.onOptionsItemSelected(item);
+    }
+
+    public boolean onOptionItemClicked(int id,View v, MenuItem item){
 
         switch (id) {
             case R.id.menu_search:
@@ -338,8 +336,12 @@ public class
                 showFilterCategories();
                 return true;
             case R.id.menu_filter:
-//            case R.id.menu_wc:
-                showSelectionDropDown(item);
+            case R.id.menu_wc:
+                View anchor = v;
+                if(anchor == null){
+                    anchor = item.getActionView();
+                }
+                showFilterSettings(item,v,anchor);
                 return true;
             case R.id.menu_about:
                 showInfo();
@@ -352,25 +354,27 @@ public class
         }
     }
 
-    private void initMapSwitchListOptionsItem(final MenuItem listMapToggle, final TextView title){
+    public void onOptionItemBottomClicked(View view){
+        onOptionItemClicked(view.getId(), view, null);
+    }
+
+    private void initMapSwitchListOptionsItem(final ImageView listMapToggle, final TextView title){
         int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
-        listMapToggle.setIcon(switch_res);
-        MenuItem.OnMenuItemClickListener l = new MenuItem.OnMenuItemClickListener() {
+        listMapToggle.setImageResource(switch_res);
+        OnClickListener l = new OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public void onClick(View view) {
                 mSelectedTab = mSelectedTab == 0 ? 1: 0;
 
                 int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
                 int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
-                listMapToggle.setIcon(switch_res);
+                listMapToggle.setImageResource(switch_res);
                 flipper.showNext();
 
                 title.setText(title_res);
-
-                return true;
             }
         };
-        listMapToggle.setOnMenuItemClickListener(l);
+        listMapToggle.setOnClickListener(l);
     }
 
     private void createSearchModeCustomView(final ActionBar bar) {
@@ -411,10 +415,12 @@ public class
         startActivity(intent);
     }
 
-    private void showSelectionDropDown(MenuItem item) {
-        View anchor = item.getActionView();
-        FilterWindow filterWindow = new FilterWindow(this,null,item);
-        filterWindow.showAsDropDown(anchor);
+    private void showFilterSettings(MenuItem menuItem, View menuView,View anchor) {
+        //Intent intent = new Intent(this, NewSettingsActivity.class);
+        //startActivity(intent);
+
+        FilterWindow filter = new FilterWindow(this, null, menuView);
+        filter.showAsDropDown(anchor);
     }
 
     private long insertNewPoi() {
@@ -461,7 +467,7 @@ public class
             return;
         }
 
-        errorDialog.show(fm);
+        errorDialog.show(fm, TAG);
     }
 
     @Override
@@ -477,7 +483,6 @@ public class
     @Override
     public void onRefreshing(boolean isRefreshing) {
         Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
-        mPullToRefreshHelper.setRefreshing(isRefreshing);
     }
 
     @Override
@@ -489,21 +494,21 @@ public class
 
     @Override
     public void refreshRegisterList(ListView listView) {
-        mPullToRefreshHelper.addRefreshableView(listView, this);
+        //mPullToRefreshHelper.addRefreshableView(listView, this);
     }
 
     @Override
     public void onRefreshEnabled(boolean refreshEnabled) {
-        mPullToRefreshHelper.setEnabled(refreshEnabled);
+        //mPullToRefreshHelper.setEnabled(refreshEnabled);
     }
 
-    @Override
-    public void onRefreshStarted(View view) {
-        DisplayFragment f = (DisplayFragment) (flipper.getDisplayedChild() == 0 ? mListFragment : mMapFragment);
-        if ( f != null) {
-            f.onRefreshStarted();
-        }
-    }
+//    @Override
+//    public void onRefreshStarted(View view) {
+//        DisplayFragment f = (DisplayFragment) (flipper.getDisplayedChild() == 0 ? mListFragment : mMapFragment);
+//        if ( f != null) {
+//            f.onRefreshStarted();
+//        }
+//    }
 
     @Override
     public void onBackPressed() {
