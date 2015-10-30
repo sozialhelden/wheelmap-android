@@ -34,10 +34,10 @@ public class LegalNoticeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_legalnotice);
 
-        if (getActionBar() != null) {
-            getActionBar().setDisplayShowTitleEnabled(false);
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

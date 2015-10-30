@@ -65,13 +65,10 @@ public class MainSinglePaneTest extends
 
     private void executeTabSelect(final int tabId) {
         final MainSinglePaneActivity activity = getActivity();
-        //Instrumentation.ActivityMonitor monitor = getInstrumentation()
-        //        .addMonitor(MainSinglePaneActivity.class.getName(), null, false);
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                activity.getSupportActionBar().setSelectedNavigationItem(
-                activity.getActionBar().setSelectedNavigationItem(
+                activity.getSupportActionBar().setSelectedNavigationItem(
                         ids[tabId].tab);
             }
         });
@@ -88,7 +85,6 @@ public class MainSinglePaneTest extends
                 getInstrumentation().callApplicationOnCreate(WheelmapApp.getApp());
             }
         });
-        // getInstrumentation().waitForIdleSync();
     }
 
     public void atestAFragmentsGettingStarted() {
@@ -159,7 +155,6 @@ public class MainSinglePaneTest extends
         RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
         RobotiumHelper.selectCategoryState(solo);
         solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
-        //solo.clickOnActionBarItem(R.id.menu_save);
         solo.sleep(2000);
         String buttonOkay = getActivity().getString(R.string.btn_okay);
         solo.clickOnButton(buttonOkay);
@@ -180,7 +175,6 @@ public class MainSinglePaneTest extends
                 POIDetailActivity.class);
         solo.waitForFragmentByTag(POIDetailFragment.TAG);
 
-        // clickOnActionbar(R.id.menu_edit);
         solo.sleep(500);
         RobotiumHelper.login(solo);
 
@@ -196,13 +190,9 @@ public class MainSinglePaneTest extends
         RobotiumHelper.selectWheelchairState(solo, "POIDetailEditableActivity");
         RobotiumHelper.selectCategoryState(solo);
         solo.waitForFragmentByTag(POIDetailEditableFragment.TAG);
-        //clickOnActionbar(R.id.menu_save);
 
         getInstrumentation().waitForIdleSync();
 
-        // solo.waitForActivity("POIDetailActivity");
-        // solo.assertCurrentActivity("Want detail activity",
-        //		POIDetailActivity.class);
         solo.waitForText("testtest");
 
         solo.goBack();

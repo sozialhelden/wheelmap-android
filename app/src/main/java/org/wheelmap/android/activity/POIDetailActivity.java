@@ -26,7 +26,7 @@ import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
-import org.wheelmap.android.fragment.WheelchairAccessStateFragment;
+import org.wheelmap.android.fragment.WheelchairAccessibilityStateFragment;
 import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
@@ -204,9 +204,9 @@ public class POIDetailActivity extends MapActivity implements
 
             long poiID = mFragment.getPoiId();
 
-            if (data.hasExtra(WheelchairAccessStateFragment.TAG)) {
+            if (data.hasExtra(WheelchairAccessibilityStateFragment.TAG)) {
                 WheelchairFilterState state = WheelchairFilterState
-                        .valueOf(data.getIntExtra(WheelchairAccessStateFragment.TAG, Extra.UNKNOWN));
+                        .valueOf(data.getIntExtra(WheelchairAccessibilityStateFragment.TAG, Extra.UNKNOWN));
                 if (state != null) {
                     updateDatabase(poiID, POIs.WHEELCHAIR, state);
                 }

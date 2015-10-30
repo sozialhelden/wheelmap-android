@@ -107,11 +107,8 @@ public class
 
         setContentView(R.layout.activity_single_pane);
 
-
-        //        appProperties = AppProperties.getInstance(getApplication());
         appProperties = AppProperties.getInstance(WheelmapApp.getApp());
         Log.d(TAG, "onCreate");
-
 
         setSupportProgressBarIndeterminateVisibility(false);
 
@@ -122,7 +119,6 @@ public class
             actionbar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         flipper = (ViewFlipper) findViewById(R.id.flipper);
         flipper.setDisplayedChild(0);
 
@@ -130,15 +126,10 @@ public class
 
         mTrackerWrapper = new TrackerWrapper(this);
 
-
         ActionBar actionBar = getSupportActionBar();
-        //actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
-       // createSearchModeCustomView(actionBar);
         View customNav = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
         actionBar.setCustomView(customNav);
-       // mTabListener = new MyTabListener(this);
-
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction t = fm.beginTransaction();
@@ -172,7 +163,6 @@ public class
             executeDefaultInstanceState();
         }
 
-
         Bundle extras = getIntent().getExtras();
         if(extras.containsKey(Extra.MAP_MODE_ENGAGE)) {
             mapModeType = MapModeType.MAP_MODE_ENGAGE;
@@ -180,9 +170,6 @@ public class
         } else {
             mapModeType = MapModeType.MAP_MODE_NORMAL;
         }
-
-        configureRefresh();
-
     }
 
     @Override
@@ -249,26 +236,6 @@ public class
         super.onSaveInstanceState(outState);
     }
 
-    private void configureRefresh() {
-//        // As we're modifying some of the options, create an instance of
-//        // PullToRefreshAttacher.Options
-//        PullToRefreshAttacher.Options ptrOptions = new PullToRefreshAttacher.Options();
-//
-//        // Here we make the refresh scroll distance to 50% of the GridView height
-//        ptrOptions.refreshScrollDistance = 0.5f;
-//
-//        // Here we customise the animations which are used when showing/hiding the header view
-//        // ptrOptions.headerInAnimation = R.anim.slide_in_top;
-//        // ptrOptions.headerOutAnimation = R.anim.slide_out_top;
-//
-//        // Here we define a custom header layout which will be inflated and used
-//        ptrOptions.headerLayout = R.layout.ptr_header;
-//
-//        mPullToRefreshHelper = PullToRefreshAttacher.get(this, ptrOptions);
-
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -280,6 +247,9 @@ public class
 
 
         ActionBar bar = getSupportActionBar();
+        if(bar == null){
+            return true;
+        }
 
         LayoutInflater inflater = LayoutInflater.from(this);
         final View customView = inflater.inflate(R.layout.actionbar,
@@ -317,7 +287,7 @@ public class
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean b = onOptionItemClicked(item.getItemId(),null,item);
+        boolean b = onOptionItemClicked(item.getItemId(), null, item);
         return b ? b : super.onOptionsItemSelected(item);
     }
 
@@ -417,9 +387,6 @@ public class
     }
 
     private void showFilterSettings(MenuItem menuItem, View menuView,View anchor) {
-        //Intent intent = new Intent(this, NewSettingsActivity.class);
-        //startActivity(intent);
-
         FilterWindow filter = new FilterWindow(this, null, menuView);
         filter.showAsDropDown(anchor);
     }
@@ -483,7 +450,7 @@ public class
 
     @Override
     public void onRefreshing(boolean isRefreshing) {
-        Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
+        // TODO - use for progressbar
     }
 
     @Override
@@ -495,12 +462,12 @@ public class
 
     @Override
     public void refreshRegisterList(ListView listView) {
-        //mPullToRefreshHelper.addRefreshableView(listView, this);
+        // TODO - use for progressbar
     }
 
     @Override
     public void onRefreshEnabled(boolean refreshEnabled) {
-        //mPullToRefreshHelper.setEnabled(refreshEnabled);
+        // TODO - use for progressbar
     }
 
     @Override
@@ -510,10 +477,6 @@ public class
 
         if(app.isSaved()){
             app.setSaved(false);
-            /*Intent intent = new Intent(getApplicationContext(),MainSinglePaneActivity.class);
-            intent.putExtra(Extra.SELECTED_TAB,1);
-            startActivity(intent);
-            super.onBackPressed(); */
             mWorkerFragment.setSearchMode(false);
             mWorkerFragment.requestUpdate(null);
         }else{

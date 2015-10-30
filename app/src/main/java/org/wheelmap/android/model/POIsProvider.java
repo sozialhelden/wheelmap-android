@@ -64,7 +64,7 @@ public class POIsProvider extends ContentProvider {
 
     private static final String DATABASE_NAME = "wheelmap.db";
 
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     private static final String POIS_TABLE_NAME = "pois";
 

@@ -32,15 +32,15 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.online.R;
 
-public class WheelchairAccessStateFragment extends WheelchairStateFragment {
+public class WheelchairAccessibilityStateFragment extends WheelchairStateFragment {
 
-    public static final String TAG = WheelchairAccessStateFragment.class
+    public static final String TAG = WheelchairAccessibilityStateFragment.class
             .getSimpleName();
 
-    public static WheelchairAccessStateFragment newInstance(WheelchairFilterState state) {
+    public static WheelchairAccessibilityStateFragment newInstance(WheelchairFilterState state) {
         Bundle b = new Bundle();
         b.putInt(Extra.WHEELCHAIR_STATE, state.getId());
-        WheelchairAccessStateFragment f = new WheelchairAccessStateFragment();
+        WheelchairAccessibilityStateFragment f = new WheelchairAccessibilityStateFragment();
         f.setArguments(b);
         return f;
     }
@@ -71,14 +71,6 @@ public class WheelchairAccessStateFragment extends WheelchairStateFragment {
                 dismiss();
             }
         });
-        /*
-        v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });     */
-
         return v;
     }
 

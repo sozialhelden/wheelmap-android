@@ -67,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate");
 
-        if (getActionBar() != null) {
-            getActionBar().setDisplayShowTitleEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         FragmentManager fm = getSupportFragmentManager();
@@ -109,7 +109,4 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

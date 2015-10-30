@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
-import org.wheelmap.android.fragment.WheelchairAccessStateFragment;
+import org.wheelmap.android.fragment.WheelchairAccessibilityStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
 import org.wheelmap.android.model.Extra;
@@ -76,15 +76,15 @@ public class WheelchairStateActivity extends AppCompatActivity implements
         }
 
         FragmentManager fm = getSupportFragmentManager();
-        mFragment = fm.findFragmentByTag(WheelchairAccessStateFragment.TAG);
+        mFragment = fm.findFragmentByTag(WheelchairAccessibilityStateFragment.TAG);
 
         if (mFragment != null) {
             return;
         }
 
-        mFragment = WheelchairAccessStateFragment.newInstance(WheelchairFilterState.valueOf(stateId));
+        mFragment = WheelchairAccessibilityStateFragment.newInstance(WheelchairFilterState.valueOf(stateId));
         fm.beginTransaction()
-                .add(R.id.content, mFragment, WheelchairAccessStateFragment.TAG).commit();
+                .add(R.id.content, mFragment, WheelchairAccessibilityStateFragment.TAG).commit();
     }
 
     private void setFragmentForWheelchairToiletState(int stateId){

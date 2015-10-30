@@ -37,7 +37,7 @@ import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
-import org.wheelmap.android.fragment.WheelchairAccessStateFragment;
+import org.wheelmap.android.fragment.WheelchairAccessibilityStateFragment;
 import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
 import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
@@ -92,7 +92,6 @@ import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-//@Activity.Addons(value = {Activity.ADDON_SHERLOCK, "MyRoboguice"})
 public class MainMultiPaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener,
         OnClickListener {
@@ -214,13 +213,6 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         t.commit();
 
-        /*
-        LinearLayout layout = (LinearLayout) getWindowDecorView().getParent().getParent();
-        View view = layout.getChildAt(0);
-        layout.removeViewAt(0);
-        layout.addView(view);*/
-
-
         WheelmapApp.checkForUpdates(this);
 
         app = (WheelmapApp) this.getApplication();
@@ -299,7 +291,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         boolean isPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         if (isPortraitMode) {
             ActionBar bar = getSupportActionBar();
-            //g.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
             LayoutInflater inflater = LayoutInflater.from(this);
             View customView = inflater.inflate(R.layout.actionbar_tablet,
                     null);
@@ -335,12 +326,6 @@ public class MainMultiPaneActivity extends MapActivity implements
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
             MenuItem item = menu.findItem(R.id.menu_filter);
             MapActivityUtils.setAccessFilterOptionDrawable(this, item, null);
-            /*
-            loginMenuItem = menu.findItem(R.id.menu_login);
-            UserCredentials credentials = new UserCredentials(getApplicationContext());
-            loginMenuItem.setIcon(credentials.isLoggedIn()
-            ? getResources().getDrawable(R.drawable.start_icon_logged_in)
-            : getResources().getDrawable(R.drawable.start_icon_login));  */
         }
 
         if (mapModeType == MapModeType.MAP_MODE_ENGAGE) {
@@ -387,7 +372,6 @@ public class MainMultiPaneActivity extends MapActivity implements
                     anchor = item.getActionView();
                 }
                 showFilterSettings(item, v, anchor);
-                //MapActivityUtils.setAccessFilterOptionDrawable(this,item,v);
                 return true;
             case R.id.menu_about:
                 showInfo();
@@ -542,7 +526,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onSearchModeChange(boolean isSearchMode) {
         Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
-        getActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
     }
 
     @Override
@@ -582,9 +566,9 @@ public class MainMultiPaneActivity extends MapActivity implements
         Log.d(TAG, "onActivityResult: requestCode = " + requestCode
                 + " resultCode = " + resultCode);
         if (requestCode == Request.SELECT_WHEELCHAIRSTATE && resultCode == RESULT_OK && data != null) {
-            if (data.hasExtra(WheelchairAccessStateFragment.TAG)) {
+            if (data.hasExtra(WheelchairAccessibilityStateFragment.TAG)) {
                 WheelchairFilterState state = WheelchairFilterState
-                        .valueOf(data.getIntExtra(WheelchairAccessStateFragment.TAG, Extra.UNKNOWN));
+                        .valueOf(data.getIntExtra(WheelchairAccessibilityStateFragment.TAG, Extra.UNKNOWN));
                 if (state != null) {
                     updateDatabase(poiIdSelected, POIs.WHEELCHAIR, state);
                 }
