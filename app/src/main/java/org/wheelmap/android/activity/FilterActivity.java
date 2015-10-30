@@ -21,16 +21,14 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
-//@Activity.Addons("MyRoboguice")
-public class FilterActivity extends Activity {
+public class FilterActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +40,7 @@ public class FilterActivity extends Activity {
         } else if(extras.getBoolean(Extra.FILTER_CATEGORIES, false)) {
             setContentView(R.layout.activity_fragment_filter_categories);
         }
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(true);

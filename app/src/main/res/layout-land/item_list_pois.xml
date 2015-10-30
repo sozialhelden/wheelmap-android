@@ -34,7 +34,7 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginRight="10dp"
-            android:src="@drawable/wheelie_yes"/>
+            android:src="@drawable/marker_yes"/>
 
     <TextView
             android:id="@+id/poi_name"

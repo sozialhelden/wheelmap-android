@@ -10,7 +10,7 @@ import org.osmdroid.views.safecanvas.ISafeCanvas;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -99,7 +99,7 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         long id = POIHelper.getId(mCursor);
         String name = POIHelper.getName(mCursor);
         SupportManager manager = WheelmapApp.getSupportManager();
-        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
         double lat = POIHelper.getLatitude(mCursor);
         double lng = POIHelper.getLongitude(mCursor);
         int nodeTypeId = POIHelper.getNodeTypeId(mCursor);

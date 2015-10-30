@@ -21,13 +21,11 @@
  */
 package org.wheelmap.android.model;
 
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.mapping.node.Category;
 import org.wheelmap.android.mapping.node.Node;
 import org.wheelmap.android.mapping.node.NodeType;
 import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -94,7 +92,9 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 
         try{
             values.put(POIs.WHEELCHAIR,
-                    WheelchairState.myValueOf(node.getWheelchair()).getId());
+                    WheelchairFilterState.myValueOf(node.getWheelchair(), null).getId());
+            values.put(POIs.WHEELCHAIR_TOILET,
+                    WheelchairFilterState.myValueOf(node.getWheelchairToilet(), "toilet_").getId());
             values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
         }catch(NullPointerException npex){
             Log.d("Tag:DataOperationsNodes", "NullPointException occurred");

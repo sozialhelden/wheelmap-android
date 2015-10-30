@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import org.wheelmap.android.mapping.Message;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.net.request.AcceptType;
@@ -146,7 +146,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
     private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
         String id = POIHelper.getWMId(mCursor);
-        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
         return new WheelchairUpdateRequestBuilder(getServer(), apiKey,
                 AcceptType.JSON, id, state);
     }
@@ -168,7 +168,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
         double latitude = POIHelper.getLatitude(mCursor);
         double longitude = POIHelper.getLongitude(mCursor);
 
-        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
         String comment = POIHelper.getComment(mCursor);
 
         String street = POIHelper.getStreet(mCursor);

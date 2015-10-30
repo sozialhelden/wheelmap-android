@@ -1,11 +1,11 @@
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.LayoutInflater;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -38,7 +38,7 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
             // noop
         }
 
-        LayoutInflater inflater = LayoutInflater.from(getSupportActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);
 
 

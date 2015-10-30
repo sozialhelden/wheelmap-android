@@ -21,17 +21,8 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.nineoldandroids.animation.ObjectAnimator;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.app.ProgressDialog;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
@@ -62,7 +53,7 @@ import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Request;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
@@ -79,6 +70,9 @@ import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.utils.ViewTool;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -101,13 +95,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -238,24 +239,36 @@ public class POIDetailFragment extends Fragment implements
 
     private ImageView stateIcon;
 
-    private TextView stateText;
+    private TextView accessStateText;
+    private TextView toiletStateText;
 
-    private ViewGroup stateLayout;
+    private ViewGroup accessStateLayout;
+    private ViewGroup toiletStateLayout;
 
     private Button mMapButton;
 
-    private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
+    private Map<WheelchairFilterState, WheelchairAttributes> mWSAttributes;
+    private Map<WheelchairFilterState, SupportManager.WheelchairToiletAttributes> mWheelchairToiletAttributes;
 
-    private WheelchairState mWheelchairState;
+    private WheelchairFilterState mWheelchairAccessFilterState;
+    private WheelchairFilterState mWheelchairToiletFilterState;
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
 
         switch (id) {
-            case R.id.wheelchair_state_layout:
+            case R.id.wheelchair_access_state_layout:
                 if (mListener != null) {
-                    mListener.onEditWheelchairState(mWheelchairState);
+                    mListener.onEditWheelchairState(mWheelchairAccessFilterState);
+
+                    return;
+                }
+                break;
+
+            case R.id.wheelchair_toilet_state_layout:
+                if (mListener != null) {
+                    mListener.onEditWheelchairToiletState(mWheelchairToiletFilterState);
 
                     return;
                 }
@@ -284,7 +297,9 @@ public class POIDetailFragment extends Fragment implements
 
         void onEdit(long poiId, int focus);
 
-        void onEditWheelchairState(WheelchairState wState);
+        void onEditWheelchairState(WheelchairFilterState wState);
+
+        void onEditWheelchairToiletState(WheelchairFilterState wState);
 
         void onShowLargeMapAt(GeoPoint point);
 
@@ -366,6 +381,7 @@ public class POIDetailFragment extends Fragment implements
 
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
+        mWheelchairToiletAttributes = SupportManager.wheelchairToiletAttributes;
         poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
 
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
@@ -395,8 +411,10 @@ public class POIDetailFragment extends Fragment implements
         addressText = (TextView)v.findViewById(R.id.addr);
         commentTitle = (TextView)v.findViewById(R.id.comment_title);
         commentText = (TextView)v.findViewById(R.id.comment);
-        stateText = (TextView)v.findViewById(R.id.state_text);
-        stateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_state_layout);
+        accessStateText = (TextView)v.findViewById(R.id.access_state_text);
+        accessStateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_access_state_layout);
+        toiletStateText = (TextView)v.findViewById(R.id.toilet_state_text);
+        toiletStateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_toilet_state_layout);
         webText = (TextView)v.findViewById(R.id.web);
         phoneText = (TextView)v.findViewById(R.id.phone);
         titlebarBackbutton = (LinearLayout)v.findViewById(R.id.titlebar_backbutton);
@@ -677,9 +695,13 @@ public class POIDetailFragment extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        stateLayout.setOnClickListener(this);
+        accessStateLayout.setOnClickListener(this);
         if (poiId == Extra.ID_UNKNOWN) {
-            stateLayout.setVisibility(View.INVISIBLE);
+            accessStateLayout.setVisibility(View.INVISIBLE);
+        }
+        toiletStateLayout.setOnClickListener(this);
+        if (poiId == Extra.ID_UNKNOWN) {
+            toiletStateLayout.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -696,7 +718,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void executeConfig(Bundle savedInstanceState) {
-        if (((MapActivity) getSupportActivity()).loadPreferences(mMapView)) {
+        if (((MapActivity) getActivity()).loadPreferences(mMapView)) {
             Log.d(TAG, "executeConfig: initialized from preferences");
             return;
         }
@@ -780,15 +802,13 @@ public class POIDetailFragment extends Fragment implements
 
     private void createShareActionProvider(Menu menu) {
         MenuItem menuItemShare = menu.findItem(R.id.menu_share);
-        mShareActionProvider = (ShareActionProvider) menuItemShare
-                .getActionProvider();
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemShare);
         mShareActionProvider
                 .setShareHistoryFileName("ab_provider_share_history.xml");
         setIntentOnActionProvider(ACTION_PROVIDER_SHARE, mShareActionProvider);
 
         MenuItem menuItemDirection = menu.findItem(R.id.menu_directions);
-        mDirectionsActionProvider = (ShareActionProvider) menuItemDirection
-                .getActionProvider();
+        mDirectionsActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItemDirection);
         mDirectionsActionProvider
                 .setShareHistoryFileName("ab_provider_directions_history.xml");
         setIntentOnActionProvider(ACTION_PROVIDER_DIRECTIONS,
@@ -860,13 +880,12 @@ public class POIDetailFragment extends Fragment implements
             long id = POIHelper.getId(mCursor);
             String name = POIHelper.getName(mCursor);
             SupportManager manager = WheelmapApp.getSupportManager();
-            WheelchairState state = POIHelper.getWheelchair(mCursor);
+            WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
             double lat = POIHelper.getLatitude(mCursor);
             double lng = POIHelper.getLongitude(mCursor);
             int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
             Drawable marker = null;
             if (nodeTypeId != 0) {
-              //  marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
                 marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
             }
             marker = marker.getConstantState().newDrawable();
@@ -910,8 +929,10 @@ public class POIDetailFragment extends Fragment implements
 
             nameText.setVisibility(View.GONE);
             categoryText.setVisibility(View.GONE);
-            stateText.setVisibility(View.GONE);
-            stateLayout.setVisibility(View.GONE);
+            accessStateText.setVisibility(View.GONE);
+            accessStateLayout.setVisibility(View.GONE);
+            toiletStateText.setVisibility(View.GONE);
+            toiletStateLayout.setVisibility(View.GONE);
             webText.setVisibility(View.GONE);
             phoneText.setVisibility(View.GONE);
 
@@ -954,8 +975,10 @@ public class POIDetailFragment extends Fragment implements
 
             nameText.setVisibility(View.VISIBLE);
             categoryText.setVisibility(View.VISIBLE);
-            stateText.setVisibility(View.VISIBLE);
-            stateLayout.setVisibility(View.VISIBLE);
+            accessStateText.setVisibility(View.VISIBLE);
+            accessStateLayout.setVisibility(View.VISIBLE);
+            toiletStateText.setVisibility(View.VISIBLE);
+            toiletStateLayout.setVisibility(View.VISIBLE);
             webText.setVisibility(View.VISIBLE);
             phoneText.setVisibility(View.VISIBLE);
 
@@ -967,7 +990,8 @@ public class POIDetailFragment extends Fragment implements
 
             poiId = POIHelper.getId(c);
             String wmIdString = POIHelper.getWMId(c);
-            WheelchairState state = POIHelper.getWheelchair(c);
+            WheelchairFilterState accessState = POIHelper.getWheelchair(c);
+            WheelchairFilterState toiletState = POIHelper.getWheelchairToilet(c);
             String name = POIHelper.getName(c);
             String comment = POIHelper.getComment(c);
 
@@ -1055,8 +1079,12 @@ public class POIDetailFragment extends Fragment implements
             SupportManager sm = WheelmapApp.getSupportManager();
 
             NodeType nodeType = sm.lookupNodeType(nodeTypeId);
-            stateLayout.setVisibility(View.VISIBLE);
-            setWheelchairState(state);
+
+            accessStateLayout.setVisibility(View.VISIBLE);
+            setWheelchairAccessState(accessState);
+            toiletStateLayout.setVisibility(View.VISIBLE);
+            setWheelchairToiletState(toiletState);
+
             if (name != null && name.length() > 0) {
                 nameText.setText(name);
             } else {
@@ -1074,42 +1102,56 @@ public class POIDetailFragment extends Fragment implements
                     comment, address);
 
             mShowMenu = true;
-            getSupportActivity().invalidateOptionsMenu();
+            getActivity().invalidateOptionsMenu();
 
             poiValues = new ContentValues();
             DatabaseUtils.cursorRowToContentValues(c, poiValues);
         }
     }
 
-    private void setWheelchairState(WheelchairState newState) {
-        mWheelchairState = newState;
-
-        int stateColor = getResources().getColor(
-                mWSAttributes.get(newState).colorId);
+    private void setWheelchairAccessState(WheelchairFilterState newState) {
+        mWheelchairAccessFilterState = newState;
 
         try{
-        if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
-            stateText.setBackgroundResource(R.drawable.detail_button_grey);
-        else if(mWheelchairState.getId() == WheelchairState.YES.getId())
-            stateText.setBackgroundResource(R.drawable.detail_button_green);
-        else if(mWheelchairState.getId() == WheelchairState.LIMITED.getId())
-            stateText.setBackgroundResource(R.drawable.detail_button_orange);
-        else if(mWheelchairState.getId() == WheelchairState.NO.getId())
-            stateText.setBackgroundResource(R.drawable.detail_button_red);
-        else if(mWheelchairState.getId() == WheelchairState.NO_PREFERENCE.getId())
-            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+        if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
+            accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.YES.getId())
+            accessStateText.setBackgroundResource(R.drawable.detail_button_green);
+        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.LIMITED.getId())
+            accessStateText.setBackgroundResource(R.drawable.detail_button_orange);
+        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.NO.getId())
+            accessStateText.setBackgroundResource(R.drawable.detail_button_red);
+        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+            accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
         else
-            stateText.setBackgroundResource(R.drawable.detail_button_grey);
+            accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
         }catch(OutOfMemoryError e){
             System.gc();
         }
 
+        accessStateText.setText(mWSAttributes.get(newState).titleStringId);
 
+    }
 
-        //title_container.setBackgroundColor(stateColor);
-        //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-        //stateText.setTextColor(stateColor);
-        stateText.setText(mWSAttributes.get(newState).titleStringId);
+    private void setWheelchairToiletState(WheelchairFilterState newState) {
+        mWheelchairToiletFilterState = newState;
+
+        try{
+        if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
+            toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
+            toiletStateText.setBackgroundResource(R.drawable.detail_button_green);
+        else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
+            toiletStateText.setBackgroundResource(R.drawable.detail_button_red);
+        else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+            toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        else
+            toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        }catch(OutOfMemoryError e){
+            System.gc();
+        }
+
+        toiletStateText.setText(mWheelchairToiletAttributes.get(newState).titleStringId);
 
     }
 

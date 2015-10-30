@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.model.UserQueryHelper;
@@ -33,11 +31,13 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -189,6 +189,7 @@ public class POIsMapWorkerFragment extends Fragment implements
                 && !bundle.containsKey(Extra.CATEGORY)
                 && !bundle.containsKey(Extra.NODETYPE)
                 && !bundle.containsKey(Extra.WHEELCHAIR_STATE)
+                && !bundle.containsKey(Extra.WHEELCHAIR_TOILET_STATE)
                 ) {
             return;
         }

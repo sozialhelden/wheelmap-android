@@ -27,6 +27,10 @@ public interface PrefKey {
     public static final String WHEELCHAIR_STATE_LIMITED = "showLimited";
     public static final String WHEELCHAIR_STATE_NO = "showNo";
     public static final String WHEELCHAIR_STATE_UNKNOWN = "showUnknown";
-    public final static String LIST_DISTANCE = "listDistance";
 
+    public static final String WHEELCHAIR_TOILET_STATE_YES = "toiletYes";
+    public static final String WHEELCHAIR_TOILET_STATE_NO = "toiletNo";
+    public static final String WHEELCHAIR_TOILET_STATE_UNKNOWN = "toiletUnknown";
+
+    public final static String LIST_DISTANCE = "listDistance";
 }

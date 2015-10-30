@@ -25,7 +25,6 @@ import com.google.inject.Inject;
 
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIsProvider;
-import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.IHttpUserAgent;
@@ -37,8 +36,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
-
-import java.math.BigInteger;
 
 import roboguice.service.RoboIntentService;
 

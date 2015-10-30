@@ -1,9 +1,5 @@
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.ListActivity;
-import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.online.R;
@@ -17,44 +13,48 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 /**
  * Created by tim on 07.02.14.
  */
-public class ChooseCategoryActivity extends ListActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class ChooseCategoryActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private Uri mUri = Support.CategoriesContent.CONTENT_URI;
+
+    private ListView listView;
 
     CursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ListView list = new ListView(this);
-        list.setId(android.R.id.list);
-        setContentView(list);
-
-
-        setTitle(R.string.dashboard_button_title_categories);
-
+        listView = new ListView(this);
+        listView.setId(android.R.id.list);
+        listView.setOnItemClickListener(this);
+        setContentView(listView);
 
         if(getSupportActionBar() != null){
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setTitle(R.string.dashboard_button_title_categories);
         }
 
         getSupportLoaderManager().initLoader(0,null,this);
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
 
-       // SharedPreferences prefs =  WheelmapApp.getCategoryChoosedPrefs();
-        Cursor c = adapter.getCursor();
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+         Cursor c = adapter.getCursor();
         for(int i=0;i<c.getCount();i++){
             c.moveToPosition(i);
             int catId = Support.CategoriesContent.getCategoryId(c);
@@ -81,7 +81,6 @@ public class ChooseCategoryActivity extends ListActivity implements
         intent.putExtra(Extra.SELECTED_TAB,0);
         intent.putExtra(Extra.QUERY_CHANGED,true);
         startActivity(intent);
-
     }
 
     @Override
@@ -106,7 +105,8 @@ public class ChooseCategoryActivity extends ListActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         adapter = new SimpleCursorAdapter(this,R.layout.simple_list_item_category,cursor,new String[]{Support.CategoryColumns.LOCALIZED_NAME},new int[]{R.id.text_category});
-        setListAdapter(adapter);
+//        setListAdapter(adapter);
+        listView.setAdapter(adapter);
     }
 
     @Override

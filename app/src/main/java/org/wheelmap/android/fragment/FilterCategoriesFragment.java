@@ -21,9 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.ListFragment;
-import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.adapter.CategorySelectCursorAdapter;
 import org.wheelmap.android.adapter.MergeAdapter;
 import org.wheelmap.android.model.Support;
@@ -36,12 +33,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import de.akquinet.android.androlog.Log;
@@ -64,9 +64,8 @@ public class FilterCategoriesFragment extends ListFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getSupportActivity());
-        mAdapterCatList = new CategorySelectCursorAdapter(getSupportActivity(), null,
-                false);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mAdapterCatList = new CategorySelectCursorAdapter(getActivity(), null, false);
     }
 
     @Override
@@ -103,7 +102,7 @@ public class FilterCategoriesFragment extends ListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        MergeAdapter adapter = (MergeAdapter) l.getAdapterSource();
+        MergeAdapter adapter = (MergeAdapter) l.getAdapter();
         Object item = l.getItemAtPosition(position);
         if (item instanceof Cursor) {
             clickCategorieItem((Cursor) item);

@@ -13,6 +13,6 @@
     <!--<string name="versionName">2.0.4-DEVEL</string>-->
     <string name="wheelmap_common_apikey">jWeAsb34CJq4yVAryjtc</string>
     <string name="mapbox_key">sozialhelden.map-iqt6py1k</string>
-    <string name="bugsense_key">68922721</string>
-    <string name="hockeyapp_id"></string>
+    <!--<string name="bugsense_key">68922721</string>-->
+    <!--<string name="hockeyapp_id"></string>-->
 </resources>

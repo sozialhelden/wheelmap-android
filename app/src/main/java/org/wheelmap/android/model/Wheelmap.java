@@ -67,6 +67,7 @@ public class Wheelmap {
         public static final String WEBSITE = "website";
 
         public static final String WHEELCHAIR = "wheelchair";
+        public static final String WHEELCHAIR_TOILET = "wheelchair_toilet";
         public static final String DESCRIPTION = "description";
 
         // auxiliry pre calculated sin and cos values of lat/lon (in radians)
@@ -194,7 +195,7 @@ public class Wheelmap {
          */
         public static final String[] PROJECTION = new String[]{_ID, WM_ID,
                 NAME, LATITUDE, LONGITUDE, STREET, HOUSE_NUM, POSTCODE, CITY,
-                PHONE, WEBSITE, WHEELCHAIR, DESCRIPTION, CATEGORY_ID, CATEGORY_IDENTIFIER,
+                PHONE, WEBSITE, WHEELCHAIR, WHEELCHAIR_TOILET, DESCRIPTION, CATEGORY_ID, CATEGORY_IDENTIFIER,          /* IMPORTANT */
                 NODETYPE_ID, NODETYPE_IDENTIFIER, ICON, TAG, STATE, DIRTY, STORE_TIMESTAMP};
     }
 }

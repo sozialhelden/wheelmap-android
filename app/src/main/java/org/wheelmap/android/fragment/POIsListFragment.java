@@ -21,14 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.ListFragment;
-import org.holoeverywhere.widget.ListView;
 import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.adapter.POIsListCursorAdapter;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
@@ -38,9 +30,9 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.online.R.id;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -54,9 +46,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
@@ -178,9 +175,9 @@ public class POIsListFragment extends ListFragment implements
 
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         mListView = (ListView) v.findViewById(android.R.id.list);
-        mAdapter = new POIsListCursorAdapter(getSupportActivity(), null, false, mUseAngloDistanceUnit);
+        mAdapter = new POIsListCursorAdapter(getActivity(), null, false, mUseAngloDistanceUnit);
         mListView.setAdapter(mAdapter);
-        if (UtilsMisc.isTablet(getSupportActivity())) {
+        if (UtilsMisc.isTablet(getActivity())) {
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
 
@@ -267,7 +264,7 @@ public class POIsListFragment extends ListFragment implements
         if (getArguments() == null
                 || getArguments()
                 .getBoolean(Extra.CREATE_WORKER_FRAGMENT, true)) {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
             fragment = fm.findFragmentByTag(POIsListWorkerFragment.TAG);
             Log.d(TAG, "Found worker fragment:" + fragment);
             if (fragment == null) {
@@ -321,7 +318,7 @@ public class POIsListFragment extends ListFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(!UtilsMisc.isTablet(getSupportActivity())){
+        if(!UtilsMisc.isTablet(getActivity())){
             inflater.inflate(R.menu.ab_list_fragment, menu);
         }
         if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
@@ -336,9 +333,6 @@ public class POIsListFragment extends ListFragment implements
         switch (id) {
             case R.id.menu_search:
                 showSearch();
-                return true;
-            case R.id.menu_refresh:
-                onRefreshStarted();
                 return true;
             default:
                 // noop
@@ -418,7 +412,7 @@ public class POIsListFragment extends ListFragment implements
                 true, false);
 
         searchDialog.setTargetFragment(this, 0);
-        searchDialog.show(fm);
+        searchDialog.show(fm, getTag());
     }
 
     @Override

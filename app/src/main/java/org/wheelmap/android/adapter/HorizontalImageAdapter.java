@@ -2,7 +2,6 @@ package org.wheelmap.android.adapter;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.holoeverywhere.widget.AdapterView;
 import org.wheelmap.android.activity.PictureActivity;
 import org.wheelmap.android.online.R;
 

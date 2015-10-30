@@ -1,6 +1,5 @@
 package org.wheelmap.android.activity;
 
-import org.holoeverywhere.widget.EditText;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;
@@ -19,18 +18,19 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
  * Created by tim on 07.02.14.
  */
-public class DashboardActivity extends
-        org.holoeverywhere.app.Activity {
+public class DashboardActivity extends AppCompatActivity {
 
     private UserCredentials mCredentials;
     private String address = null;
@@ -69,8 +69,6 @@ public class DashboardActivity extends
         }catch(Exception ex){
             // noop
         }
-
-
 
         if(uri != null){
             openMap();

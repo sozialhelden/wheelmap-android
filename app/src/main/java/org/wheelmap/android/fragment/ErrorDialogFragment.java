@@ -21,16 +21,16 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Dialog;
-import org.holoeverywhere.app.DialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestServiceException;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
 public class ErrorDialogFragment extends DialogFragment implements
         DialogInterface.OnClickListener {
@@ -100,7 +100,7 @@ public class ErrorDialogFragment extends DialogFragment implements
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getSupportActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         mId = getArguments().getInt(Extra.ID);
         String title;
         String msg;

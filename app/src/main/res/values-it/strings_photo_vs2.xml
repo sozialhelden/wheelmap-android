@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <string name="photo_upload_failed">Caricamento fallito</string>
-  <string name="photo_upload_successfully">Caricamento completato</string>
-  <string name="photo_upload_picker_title">Opzione caricamento foto</string>
-  <string name="photo_upload_picker_gallery">Galleria</string>
-  <string name="photo_upload_picker_take_new">Nuova foto</string>
-  <string name="photo_upload_progress_title">Caricamento foto...</string>
-</resources>

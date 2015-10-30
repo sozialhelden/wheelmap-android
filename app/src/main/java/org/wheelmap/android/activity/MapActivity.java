@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import org.holoeverywhere.app.Activity;
 import org.mapsforge.android.maps.MapContext;
 import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.TileRAMCache;
@@ -35,6 +34,7 @@ import org.wheelmap.android.modules.IBundlePreferences;
 import org.wheelmap.android.overlays.ConfigureMapView;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import java.util.List;
 
 import de.akquinet.android.androlog.Log;
 
-public class MapActivity extends Activity implements MapContext {
+public class MapActivity extends AppCompatActivity implements MapContext {
 
     private final static String TAG = MapActivity.class.getSimpleName();
 

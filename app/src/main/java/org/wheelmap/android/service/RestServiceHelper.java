@@ -30,8 +30,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
-import java.math.BigInteger;
-
 import de.akquinet.android.androlog.Log;
 
 public class RestServiceHelper {

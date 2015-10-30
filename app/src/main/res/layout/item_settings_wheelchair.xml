@@ -28,7 +28,8 @@
             android:id="@id/image"
             style="@style/IconLarge.WheelStateSelect"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginLeft="@dimen/margin_medium"/>
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:padding="7dp" />
 
     <TextView
             android:id="@id/text"

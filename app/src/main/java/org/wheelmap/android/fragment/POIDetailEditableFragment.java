@@ -21,15 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Toast;
-import org.wheelmap.android.activity.DashboardActivity;
 import org.wheelmap.android.activity.LoginActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
@@ -43,7 +34,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Request;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
@@ -55,6 +46,7 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -63,6 +55,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -70,6 +63,10 @@ import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -77,11 +74,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import de.akquinet.android.androlog.Log;
 
@@ -139,7 +136,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private String wmID;
 
-    private WheelchairState mWheelchairState;
+    private WheelchairFilterState mWheelchairFilterState;
 
     private double mLatitude;
 
@@ -147,7 +144,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private int mNodeType;
 
-    private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
+    private Map<WheelchairFilterState, WheelchairAttributes> mWSAttributes;
 
     private OnPOIDetailEditableListener mListener;
 
@@ -161,7 +158,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         public void onEditSave(boolean quit);
 
-        public void onEditWheelchairState(WheelchairState state);
+        public void onEditWheelchairState(WheelchairFilterState state);
 
         public void onEditGeolocation(double latitude, double longitude);
 
@@ -224,10 +221,10 @@ public class POIDetailEditableFragment extends Fragment implements
         cityText = (EditText) parent.findViewById(R.id.city);
         websiteText = (EditText) parent.findViewById(R.id.website);
         phoneText = (EditText) parent.findViewById(R.id.phone);
-        state_text = (TextView) parent.findViewById(R.id.state_text);
+        state_text = (TextView) parent.findViewById(R.id.access_state_text);
         geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
 
-        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_state_layout);
+        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_access_state_layout);
 
         edit_nodetype_container = (RelativeLayout) parent.findViewById(R.id.edit_nodetype);
         edit_geolocation_container = (RelativeLayout) parent.findViewById(R.id.edit_geolocation);
@@ -302,7 +299,7 @@ public class POIDetailEditableFragment extends Fragment implements
             if (resultCode == Activity.RESULT_OK) {
                 // newly selected wheelchair state as action data
                 if (data != null) {
-                    WheelchairState state = WheelchairState
+                    WheelchairFilterState state = WheelchairFilterState
                             .valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
                                     Extra.UNKNOWN));
                     setWheelchairState(state);
@@ -378,9 +375,9 @@ public class POIDetailEditableFragment extends Fragment implements
 
         int id = v.getId();
         switch (id) {
-            case R.id.wheelchair_state_layout: {
+            case R.id.wheelchair_access_state_layout: {
                 Intent intent = new Intent(getActivity(), WheelchairStateActivity.class);
-                intent.putExtra(Extra.WHEELCHAIR_STATE, mWheelchairState.getId());
+                intent.putExtra(Extra.WHEELCHAIR_STATE, mWheelchairFilterState.getId());
                 startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
                 break;
             }
@@ -415,7 +412,7 @@ public class POIDetailEditableFragment extends Fragment implements
                     getString(R.string.error_category_missing_message),
                     Extra.UNKNOWN);
             return;
-        } else if (mWheelchairState == WheelchairState.UNKNOWN) {
+        } else if (mWheelchairFilterState == WheelchairFilterState.UNKNOWN) {
             showErrorMessage(
                     getString(R.string.error_wheelchairstate_missing_title),
                     getString(R.string.error_wheelchairstate_missing_message),
@@ -494,7 +491,7 @@ public class POIDetailEditableFragment extends Fragment implements
         UtilsMisc.dumpCursorToLog(TAG, cursor);
         cursor.moveToFirst();
 
-        WheelchairState state = POIHelper.getWheelchair(cursor);
+        WheelchairFilterState accessState = POIHelper.getWheelchair(cursor);
         String name = POIHelper.getName(cursor);
         String comment = POIHelper.getComment(cursor);
         double latitude = POIHelper.getLatitude(cursor);
@@ -503,7 +500,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         setGeolocation(latitude, longitude);
         setNodetype(nodeType);
-        setWheelchairState(state);
+        setWheelchairState(accessState);
         nameText.setText(name);
         commentText.setText(comment);
 
@@ -607,7 +604,7 @@ public class POIDetailEditableFragment extends Fragment implements
             values.put(POIs.LATITUDE, mLatitude);
             values.put(POIs.LONGITUDE, mLongitude);
 
-            values.put(POIs.WHEELCHAIR, mWheelchairState.getId());
+            values.put(POIs.WHEELCHAIR, mWheelchairFilterState.getId());
             String description = commentText.getText().toString();
             if (!TextUtils.isEmpty(description)) {
                 values.put(POIs.DESCRIPTION, description);
@@ -643,7 +640,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
             Log.d("Tag:PoiDetailEditableFragment", "NullPointException occurred");
 
-            Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getActivity().getApplicationContext(), getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
 
             //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
 
@@ -653,38 +650,29 @@ public class POIDetailEditableFragment extends Fragment implements
         return values;
     }
 
-    public void setWheelchairState(WheelchairState newState) {
-        if (newState == null) {
+    public void setWheelchairState(WheelchairFilterState newState) {
+        if (newState == null || mWSAttributes.get(newState) == null) {
             return;
         }
 
-        mWheelchairState = newState;
-
-        int stateColor = getResources().getColor(
-                mWSAttributes.get(newState).colorId);
+        mWheelchairFilterState = newState;
 
         try{
-        if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
+        if(mWheelchairFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
-        else if(mWheelchairState.getId() == WheelchairState.YES.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.YES.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_green);
-        else if(mWheelchairState.getId() == WheelchairState.LIMITED.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.LIMITED.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_orange);
-        else if(mWheelchairState.getId() == WheelchairState.NO.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.NO.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_red);
-        else if(mWheelchairState.getId() == WheelchairState.NO_PREFERENCE.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         else
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         }catch(OutOfMemoryError e){
             System.gc();
         }
-
-
-
-        //title_container.setBackgroundColor(stateColor);
-        //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-        //stateText.setTextColor(stateColor);
 
         state_text.setText(mWSAttributes.get(newState).titleStringId);
     }
@@ -714,7 +702,7 @@ public class POIDetailEditableFragment extends Fragment implements
     }
 
     public void showErrorMessage(String title, String message, int id) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(
                 title, message, id);
         if (errorDialog == null) {

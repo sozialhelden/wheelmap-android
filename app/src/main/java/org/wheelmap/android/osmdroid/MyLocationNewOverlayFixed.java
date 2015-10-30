@@ -2,7 +2,6 @@ package org.wheelmap.android.osmdroid;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 import org.osmdroid.DefaultResourceProxyImpl;
@@ -24,7 +23,6 @@ import org.osmdroid.views.safecanvas.SafePaint;
 import org.osmdroid.views.util.constants.MapViewConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wheelmap.android.online.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -58,6 +56,11 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
     // Constants
     // ===========================================================
 
+    private final int DEFAULT_ZOOMLEVEL_LOCATED = 18;
+    private final int DEFAULT_ZOOMLEVEL_UNKNOWN = 6;
+    private final double DEFAULT_LATITUDE = 51.28940590271679;
+    private final double DEFAULT_LONGITUDE = 10.26123046875;
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -77,7 +80,7 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
     private final Point mMapCoords = new Point();
 
     private Location mLocation;
-    private final GeoPoint mGeoPoint = new GeoPoint(0, 0); // for reuse
+    private final GeoPoint mGeoPoint = new GeoPoint(DEFAULT_LATITUDE, DEFAULT_LONGITUDE); // for reuse
     private boolean mIsLocationEnabled = false;
     protected boolean mIsFollowing = false; // follow location updates
     protected boolean mDrawAccuracyEnabled = true;
@@ -489,7 +492,7 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
         }
 
         mLocation = location;
-        mMapCoords.set(0, 0);
+        mMapCoords.set((int) DEFAULT_LATITUDE, (int) DEFAULT_LONGITUDE);
 
         if (mLocation != null) {
             TileSystem.LatLongToPixelXY(mLocation.getLatitude(), mLocation.getLongitude(),
@@ -500,6 +503,7 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
             if (mIsFollowing) {
                 mGeoPoint.setLatitudeE6((int) (mLocation.getLatitude() * 1E6));
                 mGeoPoint.setLongitudeE6((int) (mLocation.getLongitude() * 1E6));
+                mMapController.setZoom(DEFAULT_ZOOMLEVEL_LOCATED);
                 mMapController.animateTo(mGeoPoint);
             } else {
                 // Get new drawing bounds
@@ -523,6 +527,9 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
                     }
                 });
             }
+        } else {
+            mMapController.setZoom(DEFAULT_ZOOMLEVEL_UNKNOWN);
+            mMapController.animateTo(mGeoPoint);
         }
 
         for (final Runnable runnable : mRunOnFirstFix) {

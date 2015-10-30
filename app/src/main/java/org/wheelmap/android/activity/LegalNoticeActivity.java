@@ -21,20 +21,19 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
-@Activity.Addons(Activity.ADDON_SHERLOCK)
-public class LegalNoticeActivity extends Activity {
+public class LegalNoticeActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_legalnotice);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(true);

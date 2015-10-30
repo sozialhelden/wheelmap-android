@@ -21,11 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.ActionBar.TabListener;
-
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
+import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.OnExecuteBundle;
 import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsListWorkerFragment;
@@ -34,8 +30,12 @@ import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.online.R;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar.TabListener;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class MyTabListener implements TabListener {
 
     private final static Map<String, TabHolder> sTagToTabHolder;
 
-    private final Activity mActivity;
+    private final AppCompatActivity mActivity;
 
     private OnStateListener mListener;
 
@@ -64,7 +64,7 @@ public class MyTabListener implements TabListener {
      *
      * @param activity The host Activity, used to instantiate the fragment
      */
-    public MyTabListener(Activity activity) {
+    public MyTabListener(AppCompatActivity activity) {
         mActivity = activity;
 
         if (activity instanceof OnStateListener) {
@@ -93,7 +93,7 @@ public class MyTabListener implements TabListener {
 
             }
 
-            holder.fragment = Fragment.instantiate( holder.clazz, new Bundle());
+            holder.fragment = Fragment.instantiate(WheelmapApp.get(), holder.clazz.getSimpleName(), new Bundle());
         }
         Log.d(TAG, "Fragment holder.fragment = " + holder.fragment.toString());
         FragmentTransaction t = fm.beginTransaction();

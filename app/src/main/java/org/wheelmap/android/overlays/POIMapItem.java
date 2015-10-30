@@ -23,7 +23,7 @@ package org.wheelmap.android.overlays;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.OverlayItem;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 
 import android.graphics.drawable.Drawable;
 
@@ -33,7 +33,7 @@ public class POIMapItem extends OverlayItem {
     /**
      * Stores the wheelchair state
      */
-    private final WheelchairState mState;
+    private final WheelchairFilterState mState;
 
     /**
      * Stores the unique id
@@ -47,7 +47,7 @@ public class POIMapItem extends OverlayItem {
      * @param point The GeoPoint of POI
      * @param state wheelchair state.
      */
-    public POIMapItem(GeoPoint point, WheelchairState state, int id, Drawable marker) {
+    public POIMapItem(GeoPoint point, WheelchairFilterState state, int id, Drawable marker) {
         super();
         this.mState = state;
         this.id = id;
@@ -60,7 +60,7 @@ public class POIMapItem extends OverlayItem {
      *
      * @return the WheelchairState of the POI
      */
-    public WheelchairState getWheelchairState() {
+    public WheelchairFilterState getWheelchairState() {
         return this.mState;
     }
 

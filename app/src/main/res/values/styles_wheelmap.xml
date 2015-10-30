@@ -19,7 +19,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
            xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.wheelmap" parent="@style/Holo.Theme.Light.DarkActionBar">
+    <style name="Theme.wheelmap" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
@@ -52,8 +52,7 @@
 
     </style>
 
-    <style name="wheelmap_solid_ActionBar"
-           parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="wheelmap_solid_ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_wheelmap</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wheelmap</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_wheelmap</item>
@@ -65,7 +64,7 @@
         <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>                  °
     </style>
 
-    <style name="wheelmap_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">
+    <style name="wheelmap_transparent_ActionBar" parent="android:Widget.Holo.ActionBar">
         <item name="background">@drawable/ab_transparent_wheelmap</item>
         <item name="progressBarStyle">@style/wheelmap_ProgressBar</item>
 
@@ -73,21 +72,21 @@
         <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>
     </style>
 
-    <style name="wheelmap_PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">
+    <style name="wheelmap_PopupMenu" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wheelmap</item>
     </style>
 
-    <style name="wheelmap_DropDownListView" parent="@style/Widget.Sherlock.ListView.DropDown">
+    <style name="wheelmap_DropDownListView" parent="android:Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wheelmap</item>
     </style>
 
-    <style name="wheelmap_ActionBarTabStyle" parent="@style/Widget.Sherlock.ActionBar.TabView">
+    <style name="wheelmap_ActionBarTabStyle" parent="android:Widget.Holo.ActionBar.TabView">
         <item name="background">@drawable/tab_indicator_ab_wheelmap</item>
 
         <item name="android:background">@drawable/tab_indicator_ab_wheelmap</item>
     </style>
 
-    <style name="wheelmap_DropDownNav" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
+    <style name="wheelmap_DropDownNav" parent="android:Widget.Spinner.DropDown">
         <item name="background">@drawable/spinner_background_ab_wheelmap</item>
 
         <item name="android:background">@drawable/spinner_background_ab_wheelmap</item>
@@ -95,12 +94,12 @@
         <item name="android:dropDownSelector">@drawable/selectable_background_wheelmap</item>
     </style>
 
-    <style name="wheelmap_ProgressBar" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
+    <style name="wheelmap_ProgressBar" parent="android:Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wheelmap</item>
     </style>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.wheelmap.widget" parent="@style/Theme.Sherlock">
+    <style name="Theme.wheelmap.widget" parent="android:Widget.Holo">
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
 

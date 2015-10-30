@@ -21,38 +21,26 @@
  */
 package org.wheelmap.android.activity;
 
-import com.google.inject.Inject;
-
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.widget.FrameLayout;
-import org.holoeverywhere.widget.Toast;
 import org.wheelmap.android.fragment.LoginFragment;
 import org.wheelmap.android.fragment.LogoutFragment;
-import org.wheelmap.android.fragment.WheelchairStateFragment;
-import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.WheelchairState;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import de.akquinet.android.androlog.Log;
 
-@Activity.Addons(Activity.ADDON_SHERLOCK)
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
     private final static String TAG = LoginActivity.class
             .getSimpleName();
@@ -121,7 +109,4 @@ public class LoginActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

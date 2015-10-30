@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.net.request;
 
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 
 import android.text.TextUtils;
 
@@ -45,7 +45,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 
     private double longitude;
 
-    private WheelchairState state;
+    private WheelchairFilterState state;
 
     private String description;
 
@@ -66,7 +66,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
     public NodeUpdateOrNewAllRequestBuilder(final String server,
             final String apiKey, final AcceptType acceptType, String id,
             String name, String category, String type, double latitude,
-            double longitude, WheelchairState state, String description,
+            double longitude, WheelchairFilterState state, String description,
             String street, String housenumber, String city, String postcode,
             String website, String phone) {
         super(server, apiKey, acceptType);

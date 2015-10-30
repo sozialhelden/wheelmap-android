@@ -1,14 +1,14 @@
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.holoeverywhere.app.Activity;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,7 +19,7 @@ import de.akquinet.android.androlog.Log;
 /**
  * Created by SMF on 18/03/14.
  */
-public class PictureActivity extends Activity{
+public class PictureActivity extends AppCompatActivity{
 
     private static final String TAG = PictureActivity.class.getSimpleName();
 

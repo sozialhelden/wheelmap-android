@@ -21,40 +21,40 @@
   #L%
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- TODO - Add title-String -->
+    <item
+        android:id="@+id/switch_view"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_list"
+        android:title=""/>
 
     <item
-            android:id="@+id/menu_refresh"
-            android:icon="@drawable/ic_menu_refresh_wheelmap"
-            android:showAsAction="ifRoom"
-            android:title="@string/menu_refresh" />
+        android:id="@+id/menu_search"
+        app:showAsAction="always"
+        android:icon="@drawable/map_navbar_btn_search"
+        android:title="@string/menu_search"/>
 
     <item
-            android:id="@+id/menu_search"
-            android:showAsAction="ifRoom"
-            android:icon="@drawable/map_navbar_btn_search"
-            android:title="@string/menu_search"/>
+        android:id="@+id/menu_filter"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_status"
+        android:title="@string/menu_filter"/>
 
-
+    <!-- TODO - CHANGE title-String -->
     <item
-            android:id="@+id/menu_new_poi"
-            android:showAsAction="ifRoom"
-            android:icon="@drawable/map_navbar_btn_neu"
-            android:title="@string/menu_new_poi"/>
+        android:id="@+id/menu_filter_kategorie"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_kategorie"
+        android:title="@string/menu_filter"/>
 
+    <!-- TODO - Add title-String -->
     <item
-            android:id="@+id/menu_filter"
-            android:showAsAction="ifRoom"
-            android:icon="@drawable/map_navbar_btn_filter"
-            android:title="@string/menu_filter"/>
-
-    <item
-            android:id="@+id/menu_filter_kategorie"
-            android:showAsAction="ifRoom"
-            android:icon="@drawable/map_navbar_btn_kategorie"
-            android:title="@string/menu_filter"/>
-
-
+        android:id="@+id/menu_wc"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_wc"
+        android:title=""/>
 
 </menu>

@@ -29,7 +29,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.UserQueryHelper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
@@ -185,7 +185,7 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
         c.close();
 
         values.clear();
-        values.put(POIs.WHEELCHAIR, WheelchairState.YES.getId());
+        values.put(POIs.WHEELCHAIR, WheelchairFilterState.YES.getId());
         values.put(POIs.DIRTY, POIs.DIRTY_STATE);
         PrepareDatabaseHelper.editCopy(cr, idOfCopy, values);
 

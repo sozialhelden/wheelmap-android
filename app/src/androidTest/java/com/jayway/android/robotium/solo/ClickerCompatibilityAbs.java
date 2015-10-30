@@ -1,17 +1,6 @@
 package com.jayway.android.robotium.solo;
 
-import com.actionbarsherlock.ActionBarSherlock;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.ActionBarSherlockCompat;
-import com.actionbarsherlock.internal.view.menu.ActionMenuItem;
-import com.actionbarsherlock.internal.widget.ActionBarContextView;
-import com.actionbarsherlock.view.Window;
-
-import org.junit.Assert;
-
 import android.app.Activity;
-import android.util.Log;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -46,25 +35,25 @@ class ClickerCompatibilityAbs {
      */
     public void clickOnActionBarHomeButtonCompat() {
         Activity activity = activityUtils.getCurrentActivity();
-        if (!(activity instanceof SherlockFragmentActivity)) {
-            throw new IllegalStateException(
-                    "This method should be called only in SherlockFragmentActivity.");
-        }
-
-        ActionMenuItem logoNavItem = new ActionMenuItem(activity, 0, android.R.id.home, 0, 0, "");
-        ActionBarSherlockCompat actionBarSherlockCompat = null;
-
-        try {
-            actionBarSherlockCompat
-                    = (ActionBarSherlockCompat) invokePrivateMethodWithoutParameters(
-                    SherlockFragmentActivity.class, "getSherlock", activity);
-        } catch (Exception ex) {
-            Log.d(LOG_TAG, "Can not find methods to invoke Home button.");
-        }
-
-        if (actionBarSherlockCompat != null) {
-            actionBarSherlockCompat.onMenuItemSelected(Window.FEATURE_OPTIONS_PANEL, logoNavItem);
-        }
+//        if (!(activity instanceof SherlockFragmentActivity)) {
+//            throw new IllegalStateException(
+//                    "This method should be called only in SherlockFragmentActivity.");
+//        }
+//
+//        ActionMenuItem logoNavItem = new ActionMenuItem(activity, 0, android.R.id.home, 0, 0, "");
+//        ActionBarSherlockCompat actionBarSherlockCompat = null;
+//
+//        try {
+//            actionBarSherlockCompat
+//                    = (ActionBarSherlockCompat) invokePrivateMethodWithoutParameters(
+//                    SherlockFragmentActivity.class, "getSherlock", activity);
+//        } catch (Exception ex) {
+//            Log.d(LOG_TAG, "Can not find methods to invoke Home button.");
+//        }
+//
+//        if (actionBarSherlockCompat != null) {
+//            actionBarSherlockCompat.onMenuItemSelected(Window.FEATURE_OPTIONS_PANEL, logoNavItem);
+//        }
     }
 
     /**
@@ -77,31 +66,31 @@ class ClickerCompatibilityAbs {
      *             interpreted as a regular expression.
      */
     public void clickOnActionModeOverflowMenuItem(String text) {
-        Activity activity = activityUtils.getCurrentActivity();
-        if (!(activity instanceof SherlockFragmentActivity)) {
-            throw new IllegalStateException(
-                    "This method should be called only in SherlockFragmentActivity.");
-        }
-
-        ActionBarContextView actionBarContextView = null;
-
-        try {
-            ActionBarSherlock actionBarSherlock
-                    = (ActionBarSherlock) invokePrivateMethodWithoutParameters(
-                    SherlockFragmentActivity.class, "getSherlock", activity);
-            actionBarContextView = (ActionBarContextView) getPrivateField("mActionModeView",
-                    actionBarSherlock);
-        } catch (Exception ex) {
-            Log.d(LOG_TAG, "Can not find methods to invoke action mode overflow button.");
-        }
-
-        if (actionBarContextView == null) {
-            Assert.fail("Contextual actionbar is not shown.");
-        }
-
-        actionBarContextView.showOverflowMenu();
-        sleeper.sleep();
-        clicker.clickOnText(text, false, 1, true, 0);
+//        Activity activity = activityUtils.getCurrentActivity();
+//        if (!(activity instanceof SherlockFragmentActivity)) {
+//            throw new IllegalStateException(
+//                    "This method should be called only in SherlockFragmentActivity.");
+//        }
+//
+//        ActionBarContextView actionBarContextView = null;
+//
+//        try {
+//            ActionBarSherlock actionBarSherlock
+//                    = (ActionBarSherlock) invokePrivateMethodWithoutParameters(
+//                    SherlockFragmentActivity.class, "getSherlock", activity);
+//            actionBarContextView = (ActionBarContextView) getPrivateField("mActionModeView",
+//                    actionBarSherlock);
+//        } catch (Exception ex) {
+//            Log.d(LOG_TAG, "Can not find methods to invoke action mode overflow button.");
+//        }
+//
+//        if (actionBarContextView == null) {
+//            Assert.fail("Contextual actionbar is not shown.");
+//        }
+//
+//        actionBarContextView.showOverflowMenu();
+//        sleeper.sleep();
+//        clicker.clickOnText(text, false, 1, true, 0);
     }
 
     private Object invokePrivateMethodWithoutParameters(Class<?> clazz, String methodName,

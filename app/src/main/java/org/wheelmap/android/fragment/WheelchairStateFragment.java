@@ -21,48 +21,29 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.WheelchairState;
-import org.wheelmap.android.online.R;
+import org.wheelmap.android.model.WheelchairFilterState;
 
-import android.os.Bundle;
+import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import java.util.HashMap;
 
-public class WheelchairStateFragment extends Fragment implements
+public abstract class WheelchairStateFragment extends Fragment implements
         OnClickListener {
 
     public static final String TAG = WheelchairStateFragment.class
             .getSimpleName();
 
-    private HashMap<WheelchairState, RadioButton> mRadioButtonsMap
-            = new HashMap<WheelchairState, RadioButton>();
+    protected HashMap<WheelchairFilterState, RadioButton> mRadioButtonsMap = new HashMap<WheelchairFilterState, RadioButton>();
 
-    private OnWheelchairState mListener;
+    protected OnWheelchairState mListener;
 
     public interface OnWheelchairState {
 
-        public void onWheelchairStateSelect(WheelchairState state);
-    }
-
-    public static WheelchairStateFragment newInstance(WheelchairState state) {
-        Bundle b = new Bundle();
-        b.putInt(Extra.WHEELCHAIR_STATE, state.getId());
-        WheelchairStateFragment f = new WheelchairStateFragment();
-        f.setArguments(b);
-        return f;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        public void onWheelchairStateSelect(WheelchairFilterState state);
     }
 
     @Override
@@ -74,73 +55,11 @@ public class WheelchairStateFragment extends Fragment implements
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_wheelchair_state,
-                container, false);
+    protected abstract void DeselectAllRadioButtons();
 
-        mRadioButtonsMap.put(WheelchairState.YES,
-                (RadioButton) v.findViewById(R.id.radio_enabled));
-        mRadioButtonsMap.put(WheelchairState.LIMITED,
-                (RadioButton) v.findViewById(R.id.radio_limited));
-        mRadioButtonsMap.put(WheelchairState.NO,
-                (RadioButton) v.findViewById(R.id.radio_disabled));
-        mRadioButtonsMap.put(WheelchairState.UNKNOWN,
-                (RadioButton) v.findViewById(R.id.radio_unknown));
+    protected abstract void setWheelchairState(WheelchairFilterState newState);
 
-        for (WheelchairState state : mRadioButtonsMap.keySet()) {
-            mRadioButtonsMap.get(state).setOnClickListener(this);
-        }
-
-
-        v.findViewById(R.id.detail_save).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                  dismiss();
-            }
-        });
-        /*
-        v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });     */
-
-        return v;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        int newStateInt = getArguments().getInt(Extra.WHEELCHAIR_STATE,
-                Extra.UNKNOWN);
-        WheelchairState newState = WheelchairState.valueOf(newStateInt);
-        setWheelchairState(newState);
-
-    }
-
-    private void DeselectAllRadioButtons() {
-        for (WheelchairState state : mRadioButtonsMap.keySet()) {
-            mRadioButtonsMap.get(state).setChecked(false);
-        }
-    }
-
-    private void setWheelchairState(WheelchairState newState) {
-        DeselectAllRadioButtons();
-        mRadioButtonsMap.get(newState).setChecked(true);
-    }
-
-    private WheelchairState getWheelchairState() {
-        for (WheelchairState state : mRadioButtonsMap.keySet()) {
-            if (mRadioButtonsMap.get(state).isChecked()) {
-                return state;
-            }
-        }
-        return WheelchairState.UNKNOWN;
-    }
+    protected abstract WheelchairFilterState getWheelchairState();
 
     @Override
     public void onClick(View v) {
@@ -149,7 +68,7 @@ public class WheelchairStateFragment extends Fragment implements
         a.setChecked(true);
     }
 
-    private void dismiss(){
+    protected void dismiss(){
         if (mListener != null) {
             mListener.onWheelchairStateSelect(getWheelchairState());
         }

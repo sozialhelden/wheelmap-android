@@ -1,21 +1,20 @@
 package org.wheelmap.android.activity;
 
-import com.actionbarsherlock.view.MenuItem;
-
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.widget.ProgressBar;
 import org.wheelmap.android.online.R;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 /**
  * Created by SMF on 04/04/14.
  */
-public class WebViewNewsActivity extends Activity {
+public class WebViewNewsActivity extends AppCompatActivity {
 
     WebView webView;
     ProgressBar progress;

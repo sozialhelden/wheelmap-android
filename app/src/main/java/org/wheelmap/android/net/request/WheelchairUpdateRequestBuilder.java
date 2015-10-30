@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.net.request;
 
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 
 /**
  * Constructs the Uri of a <code>/api/nodes/{node_id}/update_wheelchair</code> request
@@ -32,11 +32,11 @@ public class WheelchairUpdateRequestBuilder extends RequestBuilder {
 
     private String id;
 
-    private WheelchairState state;
+    private WheelchairFilterState state;
 
     public WheelchairUpdateRequestBuilder(final String server,
             final String apiKey, final AcceptType acceptType, String id,
-            WheelchairState state) {
+            WheelchairFilterState state) {
         super(server, apiKey, acceptType);
         this.id = id;
         this.state = state;

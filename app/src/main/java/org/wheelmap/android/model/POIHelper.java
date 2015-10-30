@@ -99,9 +99,14 @@ public class POIHelper {
         return address.toString();
     }
 
-    public static WheelchairState getWheelchair(Cursor c) {
-        return WheelchairState.valueOf(c.getInt(c
+    public static WheelchairFilterState getWheelchair(Cursor c) {
+        return WheelchairFilterState.valueOf(c.getInt(c
                 .getColumnIndexOrThrow(POIs.WHEELCHAIR)));
+    }
+
+    public static WheelchairFilterState getWheelchairToilet(Cursor c) {
+        return WheelchairFilterState.valueOf(c.getInt(c
+                .getColumnIndexOrThrow(POIs.WHEELCHAIR_TOILET)));
     }
 
     // comment into DB

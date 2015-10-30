@@ -21,8 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.SearchDialogFragment.OnSearchDialogListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -39,6 +37,7 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.GeoMath;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -46,6 +45,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -192,7 +192,7 @@ public class POIsListWorkerFragment extends Fragment implements
 
     private float getDistanceFromPreferences() {
         SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getSupportActivity().getApplicationContext());
+                .getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         float prefDist = prefs.getFloat(PrefKey.LIST_DISTANCE,
                 QUERY_DISTANCE_DEFAULT);
