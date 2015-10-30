@@ -4,7 +4,13 @@
 
     <item
         android:id="@+id/menu_filter"
-        android:icon="@drawable/map_navbar_btn_filter"
+        android:icon="@drawable/ic_status"
+        android:title="@string/menu_filter"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_wc"
+        android:icon="@drawable/ic_wc"
         android:title="@string/menu_filter"
         app:showAsAction="always" />
 
