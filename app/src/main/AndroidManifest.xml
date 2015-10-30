@@ -43,7 +43,7 @@ limitations under the License.
     <application
             android:hardwareAccelerated="true"
             android:name="org.wheelmap.android.app.WheelmapApp"
-            android:icon="@drawable/ic_launcher_market"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
             android:logo="@drawable/title_logo_shadow"
             android:theme="@style/Theme.wheelmap_fixed">
@@ -160,12 +160,12 @@ limitations under the License.
 
         <provider
                 android:name="org.wheelmap.android.model.POIsProvider"
-                android:authorities="@string/wheelmapprovider"
+                android:authorities="${applicationId}.wheelmap"
                 android:readPermission="org.wheelmap.android.pois.Read"
                 android:writePermission="org.wheelmap.android.pois.Write"/>
         <provider
                 android:name="org.wheelmap.android.model.SupportProvider"
-                android:authorities="@string/supportprovider"
+                android:authorities="${applicationId}.support"
                 android:readPermission="org.wheelmap.android.support.Read"
                 android:writePermission="org.wheelmap.android.support.Write"/>
         <meta-data android:name="com.crashlytics.ApiKey"

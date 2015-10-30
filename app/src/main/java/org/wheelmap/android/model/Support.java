@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
@@ -43,7 +44,7 @@ public class Support {
     }
 
     public static void init(Context context) {
-        AUTHORITY = context.getString(R.string.supportprovider);
+        AUTHORITY = BuildConfig.APPLICATION_ID + ".support";
 
         LastUpdateContent.CONTENT_URI = Uri.parse("content://"
                 + AUTHORITY + LastUpdateContent.CONTENT_PATH);
