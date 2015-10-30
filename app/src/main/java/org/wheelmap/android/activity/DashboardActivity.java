@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.profile.ProfileActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;
@@ -317,7 +318,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void account(){
-        Intent intent = new Intent(this,LoginActivity.class);
+        Intent intent = new Intent(this,ProfileActivity.class);
         startActivityForResult(intent, Request.REQUEST_CODE_LOGIN);
     }
 

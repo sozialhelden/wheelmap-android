@@ -19,10 +19,10 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.activity;
+package org.wheelmap.android.activity.profile;
 
-import org.wheelmap.android.fragment.LoginFragment;
-import org.wheelmap.android.fragment.LogoutFragment;
+import org.wheelmap.android.fragment.profile.LoginFragment;
+import org.wheelmap.android.fragment.profile.LogoutFragment;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
@@ -40,9 +40,9 @@ import android.view.ViewGroup;
 
 import de.akquinet.android.androlog.Log;
 
-public class LoginActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
-    private final static String TAG = LoginActivity.class
+    private final static String TAG = ProfileActivity.class
             .getSimpleName();
 
 
@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mCredentials = new UserCredentials(getApplicationContext());
-        setResult(mCredentials.isLoggedIn() ? RESULT_OK : RESULT_CANCELED);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             UtilsMisc.showAsPopup(this);
@@ -72,6 +71,26 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        if(UtilsMisc.isTablet(getApplicationContext())){
+            View v = findViewById(R.id.content);
+            while(v != null && v instanceof ViewGroup){
+                v.setBackgroundColor(Color.TRANSPARENT);
+                if(v.getParent() instanceof View){
+                    v = (View) v.getParent();
+                }else{
+                    break;
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setResult(mCredentials.isLoggedIn() ? RESULT_OK : RESULT_CANCELED);
+
         FragmentManager fm = getSupportFragmentManager();
 
         if(!mCredentials.isLoggedIn()){
@@ -85,19 +104,6 @@ public class LoginActivity extends AppCompatActivity {
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         LoginFragment.TAG).commit();
-
-        if(UtilsMisc.isTablet(getApplicationContext())){
-            View v = findViewById(R.id.content);
-            while(v != null && v instanceof ViewGroup){
-                v.setBackgroundColor(Color.TRANSPARENT);
-                if(v.getParent() instanceof View){
-                    v = (View) v.getParent();
-                }else{
-                    break;
-                }
-            }
-        }
-
     }
 
     @Override

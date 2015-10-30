@@ -117,18 +117,6 @@ public class SearchDialogFragment extends DialogFragment implements
 
     private View distanceContainer;
 
-    protected void enableContainerVisibility() {
-        mapHintContainer = getDialog().findViewById(R.id.search_map_hint);
-        if (getArguments().getBoolean(Extra.SHOW_MAP_HINT)) {
-            mapHintContainer.setVisibility(View.VISIBLE);
-        }
-
-        distanceContainer = getDialog().findViewById(
-                R.id.search_spinner_distance_container);
-        if (getArguments().getBoolean(Extra.SHOW_DISTANCE)) {
-            distanceContainer.setVisibility(View.VISIBLE);
-        }
-    }
 
     protected void setSearchMode(boolean enableBoundingBoxSearch) {
         Log.d(TAG, "enableBoundingBoxSearch = " + enableBoundingBoxSearch);

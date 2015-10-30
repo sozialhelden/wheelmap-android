@@ -1,4 +1,4 @@
-package org.wheelmap.android.fragment;
+package org.wheelmap.android.fragment.profile;
 
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
@@ -8,6 +8,7 @@ import org.wheelmap.android.utils.UtilsMisc;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,11 @@ public class LogoutFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_logout,container,false);
 
         TextView user = (TextView) v.findViewById(R.id.logout_user);
-        user.setText(String.format(user.getText().toString(),mCredentials.getUserName()));
+        if (TextUtils.isEmpty(mCredentials.getUserName())) {
+            user.setText(R.string.signed_in);
+        } else {
+            user.setText(String.format(user.getText().toString(), mCredentials.getUserName()));
+        }
 
         v.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
