@@ -19,8 +19,9 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.fragment;
+package org.wheelmap.android.fragment.profile;
 
+import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
@@ -46,7 +47,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;

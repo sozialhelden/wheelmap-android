@@ -21,8 +21,8 @@
  */
 package org.wheelmap.android.activity;
 
-import org.wheelmap.android.fragment.LoginFragment;
-import org.wheelmap.android.fragment.LogoutFragment;
+import org.wheelmap.android.fragment.profile.LoginFragment;
+import org.wheelmap.android.fragment.profile.LogoutFragment;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;

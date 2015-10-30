@@ -1,4 +1,4 @@
-package org.wheelmap.android.fragment;
+package org.wheelmap.android.fragment.profile;
 
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
