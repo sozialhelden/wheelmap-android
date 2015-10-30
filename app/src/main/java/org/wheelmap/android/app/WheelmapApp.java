@@ -130,7 +130,7 @@ public class WheelmapApp extends Application {
         ImageLoader.getInstance().init(config);
 
 
-        if (!getResources().getBoolean(R.bool.developbuild) && !isBugsenseInitCalled) {
+        if (!BuildConfig.DEBUG && !isBugsenseInitCalled) {
             //BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));
             isBugsenseInitCalled = true;
         }
