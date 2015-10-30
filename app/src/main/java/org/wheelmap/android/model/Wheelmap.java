@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.model;
 
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
 import android.content.ContentResolver;
@@ -132,7 +133,8 @@ public class Wheelmap {
         }
 
         public static void init(Context context) {
-            AUTHORITY = context.getString(R.string.wheelmapprovider);
+
+            AUTHORITY = BuildConfig.APPLICATION_ID + ".wheelmap";
 
             CONTENT_URI_BASE = Uri
                     .parse(ContentResolver.SCHEME_CONTENT + "://" + AUTHORITY);

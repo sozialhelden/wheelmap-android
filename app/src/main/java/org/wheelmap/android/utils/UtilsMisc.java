@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Point;
@@ -34,6 +35,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
@@ -51,6 +53,10 @@ import java.util.Date;
 public class UtilsMisc {
 
     private static final String TAG = UtilsMisc.class.getSimpleName();
+
+    public static float dbToPx(Resources r, int dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
+    }
 
     public static void dumpCursorToLog(String tag, Cursor cursor) {
         cursor.moveToFirst();

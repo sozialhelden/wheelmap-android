@@ -23,6 +23,11 @@ android {
         targetSdkVersion 22
         versionName "2.0.4"
     }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+        }
+    }
     buildTypes {
 
         debug {
@@ -34,12 +39,14 @@ android {
 
         alpha {
             initWith(buildTypes.debug)
+            signingConfig android.signingConfigs.debug
             applicationIdSuffix ".stagingdev"
             buildConfigField "String", "HOCKEY_APP_ID", "\"d076b4be1cf6f7d5130c4d766b6c7753\""
         }
 
         beta {
             initWith(buildTypes.debug)
+            signingConfig android.signingConfigs.debug
             applicationIdSuffix ".staging"
             buildConfigField "String", "HOCKEY_APP_ID", "\"53b3b9ffa1473a9536e860791cfaa0b3\""
         }

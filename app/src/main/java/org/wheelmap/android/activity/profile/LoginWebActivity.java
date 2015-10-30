@@ -44,6 +44,9 @@ public class LoginWebActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.webview);
+        View content = findViewById(R.id.content);
+        content.setMinimumHeight((int)UtilsMisc.dbToPx(getResources(), 200));
+        content.setMinimumWidth((int)UtilsMisc.dbToPx(getResources(), 200));
 
         progress = (ProgressBar) findViewById(R.id.progress);
 
