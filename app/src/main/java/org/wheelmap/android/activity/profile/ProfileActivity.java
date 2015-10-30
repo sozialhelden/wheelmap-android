@@ -40,9 +40,9 @@ import android.view.ViewGroup;
 
 import de.akquinet.android.androlog.Log;
 
-public class LoginActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
-    private final static String TAG = LoginActivity.class
+    private final static String TAG = ProfileActivity.class
             .getSimpleName();
 
 

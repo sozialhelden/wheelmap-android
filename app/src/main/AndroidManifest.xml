@@ -138,7 +138,7 @@ limitations under the License.
                 android:label="">
         </activity>
         <activity
-                android:name="org.wheelmap.android.activity.profile.LoginActivity"
+                android:name="org.wheelmap.android.activity.profile.ProfileActivity"
                 android:windowSoftInputMode="adjustPan"
                 android:theme="@style/Theme.Wheelmap.SubActivity"
                 android:label="">

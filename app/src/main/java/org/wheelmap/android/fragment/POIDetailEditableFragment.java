@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.activity.profile.LoginActivity;
+import org.wheelmap.android.activity.profile.ProfileActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
 import org.wheelmap.android.app.WheelmapApp;
@@ -279,7 +279,7 @@ public class POIDetailEditableFragment extends Fragment implements
         retrieve(savedInstanceState);
         if (!mCredentials.isLoggedIn()) {
 
-            Intent intent = new Intent(getActivity(),LoginActivity.class);
+            Intent intent = new Intent(getActivity(),ProfileActivity.class);
             startActivityForResult(intent, REQUEST_CODE_LOGIN);
         }
 
