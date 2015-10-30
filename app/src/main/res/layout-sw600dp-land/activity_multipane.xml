@@ -1,88 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:animateLayoutChanges="true">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:animateLayoutChanges="true">
 
     <FrameLayout
-            android:id="@+id/list_layout"
-            android:layout_width="@dimen/mp_list_width"
-            android:layout_height="fill_parent"/>
-
-    <!--
-    <ImageView
-            android:layout_width="@dimen/margin_large"
-            android:layout_height="fill_parent"
-            android:layout_alignRight="@+id/list_layout"
-            android:src="@drawable/fragment_shadow_right"/> -->
+        android:id="@+id/list_layout"
+        android:layout_width="@dimen/mp_list_width"
+        android:layout_height="fill_parent" />
 
     <RelativeLayout
+        android:id="@+id/layout_multi"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@+id/list_layout"
+        android:animateLayoutChanges="true">
+
+        <FrameLayout
+            android:id="@+id/map_layout"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_toRightOf="@+id/list_layout"
-            android:id="@+id/layout_multi"
-            android:animateLayoutChanges="true">
-
-        <View
-                android:id="@+id/center_position"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/landscape_divider_margin"/>
+            android:layout_height="fill_parent" />
 
         <FrameLayout
-                android:id="@+id/map_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"/>
-
-        <FrameLayout
-                android:id="@+id/movable_layout"
-                android:layout_width="300dp"
-                android:layout_height="fill_parent">
+            android:id="@+id/movable_layout"
+            android:layout_width="@dimen/overlay_width"
+            android:layout_height="fill_parent">
 
             <FrameLayout
-                    android:id="@+id/detail_layout"
-                    android:layout_width="300dp"
-                    android:layout_height="fill_parent"/>
-               <!--
-            <ImageView
-                    android:layout_width="@dimen/margin_large"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="right"
-                    android:src="@drawable/fragment_shadow_left"/>
-                    -->
+                android:id="@+id/detail_layout"
+                android:layout_width="@dimen/overlay_width"
+                android:layout_height="fill_parent" />
         </FrameLayout>
 
-        <LinearLayout android:id="@+id/my_outofzoom_text_tablet_landscape"
-                      android:layout_width="300dp"
-                      android:layout_marginTop="25dp"
-                      android:layout_centerHorizontal="true"
-                      android:layout_height="100dp"
-                      android:background="@drawable/border_rounded_corner"
-                      android:layout_toRightOf="@id/movable_layout"
+        <LinearLayout
+            android:id="@+id/my_outofzoom_text_tablet_landscape"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:layout_toRightOf="@id/movable_layout"
+            android:background="@drawable/border_rounded_corner"
 
-                      android:visibility="gone"
-                      android:gravity="center"
-                      android:clickable="true">
+            android:clickable="true"
+            android:gravity="center"
+            android:visibility="gone">
+
             <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="#ffff"
-                    android:layout_margin="5dp"
-                    android:textSize="25dp"
-                    android:text="@string/to_far_away">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:text="@string/to_far_away"
+                android:textColor="#ffff"
+                android:textSize="25dp">
 
             </TextView>
         </LinearLayout>
 
         <ImageButton
-                android:id="@+id/button_movable_resize"
-                style="@style/IconLarge"
-                android:visibility="gone"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/ic_detail_expand"/>
+            android:id="@+id/button_movable_resize"
+            style="@style/IconLarge"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_detail_expand"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

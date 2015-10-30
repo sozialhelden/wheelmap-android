@@ -323,6 +323,10 @@ public class MainMultiPaneActivity extends MapActivity implements
             View v = findViewById(R.id.menu_filter);
             MapActivityUtils.setAccessFilterOptionDrawable(this, null, v);
 
+            View filterWc = findViewById(R.id.menu_wc);
+            MapActivityUtils.setWcFilterOptionsDrawable(this, null, filterWc);
+
+
             UserCredentials credentials = new UserCredentials(getApplicationContext());
             ImageView image = (ImageView) findViewById(R.id.menu_login);
             image.setImageResource(credentials.isLoggedIn()
@@ -333,11 +337,10 @@ public class MainMultiPaneActivity extends MapActivity implements
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
             MenuItem item = menu.findItem(R.id.menu_filter);
             MapActivityUtils.setAccessFilterOptionDrawable(this, item, null);
+            item = menu.findItem(R.id.menu_wc);
+            MapActivityUtils.setWcFilterOptionsDrawable(this, item, null);
+
         }
-
-        View filterWc = findViewById(R.id.menu_wc);
-        MapActivityUtils.setWcFilterOptionsDrawable(this, null, filterWc);
-
 
         if (mapModeType == MapModeType.MAP_MODE_ENGAGE) {
             MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);

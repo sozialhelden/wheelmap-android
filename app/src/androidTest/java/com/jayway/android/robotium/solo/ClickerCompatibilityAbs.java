@@ -1,6 +1,12 @@
 package com.jayway.android.robotium.solo;
 
 import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.menu.ActionMenuItem;
+import android.support.v7.app.ActionBar;
+import android.util.Log;
+import android.view.Window;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -34,26 +40,23 @@ class ClickerCompatibilityAbs {
      * Solo#clickOnActionBarHomeButton()}.
      */
     public void clickOnActionBarHomeButtonCompat() {
+
         Activity activity = activityUtils.getCurrentActivity();
-//        if (!(activity instanceof SherlockFragmentActivity)) {
-//            throw new IllegalStateException(
-//                    "This method should be called only in SherlockFragmentActivity.");
-//        }
-//
-//        ActionMenuItem logoNavItem = new ActionMenuItem(activity, 0, android.R.id.home, 0, 0, "");
-//        ActionBarSherlockCompat actionBarSherlockCompat = null;
-//
-//        try {
-//            actionBarSherlockCompat
-//                    = (ActionBarSherlockCompat) invokePrivateMethodWithoutParameters(
-//                    SherlockFragmentActivity.class, "getSherlock", activity);
-//        } catch (Exception ex) {
-//            Log.d(LOG_TAG, "Can not find methods to invoke Home button.");
-//        }
-//
-//        if (actionBarSherlockCompat != null) {
-//            actionBarSherlockCompat.onMenuItemSelected(Window.FEATURE_OPTIONS_PANEL, logoNavItem);
-//        }
+
+        ActionMenuItem logoNavItem = new ActionMenuItem(activity, 0, android.R.id.home, 0, 0, "");
+
+        ActionBar supportActionBar = null;
+        try {
+            supportActionBar
+                    = (ActionBar) invokePrivateMethodWithoutParameters(
+                    ActionBar.class, "getActionBar", activity);
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, "Can not find methods to invoke Home button.");
+        }
+
+        if (supportActionBar != null) {
+            activity.onMenuItemSelected(Window.FEATURE_OPTIONS_PANEL, logoNavItem);
+        }
     }
 
     /**
