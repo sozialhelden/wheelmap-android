@@ -18,6 +18,7 @@ android {
 
     defaultConfig {
         applicationId "org.wheelmap.android.online"
+        testInstrumentationRunner "org.wheelmap.android.test.MyInstrumentationTestRunner"
         minSdkVersion 15
         targetSdkVersion 22
         versionName "2.0.4"

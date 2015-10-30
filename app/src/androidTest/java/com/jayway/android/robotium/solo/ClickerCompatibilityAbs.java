@@ -1,7 +1,6 @@
 package com.jayway.android.robotium.solo;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.view.menu.ActionMenuItem;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -57,43 +56,6 @@ class ClickerCompatibilityAbs {
         if (supportActionBar != null) {
             activity.onMenuItemSelected(Window.FEATURE_OPTIONS_PANEL, logoNavItem);
         }
-    }
-
-    /**
-     * Clicks on ActionMode (contextual actionbar) menu item which is hidden in overflow. Should be
-     * called only in apps that use ActionBarSherlock and which are tested on pre ICS Android. To
-     * perform a click on contextual actionbar items not hidden in overflow you should use {@link
-     * Solo#clickOnMenuItem(String) or {@link SoloCompatibilityAbs#clickOnVisibleActionbarItem(int)}}
-     *
-     * @param text the menu text that should be clicked on. The parameter <strong>will</strong> be
-     *             interpreted as a regular expression.
-     */
-    public void clickOnActionModeOverflowMenuItem(String text) {
-//        Activity activity = activityUtils.getCurrentActivity();
-//        if (!(activity instanceof SherlockFragmentActivity)) {
-//            throw new IllegalStateException(
-//                    "This method should be called only in SherlockFragmentActivity.");
-//        }
-//
-//        ActionBarContextView actionBarContextView = null;
-//
-//        try {
-//            ActionBarSherlock actionBarSherlock
-//                    = (ActionBarSherlock) invokePrivateMethodWithoutParameters(
-//                    SherlockFragmentActivity.class, "getSherlock", activity);
-//            actionBarContextView = (ActionBarContextView) getPrivateField("mActionModeView",
-//                    actionBarSherlock);
-//        } catch (Exception ex) {
-//            Log.d(LOG_TAG, "Can not find methods to invoke action mode overflow button.");
-//        }
-//
-//        if (actionBarContextView == null) {
-//            Assert.fail("Contextual actionbar is not shown.");
-//        }
-//
-//        actionBarContextView.showOverflowMenu();
-//        sleeper.sleep();
-//        clicker.clickOnText(text, false, 1, true, 0);
     }
 
     private Object invokePrivateMethodWithoutParameters(Class<?> clazz, String methodName,
