@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.profile.LoginActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;

@@ -27,6 +27,7 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.activity.profile.LoginActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;

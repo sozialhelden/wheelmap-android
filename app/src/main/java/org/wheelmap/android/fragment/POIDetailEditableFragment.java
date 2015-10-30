@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.fragment;
 
-import org.wheelmap.android.activity.LoginActivity;
+import org.wheelmap.android.activity.profile.LoginActivity;
 import org.wheelmap.android.activity.WheelchairStateActivity;
 import org.wheelmap.android.activity.WrapperActivity;
 import org.wheelmap.android.app.WheelmapApp;

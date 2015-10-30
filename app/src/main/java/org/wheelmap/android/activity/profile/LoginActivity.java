@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package org.wheelmap.android.activity;
+package org.wheelmap.android.activity.profile;
 
 import org.wheelmap.android.fragment.profile.LoginFragment;
 import org.wheelmap.android.fragment.profile.LogoutFragment;
