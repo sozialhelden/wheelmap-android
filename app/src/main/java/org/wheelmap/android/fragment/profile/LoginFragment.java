@@ -59,6 +59,7 @@ import de.akquinet.android.androlog.Log;
 public class LoginFragment extends Fragment {
 
     public final static String TAG = LoginFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_LOGIN = 0;
 
     private boolean mSyncing;
 
@@ -68,9 +69,9 @@ public class LoginFragment extends Fragment {
 
     public interface OnLoginDialogListener {
 
-        public void onLoginSuccessful();
+        void onLoginSuccessful();
 
-        public void onLoginCancelled();
+        void onLoginCancelled();
     }
 
     @Override
@@ -118,7 +119,23 @@ public class LoginFragment extends Fragment {
     }
 
     private void login() {
-        startActivity(new Intent(getActivity(), LoginWebActivity.class));
+        startActivityForResult(new Intent(getActivity(), LoginWebActivity.class), 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_LOGIN) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (mListener != null) {
+                    mListener.onLoginSuccessful();
+                }
+            } else {
+                if (mListener != null) {
+                    mListener.onLoginCancelled();
+                }
+            }
+        }
     }
 
     private void register() {

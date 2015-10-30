@@ -40,7 +40,7 @@ import android.view.ViewGroup;
 
 import de.akquinet.android.androlog.Log;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements LoginFragment.OnLoginDialogListener{
 
     private final static String TAG = ProfileActivity.class
             .getSimpleName();
@@ -82,15 +82,34 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         }
+        initFragment();
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    public void onLoginSuccessful() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void onLoginCancelled() {
+        initFragment();
+    }
+
+    private void initFragment() {
+        mCredentials = new UserCredentials(this);
         setResult(mCredentials.isLoggedIn() ? RESULT_OK : RESULT_CANCELED);
-
         FragmentManager fm = getSupportFragmentManager();
 
         if(!mCredentials.isLoggedIn()){
@@ -104,15 +123,5 @@ public class ProfileActivity extends AppCompatActivity {
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         LoginFragment.TAG).commit();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if(id == android.R.id.home){
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
