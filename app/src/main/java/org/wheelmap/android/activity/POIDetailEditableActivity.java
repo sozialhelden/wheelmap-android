@@ -22,7 +22,6 @@
 package org.wheelmap.android.activity;
 
 import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.fragment.LoginDialogFragment.OnLoginDialogListener;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
@@ -44,7 +43,7 @@ import android.view.Window;
 import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableActivity extends MapActivity implements
-        OnPOIDetailEditableListener, OnLoginDialogListener,
+        OnPOIDetailEditableListener,
         OnBackStackChangedListener, OnWheelchairState {
 
     private final static String TAG = POIDetailEditableActivity.class.getSimpleName();
@@ -180,16 +179,6 @@ public class POIDetailEditableActivity extends MapActivity implements
     public void onEditNodetype(int nodetype) {
 
         mExternalEditableState.nodetype = nodetype;
-    }
-
-    @Override
-    public void onLoginSuccessful() {
-
-    }
-
-    @Override
-    public void onLoginCancelled() {
-        finish();
     }
 
     @Override

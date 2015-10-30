@@ -22,11 +22,11 @@ public class WebViewNewsActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_web_news);
+        setContentView(R.layout.webview);
 
-         progress = (ProgressBar) findViewById(R.id.progress);
+        progress = (ProgressBar) findViewById(R.id.progress);
 
-        webView = (WebView)  findViewById(R.id.webview_news);
+        webView = (WebView)  findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {

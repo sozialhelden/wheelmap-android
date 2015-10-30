@@ -21,12 +21,15 @@
  */
 package org.wheelmap.android.fragment.profile;
 
+import org.wheelmap.android.activity.profile.LoginWebActivity;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
+import org.wheelmap.android.utils.Constants;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
@@ -53,21 +56,9 @@ import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
 
-public class LoginFragment extends Fragment implements
-        OnClickListener, DetachableResultReceiver.Receiver,
-        OnEditorActionListener {
+public class LoginFragment extends Fragment {
 
     public final static String TAG = LoginFragment.class.getSimpleName();
-
-    private EditText mEmailText;
-
-    private EditText mPasswordText;
-
-    private Button mLoginRegister;
-
-//    private TextView mRegisterText;
-//
-//    private ProgressBar mProgressBar;
 
     private boolean mSyncing;
 
@@ -86,10 +77,6 @@ public class LoginFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        mReceiver = new DetachableResultReceiver(new Handler());
-        mReceiver.setReceiver(this);
-
-
     }
 
     @Override
@@ -104,27 +91,12 @@ public class LoginFragment extends Fragment implements
                 login();
             }
         });
-
-        TextView forgot_password = (TextView)v.findViewById(R.id.login_forgot_password);
-        String forgot_password_format = "<a href=\"http://wheelmap.org/users/password/new\">%s</a>";
-        forgot_password.setText(Html.fromHtml(
-           String.format(forgot_password_format, forgot_password.getText())));
-        forgot_password.setLinksClickable(true);
-        forgot_password.setMovementMethod(LinkMovementMethod.getInstance());
-
-        TextView login2 = (TextView)v.findViewById(R.id.login_login_2);
-        String login2_format = "<a href=\""+getString(R.string.login_link_wheelmap)+"\">%s</a>";
-        login2.setText(Html.fromHtml(
-                String.format(login2_format, login2.getText())));
-        login2.setLinksClickable(true);
-        login2.setMovementMethod(LinkMovementMethod.getInstance());
-
-        mEmailText = (EditText) v.findViewById(R.id.login_email);
-        mPasswordText = (EditText) v.findViewById(R.id.login_password);
-        mLoginRegister = (Button)v.findViewById(R.id.button_login_register);
-
-       // mEmailText.setText("");
-        //mPasswordText.setText("");
+        v.findViewById(R.id.button_login_register).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                register();
+            }
+        });
 
         if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
             View scrollView = v.findViewById(R.id.scrollView);
@@ -132,15 +104,6 @@ public class LoginFragment extends Fragment implements
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
             scrollView.setLayoutParams(params);
         }
-
-        mLoginRegister.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uriUrl = Uri.parse("http://wheelmap.org/en/oauth/register_osm");
-                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-                startActivity(launchBrowser);
-            }
-        });
 
         return v;
     }
@@ -154,144 +117,20 @@ public class LoginFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        /*
-        AlertDialog dialog = (AlertDialog) getDialog();
-        Button button = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-        button.setOnClickListener(this);
-        mEmailText = (EditText) dialog.findViewById(R.id.login_email);
-        mEmailText.setOnEditorActionListener(this);
-        mPasswordText = (EditText) dialog.findViewById(R.id.login_password);
-        mPasswordText.setOnEditorActionListener(this);
-        String formattedHtml = UtilsMisc.formatHtmlLink(
-                getString(R.string.login_link_wheelmap),
-                getString(R.string.login_link_text));
-        Spanned spannedText = Html.fromHtml(formattedHtml);
-        mRegisterText = (TextView) dialog.findViewById(R.id.login_register);
-        mRegisterText.setText(spannedText);
-        mRegisterText.setMovementMethod(LinkMovementMethod.getInstance());
-        */
-        //load();
-        //mProgressBar = (ProgressBar) dialog.findViewById(R.id.progressbar);
-
-    }
-
-    private void load() {
-        mEmailText.setText("");
-        mPasswordText.setText("");
-    }
-
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        Log.d(TAG, "onReceiveResult in list resultCode = " + resultCode);
-        switch (resultCode) {
-            case RestService.STATUS_RUNNING:
-                mSyncing = true;
-                updateRefreshStatus();
-                break;
-            case RestService.STATUS_FINISHED:
-                mSyncing = false;
-                updateRefreshStatus();
-                loginSuccessful();
-                break;
-            case RestService.STATUS_ERROR:
-                // Error happened down in RestService, show as crouton.
-                mSyncing = false;
-                updateRefreshStatus();
-                final RestServiceException e = resultData
-                        .getParcelable(Extra.EXCEPTION);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(e,
-                        Extra.UNKNOWN);
-                if (errorDialog == null) {
-                    return;
-                }
-
-                errorDialog.show(fm, ErrorDialogFragment.TAG);
-                break;
-            default: // noop
-        }
-
-    }
-
-    private void updateRefreshStatus() {
-        if (mSyncing) {
-            //mProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            //mProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    private void loginSuccessful() {
-
-        try{
-            getActivity().setResult(Activity.RESULT_OK);
-            Toast.makeText(getActivity(), R.string.login_succesfully, Toast.LENGTH_SHORT).show();
-            getActivity().onBackPressed();
-            if (mListener != null) {
-                mListener.onLoginSuccessful();
-            }
-        }catch(NullPointerException npex){
-            Log.d("Tag:LoginFragment", "NullPointException occurred");
-
-            if(getActivity() == null){
-                  return;
-            }
-
-            Toast.makeText(this.getActivity().getApplicationContext(),getResources().getString(R.string.error_internal_error) , Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        login();
-    }
-
     private void login() {
-        String email = mEmailText.getText().toString();
-        String password = mPasswordText.getText().toString();
-
-        if (email.length() == 0 || password.length() == 0) {
-            return;
-        }
-
-        RestServiceHelper.executeRetrieveApiKey(getActivity(), email, password,
-                mReceiver);
+        startActivity(new Intent(getActivity(), LoginWebActivity.class));
     }
 
-    private boolean checkInputFields(TextView v) {
-        if (v.getText().toString().length() == 0) {
-            return false;
+    private void register() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String url = BuildConfig.API_BASE_URL+ Constants.Api.WM_REGISTER_LINK;
+        if (!url.startsWith("http")) {
+            url = "http://"+ url;
         }
-
-        EditText otherText;
-        if (v == mEmailText) {
-            otherText = mPasswordText;
-        } else {
-            otherText = mEmailText;
+        intent.setData(Uri.parse(url));
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
         }
-
-        if (otherText.getText().toString().length() == 0) {
-            otherText.requestFocus();
-            return false;
-        }
-
-        return true;
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (EditorInfo.IME_ACTION_DONE == actionId) {
-            if (checkInputFields(v)) {
-                login();
-            }
-            return true;
-        }
-
-        return false;
-    }
 }

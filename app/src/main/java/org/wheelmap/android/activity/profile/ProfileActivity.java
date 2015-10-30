@@ -55,7 +55,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mCredentials = new UserCredentials(getApplicationContext());
-        setResult(mCredentials.isLoggedIn() ? RESULT_OK : RESULT_CANCELED);
 
         if (UtilsMisc.isTablet(getApplicationContext())) {
             UtilsMisc.showAsPopup(this);
@@ -72,6 +71,26 @@ public class ProfileActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        if(UtilsMisc.isTablet(getApplicationContext())){
+            View v = findViewById(R.id.content);
+            while(v != null && v instanceof ViewGroup){
+                v.setBackgroundColor(Color.TRANSPARENT);
+                if(v.getParent() instanceof View){
+                    v = (View) v.getParent();
+                }else{
+                    break;
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setResult(mCredentials.isLoggedIn() ? RESULT_OK : RESULT_CANCELED);
+
         FragmentManager fm = getSupportFragmentManager();
 
         if(!mCredentials.isLoggedIn()){
@@ -85,19 +104,6 @@ public class ProfileActivity extends AppCompatActivity {
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         LoginFragment.TAG).commit();
-
-        if(UtilsMisc.isTablet(getApplicationContext())){
-            View v = findViewById(R.id.content);
-            while(v != null && v instanceof ViewGroup){
-                v.setBackgroundColor(Color.TRANSPARENT);
-                if(v.getParent() instanceof View){
-                    v = (View) v.getParent();
-                }else{
-                    break;
-                }
-            }
-        }
-
     }
 
     @Override

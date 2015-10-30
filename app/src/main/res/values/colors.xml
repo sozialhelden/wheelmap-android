@@ -43,4 +43,7 @@
 
     <color name="dashboard_text_color">#FFafbed0</color>
 
+    <color name="primary_color">#2c3b49</color>
+    <color name="green_status_yes">#99c15c</color>
+
 </resources>

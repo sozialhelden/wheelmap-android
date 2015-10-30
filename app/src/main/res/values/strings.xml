@@ -109,7 +109,7 @@
     <string name="login_forgot_password">Forgot password?</string>
     <string name="login_submit">Login</string>
     <string name="login_dont_have_account">No Wheelmap account? Log in with an OpenStreetMap account on Wheelmap.org, click on your \"Account\" and create a new Wheelmap account.</string>
-    <string name="login_new_registration">Register now</string>
+    <string name="login_new_registration">Register on OSM</string>
     <string name="login_new">New? Register now at OpenStreetMap and Wheelmap.org</string>
     <string name="login_activity_title">Login</string>
     <string name="search_distance">Distance</string>
@@ -159,4 +159,12 @@
     <string name="title_engage">Get involved</string>
     <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
     <string name="title_login">Please log in!</string>
+    <string name="profile_hint_login">To log in to Wheelmap you need a user account on OpenStreetMap (OSM)</string>
+    <string name="profile_hint_no_account_title">You don’t have an OSM user account yet?</string>
+    <string name="profile_steps_to_osm_account">Four steps to log in:\n
+1. Click on “OSM Registration” and register an OSM user account\n
+2. Go to your email and click on the activation link you have been sent\n
+3. Open the Wheelmap app\n
+4. Log in with your OSM user account (username &amp; password)\n</string>
+    <string name="signed_in">Logged in</string>
 </resources>
