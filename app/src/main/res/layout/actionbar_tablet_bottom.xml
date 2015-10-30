@@ -8,33 +8,44 @@
               android:background="@drawable/ab_solid_wheelmap">
 
     <ImageView
-            android:id="@+id/menu_filter"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onOptionItemBottomClicked"
-            android:src="@drawable/map_navbar_btn_filter"/>
+        android:id="@+id/switch_view"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_list" />
+
     <ImageView
-            android:id="@+id/menu_filter_kategorie"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onOptionItemBottomClicked"
-            android:src="@drawable/map_navbar_btn_kategorie"/>
+        android:id="@+id/menu_search"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_lupe" />
+
     <ImageView
-            android:id="@+id/menu_search"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onOptionItemBottomClicked"
-            android:src="@drawable/map_navbar_btn_search"/>
+        android:id="@+id/menu_filter"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_status" />
+
     <ImageView
-            android:id="@+id/menu_new_poi"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="onOptionItemBottomClicked"
-            android:src="@drawable/map_navbar_btn_neu"/>
+        android:id="@+id/menu_filter_kategorie"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_kategorie" />
+
+    <ImageView
+        android:id="@+id/menu_wc"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_wc" />
     <ImageView
             android:id="@+id/menu_about"
             android:layout_width="0dp"
@@ -46,7 +57,7 @@
             android:id="@+id/menu_login"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+        android:layout_weight="1"
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
             android:onClick="onOptionItemBottomClicked"

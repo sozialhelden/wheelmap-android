@@ -176,7 +176,6 @@ public class UtilsMisc {
     }
 
     public static void showAsPopup(Activity activity) {
-        activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
         activity.getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_DIM_BEHIND,
                 WindowManager.LayoutParams.FLAG_DIM_BEHIND);

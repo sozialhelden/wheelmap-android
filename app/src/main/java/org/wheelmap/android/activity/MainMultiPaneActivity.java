@@ -137,6 +137,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     public void onCreate(Bundle savedInstanceState) {
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
 
         super.onCreate(savedInstanceState);
 
@@ -148,7 +149,6 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setHomeButtonEnabled(false);
-        getSupportActionBar().setLogo(R.drawable.title_logo_shadow_tablet);
 
         setContentView(R.layout.activity_multipane);
         mMovableLayout = (ViewGroup) findViewById(R.id.movable_layout);
@@ -288,30 +288,36 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
+        ActionBar bar = getSupportActionBar();
+        if(bar == null){
+            return true;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View customView = inflater.inflate(R.layout.actionbar_tablet,
+                null);
+        bar.setCustomView(customView, new ActionBar.LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
+                Gravity.CENTER_VERTICAL | Gravity.RIGHT));
+
         boolean isPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         if (isPortraitMode) {
-            ActionBar bar = getSupportActionBar();
-            LayoutInflater inflater = LayoutInflater.from(this);
-            View customView = inflater.inflate(R.layout.actionbar_tablet,
-                    null);
 
-            final ImageView switchView = (ImageView) customView.findViewById(R.id.show_list);
-            switchView.setOnClickListener(new OnClickListener() {
+            ImageView addItem = (ImageView)  customView.findViewById(R.id.menu_new_poi);
+            addItem.setVisibility(View.VISIBLE);
+            OnClickListener addClickListener = new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleMovableResize();
+                    createNewPoi();
                 }
-            });
+            };
+            addItem.setOnClickListener(addClickListener);
 
             LinearLayout l = (LinearLayout) findViewById(R.id.actionbar_bottom);
             for (int i = 0; i < l.getChildCount(); i++) {
                 l.getChildAt(i).setOnTouchListener(new PressSelector());
             }
 
-            //LayoutParams.MATCH_PARENT
-            bar.setCustomView(customView, new ActionBar.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
-                    Gravity.CENTER_VERTICAL | Gravity.RIGHT));
             bar.setDisplayShowCustomEnabled(true);
             View v = findViewById(R.id.menu_filter);
             MapActivityUtils.setAccessFilterOptionDrawable(this, null, v);
@@ -328,10 +334,24 @@ public class MainMultiPaneActivity extends MapActivity implements
             MapActivityUtils.setAccessFilterOptionDrawable(this, item, null);
         }
 
+        View filterWc = findViewById(R.id.menu_wc);
+        MapActivityUtils.setWcFilterOptionsDrawable(this, null, filterWc);
+
+
         if (mapModeType == MapModeType.MAP_MODE_ENGAGE) {
             MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
             itemFilterWheelChairs.setEnabled(false);
             //TODO Disable it - doesn't work yet
+        }
+
+        ImageView listMapToggle = (ImageView)findViewById(R.id.switch_view);
+        if(listMapToggle != null) {
+            listMapToggle.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleMovableResize();
+                }
+            });
         }
 
         return true;
@@ -340,7 +360,7 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean b = onOptionItemClicked(item.getItemId(), null, item);
+        boolean b = onOptionItemClicked(item.getItemId(), item.getActionView(), item);
         return b ? b : super.onOptionsItemSelected(item);
     }
 
@@ -367,6 +387,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 showFilterCategories();
                 return true;
             case R.id.menu_filter:
+            case R.id.menu_wc:
                 View anchor = v;
                 if (anchor == null) {
                     anchor = item.getActionView();
