@@ -23,11 +23,11 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.online.R;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-public class LegalNoticeActivity extends Activity {
+public class LegalNoticeActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

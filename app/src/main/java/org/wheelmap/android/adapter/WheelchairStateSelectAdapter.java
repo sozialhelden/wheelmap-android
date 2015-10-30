@@ -23,8 +23,8 @@ package org.wheelmap.android.adapter;
 
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.model.WheelchairState;
-import org.wheelmap.android.view.WheelchairStateItemView;
+import org.wheelmap.android.model.WheelchairFilterState;
+import org.wheelmap.android.view.WheelchairFilterStateItemView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -39,11 +39,11 @@ import java.util.Map;
 
 public class WheelchairStateSelectAdapter extends BaseAdapter {
 
-    private Context mContext;
+    protected Context mContext;
 
     protected List<SupportManager.AccessFilterAttributes> mItems;
 
-    private SharedPreferences mPrefs;
+    protected SharedPreferences mPrefs;
 
     public WheelchairStateSelectAdapter(Context context) {
         super();
@@ -51,12 +51,12 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
 
         mItems = new ArrayList();
         mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Map<WheelchairState, WheelchairAttributes> attributes = SupportManager.wsAttributes;
+        Map<WheelchairFilterState, WheelchairAttributes> attributes = SupportManager.wsAttributes;
 
-        mItems.add(attributes.get(WheelchairState.YES));
-        mItems.add(attributes.get(WheelchairState.LIMITED));
-        mItems.add(attributes.get(WheelchairState.NO));
-        mItems.add(attributes.get(WheelchairState.UNKNOWN));
+        mItems.add(attributes.get(WheelchairFilterState.YES));
+        mItems.add(attributes.get(WheelchairFilterState.LIMITED));
+        mItems.add(attributes.get(WheelchairFilterState.NO));
+        mItems.add(attributes.get(WheelchairFilterState.UNKNOWN));
     }
 
     @Override
@@ -75,12 +75,12 @@ public class WheelchairStateSelectAdapter extends BaseAdapter {
     }
 
     @Override
-    public WheelchairStateItemView getView(int position, View convertView, ViewGroup parent) {
-        WheelchairStateItemView itemView;
+    public WheelchairFilterStateItemView getView(int position, View convertView, ViewGroup parent) {
+        WheelchairFilterStateItemView itemView;
         if (convertView != null) {
-            itemView = (WheelchairStateItemView) convertView;
+            itemView = (WheelchairFilterStateItemView) convertView;
         } else {
-            itemView = new WheelchairStateItemView(mContext);
+            itemView = new WheelchairFilterStateItemView(mContext);
         }
 
         SupportManager.AccessFilterAttributes attributes = mItems.get(position);

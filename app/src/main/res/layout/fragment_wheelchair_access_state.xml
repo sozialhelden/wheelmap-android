@@ -27,14 +27,6 @@
               android:background="#cfcfcf"
               android:orientation="vertical">
 
-    <!--<LinearLayout style="@style/TitleBarNew.SingleLine">
-
-        <TextView
-                style="@style/TitleBarTextNew.Title"
-                android:text="@string/title_wheelchair_state">
-        </TextView>
-    </LinearLayout>   -->
-
     <ScrollView
             style="@style/Scrollable.View"
             android:layout_width="fill_parent"
@@ -51,15 +43,30 @@
                 <ImageView
                         android:id="@+id/wheelchair_state_enabled_icon"
                         style="@style/IconLarge.WheelStateSelect"
+                    android:padding="5dp"
+                    android:adjustViewBounds="true"
                         android:layout_alignParentLeft="true"
                         android:src="@drawable/marker_yes"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/radio_enabled"
+                    android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
+                    android:paddingTop="3dp"
+                    android:orientation="vertical">
                 <TextView
                         style="@style/FontWheelStateSelect"
-                        android:layout_toLeftOf="@+id/radio_enabled"
-                        android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
+                        android:text="@string/ws_enabled_title"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"/>
+                <TextView
+                        style="@style/FontWheelStateSelect"
                         android:text="@string/ws_enabled"/>
-
+                </LinearLayout>
                 <RadioButton
                         android:id="@+id/radio_enabled"
                         style="@style/RadioButtonWheelStateSelect"/>
@@ -70,15 +77,33 @@
                 <ImageView
                         android:id="@+id/wheelchair_state_limited_icon"
                         style="@style/IconLarge.WheelStateSelect"
-                        android:layout_alignParentLeft="true"
+                    android:padding="5dp"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentLeft="true"
                         android:src="@drawable/marker_limited">
                 </ImageView>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/radio_limited"
+                    android:layout_toRightOf="@+id/wheelchair_state_limited_icon"
+                    android:paddingTop="3dp"
+                    android:orientation="vertical">
+                <TextView
+                    style="@style/FontWheelStateSelect"
+                    android:text="@string/ws_limited_title"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"/>
                 <TextView
                         style="@style/FontWheelStateSelect"
                         android:layout_toLeftOf="@+id/radio_limited"
                         android:layout_toRightOf="@+id/wheelchair_state_limited_icon"
                         android:text="@string/ws_limited"/>
+                </LinearLayout>
 
                 <RadioButton
                         android:id="@+id/radio_limited"
@@ -90,14 +115,32 @@
                 <ImageView
                         android:id="@+id/wheelchair_state_disabled_icon"
                         style="@style/IconLarge.WheelStateSelect"
-                        android:layout_alignParentLeft="true"
+                    android:padding="5dp"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentLeft="true"
                         android:src="@drawable/marker_no"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/radio_disabled"
+                    android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
+                    android:paddingTop="3dp"
+                    android:orientation="vertical">
+                <TextView
+                    style="@style/FontWheelStateSelect"
+                    android:text="@string/ws_disabled_title"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"/>
                 <TextView
                         style="@style/FontWheelStateSelect"
                         android:layout_toLeftOf="@+id/radio_disabled"
                         android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
                         android:text="@string/ws_disabled"/>
+                </LinearLayout>
 
                 <RadioButton
                         android:id="@+id/radio_disabled"
@@ -109,66 +152,61 @@
                 <ImageView
                         android:id="@+id/wheelchair_state_unknown_icon"
                         style="@style/IconLarge.WheelStateSelect"
-                        android:layout_alignParentLeft="true"
+                    android:padding="5dp"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentLeft="true"
                         android:src="@drawable/marker_unknown"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/radio_unknown"
+                    android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
+                    android:paddingTop="3dp"
+                    android:orientation="vertical">
+                <TextView
+                    style="@style/FontWheelStateSelect"
+                    android:text="@string/ws_unknown_title"
+                    android:textStyle="bold"
+                    android:textSize="16dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"/>
                 <TextView
                         style="@style/FontWheelStateSelect"
                         android:layout_toLeftOf="@+id/radio_unknown"
                         android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
                         android:text="@string/ws_unknown"/>
+                </LinearLayout>
 
                 <RadioButton
                         android:id="@+id/radio_unknown"
                         style="@style/RadioButtonWheelStateSelect"/>
             </RelativeLayout>
 
-            <!--<LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center">
-
-                <Button
-                        android:id="@+id/no"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/btn_cancel"/>
-
-                <Button android:id="@+id/detail_save"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/menu_save"/>
-
-            </LinearLayout>-->
             <View
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1" />
             <LinearLayout
+                android:id="@+id/detail_save"
                     android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:orientation="vertical">
-                <!--
-                <Button
-                        android:id="@+id/no"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/btn_cancel"/>   -->
+                android:orientation="vertical">
 
-                <Button android:id="@+id/detail_save"
-                        android:background="@drawable/detail_ic_save"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/detail_ic_save"/>
+
                 <TextView android:layout_width="wrap_content"
-                          android:layout_height="match_parent"
+                          android:layout_height="wrap_content"
                           android:text="@string/menu_save"
-                          android:layout_marginTop="-12dp"
-                        />
+                    android:layout_gravity="center_horizontal|bottom" />
 
             </LinearLayout>
 

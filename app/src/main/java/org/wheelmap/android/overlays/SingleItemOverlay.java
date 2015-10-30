@@ -25,7 +25,7 @@ import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.overlay.ItemizedOverlay;
 import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.manager.SupportManager.NodeType;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 
 import android.content.ContentValues;
@@ -49,7 +49,7 @@ public class SingleItemOverlay extends ItemizedOverlay<OverlayItem> {
     }
 
     public void setItem(ContentValues values, NodeType nodeType,
-            WheelchairState state) {
+            WheelchairFilterState state) {
         itemValues = values;
         //Drawable marker = nodeType.stateDrawables.get(state);
         Drawable marker = nodeType.getStateDrawable(state);

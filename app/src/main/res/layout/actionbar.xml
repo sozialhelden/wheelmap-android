@@ -18,5 +18,5 @@
         android:id="@+id/menu_new_poi"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/map_navbar_btn_neu"/>
+        android:src="@drawable/ic_plus"/>
 </LinearLayout>

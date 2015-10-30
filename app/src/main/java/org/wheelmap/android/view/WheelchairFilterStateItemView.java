@@ -30,7 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class WheelchairStateItemView extends FrameLayout {
+public class WheelchairFilterStateItemView extends FrameLayout {
 
     ImageView mWheelStateIcon;
 
@@ -38,7 +38,7 @@ public class WheelchairStateItemView extends FrameLayout {
 
     public CheckBox mWheelStateCheckBox;
 
-    public WheelchairStateItemView(Context context) {
+    public WheelchairFilterStateItemView(Context context) {
         super(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.item_settings_wheelchair, this, true);

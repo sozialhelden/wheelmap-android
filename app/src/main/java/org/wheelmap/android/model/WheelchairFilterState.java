@@ -21,22 +21,26 @@
  */
 package org.wheelmap.android.model;
 
+import android.text.TextUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public enum WheelchairState {
-    UNKNOWN(0), YES(1), LIMITED(2), NO(3), NO_PREFERENCE(4);
+public enum WheelchairFilterState {
+    NO_PREFERENCE(0),
+    UNKNOWN(1), YES(2), LIMITED(3), NO(4),
+    TOILET_UNKNOWN(5), TOILET_YES(6), TOILET_NO(7);
 
-    public static final WheelchairState DEFAULT;
+    public static final WheelchairFilterState DEFAULT;
 
     private final int id;
 
-    private static Map<Integer, WheelchairState> id2State;
+    private static Map<Integer, WheelchairFilterState> id2State;
 
-    private static Map<String, WheelchairState> string2State;
+    private static Map<String, WheelchairFilterState> string2State;
 
 
-    private WheelchairState(int id) {
+    private WheelchairFilterState(int id) {
         this.id = id;
         register();
     }
@@ -45,23 +49,26 @@ public enum WheelchairState {
         return id;
     }
 
-    public static WheelchairState valueOf(int id) {
+    public static WheelchairFilterState valueOf(int id) {
         return id2State.get(id);
     }
 
-    public static WheelchairState myValueOf(String string) {
+    public static WheelchairFilterState myValueOf(String string, String postfixKey) {
+        if(!TextUtils.isEmpty(postfixKey)){
+            string = postfixKey + string;
+        }
         return string2State.get(string.toLowerCase());
     }
 
     private void register() {
         if (id2State == null) {
-            id2State = new HashMap<Integer, WheelchairState>();
+            id2State = new HashMap<Integer, WheelchairFilterState>();
         }
 
         id2State.put(id, this);
 
         if (string2State == null) {
-            string2State = new HashMap<String, WheelchairState>();
+            string2State = new HashMap<String, WheelchairFilterState>();
         }
 
         string2State.put(this.toString().toLowerCase(), this);

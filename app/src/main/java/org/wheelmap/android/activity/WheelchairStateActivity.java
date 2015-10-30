@@ -21,10 +21,11 @@
  */
 package org.wheelmap.android.activity;
 
-import org.wheelmap.android.fragment.WheelchairStateFragment;
+import org.wheelmap.android.fragment.WheelchairAccessStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
+import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.online.R;
 
 import android.content.Intent;
@@ -58,27 +59,62 @@ public class WheelchairStateActivity extends AppCompatActivity implements
 
         }
 
+        Intent intent = getIntent();
+        if(intent.hasExtra(Extra.WHEELCHAIR_STATE)){
+            setFragmentForWheelchairAccessState(intent.getIntExtra(Extra.WHEELCHAIR_STATE, Extra.UNKNOWN));
+        } else if(intent.hasExtra(Extra.WHEELCHAIR_TOILET_STATE)){
+            setFragmentForWheelchairToiletState(intent.getIntExtra(Extra.WHEELCHAIR_TOILET_STATE, Extra.UNKNOWN));
+        } else {
+            finishByUnknownData();
+        }
+    }
+
+
+    private void setFragmentForWheelchairAccessState(int stateId){
+        if(stateId == Extra.UNKNOWN){
+            finishByUnknownData();
+        }
+
         FragmentManager fm = getSupportFragmentManager();
-        mFragment = (WheelchairStateFragment) fm
-                .findFragmentByTag(WheelchairStateFragment.TAG);
+        mFragment = fm.findFragmentByTag(WheelchairAccessStateFragment.TAG);
+
         if (mFragment != null) {
             return;
         }
 
-        int stateId = getIntent().getIntExtra(Extra.WHEELCHAIR_STATE,
-                Extra.UNKNOWN);
-        mFragment = WheelchairStateFragment.newInstance(WheelchairState
-                .valueOf(stateId));
-
+        mFragment = WheelchairAccessStateFragment.newInstance(WheelchairFilterState.valueOf(stateId));
         fm.beginTransaction()
-                .add(R.id.content, mFragment,
-                        WheelchairStateFragment.TAG).commit();
+                .add(R.id.content, mFragment, WheelchairAccessStateFragment.TAG).commit();
+    }
+
+    private void setFragmentForWheelchairToiletState(int stateId){
+        if(stateId == Extra.UNKNOWN){
+            finishByUnknownData();
+        }
+
+        FragmentManager fm = getSupportFragmentManager();
+        mFragment = fm.findFragmentByTag(WheelchairToiletStateFragment.TAG);
+
+        if (mFragment != null) {
+            return;
+        }
+
+        mFragment = WheelchairToiletStateFragment.newInstance(WheelchairFilterState.valueOf(stateId));
+        fm.beginTransaction()
+                .add(R.id.content, mFragment, WheelchairToiletStateFragment.TAG).commit();
+
+    }
+
+    private void finishByUnknownData(){
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
+        finish();
     }
 
     @Override
-    public void onWheelchairStateSelect(WheelchairState state) {
+    public void onWheelchairStateSelect(WheelchairFilterState state) {
         Intent intent = new Intent();
-        intent.putExtra(Extra.WHEELCHAIR_STATE, state.getId());
+        intent.putExtra(mFragment.getTag(), state.getId());
         setResult(RESULT_OK, intent);
         finish();
     }

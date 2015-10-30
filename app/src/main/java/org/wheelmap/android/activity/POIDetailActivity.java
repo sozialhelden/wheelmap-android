@@ -26,9 +26,11 @@ import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.ErrorDialogFragment.OnErrorDialogListener;
 import org.wheelmap.android.fragment.POIDetailFragment;
 import org.wheelmap.android.fragment.POIDetailFragment.OnPOIDetailListener;
+import org.wheelmap.android.fragment.WheelchairAccessStateFragment;
+import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
@@ -80,7 +82,7 @@ public class POIDetailActivity extends MapActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -167,12 +169,23 @@ public class POIDetailActivity extends MapActivity implements
     }
 
     @Override
-    public void onEditWheelchairState(WheelchairState wState) {
+    public void onEditWheelchairState(WheelchairFilterState wState) {
 
         // Start the activity whose result we want to retrieve. The
         // result will come back with request code GET_CODE.
         Intent intent = new Intent(this, WheelchairStateActivity.class);
         intent.putExtra(Extra.WHEELCHAIR_STATE, wState.getId());
+        startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
+
+    }
+
+    @Override
+    public void onEditWheelchairToiletState(WheelchairFilterState wState) {
+
+        // Start the activity whose result we want to retrieve. The
+        // result will come back with request code GET_CODE.
+        Intent intent = new Intent(this, WheelchairStateActivity.class);
+        intent.putExtra(Extra.WHEELCHAIR_TOILET_STATE, wState.getId());
         startActivityForResult(intent, SELECT_WHEELCHAIRSTATE);
 
     }
@@ -187,30 +200,36 @@ public class POIDetailActivity extends MapActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_WHEELCHAIRSTATE) {
-            if (resultCode == RESULT_OK) {
-                // newly selected wheelchair state as action data
-                if (data != null) {
-                    long poiID = mFragment.getPoiId();
+        if (requestCode == SELECT_WHEELCHAIRSTATE && resultCode == RESULT_OK && data != null) {
 
-                    WheelchairState state = WheelchairState
-                            .valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
-                                    Extra.UNKNOWN));
-                    updateDatabase(poiID, state);
-                    RestServiceHelper.executeUpdateServer(this, null);
+            long poiID = mFragment.getPoiId();
+
+            if (data.hasExtra(WheelchairAccessStateFragment.TAG)) {
+                WheelchairFilterState state = WheelchairFilterState
+                        .valueOf(data.getIntExtra(WheelchairAccessStateFragment.TAG, Extra.UNKNOWN));
+                if (state != null) {
+                    updateDatabase(poiID, POIs.WHEELCHAIR, state);
                 }
+            } else if (data.hasExtra(WheelchairToiletStateFragment.TAG)) {
+                WheelchairFilterState state = WheelchairFilterState
+                        .valueOf(data.getIntExtra(WheelchairToiletStateFragment.TAG, Extra.UNKNOWN));
+                if (state != null) {
+                    updateDatabase(poiID, POIs.WHEELCHAIR_TOILET, state);
+                }
+            } else {
+                return;
             }
+            RestServiceHelper.executeUpdateServer(this, null);
         }
-
     }
 
-    private void updateDatabase(long id, WheelchairState state) {
+    private void updateDatabase(long id, String poiColumnName, WheelchairFilterState state) {
         if (id == Extra.ID_UNKNOWN || state == null) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put(POIs.WHEELCHAIR, state.getId());
+        values.put(poiColumnName, state.getId());
         values.put(POIs.DIRTY, POIs.DIRTY_STATE);
 
         PrepareDatabaseHelper.editCopy(getContentResolver(), id, values);
@@ -239,7 +258,7 @@ public class POIDetailActivity extends MapActivity implements
     public void onEdit(long poiId, int focus) {
         Intent intent = new Intent(this, POIDetailEditableActivity.class);
         intent.putExtra(Extra.POI_ID, poiId);
-        intent.putExtra("Focus",focus);
+        intent.putExtra("Focus", focus);
         startActivity(intent);
     }
 

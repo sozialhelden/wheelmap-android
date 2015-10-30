@@ -220,7 +220,8 @@ public class CombinedWorkerFragment extends Fragment implements
         values.put("category_identifier",node.getCategory().getIdentifier());
         values.put("nodetype_id", node.getNodeType().getId().toString());
 
-        values.put("wheelchair",node.getWheelchair());
+        values.put("wheelchair",node.getWheelchair());                                  /* IMPORTATNT */
+        values.put("wheelchair_toilet",node.getWheelchairToilet());
         values.put("description",node.getWheelchairDescription());
         values.put("name",node.getName());
 
@@ -248,7 +249,8 @@ public class CombinedWorkerFragment extends Fragment implements
         if (!bundle.containsKey(SearchManager.QUERY)
                 && !bundle.containsKey(Extra.CATEGORY)
                 && !bundle.containsKey(Extra.NODETYPE)
-                && !bundle.containsKey(Extra.WHEELCHAIR_STATE)) {
+                && !bundle.containsKey(Extra.WHEELCHAIR_STATE)
+                && !bundle.containsKey(Extra.WHEELCHAIR_TOILET_STATE)) {
             return;
         }
 

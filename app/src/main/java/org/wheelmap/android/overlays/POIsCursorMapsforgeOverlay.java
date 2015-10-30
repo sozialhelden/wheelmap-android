@@ -27,7 +27,7 @@ import org.mapsforge.android.maps.overlay.OverlayItem;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -99,7 +99,7 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
         mCursor.moveToPosition(i);
         String name = POIHelper.getName(mCursor);
         SupportManager manager = WheelmapApp.getSupportManager();
-        WheelchairState state = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
         double lat = POIHelper.getLatitude(mCursor);
         double lng = POIHelper.getLongitude(mCursor);
         int nodeTypeId = POIHelper.getNodeTypeId(mCursor);

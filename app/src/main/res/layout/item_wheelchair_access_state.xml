@@ -22,12 +22,12 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/wheelchair_state_layout"
+                android:id="@+id/wheelchair_access_state_layout"
                 android:layout_marginTop="10dp"
                 style="@style/Container.Pressable">
 
     <TextView
-            android:id="@+id/state_text"
+            android:id="@+id/access_state_text"
             style="@style/WheelStateItem"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"

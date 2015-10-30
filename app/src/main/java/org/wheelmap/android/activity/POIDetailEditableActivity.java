@@ -28,7 +28,7 @@ import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditab
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
@@ -66,7 +66,6 @@ public class POIDetailEditableActivity extends MapActivity implements
             UtilsMisc.showAsPopup(this);
 
         }
-//        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_frame_empty);
         setSupportProgressBarIndeterminateVisibility(false);
         if(getSupportActionBar() != null){
@@ -123,12 +122,12 @@ public class POIDetailEditableActivity extends MapActivity implements
     }
 
     @Override
-    public void onEditWheelchairState(WheelchairState state) {
+    public void onEditWheelchairState(WheelchairFilterState state) {
         onWheelchairStateSelect(state);
     }
 
     @Override
-    public void onWheelchairStateSelect(WheelchairState state) {
+    public void onWheelchairStateSelect(WheelchairFilterState state) {
         Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
         mExternalEditableState.state = state;
     }
@@ -211,7 +210,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     public static class ExternalEditableState {
 
-        WheelchairState state = null;
+        WheelchairFilterState state = null;
 
         int nodetype = SupportManager.UNKNOWN_TYPE;
 
@@ -231,7 +230,7 @@ public class POIDetailEditableActivity extends MapActivity implements
         void restoreState(Bundle bundle) {
             int stateId = bundle.getInt(Extra.WHEELCHAIR_STATE, Extra.UNKNOWN);
             if (stateId != Extra.UNKNOWN) {
-                state = WheelchairState.valueOf(stateId);
+                state = WheelchairFilterState.valueOf(stateId);
             }
 
             nodetype = bundle.getInt(Extra.NODETYPE,

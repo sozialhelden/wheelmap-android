@@ -34,7 +34,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Request;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
@@ -136,7 +136,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private String wmID;
 
-    private WheelchairState mWheelchairState;
+    private WheelchairFilterState mWheelchairFilterState;
 
     private double mLatitude;
 
@@ -144,7 +144,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private int mNodeType;
 
-    private Map<WheelchairState, WheelchairAttributes> mWSAttributes;
+    private Map<WheelchairFilterState, WheelchairAttributes> mWSAttributes;
 
     private OnPOIDetailEditableListener mListener;
 
@@ -158,7 +158,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         public void onEditSave(boolean quit);
 
-        public void onEditWheelchairState(WheelchairState state);
+        public void onEditWheelchairState(WheelchairFilterState state);
 
         public void onEditGeolocation(double latitude, double longitude);
 
@@ -221,10 +221,10 @@ public class POIDetailEditableFragment extends Fragment implements
         cityText = (EditText) parent.findViewById(R.id.city);
         websiteText = (EditText) parent.findViewById(R.id.website);
         phoneText = (EditText) parent.findViewById(R.id.phone);
-        state_text = (TextView) parent.findViewById(R.id.state_text);
+        state_text = (TextView) parent.findViewById(R.id.access_state_text);
         geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
 
-        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_state_layout);
+        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_access_state_layout);
 
         edit_nodetype_container = (RelativeLayout) parent.findViewById(R.id.edit_nodetype);
         edit_geolocation_container = (RelativeLayout) parent.findViewById(R.id.edit_geolocation);
@@ -299,7 +299,7 @@ public class POIDetailEditableFragment extends Fragment implements
             if (resultCode == Activity.RESULT_OK) {
                 // newly selected wheelchair state as action data
                 if (data != null) {
-                    WheelchairState state = WheelchairState
+                    WheelchairFilterState state = WheelchairFilterState
                             .valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
                                     Extra.UNKNOWN));
                     setWheelchairState(state);
@@ -375,9 +375,9 @@ public class POIDetailEditableFragment extends Fragment implements
 
         int id = v.getId();
         switch (id) {
-            case R.id.wheelchair_state_layout: {
+            case R.id.wheelchair_access_state_layout: {
                 Intent intent = new Intent(getActivity(), WheelchairStateActivity.class);
-                intent.putExtra(Extra.WHEELCHAIR_STATE, mWheelchairState.getId());
+                intent.putExtra(Extra.WHEELCHAIR_STATE, mWheelchairFilterState.getId());
                 startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
                 break;
             }
@@ -412,7 +412,7 @@ public class POIDetailEditableFragment extends Fragment implements
                     getString(R.string.error_category_missing_message),
                     Extra.UNKNOWN);
             return;
-        } else if (mWheelchairState == WheelchairState.UNKNOWN) {
+        } else if (mWheelchairFilterState == WheelchairFilterState.UNKNOWN) {
             showErrorMessage(
                     getString(R.string.error_wheelchairstate_missing_title),
                     getString(R.string.error_wheelchairstate_missing_message),
@@ -491,7 +491,7 @@ public class POIDetailEditableFragment extends Fragment implements
         UtilsMisc.dumpCursorToLog(TAG, cursor);
         cursor.moveToFirst();
 
-        WheelchairState state = POIHelper.getWheelchair(cursor);
+        WheelchairFilterState accessState = POIHelper.getWheelchair(cursor);
         String name = POIHelper.getName(cursor);
         String comment = POIHelper.getComment(cursor);
         double latitude = POIHelper.getLatitude(cursor);
@@ -500,7 +500,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         setGeolocation(latitude, longitude);
         setNodetype(nodeType);
-        setWheelchairState(state);
+        setWheelchairState(accessState);
         nameText.setText(name);
         commentText.setText(comment);
 
@@ -604,7 +604,7 @@ public class POIDetailEditableFragment extends Fragment implements
             values.put(POIs.LATITUDE, mLatitude);
             values.put(POIs.LONGITUDE, mLongitude);
 
-            values.put(POIs.WHEELCHAIR, mWheelchairState.getId());
+            values.put(POIs.WHEELCHAIR, mWheelchairFilterState.getId());
             String description = commentText.getText().toString();
             if (!TextUtils.isEmpty(description)) {
                 values.put(POIs.DESCRIPTION, description);
@@ -650,38 +650,29 @@ public class POIDetailEditableFragment extends Fragment implements
         return values;
     }
 
-    public void setWheelchairState(WheelchairState newState) {
-        if (newState == null) {
+    public void setWheelchairState(WheelchairFilterState newState) {
+        if (newState == null || mWSAttributes.get(newState) == null) {
             return;
         }
 
-        mWheelchairState = newState;
-
-        int stateColor = getResources().getColor(
-                mWSAttributes.get(newState).colorId);
+        mWheelchairFilterState = newState;
 
         try{
-        if(mWheelchairState.getId() == WheelchairState.UNKNOWN.getId())
+        if(mWheelchairFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
-        else if(mWheelchairState.getId() == WheelchairState.YES.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.YES.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_green);
-        else if(mWheelchairState.getId() == WheelchairState.LIMITED.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.LIMITED.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_orange);
-        else if(mWheelchairState.getId() == WheelchairState.NO.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.NO.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_red);
-        else if(mWheelchairState.getId() == WheelchairState.NO_PREFERENCE.getId())
+        else if(mWheelchairFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         else
             state_text.setBackgroundResource(R.drawable.detail_button_grey);
         }catch(OutOfMemoryError e){
             System.gc();
         }
-
-
-
-        //title_container.setBackgroundColor(stateColor);
-        //stateIcon.setImageResource(mWSAttributes.get(newState).drawableId);
-        //stateText.setTextColor(stateColor);
 
         state_text.setText(mWSAttributes.get(newState).titleStringId);
     }

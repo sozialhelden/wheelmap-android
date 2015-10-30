@@ -97,7 +97,7 @@
 
             <include layout="@layout/separator"/>
 
-            <include layout="@layout/item_wheelchair_state"/>
+            <include layout="@layout/item_wheelchair_access_state"/>
 
             <include layout="@layout/separator"/>
 

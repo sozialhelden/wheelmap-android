@@ -32,9 +32,7 @@
     </style>
 
     <style name="Theme.wheelmap_fixed" parent="@style/Theme.wheelmap">
-        <!--<item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_light</item>-->
         <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_mtrl_alpha</item>
-        <!--<item name="activatedBackgroundIndicator">@drawable/selectable_background_wheelmap</item>-->
     </style>
 
     <style name="DetailView">
@@ -164,6 +162,7 @@
     <style name="Container.WheelStateSelect">
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:padding">@dimen/padding_small</item>
     </style>
 
     <style name="Container.Pressable">
@@ -173,8 +172,7 @@
 
     <style name="IconLarge.WheelStateSelect">
 
-        <!-- item name="android:layout_marginRight">@dimen/margin_small</item -->
-        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentTop">true</item>
     </style>
 
     <style name="FontWheelStateSelect" parent="@android:style/TextAppearance.Small">

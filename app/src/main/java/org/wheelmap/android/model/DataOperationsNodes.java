@@ -92,7 +92,9 @@ public class DataOperationsNodes extends DataOperations<Nodes, Node> {
 
         try{
             values.put(POIs.WHEELCHAIR,
-                    WheelchairState.myValueOf(node.getWheelchair()).getId());
+                    WheelchairFilterState.myValueOf(node.getWheelchair(), null).getId());
+            values.put(POIs.WHEELCHAIR_TOILET,
+                    WheelchairFilterState.myValueOf(node.getWheelchairToilet(), "toilet_").getId());
             values.put(POIs.DESCRIPTION, node.getWheelchairDescription());
         }catch(NullPointerException npex){
             Log.d("Tag:DataOperationsNodes", "NullPointException occurred");

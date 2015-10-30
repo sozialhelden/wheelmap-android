@@ -359,14 +359,15 @@ public class
     }
 
     private void initMapSwitchListOptionsItem(final ImageView listMapToggle, final TextView title){
-        int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+        int switch_res = mSelectedTab == 0 ? R.drawable.ic_map : R.drawable.ic_list;
         listMapToggle.setImageResource(switch_res);
+        listMapToggle.setAdjustViewBounds(true);
         OnClickListener l = new OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSelectedTab = mSelectedTab == 0 ? 1: 0;
 
-                int switch_res = mSelectedTab == 0 ? R.drawable.map_navbar_btn_map : R.drawable.map_navbar_btn_list;
+                int switch_res = mSelectedTab == 0 ? R.drawable.ic_map : R.drawable.ic_list;
                 int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
                 listMapToggle.setImageResource(switch_res);
                 flipper.showNext();
@@ -501,14 +502,6 @@ public class
     public void onRefreshEnabled(boolean refreshEnabled) {
         //mPullToRefreshHelper.setEnabled(refreshEnabled);
     }
-
-//    @Override
-//    public void onRefreshStarted(View view) {
-//        DisplayFragment f = (DisplayFragment) (flipper.getDisplayedChild() == 0 ? mListFragment : mMapFragment);
-//        if ( f != null) {
-//            f.onRefreshStarted();
-//        }
-//    }
 
     @Override
     public void onBackPressed() {

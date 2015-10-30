@@ -27,7 +27,7 @@ import org.wheelmap.android.manager.SupportManager.NodeType;
 import org.wheelmap.android.model.DirectionCursorWrapper;
 import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.POIsCursorWrapper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.view.POIsListItemView;
 
 import android.content.Context;
@@ -75,7 +75,7 @@ public class POIsListCursorAdapter extends CursorAdapter {
         SupportManager manager = WheelmapApp.getSupportManager();
 
         String name = POIHelper.getName(cursor);
-        WheelchairState state = POIHelper.getWheelchair(cursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(cursor);
         int index = cursor
                 .getColumnIndex(POIsCursorWrapper.LOCATION_COLUMN_NAME);
         float distance = cursor.getFloat(index);
@@ -98,7 +98,6 @@ public class POIsListCursorAdapter extends CursorAdapter {
         //Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
         Drawable marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
 
-//        float density = mContext.getResources().getDisplayMetrics().density;
         float density = mContext.getResources().getDisplayMetrics().density;
 
         int half = (int)(16*density);

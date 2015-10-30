@@ -38,6 +38,7 @@ public interface Extra {
     public final static String LONGITUDE = "LONGITUDE";
     public final static String ZOOM_LEVEL = "ZOOM_LEVEL";
     public final static String WHEELCHAIR_STATE = "WHEELCHAIR_STATE";
+    public final static String WHEELCHAIR_TOILET_STATE = "WHEELCHAIR_TOILET_STATE";
 
     public final static String QUERY_CHANGED = "query_changed";
     public final static String SELECTED_TAB = "SELECTED_TAB";

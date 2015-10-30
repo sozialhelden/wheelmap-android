@@ -3,7 +3,7 @@ package org.wheelmap.android.utils;
 import org.wheelmap.android.activity.MapActivity;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
 import org.wheelmap.android.manager.SupportManager;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.online.R;
 
 import android.content.SharedPreferences;
@@ -23,20 +23,20 @@ import java.util.Map;
 public class MapActivityUtils {
     public static void setAccessFilterOptionDrawable(MapActivity context, MenuItem item, View v) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Map<WheelchairState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
+        Map<WheelchairFilterState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
         Resources r = context.getResources();
         List<Drawable> layers = new LinkedList<Drawable>();
         layers.add(r.getDrawable(R.drawable.ic_status));
-        if (mPrefs.getBoolean(attributes.get(WheelchairState.YES).prefsKey, true)) {
+        if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.YES).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_status_green));
         }
-        if(mPrefs.getBoolean(attributes.get(WheelchairState.LIMITED).prefsKey, true)){
+        if(mPrefs.getBoolean(attributes.get(WheelchairFilterState.LIMITED).prefsKey, true)){
             layers.add(r.getDrawable(R.drawable.ic_status_orange));
         }
-        if (mPrefs.getBoolean(attributes.get(WheelchairState.NO).prefsKey, true)) {
+        if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.NO).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_status_red));
         }
-        if (mPrefs.getBoolean(attributes.get(WheelchairState.UNKNOWN).prefsKey, true)) {
+        if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.UNKNOWN).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_status_grey));
         }
         LayerDrawable layerDrawable = new LayerDrawable(layers.toArray(new Drawable[layers.size()]));
@@ -51,18 +51,18 @@ public class MapActivityUtils {
     //TODO - rewrite for wc-filter-entries (images & co)
     public static void setWcFilterOptionsDrawable(MapActivity context, MenuItem item, View v) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Map<WheelchairState, SupportManager.WcAttributes> attributes = SupportManager.wcAttributes;
+        Map<WheelchairFilterState, SupportManager.WheelchairToiletAttributes> attributes = SupportManager.wheelchairToiletAttributes;
         Resources r = context.getResources();
         List<Drawable> layers = new LinkedList<Drawable>();
         layers.add(r.getDrawable(R.drawable.ic_wc));
 
-        if (mPrefs.getBoolean(attributes.get(WheelchairState.YES).prefsKey, true)) {
+        if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.TOILET_YES).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_wc_green));
         }
-        if (mPrefs.getBoolean(attributes.get(WheelchairState.NO).prefsKey, true)) {
+        if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.TOILET_NO).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_wc_red));
         }
-        if (mPrefs.getBoolean(attributes.get(WheelchairState.UNKNOWN).prefsKey, true)) {
+        if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.TOILET_UNKNOWN).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_wc_grey));
         }
 
@@ -101,15 +101,15 @@ public class MapActivityUtils {
 
     public static void setWheelchairFilterToEngageMode(final MapActivity context) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Map<WheelchairState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
+        Map<WheelchairFilterState, SupportManager.WheelchairAttributes> attributes = SupportManager.wsAttributes;
 
-        mPrefs.getBoolean(attributes.get(WheelchairState.YES).prefsKey, true);
+        mPrefs.getBoolean(attributes.get(WheelchairFilterState.YES).prefsKey, true);
         SharedPreferences.Editor editor = mPrefs.edit();
 
-        editor.putBoolean(attributes.get(WheelchairState.YES).prefsKey, false);
-        editor.putBoolean(attributes.get(WheelchairState.NO).prefsKey, false);
-        editor.putBoolean(attributes.get(WheelchairState.LIMITED).prefsKey, false);
-        editor.putBoolean(attributes.get(WheelchairState.UNKNOWN).prefsKey, true);
+        editor.putBoolean(attributes.get(WheelchairFilterState.YES).prefsKey, false);
+        editor.putBoolean(attributes.get(WheelchairFilterState.NO).prefsKey, false);
+        editor.putBoolean(attributes.get(WheelchairFilterState.LIMITED).prefsKey, false);
+        editor.putBoolean(attributes.get(WheelchairFilterState.UNKNOWN).prefsKey, true);
 
         editor.commit();
     }

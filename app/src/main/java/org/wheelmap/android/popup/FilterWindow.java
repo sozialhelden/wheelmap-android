@@ -9,12 +9,12 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import org.wheelmap.android.activity.MapActivity;
-import org.wheelmap.android.adapter.WcSelectAdapter;
+import org.wheelmap.android.adapter.WheelchairToiletSelectAdapter;
 import org.wheelmap.android.adapter.WheelchairStateSelectAdapter;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.MapActivityUtils;
-import org.wheelmap.android.view.WheelchairStateItemView;
+import org.wheelmap.android.view.WheelchairFilterStateItemView;
 
 public class FilterWindow extends PopupWindow {
 
@@ -46,7 +46,7 @@ public class FilterWindow extends PopupWindow {
             if (menuItemView.getId() == R.id.menu_filter) {
                 filterAdapter = new WheelchairStateSelectAdapter(context);
             } else {
-                filterAdapter = new WcSelectAdapter(context);
+                filterAdapter = new WheelchairToiletSelectAdapter(context);
             }
             initFilterAdapterUsage(layoutContainer, filterAdapter);
 
@@ -62,7 +62,7 @@ public class FilterWindow extends PopupWindow {
     private void initFilterAdapterUsage(LinearLayout layoutContainer, final WheelchairStateSelectAdapter adapter) {
         for (int i = 0; i < adapter.getCount(); i++) {
             final int pos = i;
-            final WheelchairStateItemView view = adapter.getView(i, null, null);
+            final WheelchairFilterStateItemView view = adapter.getView(i, null, null);
             view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

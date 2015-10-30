@@ -105,6 +105,7 @@ public class POIsProvider extends ContentProvider {
                     + POIs.WEBSITE + " TEXT, "
 
                     + POIs.WHEELCHAIR + " NUMERIC, "
+                    + POIs.WHEELCHAIR_TOILET + " NUMERIC, "
                     + POIs.DESCRIPTION + " TEXT,"
 
                     + POIs.COS_LAT_RAD + " NUMERIC,"
@@ -367,6 +368,7 @@ public class POIsProvider extends ContentProvider {
         final int phoneColumn = inserter.getColumnIndex(POIs.PHONE);
         final int websiteColumn = inserter.getColumnIndex(POIs.WEBSITE);
         final int wheelchairColumn = inserter.getColumnIndex(POIs.WHEELCHAIR);
+        final int wheelchairToiletColumn = inserter.getColumnIndex(POIs.WHEELCHAIR_TOILET);
         final int descriptionColumn = inserter.getColumnIndex(POIs.DESCRIPTION);
         final int iconColumn = inserter.getColumnIndex(POIs.ICON);
         final int categoryIdColumn = inserter.getColumnIndex(POIs.CATEGORY_ID);
@@ -412,6 +414,8 @@ public class POIsProvider extends ContentProvider {
                         inserter.bind(websiteColumn, website);
                         int wheelchair = values.getAsInteger(POIs.WHEELCHAIR);
                         inserter.bind(wheelchairColumn, wheelchair);
+                        int wheelchairToilet = values.getAsInteger(POIs.WHEELCHAIR_TOILET);
+                        inserter.bind(wheelchairToiletColumn, wheelchairToilet);
                         String description = values.getAsString(POIs.DESCRIPTION);
                         inserter.bind(descriptionColumn, description);
                         String icon = values.getAsString(POIs.ICON);
@@ -623,6 +627,7 @@ public class POIsProvider extends ContentProvider {
         sPOIsProjectionMap.put(POIs.ICON, POIs.ICON);
         sPOIsProjectionMap.put(POIs.WEBSITE, POIs.WEBSITE);
         sPOIsProjectionMap.put(POIs.WHEELCHAIR, POIs.WHEELCHAIR);
+        sPOIsProjectionMap.put(POIs.WHEELCHAIR_TOILET, POIs.WHEELCHAIR_TOILET);
         sPOIsProjectionMap.put(POIs.DESCRIPTION, POIs.DESCRIPTION);
         sPOIsProjectionMap.put(POIs.CATEGORY_ID, POIs.CATEGORY_ID);
         sPOIsProjectionMap.put(POIs.CATEGORY_IDENTIFIER, POIs.CATEGORY_IDENTIFIER);

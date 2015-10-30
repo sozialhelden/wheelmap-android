@@ -25,7 +25,7 @@ import org.wheelmap.android.mapping.node.Nodes;
 import org.wheelmap.android.model.DataOperationsNodes;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.net.request.AcceptType;
 import org.wheelmap.android.net.request.BaseNodesRequestBuilder;
 import org.wheelmap.android.net.request.BoundingBox;
@@ -60,7 +60,7 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 
     private String mSearchTerm = null;
 
-    private WheelchairState mWheelchairState = null;
+    private WheelchairFilterState mWheelchairFilterState = null;
 
     public NodesExecutor(Context context, Bundle bundle) {
         super(context, bundle, Nodes.class);
@@ -103,8 +103,12 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
         }
 
         if (getBundle().containsKey(Extra.WHEELCHAIR_STATE)) {
-            mWheelchairState = WheelchairState.valueOf(getBundle().getInt(
+            mWheelchairFilterState = WheelchairFilterState.valueOf(getBundle().getInt(
                     Extra.WHEELCHAIR_STATE));
+        }
+        if (getBundle().containsKey(Extra.WHEELCHAIR_TOILET_STATE)) {
+            mWheelchairFilterState = WheelchairFilterState.valueOf(getBundle().getInt(
+                    Extra.WHEELCHAIR_TOILET_STATE));
         }
     }
 
@@ -127,7 +131,7 @@ public class NodesExecutor extends MultiPageExecutor<Nodes> implements
 
         requestBuilder.paging(new Paging(DEFAULT_TEST_PAGE_SIZE)).boundingBox(
                 mBoundingBox);
-        requestBuilder.wheelchairState(mWheelchairState);
+        requestBuilder.wheelchairState(mWheelchairFilterState);
         clearTempStore();
         retrieveMaxNPages(requestBuilder, MAX_PAGES_TO_RETRIEVE);
     }

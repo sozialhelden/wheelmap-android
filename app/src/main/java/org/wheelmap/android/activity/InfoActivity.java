@@ -24,16 +24,16 @@ package org.wheelmap.android.activity;
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class InfoActivity extends Activity implements OnInfoListener {
+public class InfoActivity extends AppCompatActivity implements OnInfoListener {
 
     private TextView txt_credit_version;
 
@@ -47,10 +47,10 @@ public class InfoActivity extends Activity implements OnInfoListener {
 
         PackageInfo pInfo;
 
-        if (getActionBar() != null) {
-            getActionBar().setDisplayShowTitleEnabled(false);
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         txt_credit_version = (TextView)findViewById(R.id.credits_version);
@@ -95,7 +95,7 @@ public class InfoActivity extends Activity implements OnInfoListener {
 
     @Override
     public void onNextView(String view) {
-        Class<? extends Activity> clzz;
+        Class<? extends AppCompatActivity> clzz;
         if (view.equals("LegalNotice")) {
             clzz = LegalNoticeActivity.class;
         } else {

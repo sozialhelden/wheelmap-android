@@ -48,6 +48,9 @@ public class Node extends BaseDomain {
 
     protected String wheelchair;
 
+    @JsonProperty(value = "wheelchair_toilet")
+    protected String wheelchair_toilet;
+
     @JsonProperty(value = "wheelchair_description")
     protected String wheelchairDescription;
 
@@ -154,6 +157,24 @@ public class Node extends BaseDomain {
      */
     public void setWheelchair(String value) {
         this.wheelchair = value;
+    }
+
+    /**
+     * Gets the value of the wheelchair_toilet property.
+     *
+     * @return possible object is {@link String }
+     */
+    public String getWheelchairToilet() {
+        return wheelchair_toilet;
+    }
+
+    /**
+     * Sets the value of the wheelchair_toilet property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    public void setWheelchairToilet(String value) {
+        this.wheelchair_toilet = value;
     }
 
     /**
@@ -318,13 +339,20 @@ public class Node extends BaseDomain {
 
     @Override
     public String toString() {
-        return "Node [lat=" + lat + ", nodeTypeId= {" + nodeType.toString() + "}, street="
-                + street + ", website=" + website + ", wheelchair="
-                + wheelchair + ", housenumber=" + housenumber
+        return "Node [lat=" + lat + ", nodeTypeId= {" + nodeType.toString()
+                + "}, street=" + street
+                + ", website=" + website
+                + ", wheelchair=" + wheelchair
+                + ", wheelchair_toilet=" + wheelchair_toilet
+                + ", housenumber=" + housenumber
                 + ", wheelchairDescription=" + wheelchairDescription
-                + ", name=" + name + ", id=" + id + ", category= {"
-                + category.toString() + "}, phone=" + phone + ", lon=" + lon + ", city="
-                + city + ", postcode=" + postcode + "]";
+                + ", name=" + name
+                + ", id=" + id
+                + ", category= {" + category.toString() + "}"
+                + ", phone=" + phone
+                + ", lon=" + lon
+                + ", city=" + city
+                + ", postcode=" + postcode + "]";
     }
 
 }

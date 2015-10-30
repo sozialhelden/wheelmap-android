@@ -121,7 +121,7 @@ public class RobotiumHelper {
 
     static void selectWheelchairState(SoloCompatibilityAbs solo,
             String activityName) throws InterruptedException {
-        View wheelchairStateButton = RobotiumHelper.findViewById(solo, id.wheelchair_state_layout);
+        View wheelchairStateButton = RobotiumHelper.findViewById(solo, id.wheelchair_access_state_layout);
         Log.d(TAG, "wheelchairState Button " + wheelchairStateButton);
         solo.clickOnView(wheelchairStateButton);
 

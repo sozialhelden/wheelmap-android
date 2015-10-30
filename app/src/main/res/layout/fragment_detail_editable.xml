@@ -63,14 +63,6 @@
                           android:hint="@string/poi_property_name"
 
                           />
-                <!--
-                <ImageView
-                        android:id="@+id/edit_titlebar_backbutton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:src="@drawable/detail_ic_close"/>
-                        -->
 
             </LinearLayout>
 
@@ -126,38 +118,7 @@
                         />
             </RelativeLayout>
 
-            <!--
-            <LinearLayout
-                    android:id="@+id/edit_geolocation_container"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                <include layout="@layout/separator"/>
-
-                <RelativeLayout
-                        android:id="@+id/edit_geolocation"
-                        style="@style/Container.Pressable">
-
-                    <TextView
-                            android:id="@+id/edit_position_text"
-                            style="@style/DetailFontNew"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/edit_geolocation_icon"
-                            android:hint="@string/poi_property_position"/>
-
-                    <ImageView
-                            android:id="@+id/edit_geolocation_icon"
-                            style="@style/IconMedium"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_menu_edit_wheelmap_dark"/>
-                </RelativeLayout>
-            </LinearLayout>
-            -->
-
-            <include  layout="@layout/item_wheelchair_state"/>
+            <include  layout="@layout/item_wheelchair_access_state"/>
 
             <TextView
                     android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -277,12 +238,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
-        <!--
-        <Button
-                android:id="@+id/no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_cancel"/>   -->
 
         <ImageButton
                 android:id="@+id/detail_save"

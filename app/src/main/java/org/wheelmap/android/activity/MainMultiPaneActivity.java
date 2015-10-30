@@ -37,6 +37,8 @@ import org.wheelmap.android.fragment.POIsListFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
+import org.wheelmap.android.fragment.WheelchairAccessStateFragment;
+import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
 import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -44,7 +46,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.MapModeType;
 import org.wheelmap.android.model.PrepareDatabaseHelper;
 import org.wheelmap.android.model.Request;
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.AppProperties;
 import org.wheelmap.android.modules.IAppProperties;
@@ -154,7 +156,7 @@ public class MainMultiPaneActivity extends MapActivity implements
         mResizeButton = (ImageButton) findViewById(R.id.button_movable_resize);
 
         ViewGroup g = (ViewGroup) findViewById(R.id.layout_multi);
-        if(Build.VERSION.SDK_INT > 16){
+        if (Build.VERSION.SDK_INT > 16) {
             g.getLayoutTransition().disableTransitionType(LayoutTransition.APPEARING);
         }
 
@@ -165,7 +167,7 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
 
         Bundle extras = getIntent().getExtras();
-        if(extras.containsKey(Extra.MAP_MODE_ENGAGE)) {
+        if (extras.containsKey(Extra.MAP_MODE_ENGAGE)) {
             mapModeType = MapModeType.MAP_MODE_ENGAGE;
         } else {
             mapModeType = MapModeType.MAP_MODE_NORMAL;
@@ -221,22 +223,22 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         WheelmapApp.checkForUpdates(this);
 
-        app = (WheelmapApp)this.getApplication();
+        app = (WheelmapApp) this.getApplication();
         String uri = null;
 
-        try{
+        try {
             address = app.getAddressString();
-        }catch(Exception ex){
+        } catch (Exception ex) {
             // noop
         }
 
-        if(address != null){
+        if (address != null) {
             showSearch();
         }
 
     }
 
-    public WorkerFragment getWorkerFragment(){
+    public WorkerFragment getWorkerFragment() {
         return mWorkerFragment;
     }
 
@@ -295,14 +297,14 @@ public class MainMultiPaneActivity extends MapActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
 
         boolean isPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-        if(isPortraitMode){
+        if (isPortraitMode) {
             ActionBar bar = getSupportActionBar();
             //g.setUiOptions(ActivityInfo.UIOPTION_SPLIT_ACTION_BAR_WHEN_NARROW);
             LayoutInflater inflater = LayoutInflater.from(this);
             View customView = inflater.inflate(R.layout.actionbar_tablet,
                     null);
 
-            final ImageView switchView = (ImageView)  customView.findViewById(R.id.show_list);
+            final ImageView switchView = (ImageView) customView.findViewById(R.id.show_list);
             switchView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -310,12 +312,12 @@ public class MainMultiPaneActivity extends MapActivity implements
                 }
             });
 
-            LinearLayout l = (LinearLayout)findViewById(R.id.actionbar_bottom);
-            for(int i=0;i<l.getChildCount();i++){
+            LinearLayout l = (LinearLayout) findViewById(R.id.actionbar_bottom);
+            for (int i = 0; i < l.getChildCount(); i++) {
                 l.getChildAt(i).setOnTouchListener(new PressSelector());
             }
 
-                   //LayoutParams.MATCH_PARENT
+            //LayoutParams.MATCH_PARENT
             bar.setCustomView(customView, new ActionBar.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
                     Gravity.CENTER_VERTICAL | Gravity.RIGHT));
@@ -324,11 +326,11 @@ public class MainMultiPaneActivity extends MapActivity implements
             MapActivityUtils.setAccessFilterOptionDrawable(this, null, v);
 
             UserCredentials credentials = new UserCredentials(getApplicationContext());
-            ImageView image = (ImageView)findViewById(R.id.menu_login);
+            ImageView image = (ImageView) findViewById(R.id.menu_login);
             image.setImageResource(credentials.isLoggedIn()
-                                    ? R.drawable.start_icon_logged_in
-                                    : R.drawable.start_icon_login);
-        }else{
+                    ? R.drawable.start_icon_logged_in
+                    : R.drawable.start_icon_login);
+        } else {
             MenuInflater inflaterMenu = getMenuInflater();
             inflaterMenu.inflate(R.menu.ab_multi_activity, menu);
             MenuItem item = menu.findItem(R.id.menu_filter);
@@ -341,7 +343,7 @@ public class MainMultiPaneActivity extends MapActivity implements
             : getResources().getDrawable(R.drawable.start_icon_login));  */
         }
 
-        if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
+        if (mapModeType == MapModeType.MAP_MODE_ENGAGE) {
             MenuItem itemFilterWheelChairs = menu.findItem(R.id.menu_filter);
             itemFilterWheelChairs.setEnabled(false);
             //TODO Disable it - doesn't work yet
@@ -353,26 +355,26 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       boolean b = onOptionItemClicked(item.getItemId(),null,item);
-       return b ? b : super.onOptionsItemSelected(item);
+        boolean b = onOptionItemClicked(item.getItemId(), null, item);
+        return b ? b : super.onOptionsItemSelected(item);
     }
 
 
-    public void onOptionItemBottomClicked(View v){
-        onOptionItemClicked(v.getId(),v,null);
+    public void onOptionItemBottomClicked(View v) {
+        onOptionItemClicked(v.getId(), v, null);
     }
 
     /*
      * combined method to handle actionbar menu and custom bottom menu
      */
-    public boolean onOptionItemClicked(int id,View v, MenuItem item){
+    public boolean onOptionItemClicked(int id, View v, MenuItem item) {
 
         switch (id) {
             case R.id.menu_search:
-                if(mWorkerFragment.isSearchMode()){
+                if (mWorkerFragment.isSearchMode()) {
                     mWorkerFragment.setSearchMode(false);
                     mWorkerFragment.requestUpdate(null);
-                }else{
+                } else {
                     showSearch();
                 }
                 return true;
@@ -381,10 +383,10 @@ public class MainMultiPaneActivity extends MapActivity implements
                 return true;
             case R.id.menu_filter:
                 View anchor = v;
-                if(anchor == null){
+                if (anchor == null) {
                     anchor = item.getActionView();
                 }
-                showFilterSettings(item,v,anchor);
+                showFilterSettings(item, v, anchor);
                 //MapActivityUtils.setAccessFilterOptionDrawable(this,item,v);
                 return true;
             case R.id.menu_about:
@@ -407,20 +409,20 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
     }
 
-    private void showNews(){
-        Intent intent = new Intent(this,WebViewNewsActivity.class);
+    private void showNews() {
+        Intent intent = new Intent(this, WebViewNewsActivity.class);
         startActivity(intent);
     }
 
-    private void showAccount(){
-        Intent intent = new Intent(this,LoginActivity.class);
+    private void showAccount() {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, Request.REQUEST_CODE_LOGIN);
     }
 
     private void createSearchModeCustomView(final ActionBar bar) {
         // not used anymore
-        if(true){
-           return;
+        if (true) {
+            return;
         }
         LayoutInflater inflater = LayoutInflater.from(this);
         View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
@@ -466,7 +468,7 @@ public class MainMultiPaneActivity extends MapActivity implements
         startActivity(intent);
     }
 
-    private void showFilterSettings(MenuItem menuItem, View menuView,View anchor) {
+    private void showFilterSettings(MenuItem menuItem, View menuView, View anchor) {
         //Intent intent = new Intent(this, NewSettingsActivity.class);
         //startActivity(intent);
 
@@ -493,9 +495,10 @@ public class MainMultiPaneActivity extends MapActivity implements
     public void onError(RestServiceException e) {
         if (e.isNetworkError()) {
             String error = getString(R.string.error_network_failure);
-            try{
+            try {
                 error = getString(e.getRessourceString());
-            }catch(Exception ex){}
+            } catch (Exception ex) {
+            }
             Crouton.makeText(this, error, Style.ALERT).show();
             return;
         }
@@ -551,9 +554,16 @@ public class MainMultiPaneActivity extends MapActivity implements
     }
 
     @Override
-    public void onEditWheelchairState(WheelchairState wState) {
+    public void onEditWheelchairState(WheelchairFilterState wState) {
         Intent intent = new Intent(this, WheelchairStateActivity.class);
         intent.putExtra(Extra.WHEELCHAIR_STATE, wState.getId());
+        startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
+    }
+
+    @Override
+    public void onEditWheelchairToiletState(WheelchairFilterState wState) {
+        Intent intent = new Intent(this, WheelchairStateActivity.class);
+        intent.putExtra(Extra.WHEELCHAIR_TOILET_STATE, wState.getId());
         startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
     }
 
@@ -571,32 +581,39 @@ public class MainMultiPaneActivity extends MapActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult: requestCode = " + requestCode
                 + " resultCode = " + resultCode);
-        if (requestCode == Request.SELECT_WHEELCHAIRSTATE) {
-            if (resultCode == RESULT_OK) {
-                // newly selected wheelchair state as action data
-                if (data != null) {
-                    WheelchairState state = WheelchairState
-                            .valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
-                                    Extra.UNKNOWN));
-                    updateDatabase(poiIdSelected, state);
-                    Log.d(TAG, "starting RestServiceHelper.executeUpdateServer");
-                    RestServiceHelper.executeUpdateServer(this, null);
+        if (requestCode == Request.SELECT_WHEELCHAIRSTATE && resultCode == RESULT_OK && data != null) {
+            if (data.hasExtra(WheelchairAccessStateFragment.TAG)) {
+                WheelchairFilterState state = WheelchairFilterState
+                        .valueOf(data.getIntExtra(WheelchairAccessStateFragment.TAG, Extra.UNKNOWN));
+                if (state != null) {
+                    updateDatabase(poiIdSelected, POIs.WHEELCHAIR, state);
                 }
+            } else if (data.hasExtra(WheelchairToiletStateFragment.TAG)) {
+                WheelchairFilterState state = WheelchairFilterState
+                        .valueOf(data.getIntExtra(WheelchairToiletStateFragment.TAG, Extra.UNKNOWN));
+                if (state != null) {
+                    updateDatabase(poiIdSelected, POIs.WHEELCHAIR_TOILET, state);
+                }
+            } else {
+                return;
             }
-        } 
-        if(requestCode == Request.REQUEST_CODE_LOGIN){
-            ImageView image = (ImageView)findViewById(R.id.menu_login);
-            if(image!=null){
-                image.setImageResource(resultCode==RESULT_OK
+            Log.d(TAG, "starting RestServiceHelper.executeUpdateServer");
+            RestServiceHelper.executeUpdateServer(this, null);
+
+        }
+        if (requestCode == Request.REQUEST_CODE_LOGIN) {
+            ImageView image = (ImageView) findViewById(R.id.menu_login);
+            if (image != null) {
+                image.setImageResource(resultCode == RESULT_OK
                         ? R.drawable.start_icon_logged_in
                         : R.drawable.start_icon_login);
             }
         }
 
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void updateDatabase(long id, WheelchairState state) {
+    private void updateDatabase(long id, String poiColumnName, WheelchairFilterState state) {
         if (id == Extra.ID_UNKNOWN || state == null) {
             return;
         }
@@ -605,7 +622,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                         + state.asRequestParameter());
 
         ContentValues values = new ContentValues();
-        values.put(POIs.WHEELCHAIR, state.getId());
+        values.put(poiColumnName, state.getId());
         values.put(POIs.DIRTY, POIs.DIRTY_STATE);
 
         PrepareDatabaseHelper.editCopy(getContentResolver(), id, values);
@@ -686,16 +703,16 @@ public class MainMultiPaneActivity extends MapActivity implements
         float endValue;
         if (mMovableVisible) {
             startValue = 0.0f;
-            if(land){
+            if (land) {
                 endValue = -mMovableLayout.getWidth();
-            }else{
+            } else {
                 endValue = -mMovableLayout.getHeight();
             }
             mMovableVisible = false;
         } else {
-            if(land){
+            if (land) {
                 startValue = -mMovableLayout.getWidth();
-            }else{
+            } else {
                 startValue = -mMovableLayout.getHeight();
             }
             endValue = 0.0f;
@@ -724,7 +741,7 @@ public class MainMultiPaneActivity extends MapActivity implements
     public void onBackPressed() {
         WheelmapApp app = (WheelmapApp) this.getApplicationContext();
 
-        if(app.isSaved()){
+        if (app.isSaved()) {
             app.setSaved(false);
            /* Intent intent = new Intent(getApplicationContext(),MainMultiPaneActivity.class);
             intent.putExtra(Extra.REQUEST, true);
@@ -732,10 +749,10 @@ public class MainMultiPaneActivity extends MapActivity implements
             overridePendingTransition(0,0);
             super.onBackPressed();
            */
-           mWorkerFragment.setSearchMode(false);
-           mWorkerFragment.requestUpdate(null);
-        }else{
-            if(mMovableVisible && !mMovableAnimationRunning){
+            mWorkerFragment.setSearchMode(false);
+            mWorkerFragment.requestUpdate(null);
+        } else {
+            if (mMovableVisible && !mMovableAnimationRunning) {
                 toggleMovableResize();
                 return;
             }

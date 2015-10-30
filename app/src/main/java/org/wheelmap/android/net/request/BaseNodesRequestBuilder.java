@@ -21,7 +21,7 @@
  */
 package org.wheelmap.android.net.request;
 
-import org.wheelmap.android.model.WheelchairState;
+import org.wheelmap.android.model.WheelchairFilterState;
 
 /**
  * Constructs the Uri of a <code>/api/nodes?bbox&wheelchair&page&per_page</code> request
@@ -32,7 +32,7 @@ public abstract class BaseNodesRequestBuilder extends RequestBuilder {
 
     private Paging paging = Paging.DEFAULT_PAGING;
 
-    private WheelchairState wheelchairState;
+    private WheelchairFilterState wheelchairFilterState;
 
     private BoundingBox boundingBox;
 
@@ -52,8 +52,8 @@ public abstract class BaseNodesRequestBuilder extends RequestBuilder {
     }
 
     public BaseNodesRequestBuilder wheelchairState(
-            final WheelchairState wheelchairState) {
-        this.wheelchairState = wheelchairState;
+            final WheelchairFilterState wheelchairFilterState) {
+        this.wheelchairFilterState = wheelchairFilterState;
         return this;
     }
 
@@ -69,10 +69,10 @@ public abstract class BaseNodesRequestBuilder extends RequestBuilder {
             requestAsStringBuffer.append(boundingBox.asRequestParameter());
         }
 
-        if (wheelchairState != null
-                && wheelchairState != WheelchairState.NO_PREFERENCE) {
+        if (wheelchairFilterState != null
+                && wheelchairFilterState != WheelchairFilterState.NO_PREFERENCE) {
             requestAsStringBuffer.append("&wheelchair=");
-            requestAsStringBuffer.append(wheelchairState.asRequestParameter());
+            requestAsStringBuffer.append(wheelchairFilterState.asRequestParameter());
         }
 
         return requestAsStringBuffer.toString();
@@ -80,7 +80,7 @@ public abstract class BaseNodesRequestBuilder extends RequestBuilder {
 
     public BaseNodesRequestBuilder reset() {
         paging = Paging.DEFAULT_PAGING;
-        wheelchairState = null;
+        wheelchairFilterState = null;
         boundingBox = null;
 
         return this;
