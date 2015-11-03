@@ -22,6 +22,8 @@
 package org.wheelmap.android.net.request;
 
 
+import java.util.Locale;
+
 /**
  * Constructs the Uri of a <code>/api/categories/1/nodes/search?api_key=&q=&bbox=&wheelchair=</code>
  * request
@@ -56,7 +58,7 @@ public class CategoryNodesRequestBuilder extends BaseNodesRequestBuilder {
     public String buildRequestUri() {
         String request = super.buildRequestUri();
         if (searchTerm != null && searchTerm.length() > 0) {
-            return String.format("%s&q=%s", request, searchTerm);
+            return String.format(java.util.Locale.US, "%s&q=%s", request, searchTerm);
         } else {
             return request;
         }
@@ -64,7 +66,7 @@ public class CategoryNodesRequestBuilder extends BaseNodesRequestBuilder {
 
     @Override
     protected String resourcePath() {
-        return String.format(RESOURCE, category);
+        return String.format(Locale.US, RESOURCE, category);
     }
 
     @Override

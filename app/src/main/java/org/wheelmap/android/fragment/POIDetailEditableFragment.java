@@ -72,7 +72,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -126,17 +126,22 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private TextView geolocation_text;
 
-    private RelativeLayout edit_state_container;
+    private TextView accessStateText;
+    private TextView toiletStateText;
 
-    private RelativeLayout edit_nodetype_container;
+    private ViewGroup accessStateLayout;
+    private ViewGroup toiletStateLayout;
 
-    private RelativeLayout edit_geolocation_container;
+    private FrameLayout edit_nodetype_container;
+
+    private FrameLayout edit_geolocation_container;
 
     private Long poiID = Extra.ID_UNKNOWN;
 
     private String wmID;
 
     private WheelchairFilterState mWheelchairFilterState;
+    private WheelchairFilterState mWheelchairToiletFilterState;
 
     private double mLatitude;
 
@@ -145,6 +150,7 @@ public class POIDetailEditableFragment extends Fragment implements
     private int mNodeType;
 
     private Map<WheelchairFilterState, WheelchairAttributes> mWSAttributes;
+    private Map<WheelchairFilterState, SupportManager.WheelchairToiletAttributes> mWheelchairToiletAttributes;
 
     private OnPOIDetailEditableListener mListener;
 
@@ -159,6 +165,8 @@ public class POIDetailEditableFragment extends Fragment implements
         public void onEditSave(boolean quit);
 
         public void onEditWheelchairState(WheelchairFilterState state);
+
+        public void onEditWheelchairToiletState(WheelchairFilterState wState);
 
         public void onEditGeolocation(double latitude, double longitude);
 
@@ -204,6 +212,7 @@ public class POIDetailEditableFragment extends Fragment implements
         Log.d(TAG, "onCreate");
         setHasOptionsMenu(true);
         mWSAttributes = SupportManager.wsAttributes;
+        mWheelchairToiletAttributes = SupportManager.wheelchairToiletAttributes;
         poiID = getArguments().getLong(Extra.POI_ID);
         focus = getArguments().getInt("Focus");
         mReceiver = new DetachableResultReceiver(new Handler());
@@ -224,10 +233,13 @@ public class POIDetailEditableFragment extends Fragment implements
         state_text = (TextView) parent.findViewById(R.id.access_state_text);
         geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
 
-        edit_state_container = (RelativeLayout) parent.findViewById(R.id.wheelchair_access_state_layout);
+        accessStateText = (TextView)parent.findViewById(R.id.access_state_text);
+        accessStateLayout = (ViewGroup)parent.findViewById(R.id.wheelchair_access_state_layout);
+        toiletStateText = (TextView)parent.findViewById(R.id.toilet_state_text);
+        toiletStateLayout = (ViewGroup)parent.findViewById(R.id.wheelchair_toilet_state_layout);
 
-        edit_nodetype_container = (RelativeLayout) parent.findViewById(R.id.edit_nodetype);
-        edit_geolocation_container = (RelativeLayout) parent.findViewById(R.id.edit_geolocation);
+        edit_nodetype_container = (FrameLayout) parent.findViewById(R.id.edit_nodetype);
+        edit_geolocation_container = (FrameLayout) parent.findViewById(R.id.edit_geolocation);
     }
 
     @Override
@@ -265,7 +277,12 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        edit_state_container.setOnClickListener(this);
+
+        setWheelchairState(WheelchairFilterState.UNKNOWN);
+        accessStateLayout.setOnClickListener(this);
+
+        setWheelchairToiletState(WheelchairFilterState.TOILET_UNKNOWN);
+        toiletStateLayout.setOnClickListener(this);
 
         edit_nodetype_container.setOnClickListener(this);
         edit_geolocation_container.setOnClickListener(this);
@@ -295,21 +312,25 @@ public class POIDetailEditableFragment extends Fragment implements
             }
         }
 
-        if (requestCode == Request.SELECT_WHEELCHAIRSTATE) {
-            if (resultCode == Activity.RESULT_OK) {
-                // newly selected wheelchair state as action data
-                if (data != null) {
-                    WheelchairFilterState state = WheelchairFilterState
-                            .valueOf(data.getIntExtra(Extra.WHEELCHAIR_STATE,
-                                    Extra.UNKNOWN));
-                    setWheelchairState(state);
-                    if(mListener != null){
-                        mListener.onEditWheelchairState(state);
-                    }
+        if (requestCode == Request.SELECT_WHEELCHAIRSTATE && resultCode == Activity.RESULT_OK && data != null) {
 
+            if (data.hasExtra(WheelchairAccessibilityStateFragment.TAG)) {
+                WheelchairFilterState state = WheelchairFilterState
+                        .valueOf(data.getIntExtra(WheelchairAccessibilityStateFragment.TAG, Extra.UNKNOWN));
+                if (state != null && mListener != null){
+                    setWheelchairState(state);
+                    mListener.onEditWheelchairState(state);
+                }
+            } else if (data.hasExtra(WheelchairToiletStateFragment.TAG)) {
+                WheelchairFilterState state = WheelchairFilterState
+                        .valueOf(data.getIntExtra(WheelchairToiletStateFragment.TAG, Extra.UNKNOWN));
+                if (state != null && mListener != null){
+                    setWheelchairToiletState(state);
+                    mListener.onEditWheelchairToiletState(state);
                 }
             }
         }
+
 
         if(requestCode == Request.SELECT_GEOLOCATION && resultCode == Activity.RESULT_OK && data != null){
             double latitude = data.getDoubleExtra(Extra.LATITUDE,mLatitude);
@@ -381,6 +402,12 @@ public class POIDetailEditableFragment extends Fragment implements
                 startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
                 break;
             }
+            case R.id.wheelchair_toilet_state_layout: {
+                Intent intent = new Intent(getActivity(), WheelchairStateActivity.class);
+                intent.putExtra(Extra.WHEELCHAIR_TOILET_STATE, mWheelchairToiletFilterState.getId());
+                startActivityForResult(intent, Request.SELECT_WHEELCHAIRSTATE);
+                break;
+            }
             case R.id.edit_geolocation: {
                 Intent intent = new Intent(getActivity(), WrapperActivity.class);
                 intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,EditPositionFragment.class.getName());
@@ -439,8 +466,6 @@ public class POIDetailEditableFragment extends Fragment implements
         PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
                 poiID, values);
         RestServiceHelper.executeUpdateServer(getActivity(), mReceiver);
-
-
     }
 
     private void quit(boolean quit) {
@@ -492,6 +517,7 @@ public class POIDetailEditableFragment extends Fragment implements
         cursor.moveToFirst();
 
         WheelchairFilterState accessState = POIHelper.getWheelchair(cursor);
+        WheelchairFilterState toiletState = POIHelper.getWheelchairToilet(cursor);
         String name = POIHelper.getName(cursor);
         String comment = POIHelper.getComment(cursor);
         double latitude = POIHelper.getLatitude(cursor);
@@ -500,8 +526,12 @@ public class POIDetailEditableFragment extends Fragment implements
 
         setGeolocation(latitude, longitude);
         setNodetype(nodeType);
+
         setWheelchairState(accessState);
-        nameText.setText(name);
+        setWheelchairToiletState(toiletState);
+        if(!getString(R.string.poi_new_default_name).equals(name)) {
+            nameText.setText(name);
+        }
         commentText.setText(comment);
 
         streetText.setText(POIHelper.getStreet(cursor));
@@ -605,6 +635,8 @@ public class POIDetailEditableFragment extends Fragment implements
             values.put(POIs.LONGITUDE, mLongitude);
 
             values.put(POIs.WHEELCHAIR, mWheelchairFilterState.getId());
+            values.put(POIs.WHEELCHAIR_TOILET, mWheelchairToiletFilterState.getId());
+
             String description = commentText.getText().toString();
             if (!TextUtils.isEmpty(description)) {
                 values.put(POIs.DESCRIPTION, description);
@@ -675,6 +707,31 @@ public class POIDetailEditableFragment extends Fragment implements
         }
 
         state_text.setText(mWSAttributes.get(newState).titleStringId);
+    }
+
+    public void setWheelchairToiletState(WheelchairFilterState newState) {
+        if (newState == null || mWheelchairToiletAttributes.get(newState) == null) {
+            return;
+        }
+
+        mWheelchairToiletFilterState = newState;
+
+        try{
+            if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_green);
+            else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_red);
+            else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        }catch(OutOfMemoryError e){
+            System.gc();
+        }
+
+        toiletStateText.setText(mWheelchairToiletAttributes.get(newState).titleStringId);
     }
 
     public void setGeolocation(double latitude, double longitude) {

@@ -6,17 +6,8 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.Wheelmap.ActionbarDialog"></style>
-
-    <style name="Theme.Wheelmap.ActionbarDialog" parent="@style/Theme.Wheelmap.Dialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
-        <item name="android:windowActionModeOverlay" tools:targetApi="honeycomb">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-    <style name="Theme.Wheelmap.Dialog" parent="@style/Theme.AppCompat.Dialog">
-        <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
+    <style name="Theme.Wheelmap.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
+    <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
         <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
         <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
@@ -39,10 +30,14 @@
             @style/wheelmap_solid_ActionBar
         </item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
+
+        <item name="windowMinWidthMajor">45%</item>
+        <item name="windowMinWidthMinor">75%</item>
     </style>
 
     <style name="DetailView">
         <item name="android:background">@android:color/background_light</item>
+        <item name="android:fadeScrollbars">false</item>
     </style>
 
 </resources>

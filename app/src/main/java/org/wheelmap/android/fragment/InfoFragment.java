@@ -75,7 +75,7 @@ public class InfoFragment extends Fragment {
 
         String linkOpenStreetMap = "https://www.openstreetmap.org/copyright";
         String linkOpenMapBox = "http://mapbox.com/about/maps/";
-        String linkOpenNicolas = "http://mapicons.nicolasmollet.com";
+        String linkOpenNicolas = "https://mapicons.mapsmarker.com";
 
 
         openStreetMapLink.setClickable(true);

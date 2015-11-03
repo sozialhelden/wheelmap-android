@@ -132,6 +132,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
@@ -386,7 +387,7 @@ public class POIDetailFragment extends Fragment implements
 
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
-            tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
+            tileUrl = String.format(Locale.US, baseUrl, getString(R.string.mapbox_key));
             mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
             mBus = EventBus.getDefault();
             mVerticalDelta = (int) TypedValue.applyDimension(

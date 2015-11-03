@@ -39,7 +39,6 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Surface;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -49,6 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class UtilsMisc {
 
@@ -90,7 +90,7 @@ public class UtilsMisc {
     }
 
     public static String formatHtmlLink(String link, String text) {
-        return String.format("<a href=\"%s\">%s</a>", link, text);
+        return String.format(Locale.US, "<a href=\"%s\">%s</a>", link, text);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)

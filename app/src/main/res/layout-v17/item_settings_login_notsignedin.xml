@@ -21,20 +21,18 @@
   #L%
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/wheelchair_access_state_layout"
-                android:layout_marginTop="10dp"
-                style="@style/Container.Pressable">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/Container.ListItem"
+              android:background="@drawable/item_pressable_background"
+              android:paddingBottom="@dimen/padding_large"
+              android:paddingTop="@dimen/padding_medium">
 
     <TextView
-            android:id="@+id/access_state_text"
-            style="@style/WheelStateItem"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF">
-    </TextView>
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:text="@string/settings_login_notsignedin"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-</RelativeLayout>
+</LinearLayout>

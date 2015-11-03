@@ -22,19 +22,24 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/wheelchair_access_state_layout"
-                android:layout_marginTop="10dp"
-                style="@style/Container.Pressable">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
-    <TextView
-            android:id="@+id/access_state_text"
-            style="@style/WheelStateItem"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
+    <FrameLayout
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_large"
+            android:background="@android:color/black"/>
+
+    <Button
+            android:id="@+id/btn_map"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF">
-    </TextView>
+            android:layout_below="@+id/separator"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="6dip"
+            android:layout_marginEnd="6dip"
+            android:layout_marginTop="6dip"
+            android:text="@string/title_pois_map"/>
 
 </RelativeLayout>

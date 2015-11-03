@@ -110,8 +110,10 @@
   <string name="ws_enabled_title">Voll rollstuhlgerecht</string>
   <string name="ws_limited">- Eingang: maximal eine Stufe, die nicht höher als 7 cm ist (etwa eine Handbreite)\n- Räume: die wichtigsten sind stufenlos erreichbar (z.B. alle Kinosäle)</string>
   <string name="ws_limited_title">Teilweise rollstuhlgerecht</string>
-  <string name="ws_unknown">Unbekannt: Hilf mit und markiere diese Orte!</string>
-  <string name="ws_unknown_title">Unbekannter Status</string>
+  <string name="ws_unknown">- Die Rollstuhlgerechigkeit des Ortes ist bisher unbekannt und muss noch markiert werden.</string>
+  <string name="ws_unknown_title">Status unbekannt</string>
+  <string name="ws_unknown_toilet">- Hilf mit und markiere den Toiletten-Status!</string>
+  <string name="ws_unknown_title_toilet">Status WC unbekannt</string>
   <string name="ws_disabled_toilet"></string>
   <string name="ws_disabled_title_toilet">Nicht rollstuhlgerechtes WC</string>
   <string name="ws_enabled_toilet">- Durchgang Tür mind. 90 cm\n- Bewegungsfläche mind. 150 cm x 150 cm\n- WC-Becken mit größerer Sitzhöhe\n- Stützklappgriffe o.ä.\n- Unterfahrbarees Waschbecken</string>

@@ -982,7 +982,7 @@ public class SupportManager {
                 R.drawable.marker_no, R.color.wheel_disabled,
                 PrefKey.WHEELCHAIR_TOILET_STATE_NO));
         wheelchairToiletAttributes.put(WheelchairFilterState.TOILET_UNKNOWN, new WheelchairToiletAttributes(
-                R.string.ws_unknown_title, R.string.ws_unknown,
+                R.string.ws_unknown_title_toilet, R.string.ws_unknown_toilet,
                 R.string.settings_wheelchair_unknown,
                 R.drawable.marker_unknown, R.color.wheel_unknown,
                 PrefKey.WHEELCHAIR_TOILET_STATE_UNKNOWN));

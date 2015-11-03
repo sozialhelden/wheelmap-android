@@ -16,18 +16,18 @@
 
     <item
         android:id="@+id/menu_filter_kategorie"
-        android:icon="@drawable/map_navbar_btn_kategorie"
+        android:icon="@drawable/ic_kategorie"
         android:title="@string/menu_filter"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_search"
-        android:icon="@drawable/ic_menu_search_wheelmap_light"
+        android:icon="@drawable/ic_lupe"
         android:title="@string/menu_search"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_new_poi"
-        android:icon="@drawable/map_navbar_btn_neu"
+        android:icon="@drawable/ic_plus"
         android:menuCategory="secondary"
         android:title="@string/menu_new_poi"
         app:showAsAction="always" />

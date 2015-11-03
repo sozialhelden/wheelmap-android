@@ -19,7 +19,7 @@ public class PhotoRequestBuilder extends BasePhotosRequestBuilder{
 
     @Override
     protected String resourcePath() {
-        return String.format("%s/%s/%s", RESOURCE, id, PHOTOS);
+        return String.format(java.util.Locale.US, "%s/%s/%s", RESOURCE, id, PHOTOS);
     }
 
     @Override

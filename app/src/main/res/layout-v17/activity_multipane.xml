@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:animateLayoutChanges="true"
+                android:id="@+id/layout_multi">
+
+    <View
+            android:id="@+id/center_vertical_position"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"/>
+
+
+    <include
+            android:id="@+id/actionbar_bottom"
+            android:layout_width="match_parent"
+             android:layout_height="50dp"
+             layout="@layout/actionbar_tablet_bottom"
+            android:layout_alignParentBottom="true"/>
+
+    <FrameLayout
+            android:layout_above="@+id/actionbar_bottom"
+            android:id="@+id/map_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+    </FrameLayout>
+
+    <ImageButton
+            android:id="@+id/button_movable_resize"
+            style="@style/IconLarge"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="48dp"
+            android:src="@drawable/ic_detail_expand"/>
+
+    <RelativeLayout
+            android:id="@+id/movable_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/center_vertical_position"
+            android:baselineAligned="false">
+
+        <View
+                android:id="@+id/center_horizontal_position"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerHorizontal="true"/>
+
+        <FrameLayout
+                android:id="@+id/list_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toStartOf="@+id/center_horizontal_position"
+                android:background="@android:color/background_light"/>
+
+        <FrameLayout
+                android:id="@+id/detail_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toEndOf="@+id/center_horizontal_position"/>
+
+        <View
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/separator_large"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/black"/>
+    </RelativeLayout>
+
+    <LinearLayout android:id="@+id/my_outofzoom_text_tablet_portrait"
+                  android:layout_width="300dp"
+                  android:layout_marginTop="25dp"
+                  android:layout_centerHorizontal="true"
+                  android:layout_height="100dp"
+                  android:background="@drawable/border_rounded_corner"
+                  android:layout_below="@id/movable_layout"
+
+                  android:visibility="gone"
+                  android:gravity="center"
+                  android:clickable="true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#ffff"
+                android:layout_margin="5dp"
+                android:textSize="25dp"
+                android:text="@string/to_far_away">
+
+        </TextView>
+    </LinearLayout>
+
+
+</RelativeLayout>

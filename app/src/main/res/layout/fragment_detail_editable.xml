@@ -49,22 +49,22 @@
                     android:textStyle="bold"/>
 
 
-            <LinearLayout
+           <FrameLayout
                     android:id="@+id/edit_title_text_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:background="#eeeeee">
 
-                <EditText android:layout_weight="1"
+                <EditText
                           android:id="@+id/name"
-                          android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                           style="@style/DetailFontNew.Editable"
                           android:hint="@string/poi_property_name"
 
                           />
 
-            </LinearLayout>
+            </FrameLayout>
 
             <TextView
                     android:layout_width="match_parent"
@@ -76,10 +76,11 @@
                     android:textStyle="bold"/>
 
 
-            <RelativeLayout
+             <FrameLayout
                     android:id="@+id/edit_nodetype"
                     style="@style/Container.Pressable"
-
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                     android:background="#eeeeee">
 
                 <TextView
@@ -90,7 +91,7 @@
                         android:padding="8dp"
                         android:hint="@string/poi_property_nodetype"
                         />
-            </RelativeLayout>
+            </FrameLayout>
 
 
             <TextView
@@ -102,10 +103,12 @@
                     android:text="@string/poi_property_position"
                     android:textStyle="bold"/>
 
-            <RelativeLayout
+            <FrameLayout
                     android:id="@+id/edit_geolocation"
                     style="@style/Container.Pressable"
-
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:background="#eeeeee">
 
                 <TextView
@@ -116,9 +119,12 @@
                         android:padding="8dp"
                         android:hint="@string/poi_property_position"
                         />
-            </RelativeLayout>
+            </FrameLayout>
 
             <include  layout="@layout/item_wheelchair_access_state"/>
+
+            <include  layout="@layout/item_wheelchair_toilet_state"/>
+
 
             <TextView
                     android:layout_width="match_parent" android:layout_height="wrap_content"

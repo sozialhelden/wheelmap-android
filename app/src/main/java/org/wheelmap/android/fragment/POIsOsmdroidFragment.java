@@ -78,6 +78,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
 
@@ -176,7 +178,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        tileUrl = String.format( baseUrl, getString(string.mapbox_key));
+        tileUrl = String.format(Locale.US, baseUrl, getString(string.mapbox_key));
         mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
         mBus = EventBus.getDefault();
 
@@ -187,7 +189,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         mOrientationAvailable = mSensor != null;
         attachWorkerFragment();
         retrieveInitialLocation();
-
     }
 
 
@@ -211,7 +212,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                     Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
                     Toast.makeText(this.getActivity().getApplicationContext(),
-                            getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
+                            getResources().getString(string.error_internal_error), Toast.LENGTH_LONG).show();
                 }
             }
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
@@ -224,7 +225,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                     Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
                     Toast.makeText(this.getActivity().getApplicationContext(),
-                            getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
+                            getResources().getString(string.error_internal_error), Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -241,7 +242,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
             Toast.makeText(this.getActivity().getApplicationContext(),
-                    getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
+                    getResources().getString(string.error_internal_error), Toast.LENGTH_LONG).show();
         }
 
 
@@ -249,7 +250,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
         setHardwareAccelerationOff();
-        mMapView.setBuiltInZoomControls(true);
+        mMapView.setBuiltInZoomControls(false);
         mMapView.setMultiTouchControls(true);
         mMapView.postDelayed(new Runnable() {
             @Override
