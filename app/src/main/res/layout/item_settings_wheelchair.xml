@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -22,35 +21,35 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/Container.ListItem">
+    style="@style/Container.ListItem">
 
     <ImageView
-            android:id="@id/image"
-            style="@style/IconLarge.WheelStateSelect"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginLeft="@dimen/margin_medium"
+        android:id="@id/image"
+        style="@style/IconLarge.WheelStateSelect"
+        android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"
-            android:padding="7dp" />
+        android:layout_marginTop="@dimen/margin_medium"
+        android:padding="7dp" />
 
     <TextView
-            android:id="@id/text"
-            style="@style/WheelStateCheckableText"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="8dp"
+        android:id="@id/text"
+        style="@style/WheelStateCheckableText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:layout_marginEnd="8dp"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <CheckBox
-            android:id="@id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/margin_medium"
-        android:layout_marginEnd="@dimen/margin_medium"/>
+        android:id="@id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium" />
 
 </LinearLayout>

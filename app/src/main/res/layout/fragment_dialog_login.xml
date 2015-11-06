@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -20,27 +19,27 @@
   limitations under the License.
   #L%
 -->
-<ScrollView android:id="@+id/scrollView"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="#cfcfcf"
-            android:fillViewport="false">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="#cfcfcf"
+    android:fillViewport="false">
 
     <LinearLayout
         android:id="@+id/login_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/padding_large"
-        >
+        android:padding="@dimen/padding_large">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:src="@drawable/credits_logo"/>
+            android:src="@drawable/credits_logo" />
 
         <TextView
             android:layout_width="match_parent"
@@ -48,7 +47,7 @@
             android:layout_margin="8dp"
             android:gravity="center_horizontal"
             android:text="@string/profile_hint_login"
-            android:textAppearance="@android:style/TextAppearance.Small"/>
+            android:textAppearance="@android:style/TextAppearance.Small" />
 
         <Button
             android:id="@+id/button_login"
@@ -58,40 +57,39 @@
             android:clickable="true"
             android:gravity="center"
             android:text="@string/login_submit"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
             android:gravity="left|start"
             android:text="@string/profile_hint_no_account_title"
             android:textAppearance="@android:style/TextAppearance.Small"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="left|start"
             android:text="@string/profile_steps_to_osm_account"
-            android:textAppearance="@android:style/TextAppearance.Small"/>
+            android:textAppearance="@android:style/TextAppearance.Small" />
 
         <TextView
             android:id="@+id/login_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Button
             android:id="@+id/button_login_register"
@@ -102,7 +100,7 @@
             android:clickable="true"
             android:gravity="center"
             android:text="@string/login_new_registration"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
