@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -22,17 +21,19 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/Container.ListItem"
-              android:background="@drawable/item_pressable_background"
-              android:paddingTop="@dimen/padding_medium"
-              android:paddingBottom="@dimen/padding_medium">
+    style="@style/Container.ListItem"
+    android:background="@drawable/item_pressable_background"
+    android:paddingBottom="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_medium">
 
     <TextView
-            android:id="@id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"/>
+        android:id="@id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

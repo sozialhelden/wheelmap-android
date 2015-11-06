@@ -76,6 +76,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
         boolean result = true;
         RestServiceException to_throw=null;
+        RestServiceException errorException = null;
         while (!mCursor.isAfterLast()) {
 
             String editApiKey = getApiKey();
@@ -115,6 +116,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
             }catch(RestServiceException e) {
                 if(e.getMessage().contains("Bad Request")){
                     PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
+                    errorException = e;
                     result = false;
                 }else{
                     to_throw = e;
@@ -132,7 +134,9 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
            throw to_throw;
         }
 
-        if(!result){
+        if(errorException != null){
+            throw errorException;
+        } else if(!result){
             throw new RestServiceException(
                     RestServiceException.ERROR_NETWORK_FAILURE,
                     new RuntimeException(
@@ -168,7 +172,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
         double latitude = POIHelper.getLatitude(mCursor);
         double longitude = POIHelper.getLongitude(mCursor);
 
-        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState accessState = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState toiletState = POIHelper.getWheelchairToilet(mCursor);
         String comment = POIHelper.getComment(mCursor);
 
         String street = POIHelper.getStreet(mCursor);
@@ -181,8 +186,8 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
         return new NodeUpdateOrNewAllRequestBuilder(getServer(), apiKey,
                 AcceptType.JSON, id, name, categoryIdentifier,
-                nodeTypeIdentifier, latitude, longitude, state, comment,
-                street, housenumber, city, postcode, website, phone);
+                nodeTypeIdentifier, latitude, longitude, accessState, toiletState,
+                comment, street, housenumber, city, postcode, website, phone);
     }
 
 }

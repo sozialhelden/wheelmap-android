@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/launch_bg_gradient" >
+    android:background="@drawable/launch_bg_gradient"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,17 +12,17 @@
         android:padding="10dp">
 
         <LinearLayout
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:layout_width="0dp"
-                android:layout_height="0dp"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
 
         <ImageView
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
             android:scaleX="1.5"
             android:scaleY="1.5"
             android:src="@drawable/start_logo_wheelmap_horizontal" />
@@ -30,11 +30,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/start_search"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/dashboard_search_edit"
@@ -42,18 +44,19 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="@string/dashboard_search_hint"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:singleLine="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:hint="@string/dashboard_search_hint"
                 android:imeOptions="actionSearch"
-                android:textColorHint="@color/dashboard_text_color"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:singleLine="true"
                 android:textColor="@color/dashboard_text_color"
+                android:textColorHint="@color/dashboard_text_color"
                 android:textCursorDrawable="@null"
                 android:textSize="17sp" />
-
 
 
             <ImageView
@@ -65,56 +68,58 @@
         </LinearLayout>
 
         <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp" >
+            android:padding="10dp">
 
             <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_in_der_naehe"
+                style="@style/wheelmap_dasboard_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/start_btn_in_der_naehe"
-                android:text="@string/dashboard_button_title_nearby"
-                style="@style/wheelmap_dasboard_button"    />
+                android:text="@string/dashboard_button_title_nearby" />
 
             <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_karte"
+                style="@style/wheelmap_dasboard_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:background="@drawable/start_btn_karte"
-                android:text="@string/dashboard_button_title_map"
-                style="@style/wheelmap_dasboard_button"/>
+                android:text="@string/dashboard_button_title_map" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp" >
+            android:padding="10dp">
 
             <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_kategorien"
+                style="@style/wheelmap_dasboard_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/start_btn_kategorien"
-                android:text="@string/dashboard_button_title_categories"
-                style="@style/wheelmap_dasboard_button" />
+                android:text="@string/dashboard_button_title_categories" />
 
             <org.wheelmap.android.view.SquareTextView
                 android:id="@+id/dashboard_btn_mithelfen"
+                style="@style/wheelmap_dasboard_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:background="@drawable/start_btn_mithelfen"
-                android:text="@string/dashboard_button_title_engage"
-                style="@style/wheelmap_dasboard_button"/>
+                android:text="@string/dashboard_button_title_engage" />
         </LinearLayout>
 
         <LinearLayout
@@ -124,13 +129,14 @@
             android:orientation="horizontal"
             android:padding="10dp">
 
-           <Button android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:id="@+id/dashboard_btn_news"
-                   android:text="@string/dashboard_button_title_news"
-                   android:background="@drawable/start_btn_news"
+            <TextView
+                android:id="@+id/dashboard_btn_news"
+                style="@style/wheelmap_dasboard_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/start_btn_news"
 
-                   style="@style/wheelmap_dasboard_button"/>
+                android:text="@string/dashboard_button_title_news" />
         </LinearLayout>
 
         <View
@@ -142,17 +148,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/dashboard_info"
-                android:paddingLeft="5dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="10dp"
-                android:paddingRight="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
+                android:layout_gravity="bottom|left|start"
+                android:paddingBottom="5dp"
+                android:paddingEnd="20dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="20dp"
+                android:paddingStart="5dp"
+                android:paddingTop="10dp"
                 android:src="@drawable/start_icon_credits" />
 
             <TextView
@@ -161,19 +169,19 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:text="@string/dashboard_locations"
                 android:textColor="@color/dashboard_text_color"
-                android:textSize="17sp"
-                android:text="@string/dashboard_locations"/>
+                android:textSize="17sp" />
 
             <ImageView
                 android:id="@+id/dashboard_login"
-                android:paddingLeft="20dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="10dp"
-                android:paddingRight="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|right|end"
+                android:paddingBottom="5dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
                 android:src="@drawable/start_icon_login" />
         </LinearLayout>
     </LinearLayout>

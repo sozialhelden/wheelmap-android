@@ -146,6 +146,7 @@
   <string name="poi_property_photos">Fotoalbum</string>
   <string name="menu_account">Benutzerkonto</string>
   <string name="menu_news">News</string>
+  <string name="action_done">Fertig</string>
   <string name="search_mode_no_point_found">Keine Orte gefunden, drücke den zurück Knopf!</string>
   <string name="poi_property_comment_add_comment">Kommentar hinzufügen</string>
   <string name="poi_property_comment_add_adress">Addresse hinzufügen</string>
@@ -164,4 +165,16 @@
 2. Email-Programm öffnen und Bestätigungslink klicken\n
 3. Wheelmap-App öffnen \n4. Mit dem OSM-Nutzerkonto (Nutzernamen &amp; Passwort) einloggen\n</string>
   <string name="signed_in">Eingeloggt</string>
+
+  <string name="bold_text_introduction_01">Willkomen bei der Wheelmap</string>
+  <string name="default_text_introduction_01">Jetzt kannst du rollstuhlgerechte Orte\nsuchen, finden und markieren.</string>
+  <string name="bold_text_introduction_02">Orte suchen</string>
+  <string name="default_text_introduction_02">Finde rollstuhlgerechte Orte\nin deiner Nähe.</string>
+  <string name="bold_text_introduction_03">Orte und Toiletten markieren</string>
+  <string name="default_text_introduction_03">Dafür musst du nicht\nangemeldet sein.</string>
+  <string name="bold_text_introduction_04">Orte bearbeiten</string>
+  <string name="default_text_introduction_04">Dafür musst du mit Profil\nangemeldet sein.</string>
+  <string name="bold_text_introduction_05">Und jetzt viel Spaß beim Suchen,\nFinden und Mappen!</string>
+  <string name="default_text_introduction_05">Weitere Tipps und Infos findest du auch\nin den FAQs auf Wheelmap.org.\nLust auf News aus der Community?\nStöbere durch den Blog und aboniere\nunseren Newsletter!</string>
+
 </resources>

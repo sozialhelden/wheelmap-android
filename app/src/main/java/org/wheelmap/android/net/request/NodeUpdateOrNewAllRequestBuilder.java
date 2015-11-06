@@ -25,6 +25,9 @@ import org.wheelmap.android.model.WheelchairFilterState;
 
 import android.text.TextUtils;
 
+import java.util.*;
+import java.util.Locale;
+
 /**
  * Constructs the Uri of a <code>/api/nodes/{node_id}</code> update/put and <code>/api/nodes</code>
  * create/post request
@@ -45,7 +48,8 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 
     private double longitude;
 
-    private WheelchairFilterState state;
+    private WheelchairFilterState accessState;
+    private WheelchairFilterState toiletState;
 
     private String description;
 
@@ -66,8 +70,8 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
     public NodeUpdateOrNewAllRequestBuilder(final String server,
             final String apiKey, final AcceptType acceptType, String id,
             String name, String category, String type, double latitude,
-            double longitude, WheelchairFilterState state, String description,
-            String street, String housenumber, String city, String postcode,
+            double longitude, WheelchairFilterState accessState, WheelchairFilterState toiletState,
+            String description, String street, String housenumber, String city, String postcode,
             String website, String phone) {
         super(server, apiKey, acceptType);
         this.id = id;
@@ -76,7 +80,8 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
         this.type = type;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.state = state;
+        this.accessState = accessState;
+        this.toiletState = toiletState;
         this.description = description;
         this.street = street;
         this.housenumber = housenumber;
@@ -114,9 +119,14 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
             requestAsStringBuffer.append(longitude);
         }
 
-        if (state != null) {
+        if (accessState != null) {
             requestAsStringBuffer.append("&wheelchair=");
-            requestAsStringBuffer.append(state.asRequestParameter());
+            requestAsStringBuffer.append(accessState.asRequestParameter());
+        }
+
+        if (toiletState != null) {
+            requestAsStringBuffer.append("&wheelchair_toilet=");
+            requestAsStringBuffer.append(toiletState.asRequestParameter());
         }
 
         if (!TextUtils.isEmpty(category)) {
@@ -160,6 +170,9 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
             requestAsStringBuffer.append("&phone=");
             requestAsStringBuffer.append(phone);
         }
+
+        requestAsStringBuffer.append("&locale=");
+        requestAsStringBuffer.append(Locale.getDefault().getLanguage());
 
         return requestAsStringBuffer.toString();
     }

@@ -112,7 +112,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.Transformation;
@@ -125,7 +124,6 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -660,16 +658,6 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void showMap(View v) {
-        int stubId;
-        if (AppCapability.degradeDetailMapAsButton()) {
-            stubId = R.id.stub_button;
-        } else {
-            stubId = R.id.stub_map;
-        }
-
-        ViewStub stub = (ViewStub) v.findViewById(stubId);
-        if(stub != null)
-            stub.inflate();
 
         if (AppCapability.degradeDetailMapAsButton()) {
             assignButton(v);

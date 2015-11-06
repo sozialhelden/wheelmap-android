@@ -4,5 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
-    android:singleLine="true"></TextView>
-    <!-- From: file:/Users/sujin/Works/android/vingle/VingleAndroid/holoeverywhere/res/layout/simple_spinner_item.xml -->
+    android:singleLine="true"></TextView><!-- From: file:/Users/sujin/Works/android/vingle/VingleAndroid/holoeverywhere/res/layout/simple_spinner_item.xml -->

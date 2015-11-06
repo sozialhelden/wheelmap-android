@@ -34,4 +34,43 @@
         <item>30</item>
     </string-array>
 
+    <array name="introduction_names">
+        <item type="array">@array/introduction_01</item>
+        <item type="array">@array/introduction_02</item>
+        <item type="array">@array/introduction_03</item>
+        <item type="array">@array/introduction_04</item>
+        <item type="array">@array/introduction_05</item>
+    </array>
+
+    <array name="introduction_01">
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_01</item>
+        <item type="string">@string/bold_text_introduction_01</item>
+        <item type="string">@string/default_text_introduction_01</item>
+    </array>
+    <array name="introduction_02">
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_02</item>
+        <item type="string">@string/bold_text_introduction_02</item>
+        <item type="string">@string/default_text_introduction_02</item>
+    </array>
+    <array name="introduction_03">
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_03</item>
+        <item type="string">@string/bold_text_introduction_03</item>
+        <item type="string">@string/default_text_introduction_03</item>
+    </array>
+    <array name="introduction_04">
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_04</item>
+        <item type="string">@string/bold_text_introduction_04</item>
+        <item type="string">@string/default_text_introduction_04</item>
+    </array>
+    <array name="introduction_05">
+        <item type="layout">@layout/fragment_introduction_last</item>
+        <item type="drawable">@drawable/introduction_05</item>
+        <item type="string">@string/bold_text_introduction_05</item>
+        <item type="string">@string/default_text_introduction_05</item>
+    </array>
+
 </resources>

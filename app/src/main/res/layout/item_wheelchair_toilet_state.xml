@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -22,20 +21,19 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/wheelchair_toilet_state_layout"
-                android:layout_marginTop="10dp"
-                style="@style/Container.Pressable">
+    android:id="@+id/wheelchair_toilet_state_layout"
+    style="@style/Container.Pressable"
+    android:layout_marginTop="10dp">
 
     <TextView
-            android:id="@+id/toilet_state_text"
-            style="@style/WheelStateItem"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:id="@+id/toilet_state_text"
+        style="@style/WheelStateItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
 
-            android:textStyle="bold"
-            android:textColor="#FFFFFF">
-    </TextView>
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"></TextView>
 
 </RelativeLayout>
