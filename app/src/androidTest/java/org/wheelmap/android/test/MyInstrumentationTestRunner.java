@@ -23,29 +23,33 @@ package org.wheelmap.android.test;
 
 import junit.framework.TestSuite;
 
-//import org.wheelmap.android.utils.UtilsMisc;
-
 import android.test.InstrumentationTestRunner;
+import android.test.InstrumentationTestSuite;
+
+import org.wheelmap.android.utils.UtilsMisc;
 
 public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
 
     public TestSuite getAllTests() {
 
-        TestSuite suite = new TestSuite(
-                MyInstrumentationTestRunner.class.getName());
+        InstrumentationTestSuite suite = new InstrumentationTestSuite(this);
 
-        // suite.addTestSuite(GeoMathTest.class);
-        // suite.addTestSuite(LoginTest.class);
-        // suite.addTestSuite(POIContentProviderTest.class);
-        // suite.addTestSuite(POIServiceDatabaseTest.class);
+         suite.addTestSuite(GeoMathTest.class);
+         suite.addTestSuite(POIContentProviderTest.class);
+         suite.addTestSuite(POIServiceDatabaseTest.class);
 
-        // suite.addTestSuite(SupportDataTest.class);
-        // if (UtilsMisc.isTablet(getContext())) {
-        //    suite.addTestSuite(MainMultiPaneTest.class);
-        // } else {
-        //    suite.addTestSuite(MainSinglePaneTest.class);
-        // }
+         suite.addTestSuite(SupportDataTest.class);
+         if (UtilsMisc.isTablet(getContext())) {
+            suite.addTestSuite(MainMultiPaneTest.class);
+         } else {
+            suite.addTestSuite(MainSinglePaneTest.class);
+         }
         return suite;
+    }
+
+    @Override
+    public ClassLoader getLoader() {
+        return MyInstrumentationTestRunner.class.getClassLoader();
     }
 
 }

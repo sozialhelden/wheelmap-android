@@ -93,9 +93,6 @@ public class AppCapability {
         if (!WheelmapApp.getApp().isBugsenseInitCalled()) {
             return;
         }
-
-        //BugSenseHandler.addCrashExtraData("memoryClass", Integer.toString(sMemoryClass));
-        //BugSenseHandler.addCrashExtraData("maxMemoryMB", Integer.toString(sMaxMemoryMB));
     }
 
     public static int getMemoryClass() {

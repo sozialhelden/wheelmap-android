@@ -25,6 +25,8 @@
  */
 package org.wheelmap.android.net.request;
 
+import java.util.Locale;
+
 public class TotalNodeCountRequestBuilder extends RequestBuilder {
 
     private static final String RESOURCE = "nodes";
@@ -44,7 +46,7 @@ public class TotalNodeCountRequestBuilder extends RequestBuilder {
 
     @Override
     protected String resourcePath() {
-        return String.format("%s", RESOURCE);
+        return String.format(Locale.US, "%s", RESOURCE);
     }
 
     @Override

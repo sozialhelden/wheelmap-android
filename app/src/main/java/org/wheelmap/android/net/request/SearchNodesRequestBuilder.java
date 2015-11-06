@@ -43,7 +43,7 @@ public class SearchNodesRequestBuilder extends BaseNodesRequestBuilder {
     public String buildRequestUri() {
         String request = super.buildRequestUri();
         if (searchTerm != null && searchTerm.length() > 0) {
-            return String.format("%s&q=%s", request, searchTerm);
+            return String.format(java.util.Locale.US, "%s&q=%s", request, searchTerm);
         } else {
             return request;
         }

@@ -21,12 +21,17 @@
  */
 package org.wheelmap.android.service;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.web.client.HttpClientErrorException;
 import org.wheelmap.android.online.R;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class RestServiceException extends RuntimeException implements
         Parcelable, Serializable {
@@ -68,9 +73,32 @@ public class RestServiceException extends RuntimeException implements
             R.string.error_network_server_maintenance,
             R.string.error_network_unknown_failure};
 
+    private final HashMap<String, String> responseBodyMessages = new HashMap<String, String>();
+
     public RestServiceException(int id, Throwable t) {
         super(t);
         this.id = id;
+        try {
+            JSONObject messageBody = new JSONObject(((HttpClientErrorException) t)
+                    .getResponseBodyAsString());
+            JSONObject errorObject = messageBody.optJSONObject("error");
+            if(errorObject != null){
+                Iterator<String> keyIterator = errorObject.keys();
+                while (keyIterator.hasNext()){
+                    String key = keyIterator.next();
+                    JSONArray messageArray = errorObject.getJSONArray(key);
+                    String message = "";
+                    for(int index = 0; index < messageArray.length(); index++) {
+                        message += messageArray.getString(index) + "\n";
+                    }
+                    responseBodyMessages.put(key, message);
+                }
+            }
+        } catch (Exception e){}
+    }
+
+    public HashMap<String, String> getResponseBodyMessages(){
+        return responseBodyMessages;
     }
 
     public int getErrorCode() {

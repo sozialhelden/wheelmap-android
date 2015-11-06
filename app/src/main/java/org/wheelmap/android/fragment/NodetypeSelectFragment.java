@@ -28,7 +28,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
 import android.app.Activity;
-import android.app.ListFragment;
+import android.support.v4.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -106,11 +106,7 @@ public class NodetypeSelectFragment extends ListFragment {
                 intent.putExtra(Extra.NODETYPE, mNodeTypeSelected);
                 getActivity().setResult(android.app.Activity.RESULT_OK,intent);
                 getActivity().finish();
-
-
                 break;
-            default:
-                //noop
         }
     }
 

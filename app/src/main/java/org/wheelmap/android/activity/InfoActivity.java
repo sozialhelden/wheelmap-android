@@ -29,8 +29,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class InfoActivity extends AppCompatActivity implements OnInfoListener {
@@ -71,6 +75,24 @@ public class InfoActivity extends AppCompatActivity implements OnInfoListener {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        ActionBar bar = getSupportActionBar();
+        if(bar == null){
+            return true;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View customView = inflater.inflate(R.layout.actionbar_tablet,
+                null);
+
+        bar.setCustomView(customView, new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+        bar.setDisplayShowCustomEnabled(true);
+
+        return true;
+    }
+
+        @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == android.R.id.home){

@@ -58,7 +58,7 @@ public abstract class RequestBuilder {
     public abstract int getRequestType();
 
     protected String baseUrl() {
-        return String.format("http://%s/api/%s.%s?api_key=%s", server,
+        return String.format(java.util.Locale.US, "http://%s/api/%s.%s?api_key=%s", server,
                 resourcePath(), acceptType.asRequestParameter(),
                 apiKey);
     }

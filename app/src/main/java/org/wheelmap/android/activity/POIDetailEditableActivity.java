@@ -24,7 +24,6 @@ package org.wheelmap.android.activity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.POIDetailEditableFragment;
 import org.wheelmap.android.fragment.POIDetailEditableFragment.OnPOIDetailEditableListener;
-import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.WheelchairFilterState;
@@ -44,14 +43,16 @@ import de.akquinet.android.androlog.Log;
 
 public class POIDetailEditableActivity extends MapActivity implements
         OnPOIDetailEditableListener,
-        OnBackStackChangedListener, OnWheelchairState {
+        OnBackStackChangedListener {
 
     private final static String TAG = POIDetailEditableActivity.class.getSimpleName();
+
+    // Definition of the one requestCode we use for receiving resuls.
+    static final private int SELECT_WHEELCHAIRSTATE = 0;
 
     private Fragment mFragment;
 
     private ExternalEditableState mExternalEditableState;
-
 
 
     @Override
@@ -67,8 +68,9 @@ public class POIDetailEditableActivity extends MapActivity implements
         }
         setContentView(R.layout.activity_frame_empty);
         setSupportProgressBarIndeterminateVisibility(false);
-        if(getSupportActionBar() != null){
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.title_editor);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -88,9 +90,9 @@ public class POIDetailEditableActivity extends MapActivity implements
             return;
         }
 
-        int focus = getIntent().getIntExtra("Focus",0);
+        int focus = getIntent().getIntExtra("Focus", 0);
 
-        mFragment = POIDetailEditableFragment.newInstance(poiID,focus);
+        mFragment = POIDetailEditableFragment.newInstance(poiID, focus);
         fm.beginTransaction()
                 .add(R.id.content, mFragment,
                         POIDetailEditableFragment.TAG).commit();
@@ -99,7 +101,7 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -122,13 +124,14 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     @Override
     public void onEditWheelchairState(WheelchairFilterState state) {
-        onWheelchairStateSelect(state);
+        Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
+        mExternalEditableState.acessState = state;
     }
 
     @Override
-    public void onWheelchairStateSelect(WheelchairFilterState state) {
-        Log.d(TAG, "onWheelchairStateSelect: state = " + state.toString());
-        mExternalEditableState.state = state;
+    public void onEditWheelchairToiletState(WheelchairFilterState state) {
+        Log.d(TAG, "onWheelchairToiletStateSelect: state = " + state.toString());
+        mExternalEditableState.toiletState = state;
     }
 
     @Override
@@ -144,24 +147,6 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         if(app.isChangedText()){
             app.setChangedText(false);
-            /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage(getResources().getString(R.string.dialog_close_editable));
-
-            builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
-                    finish();
-                }
-            });
-            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
-                    return;
-                }
-            });
-
-            AlertDialog dialog = builder.create();  */
             goBack();
         }
         else
@@ -199,7 +184,8 @@ public class POIDetailEditableActivity extends MapActivity implements
 
     public static class ExternalEditableState {
 
-        WheelchairFilterState state = null;
+        WheelchairFilterState acessState = null;
+        WheelchairFilterState toiletState = null;
 
         int nodetype = SupportManager.UNKNOWN_TYPE;
 
@@ -208,9 +194,13 @@ public class POIDetailEditableActivity extends MapActivity implements
         double longitude = Extra.UNKNOWN;
 
         void saveState(Bundle bundle) {
-            if (state != null) {
-                bundle.putInt(Extra.WHEELCHAIR_STATE, state.getId());
+            if (acessState != null) {
+                bundle.putInt(Extra.WHEELCHAIR_STATE, acessState.getId());
             }
+            if (toiletState != null) {
+                bundle.putInt(Extra.WHEELCHAIR_TOILET_STATE, toiletState.getId());
+            }
+
             bundle.putInt(Extra.NODETYPE, nodetype);
             bundle.putDouble(Extra.LATITUDE, latitude);
             bundle.putDouble(Extra.LONGITUDE, longitude);
@@ -219,7 +209,12 @@ public class POIDetailEditableActivity extends MapActivity implements
         void restoreState(Bundle bundle) {
             int stateId = bundle.getInt(Extra.WHEELCHAIR_STATE, Extra.UNKNOWN);
             if (stateId != Extra.UNKNOWN) {
-                state = WheelchairFilterState.valueOf(stateId);
+                acessState = WheelchairFilterState.valueOf(stateId);
+            }
+
+            stateId = bundle.getInt(Extra.WHEELCHAIR_TOILET_STATE, Extra.UNKNOWN);
+            if (stateId != Extra.UNKNOWN) {
+                toiletState = WheelchairFilterState.valueOf(stateId);
             }
 
             nodetype = bundle.getInt(Extra.NODETYPE,
@@ -229,14 +224,16 @@ public class POIDetailEditableActivity extends MapActivity implements
         }
 
         void clear() {
-            state = null;
+            acessState = null;
+            toiletState = null;
             nodetype = SupportManager.UNKNOWN_TYPE;
             latitude = Extra.UNKNOWN;
             longitude = Extra.UNKNOWN;
         }
 
         void setInFragment(POIDetailEditableFragment fragment) {
-            fragment.setWheelchairState(state);
+            fragment.setWheelchairState(acessState);
+            fragment.setWheelchairToiletState(toiletState);
             fragment.setNodetype(nodetype);
             fragment.setGeolocation(latitude, longitude);
         }
@@ -262,7 +259,6 @@ public class POIDetailEditableActivity extends MapActivity implements
             builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked OK button
-
                     goBack();
                 }
             });

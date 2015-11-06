@@ -79,7 +79,17 @@ public enum WheelchairFilterState {
             return "";
         }
 
-        return this.name().toLowerCase();
+        switch (this){
+            case TOILET_UNKNOWN:
+                return UNKNOWN.name().toLowerCase();
+            case TOILET_YES:
+                return YES.name().toLowerCase();
+            case TOILET_NO:
+                return NO.name().toLowerCase();
+
+            default:
+                return this.name().toLowerCase();
+        }
     }
 
     static {

@@ -35,10 +35,6 @@ public class POIPermaLinkMapActivity extends Activity {
         app.setGeoLat(lat);
         app.setGeoLon(lon);
 
-        //Test
-        //app.setGeoLat(52.6000000);
-        //app.setGeoLon(13.2000000);
-
         uriArray = uriAdress.split("=");
         uriAdress = uriArray[1];
         uri = uriAdress.replaceAll("\\+", " ");
@@ -51,9 +47,6 @@ public class POIPermaLinkMapActivity extends Activity {
         }
 
         app.setAddressString(result);
-
-        //TEST
-        //app.setAddressString(null);
 
         startActivity(new Intent(this, StartupActivity.class));
     }

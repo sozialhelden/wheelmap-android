@@ -141,8 +141,6 @@ public class SearchDialogFragment extends DialogFragment implements
                 case NODETYPE:
                     mNodeTypeSelected = search.id;
                     break;
-                default:
-                    // noop
             }
         } else if (adapterView == mDistanceSpinner) {
             String distance = (String) adapterView.getItemAtPosition(position);

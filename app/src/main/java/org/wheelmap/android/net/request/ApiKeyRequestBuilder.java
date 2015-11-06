@@ -41,7 +41,7 @@ public class ApiKeyRequestBuilder extends RequestBuilder {
     @Override
     public String buildRequestUri() {
         final StringBuilder requestAsStringBuffer = new StringBuilder(200);
-        requestAsStringBuffer.append(String.format(baseUrl()));
+        requestAsStringBuffer.append(baseUrl());
         requestAsStringBuffer.append("email=");
         requestAsStringBuffer.append(email);
         requestAsStringBuffer.append("&");
@@ -53,7 +53,7 @@ public class ApiKeyRequestBuilder extends RequestBuilder {
 
     @Override
     protected String baseUrl() {
-        return String.format("http://%s/api/%s.%s?", server,
+        return String.format(java.util.Locale.US, "http://%s/api/%s.%s?", server,
                 resourcePath(), acceptType.asRequestParameter());
     }
 

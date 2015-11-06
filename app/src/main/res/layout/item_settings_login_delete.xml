@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -22,31 +21,33 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/Container.ListItem"
-              android:background="@drawable/item_pressable_background"
-              android:orientation="vertical"
-              android:paddingBottom="@dimen/padding_large"
-              android:paddingLeft="@dimen/padding_medium"
-              android:paddingRight="@dimen/padding_medium"
-              android:paddingTop="@dimen/padding_medium">
+    style="@style/Container.ListItem"
+    android:background="@drawable/item_pressable_background"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/padding_large"
+    android:paddingEnd="@dimen/padding_medium"
+    android:paddingLeft="@dimen/padding_medium"
+    android:paddingRight="@dimen/padding_medium"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_medium">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_login_signedinas"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_login_signedinas"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-            android:id="@+id/login_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"/>
+        android:id="@+id/login_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_login_delete"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_login_delete"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

@@ -93,7 +93,7 @@ public class POIsListFragment extends ListFragment implements
 
     private boolean mUseAngloDistanceUnit;
 
-    private String selectedItem_wmID=null;
+    private String selectedItem_wmID = null;
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
         private static final float MIN_DIRECTION_DELTA = 10;
@@ -133,7 +133,7 @@ public class POIsListFragment extends ListFragment implements
     }
 
     public static POIsListFragment newInstance(boolean createWorker,
-            boolean disableSearch) {
+                                               boolean disableSearch) {
         createWorker = false;
         POIsListFragment f = new POIsListFragment();
         Bundle b = new Bundle();
@@ -170,7 +170,7 @@ public class POIsListFragment extends ListFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView " + hashCode());
 
         View v = inflater.inflate(R.layout.fragment_list, container, false);
@@ -181,12 +181,12 @@ public class POIsListFragment extends ListFragment implements
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
 
-        if ( mListener != null) {
+        if (mListener != null) {
             mListener.refreshRegisterList(mListView);
         }
         attachWorkerFragment();
 
-        if(getActivity().getIntent().hasExtra(SearchManager.QUERY)){
+        if (getActivity().getIntent().hasExtra(SearchManager.QUERY)) {
             //showSearch();
             Handler h = new Handler();
             h.postDelayed(new Runnable() {
@@ -202,13 +202,13 @@ public class POIsListFragment extends ListFragment implements
 
                     bundle.putBoolean(Extra.ENABLE_BOUNDING_BOX, true);
 
-                    if(getActivity() instanceof MainSinglePaneActivity){
-                        ((MainSinglePaneActivity)getActivity()).onSearchModeChange(true);
+                    if (getActivity() instanceof MainSinglePaneActivity) {
+                        ((MainSinglePaneActivity) getActivity()).onSearchModeChange(true);
                     }
 
                     onSearch(bundle);
                 }
-            },1000);
+            }, 1000);
 
         }
 
@@ -286,7 +286,6 @@ public class POIsListFragment extends ListFragment implements
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         mFirstVisiblePosition = mListView.getFirstVisiblePosition();
@@ -318,11 +317,8 @@ public class POIsListFragment extends ListFragment implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(!UtilsMisc.isTablet(getActivity())){
+        if (!UtilsMisc.isTablet(getActivity())) {
             inflater.inflate(R.menu.ab_list_fragment, menu);
-        }
-        if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
-          //  menu.removeItem(R.id.menu_search);
         }
     }
 
@@ -334,8 +330,6 @@ public class POIsListFragment extends ListFragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            default:
-                // noop
         }
 
         return false;
@@ -384,7 +378,7 @@ public class POIsListFragment extends ListFragment implements
         mAdapter.swapCursor(mDirectionCursorWrapper);
         //markItemClear();
         //refreshListPosition();
-        if(selectedItem_wmID != null){
+        if (selectedItem_wmID != null) {
             markItem(selectedItem_wmID);
         }
     }
@@ -426,17 +420,17 @@ public class POIsListFragment extends ListFragment implements
         setCursor(fragment.getCursor(WorkerFragment.LIST_CURSOR));
         setRefreshStatus(fragment.isRefreshing());
         setRefreshEnabled(fragment.isSearchMode());
-        if(selectedItem_wmID != null){
-             markItem(selectedItem_wmID);
+        if (selectedItem_wmID != null) {
+            markItem(selectedItem_wmID);
         }
 
         // set selected list item here - - - - - - - -
         //if(idOfSelectedListItem != 0)
-            //markItem(idOfSelectedListItem);
+        //markItem(idOfSelectedListItem);
     }
 
     private void setRefreshEnabled(boolean refreshDisabled) {
-        if ( mListener != null) {
+        if (mListener != null) {
             mListener.onRefreshEnabled(!refreshDisabled);
         }
 
@@ -450,7 +444,7 @@ public class POIsListFragment extends ListFragment implements
         }
     }
 
-    public void markItem(String wmID){
+    public void markItem(String wmID) {
         boolean marked = false;
         int pos;
         for (pos = 0; pos < mAdapter.getCount(); pos++) {
@@ -464,12 +458,12 @@ public class POIsListFragment extends ListFragment implements
             }
         }
 
-        if(!marked){
-            Log.d(TAG,"[markItem] deselect all items");
+        if (!marked) {
+            Log.d(TAG, "[markItem] deselect all items");
             mListView.clearChoices();
             mListView.requestLayout();
-        }else{
-            Log.d(TAG,"[markItem] Mark item: "+wmID);
+        } else {
+            Log.d(TAG, "[markItem] Mark item: " + wmID);
             mListView.setSelection(mListView.getCheckedItemPosition());
             mListView.requestLayout();
         }

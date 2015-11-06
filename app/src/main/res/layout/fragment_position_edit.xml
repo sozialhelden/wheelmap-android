@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -22,81 +21,86 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:background="#cfcfcf"
-                  android:orientation="vertical"
-                  android:gravity="center_horizontal">
-        <RelativeLayout android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#cfcfcf"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
             <org.osmdroid.views.MapView
-                    android:id="@+id/map"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/map_navbar_btn_fadenkreuz"/>
-
-        </RelativeLayout>
-        <View
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/separator_large"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/black"/>
-        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/position_edit_text"
-                />
+                android:layout_centerInParent="true"
+                android:src="@drawable/map_navbar_btn_fadenkreuz" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/separator_large"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:id="@+id/position_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <ImageButton
-                android:id="@+id/position_save"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:src="@drawable/detail_ic_save"
-                android:layout_weight="0.5"/>
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  android:text="@string/menu_save"
-                  android:gravity="center"
-                />
+            android:id="@+id/position_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="0.5"
+            android:background="@null"
+            android:src="@drawable/detail_ic_save" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/menu_save" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/border_rounded_corner"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/position_move_map"
-            android:alpha="0.5"
-            android:clickable="true">
+        android:id="@+id/position_move_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:alpha="0.5"
+        android:background="@drawable/border_rounded_corner"
+        android:clickable="true"
+        android:gravity="center">
 
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="#ffff"
-                android:layout_margin="5dp"
-                android:text="@string/move_the_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="@string/move_the_map"
+            android:textColor="#ffff"
 
-                />
+            />
 
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

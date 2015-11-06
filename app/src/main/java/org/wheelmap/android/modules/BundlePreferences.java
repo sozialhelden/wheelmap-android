@@ -60,6 +60,7 @@ public class BundlePreferences implements IBundlePreferences {
         }
         parcel.setDataPosition(0);
         Bundle bundle = parcel.readBundle();
+        parcel.recycle();
         Log.d(TAG, "retrieve: id = " + id + " empty = " + bundle.isEmpty());
         return bundle;
     }

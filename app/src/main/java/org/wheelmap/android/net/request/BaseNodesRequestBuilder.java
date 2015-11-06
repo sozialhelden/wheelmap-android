@@ -23,6 +23,8 @@ package org.wheelmap.android.net.request;
 
 import org.wheelmap.android.model.WheelchairFilterState;
 
+import java.util.Locale;
+
 /**
  * Constructs the Uri of a <code>/api/nodes?bbox&wheelchair&page&per_page</code> request
  *
@@ -60,7 +62,7 @@ public abstract class BaseNodesRequestBuilder extends RequestBuilder {
     @Override
     public String buildRequestUri() {
         final StringBuilder requestAsStringBuffer = new StringBuilder(200);
-        requestAsStringBuffer.append(String.format(baseUrl()
+        requestAsStringBuffer.append(String.format(Locale.US, baseUrl()
                 + "&page=%d&per_page=%d", paging.pageNumber,
                 paging.numberOfItemsPerPage));
 

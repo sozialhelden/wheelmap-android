@@ -43,8 +43,10 @@
     <string name="ws_enabled_title">Wheelchair accessible</string>
     <string name="ws_limited">- Entrance has one step with max. height 7cm (3 in)\n- Most rooms are without steps</string>
     <string name="ws_limited_title">Partially wheelchair accessible</string>
-    <string name="ws_unknown">Unknown: Help us and mark this place.</string>
+    <string name="ws_unknown">- Help out by marking places!</string>
     <string name="ws_unknown_title">Unknown status</string>
+    <string name="ws_unknown_toilet">- Help out by marking places!</string>
+    <string name="ws_unknown_title_toilet">Unknown toilet status</string>
     <string name="ws_disabled_toilet"></string>
     <string name="ws_disabled_title_toilet">No wheelchair accessible toilet</string>
     <string name="ws_enabled_toilet">- Doorways inner width min. 90 cm (35 in)\n- Clear floor space min. 150 cm x 150 cm (59 in x 59 in)\n- Wheelchair-height toilet seat\n- Folding grab rails\n- Accessible hand basin</string>
@@ -83,7 +85,7 @@
     <string name="error_not_enough_memory">Your phone does not provide enough memory for this application.</string>
     <string name="error_wheelchairstate_missing_message">Please select a wheelchair accessibility status.</string>
     <string name="error_wheelchairstate_missing_title">No wheelchair accessibility status given</string>
-    <string name="legal_notice_commonsware_copyright_nicolas">© Nicolas Mollet, CC-BY-SA</string>
+    <string name="legal_notice_commonsware_copyright_nicolas">https://mapicons.mapsmarker.com</string>
     <string name="photo_upload_failed">Upload failed</string>
     <string name="photo_upload_successfully">Successfully uploaded</string>
     <string name="photo_upload_picker_title">Option: upload photos</string>
@@ -99,6 +101,7 @@
     <string name="poi_property_photos">Photos</string>
     <string name="menu_account">Account</string>
     <string name="menu_news">News</string>
+    <string name="action_done">Done</string>
     <string name="search_mode_no_point_found">No places found, click the back arrow!</string>
     <string name="poi_property_comment_add_comment">Add comment</string>
     <string name="poi_property_comment_add_adress">Add address</string>
@@ -167,4 +170,16 @@
 3. Open the Wheelmap app\n
 4. Log in with your OSM user account (username &amp; password)\n</string>
     <string name="signed_in">Logged in</string>
+
+    <string name="introduction_01_title">Willkomen bei der Wheelmap</string>
+    <string name="introduction_01_text">Jetzt kannst du rollstuhlgerechte Orte\nsuchen, finden und markieren.</string>
+    <string name="introduction_02_title">Orte suchen</string>
+    <string name="introduction_02_text">Finde rollstuhlgerechte Orte\nin deiner Nähe.</string>
+    <string name="introduction_03_title">Orte und Toiletten markieren</string>
+    <string name="introduction_03_text">Dafür musst du nicht\nangemeldet sein.</string>
+    <string name="introduction_04_title">Orte bearbeiten</string>
+    <string name="introduction_04_text">Dafür musst du mit Profil\nangemeldet sein.</string>
+    <string name="introduction_05_title">Und jetzt viel Spaß beim Suchen,\nFinden und Mappen!</string>
+    <string name="introduction_05_text">Weitere Tipps und Infos findest du auch\nin den FAQs auf Wheelmap.org.\nLust auf News aus der Community?\nStöbere durch den Blog und aboniere\nunseren Newsletter!</string>
+
 </resources>

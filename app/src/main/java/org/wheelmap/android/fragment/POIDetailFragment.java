@@ -112,7 +112,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.view.animation.Transformation;
@@ -125,13 +124,13 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.akquinet.android.androlog.Log;
@@ -275,7 +274,6 @@ public class POIDetailFragment extends Fragment implements
                 break;
 
             default:
-                //
         }
 
     }
@@ -386,7 +384,7 @@ public class POIDetailFragment extends Fragment implements
 
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
-            tileUrl = String.format( baseUrl, getString(R.string.mapbox_key));
+            tileUrl = String.format(Locale.US, baseUrl, getString(R.string.mapbox_key));
             mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
             mBus = EventBus.getDefault();
             mVerticalDelta = (int) TypedValue.applyDimension(
@@ -471,10 +469,7 @@ public class POIDetailFragment extends Fragment implements
         });
 
         mShowMenu = false;
-        if (getArguments().containsKey(Extra.SHOW_MAP)) {
-            closeButton.setVisibility(View.GONE);
-            showMap(v);
-        }
+        closeButton.setVisibility(View.GONE);
 
         if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
             closeButton.setVisibility(View.GONE);
@@ -656,39 +651,6 @@ public class POIDetailFragment extends Fragment implements
             }
 
         }
-    }
-
-    private void showMap(View v) {
-        int stubId;
-        if (AppCapability.degradeDetailMapAsButton()) {
-            stubId = R.id.stub_button;
-        } else {
-            stubId = R.id.stub_map;
-        }
-
-        ViewStub stub = (ViewStub) v.findViewById(stubId);
-        if(stub != null)
-            stub.inflate();
-
-        if (AppCapability.degradeDetailMapAsButton()) {
-            assignButton(v);
-        } else {
-            assignMapView(v);
-        }
-    }
-
-    private void assignMapView(View v) {
-        mapView = (MapView) v.findViewById(R.id.map);
-        if(mapView != null){
-            mapView.setClickable(true);
-            mapController = mapView.getController();
-            mapController.setZoom(18);
-        }
-    }
-
-    private void assignButton(View v) {
-        mMapButton = (Button) v.findViewById(R.id.btn_map);
-        mMapButton.setOnClickListener(this);
     }
 
     @Override
@@ -1262,11 +1224,6 @@ public class POIDetailFragment extends Fragment implements
      */
     public void onReceiveResult(int resultCode, Bundle resultData) {
 
-        //wrong result returned?
-        if(wmID != resultData.getLong(Extra.ID)){
-            //return;
-        }
-
         Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
         switch (resultCode) {
             case RestService.STATUS_RUNNING: {
@@ -1307,7 +1264,6 @@ public class POIDetailFragment extends Fragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
         builder.setTitle(R.string.photo_upload_picker_title);
-        //builder.setIcon(R.drawable.detail_ic_foto);
         builder.setCancelable(true);
 
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -1316,11 +1272,6 @@ public class POIDetailFragment extends Fragment implements
                 if (which == 0) {
                     startGetPhotoFromGalleryIntent();
                 } else if (which == 1) {
-                    /*pictureActionIntent = new Intent(
-                            android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(pictureActionIntent,
-                            Request.REQUESTCODE_PHOTO_FROM_CAMERA);
-                      */
                     Intent intent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     new_photo_file = new File(Environment.getExternalStorageDirectory() + "/DCIM/", "image" + new Date().getTime() + ".png");

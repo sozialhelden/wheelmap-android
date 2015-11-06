@@ -37,6 +37,8 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import java.util.HashMap;
+
 import roboguice.service.RoboIntentService;
 
 /**
@@ -52,6 +54,8 @@ public class RestService extends RoboIntentService {
     public static final int STATUS_ERROR = 0x2;
 
     public static final int STATUS_FINISHED = 0x3;
+
+    public static final String ERROR_MESSAGE = "ERROR_MESSAGE";
 
     @Inject
     private IAppProperties mAppProperties;
@@ -112,6 +116,10 @@ public class RestService extends RoboIntentService {
                 final Bundle bundle = new Bundle();
                 bundle.putParcelable(Extra.EXCEPTION, e);
                 bundle.putInt(Extra.WHAT, what);
+                String errorMessaage = getExceptionMessageBody(e);
+                if(errorMessaage != null){
+                    bundle.putString(ERROR_MESSAGE, errorMessaage);
+                }
                 receiver.send(STATUS_ERROR, bundle);
                 return;
             }
@@ -124,5 +132,18 @@ public class RestService extends RoboIntentService {
             bundle.putInt(Extra.WHAT, what);
             receiver.send(STATUS_FINISHED, bundle);
         }
+    }
+
+    private String getExceptionMessageBody(RestServiceException e){
+        String errorMessaage = null;
+        HashMap<String, String> responseBodyMessages = e.getResponseBodyMessages();
+        if(responseBodyMessages != null){
+            errorMessaage = "";
+            for(String message : responseBodyMessages.values()){
+                errorMessaage += message + "\n";
+            }
+        }
+
+        return errorMessaage;
     }
 }

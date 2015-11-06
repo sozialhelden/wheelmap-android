@@ -53,8 +53,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:onClick="onOptionItemBottomClicked"
-        android:paddingTop="5dp"
         android:paddingBottom="10dp"
+        android:paddingTop="5dp"
         android:src="@drawable/map_navbar_btn_info" />
 
     <ImageView
@@ -63,8 +63,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:onClick="onOptionItemBottomClicked"
-        android:paddingTop="10dp"
         android:paddingBottom="15dp"
+        android:paddingTop="10dp"
         android:src="@drawable/start_ic_login" />
 
 </LinearLayout>

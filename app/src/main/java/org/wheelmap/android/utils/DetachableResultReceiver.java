@@ -72,9 +72,6 @@ public class DetachableResultReceiver extends ResultReceiver {
         this.resultData = resultData;
         if (mReceiver != null) {
             mReceiver.onReceiveResult(resultCode, resultData);
-        } else {
-            Log.w(TAG, "Dropping result on floor for code " + resultCode + ": "
-                    + resultData.toString());
         }
     }
 }

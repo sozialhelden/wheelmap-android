@@ -128,11 +128,8 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
 
         mPersonBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.person);
 
-        //mDirectionArrowBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.direction_arrow);
         mDirectionArrowBitmap = getBitmapDirectionArrow();
         Log.d(TAG,mDirectionArrowBitmap.getDensity()+"");
-        //mDirectionArrowBitmap.getDensity();
-       // mDirectionArrowBitmap.setDensity((int)(mDirectionArrowBitmap.getDensity()*1.5));
 
         mDirectionArrowCenterX = mDirectionArrowBitmap.getWidth() / 2.0;
         mDirectionArrowCenterY = mDirectionArrowBitmap.getHeight() / 2.0;
@@ -159,7 +156,6 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
             options.inTargetDensity =  metrics.densityDpi;
             options.inDensity = DisplayMetrics.DENSITY_DEFAULT*2;
 
-            //BitmapFactory.decodeResource(mContext.getResources(), R.drawable.pfeil_position);
             return BitmapFactory.decodeStream(is, null, options);
         } catch (final Exception e) {
             System.gc();

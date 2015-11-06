@@ -58,10 +58,6 @@ public class WheelmapApp extends Application {
 
     private final static String TAG = WheelmapApp.class.getSimpleName();
 
-    private static final long ACTIVE_FREQUENCY = 2 * 60 * 1000;
-
-    private static final int ACTIVE_MAXIMUM_AGE = 10 * 60 * 1000;
-
     private static WheelmapApp INSTANCE;
 
     private SupportManager mSupportManager;
@@ -100,19 +96,12 @@ public class WheelmapApp extends Application {
         return INSTANCE.mSupportManager;
     }
 
-//    static {
-//        HoloEverywhere.DEBUG = true;
-//    }
-
     @Override
     public void onCreate() {
 
         RoboGuice.setModulesResourceId(R.array.roboguice_modules);
-//        AddonMyRoboguice.addModule(MainModule.class);
         super.onCreate();
         INSTANCE = this;
-
-       // setUpUrbanAirShip();
 
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
         Log.d(TAG, "onCreate: creating App");
@@ -131,7 +120,6 @@ public class WheelmapApp extends Application {
 
 
         if (!BuildConfig.DEBUG && !isBugsenseInitCalled) {
-            //BugSenseHandler.initAndStartSession(getApplicationContext(), getString(R.string.bugsense_key));
             isBugsenseInitCalled = true;
         }
 

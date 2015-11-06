@@ -123,8 +123,6 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private boolean mMovableAnimationRunning;
 
-    private boolean mMovableGoneByButton;
-
     Long poiIdSelected = Extra.ID_UNKNOWN;
 
     private MapModeType mapModeType;
@@ -221,20 +219,13 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         try {
             address = app.getAddressString();
-        } catch (Exception ex) {
-            // noop
-        }
+        } catch (Exception ex) {}
 
         if (address != null) {
             showSearch();
         }
 
     }
-
-    public WorkerFragment getWorkerFragment() {
-        return mWorkerFragment;
-    }
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -299,7 +290,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 null);
         bar.setCustomView(customView, new ActionBar.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
-                Gravity.CENTER_VERTICAL | Gravity.RIGHT));
+                Gravity.CENTER_VERTICAL | Gravity.END));
 
         boolean isPortraitMode = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
         if (isPortraitMode) {
@@ -478,9 +469,6 @@ public class MainMultiPaneActivity extends MapActivity implements
     }
 
     private void showFilterSettings(MenuItem menuItem, View menuView, View anchor) {
-        //Intent intent = new Intent(this, NewSettingsActivity.class);
-        //startActivity(intent);
-
         FilterWindow filter = new FilterWindow(this, null, menuView);
         filter.showAsDropDown(anchor);
     }
@@ -644,7 +632,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         switch (id) {
             case R.id.button_movable_resize:
                 toggleMovableResize();
-                mMovableGoneByButton = !mMovableVisible;
         }
     }
 
@@ -678,8 +665,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         }
 
     };
-
-    private boolean mIsFirstMoveIn;
 
     private void setCollapseButtonImage(boolean toCollapse) {
         int buttonDrawableRes;
@@ -752,12 +737,6 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         if (app.isSaved()) {
             app.setSaved(false);
-           /* Intent intent = new Intent(getApplicationContext(),MainMultiPaneActivity.class);
-            intent.putExtra(Extra.REQUEST, true);
-            startActivity(intent);
-            overridePendingTransition(0,0);
-            super.onBackPressed();
-           */
             mWorkerFragment.setSearchMode(false);
             mWorkerFragment.requestUpdate(null);
         } else {

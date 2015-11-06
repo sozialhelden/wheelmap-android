@@ -110,8 +110,10 @@
   <string name="ws_enabled_title">Voll rollstuhlgerecht</string>
   <string name="ws_limited">- Eingang: maximal eine Stufe, die nicht höher als 7 cm ist (etwa eine Handbreite)\n- Räume: die wichtigsten sind stufenlos erreichbar (z.B. alle Kinosäle)</string>
   <string name="ws_limited_title">Teilweise rollstuhlgerecht</string>
-  <string name="ws_unknown">Unbekannt: Hilf mit und markiere diese Orte!</string>
-  <string name="ws_unknown_title">Unbekannter Status</string>
+  <string name="ws_unknown">- Die Rollstuhlgerechigkeit des Ortes ist bisher unbekannt und muss noch markiert werden.</string>
+  <string name="ws_unknown_title">Status unbekannt</string>
+  <string name="ws_unknown_toilet">- Hilf mit und markiere den Toiletten-Status!</string>
+  <string name="ws_unknown_title_toilet">Status WC unbekannt</string>
   <string name="ws_disabled_toilet"></string>
   <string name="ws_disabled_title_toilet">Nicht rollstuhlgerechtes WC</string>
   <string name="ws_enabled_toilet">- Durchgang Tür mind. 90 cm\n- Bewegungsfläche mind. 150 cm x 150 cm\n- WC-Becken mit größerer Sitzhöhe\n- Stützklappgriffe o.ä.\n- Unterfahrbarees Waschbecken</string>
@@ -144,6 +146,7 @@
   <string name="poi_property_photos">Fotoalbum</string>
   <string name="menu_account">Benutzerkonto</string>
   <string name="menu_news">News</string>
+  <string name="action_done">Fertig</string>
   <string name="search_mode_no_point_found">Keine Orte gefunden, drücke den zurück Knopf!</string>
   <string name="poi_property_comment_add_comment">Kommentar hinzufügen</string>
   <string name="poi_property_comment_add_adress">Addresse hinzufügen</string>
@@ -162,4 +165,16 @@
 2. Email-Programm öffnen und Bestätigungslink klicken\n
 3. Wheelmap-App öffnen \n4. Mit dem OSM-Nutzerkonto (Nutzernamen &amp; Passwort) einloggen\n</string>
   <string name="signed_in">Eingeloggt</string>
+
+  <string name="introduction_01_title">Willkomen bei der Wheelmap</string>
+  <string name="introduction_01_text">Jetzt kannst du rollstuhlgerechte Orte\nsuchen, finden und markieren.</string>
+  <string name="introduction_02_title">Orte suchen</string>
+  <string name="introduction_02_text">Finde rollstuhlgerechte Orte\nin deiner Nähe.</string>
+  <string name="introduction_03_title">Orte und Toiletten markieren</string>
+  <string name="introduction_03_text">Dafür musst du nicht\nangemeldet sein.</string>
+  <string name="introduction_04_title">Orte bearbeiten</string>
+  <string name="introduction_04_text">Dafür musst du mit Profil\nangemeldet sein.</string>
+  <string name="introduction_05_title">Und jetzt viel Spaß beim Suchen,\nFinden und Mappen!</string>
+  <string name="introduction_05_text">Weitere Tipps und Infos findest du auch\nin den FAQs auf Wheelmap.org.\nLust auf News aus der Community?\nStöbere durch den Blog und aboniere\nunseren Newsletter!</string>
+
 </resources>

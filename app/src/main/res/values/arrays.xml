@@ -34,4 +34,48 @@
         <item>30</item>
     </string-array>
 
+    <array name="introduction_names">
+        <item type="array">@array/introduction_01</item>
+        <item type="array">@array/introduction_02</item>
+        <item type="array">@array/introduction_03</item>
+        <item type="array">@array/introduction_04</item>
+        <item type="array">@array/introduction_05</item>
+    </array>
+
+    <array name="introduction_01">
+        <!-- IMPORTENT - declaration-order needs to match code-position-usage -->
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_01</item>
+        <item type="string">@string/introduction_01_title</item>
+        <item type="string">@string/introduction_01_text</item>
+    </array>
+    <array name="introduction_02">
+        <!-- IMPORTENT - declaration-order needs to match code-position-usage -->
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_02</item>
+        <item type="string">@string/introduction_02_title</item>
+        <item type="string">@string/introduction_02_text</item>
+    </array>
+    <array name="introduction_03">
+        <!-- IMPORTENT - declaration-order needs to match code-position-usage -->
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_03</item>
+        <item type="string">@string/introduction_03_title</item>
+        <item type="string">@string/introduction_03_text</item>
+    </array>
+    <array name="introduction_04">
+        <!-- IMPORTENT - declaration-order needs to match code-position-usage -->
+        <item type="layout">@layout/fragment_introduction</item>
+        <item type="drawable">@drawable/introduction_04</item>
+        <item type="string">@string/introduction_04_title</item>
+        <item type="string">@string/introduction_04_text</item>
+    </array>
+    <array name="introduction_05">
+        <!-- IMPORTENT - declaration-order needs to match code-position-usage -->
+        <item type="layout">@layout/fragment_introduction_last</item>
+        <item type="drawable">@drawable/introduction_05</item>
+        <item type="string">@string/introduction_05_title</item>
+        <item type="string">@string/introduction_05_text</item>
+    </array>
+
 </resources>

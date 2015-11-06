@@ -46,9 +46,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
@@ -208,18 +205,6 @@ public class SupportManager {
 
         public int categoryId;
 
-        public Drawable getIconDrawable(){
-           if(iconDrawable.get() == null){
-                synchronized (this){
-                    if(iconDrawable.get() == null){
-                         iconDrawable = new WeakReference<Drawable>(WheelmapApp.getSupportManager().createIconDrawable(
-                                 iconPath));
-                    }
-                }
-           }
-           return iconDrawable.get();
-        }
-
         public Drawable getStateDrawable(WheelchairFilterState state){
             if(defaults != null){
                return defaults.get(state);
@@ -312,7 +297,6 @@ public class SupportManager {
             initLookup();
         }
         Log.i(TAG, "Loading lookup data");
-        //initLookup();
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
@@ -604,7 +588,6 @@ public class SupportManager {
         while (!cursor.isAfterLast()) {
             int id = NodeTypesContent.getNodeTypeId(cursor);
             String identifier = NodeTypesContent.getIdentifier(cursor);
-            // Log.d(TAG, "Loading nodetype: identifier = " + identifier);
             String localizedName = CategoriesContent.getLocalizedName(cursor);
             int categoryId = NodeTypesContent.getCategoryId(cursor);
             String iconPath = NodeTypesContent.getIconURL(cursor);
@@ -613,16 +596,12 @@ public class SupportManager {
                     categoryId);
             nodeType.iconPath = iconPath;
             nodeType.base =  mDefaultNodeType;
-            //nodeType.iconDrawable = createIconDrawable(iconPath);
-            //nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeType);
             mNodeTypeLookup.put(id, nodeType);
 
             nodeType = new NodeType(id, identifier, localizedName,
                     categoryId);
             nodeType.iconPath = iconPath;
             nodeType.base = mDefaultNodeTypeList;
-           // nodeType.iconDrawable = createIconDrawable(iconPath);
-           // nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeTypeList);
             mNodeTypeLookupList.put(id, nodeType);
 
             cursor.moveToNext();
@@ -630,28 +609,6 @@ public class SupportManager {
 
         cursor.close();
         Log.i(TAG, "NodeTypes count = " + mNodeTypeLookup.size());
-    }
-
-    Drawable createIconDrawable(String assetPath) {
-        Bitmap bitmap;
-        // Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
-        try {
-            InputStream is=null;
-            if(MarkerIconExecutor.markerIconsDownloaded()){
-                File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                File asset = new File(dir+"/"+assetPath);
-                is = new FileInputStream(asset);
-            }else{
-                is = mAssetManager.open("icons/" + assetPath);
-            }
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (IOException e) {
-            Log.w(TAG, "Warning in createIconDrawable : " + e.getMessage());
-            return null;
-        }
-        return new BitmapDrawable(mContext.getResources(), bitmap);
-
     }
 
     private Map<WheelchairFilterState, Drawable> createDefaultDrawables() {
@@ -796,10 +753,7 @@ public class SupportManager {
                     File dir = MarkerIconExecutor.getMarkerPath(mContext);
                     File asset = new File(dir+"/"+path);
                     is = new FileInputStream(asset);
-                }else{
-                    //is = mAssetManager.open(path);
                 }
-                // is = mAssetManager.open(path);
                 drawable = Drawable.createFromStream(is, null);
                 Drawable bg = defaultNodes.getStateDrawable(state);
 
@@ -982,7 +936,7 @@ public class SupportManager {
                 R.drawable.marker_no, R.color.wheel_disabled,
                 PrefKey.WHEELCHAIR_TOILET_STATE_NO));
         wheelchairToiletAttributes.put(WheelchairFilterState.TOILET_UNKNOWN, new WheelchairToiletAttributes(
-                R.string.ws_unknown_title, R.string.ws_unknown,
+                R.string.ws_unknown_title_toilet, R.string.ws_unknown_toilet,
                 R.string.settings_wheelchair_unknown,
                 R.drawable.marker_unknown, R.color.wheel_unknown,
                 PrefKey.WHEELCHAIR_TOILET_STATE_UNKNOWN));

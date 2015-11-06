@@ -245,7 +245,6 @@ public class POIDetailActivity extends MapActivity implements
         intent.putExtra(Extra.LONGITUDE, point.getLongitude());
         intent.putExtra(Extra.REQUEST, true);
         startActivity(intent);
-        // finish();
     }
 
     @Override
@@ -307,9 +306,6 @@ public class POIDetailActivity extends MapActivity implements
                         .getParcelable(Extra.EXCEPTION);
                 showErrorDialog(e);
                 break;
-            }
-            default: {
-                // noop
             }
         }
     }

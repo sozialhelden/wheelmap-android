@@ -24,7 +24,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO - Add title-String -->
     <item
         android:id="@+id/switch_view"
         app:showAsAction="always"
@@ -43,14 +42,12 @@
         android:icon="@drawable/ic_status"
         android:title="@string/menu_filter"/>
 
-    <!-- TODO - CHANGE title-String -->
     <item
         android:id="@+id/menu_filter_kategorie"
         app:showAsAction="always"
         android:icon="@drawable/ic_kategorie"
         android:title="@string/menu_filter"/>
 
-    <!-- TODO - Add title-String -->
     <item
         android:id="@+id/menu_wc"
         app:showAsAction="always"

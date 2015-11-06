@@ -117,8 +117,6 @@ public class POIContentProviderTest extends ProviderTestCase2<POIsProvider> {
 
         Cursor c = cr.query(uri, POIs.PROJECTION, null, null, null);
         assertEquals(3, c.getCount());
-
-        // Util.dumpCursorToLog(TAG, c);
     }
 
     public void testCQueryAll() {

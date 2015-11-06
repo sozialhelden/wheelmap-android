@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   #%L
   Wheelmap - App
   %%
@@ -21,99 +20,64 @@
   #L%
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/Container.ListItem"
-                android:background="@drawable/item_pressable_background">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Container.ListItem"
+    android:background="@drawable/item_pressable_background"
+    android:orientation="horizontal">
 
     <ImageView
-            android:id="@id/image"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:padding="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small"
-            android:src="@drawable/marker_yes"/>
+        android:id="@id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:padding="8dp"
+        android:src="@drawable/marker_yes" />
 
-    <TextView
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
             android:id="@+id/poi_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
-            android:layout_toRightOf="@id/image"
+            android:layout_marginTop="@dimen/margin_small"
             android:singleLine="true"
-            android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toLeftOf="@+id/compass"/>
+            android:textStyle="bold"
+            tools:text="test" />
 
-    <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/poi_nodetype"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/poi_name"
-            android:layout_below="@+id/poi_name"
-            android:layout_toLeftOf="@+id/poi_distance"
-            android:orientation="horizontal">
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary"
+            tools:text="test" />
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            <TextView
-                    android:id="@+id/poi_nodetype"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorSecondary"/>
-            <!--
-            <TextView
-                    android:id="@+id/poi_category"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorSecondary"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/helper_delim_dash"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorSecondary"/>      -->
-
-
-        </LinearLayout>
-
-        <View
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.81"/>
     </LinearLayout>
 
     <TextView
-            android:id="@+id/poi_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:singleLine="true"
-            android:layout_marginRight="@dimen/margin_medium"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary"/>
-    <!--
-    <org.wheelmap.android.view.CompassView
-            android:id="@+id/compass"
-            style="@style/IconSmall"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"/>          -->
+        android:id="@+id/poi_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary"
+        tools:text="test" />
 
-</RelativeLayout>
+
+</LinearLayout>

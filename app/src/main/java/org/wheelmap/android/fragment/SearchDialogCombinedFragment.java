@@ -34,9 +34,7 @@ public class SearchDialogCombinedFragment extends SearchDialogFragment
 
         try{
             adress = app.getAddressString();
-        }catch(Exception ex){
-            // noop
-        }
+        }catch(Exception ex){}
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View v = inflater.inflate(R.layout.fragment_dialog_search_combined, null);

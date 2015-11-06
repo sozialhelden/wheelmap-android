@@ -54,7 +54,7 @@ public class CategoriesRequestBuilder extends RequestBuilder {
     @Override
     public String buildRequestUri() {
         final StringBuilder requestAsStringBuffer = new StringBuilder(200);
-        requestAsStringBuffer.append(String.format(baseUrl() + "&page=%d&per_page=%d",
+        requestAsStringBuffer.append(String.format(java.util.Locale.US, baseUrl() + "&page=%d&per_page=%d",
                 paging.pageNumber, paging.numberOfItemsPerPage));
 
         if (locale != null) {
