@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import org.holoeverywhere.preference.PreferenceManagerHelper;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -42,6 +43,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -56,6 +58,7 @@ public class StartupActivity extends Activity implements
         DetachableResultReceiver.Receiver {
 
     public static boolean LOAD_AGAIN_DEBUG = false;
+    public static String FIRST_START = "FIRST_START";
 
     private final static String TAG = StartupActivity.class.getSimpleName();
 
@@ -86,7 +89,7 @@ public class StartupActivity extends Activity implements
 
         checkForHockeyUpdates();
 
-        Log.d(TAG,"Server: "+ BuildConfig.API_BASE_URL);
+        Log.d(TAG, "Server: " + BuildConfig.API_BASE_URL);
 
     }
 
@@ -212,8 +215,18 @@ public class StartupActivity extends Activity implements
 
         intent.putExtra(Extra.REQUEST, true);
         startActivity(intent);
+        SharedPreferences defaultPreferences = PreferenceManagerHelper.getDefaultSharedPreferences(this);
+        if(defaultPreferences.getBoolean(FIRST_START, true)){
+            startIntroductionActivity();
+            defaultPreferences.edit().putBoolean(FIRST_START, false).commit();
+        }
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    private void startIntroductionActivity(){
+        Intent intent = new Intent(this, IntroductionActivity.class);
+        startActivity(intent);
     }
 
     @Override

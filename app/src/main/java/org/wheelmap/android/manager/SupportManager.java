@@ -46,9 +46,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
@@ -207,18 +204,6 @@ public class SupportManager {
         public String localizedName;
 
         public int categoryId;
-
-        public Drawable getIconDrawable(){
-           if(iconDrawable.get() == null){
-                synchronized (this){
-                    if(iconDrawable.get() == null){
-                         iconDrawable = new WeakReference<Drawable>(WheelmapApp.getSupportManager().createIconDrawable(
-                                 iconPath));
-                    }
-                }
-           }
-           return iconDrawable.get();
-        }
 
         public Drawable getStateDrawable(WheelchairFilterState state){
             if(defaults != null){
@@ -630,28 +615,6 @@ public class SupportManager {
 
         cursor.close();
         Log.i(TAG, "NodeTypes count = " + mNodeTypeLookup.size());
-    }
-
-    Drawable createIconDrawable(String assetPath) {
-        Bitmap bitmap;
-        // Log.d(TAG, "SupportManager:createIconDrawable loading " + assetPath);
-        try {
-            InputStream is=null;
-            if(MarkerIconExecutor.markerIconsDownloaded()){
-                File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                File asset = new File(dir+"/"+assetPath);
-                is = new FileInputStream(asset);
-            }else{
-                is = mAssetManager.open("icons/" + assetPath);
-            }
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (IOException e) {
-            Log.w(TAG, "Warning in createIconDrawable : " + e.getMessage());
-            return null;
-        }
-        return new BitmapDrawable(mContext.getResources(), bitmap);
-
     }
 
     private Map<WheelchairFilterState, Drawable> createDefaultDrawables() {

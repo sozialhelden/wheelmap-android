@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <ImageView
+        android:id="@+id/introduction_image"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        tools:src="@drawable/introduction_05"/>
+
+    <TextView
+        android:id="@+id/introduction_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textSize="16dp"
+        tools:text="@string/default_text_introduction_05"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    
+    <TextView
+        android:id="@+id/introduction_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:layout_marginBottom="20dp"
+        tools:text="@string/bold_text_introduction_05"/>
+
+    <!--<Button-->
+        <!--android:id="@+id/introduction_done"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:background="@drawable/introduction_done_button_background"-->
+        <!--android:paddingLeft="50dp"-->
+        <!--android:paddingRight="50dp"-->
+        <!--android:layout_marginTop="50dp"-->
+        <!--android:text="@string/action_done"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="18dp" />-->
+</LinearLayout>

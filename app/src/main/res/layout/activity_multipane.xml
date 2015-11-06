@@ -32,6 +32,7 @@
             android:visibility="gone"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
             android:layout_marginBottom="48dp"
             android:src="@drawable/ic_detail_expand"/>
 
@@ -53,21 +54,15 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_toLeftOf="@+id/center_horizontal_position"
+            android:layout_toStartOf="@+id/center_horizontal_position"
                 android:background="@android:color/background_light"/>
 
         <FrameLayout
                 android:id="@+id/detail_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_toRightOf="@+id/center_horizontal_position"/>
-
-        <!--
-        <ImageView
-                android:layout_width="@dimen/margin_huge"
-                android:layout_height="fill_parent"
-                android:layout_toLeftOf="@+id/center_horizontal_position"
-                android:src="@drawable/fragment_shadow_right"/>
-          -->
+                android:layout_toRightOf="@+id/center_horizontal_position"
+            android:layout_toEndOf="@+id/center_horizontal_position"/>
 
         <View
                 android:layout_width="fill_parent"
@@ -76,14 +71,13 @@
                 android:background="@android:color/black"/>
     </RelativeLayout>
 
-    <LinearLayout android:id="@+id/my_outofzoom_text_tablet_portrait"
+    <FrameLayout android:id="@+id/my_outofzoom_text_tablet_portrait"
                   android:layout_width="300dp"
                   android:layout_marginTop="25dp"
                   android:layout_centerHorizontal="true"
                   android:layout_height="100dp"
                   android:background="@drawable/border_rounded_corner"
                   android:layout_below="@id/movable_layout"
-
                   android:visibility="gone"
                   android:gravity="center"
                   android:clickable="true">
@@ -97,7 +91,7 @@
                 android:text="@string/to_far_away">
 
         </TextView>
-    </LinearLayout>
+    </FrameLayout>
 
 
 </RelativeLayout>

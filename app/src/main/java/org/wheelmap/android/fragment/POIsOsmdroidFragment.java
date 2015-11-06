@@ -42,7 +42,6 @@ import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.online.R.string;
 import org.wheelmap.android.osmdroid.MarkItemOverlay;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
@@ -74,8 +73,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -107,7 +106,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private WorkerFragment mWorkerFragment;
 
-    private LinearLayout txtOutOfZoom;
+    private FrameLayout txtOutOfZoom;
 
     private DisplayFragmentListener mListener;
 
@@ -178,7 +177,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        tileUrl = String.format(Locale.US, baseUrl, getString(string.mapbox_key));
+        tileUrl = String.format(Locale.US, baseUrl, getString(R.string.mapbox_key));
         mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
         mBus = EventBus.getDefault();
 
@@ -200,24 +199,24 @@ public class POIsOsmdroidFragment extends Fragment implements
         View v = inflater
                 .inflate(R.layout.fragment_osmdroid, container, false);
 
-        txtOutOfZoom = (LinearLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
+        txtOutOfZoom = (FrameLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
 
         if(UtilsMisc.isTablet(getActivity().getApplication())){
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
                 txtOutOfZoom.setVisibility(View.GONE);
-                txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
+                txtOutOfZoom = (FrameLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
                 try{
                     setAlphaForView(txtOutOfZoom,(float)0.5);
                 }catch(NullPointerException npex){
                     Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
                     Toast.makeText(this.getActivity().getApplicationContext(),
-                            getResources().getString(string.error_internal_error), Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
                 }
             }
             if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
                 txtOutOfZoom.setVisibility(View.GONE);
-                txtOutOfZoom = (LinearLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
+                txtOutOfZoom = (FrameLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
 
                 try{
                     setAlphaForView(txtOutOfZoom,(float)0.5);
@@ -225,7 +224,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                     Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
                     Toast.makeText(this.getActivity().getApplicationContext(),
-                            getResources().getString(string.error_internal_error), Toast.LENGTH_LONG).show();
+                            getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -242,7 +241,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
             Toast.makeText(this.getActivity().getApplicationContext(),
-                    getResources().getString(string.error_internal_error), Toast.LENGTH_LONG).show();
+                    getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
         }
 
 

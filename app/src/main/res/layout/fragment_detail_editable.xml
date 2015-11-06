@@ -25,7 +25,9 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:orientation="vertical"
-              android:background="#cfcfcf">
+              android:background="#cfcfcf"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
     <org.wheelmap.android.view.VerticalScrollView
                   android:layout_width="match_parent"
                   android:layout_height="0dp"
@@ -60,6 +62,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                           style="@style/DetailFontNew.Editable"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
                           android:hint="@string/poi_property_name"
 
                           />
@@ -171,6 +175,8 @@
                             android:layout_width="0dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.8"
+                        android:singleLine="true"
+                        android:nextFocusDown="@+id/housenum"
                             android:hint="@string/poi_property_street"/>
 
                     <EditText
@@ -179,7 +185,9 @@
                             android:layout_width="0dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.2"
-                            android:inputType="textShortMessage"
+                            android:inputType="number"
+                        android:singleLine="true"
+                        android:nextFocusDown="@+id/postcode"
                             android:hint="@string/poi_property_housenum"/>
                 </LinearLayout>
 
@@ -197,6 +205,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
                             android:inputType="number"
+                        android:singleLine="true"
+                        android:nextFocusDown="@+id/city"
                             android:hint="@string/poi_property_postcode"/>
 
                     <EditText
@@ -205,6 +215,7 @@
                             android:layout_width="0dip"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
+                        android:singleLine="true"
                             android:hint="@string/poi_property_city"/>
                 </LinearLayout>
 
@@ -213,12 +224,14 @@
                         style="@style/DetailFontNew.Editable"
                         android:autoLink="phone"
                         android:inputType="phone"
+                    android:singleLine="true"
                         android:hint="@string/poi_property_phone"/>
 
                 <EditText
                         android:id="@+id/website"
                         style="@style/DetailFontNew.Editable"
                         android:autoLink="web"
+                    android:singleLine="true"
                         android:inputType="textWebEmailAddress"
                         android:hint="@string/poi_property_website"/>
             </LinearLayout>

@@ -27,7 +27,9 @@
               android:orientation="vertical"
               android:paddingBottom="@dimen/padding_large"
               android:paddingLeft="@dimen/padding_medium"
-              android:paddingRight="@dimen/padding_medium"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingRight="@dimen/padding_medium"
+    android:paddingEnd="@dimen/padding_medium"
               android:paddingTop="@dimen/padding_medium">
 
     <TextView

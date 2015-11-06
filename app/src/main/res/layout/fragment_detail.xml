@@ -27,8 +27,10 @@
                     android:layout_height="40dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                     android:layout_marginBottom="@dimen/map_position_margin_vertical"
                     android:layout_marginLeft="@dimen/map_position_margin_horizontal"
+                android:layout_marginStart="@dimen/map_position_margin_horizontal"
                     android:alpha="0.5"
                     android:background="@drawable/center_poi"/>
 
@@ -38,10 +40,10 @@
                     android:layout_height="60dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-
+                android:layout_alignParentEnd="true"
                     android:layout_marginBottom="-7dp"
                     android:layout_marginRight="4dp"
-
+                android:layout_marginEnd="4dp"
                     android:background="@drawable/ic_detail_expand"/>
 
 

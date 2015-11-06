@@ -122,8 +122,6 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private EditText phoneText;
 
-    private TextView state_text;
-
     private TextView geolocation_text;
 
     private TextView accessStateText;
@@ -182,8 +180,7 @@ public class POIDetailEditableFragment extends Fragment implements
     public static POIDetailEditableFragment newInstance(long poiId, int focus) {
         Bundle b = new Bundle();
         b.putLong(Extra.POI_ID, poiId);
-        b.putInt("Focus",focus);
-
+        b.putInt("Focus", focus);
 
         POIDetailEditableFragment fragment = new POIDetailEditableFragment();
         fragment.setArguments(b);
@@ -217,11 +214,10 @@ public class POIDetailEditableFragment extends Fragment implements
         focus = getArguments().getInt("Focus");
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
-
     }
 
-    public void initViews(View parent){
-        nameText = (EditText)parent.findViewById(R.id.name);
+    public void initViews(View parent) {
+        nameText = (EditText) parent.findViewById(R.id.name);
         nodetypeText = (TextView) parent.findViewById(R.id.nodetype);
         commentText = (EditText) parent.findViewById(R.id.comment);
         streetText = (EditText) parent.findViewById(R.id.street);
@@ -230,13 +226,12 @@ public class POIDetailEditableFragment extends Fragment implements
         cityText = (EditText) parent.findViewById(R.id.city);
         websiteText = (EditText) parent.findViewById(R.id.website);
         phoneText = (EditText) parent.findViewById(R.id.phone);
-        state_text = (TextView) parent.findViewById(R.id.access_state_text);
         geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
 
-        accessStateText = (TextView)parent.findViewById(R.id.access_state_text);
-        accessStateLayout = (ViewGroup)parent.findViewById(R.id.wheelchair_access_state_layout);
-        toiletStateText = (TextView)parent.findViewById(R.id.toilet_state_text);
-        toiletStateLayout = (ViewGroup)parent.findViewById(R.id.wheelchair_toilet_state_layout);
+        accessStateText = (TextView) parent.findViewById(R.id.access_state_text);
+        accessStateLayout = (ViewGroup) parent.findViewById(R.id.wheelchair_access_state_layout);
+        toiletStateText = (TextView) parent.findViewById(R.id.toilet_state_text);
+        toiletStateLayout = (ViewGroup) parent.findViewById(R.id.wheelchair_toilet_state_layout);
 
         edit_nodetype_container = (FrameLayout) parent.findViewById(R.id.edit_nodetype);
         edit_geolocation_container = (FrameLayout) parent.findViewById(R.id.edit_geolocation);
@@ -244,7 +239,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detail_editable, container, false);
 
         v.findViewById(R.id.detail_save).setOnClickListener(new OnClickListener() {
@@ -255,19 +250,14 @@ public class POIDetailEditableFragment extends Fragment implements
                 return;
             }
         });
-        /*v.findViewById(R.id.no).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });    */
+
         initViews(v);
 
-        if(focus == FOCUS_TO_NOTHING){
-           //noop
-        }else if(focus == FOCUS_TO_ADRESS){
+        if (focus == FOCUS_TO_NOTHING) {
+            //noop
+        } else if (focus == FOCUS_TO_ADRESS) {
             streetText.requestFocus();
-        }else if(focus == FOCUS_TO_COMMENT){
+        } else if (focus == FOCUS_TO_COMMENT) {
             commentText.requestFocus();
         }
 
@@ -296,7 +286,7 @@ public class POIDetailEditableFragment extends Fragment implements
         retrieve(savedInstanceState);
         if (!mCredentials.isLoggedIn()) {
 
-            Intent intent = new Intent(getActivity(),ProfileActivity.class);
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
             startActivityForResult(intent, REQUEST_CODE_LOGIN);
         }
 
@@ -306,9 +296,9 @@ public class POIDetailEditableFragment extends Fragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE_LOGIN){
-            if(resultCode != Activity.RESULT_OK){
-                  getActivity().onBackPressed();
+        if (requestCode == REQUEST_CODE_LOGIN) {
+            if (resultCode != Activity.RESULT_OK) {
+                getActivity().onBackPressed();
             }
         }
 
@@ -317,14 +307,14 @@ public class POIDetailEditableFragment extends Fragment implements
             if (data.hasExtra(WheelchairAccessibilityStateFragment.TAG)) {
                 WheelchairFilterState state = WheelchairFilterState
                         .valueOf(data.getIntExtra(WheelchairAccessibilityStateFragment.TAG, Extra.UNKNOWN));
-                if (state != null && mListener != null){
+                if (state != null && mListener != null) {
                     setWheelchairState(state);
                     mListener.onEditWheelchairState(state);
                 }
             } else if (data.hasExtra(WheelchairToiletStateFragment.TAG)) {
                 WheelchairFilterState state = WheelchairFilterState
                         .valueOf(data.getIntExtra(WheelchairToiletStateFragment.TAG, Extra.UNKNOWN));
-                if (state != null && mListener != null){
+                if (state != null && mListener != null) {
                     setWheelchairToiletState(state);
                     mListener.onEditWheelchairToiletState(state);
                 }
@@ -332,19 +322,19 @@ public class POIDetailEditableFragment extends Fragment implements
         }
 
 
-        if(requestCode == Request.SELECT_GEOLOCATION && resultCode == Activity.RESULT_OK && data != null){
-            double latitude = data.getDoubleExtra(Extra.LATITUDE,mLatitude);
-            double longitude = data.getDoubleExtra(Extra.LONGITUDE,mLongitude);
-            setGeolocation(latitude,longitude);
-            if(mListener != null){
-               mListener.onEditGeolocation(latitude,longitude);
+        if (requestCode == Request.SELECT_GEOLOCATION && resultCode == Activity.RESULT_OK && data != null) {
+            double latitude = data.getDoubleExtra(Extra.LATITUDE, mLatitude);
+            double longitude = data.getDoubleExtra(Extra.LONGITUDE, mLongitude);
+            setGeolocation(latitude, longitude);
+            if (mListener != null) {
+                mListener.onEditGeolocation(latitude, longitude);
             }
         }
 
-        if(requestCode == Request.SELECT_NODETYPE && resultCode == Activity.RESULT_OK && data != null){
-            int nodeType = data.getIntExtra(Extra.NODETYPE,mNodeType);
+        if (requestCode == Request.SELECT_NODETYPE && resultCode == Activity.RESULT_OK && data != null) {
+            int nodeType = data.getIntExtra(Extra.NODETYPE, mNodeType);
             setNodetype(nodeType);
-            if(mListener != null){
+            if (mListener != null) {
                 mListener.onEditNodetype(nodeType);
             }
         }
@@ -410,15 +400,15 @@ public class POIDetailEditableFragment extends Fragment implements
             }
             case R.id.edit_geolocation: {
                 Intent intent = new Intent(getActivity(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,EditPositionFragment.class.getName());
-                intent.putExtra(Extra.LATITUDE,mLatitude);
-                intent.putExtra(Extra.LONGITUDE,mLongitude);
+                intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME, EditPositionFragment.class.getName());
+                intent.putExtra(Extra.LATITUDE, mLatitude);
+                intent.putExtra(Extra.LONGITUDE, mLongitude);
                 startActivityForResult(intent, Request.SELECT_GEOLOCATION);
                 break;
             }
             case R.id.edit_nodetype: {
                 Intent intent = new Intent(getActivity(), WrapperActivity.class);
-                intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME,NodetypeSelectFragment.class.getName());
+                intent.putExtra(WrapperActivity.EXTRA_FRAGMENT_CLASS_NAME, NodetypeSelectFragment.class.getName());
                 intent.putExtra(Extra.NODETYPE, mNodeType);
                 startActivityForResult(intent, Request.SELECT_NODETYPE);
                 break;
@@ -431,7 +421,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
     public void save() {
         ContentValues values = retrieveContentValues();
-        if(values == null){
+        if (values == null) {
             return;
         }
         if (!values.containsKey(POIs.NODETYPE_ID)) {
@@ -447,20 +437,20 @@ public class POIDetailEditableFragment extends Fragment implements
             return;
         }
 
-        if(values.containsKey(POIs.WEBSITE)){
+        if (values.containsKey(POIs.WEBSITE)) {
             String website = values.getAsString(POIs.WEBSITE);
-                website = website.toLowerCase(Locale.US);
-                if(!website.startsWith("http://") && !website.startsWith(
-                        "https://")){
-                    website = "http://"+website;
-                }
+            website = website.toLowerCase(Locale.US);
+            if (!website.startsWith("http://") && !website.startsWith(
+                    "https://")) {
+                website = "http://" + website;
+            }
 
-            if(!android.util.Patterns.WEB_URL.matcher(website).matches()){
-                showErrorMessage(null,getString(android.R.string.httpErrorBadUrl),-1);
+            if (!android.util.Patterns.WEB_URL.matcher(website).matches()) {
+                showErrorMessage(null, getString(android.R.string.httpErrorBadUrl), -1);
                 return;
             }
 
-                values.put(POIs.WEBSITE,website);
+            values.put(POIs.WEBSITE, website);
         }
         values.put(POIs.DIRTY, POIs.DIRTY_ALL);
         PrepareDatabaseHelper.editCopy(getActivity().getContentResolver(),
@@ -529,7 +519,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
         setWheelchairState(accessState);
         setWheelchairToiletState(toiletState);
-        if(!getString(R.string.poi_new_default_name).equals(name)) {
+        if (!getString(R.string.poi_new_default_name).equals(name)) {
             nameText.setText(name);
         }
         commentText.setText(comment);
@@ -571,8 +561,7 @@ public class POIDetailEditableFragment extends Fragment implements
         firstList.add(websiteText);
         firstList.add(phoneText);
 
-        for(int i=0;i<firstList.size();i++)
-        {
+        for (int i = 0; i < firstList.size(); i++) {
             firstList.get(i).addTextChangedListener(textWatcher);
         }
 
@@ -584,7 +573,7 @@ public class POIDetailEditableFragment extends Fragment implements
         retrieveExternalEditedState();
     }
 
-    private void changedEdit(boolean changed){
+    private void changedEdit(boolean changed) {
         WheelmapApp app = (WheelmapApp) this.getActivity().getApplicationContext();
         app.setChangedText(changed);
     }
@@ -607,9 +596,9 @@ public class POIDetailEditableFragment extends Fragment implements
     private ContentValues retrieveContentValues() {
         ContentValues values = new ContentValues();
 
-        try{
+        try {
 
-            if(nameText == null){
+            if (nameText == null) {
                 return null;
             }
 
@@ -668,7 +657,7 @@ public class POIDetailEditableFragment extends Fragment implements
                 values.put(POIs.PHONE, phone);
             }
 
-        }catch(NullPointerException npex){
+        } catch (NullPointerException npex) {
 
             Log.d("Tag:PoiDetailEditableFragment", "NullPointException occurred");
 
@@ -676,7 +665,7 @@ public class POIDetailEditableFragment extends Fragment implements
 
             //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
 
-           return null;
+            return null;
 
         }
         return values;
@@ -689,24 +678,24 @@ public class POIDetailEditableFragment extends Fragment implements
 
         mWheelchairFilterState = newState;
 
-        try{
-        if(mWheelchairFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
-            state_text.setBackgroundResource(R.drawable.detail_button_grey);
-        else if(mWheelchairFilterState.getId() == WheelchairFilterState.YES.getId())
-            state_text.setBackgroundResource(R.drawable.detail_button_green);
-        else if(mWheelchairFilterState.getId() == WheelchairFilterState.LIMITED.getId())
-            state_text.setBackgroundResource(R.drawable.detail_button_orange);
-        else if(mWheelchairFilterState.getId() == WheelchairFilterState.NO.getId())
-            state_text.setBackgroundResource(R.drawable.detail_button_red);
-        else if(mWheelchairFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
-            state_text.setBackgroundResource(R.drawable.detail_button_grey);
-        else
-            state_text.setBackgroundResource(R.drawable.detail_button_grey);
-        }catch(OutOfMemoryError e){
+        try {
+            if (mWheelchairFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else if (mWheelchairFilterState.getId() == WheelchairFilterState.YES.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_green);
+            else if (mWheelchairFilterState.getId() == WheelchairFilterState.LIMITED.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_orange);
+            else if (mWheelchairFilterState.getId() == WheelchairFilterState.NO.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_red);
+            else if (mWheelchairFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else
+                accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        } catch (OutOfMemoryError e) {
             System.gc();
         }
 
-        state_text.setText(mWSAttributes.get(newState).titleStringId);
+        accessStateText.setText(mWSAttributes.get(newState).titleStringId);
     }
 
     public void setWheelchairToiletState(WheelchairFilterState newState) {
@@ -716,18 +705,18 @@ public class POIDetailEditableFragment extends Fragment implements
 
         mWheelchairToiletFilterState = newState;
 
-        try{
-            if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
+        try {
+            if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-            else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
+            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_green);
-            else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
+            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_red);
-            else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
             else
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        }catch(OutOfMemoryError e){
+        } catch (OutOfMemoryError e) {
             System.gc();
         }
 
@@ -793,8 +782,8 @@ public class POIDetailEditableFragment extends Fragment implements
 
     private void storeTemporary() {
         ContentValues values = retrieveContentValues();
-        if(values == null){
-           return;
+        if (values == null) {
+            return;
         }
         if (!TextUtils.isEmpty(wmID)) {
             values.put(POIs.WM_ID, wmID);
@@ -822,13 +811,18 @@ public class POIDetailEditableFragment extends Fragment implements
         }
     }
 
-    private void showError(){
-        showErrorMessage(getString(R.string.error_title_occurred),
-                getString(R.string.error_network_unknown_failure), DIALOG_ID_NETWORK_ERROR);
+    private void showError(String errorMessage) {
+        if(errorMessage == null) {
+            showErrorMessage(getString(R.string.error_title_occurred),
+                    getString(R.string.error_network_unknown_failure), DIALOG_ID_NETWORK_ERROR);
+        } else {
+            showErrorMessage(getString(R.string.error_title_occurred),
+                    errorMessage, DIALOG_ID_NETWORK_ERROR);
+        }
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         mCredentials = new UserCredentials(getActivity().getApplicationContext());
     }
@@ -836,6 +830,7 @@ public class POIDetailEditableFragment extends Fragment implements
     /**
      * {@inheritDoc}
      */
+    @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
         Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
         switch (resultCode) {
@@ -850,7 +845,11 @@ public class POIDetailEditableFragment extends Fragment implements
             }
             case RestService.STATUS_ERROR: {
                 storingStatus(false);
-                showError();
+                if(resultData.containsKey(RestService.ERROR_MESSAGE)) {
+                    showError(resultData.getString(RestService.ERROR_MESSAGE));
+                } else {
+                    showError(null);
+                }
                 break;
             }
         }

@@ -47,13 +47,16 @@
                     android:padding="5dp"
                     android:adjustViewBounds="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:src="@drawable/marker_yes"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/radio_enabled"
+                    android:layout_toStartOf="@+id/radio_enabled"
                     android:layout_toRightOf="@+id/wheelchair_state_enabled_icon"
+                    android:layout_toEndOf="@+id/wheelchair_state_enabled_icon"
                     android:paddingTop="3dp"
                     android:orientation="vertical">
                     <TextView
@@ -81,13 +84,16 @@
                     android:padding="5dp"
                     android:adjustViewBounds="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:src="@drawable/marker_no"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/radio_disabled"
+                    android:layout_toStartOf="@+id/radio_disabled"
                     android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
+                    android:layout_toEndOf="@+id/wheelchair_state_disabled_icon"
                     android:paddingTop="3dp"
                     android:orientation="vertical">
                     <TextView
@@ -101,7 +107,9 @@
                     <TextView
                         style="@style/FontWheelStateSelect"
                         android:layout_toLeftOf="@+id/radio_disabled"
+                        android:layout_toStartOf="@+id/radio_disabled"
                         android:layout_toRightOf="@+id/wheelchair_state_disabled_icon"
+                        android:layout_toEndOf="@+id/wheelchair_state_disabled_icon"
                         android:text="@string/ws_disabled_toilet"/>
                 </LinearLayout>
 
@@ -124,7 +132,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/radio_unknown"
+                    android:layout_toStartOf="@+id/radio_unknown"
                     android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
+                    android:layout_toEndOf="@+id/wheelchair_state_unknown_icon"
                     android:paddingTop="3dp"
                     android:orientation="vertical">
                     <TextView
@@ -138,7 +148,9 @@
                     <TextView
                         style="@style/FontWheelStateSelect"
                         android:layout_toLeftOf="@+id/radio_unknown"
+                        android:layout_toStartOf="@+id/radio_unknown"
                         android:layout_toRightOf="@+id/wheelchair_state_unknown_icon"
+                        android:layout_toEndOf="@+id/wheelchair_state_unknown_icon"
                         android:text="@string/ws_unknown"/>
                 </LinearLayout>
 
