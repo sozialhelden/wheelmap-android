@@ -37,18 +37,4 @@
         android:textSize="16dp"
         tools:text="@string/introduction_01_text" />
 
-
-    <!--<Button-->
-    <!--android:id="@+id/introduction_done"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center_horizontal"-->
-    <!--android:background="@drawable/introduction_done_button_background"-->
-    <!--android:paddingLeft="50dp"-->
-    <!--android:paddingRight="50dp"-->
-    <!--android:layout_marginTop="30dp"-->
-    <!--android:text="@string/action_done"-->
-    <!--android:textAllCaps="false"-->
-    <!--android:textColor="#fff"-->
-    <!--android:textSize="18dp" />-->
 </LinearLayout>
