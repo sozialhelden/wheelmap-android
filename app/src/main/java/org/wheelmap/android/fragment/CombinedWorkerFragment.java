@@ -150,9 +150,7 @@ public class CombinedWorkerFragment extends Fragment implements
             String uri = null;
             try{
                 uri = app.getUriString();
-            }catch (Exception ex){
-                // noop
-            }
+            }catch (Exception ex){}
 
             if(uri != null){
                 // load one node, then all others near by this node
@@ -220,7 +218,7 @@ public class CombinedWorkerFragment extends Fragment implements
         values.put("category_identifier",node.getCategory().getIdentifier());
         values.put("nodetype_id", node.getNodeType().getId().toString());
 
-        values.put("wheelchair",node.getWheelchair());                                  /* IMPORTATNT */
+        values.put("wheelchair",node.getWheelchair());
         values.put("wheelchair_toilet",node.getWheelchairToilet());
         values.put("description",node.getWheelchairDescription());
         values.put("name",node.getName());

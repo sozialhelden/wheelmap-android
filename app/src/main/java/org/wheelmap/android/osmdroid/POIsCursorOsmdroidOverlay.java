@@ -105,7 +105,6 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
         Drawable marker = null;
         if (nodeTypeId != 0) {
-            //marker = manager.lookupNodeType(nodeTypeId).stateDrawables.get(state);
             marker = manager.lookupNodeType(nodeTypeId).getStateDrawable(state);
         }
 
@@ -123,8 +122,6 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
                 -2*halfDestinationDensity,
                 (int)(halfDestinationDensity * heightToWidth),
                 0);
-
-        //Log.d(TAG, "createItem width = " + marker.getIntrinsicWidth() + " height = " + marker.getIntrinsicHeight());
 
         GeoPoint geo = new GeoPoint(lat, lng);
         OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);

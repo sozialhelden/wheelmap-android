@@ -81,7 +81,6 @@ public class StartupActivity extends Activity implements
         appProperties = AppProperties.getInstance(getApplication());
 
         Log.d(TAG, "onCreate");
-//        Log.d(TAG, "addons: " + obtainAddonsList());
         setContentView(R.layout.activity_splashscreen);
 
         mState = new State();
@@ -254,8 +253,6 @@ public class StartupActivity extends Activity implements
                     mSupportManager.reloadTotalNodeCount();
                     startupAppDelayed();
                     break;
-                default:
-                    // nothing to do
             }
         } else if (resultCode == RestService.STATUS_ERROR) {
             final RestServiceException e = resultData

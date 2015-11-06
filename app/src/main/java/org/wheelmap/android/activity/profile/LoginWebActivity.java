@@ -93,9 +93,6 @@ public class LoginWebActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            default:
-                //noop
-
         }
         return true;
     }

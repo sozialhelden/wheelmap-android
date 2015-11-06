@@ -53,27 +53,20 @@ public class DashboardActivity extends AppCompatActivity {
 
         try{
             uri = app.getUriString();
-        }catch (Exception ex){
-            // noop
-        }
+        }catch (Exception ex){}
 
         try{
             address = app.getAddressString();
-        }catch(Exception ex){
-            // noop
-        }
+        }catch(Exception ex){}
 
         try{
             lon = app.getGeoLon();
             lat = app.getGeoLat();
 
-        }catch(Exception ex){
-            // noop
-        }
+        }catch(Exception ex){}
 
         if(uri != null){
             openMap();
-
         }
 
         if(lat != 0){
@@ -181,7 +174,6 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         if(address != null){
-            //((EditText)findViewById(R.id.dashboard_search_edit)).requestFocus();
             ((EditText)findViewById(R.id.dashboard_search_edit)).setText(address);
             app.setAddressString(null);
         }

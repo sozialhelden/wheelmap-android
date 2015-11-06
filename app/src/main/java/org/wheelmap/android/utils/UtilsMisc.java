@@ -214,15 +214,9 @@ public class UtilsMisc {
         String timeStamp =
                 new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
         String imageFileName = "jpg_" + timeStamp + "_";
-        /* File image = File.createTempFile(
-                imageFileName,
-                ".png",
-                context.getCacheDir()
-        );  */
+
         return new File(Environment.getExternalStoragePublicDirectory(
                Environment.DIRECTORY_PICTURES), imageFileName+".jpg");
-
-       //return image;
     }
 
     public static String getFilePathFromContentUri(Uri selectedVideoUri,

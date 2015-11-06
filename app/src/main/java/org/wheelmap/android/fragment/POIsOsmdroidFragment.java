@@ -543,9 +543,6 @@ public class POIsOsmdroidFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.ab_map_fragment, menu);
-        if (getArguments().containsKey(Extra.DISABLE_SEARCH)) {
-           // menu.removeItem(R.id.menu_search);
-        }
     }
 
     @Override
@@ -556,17 +553,13 @@ public class POIsOsmdroidFragment extends Fragment implements
             case R.id.menu_search:
                 showSearch();
                 return true;
-            default:
-                // noop
         }
 
         return false;
     }
 
     @Override
-    public void onRefreshStarted() {
-        // do nothing
-    }
+    public void onRefreshStarted() {}
 
     @Override
     public boolean onScroll(ScrollEvent event) {

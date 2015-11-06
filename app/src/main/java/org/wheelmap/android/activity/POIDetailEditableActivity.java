@@ -147,24 +147,6 @@ public class POIDetailEditableActivity extends MapActivity implements
 
         if(app.isChangedText()){
             app.setChangedText(false);
-            /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage(getResources().getString(R.string.dialog_close_editable));
-
-            builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
-                    finish();
-                }
-            });
-            builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog
-                    return;
-                }
-            });
-
-            AlertDialog dialog = builder.create();  */
             goBack();
         }
         else
@@ -277,7 +259,6 @@ public class POIDetailEditableActivity extends MapActivity implements
             builder.setPositiveButton(R.string.btn_okay, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // User clicked OK button
-
                     goBack();
                 }
             });

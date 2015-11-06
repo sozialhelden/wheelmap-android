@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -67,7 +66,7 @@ public class IntroductionActivity extends AppCompatActivity{
         });
 
         initIndicatorIcons(introductionDataList.size());
-        selectPageIndicator(0); //TODO - change on rotation
+        selectPageIndicator(0);
     }
 
     private List getIntroductionData(){
@@ -80,6 +79,7 @@ public class IntroductionActivity extends AppCompatActivity{
             if(arrayId > -1){
                 TypedArray introductionEntryArray = getResources().obtainTypedArray(arrayId);
 
+                //IMPORTENT - declaration-order needs to match xml-declaration-order -->
                 int layoutId = introductionEntryArray.getResourceId(0, -1);
                 int drawableId = introductionEntryArray.getResourceId(1, -1);
                 int boldTextId = introductionEntryArray.getResourceId(2, -1);
@@ -172,12 +172,6 @@ public class IntroductionActivity extends AppCompatActivity{
         public int getCount() {
             return introductionDataList.size();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        //TODO - edit for screen-rotation
     }
 
     public class IntroductionData{

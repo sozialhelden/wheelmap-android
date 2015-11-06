@@ -25,7 +25,7 @@
         android:gravity="center"
         android:textSize="20dp"
         android:textStyle="bold"
-        tools:text="@string/bold_text_introduction_01" />
+        tools:text="@string/introduction_01_title" />
 
     <TextView
         android:id="@+id/introduction_text"
@@ -35,7 +35,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textSize="16dp"
-        tools:text="@string/default_text_introduction_01" />
+        tools:text="@string/introduction_01_text" />
 
 
     <!--<Button-->

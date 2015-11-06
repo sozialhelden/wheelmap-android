@@ -274,7 +274,6 @@ public class POIDetailFragment extends Fragment implements
                 break;
 
             default:
-                //
         }
 
     }
@@ -470,10 +469,7 @@ public class POIDetailFragment extends Fragment implements
         });
 
         mShowMenu = false;
-        if (getArguments().containsKey(Extra.SHOW_MAP)) {
-            closeButton.setVisibility(View.GONE);
-            showMap(v);
-        }
+        closeButton.setVisibility(View.GONE);
 
         if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
             closeButton.setVisibility(View.GONE);
@@ -655,29 +651,6 @@ public class POIDetailFragment extends Fragment implements
             }
 
         }
-    }
-
-    private void showMap(View v) {
-
-        if (AppCapability.degradeDetailMapAsButton()) {
-            assignButton(v);
-        } else {
-            assignMapView(v);
-        }
-    }
-
-    private void assignMapView(View v) {
-        mapView = (MapView) v.findViewById(R.id.map);
-        if(mapView != null){
-            mapView.setClickable(true);
-            mapController = mapView.getController();
-            mapController.setZoom(18);
-        }
-    }
-
-    private void assignButton(View v) {
-        mMapButton = (Button) v.findViewById(R.id.btn_map);
-        mMapButton.setOnClickListener(this);
     }
 
     @Override
@@ -1251,11 +1224,6 @@ public class POIDetailFragment extends Fragment implements
      */
     public void onReceiveResult(int resultCode, Bundle resultData) {
 
-        //wrong result returned?
-        if(wmID != resultData.getLong(Extra.ID)){
-            //return;
-        }
-
         Log.d(TAG, "onReceiveResult resultCode = " + resultCode);
         switch (resultCode) {
             case RestService.STATUS_RUNNING: {
@@ -1296,7 +1264,6 @@ public class POIDetailFragment extends Fragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
 
         builder.setTitle(R.string.photo_upload_picker_title);
-        //builder.setIcon(R.drawable.detail_ic_foto);
         builder.setCancelable(true);
 
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -1305,11 +1272,6 @@ public class POIDetailFragment extends Fragment implements
                 if (which == 0) {
                     startGetPhotoFromGalleryIntent();
                 } else if (which == 1) {
-                    /*pictureActionIntent = new Intent(
-                            android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(pictureActionIntent,
-                            Request.REQUESTCODE_PHOTO_FROM_CAMERA);
-                      */
                     Intent intent = new Intent(
                             android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     new_photo_file = new File(Environment.getExternalStorageDirectory() + "/DCIM/", "image" + new Date().getTime() + ".png");

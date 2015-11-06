@@ -297,7 +297,6 @@ public class SupportManager {
             initLookup();
         }
         Log.i(TAG, "Loading lookup data");
-        //initLookup();
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
@@ -589,7 +588,6 @@ public class SupportManager {
         while (!cursor.isAfterLast()) {
             int id = NodeTypesContent.getNodeTypeId(cursor);
             String identifier = NodeTypesContent.getIdentifier(cursor);
-            // Log.d(TAG, "Loading nodetype: identifier = " + identifier);
             String localizedName = CategoriesContent.getLocalizedName(cursor);
             int categoryId = NodeTypesContent.getCategoryId(cursor);
             String iconPath = NodeTypesContent.getIconURL(cursor);
@@ -598,16 +596,12 @@ public class SupportManager {
                     categoryId);
             nodeType.iconPath = iconPath;
             nodeType.base =  mDefaultNodeType;
-            //nodeType.iconDrawable = createIconDrawable(iconPath);
-            //nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeType);
             mNodeTypeLookup.put(id, nodeType);
 
             nodeType = new NodeType(id, identifier, localizedName,
                     categoryId);
             nodeType.iconPath = iconPath;
             nodeType.base = mDefaultNodeTypeList;
-           // nodeType.iconDrawable = createIconDrawable(iconPath);
-           // nodeType.stateDrawables = createSpecificDrawables(iconPath,mDefaultNodeTypeList);
             mNodeTypeLookupList.put(id, nodeType);
 
             cursor.moveToNext();
@@ -759,10 +753,7 @@ public class SupportManager {
                     File dir = MarkerIconExecutor.getMarkerPath(mContext);
                     File asset = new File(dir+"/"+path);
                     is = new FileInputStream(asset);
-                }else{
-                    //is = mAssetManager.open(path);
                 }
-                // is = mAssetManager.open(path);
                 drawable = Drawable.createFromStream(is, null);
                 Drawable bg = defaultNodes.getStateDrawable(state);
 

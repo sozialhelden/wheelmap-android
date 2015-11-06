@@ -36,7 +36,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-//import android.widget.CursorAdapter;
 
 public class POIsListCursorAdapter extends CursorAdapter {
 
@@ -95,14 +94,8 @@ public class POIsListCursorAdapter extends CursorAdapter {
         pliv.setNodeType(nodeType.localizedName);
 
         pliv.setDistance(mDistanceFormatter.format(distance));
-        //Drawable marker = manager.lookupNodeTypeList(nodeTypeId).stateDrawables.get(state);
         Drawable marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
 
-        float density = mContext.getResources().getDisplayMetrics().density;
-
-        int half = (int)(16*density);
-
-       // marker.setBounds(-half, -2*half, half, 0);
         pliv.setIcon(marker);
     }
 

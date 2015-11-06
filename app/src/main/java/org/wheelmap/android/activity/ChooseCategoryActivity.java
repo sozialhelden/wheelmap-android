@@ -105,7 +105,6 @@ public class ChooseCategoryActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         adapter = new SimpleCursorAdapter(this,R.layout.simple_list_item_category,cursor,new String[]{Support.CategoryColumns.LOCALIZED_NAME},new int[]{R.id.text_category});
-//        setListAdapter(adapter);
         listView.setAdapter(adapter);
     }
 

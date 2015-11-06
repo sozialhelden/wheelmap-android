@@ -48,7 +48,6 @@ public class MapActivityUtils {
         setOptionsItemLayerDrawable(context, item, layerDrawable);
     }
 
-    //TODO - rewrite for wc-filter-entries (images & co)
     public static void setWcFilterOptionsDrawable(MapActivity context, MenuItem item, View v) {
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         Map<WheelchairFilterState, SupportManager.WheelchairToiletAttributes> attributes = SupportManager.wheelchairToiletAttributes;

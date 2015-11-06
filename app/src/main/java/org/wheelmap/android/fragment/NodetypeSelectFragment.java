@@ -106,11 +106,7 @@ public class NodetypeSelectFragment extends ListFragment {
                 intent.putExtra(Extra.NODETYPE, mNodeTypeSelected);
                 getActivity().setResult(android.app.Activity.RESULT_OK,intent);
                 getActivity().finish();
-
-
                 break;
-            default:
-                //noop
         }
     }
 

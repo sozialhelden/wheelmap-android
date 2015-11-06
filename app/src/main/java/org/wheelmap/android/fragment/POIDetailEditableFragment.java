@@ -246,16 +246,13 @@ public class POIDetailEditableFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 save();
-                //quit(true);
                 return;
             }
         });
 
         initViews(v);
 
-        if (focus == FOCUS_TO_NOTHING) {
-            //noop
-        } else if (focus == FOCUS_TO_ADRESS) {
+        if (focus == FOCUS_TO_ADRESS) {
             streetText.requestFocus();
         } else if (focus == FOCUS_TO_COMMENT) {
             commentText.requestFocus();
@@ -339,6 +336,7 @@ public class POIDetailEditableFragment extends Fragment implements
             }
         }
     }
+
     private void retrieve(Bundle bundle) {
         boolean loadTempStore = mTemporaryStored
                 || (bundle != null && bundle
@@ -352,14 +350,6 @@ public class POIDetailEditableFragment extends Fragment implements
 
         Log.d(TAG, "retrieve: init loader id = " + loaderId);
         getLoaderManager().initLoader(loaderId, null, this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        /*try{
-            storeTemporary();
-        }catch(Exception e){}   */
     }
 
     @Override
@@ -413,9 +403,6 @@ public class POIDetailEditableFragment extends Fragment implements
                 startActivityForResult(intent, Request.SELECT_NODETYPE);
                 break;
             }
-
-            default:
-                // do nothing
         }
     }
 
@@ -566,9 +553,6 @@ public class POIDetailEditableFragment extends Fragment implements
         }
 
         wmID = POIHelper.getWMId(cursor);
-        if (TextUtils.isEmpty(wmID)) {
-            showGeolocationEditor(true);
-        }
 
         retrieveExternalEditedState();
     }
@@ -576,14 +560,6 @@ public class POIDetailEditableFragment extends Fragment implements
     private void changedEdit(boolean changed) {
         WheelmapApp app = (WheelmapApp) this.getActivity().getApplicationContext();
         app.setChangedText(changed);
-    }
-
-    private void showGeolocationEditor(boolean show) {
-        if (show) {
-            //edit_geolocation_container.setVisibility(View.VISIBLE);
-        } else {
-            //edit_geolocation_container.setVisibility(View.GONE);
-        }
     }
 
     private void retrieveExternalEditedState() {
@@ -663,8 +639,6 @@ public class POIDetailEditableFragment extends Fragment implements
 
             Toast.makeText(this.getActivity().getApplicationContext(), getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
 
-            //this.startActivity(new Intent(this.getActivity(), DashboardActivity.class));
-
             return null;
 
         }
@@ -679,18 +653,19 @@ public class POIDetailEditableFragment extends Fragment implements
         mWheelchairFilterState = newState;
 
         try {
-            if (mWheelchairFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
+            if (mWheelchairFilterState.getId() == WheelchairFilterState.UNKNOWN.getId()) {
                 accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
-            else if (mWheelchairFilterState.getId() == WheelchairFilterState.YES.getId())
+            } else if (mWheelchairFilterState.getId() == WheelchairFilterState.YES.getId()) {
                 accessStateText.setBackgroundResource(R.drawable.detail_button_green);
-            else if (mWheelchairFilterState.getId() == WheelchairFilterState.LIMITED.getId())
+            } else if (mWheelchairFilterState.getId() == WheelchairFilterState.LIMITED.getId()) {
                 accessStateText.setBackgroundResource(R.drawable.detail_button_orange);
-            else if (mWheelchairFilterState.getId() == WheelchairFilterState.NO.getId())
+            } else if (mWheelchairFilterState.getId() == WheelchairFilterState.NO.getId()) {
                 accessStateText.setBackgroundResource(R.drawable.detail_button_red);
-            else if (mWheelchairFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+            } else if (mWheelchairFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId()) {
                 accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
-            else
+            } else {
                 accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            }
         } catch (OutOfMemoryError e) {
             System.gc();
         }
@@ -706,16 +681,17 @@ public class POIDetailEditableFragment extends Fragment implements
         mWheelchairToiletFilterState = newState;
 
         try {
-            if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
+            if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId()) {
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
+            } else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId()) {
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_green);
-            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
+            } else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId()) {
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_red);
-            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+            } else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId()) {
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-            else
+            } else {
                 toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            }
         } catch (OutOfMemoryError e) {
             System.gc();
         }
@@ -812,7 +788,7 @@ public class POIDetailEditableFragment extends Fragment implements
     }
 
     private void showError(String errorMessage) {
-        if(errorMessage == null) {
+        if (errorMessage == null) {
             showErrorMessage(getString(R.string.error_title_occurred),
                     getString(R.string.error_network_unknown_failure), DIALOG_ID_NETWORK_ERROR);
         } else {
@@ -845,7 +821,7 @@ public class POIDetailEditableFragment extends Fragment implements
             }
             case RestService.STATUS_ERROR: {
                 storingStatus(false);
-                if(resultData.containsKey(RestService.ERROR_MESSAGE)) {
+                if (resultData.containsKey(RestService.ERROR_MESSAGE)) {
                     showError(resultData.getString(RestService.ERROR_MESSAGE));
                 } else {
                     showError(null);

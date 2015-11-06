@@ -94,9 +94,7 @@ public class RestServiceException extends RuntimeException implements
                     responseBodyMessages.put(key, message);
                 }
             }
-        } catch (Exception e){
-            //do nothing
-        }
+        } catch (Exception e){}
     }
 
     public HashMap<String, String> getResponseBodyMessages(){

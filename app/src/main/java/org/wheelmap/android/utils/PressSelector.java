@@ -14,7 +14,6 @@ public class PressSelector implements OnTouchListener{
 			setAlphaForView(v, 1);
 		}else{
 			setAlphaForView(v, 0.5f);
-			//return true;
 		}
 		return false;
 	}

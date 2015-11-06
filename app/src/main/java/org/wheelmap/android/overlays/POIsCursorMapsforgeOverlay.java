@@ -105,8 +105,6 @@ public class POIsCursorMapsforgeOverlay extends ItemizedOverlay<OverlayItem> {
         int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
         Drawable marker = null;
         if (nodeTypeId != 0) {
-           // marker = manager.lookupNodeType(nodeTypeId).stateDrawables
-           //         .get(state);
             marker = manager.lookupNodeType(nodeTypeId).getStateDrawable(state);
         }
 

@@ -345,11 +345,7 @@ public class POIsProvider extends ContentProvider {
             if(valuesArray[0].size() <= 3){
                    return bulkInsertPhoto(uri,valuesArray);
             }
-        }catch(Exception ex){
-            //Log.d(ex.getMessage());
-        }
-
-
+        }catch(Exception ex){}
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
