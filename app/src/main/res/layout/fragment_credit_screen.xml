@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DetailView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cfcfcf">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/credit_screen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/credits_logo" />
+
+        <TextView
+            android:id="@+id/credits_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/info_wheelmap_android_two" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/credits_bund" />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/credits_sozialhelden" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_development"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_smf" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_android_development_one" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_android_development_two" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_webdevelopment_one" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_design"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/info_design_one" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <include layout="@layout/separator" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/title_info"
+            android:textStyle="bold" />
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tableLayout1"
+
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <!-- 2 columns -->
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:padding="5dip">
+
+                <TextView
+
+                    android:layout_weight="1"
+                    android:gravity="right|end"
+                    android:paddingEnd="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/info_POIData" />
+
+                <TextView
+                    android:id="@+id/openStreetMapLink"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:text="@string/info_kartendaten_points" />
+
+            </TableRow>
+            <!-- 2 columns -->
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dip">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="right|end"
+                    android:paddingEnd="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/info_kartendaten" />
+
+                <TextView
+
+                    android:id="@+id/openMapBox"
+                    android:layout_weight="1"
+                    android:gravity="left|start"
+                    android:text="@string/info_kartendaten_three" />
+
+            </TableRow>
+            <!-- 2 columns -->
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dip">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="right|end"
+                    android:paddingEnd="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/legal_notice_iconscollection" />
+
+                <TextView
+                    android:id="@+id/linkNicolasMollet"
+                    android:layout_weight="1"
+                    android:gravity="left|start"
+                    android:text="@string/legal_notice_commonsware_copyright_nicolas" />
+
+
+            </TableRow>
+
+        </TableLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/legal_notice_entypo" />
+    </LinearLayout>
+</ScrollView>

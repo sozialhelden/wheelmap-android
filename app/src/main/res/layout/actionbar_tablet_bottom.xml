@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actionbar_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/ab_solid_wheelmap"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/switch_view"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_list" />
+
+    <ImageView
+        android:id="@+id/menu_search"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_lupe" />
+
+    <ImageView
+        android:id="@+id/menu_filter"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_status" />
+
+    <ImageView
+        android:id="@+id/menu_filter_kategorie"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_kategorie" />
+
+    <ImageView
+        android:id="@+id/menu_wc"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:src="@drawable/ic_wc" />
+
+    <ImageView
+        android:id="@+id/menu_about"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:paddingBottom="10dp"
+        android:paddingTop="5dp"
+        android:src="@drawable/map_navbar_btn_info" />
+
+    <ImageView
+        android:id="@+id/menu_login"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:onClick="onOptionItemBottomClicked"
+        android:paddingBottom="15dp"
+        android:paddingTop="10dp"
+        android:src="@drawable/start_ic_login" />
+
+</LinearLayout>

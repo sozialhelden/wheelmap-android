@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources>
-  <string name="photo_upload_failed">Opload fejlede</string>
-  <string name="photo_upload_successfully">Oploadede succesfuldt</string>
-  <string name="photo_upload_picker_title">Opload billedemuligheder</string>
-  <string name="photo_upload_picker_gallery">Galleri</string>
-  <string name="photo_upload_picker_take_new">Tag et nyt billede</string>
-  <string name="photo_upload_progress_title">Oploader billede...</string>
-</resources>

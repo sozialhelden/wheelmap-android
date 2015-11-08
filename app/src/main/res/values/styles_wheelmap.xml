@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.wheelmap" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
+        <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
+        <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+        <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
+        <item name="actionDropDownStyle">@style/wheelmap_DropDownNav</item>
+        <item name="actionBarStyle">@style/wheelmap_solid_ActionBar</item>
+        <item name="android:actionBarItemBackground" tools:targetApi="ice_cream_sandwich">
+            @drawable/selectable_background_wheelmap
+        </item>
+        <item name="android:popupMenuStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_PopupMenu
+        </item>
+        <item name="android:dropDownListViewStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_DropDownListView
+        </item>
+        <item name="android:actionBarTabStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_ActionBarTabStyle
+        </item>
+        <item name="android:actionDropDownStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_DropDownNav
+        </item>
+        <item name="android:actionBarStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_solid_ActionBar
+        </item>
+        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
+        <item name="android:actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
+
+    </style>
+
+    <style name="wheelmap_solid_ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/ab_solid_wheelmap</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_wheelmap</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_wheelmap</item>
+        <item name="progressBarStyle">@style/wheelmap_ProgressBar</item>
+
+        <item name="android:background">@drawable/ab_solid_wheelmap</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wheelmap</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wheelmap</item>
+        <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>                  °
+    </style>
+
+    <style name="wheelmap_transparent_ActionBar" parent="android:Widget.Holo.ActionBar">
+        <item name="background">@drawable/ab_transparent_wheelmap</item>
+        <item name="progressBarStyle">@style/wheelmap_ProgressBar</item>
+
+        <item name="android:background">@drawable/ab_transparent_wheelmap</item>
+        <item name="android:progressBarStyle">@style/wheelmap_ProgressBar</item>
+    </style>
+
+    <style name="wheelmap_PopupMenu" parent="android:Widget.Holo.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wheelmap</item>
+    </style>
+
+    <style name="wheelmap_DropDownListView" parent="android:Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_wheelmap</item>
+    </style>
+
+    <style name="wheelmap_ActionBarTabStyle" parent="android:Widget.Holo.ActionBar.TabView">
+        <item name="background">@drawable/tab_indicator_ab_wheelmap</item>
+
+        <item name="android:background">@drawable/tab_indicator_ab_wheelmap</item>
+    </style>
+
+    <style name="wheelmap_DropDownNav" parent="android:Widget.Spinner.DropDown">
+        <item name="background">@drawable/spinner_background_ab_wheelmap</item>
+
+        <item name="android:background">@drawable/spinner_background_ab_wheelmap</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wheelmap</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_wheelmap</item>
+    </style>
+
+    <style name="wheelmap_ProgressBar" parent="android:Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_wheelmap</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.wheelmap.widget" parent="android:Widget.Holo">
+        <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
+        <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+
+        <item name="android:popupMenuStyle">@style/wheelmap_PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+    </style>
+
+    <style name="wheelmap_dasboard_button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+</resources>

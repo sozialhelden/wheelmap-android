@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources>
-  <!--NEW-->
-  <!--todo: add to transifex-->
-  <string name="search_mode_no_point_found">Keine Orte gefunden, drücke den zurück Knopf!</string>
-  <string name="poi_property_comment_add_comment">Kommentar hinzufügen</string>
-  <string name="poi_property_comment_add_adress">Addresse hinzufügen</string>
-  <string name="poi_property_comment_add_photos">Fotos hinzufügen</string>
-</resources>

@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources>
-  <string name="photo_upload_failed">Hochladen fehlgeschlagen</string>
-  <string name="photo_upload_successfully">Hochladen erfolgreich</string>
-  <string name="photo_upload_picker_title">Hochladeoptionen</string>
-  <string name="photo_upload_picker_gallery">Galerie</string>
-  <string name="photo_upload_picker_take_new">Neues Foto machen</string>
-  <string name="photo_upload_progress_title">Photo hochladen...</string>
-</resources>
