@@ -51,6 +51,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.akquinet.android.androlog.Constants;
 import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
 
@@ -104,6 +105,9 @@ public class WheelmapApp extends Application {
         INSTANCE = this;
 
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
+        if (BuildConfig.DEBUG) {
+            Log.setDefaultLogLevel(Constants.DEBUG);
+        }
         Log.d(TAG, "onCreate: creating App");
 
         // LazyLoading images.
