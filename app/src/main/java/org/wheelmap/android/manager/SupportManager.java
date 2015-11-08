@@ -193,7 +193,7 @@ public class SupportManager {
 
         private WeakReference<Drawable> iconDrawable = new WeakReference<Drawable>(null);
 
-        private WeakHashMap<WheelchairFilterState, Drawable> stateDrawables = new WeakHashMap<WheelchairFilterState, Drawable>();
+        private WeakHashMap<WheelchairFilterState, WeakReference<Drawable>> stateDrawables = new WeakHashMap<>();
 
         private Map<WheelchairFilterState, Drawable> defaults;
 
@@ -209,18 +209,20 @@ public class SupportManager {
             if(defaults != null){
                return defaults.get(state);
             }
-            if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
+            if(!stateDrawables.containsKey(state) || stateDrawables.get(state).get() == null){
                  synchronized (this){
-                     if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
-                         Log.d(TAG,"load new: "+iconPath+" "+state);
-                         stateDrawables.put(state,WheelmapApp.getSupportManager().getStateDrawable(iconPath,false,base, state));
+                     if(!stateDrawables.containsKey(state) || stateDrawables.get(state).get() == null){
+                         Log.d(TAG, "load new: " + iconPath + " " + state);
+                         Drawable drawable = WheelmapApp.getSupportManager().getStateDrawable(iconPath, false, base, state);
+                         stateDrawables.put(state, new WeakReference<>(drawable));
+                         return drawable;
                      }
                  }
             }
-            if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
+            if(!stateDrawables.containsKey(state) || stateDrawables.get(state).get() == null){
                  return base.getStateDrawable(state);
             }
-            return stateDrawables.get(state);
+            return stateDrawables.get(state).get();
         }
 
 
@@ -810,10 +812,13 @@ public class SupportManager {
         }
     }
 
-    public void cleanReferences(Map<WheelchairFilterState, Drawable> lookupMap) {
-        for (Map.Entry<WheelchairFilterState, Drawable> entry : lookupMap
+    public void cleanReferences(Map<WheelchairFilterState, WeakReference<Drawable>> lookupMap) {
+        for (Map.Entry<WheelchairFilterState, WeakReference<Drawable>> entry : lookupMap
                 .entrySet()) {
-            entry.getValue().setCallback(null);
+            Drawable value = entry.getValue().get();
+            if (value != null) {
+                value.setCallback(null);
+            }
         }
     }
 
