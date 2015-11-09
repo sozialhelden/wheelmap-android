@@ -58,8 +58,6 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
 
     private final int DEFAULT_ZOOMLEVEL_LOCATED = 18;
     private final int DEFAULT_ZOOMLEVEL_UNKNOWN = 6;
-    private final double DEFAULT_LATITUDE = 51.28940590271679;
-    private final double DEFAULT_LONGITUDE = 10.26123046875;
 
     // ===========================================================
     // Fields
@@ -80,7 +78,7 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
     private final Point mMapCoords = new Point();
 
     private Location mLocation;
-    private final GeoPoint mGeoPoint = new GeoPoint(DEFAULT_LATITUDE, DEFAULT_LONGITUDE); // for reuse
+    private final GeoPoint mGeoPoint = new GeoPoint(0, 0); // for reuse
     private boolean mIsLocationEnabled = false;
     protected boolean mIsFollowing = false; // follow location updates
     protected boolean mDrawAccuracyEnabled = true;
@@ -488,7 +486,6 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
         }
 
         mLocation = location;
-        mMapCoords.set((int) DEFAULT_LATITUDE, (int) DEFAULT_LONGITUDE);
 
         if (mLocation != null) {
             TileSystem.LatLongToPixelXY(mLocation.getLatitude(), mLocation.getLongitude(),
@@ -523,9 +520,6 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
                     }
                 });
             }
-        } else {
-            mMapController.setZoom(DEFAULT_ZOOMLEVEL_UNKNOWN);
-            mMapController.animateTo(mGeoPoint);
         }
 
         for (final Runnable runnable : mRunOnFirstFix) {

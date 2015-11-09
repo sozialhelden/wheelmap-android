@@ -39,6 +39,10 @@ public class MyLocationManager {
 
     private static MyLocationManager sInstance;
 
+    // center of germany
+    public static final double DEFAULT_LATITUDE = 51.28940590271679;
+    public static final double DEFAULT_LONGITUDE = 10.26123046875;
+
     private static final long TIME_DISTANCE_LIMIT = 5*60*1000;//TimeUnit.MINUTES.toMillis(5); // 5 Minutes
 
     private static final long TIME_GPS_UPDATE_INTERVAL = 1000 * 10;
@@ -75,8 +79,11 @@ public class MyLocationManager {
 
         public final Location location;
 
-        public LocationEvent(Location location) {
+        public final boolean isValid;
+
+        public LocationEvent(Location location, boolean isValid) {
             this.location = location;
+            this.isValid = isValid;
         }
     }
 
@@ -112,15 +119,16 @@ public class MyLocationManager {
         mNetworkLocationListener = new MyNetworkLocationListener();
 
         mCurrentBestLocation = calcBestLastKnownLocation();
+        boolean isValid = true;
         if (mCurrentBestLocation == null) {
-            // Berlin, Andreasstraße 10
+            isValid = false;
             mCurrentBestLocation = new Location(
                     LocationManager.NETWORK_PROVIDER);
-            mCurrentBestLocation.setLongitude(13.431240);
-            mCurrentBestLocation.setLatitude(52.512523);
-            mCurrentBestLocation.setAccuracy(1000 * 100);
+            mCurrentBestLocation.setLongitude(DEFAULT_LONGITUDE);
+            mCurrentBestLocation.setLatitude(DEFAULT_LATITUDE);
+            mCurrentBestLocation.setAccuracy(1000 * 1000);
         }
-        mBus.postSticky(new LocationEvent(mCurrentBestLocation));
+        mBus.postSticky(new LocationEvent(mCurrentBestLocation, isValid));
         wasBestLastKnownLocation = true;
 
         requestLocationUpdates();
@@ -285,7 +293,7 @@ public class MyLocationManager {
     private void updateLocation(Location location) {
         Log.d( TAG, "updateLocation: " + location);
         mCurrentBestLocation = location;
-        mBus.postSticky(new LocationEvent(mCurrentBestLocation));
+        mBus.postSticky(new LocationEvent(mCurrentBestLocation, true));
     }
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
