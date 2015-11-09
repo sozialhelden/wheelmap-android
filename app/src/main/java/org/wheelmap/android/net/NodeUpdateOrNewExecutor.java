@@ -32,11 +32,15 @@ import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.net.request.AcceptType;
 import org.wheelmap.android.net.request.NodeUpdateOrNewAllRequestBuilder;
 import org.wheelmap.android.net.request.RequestBuilder;
+import org.wheelmap.android.net.request.ToiletStateUpdateRequestBuilder;
 import org.wheelmap.android.net.request.WheelchairUpdateRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.akquinet.android.androlog.Log;
 
@@ -77,7 +81,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
         boolean result = true;
         RestServiceException to_throw=null;
         RestServiceException errorException = null;
-        while (!mCursor.isAfterLast()) {
+        cursorLoop: while (!mCursor.isAfterLast()) {
 
             String editApiKey = getApiKey();
             if (editApiKey.length() == 0) {
@@ -86,15 +90,16 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
                         new RuntimeException("No apikey to edit available"));
             }
 
-            RequestBuilder requestBuilder = null;
+            List<RequestBuilder> requestBuilderList = new ArrayList<>();
 
             int dirtyTag = POIHelper.getDirtyTag(mCursor);
             switch (dirtyTag) {
                 case POIs.DIRTY_STATE:
-                    requestBuilder = wheelchairUpdateRequestBuilder(editApiKey);
+                    requestBuilderList.add(wheelchairUpdateRequestBuilder(editApiKey));
+                    requestBuilderList.add(toiletStateUpdateRequestBuilder(editApiKey));
                     break;
                 case POIs.DIRTY_ALL:
-                    requestBuilder = updateOrNewRequestBuilder(editApiKey);
+                    requestBuilderList.add(updateOrNewRequestBuilder(editApiKey));
                     break;
                 default:
                     throw new RestServiceException(
@@ -104,26 +109,28 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
             }
 
             long idPOI = POIHelper.getId(mCursor);
-
-            try{
-                Object response = executeRequest(requestBuilder);
-                if(response != null && response instanceof Message){
-                    if(!((Message) response).getMessage().equals("OK")){
+            for (RequestBuilder requestBuilder : requestBuilderList) {
+                try{
+                    Message response = executeRequest(requestBuilder);
+                    if(response != null){
+                        if(!response.getMessage().equals("OK")){
+                            PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
+                            result = false;
+                        }
+                    }
+                }catch(RestServiceException e) {
+                    if(e.getMessage().contains("Bad Request")){
                         PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
+                        errorException = e;
                         result = false;
+                    }else{
+                        to_throw = e;
+                        mCursor.moveToNext();
+                        continue cursorLoop;
                     }
                 }
-            }catch(RestServiceException e) {
-                if(e.getMessage().contains("Bad Request")){
-                    PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
-                    errorException = e;
-                    result = false;
-                }else{
-                    to_throw = e;
-                    mCursor.moveToNext();
-                    continue;
-                }
             }
+
             PrepareDatabaseHelper.markDirtyAsClean(getResolver(), idPOI);
             mCursor.moveToNext();
         }
@@ -150,8 +157,16 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
     private RequestBuilder wheelchairUpdateRequestBuilder(String apiKey) {
         String id = POIHelper.getWMId(mCursor);
+
         WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
         return new WheelchairUpdateRequestBuilder(getServer(), apiKey,
+                AcceptType.JSON, id, state);
+    }
+
+    private RequestBuilder toiletStateUpdateRequestBuilder(String apiKey){
+        String id = POIHelper.getWMId(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
+        return new ToiletStateUpdateRequestBuilder(getServer(), apiKey,
                 AcceptType.JSON, id, state);
     }
 
