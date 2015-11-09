@@ -165,7 +165,7 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
     private RequestBuilder toiletStateUpdateRequestBuilder(String apiKey){
         String id = POIHelper.getWMId(mCursor);
-        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchairToilet(mCursor);
         return new ToiletStateUpdateRequestBuilder(getServer(), apiKey,
                 AcceptType.JSON, id, state);
     }
