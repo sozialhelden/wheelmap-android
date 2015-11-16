@@ -163,9 +163,9 @@
     <string name="profile_steps_to_osm_account">Vier Schritte zum Login:\n
 1. Auf “Weiter zur OSM” klicken und dort OSM-Nutzerkonto anlegen\n
 2. Email-Programm öffnen und Bestätigungslink klicken\n
-3. Wheelmap-App öffnen \n4. Mit dem OSM-Nutzerkonto (Nutzernamen &amp; Passwort) einloggen\n</string>
+3. Wheelmap-App öffnen\n
+4. Mit dem OSM-Nutzerkonto (Nutzernamen &amp; Passwort) einloggen\n</string>
   <string name="signed_in">Eingeloggt</string>
-
   <string name="introduction_01_title">Willkomen bei der Wheelmap</string>
   <string name="introduction_01_text">Jetzt kannst du rollstuhlgerechte Orte\nsuchen, finden und markieren.</string>
   <string name="introduction_02_title">Orte suchen</string>

@@ -170,16 +170,14 @@
 3. Open the Wheelmap app\n
 4. Log in with your OSM user account (username &amp; password)\n</string>
     <string name="signed_in">Logged in</string>
-
-    <string name="introduction_01_title">Willkomen bei der Wheelmap</string>
-    <string name="introduction_01_text">Jetzt kannst du rollstuhlgerechte Orte\nsuchen, finden und markieren.</string>
-    <string name="introduction_02_title">Orte suchen</string>
-    <string name="introduction_02_text">Finde rollstuhlgerechte Orte\nin deiner Nähe.</string>
-    <string name="introduction_03_title">Orte und Toiletten markieren</string>
-    <string name="introduction_03_text">Dafür musst du nicht\nangemeldet sein.</string>
-    <string name="introduction_04_title">Orte bearbeiten</string>
-    <string name="introduction_04_text">Dafür musst du mit Profil\nangemeldet sein.</string>
-    <string name="introduction_05_title">Und jetzt viel Spaß beim Suchen,\nFinden und Mappen!</string>
-    <string name="introduction_05_text">Weitere Tipps und Infos findest du auch\nin den FAQs auf Wheelmap.org.\nLust auf News aus der Community?\nStöbere durch den Blog und aboniere\nunseren Newsletter!</string>
-
+    <string name="introduction_01_title">Welcome to Wheelmap</string>
+    <string name="introduction_01_text">You can search for, find and mark\nwheelchair accessible places here.</string>
+    <string name="introduction_02_title">Search for places</string>
+    <string name="introduction_02_text">Find wheelchair accessible\nplaces nearby.</string>
+    <string name="introduction_03_title">Mark places and toilets</string>
+    <string name="introduction_03_text">You do not need\nto be registered for this.</string>
+    <string name="introduction_04_title">Edit places</string>
+    <string name="introduction_04_text">You must be logged in\nwith your Profile for this. </string>
+    <string name="introduction_05_title">And now: Have fun as you search,\nfind and map!</string>
+    <string name="introduction_05_text">You can find more tips and infos\nin the FAQs on Wheelmap.org.\nInterested in news from the community?\nCheck out the blog or subscribe\nto our newsletter.</string>
 </resources>
