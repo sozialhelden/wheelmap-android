@@ -21,20 +21,19 @@
  */
 package org.wheelmap.android.model;
 
-import org.holoeverywhere.preference.PreferenceManagerHelper;
-import org.wheelmap.android.manager.SupportManager;
-import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.model.Support.CategoriesContent;
-import org.wheelmap.android.model.Wheelmap.POIs;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.model.Support.CategoriesContent;
+import org.wheelmap.android.model.Wheelmap.POIs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,15 +140,13 @@ public class UserQueryHelper {
     };
 
     private void initWheelstateQuery() {
-        SharedPreferences prefs = PreferenceManagerHelper
-                .getDefaultSharedPreferences(mContext);
+        SharedPreferences prefs = WheelmapApp.getDefaultPrefs();
         prefs.registerOnSharedPreferenceChangeListener(prefsListener);
         calcWheelchairStateQuery(prefs);
     }
 
     private void initWheelchairToiletstateQuery() {
-        SharedPreferences prefs = PreferenceManagerHelper
-                .getDefaultSharedPreferences(mContext);
+        SharedPreferences prefs = WheelmapApp.getDefaultPrefs();
         prefs.registerOnSharedPreferenceChangeListener(prefsListener);
         calcWheelchairToiletStateQuery(prefs);
     }

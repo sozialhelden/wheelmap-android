@@ -40,10 +40,10 @@ import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
 import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.wheelmap.android.activity.MapActivity;
+import org.wheelmap.android.activity.profile.ProfileActivity;
 import org.wheelmap.android.adapter.HorizontalImageAdapter;
 import org.wheelmap.android.adapter.HorizontalView;
 import org.wheelmap.android.adapter.Item;
-import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.async.UploadPhotoTask;
 import org.wheelmap.android.manager.MyLocationManager;
@@ -55,6 +55,7 @@ import org.wheelmap.android.model.POIHelper;
 import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
@@ -150,6 +151,7 @@ public class POIDetailFragment extends Fragment implements
     private final static int FOCUS_TO_NOTHING = 0;
     private final static int FOCUS_TO_ADRESS = 1;
     private final static int FOCUS_TO_COMMENT = 2;
+    private static final int REQUEST_CODE_LOGIN = 42;
 
     private IMapController mMapController;
 
@@ -478,7 +480,7 @@ public class POIDetailFragment extends Fragment implements
         buttonPhoto.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDialog();
+                 startPickPhotoDialog();
             }
         });
 
@@ -533,7 +535,7 @@ public class POIDetailFragment extends Fragment implements
         layoutPhoto.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDialog();
+                startPickPhotoDialog();
 
             }
         });
@@ -1242,7 +1244,15 @@ public class POIDetailFragment extends Fragment implements
     }
 
 
-    private void startDialog() {
+    private void startPickPhotoDialog() {
+
+        // user must be logged in
+        UserCredentials credentials = new UserCredentials(getActivity());
+        if (!credentials.isLoggedIn()) {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+            return;
+        }
 
         final Item[] items = {new Item(getString(R.string.photo_upload_picker_gallery),android.R.drawable.ic_menu_gallery),new Item(getString(R.string.photo_upload_picker_take_new), android.R.drawable.ic_menu_camera)};
 

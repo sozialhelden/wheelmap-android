@@ -34,7 +34,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
-import org.holoeverywhere.preference.PreferenceManagerHelper;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.mapping.node.Node;
@@ -43,7 +42,6 @@ import org.wheelmap.android.mapping.node.Photos;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.UserQueryHelper;
 import org.wheelmap.android.model.Wheelmap;
-//import org.wheelmap.android.modules.MainModule;
 import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
@@ -51,8 +49,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.akquinet.android.androlog.Constants;
 import de.akquinet.android.androlog.Log;
 import roboguice.RoboGuice;
+
+//import org.wheelmap.android.modules.MainModule;
 
 public class WheelmapApp extends Application {
 
@@ -104,6 +105,9 @@ public class WheelmapApp extends Application {
         INSTANCE = this;
 
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
+        if (BuildConfig.DEBUG) {
+            Log.setDefaultLogLevel(Constants.DEBUG);
+        }
         Log.d(TAG, "onCreate: creating App");
 
         // LazyLoading images.
@@ -160,7 +164,7 @@ public class WheelmapApp extends Application {
     }
 
     private SharedPreferences getDefaultSharedPreferences(){
-        return PreferenceManagerHelper.getDefaultSharedPreferences(INSTANCE.getApplicationContext());
+        return getSharedPreferences(getPackageName() + "_preferences", Context.MODE_PRIVATE);
     }
 
     public BigInteger getCountPOIs(){

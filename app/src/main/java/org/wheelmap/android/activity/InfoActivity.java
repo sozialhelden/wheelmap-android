@@ -23,10 +23,12 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -45,6 +47,14 @@ public class InfoActivity extends AppCompatActivity implements OnInfoListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_info);
+
+        if (UtilsMisc.isTablet(this)) {
+            int widthDp = 300;
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                widthDp = 500;
+            }
+            findViewById(R.id.fragment_info).setMinimumWidth((int) UtilsMisc.dbToPx(getResources(), widthDp));
+        }
 
         String versionName;
         int versionCode;

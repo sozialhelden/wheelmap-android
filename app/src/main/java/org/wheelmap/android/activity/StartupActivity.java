@@ -21,7 +21,19 @@
  */
 package org.wheelmap.android.activity;
 
-import org.holoeverywhere.preference.PreferenceManagerHelper;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.view.WindowManager;
+
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -35,19 +47,6 @@ import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
-
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.text.TextUtils;
-import android.view.WindowManager;
 
 import java.util.List;
 
@@ -214,7 +213,7 @@ public class StartupActivity extends Activity implements
 
         intent.putExtra(Extra.REQUEST, true);
         startActivity(intent);
-        SharedPreferences defaultPreferences = PreferenceManagerHelper.getDefaultSharedPreferences(this);
+        SharedPreferences defaultPreferences = WheelmapApp.getDefaultPrefs();
         if(defaultPreferences.getBoolean(FIRST_START, true)){
             startIntroductionActivity();
             defaultPreferences.edit().putBoolean(FIRST_START, false).commit();

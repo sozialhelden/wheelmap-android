@@ -144,6 +144,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private EventBus mBus;
 
+    private MyLocationNewOverlayFixed mMyLocationOverlay;
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
     private ImageButton mBtnLocate;
@@ -274,11 +275,11 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         mMapView.getOverlays().add(mPoisItemizedOverlay);
 
-        MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
+        mMyLocationOverlay = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
                 mMapView);
-        a.enableMyLocation();
-        mMyLocationProvider.startLocationProvider(a);
-        mMapView.getOverlays().add(a);
+
+        mMyLocationProvider.startLocationProvider(mMyLocationOverlay);
+        mMapView.getOverlays().add(mMyLocationOverlay);
 
         mMapView.setMapListener(this);
 
@@ -473,7 +474,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                         if (center) {
                             executeMapPositioning(centerPoint, zoom);
                         }
-                        if (request){
+                        if (request) {
                             requestUpdate();
                         }
 
@@ -784,7 +785,21 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     public void onEventMainThread(MyLocationManager.LocationEvent locationEvent) {
+        if (!locationEvent.isValid) {
+            if (mMapView != null && !isCentered) {
+                centerMap(new GeoPoint(MyLocationManager.DEFAULT_LATITUDE, MyLocationManager.DEFAULT_LONGITUDE), false);
+                setZoomIntern(7);
+                mMapView.getOverlays().remove(mMyLocationOverlay);
+            }
+            return;
+        }
+        if (mMapView != null) {
+            if (!mMapView.getOverlays().contains(mMyLocationOverlay)) {
+                mMapView.getOverlays().add(mMyLocationOverlay);
+            }
+        }
         mLocation = locationEvent.location;
+
         Log.d(TAG, "updateLocation: " + mLocation);
         GeoPoint geoPoint = new GeoPoint(mLocation.getLatitude(),
                 mLocation.getLongitude());
