@@ -107,7 +107,7 @@ public class SupportManager {
 
     public final static int UNKNOWN_TYPE = 0;
 
-    public static class AccessFilterAttributes{
+    public static class AccessFilterAttributes {
         public final int titleStringId;
 
         public final int stringId;
@@ -121,8 +121,8 @@ public class SupportManager {
         public final String prefsKey;
 
         AccessFilterAttributes(int titleStringId, int stringId,
-                     int settingsStringId, int drawableId, int colorId,
-                     String prefsKey) {
+                               int settingsStringId, int drawableId, int colorId,
+                               String prefsKey) {
             this.titleStringId = titleStringId;
             this.stringId = stringId;
             this.settingsStringId = settingsStringId;
@@ -131,34 +131,51 @@ public class SupportManager {
             this.prefsKey = prefsKey;
         }
 
-        public int getTitleStringId(){
+        public int getTitleStringId() {
             return titleStringId;
-        };
-        public int getStringId(){
+        }
+
+        ;
+
+        public int getStringId() {
             return stringId;
-        };
-        public int getSettingsStringId(){
+        }
+
+        ;
+
+        public int getSettingsStringId() {
             return settingsStringId;
-        };
-        public int getDrawableId(){
+        }
+
+        ;
+
+        public int getDrawableId() {
             return drawableId;
-        };
-        public int getColorId(){
+        }
+
+        ;
+
+        public int getColorId() {
             return colorId;
-        };
-        public String getPrefsKey(){
+        }
+
+        ;
+
+        public String getPrefsKey() {
             return prefsKey;
-        };
+        }
+
+        ;
     }
 
     public final static Map<WheelchairFilterState, WheelchairAttributes> wsAttributes
             = new HashMap<WheelchairFilterState, WheelchairAttributes>();
 
-    public static class WheelchairAttributes extends AccessFilterAttributes{
+    public static class WheelchairAttributes extends AccessFilterAttributes {
 
         WheelchairAttributes(int titleStringId, int stringId,
-                int settingsStringId, int drawableId, int colorId,
-                String prefsKey) {
+                             int settingsStringId, int drawableId, int colorId,
+                             String prefsKey) {
             super(titleStringId, stringId, settingsStringId, drawableId, colorId, prefsKey);
         }
     }
@@ -166,7 +183,7 @@ public class SupportManager {
     public final static Map<WheelchairFilterState, WheelchairToiletAttributes> wheelchairToiletAttributes
             = new HashMap<WheelchairFilterState, WheelchairToiletAttributes>();
 
-    public static class WheelchairToiletAttributes extends AccessFilterAttributes{
+    public static class WheelchairToiletAttributes extends AccessFilterAttributes {
 
         WheelchairToiletAttributes(int titleStringId, int stringId,
                                    int settingsStringId, int drawableId, int colorId,
@@ -180,7 +197,7 @@ public class SupportManager {
     public static class NodeType {
 
         public NodeType(int id, String identifier, String localizedName,
-                int categoryId) {
+                        int categoryId) {
             this.id = id;
             this.identifier = identifier;
             this.localizedName = localizedName;
@@ -205,20 +222,20 @@ public class SupportManager {
 
         public int categoryId;
 
-        public Drawable getStateDrawable(WheelchairFilterState state){
-            if(defaults != null){
-               return defaults.get(state);
+        public Drawable getStateDrawable(WheelchairFilterState state) {
+            if (defaults != null) {
+                return defaults.get(state);
             }
-            if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
-                 synchronized (this){
-                     if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
-                         Log.d(TAG,"load new: "+iconPath+" "+state);
-                         stateDrawables.put(state,WheelmapApp.getSupportManager().getStateDrawable(iconPath,false,base, state));
-                     }
-                 }
+            if (!stateDrawables.containsKey(state) || stateDrawables.get(state) == null) {
+                synchronized (this) {
+                    if (!stateDrawables.containsKey(state) || stateDrawables.get(state) == null) {
+                        Log.d(TAG, "load new: " + iconPath + " " + state);
+                        stateDrawables.put(state, WheelmapApp.getSupportManager().getStateDrawable(iconPath, false, base, state));
+                    }
+                }
             }
-            if(!stateDrawables.containsKey(state) || stateDrawables.get(state) == null){
-                 return base.getStateDrawable(state);
+            if (!stateDrawables.containsKey(state) || stateDrawables.get(state) == null) {
+                return base.getStateDrawable(state);
             }
             return stateDrawables.get(state);
         }
@@ -292,7 +309,7 @@ public class SupportManager {
         mNeedsReloading = false;
         if (!(checkForLocales() && checkForCategories() && checkForNodeTypes())) {
             mNeedsReloading = true;
-        }else{
+        } else {
             Log.i(TAG, "Loading lookup data");
             initLookup();
         }
@@ -343,14 +360,14 @@ public class SupportManager {
 
     public void reloadStageFour() {
         initNodeTypes();
-        if(UtilsMisc.isTablet(mContext)){
+        if (UtilsMisc.isTablet(mContext)) {
             mNeedsReloading = false;
-        }else{
+        } else {
             retrieveTotalNodeCount();
         }
     }
 
-    public void reloadMarkerIcon(){
+    public void reloadMarkerIcon() {
         initMarkerIcon();
         retrieveNodeTypes();
     }
@@ -360,8 +377,8 @@ public class SupportManager {
         mNeedsReloading = false;
     }
 
-    public void retrieveTotalNodeCount(){
-        Log.d(TAG,"retrieveTotalNodeCount");
+    public void retrieveTotalNodeCount() {
+        Log.d(TAG, "retrieveTotalNodeCount");
         Intent nodeCountIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
                 RestService.class);
         nodeCountIntent.putExtra(Extra.WHAT, What.RETRIEVE_TOTAL_NODE_COUNT);
@@ -369,8 +386,8 @@ public class SupportManager {
         mContext.startService(nodeCountIntent);
     }
 
-    public void retrieveMarkerIcons(){
-        Log.d(TAG,"retrieveMarkerIcons");
+    public void retrieveMarkerIcons() {
+        Log.d(TAG, "retrieveMarkerIcons");
         Intent nodeCountIntent = new Intent(Intent.ACTION_SYNC, null, mContext,
                 RestService.class);
         nodeCountIntent.putExtra(Extra.WHAT, What.RETRIEVE_MARKER_ICONS);
@@ -378,17 +395,17 @@ public class SupportManager {
         mContext.startService(nodeCountIntent);
     }
 
-    public void initMarkerIcon(){
+    public void initMarkerIcon() {
         //rest is loaded in initNodeType    #
         mDefaultNodeType.defaults = createDefaultDrawables();
     }
 
-    public void initTotalNodeCount(){
+    public void initTotalNodeCount() {
 
     }
 
     public void retrieveCategories() {
-        Log.d(TAG,"retrieveCategories");
+        Log.d(TAG, "retrieveCategories");
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
@@ -403,7 +420,7 @@ public class SupportManager {
     }
 
     public void retrieveNodeTypes() {
-        Log.d(TAG,"retrieveNodeTypes");
+        Log.d(TAG, "retrieveNodeTypes");
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(mContext);
         String locale = prefs.getString(PREFS_SERVICE_LOCALE, "");
@@ -419,7 +436,7 @@ public class SupportManager {
     }
 
 
-    private boolean  checkIfUpdateDurationPassed(int module) {
+    private boolean checkIfUpdateDurationPassed(int module) {
         Date date = LastUpdateContent.queryTimeStamp(mContext.getContentResolver(), module);
         if (date == null) {
             return true;
@@ -595,7 +612,7 @@ public class SupportManager {
             NodeType nodeType = new NodeType(id, identifier, localizedName,
                     categoryId);
             nodeType.iconPath = iconPath;
-            nodeType.base =  mDefaultNodeType;
+            nodeType.base = mDefaultNodeType;
             mNodeTypeLookup.put(id, nodeType);
 
             nodeType = new NodeType(id, identifier, localizedName,
@@ -613,7 +630,7 @@ public class SupportManager {
 
     private Map<WheelchairFilterState, Drawable> createDefaultDrawables() {
 
-        try{
+        try {
             Map<WheelchairFilterState, Drawable> lookupMap = new HashMap<WheelchairFilterState, Drawable>();
 
             lookupMap.put(WheelchairFilterState.UNKNOWN,
@@ -628,7 +645,7 @@ public class SupportManager {
             lookupMap.put(WheelchairFilterState.YES,
                     mContext.getResources().getDrawable(R.drawable.marker_yes));
             return lookupMap;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -639,7 +656,7 @@ public class SupportManager {
     }
 
     private Map<WheelchairFilterState, Drawable> createDrawableLookup2(String assetPathPattern,
-            boolean fileNotFoundIsFatal) {
+                                                                       boolean fileNotFoundIsFatal) {
         Map<WheelchairFilterState, Drawable> lookupMap = new HashMap<WheelchairFilterState, Drawable>();
         Log.v(TAG, "SupportManager:createDrawableLookup loading " + assetPathPattern);
 
@@ -649,11 +666,11 @@ public class SupportManager {
                     .valueOf(idx).toString().toLowerCase());
             Drawable drawable = null;
             try {
-                InputStream is=null;
-                if(MarkerIconExecutor.markerIconsDownloaded()){
+                InputStream is = null;
+                if (MarkerIconExecutor.markerIconsDownloaded()) {
                     File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                    File asset = new File(dir+"/"+path);
-                }else{
+                    File asset = new File(dir + "/" + path);
+                } else {
                     is = mAssetManager.open(path);
                 }
                 is = mAssetManager.open(path);
@@ -679,12 +696,12 @@ public class SupportManager {
         return lookupMap;
     }
 
-    private Map<WheelchairFilterState, Drawable> createSpecificDrawables(String assetPath,NodeType defaultNodes) {
-        return createDrawableLookup((assetPath), false,defaultNodes);
+    private Map<WheelchairFilterState, Drawable> createSpecificDrawables(String assetPath, NodeType defaultNodes) {
+        return createDrawableLookup((assetPath), false, defaultNodes);
     }
 
     private Map<WheelchairFilterState, Drawable> createDrawableLookup(String assetPathPattern,
-            boolean fileNotFoundIsFatal,NodeType defaultNodes) {
+                                                                      boolean fileNotFoundIsFatal, NodeType defaultNodes) {
         Map<WheelchairFilterState, Drawable> lookupMap = new HashMap<WheelchairFilterState, Drawable>();
         Log.v(TAG, "SupportManager:createDrawableLookup loading " + assetPathPattern);
 
@@ -692,16 +709,16 @@ public class SupportManager {
         for (idx = 0; idx < WheelchairFilterState.values().length - 1; idx++) {
             String path = String.format(assetPathPattern, WheelchairFilterState
                     .valueOf(idx).toString().toLowerCase());
-            path = path.replace(".png","@2x.png");
+            path = path.replace(".png", "@2x.png");
             Drawable drawable = null;
             WheelchairFilterState state = WheelchairFilterState.valueOf(idx);
             try {
-                InputStream is=null;
-                if(MarkerIconExecutor.markerIconsDownloaded()){
+                InputStream is = null;
+                if (MarkerIconExecutor.markerIconsDownloaded()) {
                     File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                    File asset = new File(dir+"/"+path);
+                    File asset = new File(dir + "/" + path);
                     is = new FileInputStream(asset);
-                }else{
+                } else {
                     //is = mAssetManager.open(path);
                 }
                 // is = mAssetManager.open(path);
@@ -711,12 +728,12 @@ public class SupportManager {
 
                 float density = mContext.getResources().getDisplayMetrics().density;
 
-                Drawable[] layers = {bg,drawable};
+                Drawable[] layers = {bg, drawable};
                 LayerDrawable layerDrawable = new MyLayerDrawable(layers);
-                if(defaultNodes == mDefaultNodeType){
-                    layerDrawable.setLayerInset(1,(int) (6*density),(int) (6*density),(int) (6*density),(int)(8*density));
-                }else{
-                    layerDrawable.setLayerInset(1,(int) (8*density),(int) (8*density),(int) (8*density),(int)(12*density));
+                if (defaultNodes == mDefaultNodeType) {
+                    layerDrawable.setLayerInset(1, (int) (6 * density), (int) (6 * density), (int) (6 * density), (int) (8 * density));
+                } else {
+                    layerDrawable.setLayerInset(1, (int) (8 * density), (int) (8 * density), (int) (8 * density), (int) (12 * density));
                 }
                 drawable = layerDrawable;
 
@@ -742,50 +759,47 @@ public class SupportManager {
     }
 
     Drawable getStateDrawable(String assetPathPattern,
-            boolean fileNotFoundIsFatal,NodeType defaultNodes, WheelchairFilterState state){
+                              boolean fileNotFoundIsFatal, NodeType defaultNodes, WheelchairFilterState state) {
 
-            String path = String.format(assetPathPattern, state.toString().toLowerCase());
-            path = path.replace(".png","@2x.png");
-            Drawable drawable = null;
-            try {
-                InputStream is=null;
-                if(MarkerIconExecutor.markerIconsDownloaded()){
-                    File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                    File asset = new File(dir+"/"+path);
-                    is = new FileInputStream(asset);
-                }
-                drawable = Drawable.createFromStream(is, null);
-                Drawable bg = defaultNodes.getStateDrawable(state);
-
-                float density = mContext.getResources().getDisplayMetrics().density;
-
-                Drawable[] layers = {bg,drawable};
-                LayerDrawable layerDrawable = new MyLayerDrawable(layers);
-                if(defaultNodes == mDefaultNodeType){
-                    layerDrawable.setLayerInset(1,(int) (6*density),(int) (6*density),(int) (6*density),(int)(8*density));
-                }else{
-                    layerDrawable.setLayerInset(1,(int) (8*density),(int) (8*density),(int) (8*density),(int)(12*density));
-                }
-                drawable = layerDrawable;
-
-                is.close();
-            } catch (IOException e) {
-                if (e instanceof FileNotFoundException && fileNotFoundIsFatal) {
-                    throw new IllegalStateException(
-                            "createDrawableLookup: This shouldnt happen. Asset " + path
-                                    + " could not be found.");
-                }
-                Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
-                drawable = mDefaultNodeType.getStateDrawable(state);
-            } catch (OutOfMemoryError ofe){
-                System.gc();
-                return null;
+        String path = String.format(assetPathPattern, state.toString().toLowerCase());
+        path = path.replace(".png", "@2x.png");
+        Drawable drawable = null;
+        try {
+            InputStream is = null;
+            if (MarkerIconExecutor.markerIconsDownloaded()) {
+                File dir = MarkerIconExecutor.getMarkerPath(mContext);
+                File asset = new File(dir + "/" + path);
+                is = new FileInputStream(asset);
             }
-            if (drawable != null) {
-                drawable.setBounds(-(int) fMarkerDimension, (int) (-fMarkerDimension * 2),
-                        (int) fMarkerDimension, 0);
+            drawable = Drawable.createFromStream(is, null);
+            Drawable bg = defaultNodes.getStateDrawable(state);
+
+            float density = mContext.getResources().getDisplayMetrics().density;
+
+            Drawable[] layers = {bg, drawable};
+            LayerDrawable layerDrawable = new MyLayerDrawable(layers);
+//            if (defaultNodes == mDefaultNodeType) {
+//                layerDrawable.setLayerInset(1, (int) (6 * density), (int) (6 * density), (int) (6 * density), (int) (8 * density));
+//            } else {
+//                layerDrawable.setLayerInset(1, (int) (8 * density), (int) (8 * density), (int) (8 * density), (int) (12 * density));
+//            }
+            layerDrawable.setLayerInset(1, (int) (6 * density), (int) (6 * density), (int) (6 * density), (int) (8 * density));
+            drawable = layerDrawable;
+
+            is.close();
+        } catch (IOException e) {
+            if (e instanceof FileNotFoundException && fileNotFoundIsFatal) {
+                throw new IllegalStateException(
+                        "createDrawableLookup: This shouldnt happen. Asset " + path
+                                + " could not be found.");
             }
-       return drawable;
+            Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
+            drawable = mDefaultNodeType.getStateDrawable(state);
+        } catch (OutOfMemoryError ofe) {
+            System.gc();
+            return null;
+        }
+        return drawable;
     }
 
     public Drawable getDefaultOverlayDrawable() {
@@ -864,7 +878,7 @@ public class SupportManager {
     }
 
     private void insertContentValues(Uri contentUri, String[] projection,
-            String whereClause, String[] whereValues, ContentValues values) {
+                                     String whereClause, String[] whereValues, ContentValues values) {
         ContentResolver resolver = mContext.getContentResolver();
         Cursor c = resolver.query(contentUri, projection, whereClause,
                 whereValues, null);
@@ -888,7 +902,7 @@ public class SupportManager {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences prefs,
-                String key) {
+                                              String key) {
             Log.d(TAG, "onPreferencesChanged: key = " + key);
 
             if (key.equals(PREFS_KEY_UNIT_PREFERENCE)) {
@@ -924,7 +938,7 @@ public class SupportManager {
                 PrefKey.WHEELCHAIR_STATE_UNKNOWN));
     }
 
-    static{
+    static {
         wheelchairToiletAttributes.put(WheelchairFilterState.TOILET_YES, new WheelchairToiletAttributes(
                 R.string.ws_enabled_title_toilet, R.string.ws_enabled_toilet,
                 R.string.settings_wheelchair_yes,
