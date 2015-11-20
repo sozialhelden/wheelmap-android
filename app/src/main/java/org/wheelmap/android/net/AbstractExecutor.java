@@ -211,8 +211,12 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
 
         String request = null;
         try {
-            request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
-                    "utf-8");
+            if (requestBuilder.urlIsAlreadyUrlEncoded()) {
+                request = requestBuilder.buildRequestUri();
+            } else {
+                request = UriUtils.encodeQuery(requestBuilder.buildRequestUri(),
+                        "utf-8");
+            }
         } catch (UnsupportedEncodingException e) {
             processException(
                     RestServiceException.ERROR_INTERNAL_ERROR, e, true);

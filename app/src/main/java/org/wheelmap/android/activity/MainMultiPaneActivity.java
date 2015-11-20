@@ -68,6 +68,8 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -88,6 +90,7 @@ import android.widget.ListView;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.LayoutParams;
+import android.widget.ProgressBar;
 
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -130,6 +133,9 @@ public class MainMultiPaneActivity extends MapActivity implements
     private WheelmapApp app;
 
     private String address = null;
+
+    private ProgressBar loadingProgress;
+    private boolean onRefresh = false;
 
     @SuppressLint("NewApi")
     @Override
@@ -225,6 +231,7 @@ public class MainMultiPaneActivity extends MapActivity implements
             showSearch();
         }
 
+        loadingProgress = (ProgressBar)findViewById(R.id.loading_progress);
     }
 
     @Override
@@ -533,7 +540,26 @@ public class MainMultiPaneActivity extends MapActivity implements
     @Override
     public void onRefreshing(boolean isRefreshing) {
         Log.d(TAG, "onRefreshing isRefreshing = " + isRefreshing);
-        setProgressBarIndeterminateVisibility(isRefreshing);
+
+        onRefresh = isRefreshing;
+
+        if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {
+            loadingProgress.setVisibility(View.VISIBLE);
+            checkProgressHide();
+        }
+    }
+
+    private void checkProgressHide(){
+        if(!onRefresh) {
+            loadingProgress.setVisibility(View.GONE);
+        } else {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    checkProgressHide();
+                }
+            }, 500);
+        }
     }
 
     @Override

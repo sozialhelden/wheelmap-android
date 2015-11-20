@@ -52,6 +52,8 @@ import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -66,6 +68,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -95,8 +98,11 @@ public class
     private POIsOsmdroidFragment mMapFragment;
     private ViewFlipper flipper;
 
+    private ProgressBar loadingProgress;
+
     private MapModeType mapModeType;
 
+    private boolean onRefresh = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -170,6 +176,8 @@ public class
         } else {
             mapModeType = MapModeType.MAP_MODE_NORMAL;
         }
+
+        loadingProgress = (ProgressBar)findViewById(R.id.loading_progress);
     }
 
     @Override
@@ -450,7 +458,29 @@ public class
 
     @Override
     public void onRefreshing(boolean isRefreshing) {
-        // TODO - use for progressbar
+        onRefresh = isRefreshing;
+
+        if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {
+            loadingProgress.setVisibility(View.VISIBLE);
+            checkProgressHide();
+        }
+    }
+
+    /**
+     * Methode to check progress-hiding
+     * - prevent multiple hide-show-hide-show-...-actions by checking hide delayed
+     */
+    private void checkProgressHide(){
+        if(!onRefresh) {
+            loadingProgress.setVisibility(View.GONE);
+        } else {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    checkProgressHide();
+                }
+            }, 500);
+        }
     }
 
     @Override
@@ -462,12 +492,12 @@ public class
 
     @Override
     public void refreshRegisterList(ListView listView) {
-        // TODO - use for progressbar
+        // TODO - use for progressbar?!
     }
 
     @Override
     public void onRefreshEnabled(boolean refreshEnabled) {
-        // TODO - use for progressbar
+        // TODO - use for progressbar?!
     }
 
     @Override

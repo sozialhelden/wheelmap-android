@@ -63,5 +63,11 @@ public abstract class RequestBuilder {
                 apiKey);
     }
 
-
+    /**
+     *
+     * @return true if the builded url must be url encoded before using it
+     */
+    public boolean urlIsAlreadyUrlEncoded() {
+        return false;
+    }
 }

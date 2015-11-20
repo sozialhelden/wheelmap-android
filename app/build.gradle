@@ -57,6 +57,13 @@ android {
             buildConfigField "String", "HOCKEY_APP_ID", "\"1ede13fa382830c25625ec55f416ad06\""
             buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
         }
+
+        releaseTest {
+            initWith(buildTypes.debug)
+            applicationIdSuffix ".releaseTest"
+            buildConfigField "String", "HOCKEY_APP_ID", "\"ad5bad6dac5749cc9fc1aea17c71552d\""
+            buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
+        }
     }
 }
 

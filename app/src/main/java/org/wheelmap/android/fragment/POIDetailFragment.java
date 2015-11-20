@@ -552,29 +552,26 @@ public class POIDetailFragment extends Fragment implements
 
             mMapView.setMapListener(this);
 
-            mMapController = mMapView.getController();
-            mMapController.setZoom(18);
-            mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
-
             mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
-            mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
-                    mMapView);
-            mCurrLocationOverlay.enableMyLocation();
 
             mMapView.getOverlays().add(mPoisItemizedOverlay);
 
             MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
                     mMapView);
             a.enableMyLocation();
-            mMyLocationProvider.startLocationProvider(a);
+            a.disableFollowLocation();
             mMapView.getOverlays().add(a);
+
+            mMapController = mMapView.getController();
+            mMapController.setZoom(18);
+            mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
 
             mBtnExpand.setOnTouchListener(new PressSelector());
             mBtnExpand.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    if(mapFocus){
+                    if (mapFocus) {
                         mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_expand));
                         mapFocus = false;
 
@@ -582,10 +579,10 @@ public class POIDetailFragment extends Fragment implements
                         heightAnim.setDuration(1000);
                         layoutMapDetail.startAnimation(heightAnim);
 
-                    }else if(!mapFocus){
+                    } else if (!mapFocus) {
                         mBtnExpand.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_detail_collapse));
                         mapFocus = true;
-                        if(mHeightLayout <= 0){
+                        if (mHeightLayout <= 0) {
                             mHeightLayout = layoutMapDetail.getHeight();
                         }
                         HeightAnimation heightAnim = new HeightAnimation(layoutMapDetail, mHeightLayout, content.getHeight());
@@ -720,10 +717,6 @@ public class POIDetailFragment extends Fragment implements
         Log.d(TAG, "updateLocation: " + mLocation);
         org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mLocation.getLatitude(),
                 mLocation.getLongitude());
-
-        if (mMapView != null) {
-            centerMap(geoPoint, false);
-        }
 
         mMyLocationProvider.updateLocation(mLocation);
     }
@@ -1160,27 +1153,23 @@ public class POIDetailFragment extends Fragment implements
             String comment, String address) {
 
         StringBuilder sb = new StringBuilder();
+
         if (!TextUtils.isEmpty(name)) {
             sb.append(name);
         } else {
             sb.append(type);
         }
 
-        if (!TextUtils.isEmpty(comment)) {
-            sb.append(", ");
-            sb.append(comment);
-        }
-
-        if (!TextUtils.isEmpty(address)) {
-            sb.append(", ");
-            sb.append(address);
-        }
-
         if (sb.length() > 0) {
-            sb.append(", ");
+            sb.append(" - ");
         }
 
         sb.append("http://wheelmap.org/nodes/" + wmId);
+
+        sb.append("\n");
+
+        sb.append("#MapMyDay");
+
         Intent intent = createExternIntent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
