@@ -1,0 +1,204 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="info_development">تطوير</string>
+  <string name="info_design">تصميم</string>
+  <string name="info_design_one">Simon Staib</string>
+  <string name="info_smf">Smart Mobile Factory GmbH</string>
+  <string name="info_wheelmap_android_two">إصدار</string>
+  <string name="legal_notice_entypo">الرسوم التصويرية الخاصة ب Entypo من قبل دانيال بروس</string>
+  <string name="btn_cancel">إلغاء</string>
+  <string name="btn_okay">حسنا</string>
+  <string name="btn_quit">تسجيل خروج</string>
+  <string name="error_network_title">خطأ بالشبكة</string>
+  <string name="error_authorization_error">إمكانية التعديل غير متاحة</string>
+  <string name="info_android_development_one">ميشال هاركل</string>
+  <string name="info_android_development_two">مايكل كروز</string>
+  <string name="info_kartendaten">معلومات الخريطة</string>
+  <string name="info_POIData">بيانات POI:</string>
+  <string name="info_kartendaten_points">المساهمون في © ODbL، OpenStreetMap</string>
+  <string name="info_kartendaten_three">© MapBox</string>
+  <string name="info_webdevelopment_one">كريستوفر بونت</string>
+  <string name="error_network_failure">فشل في الشبكة</string>
+  <string name="menu_save">حفظ</string>
+  <string name="no_pois">لم يتم العثور على أماكن وفقاً لإعدادات الترشيح الخاصة بك</string>
+  <string name="poi_new_default_name">مكان جديد</string>
+  <string name="poi_property_address">العنوان</string>
+  <string name="poi_property_comment">تعليق</string>
+  <string name="poi_property_name">الإسم</string>
+  <string name="poi_property_nodetype">صنف</string>
+  <string name="poi_property_phone">الهاتف</string>
+  <string name="poi_property_position">الموضع</string>
+  <string name="poi_property_website">الموقع الإلكتروني</string>
+  <string name="settings_category_filter">تصنيف الترشيح</string>
+  <string name="support_category_unknown">التصنيف غير معروف</string>
+  <string name="support_nodetype_unknown">النوع غير معروف</string>
+  <string name="title_info">اعتمادات</string>
+  <string name="title_legal_notice">إشعار قانوني</string>
+  <string name="title_pois_detail_edit">تعديل المكان</string>
+  <string name="title_pois_map">خريطة</string>
+  <string name="title_pois_settings">تصفية الإعدادات</string>
+  <string name="ws_disabled">- مدخل لديه خطوة أو عدة خطوات\n- الغرف ليس في المتناول</string>
+  <string name="ws_disabled_title">الوصول بالكرسي المتحرك غير ممكن</string>
+  <string name="ws_enabled"> مدخل بدون خطوات \n- جميع الغرف بدون خطوات</string>
+  <string name="ws_enabled_title">يمكن الوصول بالكرسي المتحرك</string>
+  <string name="ws_limited">- مدخل له خطوة واحدة  بحد أقصى. ارتفاع 7سم و(في 3) \n- معظم الغرف  بدون خطوات</string>
+  <string name="ws_limited_title">كرسي متحرك في المتناول جزئيا </string>
+  <string name="ws_unknown">- ساعد من خلال تحديد الأماكن!</string>
+  <string name="ws_unknown_title">حالة الكرسي غير معروفة</string>
+  <string name="ws_unknown_toilet">- ساعد من خلال تحديد الأماكن!</string>
+  <string name="ws_unknown_title_toilet">مكان المرحاض غير معروف</string>
+  <string name="ws_disabled_toilet"></string>
+  <string name="ws_disabled_title_toilet">لا يوجد كرسي متحرك للمرحاض في المتناول</string>
+  <string name="ws_enabled_toilet">- العرض الداخلي للمداخل بحد أدني. 90 سم (في 35) \n- مساحة الأرض بحد أدني.150 سم × 150 سم (59 × 59) \ n- الكرسي المتحرك- ارتفاع مقعد المرحاض \n- 
+لطي القضبان \n- حوض اليد في المتناول</string>
+  <string name="ws_enabled_title_toilet">كرسي متحرك في المتناول للمرحاض</string>
+  <string name="dashboard_search_hint">البحث بالمواقع القريبة</string>
+  <string name="dashboard_button_title_nearby">بالقرب من </string>
+  <string name="dashboard_button_title_map">خريطة</string>
+  <string name="dashboard_button_title_categories">فئات</string>
+  <string name="dashboard_button_title_engage">قم بالاشتراك</string>
+  <string name="dashboard_locations">أماكن</string>
+  <string name="dashboard_button_title_news">أخبار</string>
+  <string name="poi_property_city">
+
+المدينة</string>
+  <string name="poi_property_housenum">لا</string>
+  <string name="poi_property_postcode">الرمز</string>
+  <string name="poi_property_street">
+
+شارع</string>
+  <string name="position_geopoint">الموقع</string>
+  <string name="to_far_away">قم بتقريب الصورة لرؤية الأماكن</string>
+  <string name="move_the_map">يرجى تحريك الخريطة عن طريق التمرير</string>
+  <string name="dialog_close_editable">هل تريد حقاً إغلاق شاشة التعديل؟</string>
+  <string name="error_internal_error">لقد حدث خطأ ما. يرجي إعادة فتح التطبيق.</string>
+  <string name="error_title_occurred">لقد حدث خطأ ما!</string>
+  <string name="error_authorization_not_osm_connected">إن حساب Wheelmap الخاص بك غير متصل ب OpenStreetMap.</string>
+  <string name="error_authorization_request_forbidden">الطلب غير متاح</string>
+  <string name="error_authorization_request_failed">فشل الإذن. لم يقم التطبيق بالدخول الصحيح للخدمة. إذا كنت قد قمت بتسجيل الدخول، يمكنك محاولة تسجيل الخروج. وإِلَّا فإن التطبيق بحاجة للتحديث أو أنه يوجد مشكلة بالخدمة.</string>
+  <string name="error_authorization_required">تم طلب الأذن</string>
+  <string name="error_category_missing_message">لا يمكن الحفظ بدون تصنيف للمكان.</string>
+  <string name="error_category_missing_title">لا يوجد تصنيف محدد!</string>
+  <string name="error_network_client_failure">هذا التطبيق لا يمكنه الاتصال بالخادم. أنت بحاجة إلى التحديث.</string>
+  <string name="error_network_server_failure">خادم Wheelmap به مشكلة. يرجى إعادة المحاولة في وقت لاحق.</string>
+  <string name="error_network_server_maintenance">إن خادوم Wheelmap متعطل بسبب الصيانة. يُرجى المحاولة لاحقاً</string>
+  <string name="error_network_unknown_failure">لقد حدث خطأ غير معروف في الشبكة.عذراً، لقد فشل الاتصال.</string>
+  <string name="error_newpoi_message">سيتم التحقق من المكان الجديد قبل أن يظهر في قاعدة البيانات. وهذا سوف يستغرق بعض الوقت.</string>
+  <string name="error_newpoi_title">تم إنشاء مكان جديد</string>
+  <string name="error_noid_message">عذراً، لا يحتوي هذا الرابط على أية هوية للاسترداد من خوادم Wheelmap. تعذّر العثور على الموقع.</string>
+  <string name="error_noid_title"> يفتقر الرابط لمعرّف العُقدة</string>
+  <string name="error_not_enough_memory">هاتفك لا يتوفر به ذاكرة كافية لهذا التطبيق</string>
+  <string name="error_wheelchairstate_missing_message">يُرجى تحديد حالة إمكانية الوصول الخاصة بكرسي المعاقين.</string>
+  <string name="error_wheelchairstate_missing_title">لم يُعطى حالة لوصف إمكانية الوصول الخاصة بكرسي المعاقين</string>
+  <string name="legal_notice_commonsware_copyright_nicolas">https://mapicons.mapsmarker.com</string>
+  <string name="photo_upload_failed">فشل التحميل</string>
+  <string name="photo_upload_successfully">تم التحميل بنجاح</string>
+  <string name="photo_upload_picker_title">خيار: تحميل صور</string>
+  <string name="photo_upload_picker_gallery">
+معرض
+</string>
+  <string name="photo_upload_picker_take_new">التقط صورة جديدة</string>
+  <string name="photo_upload_progress_title">جارٍ تحميل الصورة...</string>
+  <string name="menu_about">
+
+حول</string>
+  <string name="menu_directions">التنقل</string>
+  <string name="menu_filter">تصفية الإعدادات</string>
+  <string name="menu_new_poi">إنشاء مكان جديد</string>
+  <string name="menu_search">بحث</string>
+  <string name="menu_share">
+
+مشاركة</string>
+  <string name="poi_property_photos">صور</string>
+  <string name="menu_account">الحساب</string>
+  <string name="menu_news">مدونة</string>
+  <string name="action_done">تم</string>
+  <string name="search_mode_no_point_found">لم يتم العثور على أي أماكن، انقر على سهم الرجوع!</string>
+  <string name="poi_property_comment_add_comment">
+
+إضافة تعليق</string>
+  <string name="poi_property_comment_add_adress">
+
+أضف عنوان</string>
+  <string name="poi_property_comment_add_photos">أضف صور</string>
+  <string name="login_text">
+لتتمكن من تعديل الأماكن ينبغي أن تسجل دخولك لحسابك في\"ويل ماب\" وتقوم بربطه مع حسابك في \"أوبن ستريت ماب\"</string>
+  <string name="login_email">
+اسم المستخدم</string>
+  <string name="login_password">
+
+كلمة المرور</string>
+  <string name="login_forgot_password">Forgot password?</string>
+  <string name="login_submit">
+تسجيل الدخول</string>
+  <string name="login_dont_have_account">ليس لديك حساب Wheelmap؟ قُم بتسجيل الدخول باستخدام حساب OpenStreetMap  على Wheelmap.org، انقر على \"الحساب\"الخاص بك  وقُم بإنشاء حساب Wheelmap جديد.</string>
+  <string name="login_new_registration">سجل في OSM</string>
+  <string name="login_new">هل أنت جديد؟ سجل الآن في OpenStreetMap وWheelmap.org</string>
+  <string name="login_activity_title">
+تسجيل الدخول</string>
+  <string name="search_distance">المسافة</string>
+  <string name="search_execute">بحث</string>
+  <string name="search_hint_list">الكلمة الرئيسية (اختياري)</string>
+  <string name="search_mode_distance">بواسطة المسافة</string>
+  <string name="search_no_selection">الجميع</string>
+  <string name="search_pick_category">اختر نوع</string>
+  <string name="search_pick_map">يمكن البحث عن المنطقة المحددة على الخريطة فقط.</string>
+  <string name="title_search">بحث</string>
+  <string name="legal_notice_commonsware">وحدتين</string>
+  <string name="legal_notice_commonsware_copyright">© CommonsWare LLC</string>
+  <string name="legal_notice_commonsware_copyright_two">(Apache License V2)</string>
+  <string name="legal_notice_iconscollection">مجموعة أيقونات الخريطة</string>
+  <string name="legal_notice_iconscollection_copyright">© http://mapicons.nicolasmollet.com\n    </string>
+  <string name="legal_notice_iconscollection_copyright_two">(CC BY-SA 3.0)</string>
+  <string name="legal_notice_intro">يستند هذا البرنامج على أعمال أخرى. حقوق التأليف والنشر هي ك \n تتبع :\n </string>
+  <string name="legal_notice_jackson">معالج جاكسون JSON</string>
+  <string name="legal_notice_jackson_copyright">(Apache License V2)</string>
+  <string name="legal_notice_mapsforge">\" مابزفروڠ \"</string>
+  <string name="legal_notice_mapsforge_copyright">(© http://mapsforge.org (LGPL V3</string>
+  <string name="legal_notice_opensource">هذا التطبيق مفتوح المصدر</string>
+  <string name="legal_notice_opensource_copyright">\n        https://github.com/sozialhelden/wheelmap-android\n  </string>
+  <string name="legal_notice_opensource_copyright_one">(Apache License V2)</string>
+  <string name="legal_notice_pulltorefresh">اسحب لتحديث الإضافات</string>
+  <string name="legal_notice_pulltorefresh_copyright">© جون نيلسون (Apache License V2)</string>
+  <string name="legal_notice_springandroid">نسخة الإندرويد</string>
+  <string name="legal_notice_springandroid_copyright">© Spring Framework Project</string>
+  <string name="legal_notice_springandroid_copyright_two">(Apache License V2)</string>
+  <string name="legal_notice_springandroid_copyright_three">http://www.springframework.org\n    </string>
+  <string name="logout_activity_title">تسجيل الخروج</string>
+  <string name="login_succesfully">تسجيل الدخول ناجح</string>
+  <string name="logout_text">تم تسجيل الدخول ك : %s</string>
+  <string name="logout">تسجيل الخروج</string>
+  <string name="settings_login_information">هل تم الدخول؟</string>
+  <string name="settings_login_notsignedin">أنت لم تقم بتسجيل الدخول</string>
+  <string name="settings_login_signedinas">تم تسجيل دخولك ك</string>
+  <string name="settings_unit_imperial">نظام القياس الإمبراطوري</string>
+  <string name="settings_unit_metric">نظام القياس مِتْرِيّ</string>
+  <string name="settings_unit_preference">وحده قياس المسافة</string>
+  <string name="settings_wheelchair_limited">محدود</string>
+  <string name="settings_wheelchair_no">لا</string>
+  <string name="settings_wheelchair_state">حالة كرسي المعاقين</string>
+  <string name="settings_wheelchair_unknown">غير معروف</string>
+  <string name="settings_wheelchair_yes">نعم</string>
+  <string name="title_editor">المحرر</string>
+  <string name="title_engage">قم بالاشتراك</string>
+  <string name="login_link_wheelmap">http://wheelmap.org/users/sign_in</string>
+  <string name="title_login">يرجى تسجيل الدخول!</string>
+  <string name="profile_hint_login">لتسجيل الدخول إلي Wheelmap تحتاج إلي حساب المستخدم علي خريطة الشارع المفتوح (OSM) </string>
+  <string name="profile_hint_no_account_title">لا يوجد لديك حساب مستخدم OSM بعد؟</string>
+  <string name="profile_steps_to_osm_account">أربعة خطوات لتسجيل الدخول:\n
+1. اضغط على \"تسجيل OSM\" وسجل حساب المستخدم OSM \n
+2. اذهب إلى بريدك الإلكتروني وانقر على رابط التفعيل الذي تم إرساله\ n
+3. افتح التطبيق Wheelmap \n
+4. تسجيل الدخول عبر حساب المستخدم OSM الخاص بك (اسم المستخدم وamp؛ كلمة المرور) \ n</string>
+  <string name="signed_in">تسجيل دخولك</string>
+  <string name="introduction_01_title">مرحبا بكم في Wheelmap</string>
+  <string name="introduction_01_text">يمكنك البحث عن, إيجاد وتحديد\n الأماكن التي يكون فيها الكرسي المتحرك هنا في المتناول.</string>
+  <string name="introduction_02_title">ابحث عن أماكن</string>
+  <string name="introduction_02_text">إيجاد أماكن \n الكرسي المتحرك في المتناول في مكان قريب.</string>
+  <string name="introduction_03_title">حدد الأماكن و المراحيض</string>
+  <string name="introduction_03_text">أنت لا تحتاج \n أن تكون مُسجل لهذا الغرض.</string>
+  <string name="introduction_04_title">تعديل أماكن</string>
+  <string name="introduction_04_text">يجب عليك أن تكون مُسجل بالدخول \n بالملف الخاص بك لهذا الغرض.</string>
+  <string name="introduction_05_title">والآن: استمتِع وأنت تبحث عن أشياء،\nتعثر على أشياء وأنت ترسم خريطةً!</string>
+  <string name="introduction_05_text">يُمكِنك العثور على مزيدٍ من النصائح والمعلومات\n في قسم الأسئلة الشائعة FAQ على الموقع Wheelmap.org. \nهل أنت مُهتم بأخبار المُجتمع؟\nجرِّب المدونة أو اشترِك\n في رسائلنا الإخبارية.</string>
+</resources>

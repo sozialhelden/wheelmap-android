@@ -136,37 +136,25 @@ public class SupportManager {
             return titleStringId;
         }
 
-        ;
-
         public int getStringId() {
             return stringId;
         }
-
-        ;
 
         public int getSettingsStringId() {
             return settingsStringId;
         }
 
-        ;
-
         public int getDrawableId() {
             return drawableId;
         }
-
-        ;
 
         public int getColorId() {
             return colorId;
         }
 
-        ;
-
         public String getPrefsKey() {
             return prefsKey;
         }
-
-        ;
     }
 
     public final static Map<WheelchairFilterState, WheelchairAttributes> wsAttributes

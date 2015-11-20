@@ -89,7 +89,7 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
     private final float[] mMatrixValues = new float[9];
     private final Matrix mMatrix = new Matrix();
     private final Rect mMyLocationRect = new Rect();
-    private Rect mMyLocationPreviousRect = new Rect();
+    private final Rect mMyLocationPreviousRect = new Rect();
 
     // ===========================================================
     // Constructors
