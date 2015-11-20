@@ -25,6 +25,7 @@ import org.wheelmap.android.model.WheelchairFilterState;
 
 import android.text.TextUtils;
 
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.Locale;
 
@@ -101,7 +102,7 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
         requestAsStringBuffer.append(String.format(baseUrl()));
         if (!TextUtils.isEmpty(name)) {
             requestAsStringBuffer.append("&name=");
-            requestAsStringBuffer.append(name);
+            requestAsStringBuffer.append(urlencode(name));
         }
 
         if (!TextUtils.isEmpty(type)) {
@@ -121,60 +122,68 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
 
         if (accessState != null) {
             requestAsStringBuffer.append("&wheelchair=");
-            requestAsStringBuffer.append(accessState.asRequestParameter());
+            requestAsStringBuffer.append(urlencode(accessState.asRequestParameter()));
         }
 
         if (toiletState != null) {
             requestAsStringBuffer.append("&wheelchair_toilet=");
-            requestAsStringBuffer.append(toiletState.asRequestParameter());
+            requestAsStringBuffer.append(urlencode(toiletState.asRequestParameter()));
         }
 
         if (!TextUtils.isEmpty(category)) {
             requestAsStringBuffer.append("&category=");
-            requestAsStringBuffer.append(category);
+            requestAsStringBuffer.append(urlencode(category));
         }
 
         if (!TextUtils.isEmpty(description)) {
             String tmpString = description.length() > 255 ? description
                     .substring(0, 254) : description;
             requestAsStringBuffer.append("&wheelchair_description=");
-            requestAsStringBuffer.append(tmpString);
+            requestAsStringBuffer.append(urlencode(tmpString));
         }
 
         if (!TextUtils.isEmpty(street)) {
             requestAsStringBuffer.append("&street=");
-            requestAsStringBuffer.append(street);
+            requestAsStringBuffer.append(urlencode(street));
         }
 
         if (!TextUtils.isEmpty(housenumber)) {
             requestAsStringBuffer.append("&housenumber=");
-            requestAsStringBuffer.append(housenumber);
+            requestAsStringBuffer.append(urlencode(housenumber));
         }
 
         if (!TextUtils.isEmpty(city)) {
             requestAsStringBuffer.append("&city=");
-            requestAsStringBuffer.append(city);
+            requestAsStringBuffer.append(urlencode(city));
         }
 
         if (!TextUtils.isEmpty(postcode)) {
             requestAsStringBuffer.append("&postcode=");
-            requestAsStringBuffer.append(postcode);
+            requestAsStringBuffer.append(urlencode(postcode));
         }
 
         if (!TextUtils.isEmpty(website)) {
             requestAsStringBuffer.append("&website=");
-            requestAsStringBuffer.append(website);
+            requestAsStringBuffer.append(urlencode(website));
         }
 
         if (!TextUtils.isEmpty(phone)) {
             requestAsStringBuffer.append("&phone=");
-            requestAsStringBuffer.append(phone);
+            requestAsStringBuffer.append(urlencode(phone));
         }
 
         requestAsStringBuffer.append("&locale=");
         requestAsStringBuffer.append(Locale.getDefault().getLanguage());
 
         return requestAsStringBuffer.toString();
+    }
+
+    private static String urlencode(String s){
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (Exception e){
+            return s;
+        }
     }
 
     @Override
@@ -193,5 +202,10 @@ public class NodeUpdateOrNewAllRequestBuilder extends RequestBuilder {
         } else {
             return RequestBuilder.REQUEST_POST;
         }
+    }
+
+    @Override
+    public boolean urlIsAlreadyUrlEncoded() {
+        return true;
     }
 }

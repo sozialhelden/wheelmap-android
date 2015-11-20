@@ -1,102 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:animateLayoutChanges="true"
-    android:orientation="horizontal">
+    android:animateLayoutChanges="true">
 
-    <FrameLayout
-        android:id="@+id/list_layout"
-        android:layout_width="@dimen/mp_list_width"
-        android:layout_height="fill_parent" />
-
-    <FrameLayout
-        android:id="@+id/layout_multi"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal">
 
         <FrameLayout
-            android:id="@+id/map_layout"
-            android:layout_width="fill_parent"
+            android:id="@+id/list_layout"
+            android:layout_width="@dimen/mp_list_width"
             android:layout_height="fill_parent" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            android:orientation="horizontal">
+        <FrameLayout
+            android:id="@+id/layout_multi"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:animateLayoutChanges="true">
 
             <FrameLayout
-                android:id="@+id/movable_layout"
-                android:layout_width="@dimen/overlay_width"
-                android:layout_height="fill_parent">
+                android:id="@+id/map_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
 
-                <FrameLayout
-                    android:id="@+id/detail_layout"
-                    android:layout_width="@dimen/overlay_width"
-                    android:layout_height="fill_parent" />
-            </FrameLayout>
-
-            <FrameLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toEndOf="@+id/movable_layout"
-                android:layout_toRightOf="@+id/movable_layout">
+                android:animateLayoutChanges="true"
+                android:orientation="horizontal">
 
                 <FrameLayout
-                    android:id="@+id/my_outofzoom_text_tablet_landscape"
-                    android:layout_width="300dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/border_rounded_corner"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:visibility="gone">
+                    android:id="@+id/movable_layout"
+                    android:layout_width="@dimen/overlay_width"
+                    android:layout_height="fill_parent">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:gravity="center"
-                        android:text="@string/to_far_away"
-                        android:textColor="#ffff"
-                        android:textSize="25dp">
-
-                    </TextView>
+                    <FrameLayout
+                        android:id="@+id/detail_layout"
+                        android:layout_width="@dimen/overlay_width"
+                        android:layout_height="fill_parent" />
                 </FrameLayout>
-            </FrameLayout>
-        </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/button_movable_resize"
-            style="@style/IconLarge"
-            android:layout_gravity="start"
-            android:src="@drawable/ic_detail_expand"
-            android:visibility="gone" />
-    </FrameLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@+id/movable_layout"
+                    android:layout_toRightOf="@+id/movable_layout">
 
-</LinearLayout><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="fill_parent"--><!--android:layout_height="fill_parent"--><!--android:animateLayoutChanges="true">-->
+                    <FrameLayout
+                        android:id="@+id/my_outofzoom_text_tablet_landscape"
+                        android:layout_width="300dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="25dp"
+                        android:background="@drawable/border_rounded_corner"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:visibility="gone">
 
-    <!--<FrameLayout--><!--android:id="@+id/list_layout"--><!--android:layout_width="@dimen/mp_list_width"--><!--android:layout_height="fill_parent" />-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:gravity="center"
+                            android:text="@string/to_far_away"
+                            android:textColor="#ffff"
+                            android:textSize="25dp">
 
-    <!--<RelativeLayout--><!--android:id="@+id/layout_multi"--><!--android:layout_width="fill_parent"--><!--android:layout_height="fill_parent"--><!--android:layout_toRightOf="@+id/list_layout"--><!--android:animateLayoutChanges="true">-->
+                        </TextView>
+                    </FrameLayout>
+                </FrameLayout>
+            </RelativeLayout>
 
-    <!--<FrameLayout--><!--android:id="@+id/map_layout"--><!--android:layout_width="fill_parent"--><!--android:layout_height="fill_parent" />-->
+            <ImageButton
+                android:id="@+id/button_movable_resize"
+                style="@style/IconLarge"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_detail_expand"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
 
-    <!--<FrameLayout--><!--android:id="@+id/movable_layout"--><!--android:layout_width="@dimen/overlay_width"--><!--android:layout_height="fill_parent">-->
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-    <!--<FrameLayout--><!--android:id="@+id/detail_layout"--><!--android:layout_width="@dimen/overlay_width"--><!--android:layout_height="fill_parent" />--><!--</FrameLayout>-->
-
-    <!--<LinearLayout--><!--android:id="@+id/my_outofzoom_text_tablet_landscape"--><!--android:layout_width="300dp"--><!--android:layout_height="100dp"--><!--android:layout_centerHorizontal="true"--><!--android:layout_marginTop="25dp"--><!--android:layout_toRightOf="@id/movable_layout"--><!--android:background="@drawable/border_rounded_corner"-->
-
-    <!--android:clickable="true"--><!--android:gravity="center"--><!--android:visibility="gone">-->
-
-    <!--<TextView--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_margin="5dp"--><!--android:gravity="center"--><!--android:text="@string/to_far_away"--><!--android:textColor="#ffff"--><!--android:textSize="25dp">-->
-
-    <!--</TextView>--><!--</LinearLayout>-->
-
-    <!--<ImageButton--><!--android:id="@+id/button_movable_resize"--><!--style="@style/IconLarge"--><!--android:layout_alignParentRight="true"--><!--android:layout_alignParentTop="true"--><!--android:src="@drawable/ic_detail_expand"--><!--android:visibility="gone" />--><!--</RelativeLayout>-->
-
-    <!--</RelativeLayout>-->
+</FrameLayout>

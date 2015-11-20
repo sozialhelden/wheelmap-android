@@ -10,7 +10,6 @@ import org.osmdroid.views.overlay.SafeDrawOverlay;
 import org.osmdroid.views.safecanvas.ISafeCanvas;
 import org.osmdroid.views.safecanvas.SafePaint;
 import org.osmdroid.views.util.constants.MapViewConstants;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -88,7 +87,6 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
         // Calculate position of person icon's feet, scaled to screen density
         mPersonHotspot = new PointF(24.0f * mScale + 0.5f, 39.0f * mScale + 0.5f);
-
     }
 
     @Override

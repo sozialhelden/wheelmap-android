@@ -267,6 +267,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                 mMapView);
 
 
+        mCurrLocationOverlay.enableFollowLocation();
         mCurrLocationOverlay.enableMyLocation();
 
         markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
@@ -280,6 +281,9 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         mMyLocationProvider.startLocationProvider(mMyLocationOverlay);
         mMapView.getOverlays().add(mMyLocationOverlay);
+
+        mMyLocationOverlay.enableMyLocation();
+        mMyLocationOverlay.enableFollowLocation();
 
         mMapView.setMapListener(this);
 
@@ -840,7 +844,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
     }
 
-    private class MyLocationProvider implements IMyLocationProvider, SensorEventListener {
+    public class MyLocationProvider implements IMyLocationProvider, SensorEventListener {
 
         private static final float MIN_DIRECTION_DELTA = 10;
 

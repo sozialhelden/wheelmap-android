@@ -46,6 +46,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.AssetManager;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
@@ -698,67 +699,6 @@ public class SupportManager {
         return lookupMap;
     }
 
-    private Map<WheelchairFilterState, Drawable> createSpecificDrawables(String assetPath, NodeType defaultNodes) {
-        return createDrawableLookup((assetPath), false, defaultNodes);
-    }
-
-    private Map<WheelchairFilterState, Drawable> createDrawableLookup(String assetPathPattern,
-                                                                      boolean fileNotFoundIsFatal, NodeType defaultNodes) {
-        Map<WheelchairFilterState, Drawable> lookupMap = new HashMap<WheelchairFilterState, Drawable>();
-        Log.v(TAG, "SupportManager:createDrawableLookup loading " + assetPathPattern);
-
-        int idx;
-        for (idx = 0; idx < WheelchairFilterState.values().length - 1; idx++) {
-            String path = String.format(assetPathPattern, WheelchairFilterState
-                    .valueOf(idx).toString().toLowerCase());
-            path = path.replace(".png", "@2x.png");
-            Drawable drawable = null;
-            WheelchairFilterState state = WheelchairFilterState.valueOf(idx);
-            try {
-                InputStream is = null;
-                if (MarkerIconExecutor.markerIconsDownloaded()) {
-                    File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                    File asset = new File(dir + "/" + path);
-                    is = new FileInputStream(asset);
-                } else {
-                    //is = mAssetManager.open(path);
-                }
-                // is = mAssetManager.open(path);
-                drawable = Drawable.createFromStream(is, null);
-                Drawable bg = defaultNodes.getStateDrawable(WheelchairFilterState
-                        .valueOf(idx));
-
-                float density = mContext.getResources().getDisplayMetrics().density;
-
-                Drawable[] layers = {bg, drawable};
-                LayerDrawable layerDrawable = new MyLayerDrawable(layers);
-                if (defaultNodes == mDefaultNodeType) {
-                    layerDrawable.setLayerInset(1, (int) (6 * density), (int) (6 * density), (int) (6 * density), (int) (8 * density));
-                } else {
-                    layerDrawable.setLayerInset(1, (int) (8 * density), (int) (8 * density), (int) (8 * density), (int) (12 * density));
-                }
-                drawable = layerDrawable;
-
-                is.close();
-            } catch (IOException e) {
-                if (e instanceof FileNotFoundException && fileNotFoundIsFatal) {
-                    throw new IllegalStateException(
-                            "createDrawableLookup: This shouldnt happen. Asset " + path
-                                    + " could not be found.");
-                }
-                Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
-                drawable = mDefaultNodeType.getStateDrawable(WheelchairFilterState
-                        .valueOf(idx));
-            }
-            if (drawable != null) {
-                drawable.setBounds(-(int) fMarkerDimension, (int) (-fMarkerDimension * 2),
-                        (int) fMarkerDimension, 0);
-            }
-            lookupMap.put(WheelchairFilterState.valueOf(idx), drawable);
-        }
-
-        return lookupMap;
-    }
 
     Drawable getStateDrawable(String assetPathPattern,
                               boolean fileNotFoundIsFatal, NodeType defaultNodes, WheelchairFilterState state) {
@@ -780,12 +720,7 @@ public class SupportManager {
 
             Drawable[] layers = {bg, drawable};
             LayerDrawable layerDrawable = new MyLayerDrawable(layers);
-//            if (defaultNodes == mDefaultNodeType) {
-//                layerDrawable.setLayerInset(1, (int) (6 * density), (int) (6 * density), (int) (6 * density), (int) (8 * density));
-//            } else {
-//                layerDrawable.setLayerInset(1, (int) (8 * density), (int) (8 * density), (int) (8 * density), (int) (12 * density));
-//            }
-            layerDrawable.setLayerInset(1, (int) (6 * density), (int) (6 * density), (int) (6 * density), (int) (8 * density));
+            layerDrawable.setLayerInset(1, (int) (6 * density), (int) (5 * density), (int) (6 * density), (int) (12 * density));
             drawable = layerDrawable;
 
             is.close();
