@@ -52,16 +52,21 @@ public class BundlePreferences implements IBundlePreferences {
 
         byte[] bytes = Base64.decode(value, BASE64_OPTS);
         Parcel parcel = Parcel.obtain();
+        Bundle bundle;
         try {
             parcel.unmarshall(bytes, 0, bytes.length);
+            parcel.setDataPosition(0);
+            bundle = parcel.readBundle();
         } catch (RuntimeException e) {
             Log.w(TAG, "retrieve: parcel could not be decoded - returning empty");
             return new Bundle();
         }
-        parcel.setDataPosition(0);
-        Bundle bundle = parcel.readBundle();
         parcel.recycle();
-        Log.d(TAG, "retrieve: id = " + id + " empty = " + bundle.isEmpty());
-        return bundle;
+        if(bundle != null) {
+            Log.d(TAG, "retrieve: id = " + id + " empty = " + bundle.isEmpty());
+            return bundle;
+        } else {
+            return new Bundle();
+        }
     }
 }

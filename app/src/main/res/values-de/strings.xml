@@ -42,7 +42,7 @@
   <string name="ws_enabled">- Eingang stufenlos\n- Alle Räume sind stufenlos erreichbar</string>
   <string name="ws_enabled_title">Rollstuhlgerecht</string>
   <string name="ws_limited">- Eingang hat eine Stufe mit max. 7 cm Höhe (3 inches)\n- Die wichtigsten Räume sind stufenlos erreichbar</string>
-  <string name="ws_limited_title">Teilweise Rollstuhlgerechtes WC</string>
+  <string name="ws_limited_title">Teilweise rollstuhlgerecht</string>
   <string name="ws_unknown">- Hilf mit und markiere diese Orte!</string>
   <string name="ws_unknown_title">Status unbekannt</string>
   <string name="ws_unknown_toilet">- Hilf mit und markiere Orte!</string>
@@ -165,10 +165,10 @@
   <string name="title_login">Bitte melde dich an!</string>
   <string name="profile_hint_login">Um dich bei Wheelmap einzuloggen benötigst du ein Nutzerkonto bei OpenStreetMap (OSM).</string>
   <string name="profile_hint_no_account_title">Noch kein OSM-Nutzerkonto?</string>
-  <string name="profile_steps_to_osm_account">Anmelden in vier Schritten\n:
-1. Klick auf "OSM-Registrierung" und registriere die ein OSM-Profil\n
-2. Geh in dein E-Mail-Postfach und klick auf den Aktivierungslink in der Bestätigungsmail.\n
-3. Öffne die Wheelmap-App.\n
+  <string name="profile_steps_to_osm_account">Anmelden in vier Schritten:\n
+1. Klick auf "OSM-Registrierung" und registriere dir ein OSM-Profil\n
+2. Geh in dein E-Mail-Postfach und klicke auf den Aktivierungslink in der Bestätigungsmail\n
+3. Öffne die Wheelmap-App\n
 4. Melde dich mit deinem OSM-Profil an (Nutzername &amp; Passwort)\n</string>
   <string name="signed_in">Angemeldet</string>
   <string name="introduction_01_title">Willkommen bei Wheelmap</string>
