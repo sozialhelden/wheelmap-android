@@ -56,13 +56,17 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 
     private final static int WAIT_IN_SECONDS_TO_FINISH = 60;
 
+    private static final double TEST_LAT = 52.5165081;
+    private static final double TEST_LONG = 13.3779152;
+    private static final String TEST_ID = "355960992";
+
     private Location location;
 
     public void createLocation() {
-        // Berlin, Andreasstra�e 10
+        // Berlin, Brandenburger Tor
         location = new Location("Location");
-        location.setLatitude(52.512523f);
-        location.setLongitude(13.431240f);
+        location.setLatitude(TEST_LAT);
+        location.setLongitude(TEST_LONG);
     }
 
     public void testARetrieveTestDataset() throws Exception {
@@ -142,15 +146,13 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 
     }
 
-    private String wmIdToTest = "537132758";
-
     private String newName = "changed name";
 
     public void testBPrepareDatabaseHelperWithDatasetA() {
         final ContentResolver cr = getContext().getContentResolver();
 
         long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
-                .getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
+                .getContentResolver(), TEST_ID, POIs.TAG_RETRIEVED);
         Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
         long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
@@ -194,37 +196,6 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
 
     }
 
-    public void testCPrepareDatabaseHelperWithDatasetB() {
-        final ContentResolver cr = getContext().getContentResolver();
-
-		/*
-         * new dataset
-		 */
-        String newWmIdToTest = "424236321";
-
-        long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
-                .getContentResolver(), newWmIdToTest, POIs.TAG_RETRIEVED);
-        Assert.assertFalse(id == Extra.ID_UNKNOWN);
-
-        long idOfCopy = PrepareDatabaseHelper.createCopyIfNotExists(cr, id,
-                false);
-        Assert.assertFalse(idOfCopy == Extra.ID_UNKNOWN);
-        Cursor c = PrepareDatabaseHelper.queryState(getContext()
-                .getContentResolver(), POIs.STATE_UNCHANGED);
-        Assert.assertEquals(1, c.getCount());
-        int state = c.getInt(c.getColumnIndexOrThrow(POIs.STATE));
-        Assert.assertEquals(POIs.STATE_UNCHANGED, state);
-        c.close();
-
-        PrepareDatabaseHelper.cleanupOldCopies(getContext()
-                .getContentResolver(), false);
-
-        c = PrepareDatabaseHelper.queryState(cr, POIs.STATE_UNCHANGED);
-        Assert.assertEquals(1, c.getCount());
-        c.close();
-
-    }
-
     public void testDPrepareDatabaseHelperWithDatasetA() {
         final ContentResolver cr = getContext().getContentResolver();
 
@@ -237,7 +208,7 @@ public class POIServiceDatabaseTest extends AndroidTestCase {
                 .getContentResolver());
 
         long id = PrepareDatabaseHelper.getRowIdForWMId(getContext()
-                .getContentResolver(), wmIdToTest, POIs.TAG_RETRIEVED);
+                .getContentResolver(), TEST_ID, POIs.TAG_RETRIEVED);
         Assert.assertFalse(id == Extra.ID_UNKNOWN);
 
         Uri uri = ContentUris.withAppendedId(POIs.CONTENT_URI_RETRIEVED, id);
