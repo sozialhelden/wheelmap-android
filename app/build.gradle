@@ -122,7 +122,6 @@ dependencies {
         exclude group: 'com.hamcrest', module: 'hamcrest-library'
     }
     androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:4.2'
     androidTestCompile 'com.android.support.test:runner:0.3'
     androidTestCompile 'com.android.support.test:rules:0.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
