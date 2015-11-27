@@ -54,6 +54,11 @@ public class ProfileActivityTest {
         ProfileUtils.logout();
 
         onView(withId(R.id.dashboard_login)).perform(click());
+        login();
+
+    }
+
+    public void login(){
 
         onView(withId(R.id.button_login)).perform(click());
 
@@ -76,7 +81,6 @@ public class ProfileActivityTest {
         }
 
         assertTrue(ProfileUtils.isLoggedIn());
-
     }
 
     @Test
