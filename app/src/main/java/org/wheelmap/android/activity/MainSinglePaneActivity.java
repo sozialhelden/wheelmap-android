@@ -22,6 +22,7 @@
 package org.wheelmap.android.activity;
 
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
+import org.wheelmap.android.activity.listeners.Progress;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
@@ -76,9 +77,8 @@ import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
-public class
-        MainSinglePaneActivity extends MapActivity implements
-        DisplayFragmentListener, WorkerFragmentListener, OnStateListener {
+public class MainSinglePaneActivity extends MapActivity implements
+        DisplayFragmentListener, WorkerFragmentListener, OnStateListener, Progress.Provider {
 
     private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
 
@@ -103,6 +103,11 @@ public class
     private MapModeType mapModeType;
 
     private boolean onRefresh = false;
+
+    /**
+     * used for testCases
+     */
+    Progress.Listener mProgressListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -460,6 +465,10 @@ public class
     public void onRefreshing(boolean isRefreshing) {
         onRefresh = isRefreshing;
 
+        if (mProgressListener != null && isRefreshing) {
+            mProgressListener.onProgressChanged(isRefreshing);
+        }
+
         if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {
             loadingProgress.setVisibility(View.VISIBLE);
             checkProgressHide();
@@ -473,6 +482,9 @@ public class
     private void checkProgressHide(){
         if(!onRefresh) {
             loadingProgress.setVisibility(View.GONE);
+            if (mProgressListener != null) {
+                mProgressListener.onProgressChanged(false);
+            }
         } else {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -535,5 +547,10 @@ public class
             resolver.update(mUri, values, whereClause, whereValues);
         }
         c.close();
+    }
+
+    @Override
+    public void addProgressListener(Progress.Listener listener) {
+        mProgressListener = listener;
     }
 }
