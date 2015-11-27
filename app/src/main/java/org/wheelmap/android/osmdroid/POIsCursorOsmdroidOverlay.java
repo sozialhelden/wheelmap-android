@@ -241,8 +241,9 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
     public boolean onSingleTapConfirmed(MotionEvent event, MapView mapView) {
         int hitIndex = checkForItemHit(event, mapView);
         Log.d(TAG, "onSingleTapConfirmed: hitIndex = " + hitIndex);
+
         if (hitIndex == NO_HIT) {
-            return super.onSingleTapConfirmed(event, mapView);
+            return false;
         }
 
         return executeOnTap(hitIndex);
