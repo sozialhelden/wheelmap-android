@@ -361,33 +361,6 @@ public class MainSinglePaneActivity extends MapActivity implements
         listMapToggle.setOnClickListener(l);
     }
 
-    private void createSearchModeCustomView(final ActionBar bar) {
-        if(true){
-               return;
-        }
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
-                null);
-        ImageButton button = (ImageButton) customView.findViewById(R.id.image);
-        button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Fragment f = getSupportFragmentManager().findFragmentByTag(
-                        POIsMapWorkerFragment.TAG);
-                if (f == null) {
-                    return;
-                }
-
-                ((POIsMapWorkerFragment) f).setSearchMode(false);
-                bar.setDisplayShowCustomEnabled(false);
-            }
-        });
-
-        bar.setCustomView(customView, new ActionBar.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-    }
-
     private void showInfo() {
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
@@ -498,8 +471,9 @@ public class MainSinglePaneActivity extends MapActivity implements
     @Override
     public void onSearchModeChange(boolean isSearchMode) {
         Log.d(TAG, "onSearchModeChange: showing custom view in actionbar");
-        createSearchModeCustomView(getSupportActionBar());
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+        }
     }
 
     @Override

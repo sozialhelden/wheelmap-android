@@ -186,8 +186,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
 
-        createSearchModeCustomView(actionBar);
-
         mResizeButton.setOnClickListener(this);
 
         FragmentManager fm = getSupportFragmentManager();
@@ -430,35 +428,6 @@ public class MainMultiPaneActivity extends MapActivity implements
     private void showAccount() {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivityForResult(intent, Request.REQUEST_CODE_LOGIN);
-    }
-
-    private void createSearchModeCustomView(final ActionBar bar) {
-        // not used anymore
-        if (true) {
-            return;
-        }
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View customView = inflater.inflate(R.layout.item_ab_searchmodebutton,
-                null);
-
-        ImageButton button = (ImageButton) customView.findViewById(R.id.image);
-        button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Fragment f = getSupportFragmentManager().findFragmentByTag(
-                        CombinedWorkerFragment.TAG);
-                if (f == null) {
-                    return;
-                }
-
-                ((CombinedWorkerFragment) f).setSearchMode(false);
-                bar.setDisplayShowCustomEnabled(false);
-            }
-        });
-
-        bar.setCustomView(customView, new ActionBar.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     }
 
     private void showSearch() {
