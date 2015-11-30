@@ -19,8 +19,10 @@ import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.activity.POIDetailActivity;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.test.groups.PhoneTest;
 import org.wheelmap.android.test.profile.ProfileActivityTest;
 import org.wheelmap.android.test.profile.ProfileUtils;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -31,16 +33,19 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 
 /**
  * some tests for {@link MainSinglePaneActivity}
+ * IMPORTANT: only for phones due to the use of the MainSinglePaneActivity
+ *
  * Created by timfreiheit on 27.11.15.
  */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@PhoneTest
 public class MainSinglePaneActivityTest {
 
     @Rule
@@ -63,6 +68,8 @@ public class MainSinglePaneActivityTest {
     @Before
     public void before() {
         Intents.init();
+
+        assertFalse("This test is only for phones", UtilsMisc.isTablet(mActivityRule.getActivity()));
 
         // wait for network requests
         Espresso.registerIdlingResources(new ProgressIdlingResource(mActivityRule.getActivity()));

@@ -16,10 +16,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wheelmap.android.activity.MainMultiPaneActivity;
-import org.wheelmap.android.activity.MainSinglePaneActivity;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.test.groups.TabletTest;
 import org.wheelmap.android.test.profile.ProfileActivityTest;
 import org.wheelmap.android.test.profile.ProfileUtils;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -28,15 +29,18 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
 /**
  * some tests for {@link MainMultiPaneActivity}
+ * IMPORTANT: only for tablets due to the use of the MainMultiPaneActivity
+ *
  * Created by timfreiheit on 30.11.15.
  */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@TabletTest
 public class MainMultiPaneActivityTest {
     @Rule
     public ActivityTestRule<MainMultiPaneActivity> mActivityRule = new ActivityTestRule<MainMultiPaneActivity>(MainMultiPaneActivity.class) {
@@ -58,6 +62,8 @@ public class MainMultiPaneActivityTest {
     @Before
     public void before() {
         Intents.init();
+
+        assertTrue("This test is only for tablets", UtilsMisc.isTablet(mActivityRule.getActivity()));
 
         // wait for network requests
         Espresso.registerIdlingResources(new ProgressIdlingResource(mActivityRule.getActivity()));

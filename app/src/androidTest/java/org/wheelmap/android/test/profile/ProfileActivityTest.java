@@ -8,6 +8,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.MediumTest;
 
+import junit.framework.AssertionFailedError;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.wheelmap.android.activity.DashboardActivity;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.test.groups.PhoneTest;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -29,11 +33,11 @@ import static junit.framework.Assert.assertTrue;
 
 /**
  * Test login and Logout
- *
+ * IMPORTANT: only for phones due to the use of the DashboardActivity
  * Created by timfreiheit on 27.11.15.
  */
 @RunWith(AndroidJUnit4.class)
-@MediumTest
+@PhoneTest
 public class ProfileActivityTest {
 
     @Rule
@@ -42,6 +46,7 @@ public class ProfileActivityTest {
     @Before
     public void before(){
         Intents.init();
+        assertFalse("This test is only for phones", UtilsMisc.isTablet(mActivityRule.getActivity()));
     }
 
     @After
