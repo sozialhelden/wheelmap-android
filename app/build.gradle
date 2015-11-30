@@ -23,7 +23,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 15
         targetSdkVersion 22
-        versionName "3.0"
+        versionName "3.0.1"
     }
     signingConfigs {
         debug {
