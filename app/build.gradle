@@ -30,6 +30,11 @@ android {
             storeFile file('debug.keystore')
         }
     }
+
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
     buildTypes {
 
         debug {
