@@ -466,7 +466,7 @@ public class MainSinglePaneActivity extends MapActivity implements
         onRefresh = isRefreshing;
 
         if (mProgressListener != null && isRefreshing) {
-            mProgressListener.onProgressChanged(isRefreshing);
+            mProgressListener.onProgressChanged(true);
         }
 
         if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {

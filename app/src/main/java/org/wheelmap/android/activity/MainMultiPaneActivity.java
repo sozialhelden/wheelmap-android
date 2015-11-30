@@ -27,6 +27,7 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.wheelmap.android.activity.listeners.Progress;
 import org.wheelmap.android.activity.profile.ProfileActivity;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
@@ -98,7 +99,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class MainMultiPaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener,
-        OnClickListener {
+        OnClickListener , Progress.Provider{
 
     private static final String TAG = MainMultiPaneActivity.class
             .getSimpleName();
@@ -136,6 +137,11 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private ProgressBar loadingProgress;
     private boolean onRefresh = false;
+
+    /**
+     * used for testCases
+     */
+    Progress.Listener mProgressListener;
 
     @SuppressLint("NewApi")
     @Override
@@ -543,6 +549,10 @@ public class MainMultiPaneActivity extends MapActivity implements
 
         onRefresh = isRefreshing;
 
+        if (mProgressListener != null && isRefreshing) {
+            mProgressListener.onProgressChanged(true);
+        }
+
         if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {
             loadingProgress.setVisibility(View.VISIBLE);
             checkProgressHide();
@@ -552,6 +562,9 @@ public class MainMultiPaneActivity extends MapActivity implements
     private void checkProgressHide(){
         if(!onRefresh) {
             loadingProgress.setVisibility(View.GONE);
+            if (mProgressListener != null) {
+                mProgressListener.onProgressChanged(false);
+            }
         } else {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -775,4 +788,8 @@ public class MainMultiPaneActivity extends MapActivity implements
     }
 
 
+    @Override
+    public void addProgressListener(Progress.Listener listener) {
+        mProgressListener = listener;
+    }
 }
