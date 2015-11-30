@@ -58,7 +58,7 @@ public class ProfileActivityTest {
 
     }
 
-    public void login(){
+    public static void login(){
 
         onView(withId(R.id.button_login)).perform(click());
 
