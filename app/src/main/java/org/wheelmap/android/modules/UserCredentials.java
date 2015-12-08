@@ -25,6 +25,7 @@ package org.wheelmap.android.modules;
 import com.google.inject.Inject;
 
 import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 
 import android.content.Context;
@@ -57,7 +58,7 @@ public class UserCredentials implements ICredentials {
     @Inject
     public UserCredentials(Context context) {
         mContext = context;
-        ANONYMOUNS_ACCESS_API_KEY = context.getString(R.string.wheelmap_common_apikey);
+        ANONYMOUNS_ACCESS_API_KEY = BuildConfig.WHEELMAP_API_KEY;
         load();
     }
 

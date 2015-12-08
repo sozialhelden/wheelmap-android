@@ -31,6 +31,7 @@ import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
 import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 
@@ -154,7 +155,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
             executeState(getArguments());
         }
 
-        tileUrl = String.format(Locale.US, baseUrl, getString(R.string.mapbox_key));
+        tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
                 mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
                 mBus = EventBus.getDefault();
                 mVerticalDelta = (int) TypedValue.applyDimension(

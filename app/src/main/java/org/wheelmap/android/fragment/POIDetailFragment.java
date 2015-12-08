@@ -56,6 +56,7 @@ import org.wheelmap.android.model.Request;
 import org.wheelmap.android.model.WheelchairFilterState;
 import org.wheelmap.android.model.Wheelmap.POIs;
 import org.wheelmap.android.modules.UserCredentials;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
@@ -386,7 +387,7 @@ public class POIDetailFragment extends Fragment implements
 
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
-            tileUrl = String.format(Locale.US, baseUrl, getString(R.string.mapbox_key));
+            tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
             mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
             mBus = EventBus.getDefault();
             mVerticalDelta = (int) TypedValue.applyDimension(
