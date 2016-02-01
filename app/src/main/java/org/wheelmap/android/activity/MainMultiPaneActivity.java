@@ -135,7 +135,6 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private String address = null;
 
-    private ProgressBar loadingProgress;
     private boolean onRefresh = false;
 
     /**
@@ -234,8 +233,6 @@ public class MainMultiPaneActivity extends MapActivity implements
         if (address != null) {
             showSearch();
         }
-
-        loadingProgress = (ProgressBar)findViewById(R.id.loading_progress);
     }
 
     @Override
@@ -522,15 +519,30 @@ public class MainMultiPaneActivity extends MapActivity implements
             mProgressListener.onProgressChanged(true);
         }
 
-        if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {
-            loadingProgress.setVisibility(View.VISIBLE);
-            checkProgressHide();
+        if(isRefreshing) {
+            if (getSupportActionBar() != null && getSupportActionBar().getCustomView() != null) {
+                View progress = getSupportActionBar().getCustomView().findViewById(R.id.progress);
+                if (progress.getVisibility() != View.VISIBLE) {
+                    progress.setVisibility(View.VISIBLE);
+                    checkProgressHide();
+                }
+            }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        onRefresh = false;
     }
 
     private void checkProgressHide(){
         if(!onRefresh) {
-            loadingProgress.setVisibility(View.GONE);
+
+            if (getSupportActionBar() != null && getSupportActionBar().getCustomView() != null) {
+                getSupportActionBar().getCustomView().findViewById(R.id.progress).setVisibility(View.INVISIBLE);
+            }
+
             if (mProgressListener != null) {
                 mProgressListener.onProgressChanged(false);
             }

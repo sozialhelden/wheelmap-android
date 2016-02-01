@@ -98,8 +98,6 @@ public class MainSinglePaneActivity extends MapActivity implements
     private POIsOsmdroidFragment mMapFragment;
     private ViewFlipper flipper;
 
-    private ProgressBar loadingProgress;
-
     private MapModeType mapModeType;
 
     private boolean onRefresh = false;
@@ -120,8 +118,6 @@ public class MainSinglePaneActivity extends MapActivity implements
 
         appProperties = AppProperties.getInstance(WheelmapApp.getApp());
         Log.d(TAG, "onCreate");
-
-        setSupportProgressBarIndeterminateVisibility(false);
 
         ActionBar actionbar = getSupportActionBar();
         if(actionbar != null){
@@ -181,8 +177,6 @@ public class MainSinglePaneActivity extends MapActivity implements
         } else {
             mapModeType = MapModeType.MAP_MODE_NORMAL;
         }
-
-        loadingProgress = (ProgressBar)findViewById(R.id.loading_progress);
     }
 
     @Override
@@ -442,10 +436,17 @@ public class MainSinglePaneActivity extends MapActivity implements
             mProgressListener.onProgressChanged(true);
         }
 
-        if(isRefreshing && loadingProgress.getVisibility() != View.VISIBLE) {
-            loadingProgress.setVisibility(View.VISIBLE);
-            checkProgressHide();
+        if(isRefreshing) {
+            if (getSupportActionBar() != null) {
+                View progress = getSupportActionBar().getCustomView().findViewById(R.id.progress);
+                if (progress.getVisibility() != View.VISIBLE) {
+                    progress.setVisibility(View.VISIBLE);
+                    checkProgressHide();
+                }
+            }
         }
+
+
     }
 
     /**
@@ -454,7 +455,9 @@ public class MainSinglePaneActivity extends MapActivity implements
      */
     private void checkProgressHide(){
         if(!onRefresh) {
-            loadingProgress.setVisibility(View.GONE);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().getCustomView().findViewById(R.id.progress).setVisibility(View.INVISIBLE);
+            }
             if (mProgressListener != null) {
                 mProgressListener.onProgressChanged(false);
             }
@@ -466,6 +469,12 @@ public class MainSinglePaneActivity extends MapActivity implements
                 }
             }, 500);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        onRefresh = false;
     }
 
     @Override

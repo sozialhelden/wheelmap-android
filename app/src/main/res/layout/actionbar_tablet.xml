@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -19,10 +20,21 @@
             android:src="@drawable/title_logo_shadow_tablet" />
     </FrameLayout>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
     <ImageView
         android:id="@+id/menu_new_poi"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/ic_plus"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </LinearLayout>

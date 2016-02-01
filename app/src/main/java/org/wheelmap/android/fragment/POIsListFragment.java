@@ -44,27 +44,31 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
 
-public class POIsListFragment extends ListFragment implements
-        DisplayFragment, OnSearchDialogListener, OnExecuteBundle {
+public class POIsListFragment extends Fragment implements
+        DisplayFragment, OnSearchDialogListener, OnExecuteBundle, AdapterView.OnItemClickListener {
 
     public static final String TAG = POIsListFragment.class.getSimpleName();
 
     private WorkerFragment mWorkerFragment;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ListView mListView;
 
     private int mFirstVisiblePosition = 0;
@@ -94,6 +98,8 @@ public class POIsListFragment extends ListFragment implements
     private boolean mUseAngloDistanceUnit;
 
     private String selectedItem_wmID = null;
+
+    private boolean isRefreshing;
 
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
         private static final float MIN_DIRECTION_DELTA = 10;
@@ -177,6 +183,7 @@ public class POIsListFragment extends ListFragment implements
         mListView = (ListView) v.findViewById(android.R.id.list);
         mAdapter = new POIsListCursorAdapter(getActivity(), null, false, mUseAngloDistanceUnit);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
         if (UtilsMisc.isTablet(getActivity())) {
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
@@ -185,6 +192,17 @@ public class POIsListFragment extends ListFragment implements
             mListener.refreshRegisterList(mListView);
         }
         attachWorkerFragment();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mWorkerFragment != null) {
+                    mWorkerFragment.requestUpdate(null);
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            }
+        });
 
         if (getActivity().getIntent().hasExtra(SearchManager.QUERY)) {
             //showSearch();
@@ -344,9 +362,8 @@ public class POIsListFragment extends ListFragment implements
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        Cursor cursor = (Cursor) l.getAdapter().getItem(position);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor = (Cursor) parent.getAdapter().getItem(position);
         if (cursor == null) {
             return;
         }
@@ -360,7 +377,6 @@ public class POIsListFragment extends ListFragment implements
         if (mListener != null) {
             mListener.onShowDetail(this, values);
         }
-
     }
 
     private void setCursor(Cursor cursor) {
@@ -384,10 +400,15 @@ public class POIsListFragment extends ListFragment implements
     }
 
     private void setRefreshStatus(boolean isRefreshing) {
+        this.isRefreshing = isRefreshing;
         Log.d(TAG, "setRefreshStates: isRefreshing = " + isRefreshing);
 
         if (mListener != null) {
             mListener.onRefreshing(isRefreshing);
+        }
+
+        if (!isRefreshing) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
