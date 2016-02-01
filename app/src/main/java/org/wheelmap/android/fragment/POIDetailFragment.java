@@ -66,6 +66,7 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.FileUtil;
+import org.wheelmap.android.utils.MyLocationProvider;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
 import org.wheelmap.android.utils.UtilsMisc;
@@ -166,8 +167,6 @@ public class POIDetailFragment extends Fragment implements
 
     private org.osmdroid.views.MapView mMapView;
 
-    private EventBus mBus;
-
     private int mVerticalDelta;
 
     private final static int VERTICAL_DELTA = 20;
@@ -195,8 +194,6 @@ public class POIDetailFragment extends Fragment implements
     private MyLocationNewOverlay mCurrLocationOverlay;
 
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
-
-    private Location mLocation;
 
     ImageView img_logo;
     private Intent pictureActionIntent = null;
@@ -389,14 +386,16 @@ public class POIDetailFragment extends Fragment implements
 
             tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
             mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
-            mBus = EventBus.getDefault();
+            EventBus bus = EventBus.getDefault();
+            mMyLocationProvider.register();
             mVerticalDelta = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
                     getResources().getDisplayMetrics());
 
-            MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) mBus
+            MyLocationManager.LocationEvent event = (MyLocationManager.LocationEvent) bus
                     .getStickyEvent(MyLocationManager.LocationEvent.class);
-            mLocation = event.location;
+            Location location = event.location;
+            mMyLocationProvider.updateLocation(location);
 
             mSensorManager = (SensorManager) getActivity().getSystemService(
                     Context.SENSOR_SERVICE);
@@ -696,30 +695,12 @@ public class POIDetailFragment extends Fragment implements
         anim.setInterpolator(SMOOTH_INTERPOLATOR);
         anim.setDuration(FADE_IN_ANIMATION_DURATION);
         anim.start();
-
-        if(mBus != null){
-            mBus.registerSticky(this);
-            mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
-        }
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if(mBus != null){
-            mBus.post(new MyLocationManager.UnregisterEvent());
-            mBus.unregister(this);
-        }
-    }
-
-    public void onEventMainThread(MyLocationManager.LocationEvent locationEvent) {
-        mLocation = locationEvent.location;
-        Log.d(TAG, "updateLocation: " + mLocation);
-        org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mLocation.getLatitude(),
-                mLocation.getLongitude());
-
-        mMyLocationProvider.updateLocation(mLocation);
+        mMyLocationProvider.unregister();
     }
 
     @Override
@@ -734,8 +715,6 @@ public class POIDetailFragment extends Fragment implements
         mapController = null;
         System.gc();
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -1193,7 +1172,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     public void showDetail(long id) {
-        Log.d(TAG,"show id: "+id);
+        Log.d(TAG, "show id: " + id);
         poiId = id;
 
         if(getLoaderManager() != null)
@@ -1208,7 +1187,7 @@ public class POIDetailFragment extends Fragment implements
         DetachableResultReceiver r = new DetachableResultReceiver(new Handler());
         r.setReceiver(this);
 
-        RestServiceHelper.retrievePhotosById(getActivity(),wm_id,r);
+        RestServiceHelper.retrievePhotosById(getActivity(), wm_id, r);
     }
 
     /**
@@ -1488,78 +1467,6 @@ public class POIDetailFragment extends Fragment implements
         return rtnPoint;
     }
 
-    private Location getLocation() {
-        return mLocation;
-    }
-
-    private class MyLocationProvider implements IMyLocationProvider, SensorEventListener {
-
-        private static final float MIN_DIRECTION_DELTA = 10;
-
-        private float lastDirection;
-
-        private float mDirection;
-
-        private Location mProviderLocation;
-
-        private IMyLocationConsumer mMyLocationConsumer;
-
-        @Override
-        public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
-            mMyLocationConsumer = myLocationConsumer;
-            updateLocation(getLocation());
-            return true;
-        }
-
-        @Override
-        public void stopLocationProvider() {
-            mMyLocationConsumer = null;
-        }
-
-        @Override
-        public Location getLastKnownLocation() {
-            return mProviderLocation;
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            float direction = event.values[0];
-            if (direction > 180) {
-                direction -= 360;
-            }
-
-            if (isAdded()) {
-                direction -= UtilsMisc.calcRotationOffset(getActivity()
-                        .getWindowManager().getDefaultDisplay());
-            }
-
-            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
-                return;
-            }
-
-            lastDirection = mDirection;
-            mDirection = direction;
-            Log.d(TAG, "direction: " + direction);
-            updateLocation(getLocation());
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-
-        public void updateLocation(Location location) {
-            if (location == null) {
-                return;
-            }
-
-            mProviderLocation = location;
-            mProviderLocation.setBearing(mDirection + 90);
-            if (mMyLocationConsumer != null) {
-                mMyLocationConsumer.onLocationChanged(mProviderLocation, this);
-            }
-        }
-    }
 }
 
 /**

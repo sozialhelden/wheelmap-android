@@ -24,6 +24,7 @@ import org.osmdroid.views.util.constants.MapViewConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
+import org.wheelmap.android.utils.MyLocationProvider;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -399,7 +400,7 @@ public class MyLocationNewOverlayFixed extends SafeDrawOverlay implements IMyLoc
             final int worldSize_2 = TileSystem.MapSize(MapViewConstants.MAXIMUM_ZOOMLEVEL) / 2;
             mMapCoords.offset(-worldSize_2, -worldSize_2);
 
-            if (mIsFollowing && source instanceof POIsOsmdroidFragment.MyLocationProvider) {
+            if (mIsFollowing && source instanceof MyLocationProvider) {
                 mGeoPoint.setLatitudeE6((int) (mLocation.getLatitude() * 1E6));
                 mGeoPoint.setLongitudeE6((int) (mLocation.getLongitude() * 1E6));
                 mMapController.setZoom(DEFAULT_ZOOMLEVEL_LOCATED);

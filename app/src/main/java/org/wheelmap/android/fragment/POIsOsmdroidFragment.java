@@ -47,6 +47,7 @@ import org.wheelmap.android.osmdroid.MarkItemOverlay;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
+import org.wheelmap.android.utils.MyLocationProvider;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
@@ -322,6 +323,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         super.onStart();
         mBus.registerSticky(this);
         mBus.post(MyLocationManager.RegisterEvent.INSTANCE);
+        mMyLocationProvider.register();
     }
 
     @Override
@@ -354,6 +356,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         super.onStop();
         mBus.post(new MyLocationManager.UnregisterEvent());
         mBus.unregister(this);
+        mMyLocationProvider.unregister();
     }
 
     @Override
@@ -845,72 +848,4 @@ public class POIsOsmdroidFragment extends Fragment implements
         }
     }
 
-    public class MyLocationProvider implements IMyLocationProvider, SensorEventListener {
-
-        private static final float MIN_DIRECTION_DELTA = 10;
-
-        private float lastDirection;
-
-        private float mDirection;
-
-        private Location mProviderLocation;
-
-        private IMyLocationConsumer mMyLocationConsumer;
-
-        @Override
-        public boolean startLocationProvider(IMyLocationConsumer myLocationConsumer) {
-            mMyLocationConsumer = myLocationConsumer;
-            updateLocation(getLocation());
-            return true;
-        }
-
-        @Override
-        public void stopLocationProvider() {
-            mMyLocationConsumer = null;
-        }
-
-        @Override
-        public Location getLastKnownLocation() {
-            return mProviderLocation;
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            float direction = event.values[0];
-            if (direction > 180) {
-                direction -= 360;
-            }
-
-            if (isAdded()) {
-                direction -= UtilsMisc.calcRotationOffset(getActivity()
-                        .getWindowManager().getDefaultDisplay());
-            }
-
-            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
-                return;
-            }
-
-            lastDirection = mDirection;
-            mDirection = direction;
-            Log.d(TAG, "direction: " + direction);
-            updateLocation(getLocation());
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-
-        public void updateLocation(Location location) {
-            if (location == null) {
-                return;
-            }
-
-            mProviderLocation = location;
-            mProviderLocation.setBearing(mDirection + 90);
-            if (mMyLocationConsumer != null) {
-                mMyLocationConsumer.onLocationChanged(mProviderLocation, this);
-            }
-        }
-    }
 }

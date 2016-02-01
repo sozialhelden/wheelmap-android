@@ -30,14 +30,23 @@ import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
+import org.wheelmap.android.utils.MyLocationProvider;
 import org.wheelmap.android.utils.ParceableBoundingBox;
+import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -98,6 +107,8 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
     private OnEditPositionListener mListener;
 
+    MyLocationProvider myLocationProvider = new MyLocationProvider();
+    MyLocationNewOverlayFixed myLocationOverlay;
 
     @Override
     public void onUpdate(WorkerFragment fragment) {
@@ -163,6 +174,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
                 getResources().getDisplayMetrics());
 
         attachWorkerFragment();
+        myLocationProvider.register();
 
     }
 
@@ -181,6 +193,12 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
 
+        myLocationOverlay = new MyLocationNewOverlayFixed(getActivity(), myLocationProvider ,mMapView);
+
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        mMapView.getOverlays().add(myLocationOverlay);
+
         mMapController = mMapView.getController();
 
         mMapView.setBuiltInZoomControls(true);
@@ -188,6 +206,21 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         mMapController.setZoom(18);
         mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
 
+        v.findViewById(R.id.map_btn_locate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location location = myLocationProvider.getLastKnownLocation();
+                if (location == null) {
+                    return;
+                }
+                org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(location.getLatitude(),
+                        location.getLongitude());
+
+                if (mMapView != null) {
+                    mMapController.setCenter(geoPoint);
+                }
+            }
+        });
 
         mMapView.setMapListener(this);
 
@@ -227,6 +260,12 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
 
         mCrrLatitude = state.getDouble(Extra.LATITUDE);
         mCrrLongitude = state.getDouble(Extra.LONGITUDE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        myLocationProvider.unregister();
     }
 
     @Override
@@ -342,4 +381,5 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         mWorkerFragment.registerDisplayFragment(this);
         Log.d(TAG, "result mWorkerFragment = " + mWorkerFragment);
     }
+
 }
