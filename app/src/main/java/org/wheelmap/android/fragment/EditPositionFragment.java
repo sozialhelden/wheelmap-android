@@ -194,9 +194,9 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         mMapView.setMultiTouchControls(true);
 
         myLocationOverlay = new MyLocationNewOverlayFixed(getActivity(), myLocationProvider ,mMapView);
-
-        myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
+        myLocationOverlay.enableMyLocation();
+
         mMapView.getOverlays().add(myLocationOverlay);
 
         mMapController = mMapView.getController();
@@ -217,7 +217,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
                         location.getLongitude());
 
                 if (mMapView != null) {
-                    mMapController.setCenter(geoPoint);
+                    mMapController.animateTo(geoPoint);
                 }
             }
         });

@@ -545,7 +545,7 @@ public class POIDetailFragment extends Fragment implements
 
             mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
             mBtnExpand = (ImageButton) v.findViewById(R.id.map_btn_expand);
-            mBtnLocate = (ImageButton) v.findViewById(R.id.map_btn_locate);
+            mBtnLocate = (ImageButton) v.findViewById(R.id.center_poi);
 
             mMapView.setTileSource(mMapBoxTileSource);
             mMapView.setMultiTouchControls(true);
@@ -558,8 +558,8 @@ public class POIDetailFragment extends Fragment implements
 
             MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
                     mMapView);
-            a.enableMyLocation();
             a.disableFollowLocation();
+            a.enableMyLocation();
             mMapView.getOverlays().add(a);
 
             mMapController = mMapView.getController();
@@ -600,7 +600,19 @@ public class POIDetailFragment extends Fragment implements
                             mCrrLongitude);
 
                     if (mMapView != null) {
-                        centerMap(geoPoint, true);
+                        centerMap(geoPoint, true, true);
+                    }
+                }
+            });
+
+            v.findViewById(R.id.map_btn_locate).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mMapView != null && mMyLocationProvider.getLastKnownLocation() != null) {
+                        Location location = mMyLocationProvider.getLastKnownLocation();
+                        org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(location.getLatitude(),
+                                location.getLongitude());
+                        centerMap(geoPoint, true, true);
                     }
                 }
             });
@@ -1399,14 +1411,17 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force) {
+        centerMap(geoPoint, force, false);
+    }
+    private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force, boolean animated) {
         Log.d(TAG, "centerMap: force = " + force + " isCentered = "
                 + isCentered + " geoPoint = " + geoPoint);
         if (force) {
-            setCenterWithOffset(geoPoint);
+            setCenterWithOffset(geoPoint, animated);
         }
     }
 
-    private void setCenterWithOffset(org.osmdroid.util.GeoPoint geoPoint) {
+    private void setCenterWithOffset(org.osmdroid.util.GeoPoint geoPoint, boolean animated) {
         if (geoPoint == null) {
             return;
         }
@@ -1431,8 +1446,11 @@ public class POIDetailFragment extends Fragment implements
                 actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
             }
         }
-
-        mMapController.setCenter(actualGeoPoint);
+        if (animated) {
+            mMapController.animateTo(actualGeoPoint);
+        } else {
+            mMapController.setCenter(actualGeoPoint);
+        }
         isCentered = true;
     }
 
