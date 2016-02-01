@@ -110,7 +110,9 @@ public class ErrorDialogFragment extends DialogFragment implements
         } else {
             RestServiceException e = getArguments().getParcelable(
                     Extra.EXCEPTION);
-            if (e.isNetworkError()) {
+            if (mId == Extra.UNKNOWN) {
+                title = getString(R.string.error_network_unknown_failure);
+            } else if (e.isNetworkError()) {
                 title = getString(R.string.error_network_title);
             } else {
                 title = getString(R.string.error_authorization_error);

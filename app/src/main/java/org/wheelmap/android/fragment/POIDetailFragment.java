@@ -929,6 +929,15 @@ public class POIDetailFragment extends Fragment implements
             String wmIdString = POIHelper.getWMId(c);
             WheelchairFilterState accessState = POIHelper.getWheelchair(c);
             WheelchairFilterState toiletState = POIHelper.getWheelchairToilet(c);
+
+            if (accessState == WheelchairFilterState.NO_PREFERENCE) {
+                accessState = WheelchairFilterState.UNKNOWN;
+            }
+
+            if (toiletState == WheelchairFilterState.NO_PREFERENCE) {
+                toiletState = WheelchairFilterState.TOILET_UNKNOWN;
+            }
+
             String name = POIHelper.getName(c);
             String comment = POIHelper.getComment(c);
 

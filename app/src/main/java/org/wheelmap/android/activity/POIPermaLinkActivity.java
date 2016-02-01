@@ -30,5 +30,6 @@ public class POIPermaLinkActivity extends Activity {
         app.setUriString(uri);
 
         startActivity(new Intent(this, StartupActivity.class));
+        finish();
     }
 }
