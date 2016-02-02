@@ -27,8 +27,9 @@
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:visibility="invisible"
             tools:visibility="visible"/>
 
