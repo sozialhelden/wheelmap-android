@@ -44,6 +44,7 @@ import org.wheelmap.android.service.RestServiceException;
 import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
+import org.wheelmap.android.utils.FeatureToggles;
 import org.wheelmap.android.utils.UtilsMisc;
 
 import android.app.Activity;
@@ -226,6 +227,9 @@ public class POIDetailEditableFragment extends Fragment implements
         cityText = (EditText) parent.findViewById(R.id.city);
         websiteText = (EditText) parent.findViewById(R.id.website);
         phoneText = (EditText) parent.findViewById(R.id.phone);
+        if (!FeatureToggles.isPhoneNumberEditable) {
+            phoneText.setVisibility(View.GONE);
+        }
         geolocation_text = (TextView) parent.findViewById(R.id.geolocation);
 
         accessStateText = (TextView) parent.findViewById(R.id.access_state_text);
@@ -628,9 +632,12 @@ public class POIDetailEditableFragment extends Fragment implements
             if (!TextUtils.isEmpty(website)) {
                 values.put(POIs.WEBSITE, website);
             }
-            String phone = phoneText.getText().toString();
-            if (!TextUtils.isEmpty(phone)) {
-                values.put(POIs.PHONE, phone);
+
+            if (FeatureToggles.isPhoneNumberEditable) {
+                String phone = phoneText.getText().toString();
+                if (!TextUtils.isEmpty(phone)) {
+                    values.put(POIs.PHONE, phone);
+                }
             }
 
         } catch (NullPointerException npex) {

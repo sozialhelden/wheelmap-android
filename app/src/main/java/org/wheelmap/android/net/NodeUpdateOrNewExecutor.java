@@ -35,6 +35,7 @@ import org.wheelmap.android.net.request.RequestBuilder;
 import org.wheelmap.android.net.request.ToiletStateUpdateRequestBuilder;
 import org.wheelmap.android.net.request.WheelchairUpdateRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
+import org.wheelmap.android.utils.FeatureToggles;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -197,7 +198,11 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
         String postcode = POIHelper.getPostcode(mCursor);
 
         String website = POIHelper.getWebsite(mCursor);
-        String phone = POIHelper.getPhone(mCursor);
+
+        String phone = null;
+        if (FeatureToggles.isPhoneNumberEditable) {
+            phone = POIHelper.getPhone(mCursor);
+        }
 
         return new NodeUpdateOrNewAllRequestBuilder(getServer(), apiKey,
                 AcceptType.JSON, id, name, categoryIdentifier,
