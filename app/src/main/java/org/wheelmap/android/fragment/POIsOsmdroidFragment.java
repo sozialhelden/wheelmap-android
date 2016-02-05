@@ -21,6 +21,31 @@
  */
 package org.wheelmap.android.fragment;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
@@ -32,8 +57,6 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.MapView.Projection;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
-import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.wheelmap.android.activity.MapActivity;
 import org.wheelmap.android.app.WheelmapApp;
@@ -51,33 +74,6 @@ import org.wheelmap.android.utils.MyLocationProvider;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Point;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -130,7 +126,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private boolean mHeightFull = true;
 
-    private boolean isCentered;
+    private boolean isCentered = false;
 
     private int oldZoomLevel = MAP_ZOOM_DEFAULT;
 
@@ -247,8 +243,6 @@ public class POIsOsmdroidFragment extends Fragment implements
                     getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
         }
 
-
-
         mMapView = (MapView) v.findViewById(R.id.map);
         mMapView.setTileSource(mMapBoxTileSource);
         setHardwareAccelerationOff();
@@ -280,12 +274,11 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         mMyLocationOverlay = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
                 mMapView);
-
-        mMyLocationProvider.startLocationProvider(mMyLocationOverlay);
+        mMyLocationOverlay.disableFollowLocation();
         mMapView.getOverlays().add(mMyLocationOverlay);
 
+        mMyLocationProvider.startLocationProvider(mMyLocationOverlay);
         mMyLocationOverlay.enableMyLocation();
-        mMyLocationOverlay.enableFollowLocation();
 
         mMapView.setMapListener(this);
 
@@ -296,7 +289,6 @@ public class POIsOsmdroidFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 centerMap(mCurrentLocationGeoPoint, true);
-                setZoomIntern(MAP_ZOOM_DEFAULT);
                 requestUpdate();
             }
         });
@@ -304,6 +296,12 @@ public class POIsOsmdroidFragment extends Fragment implements
         onRestoreInstanceState(savedInstanceState);
 
         return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        onEventMainThread(mBus.getStickyEvent(MyLocationManager.LocationEvent.class));
     }
 
     public void zoomInToMax(){
@@ -538,7 +536,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         int zoomlevel = mMapView.getZoomLevel();
 
         outState.putInt(Extra.ZOOM_LEVEL, zoomlevel);
-        outState.putInt(Extra.LATITUDE,current_location.getLatitudeE6());
+        outState.putInt(Extra.LATITUDE, current_location.getLatitudeE6());
         outState.putInt(Extra.LONGITUDE, current_location.getLongitudeE6());
 
         GeoPoint selectedPOI = markItemOverlay.getLocation();
@@ -655,10 +653,18 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     private void centerMap(GeoPoint geoPoint, boolean force) {
+        centerMap(geoPoint, force, true);
+    }
+    private void centerMap(GeoPoint geoPoint, boolean force, boolean withOffset) {
         Log.d(TAG, "centerMap: force = " + force + " isCentered = "
                 + isCentered + " geoPoint = " + geoPoint);
         if (force || !isCentered) {
-            setCenterWithOffset(geoPoint);
+            if (withOffset) {
+                setCenterWithOffset(geoPoint);
+            } else {
+                mMapController.setCenter(geoPoint);
+                isCentered = true;
+            }
         }
     }
 
@@ -669,9 +675,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         IGeoPoint actualGeoPoint = geoPoint;
-
-
-
 
         if (mHeightFull) {
             actualGeoPoint = geoPoint;
@@ -813,7 +816,11 @@ public class POIsOsmdroidFragment extends Fragment implements
                 mLocation.getLongitude());
 
         if (mMapView != null && !isCentered) {
-            centerMap(geoPoint, false);
+            mMyLocationOverlay.enableFollowLocation();
+            mMapView.getOverlays().add(mMyLocationOverlay);
+            mMyLocationProvider.updateLocation(mLocation);
+            mMyLocationOverlay.disableFollowLocation();
+            isCentered = true;
         }
 
         mCurrentLocationGeoPoint = geoPoint;
