@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.facebook.stetho.Stetho;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -103,6 +104,10 @@ public class WheelmapApp extends Application {
         RoboGuice.setModulesResourceId(R.array.roboguice_modules);
         super.onCreate();
         INSTANCE = this;
+
+        if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this);
+        }
 
         Log.init(getApplicationContext(), getString(R.string.andrologproperties));
         if (BuildConfig.DEBUG) {
