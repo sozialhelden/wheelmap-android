@@ -67,7 +67,7 @@ public class PrepareDatabaseHelper {
         Log.v(TAG, "createCopyIfNotExists id = " + id);
         Uri uri = Uri.withAppendedPath(POIs.CONTENT_URI_RETRIEVED,
                 Long.toString(id));
-        Cursor c = resolver.query(uri, POIs.PROJECTION, null, null, null);
+        Cursor c = resolver.query(uri, null, null, null, null);
 
         if (c == null || c.getCount() != 1) {
             return Extra.ID_UNKNOWN;
@@ -76,6 +76,7 @@ public class PrepareDatabaseHelper {
         c.moveToFirst();
         ContentValues values = new ContentValues();
         POIHelper.copyItemToValues(c, values);
+
         c.close();
         return createCopyFromContentValues(resolver, values, retain);
     }
@@ -252,7 +253,7 @@ public class PrepareDatabaseHelper {
         String whereValues[] = {node.getNode().getId().toString()};
 
         long id = insertOrUpdateContentValues(resolver,
-                Wheelmap.POIs.CONTENT_URI_RETRIEVED, Wheelmap.POIs.PROJECTION,
+                POIs.createNoNotify(POIs.CONTENT_URI_RETRIEVED), null,
                 whereClause, whereValues, values);
 
         createCopyIfNotExists(resolver, id, false);

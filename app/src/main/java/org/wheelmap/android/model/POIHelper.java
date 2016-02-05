@@ -171,6 +171,7 @@ public class POIHelper {
         values.put(POIs.PHONE, getPhone(c));
 
         values.put(POIs.WHEELCHAIR, getWheelchair(c).getId());
+        values.put(POIs.WHEELCHAIR_TOILET, getWheelchairToilet(c).getId());
         values.put(POIs.DESCRIPTION, getComment(c));
 
     }
