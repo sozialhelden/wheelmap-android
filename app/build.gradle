@@ -95,12 +95,6 @@ dependencies {
     // http://mvnrepository.com/artifact/com.nostra13.universalimageloader/universal-image-loader/1.9.4
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 
-
-    // Recommended for location services
-    compile('com.google.android.gms:play-services-location:8.1.0'){
-        exclude module: 'support-v4'
-    }
-
     compile 'org.roboguice:roboguice:2.0'
 
     compile "org.apache.httpcomponents:httpmime:4.2.3"
