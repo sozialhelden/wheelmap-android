@@ -70,8 +70,12 @@ android {
         }
 
         releaseTest {
-            initWith(buildTypes.release)
+            initWith(buildTypes.debug)
+            debuggable true
             applicationIdSuffix ".releaseTest"
+            buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
+            buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
+            buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
             buildConfigField "String", "HOCKEY_APP_ID", "\"ad5bad6dac5749cc9fc1aea17c71552d\""
         }
     }
