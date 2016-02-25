@@ -52,6 +52,8 @@ import java.util.List;
 
 import de.akquinet.android.androlog.Constants;
 import de.akquinet.android.androlog.Log;
+import hotchemi.android.rate.AppRate;
+import hotchemi.android.rate.OnClickButtonListener;
 import roboguice.RoboGuice;
 
 //import org.wheelmap.android.modules.MainModule;
@@ -139,6 +141,18 @@ public class WheelmapApp extends Application {
 
         mSupportManager = new SupportManager(getApplicationContext());
         UserQueryHelper.init(getApplicationContext());
+
+        initAppRateDialog();
+    }
+
+    private void initAppRateDialog() {
+        AppRate.with(this)
+            .setInstallDays(4)
+            .setLaunchTimes(3)
+            .setRemindInterval(2)
+            .setShowLaterButton(true)
+            .setDebug(true)
+            .monitor();
     }
 
     @Override

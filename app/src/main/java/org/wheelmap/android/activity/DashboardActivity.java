@@ -28,6 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import hotchemi.android.rate.AppRate;
+
 /**
  * Created by tim on 07.02.14.
  */
@@ -193,6 +195,10 @@ public class DashboardActivity extends AppCompatActivity {
 
         boolean loggedIn = mCredentials.isLoggedIn();
         onActivityResult(Request.REQUEST_CODE_LOGIN,loggedIn?RESULT_OK:RESULT_CANCELED,null);
+
+        // Show a dialog if meets conditions
+        AppRate.showRateDialogIfMeetsConditions(this);
+
     }
 
     @Override

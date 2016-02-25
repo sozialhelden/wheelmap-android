@@ -96,6 +96,7 @@ import android.widget.ProgressBar;
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import hotchemi.android.rate.AppRate;
 
 public class MainMultiPaneActivity extends MapActivity implements
         DisplayFragmentListener, WorkerFragmentListener, OnPOIDetailListener,
@@ -233,6 +234,10 @@ public class MainMultiPaneActivity extends MapActivity implements
         if (address != null) {
             showSearch();
         }
+
+        // Show a dialog if meets conditions
+        AppRate.showRateDialogIfMeetsConditions(this);
+
     }
 
     @Override
