@@ -63,7 +63,13 @@ public class BundlePreferences implements IBundlePreferences {
         }
         parcel.recycle();
         if(bundle != null) {
-            Log.d(TAG, "retrieve: id = " + id + " empty = " + bundle.isEmpty());
+            try {
+                Log.d(TAG, "retrieve: id = " + id + " empty = " + bundle.isEmpty());
+            } catch (Exception e) {
+                //  Parcel android.os.Parcel: Unmarshalling unknown type code 5177420
+                e.printStackTrace();
+                return new Bundle();
+            }
             return bundle;
         } else {
             return new Bundle();
