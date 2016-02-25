@@ -131,7 +131,6 @@ public class MyLocationManager {
         mBus.postSticky(new LocationEvent(mCurrentBestLocation, isValid));
         wasBestLastKnownLocation = true;
 
-        requestLocationUpdates();
     }
 
     public static void init(Context context) {
@@ -146,7 +145,8 @@ public class MyLocationManager {
     }
 
     public void onEventMainThread(RegisterEvent e) {
-        Log.d(TAG, "onRegisterEvent: entity registered" );
+        Log.d(TAG, "onRegisterEvent: entity registered: " + mSubscriber);
+        mSubscriber = Math.max(mSubscriber, 0);
         mSubscriber++;
 
         if (mSubscriber > 0) {
@@ -156,9 +156,10 @@ public class MyLocationManager {
     }
 
     public void onEventMainThread(UnregisterEvent e) {
-        Log.d(TAG, "onUnregisterEvent: entity unregistered" );
+        Log.d(TAG, "onUnregisterEvent: entity unregistered: " + mSubscriber);
 
         mSubscriber--;
+        mSubscriber = Math.max(mSubscriber, 0);
 
         if (mSubscriber > 0) {
             return;
