@@ -1196,8 +1196,15 @@ public class POIDetailFragment extends Fragment implements
         Log.d(TAG, "show id: " + id);
         poiId = id;
 
-        if(getLoaderManager() != null)
+        if(getLoaderManager() != null) {
             getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
+        }
+    }
+
+    public void reloadData() {
+        if(getLoaderManager() != null) {
+            getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
+        }
     }
 
     public void getPhotos(long wm_id){
