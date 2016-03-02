@@ -21,6 +21,18 @@
  */
 package org.wheelmap.android.manager;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
+import android.preference.PreferenceManager;
+
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Extra.What;
@@ -37,20 +49,6 @@ import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.GeoMath;
 import org.wheelmap.android.utils.UtilsMisc;
 import org.wheelmap.android.view.MyLayerDrawable;
-
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.AssetManager;
-import android.database.Cursor;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,8 +71,6 @@ import de.greenrobot.event.EventBus;
 public class SupportManager {
 
     private static final String TAG = SupportManager.class.getSimpleName();
-
-    private final float fMarkerDimension;
 
     private Context mContext;
 
@@ -181,8 +177,6 @@ public class SupportManager {
         }
     }
 
-    private AssetManager mAssetManager;
-
     public static class NodeType {
 
         public NodeType(int id, String identifier, String localizedName,
@@ -196,8 +190,6 @@ public class SupportManager {
         public NodeType base;
 
         public String iconPath;
-
-        private WeakReference<Drawable> iconDrawable = new WeakReference<Drawable>(null);
 
         private WeakHashMap<WheelchairFilterState, WeakReference<Drawable>> stateDrawables = new WeakHashMap<>();
 
@@ -279,12 +271,9 @@ public class SupportManager {
 
         mBus = EventBus.getDefault();
 
-        fMarkerDimension = mContext.getResources().getDimension(R.dimen.mapmarker_halflength);
-
-        mCategoryLookup = new HashMap<Integer, Category>();
-        mNodeTypeLookup = new HashMap<Integer, NodeType>();
-        mNodeTypeLookupList = new HashMap<Integer, NodeType>();
-        mAssetManager = mContext.getAssets();
+        mCategoryLookup = new HashMap<>();
+        mNodeTypeLookup = new HashMap<>();
+        mNodeTypeLookupList = new HashMap<>();
 
         mDefaultCategory = new Category(UNKNOWN_TYPE, "unknown",
                 mContext.getString(R.string.support_category_unknown));
@@ -642,58 +631,12 @@ public class SupportManager {
         }
     }
 
-    private Map<WheelchairFilterState, Drawable> createSpecificDrawables2(String assetPath) {
-        return createDrawableLookup2(("marker/%s/" + assetPath), false);
-    }
-
-    private Map<WheelchairFilterState, Drawable> createDrawableLookup2(String assetPathPattern,
-                                                                       boolean fileNotFoundIsFatal) {
-        Map<WheelchairFilterState, Drawable> lookupMap = new HashMap<WheelchairFilterState, Drawable>();
-        Log.v(TAG, "SupportManager:createDrawableLookup loading " + assetPathPattern);
-
-        int idx;
-        for (idx = 0; idx < WheelchairFilterState.values().length - 1; idx++) {
-            String path = String.format(assetPathPattern, WheelchairFilterState
-                    .valueOf(idx).toString().toLowerCase());
-            Drawable drawable = null;
-            try {
-                InputStream is = null;
-                if (MarkerIconExecutor.markerIconsDownloaded()) {
-                    File dir = MarkerIconExecutor.getMarkerPath(mContext);
-                    File asset = new File(dir + "/" + path);
-                } else {
-                    is = mAssetManager.open(path);
-                }
-                is = mAssetManager.open(path);
-                drawable = Drawable.createFromStream(is, null);
-                is.close();
-            } catch (IOException e) {
-                if (e instanceof FileNotFoundException && fileNotFoundIsFatal) {
-                    throw new IllegalStateException(
-                            "createDrawableLookup: This shouldnt happen. Asset " + path
-                                    + " could not be found.");
-                }
-                Log.w(TAG, "Error in createDrawableLookup. Assigning fallback. ", e);
-                drawable = mDefaultNodeType.getStateDrawable(WheelchairFilterState
-                        .valueOf(idx));
-            }
-            if (drawable != null) {
-                drawable.setBounds(-(int) fMarkerDimension, (int) (-fMarkerDimension * 2),
-                        (int) fMarkerDimension, 0);
-            }
-            lookupMap.put(WheelchairFilterState.valueOf(idx), drawable);
-        }
-
-        return lookupMap;
-    }
-
-
     Drawable getStateDrawable(String assetPathPattern,
                               boolean fileNotFoundIsFatal, NodeType defaultNodes, WheelchairFilterState state) {
 
         String path = String.format(assetPathPattern, state.toString().toLowerCase());
         path = path.replace(".png", "@2x.png");
-        Drawable drawable = null;
+        Drawable drawable;
         try {
             InputStream is = null;
             if (MarkerIconExecutor.markerIconsDownloaded()) {
