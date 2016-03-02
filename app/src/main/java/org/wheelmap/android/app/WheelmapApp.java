@@ -151,7 +151,7 @@ public class WheelmapApp extends Application {
             .setLaunchTimes(3)
             .setRemindInterval(2)
             .setShowLaterButton(true)
-            .setDebug(true)
+            .setDebug(BuildConfig.DEBUG && BuildConfig.BUILD_TYPE.equals("debug"))
             .monitor();
     }
 
