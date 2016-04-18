@@ -309,7 +309,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
             } catch (HttpMessageConversionException e) {
                 processException(
                         RestServiceException.ERROR_NETWORK_FAILURE, e, false);
-            } catch (RestClientException e) {
+            } catch (Exception e) {
                 processException(
                         RestServiceException.ERROR_NETWORK_UNKNOWN_FAILURE, e, true);
             }
