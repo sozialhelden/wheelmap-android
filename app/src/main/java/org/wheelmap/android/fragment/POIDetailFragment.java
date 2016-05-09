@@ -21,57 +21,6 @@
  */
 package org.wheelmap.android.fragment;
 
-import com.nineoldandroids.animation.ObjectAnimator;
-
-import org.mapsforge.android.maps.GeoPoint;
-import org.mapsforge.android.maps.MapController;
-import org.mapsforge.android.maps.MapView;
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.api.IGeoPoint;
-import org.osmdroid.api.IMapController;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
-import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
-import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.wheelmap.android.activity.MapActivity;
-import org.wheelmap.android.activity.profile.ProfileActivity;
-import org.wheelmap.android.adapter.HorizontalImageAdapter;
-import org.wheelmap.android.adapter.HorizontalView;
-import org.wheelmap.android.adapter.Item;
-import org.wheelmap.android.app.WheelmapApp;
-import org.wheelmap.android.async.UploadPhotoTask;
-import org.wheelmap.android.manager.MyLocationManager;
-import org.wheelmap.android.manager.SupportManager;
-import org.wheelmap.android.manager.SupportManager.NodeType;
-import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
-import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.model.POIHelper;
-import org.wheelmap.android.model.Request;
-import org.wheelmap.android.model.WheelchairFilterState;
-import org.wheelmap.android.model.Wheelmap.POIs;
-import org.wheelmap.android.modules.UserCredentials;
-import org.wheelmap.android.online.BuildConfig;
-import org.wheelmap.android.online.R;
-import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
-import org.wheelmap.android.osmdroid.OnTapListener;
-import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
-import org.wheelmap.android.service.RestService;
-import org.wheelmap.android.service.RestServiceHelper;
-import org.wheelmap.android.utils.DetachableResultReceiver;
-import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
-import org.wheelmap.android.utils.FileUtil;
-import org.wheelmap.android.utils.MyLocationProvider;
-import org.wheelmap.android.utils.PressSelector;
-import org.wheelmap.android.utils.SmoothInterpolator;
-import org.wheelmap.android.utils.UtilsMisc;
-import org.wheelmap.android.utils.ViewTool;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -88,8 +37,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.Uri;
@@ -127,6 +74,56 @@ import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.nineoldandroids.animation.ObjectAnimator;
+
+import org.mapsforge.android.maps.GeoPoint;
+import org.mapsforge.android.maps.MapController;
+import org.mapsforge.android.maps.MapView;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.wheelmap.android.activity.MapActivity;
+import org.wheelmap.android.activity.profile.ProfileActivity;
+import org.wheelmap.android.adapter.HorizontalImageAdapter;
+import org.wheelmap.android.adapter.HorizontalView;
+import org.wheelmap.android.adapter.Item;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.async.UploadPhotoTask;
+import org.wheelmap.android.manager.MyLocationManager;
+import org.wheelmap.android.manager.SupportManager;
+import org.wheelmap.android.manager.SupportManager.NodeType;
+import org.wheelmap.android.manager.SupportManager.WheelchairAttributes;
+import org.wheelmap.android.model.Extra;
+import org.wheelmap.android.model.POIHelper;
+import org.wheelmap.android.model.Request;
+import org.wheelmap.android.model.WheelchairFilterState;
+import org.wheelmap.android.model.Wheelmap.POIs;
+import org.wheelmap.android.modules.UserCredentials;
+import org.wheelmap.android.online.BuildConfig;
+import org.wheelmap.android.online.R;
+import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
+import org.wheelmap.android.osmdroid.OnTapListener;
+import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
+import org.wheelmap.android.service.RestService;
+import org.wheelmap.android.service.RestServiceHelper;
+import org.wheelmap.android.utils.DetachableResultReceiver;
+import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
+import org.wheelmap.android.utils.FileUtil;
+import org.wheelmap.android.utils.MyLocationProvider;
+import org.wheelmap.android.utils.PressSelector;
+import org.wheelmap.android.utils.SmoothInterpolator;
+import org.wheelmap.android.utils.UtilsMisc;
+import org.wheelmap.android.utils.ViewTool;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -385,7 +382,7 @@ public class POIDetailFragment extends Fragment implements
         if(!UtilsMisc.isTablet(getActivity().getApplication())){
 
             tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
-            mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
+            mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[] { tileUrl });
             EventBus bus = EventBus.getDefault();
             mMyLocationProvider.register();
             mVerticalDelta = (int) TypedValue.applyDimension(
@@ -556,7 +553,7 @@ public class POIDetailFragment extends Fragment implements
 
             mMapView.getOverlays().add(mPoisItemizedOverlay);
 
-            MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
+            MyLocationNewOverlayFixed a = new MyLocationNewOverlayFixed(mMyLocationProvider,
                     mMapView);
             a.disableFollowLocation();
             a.enableMyLocation();
@@ -849,10 +846,10 @@ public class POIDetailFragment extends Fragment implements
             item.setMarker(marker);
             overlayItemArray.add(item);
 
-            DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
+           /* DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
             ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
 
-            mMapView.getOverlays().add(myItemizedIconOverlay);
+            mMapView.getOverlays().add(myItemizedIconOverlay);*/
         }
     }
 
@@ -1470,7 +1467,7 @@ public class POIDetailFragment extends Fragment implements
      */
     private org.osmdroid.util.GeoPoint geoPointFromScreenCoords(int x, int y, org.osmdroid.views.MapView vw){
         // Get the top left GeoPoint
-        org.osmdroid.views.MapView.Projection projection = vw.getProjection();
+        Projection projection = vw.getProjection();
         org.osmdroid.util.GeoPoint geoPointTopLeft = (org.osmdroid.util.GeoPoint) projection.fromPixels(0, 0);
         Point topLeftPoint = new Point();
         // Get the top left Point (includes osmdroid offsets)
@@ -1482,6 +1479,7 @@ public class POIDetailFragment extends Fragment implements
 
     /**
      *
+     * {@link}
      * @param gp GeoPoint
      * @param vw Mapview
      * @return a 'Point' in screen coords relative to top left
@@ -1489,7 +1487,7 @@ public class POIDetailFragment extends Fragment implements
     private Point pointFromGeoPoint(org.osmdroid.util.GeoPoint gp, org.osmdroid.views.MapView vw){
 
         Point rtnPoint = new Point();
-        org.osmdroid.views.MapView.Projection projection = vw.getProjection();
+        Projection projection = vw.getProjection();
         projection.toPixels(gp, rtnPoint);
         // Get the top left GeoPoint
         org.osmdroid.util.GeoPoint geoPointTopLeft = (org.osmdroid.util.GeoPoint) projection.fromPixels(0, 0);

@@ -167,7 +167,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         }
 
         tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
-                mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
+                mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[] { tileUrl });
                 mBus = EventBus.getDefault();
                 mVerticalDelta = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, (float) VERTICAL_DELTA,
@@ -193,7 +193,7 @@ public class EditPositionFragment extends Fragment implements DisplayFragment,
         mMapView.setBuiltInZoomControls(true);
         mMapView.setMultiTouchControls(true);
 
-        myLocationOverlay = new MyLocationNewOverlayFixed(getActivity(), myLocationProvider ,mMapView);
+        myLocationOverlay = new MyLocationNewOverlayFixed(myLocationProvider ,mMapView);
         myLocationOverlay.disableFollowLocation();
         myLocationOverlay.enableMyLocation();
 

@@ -63,6 +63,16 @@ public class MapController implements IMapController {
     }
 
     @Override
+    public boolean zoomTo(int zoomLevel) {
+        return false;
+    }
+
+    @Override
+    public boolean zoomToFixing(int zoomLevel, int xPixel, int yPixel) {
+        return false;
+    }
+
+    @Override
     public void zoomToSpan(final int pLatSpanE6, final int pLonSpanE6) {
         // TODO call zoomToSpan if they define it
         // mController.zoomToSpan(pLatSpanE6, pLonSpanE6);

@@ -55,7 +55,7 @@ import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.MapView.Projection;
+import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.wheelmap.android.activity.MapActivity;
@@ -70,6 +70,7 @@ import org.wheelmap.android.osmdroid.MarkItemOverlay;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
+import org.wheelmap.android.overlays.MyLocationOverlay;
 import org.wheelmap.android.utils.MyLocationProvider;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 import org.wheelmap.android.utils.PressSelector;
@@ -142,7 +143,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private EventBus mBus;
 
-    private MyLocationNewOverlayFixed mMyLocationOverlay;
+    private MyLocationNewOverlay mMyLocationOverlay;
     private MyLocationProvider mMyLocationProvider = new MyLocationProvider();
 
     private ImageButton mBtnLocate;
@@ -177,7 +178,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
-        mMapBoxTileSource = new XYTileSource("Mapbox", null, 3, 21, 256, ".png", new String[] { tileUrl });
+        mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[] { tileUrl });
         mBus = EventBus.getDefault();
 
         mSensorManager = (SensorManager) getActivity().getSystemService(
@@ -259,7 +260,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         // overlays
         mPoisItemizedOverlay = new POIsCursorOsmdroidOverlay(getActivity(), this);
-        mCurrLocationOverlay = new MyLocationNewOverlay(getActivity(), mMyLocationProvider,
+        mCurrLocationOverlay = new MyLocationNewOverlayFixed(mMyLocationProvider,
                 mMapView);
 
 
@@ -272,8 +273,8 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         mMapView.getOverlays().add(mPoisItemizedOverlay);
 
-        mMyLocationOverlay = new MyLocationNewOverlayFixed(getActivity(), mMyLocationProvider,
-                mMapView);
+        mMyLocationOverlay = new MyLocationNewOverlayFixed(mMyLocationProvider, mMapView);
+
         mMyLocationOverlay.disableFollowLocation();
         mMapView.getOverlays().add(mMyLocationOverlay);
 

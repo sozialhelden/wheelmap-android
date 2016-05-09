@@ -1,12 +1,11 @@
 package org.wheelmap.android.osmdroid;
 
-import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.api.IMapView;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.safecanvas.ISafeCanvas;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
 import org.wheelmap.android.model.POIHelper;
@@ -17,15 +16,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
 import de.akquinet.android.androlog.Log;
+import roboguice.event.Observes;
 
 public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
 
@@ -51,8 +56,7 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
     private Matrix mTempMatrix = new Matrix();
 
     public POIsCursorOsmdroidOverlay(Context context, OnTapListener listener) {
-        super(WheelmapApp.getSupportManager().getDefaultOverlayDrawable(),
-                new DefaultResourceProxyImpl(context));
+        super(context, WheelmapApp.getSupportManager().getDefaultOverlayDrawable());
         mContext = context;
         mHandler = new Handler();
         mListener = listener;
@@ -63,7 +67,7 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
             return;
         }
 
-        if(cursor == null){
+        if (cursor == null) {
             return;
         }
 
@@ -116,21 +120,21 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
 
         int markerHeight = marker.getIntrinsicHeight();
         int markerWidth = marker.getIntrinsicWidth();
-        float heightToWidth = (float)markerWidth / markerHeight;
+        float heightToWidth = (float) markerWidth / markerHeight;
 
-        int halfDestinationDensity = (int)(16*density);
+        int halfDestinationDensity = (int) (16 * density);
 
         //show marker (centered && above) the declared position
         marker.setBounds(
-                (int)(-halfDestinationDensity * heightToWidth),
-                -2*halfDestinationDensity,
-                (int)(halfDestinationDensity * heightToWidth),
+                (int) (-halfDestinationDensity * heightToWidth),
+                -2 * halfDestinationDensity,
+                (int) (halfDestinationDensity * heightToWidth),
                 0);
 
         GeoPoint geo = new GeoPoint(lat, lng);
         OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
         item.setMarker(marker);
-        Log.d(TAG,item+" pos: "+geo);
+        Log.d(TAG, item + " pos: " + geo);
         return item;
     }
 
@@ -206,47 +210,34 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
     }
 
     @Override
-    protected void drawSafe(ISafeCanvas canvas, MapView mapView, boolean shadow) {
+    protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
 
         if (shadow) {
             return;
         }
 
-        final MapView.Projection pj = mapView.getProjection();
+        final Projection pj = mapView.getProjection();
         final int size = size() - 1;
 
         Matrix canvasMatrix = canvas.getMatrix();
         /* Draw in backward cycle, so the items with the least index are on the front. */
         for (int i = size; i >= 0; i--) {
             final OverlayItem item = getItem(i);
-            pj.toMapPixels(item.getPoint(), mCurScreenCoords);
+            pj.toPixels(item.getPoint(), mCurScreenCoords);
 
-            onDrawItem(canvas.getSafeCanvas(), item, mCurScreenCoords, canvasMatrix);
+            onDrawItem(canvas, item, mCurScreenCoords, canvasMatrix);
         }
         canvas.setMatrix(canvasMatrix);  //Restore old matrix
     }
 
     protected void onDrawItem(Canvas canvas, OverlayItem item, Point curScreenCoords,
-            Matrix canvasMatrix) {
+                              Matrix canvasMatrix) {
 
         Drawable pin = item.getDrawable();
         mTempMatrix.set(canvasMatrix);
         mTempMatrix.preTranslate(curScreenCoords.x, curScreenCoords.y);
         canvas.setMatrix(mTempMatrix);
         pin.draw(canvas);
-    }
-
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent event, MapView mapView) {
-        int hitIndex = checkForItemHit(event, mapView);
-        Log.d(TAG, "onSingleTapConfirmed: hitIndex = " + hitIndex);
-
-        if (hitIndex == NO_HIT) {
-            return false;
-        }
-
-        return executeOnTap(hitIndex);
     }
 
     @Override
@@ -260,22 +251,28 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         return executeLongPress(hitIndex);
     }
 
+    @Override
+    protected boolean onTap(int index) {
+        return executeOnTap(index);
+    }
+
     private int checkForItemHit(final MotionEvent event, final MapView mapView) {
 
 
         //avoid NullPointerException
-        if(mCursor == null
+        if (mCursor == null
                 || mapView == null
                 || event == null
-                || mapView.getProjection() == null){
+                || mapView.getProjection() == null) {
             return NO_HIT;
         }
 
-        final MapView.Projection pj = mapView.getProjection();
+        final Projection pj = mapView.getProjection();
         final int eventX = (int) event.getX();
         final int eventY = (int) event.getY();
 
-        pj.fromMapPixels(eventX, eventY, mTouchScreenPoint);
+        Point p = new Point(eventX, eventY);
+        pj.toPixelsFromProjected(p, mTouchScreenPoint);
 
         mCursor.moveToFirst();
         while (!mCursor.isAfterLast()) {

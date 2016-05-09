@@ -1,31 +1,34 @@
 package org.wheelmap.android.osmdroid;
 
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.SafeDrawOverlay;
-import org.osmdroid.views.safecanvas.ISafeCanvas;
-import org.osmdroid.views.safecanvas.SafePaint;
+import org.osmdroid.views.Projection;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.util.constants.MapViewConstants;
+import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.ImageUtils;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.location.Location;
+import android.support.v4.content.ContextCompat;
 import android.util.FloatMath;
 import android.util.Log;
 
 import java.util.LinkedList;
 
-public class MarkItemOverlay extends SafeDrawOverlay{
+public class MarkItemOverlay extends Overlay {
 
     private static final String TAG = MarkItemOverlay.class.getSimpleName();
+    private static final int MAXIMUM_ZOOMLEVEL = 22;
 
     // ===========================================================
     // Constants
@@ -37,7 +40,7 @@ public class MarkItemOverlay extends SafeDrawOverlay{
 
     protected Context mContext;
 
-    protected final SafePaint mCirclePaint = new SafePaint();
+    protected final Paint mCirclePaint = new Paint();
 
     protected final Bitmap mPersonBitmap;
     protected final Bitmap mDirectionArrowBitmap;
@@ -66,27 +69,37 @@ public class MarkItemOverlay extends SafeDrawOverlay{
     // Constructors
     // ===========================================================
 
-    public MarkItemOverlay(Context context,MapView mapView) {
-        this(mapView, new DefaultResourceProxyImpl(context));
-        mContext = context;
+    public MarkItemOverlay(MapView mapView) {
+        this(mapView.getContext(), mapView);
     }
 
-    public MarkItemOverlay(MapView mapView,
-            ResourceProxy resourceProxy) {
-        super(resourceProxy);
+    public MarkItemOverlay(Context context,MapView mapView) {
+        super(context);
+        mContext = context;
 
         mMapView = mapView;
         mCirclePaint.setARGB(0, 100, 100, 255);
         mCirclePaint.setAntiAlias(true);
 
-        mPersonBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.person);
-        mDirectionArrowBitmap = mResourceProxy.getBitmap(ResourceProxy.bitmap.direction_arrow);
+        mPersonBitmap = ImageUtils.drawableToBitmap(ContextCompat.getDrawable(mContext, R.drawable.person));
+        mDirectionArrowBitmap = ImageUtils.drawableToBitmap(ContextCompat.getDrawable(mContext, R.drawable.direction_arrow));
 
         mDirectionArrowCenterX = mDirectionArrowBitmap.getWidth() / 2.0 - 0.5;
         mDirectionArrowCenterY = mDirectionArrowBitmap.getHeight() / 2.0 - 0.5;
 
         // Calculate position of person icon's feet, scaled to screen density
         mPersonHotspot = new PointF(24.0f * mScale + 0.5f, 39.0f * mScale + 0.5f);
+    }
+
+    @Override
+    protected void draw(Canvas canvas, MapView mapView, boolean shadow) {
+        if (shadow)
+            return;
+
+        Log.d(TAG,"drawSafe "+mLocation+" "+shadow);
+        if (mLocation != null) {
+            drawMyLocation(canvas, mapView, mLocation);
+        }
     }
 
     @Override
@@ -99,10 +112,10 @@ public class MarkItemOverlay extends SafeDrawOverlay{
     // Getter & Setter
     // ===========================================================
 
-    protected void drawMyLocation(final ISafeCanvas canvas, final MapView mapView,
+    protected void drawMyLocation(final Canvas canvas, final MapView mapView,
             final Location lastFix) {
-        final MapView.Projection pj = mapView.getProjection();
-        final int zoomDiff = MapViewConstants.MAXIMUM_ZOOMLEVEL - pj.getZoomLevel();
+        final Projection pj = mapView.getProjection();
+        final int zoomDiff = MAXIMUM_ZOOMLEVEL - pj.getZoomLevel();
 
         float radius = 10 * mContext.getResources().getDisplayMetrics().density;
 
@@ -126,7 +139,7 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         if (reuse == null)
             reuse = new Rect();
 
-        final int zoomDiff = MapViewConstants.MAXIMUM_ZOOMLEVEL - zoomLevel;
+        final int zoomDiff = MAXIMUM_ZOOMLEVEL - zoomLevel;
         final int posX = mMapCoords.x >> zoomDiff;
         final int posY = mMapCoords.y >> zoomDiff;
 
@@ -167,8 +180,8 @@ public class MarkItemOverlay extends SafeDrawOverlay{
         mLocation = location;
 
         TileSystem.LatLongToPixelXY(mLocation.getLatitude(), mLocation.getLongitude(),
-                MapViewConstants.MAXIMUM_ZOOMLEVEL, mMapCoords);
-        final int worldSize_2 = TileSystem.MapSize(MapViewConstants.MAXIMUM_ZOOMLEVEL) / 2;
+                MAXIMUM_ZOOMLEVEL, mMapCoords);
+        final int worldSize_2 = TileSystem.MapSize(MAXIMUM_ZOOMLEVEL) / 2;
         mMapCoords.offset(-worldSize_2, -worldSize_2);
 
 
@@ -197,21 +210,6 @@ public class MarkItemOverlay extends SafeDrawOverlay{
             new Thread(runnable).start();
         }
         mRunOnFirstFix.clear();
-    }
-
-    // ===========================================================
-    // Methods from SuperClass/Interfaces
-    // ===========================================================
-
-    @Override
-    protected void drawSafe(ISafeCanvas canvas, MapView mapView, boolean shadow) {
-        if (shadow)
-            return;
-
-        Log.d(TAG,"drawSafe "+mLocation+" "+shadow);
-        if (mLocation != null) {
-            drawMyLocation(canvas, mapView, mLocation);
-        }
     }
 
     // ===========================================================
