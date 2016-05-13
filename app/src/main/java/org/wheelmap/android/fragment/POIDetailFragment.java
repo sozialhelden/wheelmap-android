@@ -22,6 +22,7 @@
 package org.wheelmap.android.fragment;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -30,11 +31,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -80,14 +79,12 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapController;
 import org.mapsforge.android.maps.MapView;
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
 import org.osmdroid.events.ScrollEvent;
 import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
-import org.osmdroid.views.Projection;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -545,7 +542,9 @@ public class POIDetailFragment extends Fragment implements
             mBtnLocate = (ImageButton) v.findViewById(R.id.center_poi);
 
             mMapView.setTileSource(mMapBoxTileSource);
+            mMapView.setBuiltInZoomControls(false);
             mMapView.setMultiTouchControls(true);
+            setHardwareAccelerationOff();
 
             mMapView.setMapListener(this);
 
@@ -561,7 +560,7 @@ public class POIDetailFragment extends Fragment implements
 
             mMapController = mMapView.getController();
             mMapController.setZoom(18);
-            mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
+            //mMapController.setCenter(new org.osmdroid.mapsforge.wrapper.GeoPoint(new GeoPoint(mCrrLatitude, mCrrLongitude)));
 
             mBtnExpand.setOnTouchListener(new PressSelector());
             mBtnExpand.setOnClickListener(new OnClickListener() {
@@ -624,6 +623,14 @@ public class POIDetailFragment extends Fragment implements
 
             listView.setAdapter(imageAdapter);
             listView.setOnItemClickListener(imageAdapter);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setHardwareAccelerationOff() {
+        // Turn off hardware acceleration here, or in manifest
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mMapView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
     }
 
@@ -822,34 +829,12 @@ public class POIDetailFragment extends Fragment implements
         if(mCursor != null && mCursor.getCount() > 0){
             mCursor.moveToFirst();
             ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
-
-            long id = POIHelper.getId(mCursor);
-            String name = POIHelper.getName(mCursor);
-            SupportManager manager = WheelmapApp.getSupportManager();
-            WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
-            double lat = POIHelper.getLatitude(mCursor);
-            double lng = POIHelper.getLongitude(mCursor);
-            int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
-            Drawable marker = null;
-            if (nodeTypeId != 0) {
-                marker = manager.lookupNodeTypeList(nodeTypeId).getStateDrawable(state);
-            }
-            marker = marker.getConstantState().newDrawable();
-            float density = getActivity().getResources().getDisplayMetrics().density;
-
-            int half = (int)(10*density);
-
-            marker.setBounds(-half, -2*half, half, 0);
-
-            org.osmdroid.util.GeoPoint geo = new org.osmdroid.util.GeoPoint(lat, lng);
-            OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
-            item.setMarker(marker);
+            OverlayItem item = POIsCursorOsmdroidOverlay.getFromCursor(getActivity(), mCursor);
             overlayItemArray.add(item);
 
-           /* DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this.getActivity().getApplicationContext());
-            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<OverlayItem>(overlayItemArray, null, defaultResourceProxyImpl);
+            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<>(overlayItemArray, null, getActivity());
 
-            mMapView.getOverlays().add(myItemizedIconOverlay);*/
+            mMapView.getOverlays().add(myItemizedIconOverlay);
         }
     }
 
@@ -1415,88 +1400,20 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force) {
+        Log.d(TAG, "CenterMap");
         centerMap(geoPoint, force, false);
     }
     private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force, boolean animated) {
         Log.d(TAG, "centerMap: force = " + force + " isCentered = "
                 + isCentered + " geoPoint = " + geoPoint);
         if (force) {
-            setCenterWithOffset(geoPoint, animated);
-        }
-    }
-
-    private void setCenterWithOffset(org.osmdroid.util.GeoPoint geoPoint, boolean animated) {
-        if (geoPoint == null) {
-            return;
-        }
-        boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
-        IGeoPoint actualGeoPoint = geoPoint;
-
-        if (mHeightFull) {
-            actualGeoPoint = geoPoint;
-        } else {
-
-            if(land){
-                Point point = pointFromGeoPoint(geoPoint,mMapView);
-                int horizontalOffset = mMapView.getWidth() / 4;
-                point.x -= horizontalOffset;
-                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
-
-            }else{
-                Point point = pointFromGeoPoint(geoPoint,mMapView);
-                int mVerticalOffset = mMapView.getHeight() / 4;
-                point.y -= mVerticalOffset;
-                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
+            if (animated) {
+                mMapController.animateTo(geoPoint);
+            } else {
+                mMapController.setCenter(geoPoint);
             }
+            isCentered = true;
         }
-        if (animated) {
-            mMapController.animateTo(actualGeoPoint);
-        } else {
-            mMapController.setCenter(actualGeoPoint);
-        }
-        isCentered = true;
-    }
-
-    /**
-     *
-     * @param x  view coord relative to left
-     * @param y  view coord relative to top
-     * @param vw MapView
-     * @return GeoPoint
-     */
-    private org.osmdroid.util.GeoPoint geoPointFromScreenCoords(int x, int y, org.osmdroid.views.MapView vw){
-        // Get the top left GeoPoint
-        Projection projection = vw.getProjection();
-        org.osmdroid.util.GeoPoint geoPointTopLeft = (org.osmdroid.util.GeoPoint) projection.fromPixels(0, 0);
-        Point topLeftPoint = new Point();
-        // Get the top left Point (includes osmdroid offsets)
-        projection.toPixels(geoPointTopLeft, topLeftPoint);
-        // get the GeoPoint of any point on screen
-        org.osmdroid.util.GeoPoint rtnGeoPoint = (org.osmdroid.util.GeoPoint) projection.fromPixels(x, y);
-        return rtnGeoPoint;
-    }
-
-    /**
-     *
-     * {@link}
-     * @param gp GeoPoint
-     * @param vw Mapview
-     * @return a 'Point' in screen coords relative to top left
-     */
-    private Point pointFromGeoPoint(org.osmdroid.util.GeoPoint gp, org.osmdroid.views.MapView vw){
-
-        Point rtnPoint = new Point();
-        Projection projection = vw.getProjection();
-        projection.toPixels(gp, rtnPoint);
-        // Get the top left GeoPoint
-        org.osmdroid.util.GeoPoint geoPointTopLeft = (org.osmdroid.util.GeoPoint) projection.fromPixels(0, 0);
-        Point topLeftPoint = new Point();
-        // Get the top left Point (includes osmdroid offsets)
-        projection.toPixels(geoPointTopLeft, topLeftPoint);
-        rtnPoint.x-= topLeftPoint.x; // remove offsets
-        rtnPoint.y-= topLeftPoint.y;
-        return rtnPoint;
     }
 
 }

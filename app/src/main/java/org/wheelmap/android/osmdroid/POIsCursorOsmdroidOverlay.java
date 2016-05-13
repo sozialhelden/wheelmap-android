@@ -100,13 +100,19 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         }
 
         mCursor.moveToPosition(i);
-        long id = POIHelper.getId(mCursor);
-        String name = POIHelper.getName(mCursor);
+        OverlayItem item = getFromCursor(mContext, mCursor);
+        return item;
+    }
+
+    public static OverlayItem getFromCursor(Context context, Cursor cursor) {
+
+        long id = POIHelper.getId(cursor);
+        String name = POIHelper.getName(cursor);
         SupportManager manager = WheelmapApp.getSupportManager();
-        WheelchairFilterState state = POIHelper.getWheelchair(mCursor);
-        double lat = POIHelper.getLatitude(mCursor);
-        double lng = POIHelper.getLongitude(mCursor);
-        int nodeTypeId = POIHelper.getNodeTypeId(mCursor);
+        WheelchairFilterState state = POIHelper.getWheelchair(cursor);
+        double lat = POIHelper.getLatitude(cursor);
+        double lng = POIHelper.getLongitude(cursor);
+        int nodeTypeId = POIHelper.getNodeTypeId(cursor);
         Drawable marker = null;
         if (nodeTypeId != 0) {
             marker = manager.lookupNodeType(nodeTypeId).getStateDrawable(state);
@@ -116,7 +122,7 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
             return null;
         }
 
-        float density = mContext.getResources().getDisplayMetrics().density;
+        float density = context.getResources().getDisplayMetrics().density;
 
         int markerHeight = marker.getIntrinsicHeight();
         int markerWidth = marker.getIntrinsicWidth();
@@ -134,7 +140,6 @@ public class POIsCursorOsmdroidOverlay extends ItemizedOverlay<OverlayItem> {
         GeoPoint geo = new GeoPoint(lat, lng);
         OverlayItem item = new OverlayItem(String.valueOf(id), name, name, geo);
         item.setMarker(marker);
-        Log.d(TAG, item + " pos: " + geo);
         return item;
     }
 
