@@ -85,6 +85,11 @@ public class MyLocationManager {
             this.location = location;
             this.isValid = isValid;
         }
+
+        @Override
+        public String toString() {
+            return "LocationEvent: {isValid: "+isValid+", location:"+ location + "}";
+        }
     }
 
     public static class RegisterEvent {

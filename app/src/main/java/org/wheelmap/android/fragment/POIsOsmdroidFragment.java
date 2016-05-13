@@ -153,7 +153,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     public static POIsOsmdroidFragment newInstance(boolean createWorker,
-            boolean disableSearch) {
+                                                   boolean disableSearch) {
         createWorker = false;
         POIsOsmdroidFragment f = new POIsOsmdroidFragment();
         Bundle b = new Bundle();
@@ -178,7 +178,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
-        mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[] { tileUrl });
+        mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[]{tileUrl});
         mBus = EventBus.getDefault();
 
         mSensorManager = (SensorManager) getActivity().getSystemService(
@@ -191,36 +191,35 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
         View v = inflater
                 .inflate(R.layout.fragment_osmdroid, container, false);
 
         txtOutOfZoom = (FrameLayout) v.findViewById(R.id.my_outofzoom_text_smartphone);
 
-        if(UtilsMisc.isTablet(getActivity().getApplication())){
-            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (UtilsMisc.isTablet(getActivity().getApplication())) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (FrameLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_portrait);
-                try{
-                    setAlphaForView(txtOutOfZoom,(float)0.5);
-                }catch(NullPointerException npex){
+                try {
+                    setAlphaForView(txtOutOfZoom, (float) 0.5);
+                } catch (NullPointerException npex) {
                     Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
                     Toast.makeText(this.getActivity().getApplicationContext(),
                             getResources().getString(R.string.error_internal_error), Toast.LENGTH_LONG).show();
                 }
             }
-            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 txtOutOfZoom.setVisibility(View.GONE);
                 txtOutOfZoom = (FrameLayout) getActivity().findViewById(R.id.my_outofzoom_text_tablet_landscape);
 
-                try{
-                    setAlphaForView(txtOutOfZoom,(float)0.5);
-                }catch(NullPointerException npex){
+                try {
+                    setAlphaForView(txtOutOfZoom, (float) 0.5);
+                } catch (NullPointerException npex) {
                     Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
                     Toast.makeText(this.getActivity().getApplicationContext(),
@@ -229,7 +228,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             }
         }
 
-        try{
+        try {
             txtOutOfZoom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,7 +236,7 @@ public class POIsOsmdroidFragment extends Fragment implements
                     zoomInToMax();
                 }
             });
-        }catch(NullPointerException npex){
+        } catch (NullPointerException npex) {
             Log.d("Tag:POIsOsmdroidFragment", "NullPointException occurred");
 
             Toast.makeText(this.getActivity().getApplicationContext(),
@@ -254,7 +253,7 @@ public class POIsOsmdroidFragment extends Fragment implements
             public void run() {
                 requestUpdate();
             }
-        },1000);
+        }, 1000);
 
         mMapController = mMapView.getController();
 
@@ -267,7 +266,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         mCurrLocationOverlay.enableFollowLocation();
         mCurrLocationOverlay.enableMyLocation();
 
-        markItemOverlay = new MarkItemOverlay(getActivity(),mMapView);
+        markItemOverlay = new MarkItemOverlay(getActivity(), mMapView);
 
         mMapView.getOverlays().add(markItemOverlay);
 
@@ -305,7 +304,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         onEventMainThread(mBus.getStickyEvent(MyLocationManager.LocationEvent.class));
     }
 
-    public void zoomInToMax(){
+    public void zoomInToMax() {
         setZoomIntern(MAP_ZOOM_DEFAULT);
         requestUpdate();
     }
@@ -471,7 +470,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     private void executeMapDeferred(final GeoPoint centerPoint, final int zoom,
-            final boolean center, final boolean request) {
+                                    final boolean center, final boolean request) {
         mMapView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new OnGlobalLayoutListener() {
 
@@ -501,8 +500,8 @@ public class POIsOsmdroidFragment extends Fragment implements
         markItemIntern(geoPoint, false);
     }
 
-    public void onRestoreInstanceState(Bundle savedInstanceState){
-        if(savedInstanceState == null){
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
             return;
         }
 
@@ -510,13 +509,13 @@ public class POIsOsmdroidFragment extends Fragment implements
         int lo = savedInstanceState.getInt(Extra.LONGITUDE);
         int zoom = savedInstanceState.getInt(Extra.ZOOM_LEVEL);
 
-        mCurrentLocationGeoPoint = new GeoPoint(la,lo);
+        mCurrentLocationGeoPoint = new GeoPoint(la, lo);
 
         setZoomIntern(zoom);
 
         centerMap(mCurrentLocationGeoPoint, true);
 
-        if(savedInstanceState.containsKey(Extra.SELECTED_LATITUDE)){
+        if (savedInstanceState.containsKey(Extra.SELECTED_LATITUDE)) {
             Location selectedLocation = new Location("gps");
             selectedLocation.setLongitude(savedInstanceState.getDouble(Extra.SELECTED_LONGITUDE));
             selectedLocation.setLatitude(savedInstanceState.getDouble(Extra.SELECTED_LATITUDE));
@@ -541,7 +540,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         outState.putInt(Extra.LONGITUDE, current_location.getLongitudeE6());
 
         GeoPoint selectedPOI = markItemOverlay.getLocation();
-        if(selectedPOI != null){
+        if (selectedPOI != null) {
             outState.putDouble(Extra.SELECTED_LATITUDE, selectedPOI.getLatitude());
             outState.putDouble(Extra.SELECTED_LONGITUDE, selectedPOI.getLongitude());
         }
@@ -567,7 +566,8 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     @Override
-    public void onRefreshStarted() {}
+    public void onRefreshStarted() {
+    }
 
     @Override
     public boolean onScroll(ScrollEvent event) {
@@ -599,9 +599,9 @@ public class POIsOsmdroidFragment extends Fragment implements
         Log.d(TAG, "onZoom: " + zoomLevel);
         boolean isZoomedEnough = true;
 
-        if(zoomLevel <= ZOOMLEVEL_MAX){
+        if (zoomLevel <= ZOOMLEVEL_MAX) {
             txtOutOfZoom.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             txtOutOfZoom.setVisibility(View.GONE);
         }
 
@@ -626,8 +626,8 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     protected void requestUpdate() {
         Bundle extras = fillExtrasWithBoundingRect();
-        if(extras == null){
-           return;
+        if (extras == null) {
+            return;
         }
         mWorkerFragment.requestUpdate(extras);
     }
@@ -637,7 +637,7 @@ public class POIsOsmdroidFragment extends Fragment implements
 
         int latSpan = (int) (mMapView.getLatitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
         int lonSpan = (int) (mMapView.getLongitudeSpan() * SPAN_ENLARGEMENT_FAKTOR);
-        if(latSpan <= 0 || lonSpan <= 0){
+        if (latSpan <= 0 || lonSpan <= 0) {
             //mapview is not fully loaded
             return null;
         }
@@ -656,6 +656,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     private void centerMap(GeoPoint geoPoint, boolean force) {
         centerMap(geoPoint, force, true);
     }
+
     private void centerMap(GeoPoint geoPoint, boolean force, boolean withOffset) {
         Log.d(TAG, "centerMap: force = " + force + " isCentered = "
                 + isCentered + " geoPoint = " + geoPoint);
@@ -673,6 +674,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         if (geoPoint == null) {
             return;
         }
+        Log.d(TAG, "setCenterWithOffset");
         boolean land = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         IGeoPoint actualGeoPoint = geoPoint;
@@ -681,17 +683,17 @@ public class POIsOsmdroidFragment extends Fragment implements
             actualGeoPoint = geoPoint;
         } else {
 
-            if(land){
-                Point point = pointFromGeoPoint(geoPoint,mMapView);
+            if (land) {
+                Point point = pointFromGeoPoint(geoPoint, mMapView);
                 int horizontalOffset = mMapView.getWidth() / 4;
                 point.x -= horizontalOffset;
-                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
+                actualGeoPoint = geoPointFromScreenCoords(point.x, point.y, mMapView);
 
-            }else{
-                Point point = pointFromGeoPoint(geoPoint,mMapView);
+            } else {
+                Point point = pointFromGeoPoint(geoPoint, mMapView);
                 int mVerticalOffset = mMapView.getHeight() / 4;
                 point.y -= mVerticalOffset;
-                actualGeoPoint = geoPointFromScreenCoords(point.x,point.y,mMapView);
+                actualGeoPoint = geoPointFromScreenCoords(point.x, point.y, mMapView);
             }
         }
 
@@ -700,13 +702,12 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     /**
-     *
      * @param x  view coord relative to left
      * @param y  view coord relative to top
      * @param vw MapView
      * @return GeoPoint
      */
-    private GeoPoint geoPointFromScreenCoords(int x, int y, MapView vw){
+    private GeoPoint geoPointFromScreenCoords(int x, int y, MapView vw) {
         // Get the top left GeoPoint
         Projection projection = vw.getProjection();
         GeoPoint geoPointTopLeft = (GeoPoint) projection.fromPixels(0, 0);
@@ -719,12 +720,11 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     /**
-     *
      * @param gp GeoPoint
      * @param vw Mapview
      * @return a 'Point' in screen coords relative to top left
      */
-    private Point pointFromGeoPoint(GeoPoint gp, MapView vw){
+    private Point pointFromGeoPoint(GeoPoint gp, MapView vw) {
 
         Point rtnPoint = new Point();
         Projection projection = vw.getProjection();
@@ -734,8 +734,8 @@ public class POIsOsmdroidFragment extends Fragment implements
         Point topLeftPoint = new Point();
         // Get the top left Point (includes osmdroid offsets)
         projection.toPixels(geoPointTopLeft, topLeftPoint);
-        rtnPoint.x-= topLeftPoint.x; // remove offsets
-        rtnPoint.y-= topLeftPoint.y;
+        rtnPoint.x -= topLeftPoint.x; // remove offsets
+        rtnPoint.y -= topLeftPoint.y;
         return rtnPoint;
     }
 
@@ -744,6 +744,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     private void setZoomIntern(int zoom) {
+        Log.d(TAG, "setZoomInternal: " + zoom);
         mMapView.setMapListener(null);
         mMapController.setZoom(zoom);
         mMapView.setMapListener(this);
@@ -751,7 +752,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     }
 
     private void setCursor(Cursor cursor) {
-        UtilsMisc.dumpCursorCompare(TAG, mCursor, cursor);
+        //UtilsMisc.dumpCursorCompare(TAG, mCursor, cursor);
         if (cursor == mCursor) {
             return;
         }
@@ -799,9 +800,14 @@ public class POIsOsmdroidFragment extends Fragment implements
     public void onEventMainThread(MyLocationManager.LocationEvent locationEvent) {
         if (!locationEvent.isValid) {
             if (mMapView != null && !isCentered) {
-                centerMap(new GeoPoint(MyLocationManager.DEFAULT_LATITUDE, MyLocationManager.DEFAULT_LONGITUDE), false);
-                setZoomIntern(7);
-                mMapView.getOverlays().remove(mMyLocationOverlay);
+                mMapView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        centerMap(new GeoPoint(MyLocationManager.DEFAULT_LATITUDE, MyLocationManager.DEFAULT_LONGITUDE), false);
+                        setZoomIntern(7);
+                        mMapView.getOverlays().remove(mMyLocationOverlay);
+                    }
+                }, 100);
             }
             return;
         }
@@ -834,14 +840,14 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     @Override
     public void markItem(ContentValues values, boolean centerToItem) {
-        Log.d(TAG, "markItem "+values);
+        Log.d(TAG, "markItem " + values);
         GeoPoint point = new GeoPoint(values.getAsDouble(POIs.LATITUDE),
                 values.getAsDouble(POIs.LONGITUDE));
         markItemIntern(point, centerToItem);
-        WheelmapApp app = (WheelmapApp)this.getActivity().getApplication();
+        WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
         boolean b = app.isNoItemToSelect();
         app.setNoItemToSelect(false);
-        if(!b){
+        if (!b) {
 
             if (mListener != null) {
                 mListener.onShowDetail(this, values);
