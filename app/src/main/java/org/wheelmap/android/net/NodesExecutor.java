@@ -49,7 +49,7 @@ import de.akquinet.android.androlog.Log;
 public class NodesExecutor extends MultiPageExecutor<Nodes> implements
         IExecutor {
 
-    private static final int MAX_PAGES_TO_RETRIEVE = 2;
+    private static final int MAX_PAGES_TO_RETRIEVE = 5;
 
 
     private BoundingBox mBoundingBox = null;
