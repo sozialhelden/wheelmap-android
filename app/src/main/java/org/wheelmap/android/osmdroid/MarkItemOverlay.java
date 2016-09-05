@@ -158,10 +158,10 @@ public class MarkItemOverlay extends Overlay {
 
         // Add in the accuracy circle if enabled
         if (mDrawAccuracyEnabled) {
-            final int radius = (int) FloatMath.ceil(lastFix.getAccuracy()
+            final int radius = (int) Math.ceil(lastFix.getAccuracy()
                     / (float) TileSystem.GroundResolution(lastFix.getLatitude(), zoomLevel));
             reuse.union(posX - radius, posY - radius, posX + radius, posY + radius);
-            final int strokeWidth = (int) FloatMath.ceil(mCirclePaint.getStrokeWidth() == 0 ? 1
+            final int strokeWidth = (int) Math.ceil(mCirclePaint.getStrokeWidth() == 0 ? 1
                     : mCirclePaint.getStrokeWidth());
             reuse.inset(-strokeWidth, -strokeWidth);
         }
