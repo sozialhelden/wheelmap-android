@@ -14,24 +14,38 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/AppTheme.ThemeOverlay.Dark">
 
-            <android.support.v7.widget.Toolbar
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:navigationIcon="?homeAsUpIndicator">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="56dp"
+                    android:paddingRight="56dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/start_logo_wheelmap_horizontal"
+                        tools:ignore="ContentDescription"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:text="@string/tango_measurement"/>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/start_logo_wheelmap_horizontal"
-                    tools:ignore="ContentDescription"/>
+                    app:navigationIcon="?homeAsUpIndicator">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="@string/tango_measurement"/>
-
-            </android.support.v7.widget.Toolbar>
+                </android.support.v7.widget.Toolbar>
+            </FrameLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -39,10 +53,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
             <org.rajawali3d.surface.RajawaliSurfaceView
                 android:id="@+id/surfaceView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
+            <org.wheelmap.android.tango.ModeSelectionView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"/>
 
             <ImageView
                 android:id="@+id/centerCross"
