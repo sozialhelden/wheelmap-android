@@ -75,31 +75,31 @@ public class TangoMeasureActivity extends BaseActivity {
         tangoUx.setLayout(binding.tangoUxLayout);
         tangoUx.setUxExceptionEventListener(uxExceptionEvent -> {
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_LYING_ON_SURFACE) {
-                Log.i(TAG, "Device lying on surface ");
+                Log.w(TAG, "Device lying on surface ");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_FEW_DEPTH_POINTS) {
-                Log.i(TAG, "Very few depth points in mPoint cloud ");
+                Log.w(TAG, "Very few depth points in mPoint cloud ");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_FEW_FEATURES) {
-                Log.i(TAG, "Invalid poses in MotionTracking ");
+                Log.w(TAG, "Invalid poses in MotionTracking ");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_INCOMPATIBLE_VM) {
-                Log.i(TAG, "Device not running on ART");
+                Log.w(TAG, "Device not running on ART");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_MOTION_TRACK_INVALID) {
-                Log.i(TAG, "Invalid poses in MotionTracking ");
+                Log.w(TAG, "Invalid poses in MotionTracking ");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_MOVING_TOO_FAST) {
-                Log.i(TAG, "Invalid poses in MotionTracking ");
+                Log.w(TAG, "Invalid poses in MotionTracking ");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_OVER_EXPOSED) {
-                Log.i(TAG, "Camera Over Exposed");
+                Log.w(TAG, "Camera Over Exposed");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_TANGO_SERVICE_NOT_RESPONDING) {
-                Log.i(TAG, "TangoService is not responding ");
+                Log.w(TAG, "TangoService is not responding ");
             }
             if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_UNDER_EXPOSED) {
-                Log.i(TAG, "Camera Under Exposed ");
+                Log.w(TAG, "Camera Under Exposed ");
             }
         });
         return tangoUx;
@@ -212,7 +212,7 @@ public class TangoMeasureActivity extends BaseActivity {
 
     private void connectRenderer() {
         binding.surfaceView.setEGLContextClientVersion(2);
-        renderer.getCurrentScene().registerFrameCallback(new ASceneFrameCallback() {
+        renderer.getCurrentScene().registerFrameCallback(new SimpleASceneFrameCallback.PreFrameCallback() {
             @Override
             public void onPreFrame(long sceneTime, double deltaTime) {
                 // NOTE: This is called from the OpenGL render thread, after all the renderer
@@ -224,24 +224,6 @@ public class TangoMeasureActivity extends BaseActivity {
                         // Don't execute any tango API actions if we're not connected to the service
                         if (!isConnected) {
                             return;
-                        }
-
-                        try {
-                            float[] planeFitTransform = TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, 0.5f, 0.5f, rgbTimestampGlThread);
-                            Matrix4 transform = new Matrix4(planeFitTransform);
-                            Vector3 position = transform.getTranslation();
-                            final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
-                            binding.currentPointerPosition.post(() -> {
-                                binding.centerCross.setEnabled(true);
-                                binding.currentPointerPosition.setText(text);
-                                binding.currentPointerPosition.setTextColor(Color.BLACK);
-                            });
-                        } catch (Exception e) {
-                            binding.currentPointerPosition.post(() -> {
-                                binding.centerCross.setEnabled(false);
-                                binding.currentPointerPosition.setText("no position");
-                                binding.currentPointerPosition.setTextColor(Color.RED);
-                            });
                         }
 
                         // Set-up scene camera projection to match RGB camera intrinsics
@@ -306,20 +288,35 @@ public class TangoMeasureActivity extends BaseActivity {
                     Log.e(TAG, "Exception on the OpenGL thread", t);
                 }
             }
+        });
 
+        renderer.getCurrentScene().registerFrameCallback(new SimpleASceneFrameCallback.PreFrameCallback() {
             @Override
-            public void onPreDraw(long sceneTime, double deltaTime) {
+            public void onPreFrame(long sceneTime, double deltaTime) {
 
-            }
+                // Don't execute any tango API actions if we're not connected to the service
+                if (!isConnected) {
+                    return;
+                }
 
-            @Override
-            public void onPostFrame(long sceneTime, double deltaTime) {
+                try {
+                    float[] planeFitTransform = TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, 0.5f, 0.5f, rgbTimestampGlThread);
+                    Matrix4 transform = new Matrix4(planeFitTransform);
+                    Vector3 position = transform.getTranslation();
+                    final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
+                    binding.currentPointerPosition.post(() -> {
+                        binding.centerCross.setEnabled(true);
+                        binding.currentPointerPosition.setText(text);
+                        binding.currentPointerPosition.setTextColor(Color.BLACK);
+                    });
+                } catch (Exception e) {
+                    binding.currentPointerPosition.post(() -> {
+                        binding.centerCross.setEnabled(false);
+                        binding.currentPointerPosition.setText("no position");
+                        binding.currentPointerPosition.setTextColor(Color.RED);
+                    });
+                }
 
-            }
-
-            @Override
-            public boolean callPreFrame() {
-                return true;
             }
         });
         binding.surfaceView.setSurfaceRenderer(renderer);
