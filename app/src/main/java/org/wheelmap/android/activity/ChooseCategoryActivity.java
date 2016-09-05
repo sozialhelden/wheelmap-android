@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.online.R;
@@ -24,7 +25,7 @@ import android.widget.SimpleCursorAdapter;
 /**
  * Created by tim on 07.02.14.
  */
-public class ChooseCategoryActivity extends AppCompatActivity implements
+public class ChooseCategoryActivity extends BaseActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private Uri mUri = Support.CategoriesContent.CONTENT_URI;

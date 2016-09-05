@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
@@ -39,7 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class InfoActivity extends AppCompatActivity implements OnInfoListener {
+public class InfoActivity extends BaseActivity implements OnInfoListener {
 
     private TextView txt_credit_version;
 

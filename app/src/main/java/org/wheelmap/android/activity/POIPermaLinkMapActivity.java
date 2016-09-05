@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.app.WheelmapApp;
 
 import android.app.Activity;
@@ -12,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Created by SMF on 10/06/14.
  */
-public class POIPermaLinkMapActivity extends Activity {
+public class POIPermaLinkMapActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

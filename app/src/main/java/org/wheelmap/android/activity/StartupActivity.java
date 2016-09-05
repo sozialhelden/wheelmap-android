@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.WindowManager;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -45,6 +46,7 @@ import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceException;
+import org.wheelmap.android.tango.TangoMeasureActivity;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.UtilsMisc;
 
@@ -53,7 +55,7 @@ import java.util.List;
 import de.akquinet.android.androlog.Log;
 import roboguice.inject.ContentViewListener;
 
-public class StartupActivity extends Activity implements
+public class StartupActivity extends BaseActivity implements
         DetachableResultReceiver.Receiver {
 
     public static boolean LOAD_AGAIN_DEBUG = false;
@@ -210,6 +212,8 @@ public class StartupActivity extends Activity implements
             intent = new Intent(getApplicationContext(),
                     DashboardActivity.class);
         }
+
+        intent = TangoMeasureActivity.newIntent(this);
 
         intent.putExtra(Extra.REQUEST, true);
         startActivity(intent);

@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.online.R;
 
@@ -28,7 +29,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-public class FilterActivity extends AppCompatActivity {
+public class FilterActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

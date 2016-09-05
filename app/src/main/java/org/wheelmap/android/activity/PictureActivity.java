@@ -2,6 +2,7 @@ package org.wheelmap.android.activity;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
 
@@ -19,7 +20,7 @@ import de.akquinet.android.androlog.Log;
 /**
  * Created by SMF on 18/03/14.
  */
-public class PictureActivity extends AppCompatActivity{
+public class PictureActivity extends BaseActivity {
 
     private static final String TAG = PictureActivity.class.getSimpleName();
 

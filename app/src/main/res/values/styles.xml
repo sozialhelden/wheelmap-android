@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap_fixed">
+
+    </style>
+
+    <style name="Theme.Wheelmap.SubActivity.NoActionBar" parent="@style/Theme.Wheelmap.SubActivity">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.wheelmap_fixed">
+
+    </style>
+
+    <style name="Theme.Wheelmap.NoActionbar" parent="Theme.wheelmap_fixed">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.wheelmap_fixed" parent="@style/Theme.wheelmap">
+        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_mtrl_alpha</item>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_color_dark</item>
+    </style>
+
+    <style name="Theme.wheelmap" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
+        <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
+        <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
+        <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
+        <item name="actionDropDownStyle">@style/wheelmap_DropDownNav</item>
+        <item name="actionBarStyle">@style/wheelmap_solid_ActionBar</item>
+        <item name="android:actionBarItemBackground" tools:targetApi="ice_cream_sandwich">
+            @drawable/selectable_background_wheelmap
+        </item>
+        <item name="android:popupMenuStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_PopupMenu
+        </item>
+        <item name="android:dropDownListViewStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_DropDownListView
+        </item>
+        <item name="android:actionBarTabStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_ActionBarTabStyle
+        </item>
+        <item name="android:actionDropDownStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_DropDownNav
+        </item>
+        <item name="android:actionBarStyle" tools:targetApi="ice_cream_sandwich">
+            @style/wheelmap_solid_ActionBar
+        </item>
+        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
+        <item name="android:actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
+
+    </style>
+
+    <style name="AppTheme.ThemeOverlay.Dark" parent="ThemeOverlay.AppCompat.Dark"/>
+
+</resources>

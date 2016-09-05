@@ -19,39 +19,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
            xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.wheelmap" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="actionBarItemBackground">@drawable/selectable_background_wheelmap</item>
-        <item name="popupMenuStyle">@style/wheelmap_PopupMenu</item>
-        <item name="dropDownListViewStyle">@style/wheelmap_DropDownListView</item>
-        <item name="actionBarTabStyle">@style/wheelmap_ActionBarTabStyle</item>
-        <item name="actionDropDownStyle">@style/wheelmap_DropDownNav</item>
-        <item name="actionBarStyle">@style/wheelmap_solid_ActionBar</item>
-        <item name="android:actionBarItemBackground" tools:targetApi="ice_cream_sandwich">
-            @drawable/selectable_background_wheelmap
-        </item>
-        <item name="android:popupMenuStyle" tools:targetApi="ice_cream_sandwich">
-            @style/wheelmap_PopupMenu
-        </item>
-        <item name="android:dropDownListViewStyle" tools:targetApi="ice_cream_sandwich">
-            @style/wheelmap_DropDownListView
-        </item>
-        <item name="android:actionBarTabStyle" tools:targetApi="ice_cream_sandwich">
-            @style/wheelmap_ActionBarTabStyle
-        </item>
-        <item name="android:actionDropDownStyle" tools:targetApi="ice_cream_sandwich">
-            @style/wheelmap_DropDownNav
-        </item>
-        <item name="android:actionBarStyle" tools:targetApi="ice_cream_sandwich">
-            @style/wheelmap_solid_ActionBar
-        </item>
-        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wheelmap</item>
-
-        <!-- Light.DarkActionBar specific -->
-        <item name="actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
-        <item name="android:actionBarWidgetTheme">@style/Theme.wheelmap.widget</item>
-
-    </style>
-
     <style name="wheelmap_solid_ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_wheelmap</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wheelmap</item>

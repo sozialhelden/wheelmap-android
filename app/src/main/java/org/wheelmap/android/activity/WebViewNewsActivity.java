@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.online.R;
 
 import android.graphics.Bitmap;
@@ -14,7 +15,7 @@ import android.widget.ProgressBar;
 /**
  * Created by SMF on 04/04/14.
  */
-public class WebViewNewsActivity extends AppCompatActivity {
+public class WebViewNewsActivity extends BaseActivity {
 
     WebView webView;
     ProgressBar progress;
