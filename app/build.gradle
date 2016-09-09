@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'de.timfreiheit.buildtypelaunchericon.plugin'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
@@ -158,6 +159,14 @@ dependencies {
     compile(name: 'tango_support_java_lib', ext: 'aar')
     compile(name: 'tango-ux-support-library', ext: 'aar')
     compile project(':tango_utils')
+
+    // AutoValue
+    def auto_value_version = "1.2"
+    apt "com.google.auto.value:auto-value:${auto_value_version}"
+    provided 'com.jakewharton.auto.value:auto-value-annotations:1.2-update1'
+    apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.3-rc1'
+    apt 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
 
     // Testing-only dependencies
 

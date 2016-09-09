@@ -1,4 +1,4 @@
-package org.wheelmap.android.tango;
+package org.wheelmap.android.tango.renderer;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -17,16 +17,18 @@ import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.ScreenQuad;
 import org.rajawali3d.renderer.RajawaliRenderer;
 
+import java.util.Vector;
+
 import javax.microedition.khronos.opengles.GL10;
 
-public class TangoRajawaliRenderer extends RajawaliRenderer {
+public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
     private static final String TAG = "TangoRajawaliRenderer";
 
     // Augmented Reality related fields
     private ATexture mTangoCameraTexture;
     private boolean mSceneCameraConfigured;
 
-    public TangoRajawaliRenderer(Context context) {
+    TangoRajawaliRenderer(Context context) {
         super(context);
     }
 

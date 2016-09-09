@@ -19,6 +19,7 @@ import com.google.atap.tangoservice.TangoCoordinateFramePair;
 import com.google.atap.tangoservice.TangoErrorException;
 import com.google.atap.tangoservice.TangoEvent;
 import com.google.atap.tangoservice.TangoOutOfDateException;
+import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
 import com.projecttango.tangosupport.TangoPointCloudManager;
@@ -26,10 +27,12 @@ import com.projecttango.tangosupport.TangoSupport;
 
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
-import org.rajawali3d.scene.ASceneFrameCallback;
 import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
+import org.wheelmap.android.tango.mode.MeasureWidthModeRenderer;
+import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
+import org.wheelmap.android.tango.renderer.WheelmapTangoRajawaliRenderer;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -40,6 +43,7 @@ public class TangoMeasureActivity extends BaseActivity {
     private static final String TAG = TangoMeasureActivity.class.getSimpleName();
     private static final int INVALID_TEXTURE_ID = 0;
 
+    private TangoMeasurePresenter presenter;
     private Tango tango;
     private TangoUx tangoUx;
     private TangoActivityBinding binding;
@@ -50,11 +54,11 @@ public class TangoMeasureActivity extends BaseActivity {
     // NOTE: Naming indicates which thread is in charge of updating this variable
     private int connectedTextureIdGlThread = INVALID_TEXTURE_ID;
 
-    private TangoRajawaliRenderer renderer;
+    private WheelmapTangoRajawaliRenderer renderer;
+    private WheelmapModeRenderer modeRenderer;
     private TangoCameraIntrinsics intrinsics;
     private double rgbTimestampGlThread;
     private double cameraPoseTimestamp;
-
 
     public static Intent newIntent(Context context) {
         return new Intent(context, TangoMeasureActivity.class);
@@ -65,9 +69,15 @@ public class TangoMeasureActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.tango_activity);
 
-        renderer = new TangoRajawaliRenderer(this);
+        renderer = new WheelmapTangoRajawaliRenderer(this);
         tangoUx = setupTangoUx();
         connectRenderer();
+        setupUiOverlay();
+        presenter = new TangoMeasurePresenter(this);
+    }
+
+    private void setupUiOverlay() {
+        binding.fab.setOnClickListener(v -> presenter.onFabClicked());
     }
 
     private TangoUx setupTangoUx() {
@@ -120,6 +130,7 @@ public class TangoMeasureActivity extends BaseActivity {
                 config.putBoolean(TangoConfig.KEY_BOOLEAN_LOWLATENCYIMUINTEGRATION, true);
                 config.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
                 config.putBoolean(TangoConfig.KEY_BOOLEAN_COLORCAMERA, true);
+                config.putInt(TangoConfig.KEY_INT_DEPTH_MODE, TangoConfig.TANGO_DEPTH_MODE_POINT_CLOUD);
 
                 // Drift correction allows motion tracking to recover after it loses tracking.
                 //
@@ -183,7 +194,6 @@ public class TangoMeasureActivity extends BaseActivity {
 
             @Override
             public void onXyzIjAvailable(TangoXyzIjData xyzIj) {
-                pointCloudManager.updateXyzIj(xyzIj);
                 if (tangoUx != null) {
                     tangoUx.updateXyzCount(xyzIj.xyzCount);
                 }
@@ -194,6 +204,11 @@ public class TangoMeasureActivity extends BaseActivity {
                 if (tangoUx != null) {
                     tangoUx.updateTangoEvent(event);
                 }
+            }
+
+            @Override
+            public void onPointCloudAvailable(TangoPointCloudData tangoPointCloudData) {
+                pointCloudManager.updatePointCloud(tangoPointCloudData);
             }
 
             @Override
@@ -300,7 +315,7 @@ public class TangoMeasureActivity extends BaseActivity {
                 }
 
                 try {
-                    float[] planeFitTransform = TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, 0.5f, 0.5f, rgbTimestampGlThread);
+                    float[] planeFitTransform = doFitPlane(0.5f, 0.5f);
                     Matrix4 transform = new Matrix4(planeFitTransform);
                     Vector3 position = transform.getTranslation();
                     final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
@@ -316,10 +331,20 @@ public class TangoMeasureActivity extends BaseActivity {
                         binding.currentPointerPosition.setTextColor(Color.RED);
                     });
                 }
-
             }
         });
         binding.surfaceView.setSurfaceRenderer(renderer);
+    }
+
+    public synchronized float[] doFitPlane(float u, float v) {
+        return TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, u, v, rgbTimestampGlThread);
+    }
+
+    public void setWheelmapModeRenderer(WheelmapModeRenderer modeRenderer) {
+        this.modeRenderer = modeRenderer;
+        if (this.renderer != null) {
+            this.renderer.setModeRenderer(modeRenderer);
+        }
     }
 
 }

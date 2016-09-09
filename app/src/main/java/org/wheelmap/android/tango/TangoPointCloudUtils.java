@@ -4,6 +4,7 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import com.google.atap.tangoservice.TangoCameraIntrinsics;
+import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
 import com.projecttango.tangosupport.TangoPointCloudManager;
@@ -18,9 +19,9 @@ class TangoPointCloudUtils {
      * It returns the transform of the fitted plane in a double array.
      */
     static float[] doFitPlane(TangoPointCloudManager pointCloudManager, TangoCameraIntrinsics intrinsics, float u, float v, double rgbTimestamp) {
-        TangoXyzIjData xyzIj = pointCloudManager.getLatestXyzIj();
+        TangoPointCloudData pointCloud = pointCloudManager.getLatestPointCloud();
 
-        if (xyzIj == null) {
+        if (pointCloud == null) {
             return null;
         }
 
@@ -29,16 +30,16 @@ class TangoPointCloudUtils {
         // cloud was acquired.
         TangoPoseData colorTdepthPose = TangoSupport.calculateRelativePose(
                 rgbTimestamp, TangoPoseData.COORDINATE_FRAME_CAMERA_COLOR,
-                xyzIj.timestamp, TangoPoseData.COORDINATE_FRAME_CAMERA_DEPTH);
+                pointCloud.timestamp, TangoPoseData.COORDINATE_FRAME_CAMERA_DEPTH);
 
         // Perform plane fitting with the latest available point cloud data.
         TangoSupport.IntersectionPointPlaneModelPair intersectionPointPlaneModelPair =
-                TangoSupport.fitPlaneModelNearClick(xyzIj, intrinsics,
+                TangoSupport.fitPlaneModelNearPoint(pointCloud,
                         colorTdepthPose, u, v);
 
         // Get the transform from depth camera to OpenGL world at the timestamp of the cloud.
         TangoSupport.TangoMatrixTransformData transform =
-                TangoSupport.getMatrixTransformAtTime(xyzIj.timestamp,
+                TangoSupport.getMatrixTransformAtTime(pointCloud.timestamp,
                         TangoPoseData.COORDINATE_FRAME_AREA_DESCRIPTION,
                         TangoPoseData.COORDINATE_FRAME_CAMERA_DEPTH,
                         TangoSupport.TANGO_SUPPORT_ENGINE_OPENGL,
@@ -50,7 +51,7 @@ class TangoPointCloudUtils {
 
             return openGlTPlane;
         } else {
-            Log.w(TAG, "Can't get depth camera transform at time " + xyzIj.timestamp);
+            Log.w(TAG, "Can't get depth camera transform at time " + pointCloud.timestamp);
             return null;
         }
     }
