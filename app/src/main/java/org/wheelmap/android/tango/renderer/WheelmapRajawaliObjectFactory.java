@@ -12,11 +12,12 @@ import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.primitives.RectangularPrism;
 import org.rajawali3d.primitives.Sphere;
-import org.wheelmap.android.tango.mode.TextureCache;
 
 public class WheelmapRajawaliObjectFactory {
 
     private static final float MEASURE_POINT_RADIUS = 0.015f;
+
+    private static final int TEXT_COLOR = Color.RED;
 
     private TextureCache textureCache = new TextureCache();
 
@@ -45,7 +46,7 @@ public class WheelmapRajawaliObjectFactory {
 
         canvas.save();
         canvas.rotate(180, width / 2, height / 2);
-        paint.setColor(Color.BLACK);
+        paint.setColor(TEXT_COLOR);
         canvas.drawText(text, 0, height - 10, paint);
 
         canvas.restore();
@@ -60,4 +61,8 @@ public class WheelmapRajawaliObjectFactory {
         return textObject;
     }
 
+
+    public TextureCache getTextureCache() {
+        return textureCache;
+    }
 }

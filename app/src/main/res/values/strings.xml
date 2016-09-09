@@ -181,4 +181,6 @@
   <string name="introduction_05_title">And now: Have fun as you search,\nfind and map!</string>
   <string name="introduction_05_text">You can find more tips and infos\nin the FAQs on Wheelmap.org.\nInterested in news from the community?\nCheck out the blog or subscribe\nto our newsletter.</string>
   <string name="tango_measurement">Measurement</string>
+  <string name="clear">Clear</string>
+  <string name="undo">Undo</string>
 </resources>

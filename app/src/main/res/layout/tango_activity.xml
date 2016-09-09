@@ -14,38 +14,92 @@
             android:background="?attr/colorPrimary"
             android:theme="@style/AppTheme.ThemeOverlay.Dark">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="64dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/homeAsUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:background="?selectableItemBackground"
+                    app:srcCompat="?homeAsUpIndicator"
+                    tools:ignore="ContentDescription"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/start_logo_wheelmap_horizontal"
+                    tools:ignore="ContentDescription"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="@string/tango_measurement"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/clear"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingLeft="56dp"
-                    android:paddingRight="56dp"
-                    android:gravity="center_vertical">
+                    android:background="?selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/start_logo_wheelmap_horizontal"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_clear"
                         tools:ignore="ContentDescription"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:text="@string/tango_measurement"/>
+                        android:text="@string/clear"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#fff"
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
-                <android.support.v7.widget.Toolbar
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:navigationIcon="?homeAsUpIndicator">
+                <LinearLayout
+                    android:id="@+id/undo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp">
 
-                </android.support.v7.widget.Toolbar>
-            </FrameLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ic_undo"
+                        tools:ignore="ContentDescription"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/undo"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#fff"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -87,10 +141,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    app:fabSize="normal"
+                    android:layout_margin="16dp"
                     app:backgroundTint="@color/primary_color"
-                    app:srcCompat="@drawable/ic_fab_plus"
-                    android:layout_margin="16dp"/>
+                    app:fabSize="normal"
+                    app:srcCompat="@drawable/ic_fab_plus"/>
 
             </FrameLayout>
 

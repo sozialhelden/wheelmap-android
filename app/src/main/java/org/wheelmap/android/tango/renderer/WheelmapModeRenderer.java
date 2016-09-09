@@ -34,7 +34,8 @@ public abstract class WheelmapModeRenderer {
         renderer.invokeAction(() -> consumer.consule(manipulator));
     }
 
-    public final void clear() {
+    @CallSuper
+    public void clear() {
         renderer.invokeAction(() -> {
 
             for (Object3D object3D : object3DList) {

@@ -1,4 +1,4 @@
-package org.wheelmap.android.tango.mode;
+package org.wheelmap.android.tango.renderer;
 
 import android.graphics.Color;
 
@@ -41,13 +41,13 @@ public class TextureCache {
 
     private Material createLineMaterial() {
         Material material = new Material();
-        material.setColor(Color.YELLOW);
+        material.setColor(Color.RED);
         return material;
     }
 
     private Material createCircleMaterial() {
         Material material = new Material();
-        material.setColor(Color.YELLOW);
+        material.setColor(Color.RED);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         return material;
     }

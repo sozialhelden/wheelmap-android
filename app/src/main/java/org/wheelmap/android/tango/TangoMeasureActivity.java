@@ -78,6 +78,8 @@ public class TangoMeasureActivity extends BaseActivity {
 
     private void setupUiOverlay() {
         binding.fab.setOnClickListener(v -> presenter.onFabClicked());
+        binding.undo.setOnClickListener(v -> presenter.undo());
+        binding.clear.setOnClickListener(v -> presenter.clear());
     }
 
     private TangoUx setupTangoUx() {

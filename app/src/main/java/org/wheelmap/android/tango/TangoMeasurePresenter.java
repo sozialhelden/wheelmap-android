@@ -48,4 +48,11 @@ class TangoMeasurePresenter {
         }
     }
 
+    public void undo() {
+        renderer.undo();
+    }
+
+    public void clear() {
+        renderer.clear();
+    }
 }
