@@ -57,7 +57,9 @@ public class WheelmapTangoRajawaliRenderer extends TangoRajawaliRenderer {
         super.onRender(ellapsedRealtime, deltaTime);
     }
 
-    public synchronized void invokeAction(Runnable runnable) {
-        actions.add(runnable);
+    public void invokeAction(Runnable runnable) {
+        synchronized (this) {
+            actions.add(runnable);
+        }
     }
 }

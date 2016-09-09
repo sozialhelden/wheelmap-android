@@ -241,6 +241,10 @@ public class TangoMeasureActivity extends BaseActivity {
                             return;
                         }
 
+                        if (intrinsics == null) {
+                            intrinsics = tango.getCameraIntrinsics(TangoCameraIntrinsics.TANGO_CAMERA_COLOR);
+                        }
+
                         // Set-up scene camera projection to match RGB camera intrinsics
                         if (!renderer.isSceneCameraConfigured()) {
                             renderer.setProjectionMatrix(
@@ -314,30 +318,34 @@ public class TangoMeasureActivity extends BaseActivity {
                     return;
                 }
 
-                try {
-                    float[] planeFitTransform = doFitPlane(0.5f, 0.5f);
-                    Matrix4 transform = new Matrix4(planeFitTransform);
-                    Vector3 position = transform.getTranslation();
-                    final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
-                    binding.currentPointerPosition.post(() -> {
-                        binding.centerCross.setEnabled(true);
-                        binding.currentPointerPosition.setText(text);
-                        binding.currentPointerPosition.setTextColor(Color.BLACK);
-                    });
-                } catch (Exception e) {
-                    binding.currentPointerPosition.post(() -> {
-                        binding.centerCross.setEnabled(false);
-                        binding.currentPointerPosition.setText("no position");
-                        binding.currentPointerPosition.setTextColor(Color.RED);
-                    });
+                synchronized (TangoMeasureActivity.this) {
+                    try {
+                        float[] planeFitTransform = doFitPlane(0.5f, 0.5f);
+                        Matrix4 transform = new Matrix4(planeFitTransform);
+                        Vector3 position = transform.getTranslation();
+                        final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
+                        binding.currentPointerPosition.post(() -> {
+                            binding.centerCross.setEnabled(true);
+                            binding.currentPointerPosition.setText(text);
+                            binding.currentPointerPosition.setTextColor(Color.BLACK);
+                        });
+                    } catch (Exception e) {
+                        binding.currentPointerPosition.post(() -> {
+                            binding.centerCross.setEnabled(false);
+                            binding.currentPointerPosition.setText("no position");
+                            binding.currentPointerPosition.setTextColor(Color.RED);
+                        });
+                    }
                 }
             }
         });
         binding.surfaceView.setSurfaceRenderer(renderer);
     }
 
-    public synchronized float[] doFitPlane(float u, float v) {
-        return TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, u, v, rgbTimestampGlThread);
+    public float[] doFitPlane(float u, float v) {
+        synchronized (this) {
+            return TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, u, v, rgbTimestampGlThread);
+        }
     }
 
     public void setWheelmapModeRenderer(WheelmapModeRenderer modeRenderer) {

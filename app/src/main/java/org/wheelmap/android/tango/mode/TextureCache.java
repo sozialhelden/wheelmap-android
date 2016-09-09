@@ -48,8 +48,6 @@ public class TextureCache {
     private Material createCircleMaterial() {
         Material material = new Material();
         material.setColor(Color.YELLOW);
-        material.setColorInfluence(0.1f);
-        material.enableLighting(true);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         return material;
     }

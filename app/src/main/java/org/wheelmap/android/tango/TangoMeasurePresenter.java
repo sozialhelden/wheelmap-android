@@ -1,5 +1,7 @@
 package org.wheelmap.android.tango;
 
+import android.util.Log;
+
 import com.google.atap.tangoservice.TangoException;
 
 import org.wheelmap.android.tango.mode.MeasureWidthModeRenderer;
@@ -7,6 +9,7 @@ import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 
 class TangoMeasurePresenter {
 
+    private static final String TAG = TangoMeasurePresenter.class.getSimpleName();
     private WheelmapModeRenderer renderer;
     private TangoMeasureActivity view;
 
@@ -25,6 +28,7 @@ class TangoMeasurePresenter {
             planeFitTransform = view.doFitPlane(0.5f, 0.5f);
 
             if (planeFitTransform != null) {
+                Log.d(TAG, "onClickedAt");
                 // Update the position of the rendered cube to the pose of the detected plane
                 // This update is made thread safe by the renderer
                 renderer.onClickedAt(planeFitTransform);

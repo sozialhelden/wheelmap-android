@@ -58,16 +58,7 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
         light.setPosition(3, 2, 4);
         getCurrentScene().addLight(light);
 
-
-        Cube cube = new Cube(1);
-        cube.setPosition(1,1,1);
-        Material material = new Material();
-        material.setColor(Color.YELLOW);
-        cube.setMaterial(material);
-        getCurrentScene().addChild(cube);
-
     }
-
 
     /**
      * It returns the ID currently assigned to the texture where the Tango color camera contents

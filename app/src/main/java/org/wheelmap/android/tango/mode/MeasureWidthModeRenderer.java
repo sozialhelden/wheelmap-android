@@ -9,8 +9,16 @@ public class MeasureWidthModeRenderer extends WheelmapModeRenderer {
 
     @Override
     public void onClickedAt(float[] transform) {
-        Object3D object = getObjectFactory().createMeasurePoint();
-        setObjectPose(object, transform);
+        manipulateScene(m -> {
+            Object3D object = getObjectFactory().createMeasurePoint();
+            setObjectPose(object, transform);
+            m.addObject(object);
+        });
+    }
+
+    @Override
+    public void undo() {
+
     }
 
     /**

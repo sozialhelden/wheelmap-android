@@ -11,10 +11,16 @@ import java.util.List;
 
 public abstract class WheelmapModeRenderer {
 
+    public interface Consumer<T> {
+        void consule(T t);
+    }
+
     private List<Object3D> object3DList = new ArrayList<>();
     private List<Object3D> textObjectsList = new ArrayList<>();
 
     private WheelmapTangoRajawaliRenderer renderer;
+
+    private Manipulator manipulator = new Manipulator();
 
     public final void setRajawaliRenderer(WheelmapTangoRajawaliRenderer renderer) {
         this.renderer = renderer;
@@ -24,29 +30,8 @@ public abstract class WheelmapModeRenderer {
         return renderer;
     }
 
-    public final void addObject(Object3D object3D) {
-        renderer.invokeAction(() -> {
-            renderer.getCurrentScene().addChild(object3D);
-            object3DList.add(object3D);
-        });
-    }
-
-    /**
-     * text objects are always faced to the camera
-     */
-    public final void addTextObject(Object3D object3D) {
-        renderer.invokeAction(() -> {
-            renderer.getCurrentScene().addChild(object3D);
-            textObjectsList.add(object3D);
-        });
-    }
-
-    public final void removeObject(Object3D object3D) {
-        renderer.invokeAction(() -> {
-            renderer.getCurrentScene().removeChild(object3D);
-            textObjectsList.remove(object3D);
-            object3DList.remove(object3D);
-        });
+    public final void manipulateScene(Consumer<Manipulator> consumer) {
+        renderer.invokeAction(() -> consumer.consule(manipulator));
     }
 
     public final void clear() {
@@ -80,5 +65,28 @@ public abstract class WheelmapModeRenderer {
     }
 
     public abstract void onClickedAt(float[] transform);
+
+    public abstract void undo();
+
+    public class Manipulator {
+        public final void addObject(Object3D object3D) {
+            renderer.getCurrentScene().addChild(object3D);
+            object3DList.add(object3D);
+        }
+
+        /**
+         * text objects are always faced to the camera
+         */
+        public final void addTextObject(Object3D object3D) {
+            renderer.getCurrentScene().addChild(object3D);
+            textObjectsList.add(object3D);
+        }
+
+        public final void removeObject(Object3D object3D) {
+            renderer.getCurrentScene().removeChild(object3D);
+            textObjectsList.remove(object3D);
+            object3DList.remove(object3D);
+        }
+    }
 
 }
