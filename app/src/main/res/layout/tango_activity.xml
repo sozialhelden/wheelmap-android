@@ -3,10 +3,67 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- add small overlap to avoid flickering on top of the surfaceView -->
+            <org.rajawali3d.surface.RajawaliSurfaceView
+                android:id="@+id/surfaceView"
+                android:layout_marginTop="62dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <FrameLayout
+                android:id="@+id/overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="64dp"
+                android:layout_marginBottom="4dp">
+
+                <org.wheelmap.android.tango.ModeSelectionView
+                    android:id="@+id/modeSelection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"/>
+
+                <ImageView
+                    android:id="@+id/centerCross"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_tango_cross"/>
+
+                <TextView
+                    android:id="@+id/currentPointerPosition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"/>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    app:backgroundTint="@color/primary_color"
+                    app:fabSize="normal"
+                    app:srcCompat="@drawable/ic_fab_plus"/>
+
+            </FrameLayout>
+
+            <com.google.atap.tango.ux.TangoUxLayout
+                android:id="@+id/tango_ux_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="64dp"/>
+
+        </FrameLayout>
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -23,8 +80,8 @@
                     android:id="@+id/homeAsUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
                     android:background="?selectableItemBackground"
+                    android:padding="16dp"
                     app:srcCompat="?homeAsUpIndicator"
                     tools:ignore="ContentDescription"/>
 
@@ -103,58 +160,6 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <org.rajawali3d.surface.RajawaliSurfaceView
-                android:id="@+id/surfaceView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-            <FrameLayout
-                android:id="@+id/overlay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <org.wheelmap.android.tango.ModeSelectionView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"/>
-
-                <ImageView
-                    android:id="@+id/centerCross"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_tango_cross"/>
-
-                <TextView
-                    android:id="@+id/currentPointerPosition"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="40dp"/>
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    app:backgroundTint="@color/primary_color"
-                    app:fabSize="normal"
-                    app:srcCompat="@drawable/ic_fab_plus"/>
-
-            </FrameLayout>
-
-            <com.google.atap.tango.ux.TangoUxLayout
-                android:id="@+id/tango_ux_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </FrameLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </layout>

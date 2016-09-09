@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.atap.tangoservice.TangoException;
 
 import org.wheelmap.android.tango.mode.MeasureWidthModeRenderer;
+import org.wheelmap.android.tango.mode.Mode;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 
 class TangoMeasurePresenter {
@@ -55,4 +56,10 @@ class TangoMeasurePresenter {
     public void clear() {
         renderer.clear();
     }
+
+    public void onModeSelected(Mode mode) {
+        renderer = mode.newRenderer();
+        view.setWheelmapModeRenderer(renderer);
+    }
+
 }

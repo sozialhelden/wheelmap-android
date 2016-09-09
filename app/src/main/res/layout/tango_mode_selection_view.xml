@@ -8,14 +8,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:theme="@style/AppTheme.ThemeOverlay.Dark"
-        tools:background="?colorPrimary"
+        android:background="?colorPrimary"
         android:elevation="4dp"
         tools:ignore="UseCompoundDrawables">
 
         <LinearLayout
+            android:id="@+id/top"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?colorPrimaryDark"
+            android:foreground="?selectableItemBackground"
             android:orientation="horizontal">
 
             <include
@@ -39,7 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout_height="126dp"
-            android:background="?colorPrimary"
             android:orientation="vertical"/>
 
     </LinearLayout>

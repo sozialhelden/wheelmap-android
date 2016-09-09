@@ -9,7 +9,6 @@ import org.rajawali3d.primitives.Line3D;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
 import org.wheelmap.android.tango.renderer.TextureCache;
-import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 
 import java.util.ArrayList;
 import java.util.List;

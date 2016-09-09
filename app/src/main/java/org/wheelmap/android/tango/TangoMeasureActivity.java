@@ -30,11 +30,12 @@ import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
-import org.wheelmap.android.tango.mode.MeasureWidthModeRenderer;
+import org.wheelmap.android.tango.mode.Mode;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapTangoRajawaliRenderer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -80,6 +81,16 @@ public class TangoMeasureActivity extends BaseActivity {
         binding.fab.setOnClickListener(v -> presenter.onFabClicked());
         binding.undo.setOnClickListener(v -> presenter.undo());
         binding.clear.setOnClickListener(v -> presenter.clear());
+
+        List<ModeSelectionView.Item> itemList = new ArrayList<>();
+        for (Mode mode : Mode.values()) {
+            itemList.add(ModeSelectionView.Item.create(mode.title, mode.icon, mode));
+        }
+        binding.modeSelection.setItems(itemList);
+        binding.modeSelection.setSelectedItemTag(Mode.DOOR);
+        binding.modeSelection.setOnItemSelectionListener(item -> {
+            presenter.onModeSelected((Mode)item.tag());
+        });
     }
 
     private TangoUx setupTangoUx() {

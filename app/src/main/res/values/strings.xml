@@ -183,4 +183,8 @@
   <string name="tango_measurement">Measurement</string>
   <string name="clear">Clear</string>
   <string name="undo">Undo</string>
+  <string name="tango_mode_door">Door</string>
+  <string name="tango_mode_stair">Stairs</string>
+  <string name="tango_mode_ramp">Ramp</string>
+  <string name="tango_mode_toilet">Toilet</string>
 </resources>
