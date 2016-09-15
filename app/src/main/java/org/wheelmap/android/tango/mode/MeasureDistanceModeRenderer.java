@@ -49,9 +49,21 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
                     line.setMaterial(getObjectFactory().getTextureCache().get(TextureCache.MaterialType.LINE));
                     m.addObject(line);
                     try {
+
+                        //calculate normal vector
+                        Vector3 n = linePoints.get(0).clone()
+                                .subtract(linePoints.get(1))
+                                .cross(new Vector3(0, 0, 1))
+                                .absoluteValue();
+
+                        // place text 10cm above the line
+                        
+                        n.normalize();
+                        n.multiply(0.1);
+
                         Vector3 textPosition = linePoints.get(0).clone()
                                 .add(linePoints.get(1)).multiply(0.5)
-                                .add(0, 0.1f, 0);
+                                .add(n);
 
                         String text = String.format(Locale.getDefault(), "%.2f", getLastDistance());
                         Object3D distanceText = getObjectFactory().createTextObject(text);
