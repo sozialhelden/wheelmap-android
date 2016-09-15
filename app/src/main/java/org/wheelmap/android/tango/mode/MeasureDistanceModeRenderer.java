@@ -29,6 +29,11 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
         addOperation(new CreateObjectsOperation() {
             @Override
             public void execute(Manipulator m) {
+
+                if (isReady()) {
+                    return;
+                }
+
                 Object3D createdPoint = getObjectFactory().createMeasurePoint();
                 setObjectPose(createdPoint, transform);
 

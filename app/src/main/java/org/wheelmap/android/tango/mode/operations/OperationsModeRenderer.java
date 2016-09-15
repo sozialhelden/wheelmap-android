@@ -14,6 +14,7 @@ public abstract class OperationsModeRenderer extends WheelmapModeRenderer {
             public void consume(Manipulator m) {
                 operation.run(m);
                 operationList.push(operation);
+                onStatusHasChanged();
             }
         });
     }
@@ -26,6 +27,7 @@ public abstract class OperationsModeRenderer extends WheelmapModeRenderer {
                 if (!operationList.empty()) {
                     operationList.pop().undo(m);
                 }
+                onStatusHasChanged();
             }
         });
     }

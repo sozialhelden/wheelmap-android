@@ -3,10 +3,14 @@ package org.wheelmap.android.tango;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -111,6 +115,22 @@ public class TangoMeasureActivity extends BaseActivity {
                 presenter.onModeSelected((Mode) item.tag());
             }
         });
+        setFabStatus(FabStatus.ADD_NEW);
+
+    }
+
+    @MainThread
+    void setFabStatus(FabStatus status) {
+        switch (status) {
+            case ADD_NEW:
+                binding.fab.setImageResource(R.drawable.ic_fab_plus);
+                binding.fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primary_color)));
+                break;
+            case READY:
+                binding.fab.setImageResource(R.drawable.ic_check);
+                binding.fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green_700)));
+                break;
+        }
     }
 
     private TangoUx setupTangoUx() {
@@ -398,6 +418,12 @@ public class TangoMeasureActivity extends BaseActivity {
         if (this.renderer != null) {
             this.renderer.setModeRenderer(modeRenderer);
         }
+    }
+
+
+    enum FabStatus {
+        READY,
+        ADD_NEW
     }
 
 }

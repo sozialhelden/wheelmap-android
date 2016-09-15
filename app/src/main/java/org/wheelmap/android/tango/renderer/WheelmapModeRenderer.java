@@ -15,6 +15,12 @@ public abstract class WheelmapModeRenderer {
         void consume(T t);
     }
 
+    public interface OnStatusChangeListener {
+        void onStatusChanged();
+    }
+
+    private OnStatusChangeListener onStatusChangeListener;
+
     private List<Object3D> object3DList = new ArrayList<>();
     private List<Object3D> textObjectsList = new ArrayList<>();
 
@@ -55,6 +61,16 @@ public abstract class WheelmapModeRenderer {
                 textObjectsList.clear();
             }
         });
+    }
+
+    public void setOnStatusChangeListener(OnStatusChangeListener listener) {
+        this.onStatusChangeListener = listener;
+    }
+
+    protected void onStatusHasChanged() {
+        if (onStatusChangeListener != null) {
+            onStatusChangeListener.onStatusChanged();
+        }
     }
 
     public WheelmapRajawaliObjectFactory getObjectFactory() {
