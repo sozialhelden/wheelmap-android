@@ -12,7 +12,9 @@ public abstract class CreateObjectsOperation implements Operation {
 
     private List<Object3D> createdObjects = new ArrayList<>();
 
-    protected void addObject(Object3D object3D) {
+    private CreateObjectManipulator manipulatorWrapper = new CreateObjectManipulator();
+
+    void addObject(Object3D object3D) {
         createdObjects.add(object3D);
     }
 
@@ -22,14 +24,44 @@ public abstract class CreateObjectsOperation implements Operation {
 
     @CallSuper
     @Override
-    public void run(WheelmapModeRenderer.Manipulator manipulator) {
+    public final void run(WheelmapModeRenderer.Manipulator manipulator) {
         createdObjects.clear();
+        manipulatorWrapper.setWrappedManipulator(manipulator);
+        execute(manipulatorWrapper);
     }
+
+    public abstract void execute(WheelmapModeRenderer.Manipulator manipulator);
 
     @Override
     public void undo(WheelmapModeRenderer.Manipulator manipulator) {
         for (Object3D createdObject : createdObjects) {
             manipulator.removeObject(createdObject);
+        }
+    }
+
+    private class CreateObjectManipulator implements WheelmapModeRenderer.Manipulator {
+
+        private WheelmapModeRenderer.Manipulator impl;
+
+        void setWrappedManipulator(WheelmapModeRenderer.Manipulator impl) {
+            this.impl = impl;
+        }
+
+        @Override
+        public void addObject(Object3D object3D) {
+            impl.addObject(object3D);
+            CreateObjectsOperation.this.addObject(object3D);
+        }
+
+        @Override
+        public void addTextObject(Object3D object3D) {
+            impl.addTextObject(object3D);
+            CreateObjectsOperation.this.addObject(object3D);
+        }
+
+        @Override
+        public void removeObject(Object3D object3D) {
+            impl.addTextObject(object3D);
         }
     }
 

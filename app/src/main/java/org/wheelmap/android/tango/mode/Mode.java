@@ -28,13 +28,13 @@ public enum Mode {
     public WheelmapModeRenderer newRenderer() {
         switch (this) {
             case DOOR:
-                return new MeasureWidthModeRenderer();
+                return new MeasureDistanceModeRenderer();
             case STAIR:
-                return new MeasureWidthModeRenderer();
+                return new MeasureDistanceModeRenderer();
             case RAMP:
-                return new MeasureWidthModeRenderer();
+                return new MeasureDistanceModeRenderer();
             case TOILET:
-                return new MeasureWidthModeRenderer();
+                return new MeasureDistanceModeRenderer();
             default:
                 throw new IllegalStateException("unimplemented renderer");
         }

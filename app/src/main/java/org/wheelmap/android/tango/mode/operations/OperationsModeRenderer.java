@@ -8,18 +8,24 @@ public abstract class OperationsModeRenderer extends WheelmapModeRenderer {
 
     private Stack<Operation> operationList = new Stack<>();
 
-    public void addOperation(Operation operation) {
-        manipulateScene(m -> {
-            operation.run(m);
-            operationList.push(operation);
+    public void addOperation(final Operation operation) {
+        manipulateScene(new Consumer<Manipulator>() {
+            @Override
+            public void consume(Manipulator m) {
+                operation.run(m);
+                operationList.push(operation);
+            }
         });
     }
 
     @Override
     public void undo() {
-        manipulateScene(m -> {
-            if (!operationList.empty()) {
-                operationList.pop().undo(m);
+        manipulateScene(new Consumer<Manipulator>() {
+            @Override
+            public void consume(Manipulator m) {
+                if (!operationList.empty()) {
+                    operationList.pop().undo(m);
+                }
             }
         });
     }

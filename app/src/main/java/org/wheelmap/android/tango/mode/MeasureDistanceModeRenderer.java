@@ -15,34 +15,34 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
-public class MeasureWidthModeRenderer extends OperationsModeRenderer {
+public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
 
     private List<Object3D> pointObjects = new ArrayList<>();
 
     @Override
-    public void onClickedAt(float[] transform) {
+    public void onClickedAt(final float[] transform) {
+
+        if (isReady()) {
+            return;
+        }
 
         addOperation(new CreateObjectsOperation() {
             @Override
-            public void run(Manipulator m) {
-                super.run(m);
-
+            public void execute(Manipulator m) {
                 Object3D createdPoint = getObjectFactory().createMeasurePoint();
                 setObjectPose(createdPoint, transform);
 
-                addObject(createdPoint);
                 pointObjects.add(createdPoint);
                 m.addObject(createdPoint);
 
                 int size = pointObjects.size();
                 if (size > 1) {
-                    Stack<Vector3> linePoints = new Stack<Vector3>();
+                    Stack<Vector3> linePoints = new Stack<>();
                     linePoints.add(pointObjects.get(size - 2).getPosition());
                     linePoints.add(pointObjects.get(size - 1).getPosition());
                     Line3D line = new Line3D(linePoints, 50);
                     line.setMaterial(getObjectFactory().getTextureCache().get(TextureCache.MaterialType.LINE));
                     m.addObject(line);
-                    addObject(line);
                     try {
                         Vector3 textPosition = linePoints.get(0).clone()
                                 .add(linePoints.get(1)).multiply(0.5)
@@ -52,7 +52,6 @@ public class MeasureWidthModeRenderer extends OperationsModeRenderer {
                         Object3D distanceText = getObjectFactory().createTextObject(text);
                         distanceText.setPosition(textPosition);
                         m.addTextObject(distanceText);
-                        addObject(distanceText);
                     } catch (ATexture.TextureException e) {
                         e.printStackTrace();
                     }
@@ -65,6 +64,11 @@ public class MeasureWidthModeRenderer extends OperationsModeRenderer {
                 pointObjects.removeAll(getCreatedObjects());
             }
         });
+    }
+
+    @Override
+    public boolean isReady() {
+        return pointObjects.size() >= 2;
     }
 
     public double getLastDistance() {

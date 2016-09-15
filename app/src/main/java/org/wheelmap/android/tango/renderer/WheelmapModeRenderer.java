@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class WheelmapModeRenderer {
 
     public interface Consumer<T> {
-        void consule(T t);
+        void consume(T t);
     }
 
     private List<Object3D> object3DList = new ArrayList<>();
@@ -20,9 +20,9 @@ public abstract class WheelmapModeRenderer {
 
     private WheelmapTangoRajawaliRenderer renderer;
 
-    private Manipulator manipulator = new Manipulator();
+    private Manipulator manipulator = new ManipulatorImpl();
 
-    public final void setRajawaliRenderer(WheelmapTangoRajawaliRenderer renderer) {
+    final void setRajawaliRenderer(WheelmapTangoRajawaliRenderer renderer) {
         this.renderer = renderer;
     }
 
@@ -30,24 +30,30 @@ public abstract class WheelmapModeRenderer {
         return renderer;
     }
 
-    public final void manipulateScene(Consumer<Manipulator> consumer) {
-        renderer.invokeAction(() -> consumer.consule(manipulator));
+    protected final void manipulateScene(final Consumer<Manipulator> consumer) {
+        renderer.invokeAction(new Runnable() {
+            @Override
+            public void run() {
+                consumer.consume(manipulator);
+            }
+        });
     }
 
     @CallSuper
     public void clear() {
-        renderer.invokeAction(() -> {
+        renderer.invokeAction(new Runnable() {
+            @Override
+            public void run() {
+                for (Object3D object3D : object3DList) {
+                    renderer.getCurrentScene().removeChild(object3D);
+                }
+                object3DList.clear();
 
-            for (Object3D object3D : object3DList) {
-                renderer.getCurrentScene().removeChild(object3D);
+                for (Object3D object3D : textObjectsList) {
+                    renderer.getCurrentScene().removeChild(object3D);
+                }
+                textObjectsList.clear();
             }
-            object3DList.clear();
-
-            for (Object3D object3D : textObjectsList) {
-                renderer.getCurrentScene().removeChild(object3D);
-            }
-            textObjectsList.clear();
-
         });
     }
 
@@ -69,15 +75,25 @@ public abstract class WheelmapModeRenderer {
 
     public abstract void undo();
 
-    public class Manipulator {
+    public abstract boolean isReady();
+
+    public interface Manipulator {
+        void addObject(Object3D object3D);
+
+        /**
+         * text objects are always faced to the camera
+         */
+        void addTextObject(Object3D object3D);
+
+        void removeObject(Object3D object3D);
+    }
+
+    private class ManipulatorImpl implements Manipulator {
         public final void addObject(Object3D object3D) {
             renderer.getCurrentScene().addChild(object3D);
             object3DList.add(object3D);
         }
 
-        /**
-         * text objects are always faced to the camera
-         */
         public final void addTextObject(Object3D object3D) {
             renderer.getCurrentScene().addChild(object3D);
             textObjectsList.add(object3D);

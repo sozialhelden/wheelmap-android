@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
 
 import com.google.atap.tango.ux.TangoUx;
 import com.google.atap.tango.ux.UxExceptionEvent;
+import com.google.atap.tango.ux.UxExceptionEventListener;
 import com.google.atap.tangoservice.Tango;
 import com.google.atap.tangoservice.TangoCameraIntrinsics;
 import com.google.atap.tangoservice.TangoConfig;
@@ -78,9 +80,24 @@ public class TangoMeasureActivity extends BaseActivity {
     }
 
     private void setupUiOverlay() {
-        binding.fab.setOnClickListener(v -> presenter.onFabClicked());
-        binding.undo.setOnClickListener(v -> presenter.undo());
-        binding.clear.setOnClickListener(v -> presenter.clear());
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onFabClicked();
+            }
+        });
+        binding.undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.undo();
+            }
+        });
+        binding.clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.clear();
+            }
+        });
 
         List<ModeSelectionView.Item> itemList = new ArrayList<>();
         for (Mode mode : Mode.values()) {
@@ -88,41 +105,47 @@ public class TangoMeasureActivity extends BaseActivity {
         }
         binding.modeSelection.setItems(itemList);
         binding.modeSelection.setSelectedItemTag(Mode.DOOR);
-        binding.modeSelection.setOnItemSelectionListener(item -> {
-            presenter.onModeSelected((Mode)item.tag());
+        binding.modeSelection.setOnItemSelectionListener(new ModeSelectionView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(ModeSelectionView.Item item) {
+                presenter.onModeSelected((Mode) item.tag());
+            }
         });
     }
 
     private TangoUx setupTangoUx() {
         TangoUx tangoUx = new TangoUx(this);
         tangoUx.setLayout(binding.tangoUxLayout);
-        tangoUx.setUxExceptionEventListener(uxExceptionEvent -> {
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_LYING_ON_SURFACE) {
-                Log.w(TAG, "Device lying on surface ");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_FEW_DEPTH_POINTS) {
-                Log.w(TAG, "Very few depth points in mPoint cloud ");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_FEW_FEATURES) {
-                Log.w(TAG, "Invalid poses in MotionTracking ");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_INCOMPATIBLE_VM) {
-                Log.w(TAG, "Device not running on ART");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_MOTION_TRACK_INVALID) {
-                Log.w(TAG, "Invalid poses in MotionTracking ");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_MOVING_TOO_FAST) {
-                Log.w(TAG, "Invalid poses in MotionTracking ");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_OVER_EXPOSED) {
-                Log.w(TAG, "Camera Over Exposed");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_TANGO_SERVICE_NOT_RESPONDING) {
-                Log.w(TAG, "TangoService is not responding ");
-            }
-            if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_UNDER_EXPOSED) {
-                Log.w(TAG, "Camera Under Exposed ");
+        tangoUx.setUxExceptionEventListener(new UxExceptionEventListener() {
+            @Override
+            public void onUxExceptionEvent(UxExceptionEvent uxExceptionEvent) {
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_LYING_ON_SURFACE) {
+                    Log.w(TAG, "Device lying on surface ");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_FEW_DEPTH_POINTS) {
+                    Log.w(TAG, "Very few depth points in mPoint cloud ");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_FEW_FEATURES) {
+                    Log.w(TAG, "Invalid poses in MotionTracking ");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_INCOMPATIBLE_VM) {
+                    Log.w(TAG, "Device not running on ART");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_MOTION_TRACK_INVALID) {
+                    Log.w(TAG, "Invalid poses in MotionTracking ");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_MOVING_TOO_FAST) {
+                    Log.w(TAG, "Invalid poses in MotionTracking ");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_OVER_EXPOSED) {
+                    Log.w(TAG, "Camera Over Exposed");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_TANGO_SERVICE_NOT_RESPONDING) {
+                    Log.w(TAG, "TangoService is not responding ");
+                }
+                if (uxExceptionEvent.getType() == UxExceptionEvent.TYPE_UNDER_EXPOSED) {
+                    Log.w(TAG, "Camera Under Exposed ");
+                }
             }
         });
         return tangoUx;
@@ -133,40 +156,43 @@ public class TangoMeasureActivity extends BaseActivity {
         super.onResume();
 
         tangoUx.start(new TangoUx.StartParams());
-        tango = new Tango(this, () -> {
-            // Synchronize against disconnecting while the service is being used in the
-            // OpenGL thread or in the UI thread.
-            synchronized (this) {
-                TangoSupport.initialize();
+        tango = new Tango(this, new Runnable() {
+            @Override
+            public void run() {
+                // Synchronize against disconnecting while the service is being used in the
+                // OpenGL thread or in the UI thread.
+                synchronized (TangoMeasureActivity.this) {
+                    TangoSupport.initialize();
 
-                TangoConfig config = tango.getConfig(TangoConfig.CONFIG_TYPE_DEFAULT);
-                config.putBoolean(TangoConfig.KEY_BOOLEAN_LOWLATENCYIMUINTEGRATION, true);
-                config.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
-                config.putBoolean(TangoConfig.KEY_BOOLEAN_COLORCAMERA, true);
-                config.putInt(TangoConfig.KEY_INT_DEPTH_MODE, TangoConfig.TANGO_DEPTH_MODE_POINT_CLOUD);
+                    TangoConfig config = tango.getConfig(TangoConfig.CONFIG_TYPE_DEFAULT);
+                    config.putBoolean(TangoConfig.KEY_BOOLEAN_LOWLATENCYIMUINTEGRATION, true);
+                    config.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
+                    config.putBoolean(TangoConfig.KEY_BOOLEAN_COLORCAMERA, true);
+                    config.putInt(TangoConfig.KEY_INT_DEPTH_MODE, TangoConfig.TANGO_DEPTH_MODE_POINT_CLOUD);
 
-                // Drift correction allows motion tracking to recover after it loses tracking.
-                //
-                // The drift corrected pose is is available through the frame pair with
-                // base frame AREA_DESCRIPTION and target frame DEVICE.
-                config.putBoolean(TangoConfig.KEY_BOOLEAN_DRIFT_CORRECTION, true);
+                    // Drift correction allows motion tracking to recover after it loses tracking.
+                    //
+                    // The drift corrected pose is is available through the frame pair with
+                    // base frame AREA_DESCRIPTION and target frame DEVICE.
+                    config.putBoolean(TangoConfig.KEY_BOOLEAN_DRIFT_CORRECTION, true);
 
-                try {
-                    setTangoListeners();
-                } catch (TangoErrorException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    tango.connect(config);
-                    isConnected = true;
-                } catch (TangoOutOfDateException e) {
-                    if (tangoUx != null) {
-                        tangoUx.showTangoOutOfDate();
+                    try {
+                        TangoMeasureActivity.this.setTangoListeners();
+                    } catch (TangoErrorException e) {
+                        e.printStackTrace();
                     }
-                    e.printStackTrace();
-                } catch (TangoErrorException e) {
-                    e.printStackTrace();
+
+                    try {
+                        tango.connect(config);
+                        isConnected = true;
+                    } catch (TangoOutOfDateException e) {
+                        if (tangoUx != null) {
+                            tangoUx.showTangoOutOfDate();
+                        }
+                        e.printStackTrace();
+                    } catch (TangoErrorException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -337,16 +363,22 @@ public class TangoMeasureActivity extends BaseActivity {
                         Matrix4 transform = new Matrix4(planeFitTransform);
                         Vector3 position = transform.getTranslation();
                         final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
-                        binding.currentPointerPosition.post(() -> {
-                            binding.centerCross.setEnabled(true);
-                            binding.currentPointerPosition.setText(text);
-                            binding.currentPointerPosition.setTextColor(Color.BLACK);
+                        binding.currentPointerPosition.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.centerCross.setEnabled(true);
+                                binding.currentPointerPosition.setText(text);
+                                binding.currentPointerPosition.setTextColor(Color.BLACK);
+                            }
                         });
                     } catch (Exception e) {
-                        binding.currentPointerPosition.post(() -> {
-                            binding.centerCross.setEnabled(false);
-                            binding.currentPointerPosition.setText("no position");
-                            binding.currentPointerPosition.setTextColor(Color.RED);
+                        binding.currentPointerPosition.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                binding.centerCross.setEnabled(false);
+                                binding.currentPointerPosition.setText("no position");
+                                binding.currentPointerPosition.setTextColor(Color.RED);
+                            }
                         });
                     }
                 }

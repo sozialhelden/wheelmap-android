@@ -71,8 +71,11 @@ public class ModeSelectionView extends LinearLayout {
         ((ViewGroup) binding.getRoot()).setLayoutTransition(transition);
 
         binding.choosableContent.getLayoutParams().height = 0;
-        binding.top.setOnClickListener(v -> {
-            toggleMenu();
+        binding.top.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ModeSelectionView.this.toggleMenu();
+            }
         });
 
     }
@@ -99,7 +102,7 @@ public class ModeSelectionView extends LinearLayout {
         binding.choosableContent.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (Item item : items) {
+        for (final Item item : items) {
             if (item == selectedItem) {
                 continue;
             }
@@ -111,10 +114,13 @@ public class ModeSelectionView extends LinearLayout {
             }
             itemBinding.title.setText(item.title());
 
-            itemBinding.getRoot().setOnClickListener(v -> {
-                setSelectedItem(item);
-                if (listener != null) {
-                    listener.onItemSelected(item);
+            itemBinding.getRoot().setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ModeSelectionView.this.setSelectedItem(item);
+                    if (listener != null) {
+                        listener.onItemSelected(item);
+                    }
                 }
             });
 
