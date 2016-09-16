@@ -16,11 +16,11 @@ limitations under the License.
 -->
 <manifest package="org.wheelmap.android.online"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:installLocation="auto"
           xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="auto"
           android:versionCode="488">
 
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -50,7 +50,7 @@ limitations under the License.
 
         <uses-library
             android:name="com.projecttango.libtango_device2"
-            android:required="false" />
+            android:required="false"/>
 
         <activity
             android:name="org.wheelmap.android.activity.StartupActivity"
@@ -63,9 +63,14 @@ limitations under the License.
             </intent-filter>
         </activity>
 
-        <activity android:name="org.wheelmap.android.tango.TangoMeasureActivity"
-                  android:theme="@style/Theme.Wheelmap.NoActionbar"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name="org.wheelmap.android.tango.TangoMeasureActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Wheelmap.NoActionbar"/>
+
+        <activity
+            android:name="org.wheelmap.android.tango.TangoTutorialActivity"
+            android:theme="@style/Theme.Wheelmap.Translucent"/>
 
         <activity
             android:name="org.wheelmap.android.activity.IntroductionActivity"

@@ -112,11 +112,18 @@ public class TangoMeasureActivity extends BaseActivity {
         binding.modeSelection.setOnItemSelectionListener(new ModeSelectionView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(ModeSelectionView.Item item) {
-                presenter.onModeSelected((Mode) item.tag());
+                Mode mode = (Mode) item.tag();
+                presenter.onModeSelected(mode);
+                setMode(mode);
             }
         });
         setFabStatus(FabStatus.ADD_NEW);
+    }
 
+    private void setMode(Mode mode) {
+        binding.modeSelection.setSelectedItemTag(mode);
+        Intent intent = new Intent(this, TangoTutorialActivity.class);
+        startActivity(intent);
     }
 
     @MainThread
@@ -127,7 +134,7 @@ public class TangoMeasureActivity extends BaseActivity {
                 binding.fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primary_color)));
                 break;
             case READY:
-                binding.fab.setImageResource(R.drawable.ic_check);
+                binding.fab.setImageResource(R.drawable.ic_camera);
                 binding.fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green_700)));
                 break;
         }
@@ -172,8 +179,8 @@ public class TangoMeasureActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
 
         tangoUx.start(new TangoUx.StartParams());
         tango = new Tango(this, new Runnable() {
@@ -220,8 +227,8 @@ public class TangoMeasureActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         // Synchronize against disconnecting while the service is being used in the OpenGL thread or
         // in the UI thread.
         synchronized (this) {

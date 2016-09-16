@@ -48,5 +48,6 @@
     <color name="green_status_yes">#99c15c</color>
 
     <color name="green_700">#388E3C</color>
+    <color name="green_btn">#7AA85E</color>
 
 </resources>

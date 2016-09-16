@@ -53,11 +53,11 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
                         //calculate normal vector
                         Vector3 n = linePoints.get(0).clone()
                                 .subtract(linePoints.get(1))
-                                .cross(new Vector3(0, 0, 1))
+                                .cross(0, 0, 1)
                                 .absoluteValue();
 
                         // place text 10cm above the line
-                        
+
                         n.normalize();
                         n.multiply(0.1);
 
