@@ -213,7 +213,7 @@ public class StartupActivity extends BaseActivity implements
                     DashboardActivity.class);
         }
 
-        intent = TangoMeasureActivity.newIntent(this);
+        //intent = TangoMeasureActivity.newIntent(this);
 
         intent.putExtra(Extra.REQUEST, true);
         startActivity(intent);

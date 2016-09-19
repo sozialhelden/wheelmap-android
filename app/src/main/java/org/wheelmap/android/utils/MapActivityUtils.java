@@ -53,7 +53,7 @@ public class MapActivityUtils {
         Map<WheelchairFilterState, SupportManager.WheelchairToiletAttributes> attributes = SupportManager.wheelchairToiletAttributes;
         Resources r = context.getResources();
         List<Drawable> layers = new LinkedList<Drawable>();
-        layers.add(r.getDrawable(R.drawable.ic_tango_wc));
+        layers.add(r.getDrawable(R.drawable.ic_wc));
 
         if (mPrefs.getBoolean(attributes.get(WheelchairFilterState.TOILET_YES).prefsKey, true)) {
             layers.add(r.getDrawable(R.drawable.ic_wc_green));

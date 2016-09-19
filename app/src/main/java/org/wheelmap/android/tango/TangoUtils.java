@@ -2,12 +2,15 @@ package org.wheelmap.android.tango;
 
 import android.opengl.Matrix;
 
+import com.google.atap.tangoservice.Tango;
 import com.google.atap.tangoservice.TangoCameraIntrinsics;
+
+import org.wheelmap.android.app.WheelmapApp;
 
 public class TangoUtils {
 
     public static boolean isTangoSupported() {
-        return true;
+        return Tango.getVersion(WheelmapApp.get()) > 0;
     }
 
     /**
