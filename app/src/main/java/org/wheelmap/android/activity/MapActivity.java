@@ -32,6 +32,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.BundlePreferences;
 import org.wheelmap.android.modules.IBundlePreferences;
 import org.wheelmap.android.overlays.ConfigureMapView;
+import org.wheelmap.android.utils.Constants;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,9 @@ public class MapActivity extends AppCompatActivity implements MapContext {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bprefs = (getIntent().hasExtra(Extra.SELECTED_TAB) && getIntent().getIntExtra(Extra.SELECTED_TAB, 0) != 0) ? new BundlePreferences(this) : null;
+        bprefs = (getIntent().hasExtra(Extra.SELECTED_TAB)
+                && getIntent().getIntExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST) != Constants.TabContent.LOCATION_BASED_LIST)
+                ? new BundlePreferences(this) : null;
     }
 
     /**
