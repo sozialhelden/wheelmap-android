@@ -8,6 +8,7 @@ import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.Constants;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
 
@@ -231,7 +232,7 @@ public class DashboardActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         intent.putExtra(SearchManager.QUERY,search.getText().toString());
         startActivity(intent);
     }
@@ -246,7 +247,7 @@ public class DashboardActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         startActivity(intent);
         resetKategorieFilter();
     }
@@ -261,7 +262,7 @@ public class DashboardActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,1);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.MAP);
         startActivity(intent);
         resetKategorieFilter();
     }
@@ -281,14 +282,14 @@ public class DashboardActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         intent.putExtra(Extra.MAP_MODE_ENGAGE, true);
         startActivity(intent);
     }
 
     public void openKategorien(){
         Intent intent = new Intent(this,ChooseCategoryActivity.class);
-        intent.putExtra(Extra.SELECTED_TAB,2);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.CATEGORY_LIST);
         startActivity(intent);
     }
 
