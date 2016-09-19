@@ -10,7 +10,6 @@ public class TangoUtils {
         return true;
     }
 
-
     /**
      * Use Tango camera intrinsics to calculate the projection Matrix for the Rajawali scene.
      */

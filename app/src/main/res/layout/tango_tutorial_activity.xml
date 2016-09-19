@@ -33,14 +33,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    tools:text="Stufenhöhe"/>
+                    tools:text="@string/tango_tutorial.ramp.title"/>
 
                 <TextView
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="Lorem Ipsum, Lorem Ipsum, Lorem Ipsum, Lorem Ipsum, Lorem Ipsum, Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum "/>
+                    tools:text="@string/tango_tutorial.ramp.text"/>
 
                 <View
                     android:layout_width="0dp"
@@ -50,7 +50,9 @@
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    tools:src="@drawable/img_tango_ramp"
+                    android:layout_gravity="center"/>
 
                 <View
                     android:layout_width="0dp"
@@ -58,16 +60,19 @@
                     android:layout_weight="1"/>
 
                 <Button
+                    android:id="@+id/startBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:backgroundTint="@color/green_btn"
                     android:minWidth="200dp"
+                    android:textColor="#FFF"
                     android:text="@string/start"/>
 
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/closeBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"

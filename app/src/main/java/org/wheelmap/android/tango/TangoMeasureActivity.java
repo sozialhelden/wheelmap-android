@@ -34,6 +34,7 @@ import com.projecttango.tangosupport.TangoSupport;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.activity.base.BaseActivity;
+import org.wheelmap.android.model.Prefs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
 import org.wheelmap.android.tango.mode.Mode;
@@ -105,10 +106,9 @@ public class TangoMeasureActivity extends BaseActivity {
 
         List<ModeSelectionView.Item> itemList = new ArrayList<>();
         for (Mode mode : Mode.values()) {
-            itemList.add(ModeSelectionView.Item.create(mode.title, mode.icon, mode));
+            itemList.add(ModeSelectionView.Item.create(mode.title(), mode.icon(), mode));
         }
         binding.modeSelection.setItems(itemList);
-        binding.modeSelection.setSelectedItemTag(Mode.DOOR);
         binding.modeSelection.setOnItemSelectionListener(new ModeSelectionView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(ModeSelectionView.Item item) {
@@ -118,11 +118,25 @@ public class TangoMeasureActivity extends BaseActivity {
             }
         });
         setFabStatus(FabStatus.ADD_NEW);
+
+        binding.helpFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHelp((Mode) binding.modeSelection.getSelectedItem().tag());
+            }
+        });
     }
 
-    private void setMode(Mode mode) {
+    void setMode(Mode mode) {
         binding.modeSelection.setSelectedItemTag(mode);
-        Intent intent = new Intent(this, TangoTutorialActivity.class);
+        if (!Prefs.getModeTutorialWasShown(mode)) {
+            showHelp(mode);
+            Prefs.setModeTutorialWasShown(mode, true);
+        }
+    }
+
+    private void showHelp(Mode mode) {
+        Intent intent = TangoTutorialActivity.newIntent(this, mode);
         startActivity(intent);
     }
 

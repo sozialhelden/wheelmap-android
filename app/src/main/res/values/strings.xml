@@ -181,15 +181,24 @@
   <string name="introduction_05_title">And now: Have fun as you search,\nfind and map!</string>
   <string name="introduction_05_text">You can find more tips and infos\nin the FAQs on Wheelmap.org.\nInterested in news from the community?\nCheck out the blog or subscribe\nto our newsletter.</string>
 
-  <!-- new strings -->
+  <!-- new strings TODO translate -->
 
   <string name="tango_measurement">Measurement</string>
   <string name="clear">Clear</string>
   <string name="undo">Undo</string>
-  <string name="tango_mode_door">Door</string>
-  <string name="tango_mode_stair">Stairs</string>
-  <string name="tango_mode_ramp">Ramp</string>
-  <string name="tango_mode_toilet">Toilet</string>
-  <string name="failed_measurement">Measurment failed</string>
-  <string name="start">start</string>
+  <string name="tango_mode_door">Tür</string>
+  <string name="tango_mode_stair">Stufe</string>
+  <string name="tango_mode_ramp">Rampe</string>
+  <string name="tango_mode_toilet">Toilette</string>
+  <string name="failed_measurement">Messung fehlgeschlagen</string>
+  <string name="start">Start</string>
+  <string name="tango_tutorial.door.title">Türbreite ermitteln</string>
+  <string name="tango_tutorial.door.text">Um die Breite einer Tür zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt der Tür, diese markieren Sie, inde, Sie die Punkte nacheinander anviesieren…</string>
+  <string name="tango_tutorial.stair.title">Stufenhöhe ermitteln</string>
+  <string name="tango_tutorial.stair.text">Um die Höhe einer Stufe zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt der Stufe, diese markieren Sie, inde Sie die Punkte nacheinander anvisieren…</string>
+  <string name="tango_tutorial.ramp.title">Rampenneigung ermitteln</string>
+  <string name="tango_tutorial.ramp.text">Um die Neigung einer Rampe zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt einer Rampe, diese markieren Sie, indem Sie die Punkte nacheinander anvisiren…</string>
+  <string name="tango_tutorial.wc.title">Bewegungsfläche einer Toilette ermitteln</string>
+  <string name="tango_tutorial.wc.text">Um die Bewegungsfläche einer Toilette zu bestimmen, benötigen Sie vier Punkte. Diese markieren Sie, indem Sie alle vier Punkte nacheinander anvisieren…</string>
+
 </resources>

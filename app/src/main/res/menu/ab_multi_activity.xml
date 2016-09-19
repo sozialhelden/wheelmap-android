@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/menu_wc"
-        android:icon="@drawable/ic_wc"
+        android:icon="@drawable/ic_tango_wc"
         android:title="@string/menu_filter"
         app:showAsAction="always" />
 

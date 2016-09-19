@@ -45,12 +45,26 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="40dp"/>
 
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/helpFab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="@dimen/fab_margin"
+                    app:backgroundTint="@color/primary_color"
+                    app:fabSize="normal"
+                    app:drawableText='@{"?"}'
+                    app:drawableTextSize="@{28}"
+                    app:drawableTextColor="@{@android:color/white}"/>
+
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
+                    android:layout_margin="@dimen/fab_margin"
                     app:backgroundTint="@color/primary_color"
                     app:fabSize="normal"
                     app:srcCompat="@drawable/ic_fab_plus"/>

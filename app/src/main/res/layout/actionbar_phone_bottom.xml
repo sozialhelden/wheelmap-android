@@ -46,6 +46,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:onClick="onOptionItemBottomClicked"
-        android:src="@drawable/ic_wc" />
+        android:src="@drawable/ic_tango_wc" />
 
 </LinearLayout>

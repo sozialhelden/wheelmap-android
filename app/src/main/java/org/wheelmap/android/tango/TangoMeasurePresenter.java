@@ -22,6 +22,8 @@ class TangoMeasurePresenter {
     TangoMeasurePresenter(TangoMeasureActivity view) {
         this.view = view;
         mainThreadHandler = new Handler(Looper.getMainLooper());
+
+        view.setMode(Mode.DOOR);
         setRenderer(new MeasureDistanceModeRenderer());
     }
 

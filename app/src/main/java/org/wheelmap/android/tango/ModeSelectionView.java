@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import android.support.transition.TransitionManager;
-
 import com.google.auto.value.AutoValue;
 
 import org.wheelmap.android.online.R;
