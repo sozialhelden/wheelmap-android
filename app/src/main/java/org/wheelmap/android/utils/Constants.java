@@ -11,4 +11,9 @@ public class Constants {
         public static final String SCHEMA_WHEELMAP = "wheelmap";
     }
 
+    public  static class TabContent {
+        public static final int LOCATION_BASED_LIST = 0;
+        public static final int MAP = 1;
+        public static final int CATEGORY_LIST = 2;
+    }
 }

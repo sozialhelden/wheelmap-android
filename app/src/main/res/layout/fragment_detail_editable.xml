@@ -188,7 +188,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2"
                         android:hint="@string/poi_property_housenum"
-                        android:inputType="number"
+                        android:inputType="textPostalAddress"
                         android:nextFocusDown="@+id/postcode"
                         android:singleLine="true" />
                 </LinearLayout>

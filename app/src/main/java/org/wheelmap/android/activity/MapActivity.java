@@ -56,7 +56,7 @@ public class MapActivity extends AppCompatActivity implements MapContext {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bprefs = new BundlePreferences(this);
+        bprefs = (getIntent().hasExtra(Extra.SELECTED_TAB) && getIntent().getIntExtra(Extra.SELECTED_TAB, 0) != 0) ? new BundlePreferences(this) : null;
     }
 
     /**
@@ -177,7 +177,7 @@ public class MapActivity extends AppCompatActivity implements MapContext {
         int id = getId(mapView);
         Log.d(TAG, "loadPreferences: mapView " + mapView + " id = " + id);
         String mapId = String.valueOf(id) + "_map";
-        if (bprefs.contains(mapId)) {
+        if (bprefs != null && bprefs.contains(mapId)) {
             Bundle b = bprefs.retrieve(mapId);
 
             String fileName = b.getString("mapFile");
@@ -230,14 +230,16 @@ public class MapActivity extends AppCompatActivity implements MapContext {
             storeMapsforgeFile((MFMapView) mapView, b);
         }
 
-        IGeoPoint mapCenter = mapView.getMapCenter();
-        b.putInt(Extra.LATITUDE, mapCenter.getLatitudeE6());
-        b.putInt(Extra.LONGITUDE, mapCenter.getLongitudeE6());
-        b.putInt(Extra.ZOOM_LEVEL, mapView.getZoomLevel());
+        if(bprefs != null) {
+            IGeoPoint mapCenter = mapView.getMapCenter();
+            b.putInt(Extra.LATITUDE, mapCenter.getLatitudeE6());
+            b.putInt(Extra.LONGITUDE, mapCenter.getLongitudeE6());
+            b.putInt(Extra.ZOOM_LEVEL, mapView.getZoomLevel());
 
-        int id = getId( mapView );
-        String mapId = String.valueOf(id) + "_map";
-        bprefs.store(mapId, b);
+            int id = getId(mapView);
+            String mapId = String.valueOf(id) + "_map";
+            bprefs.store(mapId, b);
+        }
     }
 
     /**
