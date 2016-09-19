@@ -1,8 +1,11 @@
 package org.wheelmap.android.tango.renderer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import java.util.Vector;
+
+import javax.microedition.khronos.opengles.GL10;
 
 public class WheelmapTangoRajawaliRenderer extends TangoRajawaliRenderer {
 

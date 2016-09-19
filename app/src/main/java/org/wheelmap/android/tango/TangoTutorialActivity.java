@@ -41,8 +41,7 @@ public class TangoTutorialActivity extends BaseActivity {
         binding.image.setImageResource(mode.tutorialImage());
 
         int tintColor = ContextCompat.getColor(this, R.color.green_btn);
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{tintColor});
-        ViewTool.setBackgroundTintList(binding.startBtn, csl);
+        ViewTool.setBackgroundTint(binding.startBtn, tintColor);
 
         View.OnClickListener finishClickListener = new View.OnClickListener() {
             @Override

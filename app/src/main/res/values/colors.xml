@@ -50,4 +50,6 @@
     <color name="green_700">#388E3C</color>
     <color name="green_btn">#7AA85E</color>
 
+    <color name="translucent_activity_background">#AAAA</color>
+
 </resources>

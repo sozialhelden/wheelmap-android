@@ -1,5 +1,8 @@
 package org.wheelmap.android.tango;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -10,7 +13,12 @@ import com.google.atap.tangoservice.TangoException;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.tango.mode.MeasureDistanceModeRenderer;
 import org.wheelmap.android.tango.mode.Mode;
+import org.wheelmap.android.tango.renderer.TangoRajawaliRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 class TangoMeasurePresenter {
 
@@ -82,7 +90,31 @@ class TangoMeasurePresenter {
     }
 
     private void onReadyClicked() {
-        // TODO
+        view.captureScreenshot(new TangoRajawaliRenderer.ScreenshotCaptureListener() {
+            @Override
+            public void onScreenshotCaptured(Bitmap bitmap) {
+                try {
+                    File outFile = new File(view.getCacheDir(), System.currentTimeMillis() + ".jpg");
+                    FileOutputStream outputStream = new FileOutputStream(outFile);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    outputStream.close();
+                    final Uri uri = Uri.fromFile(outFile);
+
+                    mainThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = TangoConfirmPictureActivity.newIntent(view, uri);
+                            view.startActivity(intent);
+                            view.overridePendingTransition(R.anim.fade_in_medium, 0);
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     private void refreshIsReady() {

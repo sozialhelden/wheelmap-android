@@ -26,48 +26,67 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp">
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    tools:text="@string/tango_tutorial.ramp.title"/>
+                    android:text="@string/tango_additional_information.title"/>
 
                 <TextView
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="@string/tango_tutorial.ramp.text"/>
+                    android:text="@string/tango_additional_information.text"/>
 
-                <View
-                    android:layout_width="0dp"
+                <EditText
+                    android:id="@+id/commentEditText"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:src="@drawable/img_tango_ramp"
-                    android:layout_gravity="center"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <Button
-                    android:id="@+id/startBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:backgroundTint="@color/green_btn"
-                    android:minWidth="200dp"
-                    android:textColor="#FFF"
-                    android:text="@string/start"/>
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/tango_additional_information.comment.hint"
+                    android:gravity="top"
+                    android:background="@drawable/border_rounded_corner_light"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/saveBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:backgroundTint="@color/green_btn"
+                        android:minWidth="200dp"
+                        android:text="@string/tango_additional_information.save"
+                        android:textColor="#FFF"/>
+
+                    <Button
+                        android:id="@+id/skipBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:minWidth="200dp"
+                        android:textAllCaps="false"
+                        android:text="@string/tango_additional_information.skip"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

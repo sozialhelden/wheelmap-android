@@ -1,6 +1,7 @@
 package org.wheelmap.android.tango.renderer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,11 +23,19 @@ import java.util.Vector;
 import javax.microedition.khronos.opengles.GL10;
 
 public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
+
     private static final String TAG = "TangoRajawaliRenderer";
+
+    public interface ScreenshotCaptureListener {
+        void onScreenshotCaptured(Bitmap bitmap);
+    }
 
     // Augmented Reality related fields
     private ATexture mTangoCameraTexture;
     private boolean mSceneCameraConfigured;
+
+
+    private WheelmapTangoRajawaliRenderer.ScreenshotCaptureListener screenshotCaptureListener = null;
 
     TangoRajawaliRenderer(Context context) {
         super(context);
@@ -118,6 +127,20 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
     @Override
     public void onTouchEvent(MotionEvent event) {
 
+    }
+
+    @Override
+    public void onRenderFrame(GL10 gl) {
+        super.onRenderFrame(gl);
+        if (screenshotCaptureListener != null) {
+            Bitmap bitmap = ScreenshotHelper.getBitmap(0, 0, getDefaultViewportWidth(), getDefaultViewportHeight(), gl);
+            screenshotCaptureListener.onScreenshotCaptured(bitmap);
+            screenshotCaptureListener = null;
+        }
+    }
+
+    public void captureScreenshot(ScreenshotCaptureListener listener) {
+        this.screenshotCaptureListener = listener;
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
@@ -38,6 +39,7 @@ import org.wheelmap.android.model.Prefs;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
 import org.wheelmap.android.tango.mode.Mode;
+import org.wheelmap.android.tango.renderer.TangoRajawaliRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapTangoRajawaliRenderer;
 
@@ -441,6 +443,19 @@ public class TangoMeasureActivity extends BaseActivity {
         }
     }
 
+    void captureScreenshot(final TangoRajawaliRenderer.ScreenshotCaptureListener listener) {
+        renderer.captureScreenshot(new TangoRajawaliRenderer.ScreenshotCaptureListener() {
+            @Override
+            public void onScreenshotCaptured(final Bitmap bitmap) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onScreenshotCaptured(bitmap);
+                    }
+                }).start();
+            }
+        });
+    }
 
     enum FabStatus {
         READY,

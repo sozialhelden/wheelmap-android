@@ -200,5 +200,13 @@
   <string name="tango_tutorial.ramp.text">Um die Neigung einer Rampe zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt einer Rampe, diese markieren Sie, indem Sie die Punkte nacheinander anvisiren…</string>
   <string name="tango_tutorial.wc.title">Bewegungsfläche einer Toilette ermitteln</string>
   <string name="tango_tutorial.wc.text">Um die Bewegungsfläche einer Toilette zu bestimmen, benötigen Sie vier Punkte. Diese markieren Sie, indem Sie alle vier Punkte nacheinander anvisieren…</string>
+  <string name="tango_confirm_picture.title">Aufnahme bestätigen</string>
+  <string name="tango_confirm_picture.confirm">verwenden</string>
+  <string name="tango_confirm_picture.cancel">wiederholen</string>
+  <string name="tango_additional_information.comment.hint">Kommentar</string>
+  <string name="tango_additional_information.text">Hinterlassen Sie einen Kommentar zu diesem Foto</string>
+  <string name="tango_additional_information.title">Kommentar hinzufügen</string>
+  <string name="tango_additional_information.skip">Überspringen</string>
+  <string name="tango_additional_information.save">Speichern</string>
 
 </resources>

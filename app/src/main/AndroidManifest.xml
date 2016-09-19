@@ -73,6 +73,14 @@ limitations under the License.
             android:theme="@style/Theme.Wheelmap.Translucent"/>
 
         <activity
+            android:name="org.wheelmap.android.tango.TangoConfirmPictureActivity"
+            android:theme="@style/Theme.Wheelmap.Translucent"/>
+
+        <activity
+            android:name="org.wheelmap.android.tango.TangoAdditionalInformationActivity"
+            android:theme="@style/Theme.Wheelmap.Translucent"/>
+
+        <activity
             android:name="org.wheelmap.android.activity.IntroductionActivity"
             android:label=""
             android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">

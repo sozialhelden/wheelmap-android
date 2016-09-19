@@ -23,6 +23,9 @@ package org.wheelmap.android.utils;
 
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.TintableBackgroundView;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
@@ -31,8 +34,15 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
+import org.wheelmap.android.online.R;
+
 public class ViewTool {
 
+
+    public static void setBackgroundTint(View v, @ColorInt int color) {
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{color});
+        setBackgroundTintList(v, csl);
+    }
 
     /**
      * workaround to solve bug from lollipop
