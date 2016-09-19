@@ -101,7 +101,7 @@ public enum Mode {
             case STAIR:
                 return new MeasureDistanceModeRenderer();
             case RAMP:
-                return new MeasureDistanceModeRenderer();
+                return new MeasureSlopeAngleModeRenderer();
             case TOILET:
                 return new MeasureDistanceModeRenderer();
             default:

@@ -2,8 +2,6 @@ package org.wheelmap.android.tango.mode;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.materials.textures.ATexture;
-import org.rajawali3d.math.Matrix4;
-import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Line3D;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
@@ -15,7 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
-public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
+public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
 
     private List<Object3D> pointObjects = new ArrayList<>();
 
@@ -29,7 +27,6 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
         addOperation(new CreateObjectsOperation() {
             @Override
             public void execute(Manipulator m) {
-
                 if (isReady()) {
                     return;
                 }
@@ -49,7 +46,6 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
                     line.setMaterial(getObjectFactory().getTextureCache().get(TextureCache.MaterialType.LINE));
                     m.addObject(line);
                     try {
-
                         //calculate normal vector
                         Vector3 n = linePoints.get(0).clone()
                                 .subtract(linePoints.get(1))
@@ -65,7 +61,7 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
                                 .add(linePoints.get(1)).multiply(0.5)
                                 .add(n);
 
-                        String text = String.format(Locale.getDefault(), "%.2fm", getLastDistance());
+                        String text = String.format(Locale.getDefault(), "%.1f\u00B0", getAngle());
                         Object3D distanceText = getObjectFactory().createTextObject(text);
                         distanceText.setPosition(textPosition);
                         m.addTextObject(distanceText);
@@ -80,6 +76,7 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
                 super.undo(manipulator);
                 pointObjects.removeAll(getCreatedObjects());
             }
+
         });
     }
 
@@ -88,21 +85,27 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
         return pointObjects.size() >= 2;
     }
 
-    public double getLastDistance() {
-        if (pointObjects.size() < 2) {
-            return 0;
-        }
-        int lastItemPosition = pointObjects.size() - 1;
-        Object3D lastItem = pointObjects.get(lastItemPosition);
-        int secondLastItemPosition = pointObjects.size() - 2;
-        Object3D secondLastItem = pointObjects.get(secondLastItemPosition);
-        return lastItem.getPosition().distanceTo(secondLastItem.getPosition());
-    }
-
     @Override
     public void clear() {
         super.clear();
         pointObjects.clear();
     }
 
+    public double getAngle() {
+        if (pointObjects.size() < 2) {
+            return 0;
+        }
+
+        Vector3 one = pointObjects.get(0).getPosition();
+        Vector3 two = pointObjects.get(1).getPosition();
+
+        Vector3 u = one.clone().subtract(two);
+
+        // normal to z surface
+        Vector3 n = new Vector3(0, 1, 0);
+
+        double top = n.clone().multiply(u).normalize();
+        double bottom = n.clone().normalize() * u.clone().normalize();
+        return Math.toDegrees(Math.asin(top/bottom));
+    }
 }
