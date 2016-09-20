@@ -1,10 +1,10 @@
 package org.wheelmap.android.fragment.profile;
 
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,6 +41,7 @@ public class LogoutFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 mCredentials.logout();
+                AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.OSMLOGOUTSCREEN);
                 getActivity().setResult(Activity.RESULT_CANCELED);
                 getActivity().finish();
             }

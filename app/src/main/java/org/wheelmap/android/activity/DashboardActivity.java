@@ -1,6 +1,7 @@
 package org.wheelmap.android.activity;
 
 import org.wheelmap.android.activity.profile.ProfileActivity;
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;
@@ -11,7 +12,6 @@ import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.Constants;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentResolver;
@@ -28,7 +28,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import hotchemi.android.rate.AppRate;
 
 /**
@@ -206,6 +205,7 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         WheelmapApp.checkForCrashes(this);
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.HOMESCREEN);
     }
 
     private int getPoiCount(){

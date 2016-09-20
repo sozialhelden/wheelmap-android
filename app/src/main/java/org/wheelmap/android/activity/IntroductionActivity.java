@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.fragment.introduction.IntroductionFragment;
 import org.wheelmap.android.online.R;
 
@@ -67,6 +67,8 @@ public class IntroductionActivity extends AppCompatActivity{
 
         initIndicatorIcons(introductionDataList.size());
         selectPageIndicator(0);
+
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.OSMONBORDINGSCREEN);
     }
 
     private List getIntroductionData(){

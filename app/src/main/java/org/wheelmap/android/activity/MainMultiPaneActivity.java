@@ -25,10 +25,10 @@ package org.wheelmap.android.activity;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ObjectAnimator;
-
 import org.mapsforge.android.maps.GeoPoint;
 import org.wheelmap.android.activity.listeners.Progress;
 import org.wheelmap.android.activity.profile.ProfileActivity;
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
@@ -41,7 +41,6 @@ import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
 import org.wheelmap.android.fragment.WheelchairAccessibilityStateFragment;
 import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
-import org.wheelmap.android.fragment.WorkerFragment;
 import org.wheelmap.android.fragment.WorkerFragmentListener;
 import org.wheelmap.android.manager.MyLocationManager;
 import org.wheelmap.android.model.Extra;
@@ -60,7 +59,6 @@ import org.wheelmap.android.service.RestServiceHelper;
 import org.wheelmap.android.utils.MapActivityUtils;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.SmoothInterpolator;
-
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -88,11 +86,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.LayoutParams;
-import android.widget.ProgressBar;
-
 import de.akquinet.android.androlog.Log;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -282,6 +277,10 @@ public class MainMultiPaneActivity extends MapActivity implements
 
     private void executeDefaultInstanceState() {
         setMovableGone();
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.MAPSCREEN);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.NEARBYSCREEN);
+        }
     }
 
     @Override
@@ -733,6 +732,7 @@ public class MainMultiPaneActivity extends MapActivity implements
                 startValue = -mMovableLayout.getWidth();
             } else {
                 startValue = -mMovableLayout.getHeight();
+                AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.NEARBYSCREEN);
             }
             endValue = 0.0f;
             mMovableVisible = true;

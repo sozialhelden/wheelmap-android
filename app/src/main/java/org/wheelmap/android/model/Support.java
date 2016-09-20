@@ -22,15 +22,11 @@
 package org.wheelmap.android.model;
 
 import org.wheelmap.android.online.BuildConfig;
-import org.wheelmap.android.online.R;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +39,7 @@ public class Support {
     private Support() {
     }
 
-    public static void init(Context context) {
+    public static void init() {
         AUTHORITY = BuildConfig.APPLICATION_ID + ".support";
 
         LastUpdateContent.CONTENT_URI = Uri.parse("content://"

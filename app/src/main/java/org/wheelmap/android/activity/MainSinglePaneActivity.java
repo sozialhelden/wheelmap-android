@@ -23,12 +23,12 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.activity.MyTabListener.OnStateListener;
 import org.wheelmap.android.activity.listeners.Progress;
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.fragment.CombinedWorkerFragment;
 import org.wheelmap.android.fragment.DisplayFragmentListener;
 import org.wheelmap.android.fragment.ErrorDialogFragment;
 import org.wheelmap.android.fragment.POIsListFragment;
-import org.wheelmap.android.fragment.POIsMapWorkerFragment;
 import org.wheelmap.android.fragment.POIsOsmdroidFragment;
 import org.wheelmap.android.fragment.SearchDialogCombinedFragment;
 import org.wheelmap.android.fragment.SearchDialogFragment;
@@ -43,9 +43,8 @@ import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.popup.FilterWindow;
 import org.wheelmap.android.service.RestServiceException;
-import org.wheelmap.android.tracker.TrackerWrapper;
+import org.wheelmap.android.utils.Constants;
 import org.wheelmap.android.utils.MapActivityUtils;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -85,11 +84,7 @@ public class MainSinglePaneActivity extends MapActivity implements
     //@Inject
     IAppProperties appProperties;
 
-    private final static int DEFAULT_SELECTED_TAB = 0;
-
-    private int mSelectedTab = DEFAULT_SELECTED_TAB;
-
-    private TrackerWrapper mTrackerWrapper;
+    private int mSelectedTab = Constants.TabContent.LOCATION_BASED_LIST;
 
     public boolean mFirstStart;
 
@@ -130,8 +125,6 @@ public class MainSinglePaneActivity extends MapActivity implements
         flipper.setDisplayedChild(0);
 
         FragmentManager.enableDebugLogging(true);
-
-        mTrackerWrapper = new TrackerWrapper(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
@@ -211,20 +204,29 @@ public class MainSinglePaneActivity extends MapActivity implements
     }
 
     private void executeState(Bundle state) {
-        mSelectedTab = state.getInt(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
+        mSelectedTab = state.getInt(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         mFirstStart = false;
 
         flipper.setDisplayedChild(mSelectedTab);
-
+        trackTabScreen();
     }
 
     private void executeDefaultInstanceState() {
-        mSelectedTab = getIntent().getIntExtra(Extra.SELECTED_TAB, DEFAULT_SELECTED_TAB);
+        mSelectedTab = getIntent().getIntExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         mFirstStart = true;
         ActionBar actionBar = getSupportActionBar();
         Log.d(TAG, "executeDefaultInstanceState: selectedNavigationIndex = " + actionBar.getSelectedNavigationIndex());
 
         flipper.setDisplayedChild(mSelectedTab);
+        trackTabScreen();
+    }
+
+    private void trackTabScreen() {
+        if(mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST) {
+            AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.NEARBYSCREEN);
+        } else if(mSelectedTab == Constants.TabContent.MAP) {
+            AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.MAPSCREEN);
+        }
     }
 
     public void onStateChange(String tag) {
@@ -234,7 +236,7 @@ public class MainSinglePaneActivity extends MapActivity implements
 
         Log.d(TAG, "onStateChange " + tag);
         String readableName = tag.replaceAll("Fragment", "");
-        mTrackerWrapper.track(readableName);
+//        mTrackerWrapper.track(readableName);
     }
 
     @Override
@@ -275,8 +277,9 @@ public class MainSinglePaneActivity extends MapActivity implements
         int title_res;
         if(mapModeType == MapModeType.MAP_MODE_ENGAGE) {
             title_res = R.string.title_engage;
+            AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.CONTRIBUTESCREEN);
         } else {
-            title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
+            title_res = mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
         }
         title.setText(title_res);
 
@@ -336,20 +339,22 @@ public class MainSinglePaneActivity extends MapActivity implements
     }
 
     private void initMapSwitchListOptionsItem(final ImageView listMapToggle, final TextView title){
-        int switch_res = mSelectedTab == 0 ? R.drawable.ic_map : R.drawable.ic_list;
+        int switch_res = mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST ? R.drawable.ic_map : R.drawable.ic_list;
         listMapToggle.setImageResource(switch_res);
         listMapToggle.setAdjustViewBounds(true);
         OnClickListener l = new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSelectedTab = mSelectedTab == 0 ? 1: 0;
+                mSelectedTab = mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST ? Constants.TabContent.MAP : Constants.TabContent.LOCATION_BASED_LIST;
 
-                int switch_res = mSelectedTab == 0 ? R.drawable.ic_map : R.drawable.ic_list;
-                int title_res = mSelectedTab == 0 ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
+                int switch_res = mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST ? R.drawable.ic_map : R.drawable.ic_list;
+                int title_res = mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST ? R.string.dashboard_button_title_nearby : R.string.dashboard_button_title_map;
                 listMapToggle.setImageResource(switch_res);
                 flipper.showNext();
 
                 title.setText(title_res);
+
+                AnalyticsTrackingManager.trackScreen(mSelectedTab == Constants.TabContent.LOCATION_BASED_LIST ? AnalyticsTrackingManager.TrackableScreensName.NEARBYSCREEN : AnalyticsTrackingManager.TrackableScreensName.MAPSCREEN);
             }
         };
         listMapToggle.setOnClickListener(l);
