@@ -45,7 +45,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.events.MapListener;
@@ -70,17 +69,13 @@ import org.wheelmap.android.osmdroid.MarkItemOverlay;
 import org.wheelmap.android.osmdroid.MyLocationNewOverlayFixed;
 import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
-import org.wheelmap.android.overlays.MyLocationOverlay;
 import org.wheelmap.android.utils.MyLocationProvider;
 import org.wheelmap.android.utils.ParceableBoundingBox;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
-
 import java.util.Locale;
-
 import de.akquinet.android.androlog.Log;
 import de.greenrobot.event.EventBus;
-
 import static org.wheelmap.android.utils.PressSelector.setAlphaForView;
 
 public class POIsOsmdroidFragment extends Fragment implements
@@ -288,6 +283,10 @@ public class POIsOsmdroidFragment extends Fragment implements
 
             @Override
             public void onClick(View v) {
+                if (mMapView.getZoomLevel(true) <= ZOOMLEVEL_MAX) {
+                    setZoomIntern(MAP_ZOOM_DEFAULT);
+                    txtOutOfZoom.setVisibility(View.GONE);
+                }
                 centerMap(mCurrentLocationGeoPoint, true);
                 requestUpdate();
             }
@@ -861,5 +860,4 @@ public class POIsOsmdroidFragment extends Fragment implements
             centerMap(point, true);
         }
     }
-
 }

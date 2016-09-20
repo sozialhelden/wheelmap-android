@@ -21,10 +21,10 @@
  */
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.fragment.InfoFragment.OnInfoListener;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.utils.UtilsMisc;
-
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -82,6 +82,8 @@ public class InfoActivity extends AppCompatActivity implements OnInfoListener {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.INFOSCREEN);
     }
 
     @Override

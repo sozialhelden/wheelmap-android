@@ -16,4 +16,18 @@ public class Constants {
         public static final int MAP = 1;
         public static final int CATEGORY_LIST = 2;
     }
+
+    public  static class Tracking {
+        public  static class Screens {
+            public static final String SPLASHSCREEN = "SplashScreen";
+            public static final String HOMESCREEN = "HomeScreen";
+            public static final String NEARBYSCREEN = "NearbyScreen";
+            public static final String MAPSCREEN = "MapScreen";
+            public static final String CATEGORYSCREEN = "CategoriesScreen";
+            public static final String CONTRIBUTESCREEN = "ContributeScreen";
+            public static final String OSMONBORDINGSCREEN = "OSMOnboardingScreen";
+            public static final String OSMLOGOUTSCREEN = "OSMLogoutScreen";
+            public static final String INFOSCREEN = "InfoScreen";
+        }
+    }
 }
