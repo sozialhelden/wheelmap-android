@@ -296,7 +296,6 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
                     processException(
                             RestServiceException.ERROR_CLIENT_FAILURE, e, true);
                 }
-
             } catch (HttpServerErrorException e) {
                 HttpStatus status = e.getStatusCode();
                 if (status.value() == statusDownMaintenance) {
