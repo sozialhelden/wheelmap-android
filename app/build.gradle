@@ -41,7 +41,7 @@ android {
             debuggable true
             applicationIdSuffix ".debug"
             buildConfigField "String", "HOCKEY_APP_ID", "null"
-            buildConfigField "String", "API_BASE_URL", "\"staging.wheelmap.org\""
+            buildConfigField "String", "API_BASE_URL", "\"https://staging.wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_STAGING_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
             buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"\""
@@ -67,7 +67,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "HOCKEY_APP_ID", "\"1ede13fa382830c25625ec55f416ad06\""
-            buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
+            buildConfigField "String", "API_BASE_URL", "\"https://wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
             buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_RELEASE
@@ -77,7 +77,7 @@ android {
             initWith(buildTypes.debug)
             debuggable true
             applicationIdSuffix ".releaseTest"
-            buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
+            buildConfigField "String", "API_BASE_URL", "\"https://wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
             buildConfigField "String", "HOCKEY_APP_ID", "\"ad5bad6dac5749cc9fc1aea17c71552d\""

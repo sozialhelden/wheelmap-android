@@ -25,7 +25,7 @@ import android.widget.Toast;
 import java.io.File;
 
 
-public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
+public class UploadPhotoTask extends AsyncTask<File, Void, Boolean> {
 
     private static final String TAG = UploadPhotoTask.class.getSimpleName();
 
@@ -35,7 +35,7 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
     Fragment mFragment;
     Cursor mCursor;
 
-    public UploadPhotoTask(Cursor cursor,Fragment fragment,Application context,ProgressDialog d, long wmID){
+    public UploadPhotoTask(Cursor cursor, Fragment fragment, Application context, ProgressDialog d, long wmID) {
         mContext = context;
         this.wmID = wmID;
         progress = d;
@@ -47,17 +47,17 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if(progress != null && !progress.isShowing()){
+        if (progress != null && !progress.isShowing()) {
             progress.show();
         }
     }
 
     @Override
     protected Boolean doInBackground(File... params) {
-        String server  = BuildConfig.API_BASE_URL;
+        String server = BuildConfig.API_BASE_URL;
         ICredentials credentials = new UserCredentials(mContext);
-        String url = "http://"+server+"/api/nodes/"+wmID+"/photos?api_key="+credentials.getApiKey();
-        Log.d(TAG,url);
+        String url = server + "/api/nodes/" + wmID + "/photos?api_key=" + credentials.getApiKey();
+        Log.d(TAG, url);
 
         File image = params[0];
 
@@ -70,11 +70,11 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
             httppost.setEntity(entity);
             HttpResponse response = httpclient.execute(httppost);
             String result = EntityUtils.toString(response.getEntity());
-            Log.d(TAG,result+"");
+            Log.d(TAG, result + "");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,e.getLocalizedMessage());
+            Log.d(TAG, e.getLocalizedMessage());
             return false;
         }
 
@@ -84,15 +84,15 @@ public class UploadPhotoTask extends AsyncTask<File,Void,Boolean>{
     protected void onPostExecute(Boolean b) {
         super.onPostExecute(b);
 
-        if(progress != null){
+        if (progress != null) {
             progress.dismiss();
         }
 
-        if(!b){
+        if (!b) {
             Toast.makeText(mContext, R.string.photo_upload_failed, Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(mContext, R.string.photo_upload_successfully,Toast.LENGTH_LONG).show();
-            if(mFragment != null && mFragment.isAdded() && mCursor != null && mCursor.getCount() > 0) {
+        } else {
+            Toast.makeText(mContext, R.string.photo_upload_successfully, Toast.LENGTH_LONG).show();
+            if (mFragment != null && mFragment.isAdded() && mCursor != null && mCursor.getCount() > 0) {
                 ((POIDetailFragment) mFragment).reloadData();
             }
         }
