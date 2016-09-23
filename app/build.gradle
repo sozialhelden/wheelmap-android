@@ -60,7 +60,7 @@ android {
             signingConfig android.signingConfigs.debug
             applicationIdSuffix ".staging"
             buildConfigField "String", "HOCKEY_APP_ID", "\"53b3b9ffa1473a9536e860791cfaa0b3\""
-            buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"\""
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_DEVELOPMENT
         }
 
         release {
@@ -70,7 +70,7 @@ android {
             buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
-            buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"UA-84358890-1\""
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_RELEASE
         }
 
         releaseTest {
@@ -81,7 +81,7 @@ android {
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
             buildConfigField "String", "HOCKEY_APP_ID", "\"ad5bad6dac5749cc9fc1aea17c71552d\""
-            buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"UA-84358890-1\""
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_RELEASE
         }
     }
 }
