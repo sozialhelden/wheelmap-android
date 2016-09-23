@@ -33,8 +33,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.WindowManager;
+<<<<<<< HEAD
 
 import org.wheelmap.android.activity.base.BaseActivity;
+=======
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
+>>>>>>> 1d57954aef8d4309f867c6ce784e3fa52dedb76f
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;
@@ -90,7 +94,6 @@ public class StartupActivity extends BaseActivity implements
         checkForHockeyUpdates();
 
         Log.d(TAG, "Server: " + BuildConfig.API_BASE_URL);
-
     }
 
     @Override
@@ -104,6 +107,7 @@ public class StartupActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         mIsInForeground = true;
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.SPLASHSCREEN);
     }
 
     @Override

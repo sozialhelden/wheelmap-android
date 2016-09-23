@@ -2,6 +2,7 @@ package org.wheelmap.android.activity;
 
 import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.activity.profile.ProfileActivity;
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Request;
@@ -9,9 +10,9 @@ import org.wheelmap.android.model.Support;
 import org.wheelmap.android.model.Wheelmap;
 import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.utils.Constants;
 import org.wheelmap.android.utils.PressSelector;
 import org.wheelmap.android.utils.UtilsMisc;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.ContentResolver;
@@ -28,7 +29,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import hotchemi.android.rate.AppRate;
 
 /**
@@ -206,6 +206,7 @@ public class DashboardActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         WheelmapApp.checkForCrashes(this);
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.HOMESCREEN);
     }
 
     private int getPoiCount(){
@@ -232,7 +233,7 @@ public class DashboardActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         intent.putExtra(SearchManager.QUERY,search.getText().toString());
         startActivity(intent);
     }
@@ -247,7 +248,7 @@ public class DashboardActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         startActivity(intent);
         resetKategorieFilter();
     }
@@ -262,7 +263,7 @@ public class DashboardActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,1);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.MAP);
         startActivity(intent);
         resetKategorieFilter();
     }
@@ -282,14 +283,14 @@ public class DashboardActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
         }
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         intent.putExtra(Extra.MAP_MODE_ENGAGE, true);
         startActivity(intent);
     }
 
     public void openKategorien(){
         Intent intent = new Intent(this,ChooseCategoryActivity.class);
-        intent.putExtra(Extra.SELECTED_TAB,2);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.CATEGORY_LIST);
         startActivity(intent);
     }
 

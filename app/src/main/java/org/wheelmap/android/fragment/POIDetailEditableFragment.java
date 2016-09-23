@@ -786,7 +786,7 @@ public class POIDetailEditableFragment extends Fragment implements
     }
 
     private void showNewPoiOrQuit() {
-        if (TextUtils.isEmpty(wmID)) {
+        if (TextUtils.isEmpty(wmID) && isAdded()) {
             showErrorMessage(getString(R.string.error_newpoi_title),
                     getString(R.string.error_newpoi_message), DIALOG_ID_NEWPOI);
         } else {

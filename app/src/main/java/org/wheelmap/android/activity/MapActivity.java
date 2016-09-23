@@ -33,6 +33,7 @@ import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.BundlePreferences;
 import org.wheelmap.android.modules.IBundlePreferences;
 import org.wheelmap.android.overlays.ConfigureMapView;
+import org.wheelmap.android.utils.Constants;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +58,9 @@ public class MapActivity extends BaseActivity implements MapContext {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bprefs = new BundlePreferences(this);
+        bprefs = (getIntent().hasExtra(Extra.SELECTED_TAB)
+                && getIntent().getIntExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST) != Constants.TabContent.LOCATION_BASED_LIST)
+                ? new BundlePreferences(this) : null;
     }
 
     /**
@@ -178,7 +181,7 @@ public class MapActivity extends BaseActivity implements MapContext {
         int id = getId(mapView);
         Log.d(TAG, "loadPreferences: mapView " + mapView + " id = " + id);
         String mapId = String.valueOf(id) + "_map";
-        if (bprefs.contains(mapId)) {
+        if (bprefs != null && bprefs.contains(mapId)) {
             Bundle b = bprefs.retrieve(mapId);
 
             String fileName = b.getString("mapFile");
@@ -231,14 +234,16 @@ public class MapActivity extends BaseActivity implements MapContext {
             storeMapsforgeFile((MFMapView) mapView, b);
         }
 
-        IGeoPoint mapCenter = mapView.getMapCenter();
-        b.putInt(Extra.LATITUDE, mapCenter.getLatitudeE6());
-        b.putInt(Extra.LONGITUDE, mapCenter.getLongitudeE6());
-        b.putInt(Extra.ZOOM_LEVEL, mapView.getZoomLevel());
+        if(bprefs != null) {
+            IGeoPoint mapCenter = mapView.getMapCenter();
+            b.putInt(Extra.LATITUDE, mapCenter.getLatitudeE6());
+            b.putInt(Extra.LONGITUDE, mapCenter.getLongitudeE6());
+            b.putInt(Extra.ZOOM_LEVEL, mapView.getZoomLevel());
 
-        int id = getId( mapView );
-        String mapId = String.valueOf(id) + "_map";
-        bprefs.store(mapId, b);
+            int id = getId(mapView);
+            String mapId = String.valueOf(id) + "_map";
+            bprefs.store(mapId, b);
+        }
     }
 
     /**

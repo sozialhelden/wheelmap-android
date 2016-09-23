@@ -1,10 +1,14 @@
 package org.wheelmap.android.activity;
 
+<<<<<<< HEAD
 import org.wheelmap.android.activity.base.BaseActivity;
+=======
+import org.wheelmap.android.analytics.AnalyticsTrackingManager;
+>>>>>>> 1d57954aef8d4309f867c6ce784e3fa52dedb76f
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.model.Support;
 import org.wheelmap.android.online.R;
-
+import org.wheelmap.android.utils.Constants;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -52,6 +56,12 @@ public class ChooseCategoryActivity extends BaseActivity implements
         getSupportLoaderManager().initLoader(0,null,this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.CATEGORYSCREEN);
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,7 +89,7 @@ public class ChooseCategoryActivity extends BaseActivity implements
         Intent intent = new Intent(getApplicationContext(),
                     MainSinglePaneActivity.class);
 
-        intent.putExtra(Extra.SELECTED_TAB,0);
+        intent.putExtra(Extra.SELECTED_TAB, Constants.TabContent.LOCATION_BASED_LIST);
         intent.putExtra(Extra.QUERY_CHANGED,true);
         startActivity(intent);
     }

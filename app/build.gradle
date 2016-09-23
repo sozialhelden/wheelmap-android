@@ -54,6 +54,7 @@ android {
             buildConfigField "String", "API_BASE_URL", "\"staging.wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_STAGING_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"\""
         }
 
         alpha {
@@ -61,6 +62,7 @@ android {
             signingConfig android.signingConfigs.debug
             applicationIdSuffix ".stagingdev"
             buildConfigField "String", "HOCKEY_APP_ID", "\"d076b4be1cf6f7d5130c4d766b6c7753\""
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"\""
         }
 
         beta {
@@ -68,6 +70,7 @@ android {
             signingConfig android.signingConfigs.debug
             applicationIdSuffix ".staging"
             buildConfigField "String", "HOCKEY_APP_ID", "\"53b3b9ffa1473a9536e860791cfaa0b3\""
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_DEVELOPMENT
         }
 
         release {
@@ -77,6 +80,7 @@ android {
             buildConfigField "String", "API_BASE_URL", "\"wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_RELEASE
         }
 
         releaseTest {
@@ -87,6 +91,7 @@ android {
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
             buildConfigField "String", "HOCKEY_APP_ID", "\"ad5bad6dac5749cc9fc1aea17c71552d\""
+            buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_RELEASE
         }
     }
 }
@@ -162,6 +167,8 @@ dependencies {
     apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.3-rc1'
     apt 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
     provided 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
+
+    compile 'com.google.android.gms:play-services-analytics:7.8.0'
 
     // Testing-only dependencies
 
