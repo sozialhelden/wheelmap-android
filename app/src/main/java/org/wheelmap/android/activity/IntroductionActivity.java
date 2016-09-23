@@ -17,12 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-<<<<<<< HEAD
 
 import org.wheelmap.android.activity.base.BaseActivity;
-=======
 import org.wheelmap.android.analytics.AnalyticsTrackingManager;
->>>>>>> 1d57954aef8d4309f867c6ce784e3fa52dedb76f
 import org.wheelmap.android.fragment.introduction.IntroductionFragment;
 import org.wheelmap.android.online.R;
 

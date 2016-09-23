@@ -21,7 +21,6 @@
  */
 package org.wheelmap.android.activity;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
@@ -33,12 +32,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.WindowManager;
-<<<<<<< HEAD
 
 import org.wheelmap.android.activity.base.BaseActivity;
-=======
 import org.wheelmap.android.analytics.AnalyticsTrackingManager;
->>>>>>> 1d57954aef8d4309f867c6ce784e3fa52dedb76f
 import org.wheelmap.android.app.AppCapability;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.manager.SupportManager;

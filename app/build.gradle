@@ -28,6 +28,7 @@ android {
         targetSdkVersion 22
         versionName "3.0.2"
 
+        multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -113,6 +114,9 @@ repositories {
 }
 
 dependencies {
+
+    compile 'com.android.support:multidex:1.0.1'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     def android_support_version = "24.2.0"
