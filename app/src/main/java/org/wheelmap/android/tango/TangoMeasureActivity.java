@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
