@@ -10,8 +10,15 @@ import org.rajawali3d.Object3D;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.Texture;
+import org.rajawali3d.math.vector.Vector3;
+import org.rajawali3d.primitives.Line3D;
 import org.rajawali3d.primitives.RectangularPrism;
 import org.rajawali3d.primitives.Sphere;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Stack;
 
 public class WheelmapRajawaliObjectFactory {
 
@@ -61,8 +68,46 @@ public class WheelmapRajawaliObjectFactory {
         return textObject;
     }
 
+    public void measureLineBetween(WheelmapModeRenderer.Manipulator m, Vector3 first, Vector3 second, String text) {
+        measureLineBetween(m, first, second, text, Vector3.Z);
+    }
+
+    public void measureLineBetween(WheelmapModeRenderer.Manipulator m, Vector3 first, Vector3 second, String text, Vector3 axis) {
+        Stack<Vector3> linePoints = new Stack<>();
+        linePoints.add(first);
+        linePoints.add(second);
+
+        Line3D line = new Line3D(linePoints, 50);
+        line.setMaterial(getTextureCache().get(TextureCache.MaterialType.LINE));
+        m.addObject(line);
+        try {
+
+            //calculate normal vector
+            Vector3 n = linePoints.get(0).clone()
+                    .subtract(linePoints.get(1))
+                    .cross(axis)
+                    .absoluteValue();
+
+            // place text 10cm above the line
+
+            n.normalize();
+            n.multiply(0.1);
+
+            Vector3 textPosition = linePoints.get(0).clone()
+                    .add(linePoints.get(1)).multiply(0.5)
+                    .add(n);
+
+            Object3D distanceText = createTextObject(text);
+            distanceText.setPosition(textPosition);
+            m.addTextObject(distanceText);
+        } catch (ATexture.TextureException e) {
+            e.printStackTrace();
+        }
+    }
 
     public TextureCache getTextureCache() {
         return textureCache;
     }
+
+
 }

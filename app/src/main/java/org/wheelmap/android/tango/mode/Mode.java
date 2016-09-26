@@ -103,7 +103,7 @@ public enum Mode {
             case RAMP:
                 return new MeasureSlopeAngleModeRenderer();
             case TOILET:
-                return new MeasureDistanceModeRenderer();
+                return new MeasureAreaModeRenderer();
             default:
                 throw new IllegalStateException("unimplemented renderer");
         }

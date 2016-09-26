@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
+public class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
     private List<Object3D> pointObjects = new ArrayList<>();
 
@@ -23,6 +23,7 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
         addOperation(new CreateObjectsOperation() {
             @Override
             public void execute(Manipulator m) {
+
                 if (isReady()) {
                     return;
                 }
@@ -35,10 +36,21 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
 
                 int size = pointObjects.size();
                 if (size > 1) {
-                    String text = String.format(Locale.getDefault(), "%.1f\u00B0", getAngle());
+
+                    String text = String.format(Locale.getDefault(), "%.2fm", getLastDistance());
                     getObjectFactory().measureLineBetween(m, pointObjects.get(size - 1).getPosition(), pointObjects.get(size - 2).getPosition(), text);
+
                 }
 
+                if (size == 4) {
+
+                    Vector3 first = pointObjects.get(0).getPosition();
+                    Vector3 last = pointObjects.get(size - 1).getPosition();
+
+                    String text = String.format(Locale.getDefault(), "%.2fm", first.distanceTo(last));
+                    getObjectFactory().measureLineBetween(m, first, last, text);
+
+                }
             }
 
             @Override
@@ -46,13 +58,23 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
                 super.undo(manipulator);
                 pointObjects.removeAll(getCreatedObjects());
             }
-
         });
     }
 
     @Override
     public boolean isReady() {
-        return pointObjects.size() >= 2;
+        return pointObjects.size() >= 4;
+    }
+
+    public double getLastDistance() {
+        if (pointObjects.size() < 2) {
+            return 0;
+        }
+        int lastItemPosition = pointObjects.size() - 1;
+        Object3D lastItem = pointObjects.get(lastItemPosition);
+        int secondLastItemPosition = pointObjects.size() - 2;
+        Object3D secondLastItem = pointObjects.get(secondLastItemPosition);
+        return lastItem.getPosition().distanceTo(secondLastItem.getPosition());
     }
 
     @Override
@@ -61,21 +83,4 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
         pointObjects.clear();
     }
 
-    public double getAngle() {
-        if (pointObjects.size() < 2) {
-            return 0;
-        }
-
-        Vector3 one = pointObjects.get(0).getPosition();
-        Vector3 two = pointObjects.get(1).getPosition();
-
-        Vector3 u = one.clone().subtract(two);
-
-        // normal to z surface
-        Vector3 n = new Vector3(0, 1, 0);
-
-        double top = n.clone().multiply(u).normalize();
-        double bottom = n.clone().normalize() * u.clone().normalize();
-        return Math.toDegrees(Math.asin(top/bottom));
-    }
 }

@@ -15,5 +15,4 @@ class Object3dUtils {
         object.setPosition(transform.getTranslation());
         object.setOrientation(new Quaternion().fromMatrix(transform).conjugate());
     }
-
 }
