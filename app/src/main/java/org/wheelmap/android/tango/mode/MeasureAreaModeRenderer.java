@@ -1,13 +1,22 @@
 package org.wheelmap.android.tango.mode;
 
+import android.graphics.Color;
+import android.opengl.GLES20;
+
 import org.rajawali3d.Object3D;
+import org.rajawali3d.loader.awd.BlockSimpleMaterial;
+import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
+import org.wheelmap.android.tango.renderer.TextureCache;
+import org.wheelmap.android.tango.renderer.objects.Polygon;
+import org.wheelmap.android.tango.renderer.objects.Triangle;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 public class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
@@ -50,6 +59,17 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                     String text = String.format(Locale.getDefault(), "%.2fm", first.distanceTo(last));
                     getObjectFactory().measureLineBetween(m, first, last, text);
 
+                    Stack<Vector3> areaPoints = new Stack<>();
+                    for (int i = 0, pointObjectsSize = pointObjects.size(); i < pointObjectsSize; i++) {
+                        Object3D pointObject = pointObjects.get(i);
+                        areaPoints.add(pointObject.getPosition());
+                    }
+                    Polygon area = new Polygon(areaPoints, Color.argb(128, 128, 0, 0));
+                    area.setMaterial(new Material());
+                    area.setColor(Color.argb(128, 128, 0, 0));
+                    area.setTransparent(true);
+                    area.setAlpha(0.5f);
+                    m.addObject(area);
                 }
             }
 

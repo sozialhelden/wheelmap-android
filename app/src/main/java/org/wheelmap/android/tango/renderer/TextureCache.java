@@ -12,7 +12,8 @@ public class TextureCache {
 
     public enum MaterialType {
         CIRCLE,
-        LINE
+        LINE,
+        AREA
     }
 
     private Map<MaterialType, Material> cache = new HashMap<MaterialType, Material>();
@@ -31,11 +32,20 @@ public class TextureCache {
             case LINE:
                 material = createLineMaterial();
                 break;
+            case AREA:
+                material = createAreaMaterial();
+                break;
             default:
                 return null;
         }
 
         cache.put(key, material);
+        return material;
+    }
+
+    private Material createAreaMaterial() {
+        Material material = new Material();
+        material.setColor(Color.argb(0, 128, 0, 0));
         return material;
     }
 
