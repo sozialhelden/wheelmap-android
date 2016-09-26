@@ -25,6 +25,7 @@ android {
         targetSdkVersion 22
         versionName "3.0.2"
     }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
