@@ -17,7 +17,8 @@ limitations under the License.
 <manifest package="org.wheelmap.android.online"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="494">
+          android:versionCode="494"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -33,6 +34,8 @@ limitations under the License.
     <uses-feature
         android:name="android.hardware.location.gps"
         android:required="false"/>
+
+    <uses-sdk tools:overrideLibrary="com.projecttango.tangosupport, com.google.atap.tango.uxsupportlibrary"/>
 
     <application
         android:name="org.wheelmap.android.app.WheelmapApp"
