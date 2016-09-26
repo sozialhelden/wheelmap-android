@@ -143,6 +143,7 @@ public class TangoMeasureActivity extends BaseActivity {
 
     @MainThread
     void setFabStatus(FabStatus status) {
+        Log.d(TAG, "setFabStatus(" + status + ")");
         switch (status) {
             case ADD_NEW:
                 binding.fab.setImageResource(R.drawable.ic_fab_plus);

@@ -31,22 +31,9 @@ class TangoMeasurePresenter {
         this.view = view;
         mainThreadHandler = new Handler(Looper.getMainLooper());
 
-        view.setMode(Mode.DOOR);
-        setRenderer(new MeasureDistanceModeRenderer());
-    }
-
-    private void setRenderer(WheelmapModeRenderer renderer) {
-        if (this.renderer != null) {
-            this.renderer.setOnStatusChangeListener(null);
-        }
-        this.renderer = renderer;
-        this.renderer.setOnStatusChangeListener(new WheelmapModeRenderer.OnStatusChangeListener() {
-            @Override
-            public void onStatusChanged() {
-                refreshIsReady();
-            }
-        });
-        view.setWheelmapModeRenderer(renderer);
+        Mode startMode = Mode.DOOR;
+        view.setMode(startMode);
+        onModeSelected(startMode);
     }
 
     void onFabClicked() {
@@ -138,8 +125,22 @@ class TangoMeasurePresenter {
     }
 
     public void onModeSelected(Mode mode) {
-        renderer = mode.newRenderer();
+        setRenderer(mode.newRenderer());
+    }
+
+    private void setRenderer(WheelmapModeRenderer renderer) {
+        if (this.renderer != null) {
+            this.renderer.setOnStatusChangeListener(null);
+        }
+        this.renderer = renderer;
+        this.renderer.setOnStatusChangeListener(new WheelmapModeRenderer.OnStatusChangeListener() {
+            @Override
+            public void onStatusChanged() {
+                refreshIsReady();
+            }
+        });
         view.setWheelmapModeRenderer(renderer);
+        view.setFabStatus(TangoMeasureActivity.FabStatus.ADD_NEW);
     }
 
 }
