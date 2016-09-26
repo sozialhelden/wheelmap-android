@@ -49,7 +49,7 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
                         //calculate normal vector
                         Vector3 n = linePoints.get(0).clone()
                                 .subtract(linePoints.get(1))
-                                .cross(0, 0, 1)
+                                .cross(0, 1, 0)
                                 .absoluteValue();
 
                         // place text 10cm above the line
