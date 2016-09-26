@@ -1,9 +1,6 @@
 package org.wheelmap.android.tango.mode;
 
-import android.graphics.Color;
-
 import org.rajawali3d.Object3D;
-import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
@@ -49,12 +46,14 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
                 if (size == 4) {
 
+                    // close polygon by drawing line between first and last point
                     Vector3 first = pointObjects.get(0).getPosition();
                     Vector3 last = pointObjects.get(size - 1).getPosition();
 
                     String text = String.format(Locale.getDefault(), "%.2fm", first.distanceTo(last));
                     getObjectFactory().measureLineBetween(m, first, last, text);
 
+                    // finish polygon by filling it
                     Stack<Vector3> areaPoints = new Stack<>();
                     for (int i = 0, pointObjectsSize = pointObjects.size(); i < pointObjectsSize; i++) {
                         Object3D pointObject = pointObjects.get(i);
@@ -78,7 +77,7 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
         return pointObjects.size() >= 4;
     }
 
-    public double getLastDistance() {
+    private double getLastDistance() {
         if (pointObjects.size() < 2) {
             return 0;
         }

@@ -35,7 +35,7 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
 
                 int size = pointObjects.size();
                 if (size > 1) {
-                    String text = String.format(Locale.getDefault(), "%.2fm", getLastDistance());
+                    String text = String.format(Locale.getDefault(), "%.2fm", getDistance());
                     getObjectFactory().measureLineBetween(m, pointObjects.get(size - 1).getPosition(), pointObjects.get(size - 2).getPosition(), text);
                 }
             }
@@ -53,7 +53,7 @@ public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
         return pointObjects.size() >= 2;
     }
 
-    public double getLastDistance() {
+    public double getDistance() {
         if (pointObjects.size() < 2) {
             return 0;
         }

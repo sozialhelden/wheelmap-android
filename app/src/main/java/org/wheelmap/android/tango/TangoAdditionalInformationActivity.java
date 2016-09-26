@@ -32,8 +32,7 @@ public class TangoAdditionalInformationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = TangoAdditionalInformationActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
+        
         int tintColor = ContextCompat.getColor(this, R.color.green_btn);
         ViewTool.setBackgroundTint(binding.saveBtn, tintColor);
 
