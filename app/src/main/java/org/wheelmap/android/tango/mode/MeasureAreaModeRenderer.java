@@ -60,11 +60,7 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                         Object3D pointObject = pointObjects.get(i);
                         areaPoints.add(pointObject.getPosition());
                     }
-                    Polygon area = new Polygon(areaPoints, Color.argb(128, 128, 0, 0));
-                    area.setMaterial(new Material());
-                    area.setColor(Color.argb(128, 128, 0, 0));
-                    area.setTransparent(true);
-                    area.setAlpha(0.5f);
+                    Polygon area = getObjectFactory().createAreaPolygon(areaPoints);
                     m.addObject(area);
                 }
             }

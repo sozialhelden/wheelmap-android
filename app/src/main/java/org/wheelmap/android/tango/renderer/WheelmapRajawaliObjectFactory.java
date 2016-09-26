@@ -14,6 +14,7 @@ import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Line3D;
 import org.rajawali3d.primitives.RectangularPrism;
 import org.rajawali3d.primitives.Sphere;
+import org.wheelmap.android.tango.renderer.objects.Polygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,15 @@ public class WheelmapRajawaliObjectFactory {
         } catch (ATexture.TextureException e) {
             e.printStackTrace();
         }
+    }
+
+    public Polygon createAreaPolygon(Stack<Vector3> positions) {
+        Polygon area = new Polygon(positions, Color.argb(128, 128, 0, 0));
+        area.setMaterial(new Material());
+        area.setColor(Color.argb(128, 128, 0, 0));
+        area.setTransparent(true);
+        area.setAlpha(0.5f);
+        return area;
     }
 
     public TextureCache getTextureCache() {
