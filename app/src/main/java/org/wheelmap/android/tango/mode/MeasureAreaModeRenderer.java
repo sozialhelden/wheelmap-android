@@ -1,17 +1,13 @@
 package org.wheelmap.android.tango.mode;
 
 import android.graphics.Color;
-import android.opengl.GLES20;
 
 import org.rajawali3d.Object3D;
-import org.rajawali3d.loader.awd.BlockSimpleMaterial;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
-import org.wheelmap.android.tango.renderer.TextureCache;
 import org.wheelmap.android.tango.renderer.objects.Polygon;
-import org.wheelmap.android.tango.renderer.objects.Triangle;
 
 import java.util.ArrayList;
 import java.util.List;
