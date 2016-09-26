@@ -764,10 +764,6 @@ public class POIsOsmdroidFragment extends Fragment implements
     @Override
     public void onTap(OverlayItem item, ContentValues values) {
         markItem(values, false);
-        if (mListener != null) {
-            mListener.onShowDetail(this, values);
-        }
-
     }
 
     private void showSearch() {
@@ -846,7 +842,7 @@ public class POIsOsmdroidFragment extends Fragment implements
         WheelmapApp app = (WheelmapApp) this.getActivity().getApplication();
         boolean b = app.isNoItemToSelect();
         app.setNoItemToSelect(false);
-        if (!b) {
+        if (!b || !UtilsMisc.isTablet(app)) {
 
             if (mListener != null) {
                 mListener.onShowDetail(this, values);
