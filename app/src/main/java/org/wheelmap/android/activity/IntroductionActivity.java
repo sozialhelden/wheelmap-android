@@ -71,6 +71,7 @@ public class IntroductionActivity extends AppCompatActivity{
         AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.OSMONBORDINGSCREEN);
     }
 
+    @SuppressWarnings("ResourceType")
     private List getIntroductionData(){
 
         ArrayList<IntroductionData> introductionDataList = new ArrayList<>();
