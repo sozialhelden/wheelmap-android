@@ -23,9 +23,11 @@ import java.util.Stack;
 
 public class WheelmapRajawaliObjectFactory {
 
-    private static final float MEASURE_POINT_RADIUS = 0.015f;
+    private static final float MEASURE_POINT_RADIUS = 0.01f;
 
-    private static final int TEXT_COLOR = Color.RED;
+    public static final int TEXT_COLOR = Color.YELLOW;
+    public static final int ELEMENT_COLOR = Color.YELLOW;
+
 
     private TextureCache textureCache = new TextureCache();
 
@@ -107,11 +109,14 @@ public class WheelmapRajawaliObjectFactory {
     }
 
     public Polygon createAreaPolygon(Stack<Vector3> positions) {
-        Polygon area = new Polygon(positions, Color.argb(128, 128, 0, 0));
+
+        int color = Color.argb((int)(0.3f * 255), Color.red(ELEMENT_COLOR), Color.green(ELEMENT_COLOR), Color.blue(ELEMENT_COLOR));
+
+        Polygon area = new Polygon(positions, color);
         area.setMaterial(new Material());
-        area.setColor(Color.argb(128, 128, 0, 0));
+        area.setColor(color);
         area.setTransparent(true);
-        area.setAlpha(0.5f);
+        area.setAlpha(0.3f);
         return area;
     }
 

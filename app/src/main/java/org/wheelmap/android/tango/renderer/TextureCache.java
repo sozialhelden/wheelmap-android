@@ -1,7 +1,5 @@
 package org.wheelmap.android.tango.renderer;
 
-import android.graphics.Color;
-
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 
@@ -15,7 +13,7 @@ public class TextureCache {
         LINE
     }
 
-    private Map<MaterialType, Material> cache = new HashMap<MaterialType, Material>();
+    private Map<MaterialType, Material> cache = new HashMap<>();
 
     public synchronized Material get(MaterialType key) {
 
@@ -40,13 +38,13 @@ public class TextureCache {
     }
     private Material createLineMaterial() {
         Material material = new Material();
-        material.setColor(Color.RED);
+        material.setColor(WheelmapRajawaliObjectFactory.ELEMENT_COLOR);
         return material;
     }
 
     private Material createCircleMaterial() {
         Material material = new Material();
-        material.setColor(Color.RED);
+        material.setColor(WheelmapRajawaliObjectFactory.ELEMENT_COLOR);
         material.setDiffuseMethod(new DiffuseMethod.Lambert());
         return material;
     }
