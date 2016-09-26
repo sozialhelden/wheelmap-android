@@ -51,7 +51,7 @@ public class MarkerIconExecutor extends SinglePageExecutor<SingleNode> implement
 
         prefs = WheelmapApp.getDefaultPrefs();
 
-        String request = "http://" + getServer() + "/api/assets?api_key=" + getApiKey();
+        String request = getServer() + "/api/assets?api_key=" + getApiKey();
 
         try {
             org.apache.http.client.HttpClient client = mRequestProcessor.getRequestFactory().getHttpClient();
