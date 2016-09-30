@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.auto.value.AutoValue;
 
 import org.wheelmap.android.activity.base.BaseActivity;
+import org.wheelmap.android.net.UploadTangoMeasurementExecutor;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoAdditionalInformationActivityBinding;
 import org.wheelmap.android.online.databinding.TangoUploadActivityBinding;
@@ -25,14 +26,15 @@ import org.wheelmap.android.utils.ViewTool;
 import org.wheelmap.android.view.progress.ProgressCompleteView;
 import org.wheelmap.android.view.progress.ProgressCompleteView.Status;
 
+import rx.functions.Action1;
+
 public class TangoUploadActivity extends BaseActivity {
 
     private TangoUploadActivityBinding binding;
 
-    public static Intent newIntent(Context context, Uri fileUri) {
+    public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, TangoUploadActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        intent.putExtras(new AutoValue_TangoUploadActivity_Args(fileUri).toBundle());
         return intent;
     }
 
@@ -41,7 +43,7 @@ public class TangoUploadActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = TangoUploadActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
         int tintColor = ContextCompat.getColor(this, R.color.green_btn);
         ViewTool.setBackgroundTint(binding.btn, tintColor);
 
@@ -68,12 +70,24 @@ public class TangoUploadActivity extends BaseActivity {
 
         setStatus(Status.LOADING);
 
-        new Handler().postDelayed(new Runnable() {
+        MeasurementUploadManager.getInstance().getExecutor().uploadReady().subscribe(new Action1<UploadTangoMeasurementExecutor.Status>() {
             @Override
-            public void run() {
-                setStatus(Status.SUCCESS);
+            public void call(UploadTangoMeasurementExecutor.Status status) {
+                switch (status) {
+                    case ERROR:
+                        setStatus(Status.ERROR);
+                        break;
+                    case SUCCESS:
+                        setStatus(Status.SUCCESS);
+                        break;
+                }
             }
-        }, 4000);
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                setStatus(Status.ERROR);
+            }
+        });
 
     }
 
@@ -122,18 +136,14 @@ public class TangoUploadActivity extends BaseActivity {
                 binding.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        setStatus(Status.LOADING);
+                        MeasurementUploadManager.getInstance().getExecutor().retry();
                     }
                 });
                 break;
             }
         }
 
-    }
-
-    @AutoValue
-    static abstract class Args extends Arguments {
-        abstract Uri uri();
     }
 
 }

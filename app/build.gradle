@@ -163,6 +163,10 @@ dependencies {
     compile(name: 'tango-ux-support-library', ext: 'aar')
     compile project(':tango_utils')
 
+    // RxJava
+    compile 'io.reactivex:rxjava:1.1.7'
+    compile 'io.reactivex:rxandroid:1.2.0'
+
     // AutoValue
     def auto_value_version = "1.2"
     apt "com.google.auto.value:auto-value:${auto_value_version}"

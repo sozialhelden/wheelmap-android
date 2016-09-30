@@ -35,6 +35,7 @@ import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.model.Prefs;
+import org.wheelmap.android.net.UploadTangoMeasurementExecutor;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
 import org.wheelmap.android.tango.mode.Mode;

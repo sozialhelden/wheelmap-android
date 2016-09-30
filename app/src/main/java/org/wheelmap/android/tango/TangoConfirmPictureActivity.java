@@ -55,7 +55,11 @@ public class TangoConfirmPictureActivity extends BaseActivity {
         binding.confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = TangoAdditionalInformationActivity.newIntent(TangoConfirmPictureActivity.this, args.uri());
+
+                MeasurementUploadManager.getInstance().reset();
+                MeasurementUploadManager.getInstance().getExecutor().uploadImage(args.uri());
+
+                Intent intent = TangoAdditionalInformationActivity.newIntent(TangoConfirmPictureActivity.this);
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in_medium, 0);
                 finish();
