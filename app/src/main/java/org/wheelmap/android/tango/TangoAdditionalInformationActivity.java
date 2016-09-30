@@ -23,7 +23,8 @@ public class TangoAdditionalInformationActivity extends BaseActivity {
 
     public static Intent newIntent(Context context, Uri fileUri) {
         Intent intent = new Intent(context, TangoAdditionalInformationActivity.class);
-        intent.putExtras(new AutoValue_TangoConfirmPictureActivity_Args(fileUri).toBundle());
+        intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        intent.putExtras(new AutoValue_TangoAdditionalInformationActivity_Args(fileUri).toBundle());
         return intent;
     }
 
@@ -45,6 +46,17 @@ public class TangoAdditionalInformationActivity extends BaseActivity {
 
         binding.saveBtn.setOnClickListener(okClickListener);
         binding.skipBtn.setOnClickListener(okClickListener);
+
+        binding.saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Args args = Args.fromBundle(getIntent().getExtras());
+                Intent intent = TangoUploadActivity.newIntent(TangoAdditionalInformationActivity.this, args.uri());
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in_medium, 0);
+                finish();
+            }
+        });
 
         binding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

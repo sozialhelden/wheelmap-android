@@ -457,6 +457,11 @@ public class TangoMeasureActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        presenter.onActivityResult(requestCode, resultCode, data);
+    }
+
     enum FabStatus {
         READY,
         ADD_NEW

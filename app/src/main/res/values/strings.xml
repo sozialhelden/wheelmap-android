@@ -208,5 +208,12 @@
   <string name="tango_additional_information.title">Kommentar hinzufügen</string>
   <string name="tango_additional_information.skip">Überspringen</string>
   <string name="tango_additional_information.save">Speichern</string>
+  <string name="tango_uploading.btn.ok">OK</string>
+  <string name="tango_uploading.btn.retry">wiederholen</string>
+  <string name="tango_uploading.loading.title">Foto wird hochgeladen...</string>
+  <string name="tango_uploading.success.title">Foto wurde hochgeladen</string>
+  <string name="tango_uploading.failed.title">Foto konnte nicht hochgeladen werden</string>
+  <string name="tango_uploading.failed.text">Leider ist etwas schief gelaufen beim Hochladen des Fotos. Bitte prüfen Sie die Einstellungen oder versuchen Sie es erneut.</string>
+  <string name="tango_uploading.success.text">Sie haben das Foto erfolgreich hochgeladen. Es wird allerdings eine Zeit in Anspruch nehmen, bis das Bild in der Galerie sichtbar ist.</string>
 
 </resources>

@@ -41,6 +41,7 @@
     <color name="position_marker_outline_blue_dark">#FF4F5C8C</color>
     <color name="position_marker_outline_blue_light">#FF848484</color>
 
+    <color name="disabled_tint_color">#AAA</color>
     <color name="dashboard_text_color">#FFafbed0</color>
 
     <color name="primary_color_dark">#24313f</color>

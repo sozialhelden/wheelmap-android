@@ -1,5 +1,6 @@
 package org.wheelmap.android.tango;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 class TangoMeasurePresenter {
+
+    private static final int REQUEST_CODE_UPLOAD = 235;
 
     private static final String TAG = TangoMeasurePresenter.class.getSimpleName();
     private WheelmapModeRenderer renderer;
@@ -91,7 +94,7 @@ class TangoMeasurePresenter {
                         @Override
                         public void run() {
                             Intent intent = TangoConfirmPictureActivity.newIntent(view, uri);
-                            view.startActivity(intent);
+                            view.startActivityForResult(intent, REQUEST_CODE_UPLOAD);
                             view.overridePendingTransition(R.anim.fade_in_medium, 0);
                         }
                     });
@@ -141,6 +144,14 @@ class TangoMeasurePresenter {
         });
         view.setWheelmapModeRenderer(renderer);
         view.setFabStatus(TangoMeasureActivity.FabStatus.ADD_NEW);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_UPLOAD) {
+            if (resultCode == Activity.RESULT_OK) {
+                view.finish();
+            }
+        }
     }
 
 }
