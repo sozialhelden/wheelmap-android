@@ -26,10 +26,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 15
         targetSdkVersion 22
-        versionName "3.0.2"
-
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+        versionName "3.0.3"
     }
 
     signingConfigs {

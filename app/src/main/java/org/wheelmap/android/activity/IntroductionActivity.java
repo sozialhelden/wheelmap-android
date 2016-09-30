@@ -73,6 +73,7 @@ public class IntroductionActivity extends BaseActivity {
         AnalyticsTrackingManager.trackScreen(AnalyticsTrackingManager.TrackableScreensName.OSMONBORDINGSCREEN);
     }
 
+    @SuppressWarnings("ResourceType")
     private List getIntroductionData(){
 
         ArrayList<IntroductionData> introductionDataList = new ArrayList<>();
