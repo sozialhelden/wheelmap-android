@@ -183,37 +183,37 @@
 
   <!-- new strings TODO translate -->
 
-  <string name="tango_measurement">Measurement</string>
+  <string name="tango_measurement">Take a picture and measure</string>
   <string name="clear">Clear</string>
   <string name="undo">Undo</string>
-  <string name="tango_mode_door">Tür</string>
-  <string name="tango_mode_stair">Stufe</string>
-  <string name="tango_mode_ramp">Rampe</string>
-  <string name="tango_mode_toilet">Toilette</string>
-  <string name="failed_measurement">Messung fehlgeschlagen</string>
+  <string name="tango_mode_door">Door</string>
+  <string name="tango_mode_stair">Step</string>
+  <string name="tango_mode_ramp">Ramp</string>
+  <string name="tango_mode_toilet">Toilet</string>
+  <string name="failed_measurement">measurement failed</string>
   <string name="start">Start</string>
-  <string name="tango_tutorial.door.title">Türbreite ermitteln</string>
-  <string name="tango_tutorial.door.text">Um die Breite einer Tür zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt der Tür, diese markieren Sie, inde, Sie die Punkte nacheinander anviesieren…</string>
-  <string name="tango_tutorial.stair.title">Stufenhöhe ermitteln</string>
-  <string name="tango_tutorial.stair.text">Um die Höhe einer Stufe zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt der Stufe, diese markieren Sie, inde Sie die Punkte nacheinander anvisieren…</string>
-  <string name="tango_tutorial.ramp.title">Rampenneigung ermitteln</string>
-  <string name="tango_tutorial.ramp.text">Um die Neigung einer Rampe zu bestimmen, benötigen Sie zwei Punkte. Den Startpunkt und den Endpunkt einer Rampe, diese markieren Sie, indem Sie die Punkte nacheinander anvisiren…</string>
-  <string name="tango_tutorial.wc.title">Bewegungsfläche einer Toilette ermitteln</string>
-  <string name="tango_tutorial.wc.text">Um die Bewegungsfläche einer Toilette zu bestimmen, benötigen Sie vier Punkte. Diese markieren Sie, indem Sie alle vier Punkte nacheinander anvisieren…</string>
-  <string name="tango_confirm_picture.title">Aufnahme bestätigen</string>
-  <string name="tango_confirm_picture.confirm">verwenden</string>
-  <string name="tango_confirm_picture.cancel">wiederholen</string>
-  <string name="tango_additional_information.comment.hint">Kommentar</string>
-  <string name="tango_additional_information.text">Hinterlassen Sie einen Kommentar zu diesem Foto</string>
-  <string name="tango_additional_information.title">Kommentar hinzufügen</string>
-  <string name="tango_additional_information.skip">Überspringen</string>
-  <string name="tango_additional_information.save">Speichern</string>
+  <string name="tango_tutorial.door.title">Measure door width</string>
+  <string name="tango_tutorial.door.text">To measure the width of a door you need to measure two points. \n\nAim at the inside of the door frame on one side and then at the other side.</string>
+  <string name="tango_tutorial.stair.title">Measure height of step</string>
+  <string name="tango_tutorial.stair.text">To measure the height of a step you need to measure two points.\n\nAim at the lower edge of the step and then at the upper edge of the step.</string>
+  <string name="tango_tutorial.ramp.title">Measure ramp\'s slope</string>
+  <string name="tango_tutorial.ramp.text">To measure the slope of a ramp or incline you need to measure two points.\n\nAim at the lower end and at the upper.</string>
+  <string name="tango_tutorial.wc.title">Measure toilet area</string>
+  <string name="tango_tutorial.wc.text">To measure the clear floor space around the toilet you need to measure four points.\n\nAim at the furthest free points to the right and left of the wall behind the toilet. Then aim at the two points to the right and left of the boundary of the clear floor space in front of the toilet.</string>
+  <string name="tango_confirm_picture.title">Confirm measurement and photo</string>
+  <string name="tango_confirm_picture.confirm">take</string>
+  <string name="tango_confirm_picture.cancel">retry</string>
+  <string name="tango_additional_information.comment.hint">Comment</string>
+  <string name="tango_additional_information.text">What exactly does the photo show? For instance "Ladies Restroom", "Door to the restaurant's back room"</string>
+  <string name="tango_additional_information.title">Add a comment</string>
+  <string name="tango_additional_information.skip">Skip</string>
+  <string name="tango_additional_information.save">Save</string>
   <string name="tango_uploading.btn.ok">OK</string>
-  <string name="tango_uploading.btn.retry">wiederholen</string>
-  <string name="tango_uploading.loading.title">Foto wird hochgeladen...</string>
-  <string name="tango_uploading.success.title">Foto wurde hochgeladen</string>
-  <string name="tango_uploading.failed.title">Foto konnte nicht hochgeladen werden</string>
-  <string name="tango_uploading.failed.text">Leider ist etwas schief gelaufen beim Hochladen des Fotos. Bitte prüfen Sie die Einstellungen oder versuchen Sie es erneut.</string>
-  <string name="tango_uploading.success.text">Sie haben das Foto erfolgreich hochgeladen. Es wird allerdings eine Zeit in Anspruch nehmen, bis das Bild in der Galerie sichtbar ist.</string>
+  <string name="tango_uploading.btn.retry">retry</string>
+  <string name="tango_uploading.loading.title">Uploading…</string>
+  <string name="tango_uploading.success.title">Upload successful</string>
+  <string name="tango_uploading.failed.title">Upload failed</string>
+  <string name="tango_uploading.failed.text">Unfortunately something went wrong while uploading the photos and the measurements. Please check your internet connection and try again.</string>
+  <string name="tango_uploading.success.text">Photo, measurements and comments (if applicable) were uploaded successfully. It will take a few minutes until the photo is visible in the location\'s gallery.</string>
 
 </resources>
