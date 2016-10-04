@@ -65,12 +65,9 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
         if (pointObjects.size() < 2) {
             return 0;
         }
-
         Vector3 one = pointObjects.get(0).getPosition();
         Vector3 two = pointObjects.get(1).getPosition();
-
         Vector3 u = one.clone().subtract(two);
-
         // normal to z surface
         Vector3 n = new Vector3(0, 1, 0);
 
@@ -78,4 +75,5 @@ public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
         double bottom = n.clone().normalize() * u.clone().normalize();
         return Math.toDegrees(Math.asin(top/bottom));
     }
+
 }

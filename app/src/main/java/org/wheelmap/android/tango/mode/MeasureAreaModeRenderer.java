@@ -40,7 +40,6 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                 pointObjects.add(createdPoint);
                 m.addObject(createdPoint);
 
-
                 int size = pointObjects.size();
 
                 if (size == 4) {
@@ -77,6 +76,8 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                     Polygon area = getObjectFactory().createAreaPolygon(areaPoints);
                     m.addObject(area);
                 }
+
+                Log.d(TAG, "Irregular:" + isPolygonIrregular());
 
             }
 
@@ -137,6 +138,35 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
         Vector3 c;
         // TODO
         return 0;
+    }
+
+    private boolean isPolygonIrregular() {
+
+        if (pointObjects.size() <= 2) {
+            return false;
+        }
+
+        double polygonAngle = 0;
+        int size = pointObjects.size();
+        for (int i = 0; i < size; i++) {
+
+            Vector3 one = pointObjects.get(i % size).getPosition();
+            Vector3 two = pointObjects.get((i + 1) % size).getPosition();
+            Vector3 three = pointObjects.get((i + 2) % size).getPosition();
+
+            Vector3 directionsVector1 = one.clone().subtract(two);
+            Vector3 directionsVector2 = two.clone().subtract(three);
+
+            double angle = VectorMathUtils.getAngle(directionsVector1, directionsVector2);
+            polygonAngle += angle;
+            Log.d(TAG, "Angle: " + angle);
+            if (Math.abs(angle) >= 180) {
+                return true;
+            }
+        }
+
+        Log.d(TAG, "polygonAngle: " + polygonAngle);
+        return polygonAngle < 350 || polygonAngle > 370;
     }
 
     @Override
