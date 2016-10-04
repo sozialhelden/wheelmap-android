@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+import org.wheelmap.android.tango.renderer.objects.TextObject3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,23 +97,18 @@ public abstract class WheelmapModeRenderer {
     public interface Manipulator {
         void addObject(Object3D object3D);
 
-        /**
-         * text objects are always faced to the camera
-         */
-        void addTextObject(Object3D object3D);
-
         void removeObject(Object3D object3D);
     }
 
     private class ManipulatorImpl implements Manipulator {
+
         public final void addObject(Object3D object3D) {
             renderer.getCurrentScene().addChild(object3D);
-            object3DList.add(object3D);
-        }
-
-        public final void addTextObject(Object3D object3D) {
-            renderer.getCurrentScene().addChild(object3D);
-            textObjectsList.add(object3D);
+            if (object3D instanceof TextObject3d) {
+                textObjectsList.add(object3D);
+            } else {
+                object3DList.add(object3D);
+            }
         }
 
         public final void removeObject(Object3D object3D) {
@@ -120,6 +116,7 @@ public abstract class WheelmapModeRenderer {
             textObjectsList.remove(object3D);
             object3DList.remove(object3D);
         }
+
     }
 
 }

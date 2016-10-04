@@ -11,12 +11,9 @@ import java.util.List;
 public abstract class CreateObjectsOperation implements Operation {
 
     private List<Object3D> createdObjects = new ArrayList<>();
+    private List<Object3D> removedObjects = new ArrayList<>();
 
     private CreateObjectManipulator manipulatorWrapper = new CreateObjectManipulator();
-
-    void addObject(Object3D object3D) {
-        createdObjects.add(object3D);
-    }
 
     protected List<Object3D> getCreatedObjects() {
         return createdObjects;
@@ -37,6 +34,10 @@ public abstract class CreateObjectsOperation implements Operation {
         for (Object3D createdObject : createdObjects) {
             manipulator.removeObject(createdObject);
         }
+
+        for (Object3D removedObject : removedObjects) {
+            manipulator.addObject(removedObject);
+        }
     }
 
     private class CreateObjectManipulator implements WheelmapModeRenderer.Manipulator {
@@ -50,19 +51,15 @@ public abstract class CreateObjectsOperation implements Operation {
         @Override
         public void addObject(Object3D object3D) {
             impl.addObject(object3D);
-            CreateObjectsOperation.this.addObject(object3D);
-        }
-
-        @Override
-        public void addTextObject(Object3D object3D) {
-            impl.addTextObject(object3D);
-            CreateObjectsOperation.this.addObject(object3D);
+            createdObjects.add(object3D);
         }
 
         @Override
         public void removeObject(Object3D object3D) {
-            impl.addTextObject(object3D);
+            removedObjects.add(object3D);
+            impl.removeObject(object3D);
         }
+
     }
 
 }
