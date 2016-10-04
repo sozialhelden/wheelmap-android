@@ -1,6 +1,9 @@
 package org.wheelmap.android.tango.mode;
 
+import android.util.Log;
+
 import org.rajawali3d.Object3D;
+import org.rajawali3d.math.Plane;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
@@ -13,6 +16,7 @@ import java.util.Stack;
 
 public class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
+    private static final String TAG = MeasureAreaModeRenderer.class.getSimpleName();
     private List<Object3D> pointObjects = new ArrayList<>();
 
     @Override
@@ -36,7 +40,18 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                 pointObjects.add(createdPoint);
                 m.addObject(createdPoint);
 
+
                 int size = pointObjects.size();
+
+                if (size == 4) {
+                    Object3D lastPoint = pointObjects.get(3);
+                    projectObjectToPlane(lastPoint, new Plane(
+                            pointObjects.get(0).getPosition(),
+                            pointObjects.get(1).getPosition(),
+                            pointObjects.get(2).getPosition()
+                    ));
+                }
+
                 if (size > 1) {
 
                     String text = String.format(Locale.getDefault(), "%.2fm", getLastDistance());
@@ -62,6 +77,7 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                     Polygon area = getObjectFactory().createAreaPolygon(areaPoints);
                     m.addObject(area);
                 }
+
             }
 
             @Override
@@ -69,7 +85,9 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
                 super.undo(manipulator);
                 pointObjects.removeAll(getCreatedObjects());
             }
+
         });
+
     }
 
     @Override
@@ -86,6 +104,39 @@ public class MeasureAreaModeRenderer extends OperationsModeRenderer {
         int secondLastItemPosition = pointObjects.size() - 2;
         Object3D secondLastItem = pointObjects.get(secondLastItemPosition);
         return lastItem.getPosition().distanceTo(secondLastItem.getPosition());
+    }
+
+    private void projectObjectToPlane(Object3D point, Plane plane) {
+        Vector3 position = point.getPosition();
+        double distance = plane.getDistanceTo(position);
+        Vector3 normal = plane.getNormal().clone();
+        normal.normalize();
+        normal.multiply(-distance);
+        position.add(normal);
+        point.setPosition(position);
+    }
+
+    private Object3D calculateLastPointOfPolygon() {
+        if (pointObjects.size() != 3) {
+            throw new IllegalStateException();
+        }
+
+        Vector3 a = pointObjects.get(0).getPosition();
+        Vector3 b = pointObjects.get(1).getPosition();
+        Vector3 c = pointObjects.get(2).getPosition();
+
+        Vector3 ba = b.clone().subtract(a);
+
+        Vector3 position = c.clone().subtract(ba);
+        Object3D point4 = getObjectFactory().createMeasurePoint();
+        point4.setPosition(position);
+        return point4;
+    }
+
+    public double getArea() {
+        Vector3 c;
+        // TODO
+        return 0;
     }
 
     @Override
