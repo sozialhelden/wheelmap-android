@@ -122,6 +122,7 @@ public class TangoUploadActivity extends BaseActivity {
                 binding.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        setResult(RESULT_OK);
                         finish();
                     }
                 });

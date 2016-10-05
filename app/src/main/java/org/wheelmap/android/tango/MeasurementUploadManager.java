@@ -15,8 +15,8 @@ class MeasurementUploadManager {
 
     private UploadTangoMeasurementExecutor executor;
 
-    void reset() {
-        executor = new UploadTangoMeasurementExecutor();
+    void reset(long wmId) {
+        executor = new UploadTangoMeasurementExecutor(wmId);
     }
 
     UploadTangoMeasurementExecutor getExecutor() {

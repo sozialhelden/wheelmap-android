@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.google.atap.tangoservice.TangoException;
 
 import org.wheelmap.android.online.R;
-import org.wheelmap.android.tango.mode.MeasureDistanceModeRenderer;
 import org.wheelmap.android.tango.mode.Mode;
 import org.wheelmap.android.tango.renderer.TangoRajawaliRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
@@ -93,7 +92,8 @@ class TangoMeasurePresenter {
                     mainThreadHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Intent intent = TangoConfirmPictureActivity.newIntent(view, uri);
+                            TangoMeasureActivity.Args args = view.getArgs();
+                            Intent intent = TangoConfirmPictureActivity.newIntent(view, args.wmId(), uri);
                             view.startActivityForResult(intent, REQUEST_CODE_UPLOAD);
                             view.overridePendingTransition(R.anim.fade_in_medium, 0);
                         }
@@ -147,6 +147,7 @@ class TangoMeasurePresenter {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult() called with " + "requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         if (requestCode == REQUEST_CODE_UPLOAD) {
             if (resultCode == Activity.RESULT_OK) {
                 view.finish();

@@ -1244,7 +1244,7 @@ public class POIDetailFragment extends Fragment implements
             startActivityForResult(intent, REQUEST_CODE_LOGIN);
             return;
         }
-        Intent intent = TangoMeasureActivity.newIntent(getContext());
+        Intent intent = TangoMeasureActivity.newIntent(getContext(), wmID);
         startActivity(intent);
     }
 

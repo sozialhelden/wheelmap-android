@@ -21,9 +21,9 @@ public class TangoConfirmPictureActivity extends BaseActivity {
 
     private TangoConfirmPictureActivityBinding binding;
 
-    public static Intent newIntent(Context context, Uri fileUri) {
+    public static Intent newIntent(Context context, long wmId, Uri fileUri) {
         Intent intent = new Intent(context, TangoConfirmPictureActivity.class);
-        intent.putExtras(new AutoValue_TangoConfirmPictureActivity_Args(fileUri).toBundle());
+        intent.putExtras(new AutoValue_TangoConfirmPictureActivity_Args(wmId, fileUri).toBundle());
         return intent;
     }
 
@@ -56,7 +56,7 @@ public class TangoConfirmPictureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                MeasurementUploadManager.getInstance().reset();
+                MeasurementUploadManager.getInstance().reset(args.wmId());
                 MeasurementUploadManager.getInstance().getExecutor().uploadImage(args.uri());
 
                 Intent intent = TangoAdditionalInformationActivity.newIntent(TangoConfirmPictureActivity.this);
@@ -70,6 +70,7 @@ public class TangoConfirmPictureActivity extends BaseActivity {
 
     @AutoValue
     static abstract class Args extends Arguments {
+        abstract long wmId();
         abstract Uri uri();
     }
 

@@ -28,6 +28,7 @@ import com.google.atap.tangoservice.TangoOutOfDateException;
 import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
+import com.google.auto.value.AutoValue;
 import com.projecttango.tangosupport.TangoPointCloudManager;
 import com.projecttango.tangosupport.TangoSupport;
 
@@ -35,13 +36,13 @@ import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.model.Prefs;
-import org.wheelmap.android.net.UploadTangoMeasurementExecutor;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
 import org.wheelmap.android.tango.mode.Mode;
 import org.wheelmap.android.tango.renderer.TangoRajawaliRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 import org.wheelmap.android.tango.renderer.WheelmapTangoRajawaliRenderer;
+import org.wheelmap.android.utils.Arguments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +71,10 @@ public class TangoMeasureActivity extends BaseActivity {
     private double rgbTimestampGlThread;
     private double cameraPoseTimestamp;
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, TangoMeasureActivity.class);
+    public static Intent newIntent(Context context, long wmId) {
+        Intent intent = new Intent(context, TangoMeasureActivity.class);
+        intent.putExtras(new AutoValue_TangoMeasureActivity_Args(wmId).toBundle());
+        return intent;
     }
 
     @Override
@@ -458,6 +461,10 @@ public class TangoMeasureActivity extends BaseActivity {
         });
     }
 
+    public Args getArgs() {
+        return Args.fromBundle(getIntent().getExtras());
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         presenter.onActivityResult(requestCode, resultCode, data);
@@ -466,6 +473,11 @@ public class TangoMeasureActivity extends BaseActivity {
     enum FabStatus {
         READY,
         ADD_NEW
+    }
+
+    @AutoValue
+    public abstract static class Args extends Arguments {
+        public abstract long wmId();
     }
 
 }
