@@ -186,6 +186,7 @@ dependencies {
     apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.3-rc1'
     apt 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
     provided 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
+    apt 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
 
     compile 'com.google.android.gms:play-services-analytics:7.8.0'
 

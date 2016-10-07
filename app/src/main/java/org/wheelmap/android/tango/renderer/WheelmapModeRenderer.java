@@ -5,6 +5,8 @@ import android.support.annotation.CallSuper;
 import org.rajawali3d.Object3D;
 import org.rajawali3d.math.Quaternion;
 import org.rajawali3d.math.vector.Vector3;
+import org.wheelmap.android.model.api.MeasurementInfo;
+import org.wheelmap.android.tango.mode.Mode;
 import org.wheelmap.android.tango.renderer.objects.TextObject3d;
 
 import java.util.ArrayList;
@@ -93,6 +95,10 @@ public abstract class WheelmapModeRenderer {
     public abstract void undo();
 
     public abstract boolean isReady();
+
+    public abstract MeasurementInfo.MetaData createMetaData();
+
+    public abstract Mode getMode();
 
     public interface Manipulator {
         void addObject(Object3D object3D);

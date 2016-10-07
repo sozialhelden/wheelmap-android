@@ -12,6 +12,7 @@ import com.google.auto.value.AutoValue;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.wheelmap.android.activity.base.BaseActivity;
+import org.wheelmap.android.model.api.MeasurementInfo;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoConfirmPictureActivityBinding;
 import org.wheelmap.android.utils.Arguments;
@@ -21,9 +22,9 @@ public class TangoConfirmPictureActivity extends BaseActivity {
 
     private TangoConfirmPictureActivityBinding binding;
 
-    public static Intent newIntent(Context context, long wmId, Uri fileUri) {
+    public static Intent newIntent(Context context, long wmId, Uri fileUri, MeasurementInfo metaData) {
         Intent intent = new Intent(context, TangoConfirmPictureActivity.class);
-        intent.putExtras(new AutoValue_TangoConfirmPictureActivity_Args(wmId, fileUri).toBundle());
+        intent.putExtras(new AutoValue_TangoConfirmPictureActivity_Args(wmId, fileUri, metaData).toBundle());
         return intent;
     }
 
@@ -59,7 +60,7 @@ public class TangoConfirmPictureActivity extends BaseActivity {
                 MeasurementUploadManager.getInstance().reset(args.wmId());
                 MeasurementUploadManager.getInstance().getExecutor().uploadImage(args.uri());
 
-                Intent intent = TangoAdditionalInformationActivity.newIntent(TangoConfirmPictureActivity.this);
+                Intent intent = TangoAdditionalInformationActivity.newIntent(TangoConfirmPictureActivity.this, args.metaData());
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in_medium, 0);
                 finish();
@@ -72,6 +73,7 @@ public class TangoConfirmPictureActivity extends BaseActivity {
     static abstract class Args extends Arguments {
         abstract long wmId();
         abstract Uri uri();
+        abstract MeasurementInfo metaData();
     }
 
 }

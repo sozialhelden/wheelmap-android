@@ -3,6 +3,7 @@ package org.wheelmap.android.tango.mode;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
+import org.wheelmap.android.model.api.MeasurementInfo;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.tango.renderer.WheelmapModeRenderer;
 
@@ -95,15 +96,56 @@ public enum Mode {
     }
 
     public WheelmapModeRenderer newRenderer() {
+        final Mode mode = this;
         switch (this) {
             case DOOR:
-                return new MeasureDistanceModeRenderer();
+                return new MeasureDistanceModeRenderer() {
+                    @Override
+                    public MeasurementInfo.MetaData createMetaData() {
+                        return MeasurementInfo.DoorMetaData.create(getDistance());
+                    }
+
+                    @Override
+                    public Mode getMode() {
+                        return mode;
+                    }
+                };
             case STAIR:
-                return new MeasureDistanceModeRenderer();
+                return new MeasureDistanceModeRenderer() {
+                    @Override
+                    public MeasurementInfo.MetaData createMetaData() {
+                        return MeasurementInfo.StairMetaData.create(getDistance());
+                    }
+
+                    @Override
+                    public Mode getMode() {
+                        return mode;
+                    }
+                };
             case RAMP:
-                return new MeasureSlopeAngleModeRenderer();
+                return new MeasureSlopeAngleModeRenderer() {
+                    @Override
+                    public MeasurementInfo.MetaData createMetaData() {
+                        return MeasurementInfo.RampMetaData.create(getAngle());
+                    }
+
+                    @Override
+                    public Mode getMode() {
+                        return mode;
+                    }
+                };
             case TOILET:
-                return new MeasureAreaModeRenderer();
+                return new MeasureAreaModeRenderer() {
+                    @Override
+                    public MeasurementInfo.MetaData createMetaData() {
+                        return MeasurementInfo.ToiletMetaData.create(getArea());
+                    }
+
+                    @Override
+                    public Mode getMode() {
+                        return mode;
+                    }
+                };
             default:
                 throw new IllegalStateException("unimplemented renderer");
         }

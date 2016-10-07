@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.atap.tangoservice.TangoException;
 
+import org.wheelmap.android.model.api.MeasurementInfo;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.tango.mode.Mode;
 import org.wheelmap.android.tango.renderer.TangoRajawaliRenderer;
@@ -93,7 +94,12 @@ class TangoMeasurePresenter {
                         @Override
                         public void run() {
                             TangoMeasureActivity.Args args = view.getArgs();
-                            Intent intent = TangoConfirmPictureActivity.newIntent(view, args.wmId(), uri);
+
+                            Mode mode = renderer.getMode();
+                            MeasurementInfo.MetaData metaData = renderer.createMetaData();
+                            MeasurementInfo data = MeasurementInfo.create(mode, "", metaData);
+
+                            Intent intent = TangoConfirmPictureActivity.newIntent(view, args.wmId(), uri, data);
                             view.startActivityForResult(intent, REQUEST_CODE_UPLOAD);
                             view.overridePendingTransition(R.anim.fade_in_medium, 0);
                         }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MeasureDistanceModeRenderer extends OperationsModeRenderer {
+public abstract class MeasureDistanceModeRenderer extends OperationsModeRenderer {
 
     private List<Object3D> pointObjects = new ArrayList<>();
 

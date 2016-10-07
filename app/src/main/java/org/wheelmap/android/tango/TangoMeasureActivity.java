@@ -140,6 +140,10 @@ public class TangoMeasureActivity extends BaseActivity {
         }
     }
 
+    public Mode getMode() {
+        return (Mode) binding.modeSelection.getSelectedItem().tag();
+    }
+
     private void showHelp(Mode mode) {
         Intent intent = TangoTutorialActivity.newIntent(this, mode);
         startActivity(intent);

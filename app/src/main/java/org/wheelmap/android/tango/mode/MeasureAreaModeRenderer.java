@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
-public class MeasureAreaModeRenderer extends OperationsModeRenderer {
+public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
     private static final String TAG = MeasureAreaModeRenderer.class.getSimpleName();
     private List<Object3D> pointObjects = new ArrayList<>();

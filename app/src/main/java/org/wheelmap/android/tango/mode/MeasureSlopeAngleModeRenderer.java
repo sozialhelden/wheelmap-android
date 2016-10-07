@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
+public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
 
     private List<Object3D> pointObjects = new ArrayList<>();
 

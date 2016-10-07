@@ -4,11 +4,12 @@ import android.net.Uri;
 import android.util.Log;
 
 import org.wheelmap.android.model.api.ApiResponse;
+import org.wheelmap.android.model.api.MeasurementImageUploadResponse;
+import org.wheelmap.android.model.api.MeasurementInfo;
 
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -24,10 +25,16 @@ public class UploadTangoMeasurementExecutor {
 
     private static final String TAG = UploadTangoMeasurementExecutor.class.getSimpleName();
 
+    /**
+     * temporary upload measurements over the photos api
+     */
+    private static boolean USE_PHOTO_API = false;
+
     private long wmId;
+    private MeasurementInfo measurementInfo;
 
     private Uri uploadFotoUri;
-    private Observable<ApiResponse> imageUploadObservable;
+    private Observable<MeasurementImageUploadResponse> imageUploadObservable;
 
     private BehaviorSubject<Status> uploadReadySubject = BehaviorSubject.create();
 
@@ -35,7 +42,7 @@ public class UploadTangoMeasurementExecutor {
         this.wmId = wmId;
     }
 
-    public void uploadImage(Uri uri) {
+    public Observable<MeasurementImageUploadResponse> uploadImage(Uri uri) {
 
         if (uploadFotoUri != null && uploadFotoUri != uri) {
             throw new IllegalStateException("UploadTangoMeasurementExecutor can only be used once");
@@ -43,19 +50,29 @@ public class UploadTangoMeasurementExecutor {
 
         uploadFotoUri = uri;
         if (imageUploadObservable == null) {
-            imageUploadObservable = ApiModule.getInstance().api().uploadImage(wmId, uri)
-                    .subscribeOn(Schedulers.io())
-                    .flatMap(new Func1<ApiResponse, Observable<ApiResponse>>() {
-                        @Override
-                        public Observable<ApiResponse> call(ApiResponse apiResponse) {
-                            Log.d(TAG, "Upload Response:" + apiResponse);
-                            if (apiResponse.isOk()) {
-                                return Observable.just(apiResponse);
+            if (USE_PHOTO_API) {
+                imageUploadObservable = ApiModule.getInstance().api().uploadImage(wmId, uri)
+                        .flatMap(new Func1<ApiResponse, Observable<ApiResponse>>() {
+                            @Override
+                            public Observable<ApiResponse> call(ApiResponse apiResponse) {
+                                Log.d(TAG, "Upload Response:" + apiResponse);
+                                if (apiResponse.isOk()) {
+                                    return Observable.just(apiResponse);
+                                }
+                                return Observable.error(new Exception());
                             }
-                            return Observable.error(new Exception());
-                        }
-                    })
-                    .retry(3)
+                        }).map(new Func1<ApiResponse, MeasurementImageUploadResponse>() {
+                            @Override
+                            public MeasurementImageUploadResponse call(ApiResponse apiResponse) {
+                                return null;
+                            }
+                        });
+            } else {
+                imageUploadObservable = ApiModule.getInstance().api().uploadMeasurementImage(wmId, uri);
+            }
+            imageUploadObservable = imageUploadObservable
+                    .subscribeOn(Schedulers.io())
+                    .retry(2)
                     .replay(1)
                     .autoConnect();
             imageUploadObservable.subscribe(new Action1<Object>() {
@@ -72,22 +89,23 @@ public class UploadTangoMeasurementExecutor {
             });
         }
 
+        return imageUploadObservable;
     }
 
-    public void uploadMetaData() {
-        uploadImage(uploadFotoUri);
-
-        if (imageUploadObservable == null) {
-            throw new IllegalStateException("need to upload the image first");
-        }
-
-        imageUploadObservable.take(1)
-                .flatMap(new Func1<Object, Observable<?>>() {
+    public void uploadMetaData(final MeasurementInfo measurementInfo) {
+        this.measurementInfo = measurementInfo;
+        uploadImage(uploadFotoUri).take(1)
+                .flatMap(new Func1<MeasurementImageUploadResponse, Observable<?>>() {
                     @Override
-                    public Observable<Object> call(Object o) {
-                        // TODO make real request
-                        return Observable.just(null)
-                                .delay(1, TimeUnit.SECONDS);
+                    public Observable<Void> call(MeasurementImageUploadResponse o) {
+                        if (USE_PHOTO_API) {
+                            return Observable.<Void>just(null)
+                                    .delay(1, TimeUnit.SECONDS);
+                        } else {
+                            return ApiModule.getInstance().api().uploadMeasurementMetaData(wmId, o, measurementInfo)
+                                    .subscribeOn(Schedulers.io())
+                                    .retry(2);
+                        }
                     }
                 })
                 .subscribe(new Action1<Object>() {
@@ -108,7 +126,7 @@ public class UploadTangoMeasurementExecutor {
     }
 
     public void retry() {
-        uploadMetaData();
+        uploadMetaData(measurementInfo);
     }
 
 }
