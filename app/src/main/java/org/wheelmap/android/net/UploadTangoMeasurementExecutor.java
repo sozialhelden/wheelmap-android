@@ -33,7 +33,7 @@ public class UploadTangoMeasurementExecutor {
     private long wmId;
     private MeasurementInfo measurementInfo;
 
-    private Uri uploadFotoUri;
+    private Uri uploadPhotoUri;
     private Observable<MeasurementImageUploadResponse> imageUploadObservable;
 
     private BehaviorSubject<Status> uploadReadySubject = BehaviorSubject.create();
@@ -44,11 +44,11 @@ public class UploadTangoMeasurementExecutor {
 
     public Observable<MeasurementImageUploadResponse> uploadImage(Uri uri) {
 
-        if (uploadFotoUri != null && uploadFotoUri != uri) {
+        if (uploadPhotoUri != null && uploadPhotoUri != uri) {
             throw new IllegalStateException("UploadTangoMeasurementExecutor can only be used once");
         }
 
-        uploadFotoUri = uri;
+        uploadPhotoUri = uri;
         if (imageUploadObservable == null) {
             if (USE_PHOTO_API) {
                 imageUploadObservable = ApiModule.getInstance().api().uploadImage(wmId, uri)
@@ -94,7 +94,7 @@ public class UploadTangoMeasurementExecutor {
 
     public void uploadMetaData(final MeasurementInfo measurementInfo) {
         this.measurementInfo = measurementInfo;
-        uploadImage(uploadFotoUri).take(1)
+        uploadImage(uploadPhotoUri).take(1)
                 .flatMap(new Func1<MeasurementImageUploadResponse, Observable<?>>() {
                     @Override
                     public Observable<Void> call(MeasurementImageUploadResponse o) {
