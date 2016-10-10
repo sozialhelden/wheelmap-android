@@ -36,6 +36,7 @@ import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.model.Prefs;
+import org.wheelmap.android.online.BuildConfig;
 import org.wheelmap.android.online.R;
 import org.wheelmap.android.online.databinding.TangoActivityBinding;
 import org.wheelmap.android.tango.mode.Mode;
@@ -412,14 +413,21 @@ public class TangoMeasureActivity extends BaseActivity {
                     try {
                         float[] planeFitTransform = doFitPlane(0.5f, 0.5f);
                         Matrix4 transform = new Matrix4(planeFitTransform);
-                        Vector3 position = transform.getTranslation();
-                        final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
+                        final Vector3 position = transform.getTranslation();
+
                         binding.currentPointerPosition.post(new Runnable() {
                             @Override
                             public void run() {
                                 binding.centerCross.setEnabled(true);
-                                binding.currentPointerPosition.setText(text);
-                                binding.currentPointerPosition.setTextColor(Color.BLACK);
+
+                                if (BuildConfig.BUILD_TYPE.equals("debug")) {
+                                    // for debug purposes
+                                    final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
+                                    binding.currentPointerPosition.setText(text);
+                                    binding.currentPointerPosition.setTextColor(Color.BLACK);
+                                } else {
+                                    binding.currentPointerPosition.setText("");
+                                }
                             }
                         });
                     } catch (Exception e) {
@@ -427,7 +435,7 @@ public class TangoMeasureActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 binding.centerCross.setEnabled(false);
-                                binding.currentPointerPosition.setText("no position");
+                                binding.currentPointerPosition.setText(R.string.failed_measurement);
                                 binding.currentPointerPosition.setTextColor(Color.RED);
                             }
                         });
