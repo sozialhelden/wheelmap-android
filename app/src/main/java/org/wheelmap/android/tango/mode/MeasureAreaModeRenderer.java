@@ -1,11 +1,9 @@
 package org.wheelmap.android.tango.mode;
 
-import android.renderscript.Matrix3f;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.rajawali3d.Object3D;
-import org.rajawali3d.math.Matrix;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.Plane;
 import org.rajawali3d.math.vector.Vector2;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
-import java.util.Vector;
 
 public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
