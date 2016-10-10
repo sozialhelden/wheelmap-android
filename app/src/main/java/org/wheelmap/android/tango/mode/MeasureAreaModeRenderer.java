@@ -1,10 +1,17 @@
 package org.wheelmap.android.tango.mode;
 
+import android.renderscript.Matrix3f;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.rajawali3d.Object3D;
+import org.rajawali3d.math.Matrix;
+import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.Plane;
+import org.rajawali3d.math.vector.Vector2;
 import org.rajawali3d.math.vector.Vector3;
+import org.wheelmap.android.app.WheelmapApp;
+import org.wheelmap.android.online.R;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
 import org.wheelmap.android.tango.renderer.objects.Polygon;
@@ -13,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
+import java.util.Vector;
 
 public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
@@ -26,6 +34,27 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
             return;
         }
 
+        Matrix4 matrix4 = new Matrix4(transform);
+        final Vector3 position = matrix4.getTranslation();
+        if (pointObjects.size() == 3) {
+            projectObjectToPlane(position, new Plane(
+                    pointObjects.get(0).getPosition(),
+                    pointObjects.get(1).getPosition(),
+                    pointObjects.get(2).getPosition()
+            ));
+        }
+
+        // check if new point has a valid position and does not create a irregular polygon
+        List<Vector3> polygonPoints = new ArrayList<>(4);
+        for (int i = 0; i < pointObjects.size(); i++) {
+            polygonPoints.add(pointObjects.get(i).getPosition());
+        }
+        polygonPoints.add(position);
+        if (isPolygonIrregular(polygonPoints)) {
+            Toast.makeText(WheelmapApp.get(), R.string.tango_measurement_area_invalid_position, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         addOperation(new CreateObjectsOperation() {
             @Override
             public void execute(Manipulator m) {
@@ -35,21 +64,13 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
                 }
 
                 Object3D createdPoint = getObjectFactory().createMeasurePoint();
-                Object3dUtils.setObjectPose(createdPoint, transform);
+                createdPoint.setPosition(position);
 
                 pointObjects.add(createdPoint);
                 m.addObject(createdPoint);
 
                 int size = pointObjects.size();
 
-                if (size == 4) {
-                    Object3D lastPoint = pointObjects.get(3);
-                    projectObjectToPlane(lastPoint, new Plane(
-                            pointObjects.get(0).getPosition(),
-                            pointObjects.get(1).getPosition(),
-                            pointObjects.get(2).getPosition()
-                    ));
-                }
 
                 if (size > 1) {
 
@@ -76,9 +97,6 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
                     Polygon area = getObjectFactory().createAreaPolygon(areaPoints);
                     m.addObject(area);
                 }
-
-                Log.d(TAG, "Irregular:" + isPolygonIrregular());
-
             }
 
             @Override
@@ -107,14 +125,12 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         return lastItem.getPosition().distanceTo(secondLastItem.getPosition());
     }
 
-    private void projectObjectToPlane(Object3D point, Plane plane) {
-        Vector3 position = point.getPosition();
+    private void projectObjectToPlane(Vector3 position, Plane plane) {
         double distance = plane.getDistanceTo(position);
         Vector3 normal = plane.getNormal().clone();
         normal.normalize();
         normal.multiply(-distance);
         position.add(normal);
-        point.setPosition(position);
     }
 
     private Object3D calculateLastPointOfPolygon() {
@@ -135,24 +151,32 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
     }
 
     public double getArea() {
-        Vector3 c;
-        // TODO
-        return 0;
+
+        if (pointObjects.size() != 4) {
+            return -1;
+        }
+
+        List<Vector3> polygon3dPoints = new ArrayList<>(4);
+        for (int i = 0; i < pointObjects.size(); i++) {
+            polygon3dPoints.add(pointObjects.get(i).getPosition());
+        }
+
+        List<Vector2> points = project2d(polygon3dPoints);
+        return areaOfPolygon(points);
     }
 
-    private boolean isPolygonIrregular() {
-
-        if (pointObjects.size() <= 2) {
+    private boolean isPolygonIrregular(List<Vector3> points) {
+        int size = points.size();
+        if (size <= 3) {
             return false;
         }
 
         double polygonAngle = 0;
-        int size = pointObjects.size();
         for (int i = 0; i < size; i++) {
 
-            Vector3 one = pointObjects.get(i % size).getPosition();
-            Vector3 two = pointObjects.get((i + 1) % size).getPosition();
-            Vector3 three = pointObjects.get((i + 2) % size).getPosition();
+            Vector3 one = points.get(i % size);
+            Vector3 two = points.get((i + 1) % size);
+            Vector3 three = points.get((i + 2) % size);
 
             Vector3 directionsVector1 = one.clone().subtract(two);
             Vector3 directionsVector2 = two.clone().subtract(three);
@@ -167,6 +191,75 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
 
         Log.d(TAG, "polygonAngle: " + polygonAngle);
         return polygonAngle < 350 || polygonAngle > 370;
+    }
+
+    private double areaOfPolygon(List<Vector2> polyPoints) {
+        int i, j, n = polyPoints.size();
+        double area = 0;
+
+        for (i = 0; i < n; i++) {
+            j = (i + 1) % n;
+            area += polyPoints.get(i).getX() * polyPoints.get(j).getY();
+            area -= polyPoints.get(j).getX() * polyPoints.get(i).getY();
+        }
+        area /= 2.0;
+        return Math.abs(area);
+    }
+
+    /**
+     * TODO
+     */
+    private List<Vector2> project2d(List<Vector3> list) {
+
+        List<Vector2> vector2s = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            Vector3 item = list.get(i);
+            Log.d(TAG, item.toString());
+            vector2s.add(new Vector2(item.x, item.z));
+        }
+        return vector2s;
+
+        /*Plane plane = new Plane(
+                list.get(0),
+                list.get(1),
+                list.get(2)
+        );
+
+        Matrix4 rotationMatrix = new Matrix4();
+
+        Vector3 axis = Vector3.Z;
+        double angle = (90 - VectorMathUtils.getAngle(axis, plane.getNormal()));
+        Log.d(TAG, "Angle With Z: " + angle);
+        rotationMatrix.rotate(axis, angle);
+
+        for (int i = 0; i < list.size(); i++) {
+            Vector3 vector3 = list.get(i);
+            vector3 = rotationMatrix.projectAndCreateVector(vector3);
+            list.set(i, vector3);
+        }
+
+        plane = new Plane(
+                list.get(0),
+                list.get(1),
+                list.get(2)
+        );
+
+        rotationMatrix = new Matrix4();
+        axis = Vector3.Z;
+        angle = (90 - VectorMathUtils.getAngle(axis, plane.getNormal()));
+        rotationMatrix.rotate(axis, angle);
+        for (int i = 0; i < list.size(); i++) {
+            Vector3 vector3 = list.get(i);
+            rotationMatrix.projectVector(vector3);
+        }
+
+        List<Vector2> vector2s = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            Vector3 item = list.get(i);
+            Log.d(TAG, item.toString());
+            vector2s.add(new Vector2(item.x, item.z));
+        }
+        return vector2s;*/
     }
 
     @Override
