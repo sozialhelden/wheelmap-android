@@ -51,11 +51,13 @@ public abstract class CreateObjectsOperation implements Operation {
         @Override
         public void addObject(Object3D object3D) {
             impl.addObject(object3D);
+            removedObjects.remove(object3D);
             createdObjects.add(object3D);
         }
 
         @Override
         public void removeObject(Object3D object3D) {
+            createdObjects.remove(object3D);
             removedObjects.add(object3D);
             impl.removeObject(object3D);
         }
