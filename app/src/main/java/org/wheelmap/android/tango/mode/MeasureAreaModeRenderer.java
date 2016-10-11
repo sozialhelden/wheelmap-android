@@ -159,7 +159,9 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         }
 
         List<Vector2> points = project2d(polygon3dPoints);
-        return areaOfPolygon(points);
+        double area = areaOfPolygon(points);
+        Log.d(TAG, "Area: " + area);
+        return area;
     }
 
     private boolean isPolygonIrregular(List<Vector3> points) {
@@ -207,7 +209,6 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
      * TODO
      */
     private List<Vector2> project2d(List<Vector3> list) {
-
         List<Vector2> vector2s = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {
             Vector3 item = list.get(i);
@@ -215,48 +216,6 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
             vector2s.add(new Vector2(item.x, item.z));
         }
         return vector2s;
-
-        /*Plane plane = new Plane(
-                list.get(0),
-                list.get(1),
-                list.get(2)
-        );
-
-        Matrix4 rotationMatrix = new Matrix4();
-
-        Vector3 axis = Vector3.Z;
-        double angle = (90 - VectorMathUtils.getAngle(axis, plane.getNormal()));
-        Log.d(TAG, "Angle With Z: " + angle);
-        rotationMatrix.rotate(axis, angle);
-
-        for (int i = 0; i < list.size(); i++) {
-            Vector3 vector3 = list.get(i);
-            vector3 = rotationMatrix.projectAndCreateVector(vector3);
-            list.set(i, vector3);
-        }
-
-        plane = new Plane(
-                list.get(0),
-                list.get(1),
-                list.get(2)
-        );
-
-        rotationMatrix = new Matrix4();
-        axis = Vector3.Z;
-        angle = (90 - VectorMathUtils.getAngle(axis, plane.getNormal()));
-        rotationMatrix.rotate(axis, angle);
-        for (int i = 0; i < list.size(); i++) {
-            Vector3 vector3 = list.get(i);
-            rotationMatrix.projectVector(vector3);
-        }
-
-        List<Vector2> vector2s = new ArrayList<>(list.size());
-        for (int i = 0; i < list.size(); i++) {
-            Vector3 item = list.get(i);
-            Log.d(TAG, item.toString());
-            vector2s.add(new Vector2(item.x, item.z));
-        }
-        return vector2s;*/
     }
 
     @Override

@@ -41,6 +41,7 @@ public class TangoUploadActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = TangoUploadActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
