@@ -28,7 +28,7 @@ public class UploadTangoMeasurementExecutor {
     /**
      * temporary upload measurements over the photos api
      */
-    private static boolean USE_PHOTO_API = false;
+    private static boolean USE_PHOTO_API = true;
 
     private long wmId;
     private MeasurementInfo measurementInfo;
