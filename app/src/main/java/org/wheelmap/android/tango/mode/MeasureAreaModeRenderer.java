@@ -180,7 +180,7 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
             Vector3 directionsVector1 = one.clone().subtract(two);
             Vector3 directionsVector2 = two.clone().subtract(three);
 
-            double angle = VectorMathUtils.getAngle(directionsVector1, directionsVector2);
+            double angle = directionsVector1.angle(directionsVector2);
             polygonAngle += angle;
             Log.d(TAG, "Angle: " + angle);
             if (Math.abs(angle) >= 180) {
@@ -189,7 +189,8 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         }
 
         Log.d(TAG, "polygonAngle: " + polygonAngle);
-        return polygonAngle < 350 || polygonAngle > 370;
+        // add some calculation tolerance
+        return polygonAngle < 355 || polygonAngle > 365;
     }
 
     private double areaOfPolygon(List<Vector2> polyPoints) {

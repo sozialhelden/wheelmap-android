@@ -61,6 +61,9 @@ public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRender
         pointObjects.clear();
     }
 
+    /**
+     * calculates the angle of the line between the z surface
+     */
     public double getAngle() {
         if (pointObjects.size() < 2) {
             return 0;
@@ -70,7 +73,6 @@ public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRender
         Vector3 u = one.clone().subtract(two);
         // normal to z surface
         Vector3 n = new Vector3(0, 1, 0);
-
         double top = n.clone().multiply(u).normalize();
         double bottom = n.clone().normalize() * u.clone().normalize();
         return Math.toDegrees(Math.asin(top/bottom));
