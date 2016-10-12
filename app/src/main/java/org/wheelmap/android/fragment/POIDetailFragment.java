@@ -86,6 +86,7 @@ import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.wheelmap.android.activity.MapActivity;
@@ -840,6 +841,14 @@ public class POIDetailFragment extends Fragment implements
             ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
             OverlayItem item = POIsCursorOsmdroidOverlay.getFromCursor(getActivity(), mCursor);
             overlayItemArray.add(item);
+
+            // remove all previous overlays
+            for (int i = mMapView.getOverlays().size() - 1; i >= 0; i--) {
+                Overlay overlay = mMapView.getOverlays().get(i);
+                if (overlay instanceof ItemizedIconOverlay) {
+                    mMapView.getOverlays().remove(i);
+                }
+            }
 
             ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay = new ItemizedIconOverlay<>(overlayItemArray, null, getActivity());
 
