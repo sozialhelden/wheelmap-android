@@ -15,6 +15,11 @@ import java.util.Map;
 @AutoValue
 public abstract class MeasurementInfo implements Parcelable {
 
+    private static final String TYPE_DOOR = "door";
+    private static final String TYPE_RAMP = "ramp";
+    private static final String TYPE_STAIR = "stair";
+    private static final String TYPE_TOILET = "toilet";
+
     private MetaData metaData;
 
     public abstract String type();
@@ -32,8 +37,17 @@ public abstract class MeasurementInfo implements Parcelable {
         Gson gson =  ApiModule.getInstance().gson();
         String json = gson.toJson(data());
         switch (type()) {
-            case "door":
+            case TYPE_DOOR:
                 metaData = gson.fromJson(json, DoorMetaData.class);
+                break;
+            case TYPE_RAMP:
+                metaData = gson.fromJson(json, RampMetaData.class);
+                break;
+            case TYPE_STAIR:
+                metaData = gson.fromJson(json, StairMetaData.class);
+                break;
+            case TYPE_TOILET:
+                metaData = gson.fromJson(json, ToiletMetaData.class);
                 break;
         }
         return metaData;
@@ -43,19 +57,28 @@ public abstract class MeasurementInfo implements Parcelable {
         String type = "";
         switch (mode) {
             case DOOR:
-                type = "door";
+                type = TYPE_DOOR;
                 if (!(data instanceof DoorMetaData)) {
                     throw new IllegalArgumentException();
                 }
                 break;
             case RAMP:
+                type = TYPE_RAMP;
+                if (!(data instanceof RampMetaData)) {
+                    throw new IllegalArgumentException();
+                }
                 break;
             case STAIR:
+                type = TYPE_STAIR;
                 if (!(data instanceof StairMetaData)) {
                     throw new IllegalArgumentException();
                 }
                 break;
             case TOILET:
+                type = TYPE_TOILET;
+                if (!(data instanceof ToiletMetaData)) {
+                    throw new IllegalArgumentException();
+                }
                 break;
         }
 
