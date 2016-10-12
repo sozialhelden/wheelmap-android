@@ -20,6 +20,7 @@ import org.wheelmap.android.utils.ViewTool;
 public class TangoAdditionalInformationActivity extends BaseActivity {
 
     private TangoAdditionalInformationActivityBinding binding;
+    private Args args;
 
     public static Intent newIntent(Context context, MeasurementInfo metaData) {
         Intent intent = new Intent(context, TangoAdditionalInformationActivity.class);
@@ -32,7 +33,7 @@ public class TangoAdditionalInformationActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Args args = Args.fromBundle(getIntent().getExtras());
+        args = Args.fromBundle(getIntent().getExtras());
 
         binding = TangoAdditionalInformationActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -40,28 +41,23 @@ public class TangoAdditionalInformationActivity extends BaseActivity {
         int tintColor = ContextCompat.getColor(this, R.color.green_btn);
         ViewTool.setBackgroundTint(binding.saveBtn, tintColor);
 
-        View.OnClickListener okClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "No Implemeted yet", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        binding.saveBtn.setOnClickListener(okClickListener);
-        binding.skipBtn.setOnClickListener(okClickListener);
-
-        binding.saveBtn.setOnClickListener(new View.OnClickListener() {
+        binding.skipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 MeasurementInfo info = args.metaData()
-                        .withDescription(binding.commentEditText.getText().toString().trim());
-                MeasurementUploadManager.getInstance().getExecutor().uploadMetaData(info);
+                        .withDescription("");
+                openUploadActivity(info);
 
-                Intent intent = TangoUploadActivity.newIntent(TangoAdditionalInformationActivity.this);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in_medium, 0);
-                finish();
+            }
+        });
+
+        binding.saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MeasurementInfo info = args.metaData()
+                        .withDescription(binding.commentEditText.getText().toString().trim());
+                openUploadActivity(info);
             }
         });
 
@@ -72,6 +68,15 @@ public class TangoAdditionalInformationActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void openUploadActivity(MeasurementInfo info) {
+        MeasurementUploadManager.getInstance().getExecutor().uploadMetaData(info);
+
+        Intent intent = TangoUploadActivity.newIntent(TangoAdditionalInformationActivity.this);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in_medium, 0);
+        finish();
     }
 
     @AutoValue

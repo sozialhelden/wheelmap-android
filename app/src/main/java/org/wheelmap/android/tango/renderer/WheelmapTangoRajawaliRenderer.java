@@ -39,7 +39,7 @@ public class WheelmapTangoRajawaliRenderer extends TangoRajawaliRenderer {
         }
     }
 
-    public WheelmapModeRenderer getModeRenderere() {
+    public WheelmapModeRenderer getModeRenderer() {
         return renderer;
     }
 

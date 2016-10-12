@@ -48,15 +48,6 @@ public class TangoUploadActivity extends BaseActivity {
         int tintColor = ContextCompat.getColor(this, R.color.green_btn);
         ViewTool.setBackgroundTint(binding.btn, tintColor);
 
-        View.OnClickListener okClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "No Implemeted yet", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        binding.btn.setOnClickListener(okClickListener);
-
         binding.closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
