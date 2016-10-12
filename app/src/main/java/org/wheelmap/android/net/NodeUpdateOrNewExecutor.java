@@ -54,9 +54,6 @@ public class NodeUpdateOrNewExecutor extends AbstractExecutor<Message> {
 
     private Cursor mCursor;
 
-    @Inject
-    private ICredentials mCredentials;
-
     public NodeUpdateOrNewExecutor(Context context) {
         super(context, null, Message.class, MAX_RETRY_COUNT);
     }

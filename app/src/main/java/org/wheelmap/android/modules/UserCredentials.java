@@ -22,14 +22,11 @@
 package org.wheelmap.android.modules;
 
 
-import com.google.inject.Inject;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import org.wheelmap.android.app.WheelmapObscuredSharedPreferences;
 import org.wheelmap.android.online.BuildConfig;
-import org.wheelmap.android.online.R;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import oak.ObscuredSharedPreferences;
 
@@ -55,7 +52,6 @@ public class UserCredentials implements ICredentials {
 
     private Context mContext;
 
-    @Inject
     public UserCredentials(Context context) {
         mContext = context;
         ANONYMOUNS_ACCESS_API_KEY = BuildConfig.WHEELMAP_API_KEY;

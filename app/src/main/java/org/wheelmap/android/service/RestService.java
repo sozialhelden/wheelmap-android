@@ -28,6 +28,7 @@ import org.wheelmap.android.model.POIsProvider;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.IHttpUserAgent;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.net.AbstractExecutor;
 import org.wheelmap.android.net.IExecutor;
 
@@ -59,9 +60,6 @@ public class RestService extends RoboIntentService {
 
     @Inject
     private IAppProperties mAppProperties;
-
-    @Inject
-    private ICredentials mCredentials;
 
     @Inject
     private IHttpUserAgent mHttpUserAgent;
@@ -102,8 +100,9 @@ public class RestService extends RoboIntentService {
             receiver.send(STATUS_RUNNING, bundle);
         }
 
+        UserCredentials credentials = new UserCredentials(getApplicationContext());
         IExecutor executor = AbstractExecutor.create(getApplicationContext(),
-                extras, mAppProperties, mCredentials, mHttpUserAgent);
+                extras, mAppProperties, credentials, mHttpUserAgent);
         executor.prepareContent();
         try {
             executor.execute(id);

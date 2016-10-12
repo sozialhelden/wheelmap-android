@@ -21,20 +21,17 @@
  */
 package org.wheelmap.android.net;
 
+import android.content.Context;
+import android.os.Bundle;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.wheelmap.android.mapping.apikey.AuthInfo;
 import org.wheelmap.android.model.Extra;
-import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.net.request.AcceptType;
 import org.wheelmap.android.net.request.ApiKeyRequestBuilder;
 import org.wheelmap.android.service.RestServiceException;
 
-import roboguice.RoboGuice;
-import android.content.Context;
-import android.os.Bundle;
-
-import com.google.inject.Inject;
 import de.akquinet.android.androlog.Log;
 
 public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
@@ -51,12 +48,8 @@ public class ApiKeyExecutor extends AbstractExecutor<AuthInfo> {
 
 	private final static int statusOSMFailed = 403;
 
-	@Inject
-	private ICredentials mCredentials;
-
 	public ApiKeyExecutor(Context context, Bundle bundle) {
 		super(context, bundle, AuthInfo.class, MAX_RETRY_COUNT);
-		RoboGuice.injectMembers(context, this);
 	}
 
 	@Override

@@ -52,7 +52,6 @@ public class MapActivity extends BaseActivity implements MapContext {
 
     private List<IMapView> mapViews = new ArrayList<IMapView>(2);
 
-    //@Inject
     private IBundlePreferences bprefs;
 
     @Override

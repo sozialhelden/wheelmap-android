@@ -81,7 +81,6 @@ public class MainSinglePaneActivity extends MapActivity implements
 
     private static final String TAG = MainSinglePaneActivity.class.getSimpleName();
 
-    //@Inject
     IAppProperties appProperties;
 
     private int mSelectedTab = Constants.TabContent.LOCATION_BASED_LIST;

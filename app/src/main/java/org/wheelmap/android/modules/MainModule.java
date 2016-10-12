@@ -39,7 +39,6 @@ public class MainModule extends AbstractModule {
         Log.d(TAG, "configuring begin");
         bind(IAppProperties.class).to(AppProperties.class).asEagerSingleton();
         bind(IHttpUserAgent.class).to(HttpUserAgent.class).asEagerSingleton();
-        bind(ICredentials.class).to(UserCredentials.class).asEagerSingleton();
         bind(IBundlePreferences.class).to(BundlePreferences.class).asEagerSingleton();
         Log.d(TAG, "configuring done");
 

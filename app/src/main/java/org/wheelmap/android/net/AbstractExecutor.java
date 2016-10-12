@@ -39,6 +39,7 @@ import org.wheelmap.android.model.Extra.What;
 import org.wheelmap.android.modules.IAppProperties;
 import org.wheelmap.android.modules.ICredentials;
 import org.wheelmap.android.modules.IHttpUserAgent;
+import org.wheelmap.android.modules.UserCredentials;
 import org.wheelmap.android.net.request.RequestBuilder;
 import org.wheelmap.android.net.request.RequestProcessor;
 import org.wheelmap.android.online.BuildConfig;
@@ -92,7 +93,7 @@ public abstract class AbstractExecutor<T extends Base> implements IExecutor {
         mBundle = bundle;
         mClazz = clazz;
         fMaxRetryCount = maxRetryCount;
-        RoboGuice.injectMembers(context, this);
+        mCredentials = new UserCredentials(mContext);
     }
 
     public static IExecutor create(Context context, Bundle bundle, IAppProperties appProperties,
