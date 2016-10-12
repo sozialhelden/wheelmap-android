@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wheelmap.android.view.VerticalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wheelmap.android.view.VerticalScrollView
     android:id="@+id/scrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#cfcfcf"
@@ -10,7 +13,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="vertical"
         android:padding="20dp">
 
@@ -28,9 +30,9 @@
 
                 <TextView
                     style="@style/TitleBarTextNew.Title"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"/>
 
-                <TextView style="@style/TitleBarTextNew.Subtitle" />
+                <TextView style="@style/TitleBarTextNew.Subtitle"/>
             </LinearLayout>
 
             <LinearLayout
@@ -44,14 +46,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/detail_ic_close" />
+                    android:src="@drawable/detail_ic_close"/>
             </LinearLayout>
         </LinearLayout>
 
 
-        <include layout="@layout/item_wheelchair_access_state" />
+        <include layout="@layout/item_wheelchair_access_state"/>
 
-        <include layout="@layout/item_wheelchair_toilet_state" />
+        <include layout="@layout/item_wheelchair_toilet_state"/>
 
 
         <TextView
@@ -61,7 +63,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="10dp"
             android:text="@string/poi_property_address"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/layout_detail_adress"
@@ -78,20 +80,20 @@
                 <TextView
                     android:id="@+id/addr"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autoLink="phone" />
+                    android:autoLink="phone"/>
 
                 <TextView
                     android:id="@+id/web"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
-                    android:linksClickable="true" />
+                    android:linksClickable="true"/>
 
                 <TextView
                     android:id="@+id/nothing"
@@ -99,14 +101,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="No Point selected!" />
+                    android:text="No Point selected!"/>
 
                 <TextView
                     android:id="@+id/noadress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/poi_property_comment_add_adress"
-                    android:textColor="#cfcfcf" />
+                    android:textColor="#cfcfcf"/>
 
             </LinearLayout>
 
@@ -119,7 +121,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="10dp"
             android:text="@string/poi_property_comment"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:id="@+id/layout_detail_comment"
@@ -136,14 +138,14 @@
                 <TextView
                     android:id="@+id/comment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/nocomment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/poi_property_comment_add_comment"
-                    android:textColor="#cfcfcf" />
+                    android:textColor="#cfcfcf"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -154,7 +156,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="10dp"
             android:text="@string/poi_property_photos"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
 
         <LinearLayout
@@ -170,7 +172,7 @@
                 android:layout_height="20dp"
                 android:layout_margin="8dp"
                 android:text="@string/poi_property_comment_add_photos"
-                android:textColor="#cfcfcf" />
+                android:textColor="#cfcfcf"/>
 
             <org.wheelmap.android.adapter.HorizontalView
                 android:id="@+id/gallery"
@@ -178,14 +180,14 @@
                 android:layout_height="120dp"
                 android:scrollbars="horizontal"
                 android:smoothScrollbar="true"
-                android:spacing="20dip"></org.wheelmap.android.adapter.HorizontalView>
+                android:spacing="20dip"/>
 
         </LinearLayout>
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -194,12 +196,24 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/detail_tango_measurement"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="5dp"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_tango_measurement"
+                tools:visibility="visible"
+                />
+
+            <ImageButton
                 android:id="@+id/detail_foto"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:background="@null"
-                android:src="@drawable/detail_ic_foto" />
+                android:src="@drawable/detail_ic_foto"/>
 
             <ImageButton
                 android:id="@+id/detail_edit"
@@ -207,7 +221,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:background="@null"
-                android:src="@drawable/detail_ic_edit" />
+                android:src="@drawable/detail_ic_edit"/>
 
             <ImageButton
                 android:id="@+id/detail_route"
@@ -215,7 +229,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:background="@null"
-                android:src="@drawable/detail_ic_route" />
+                android:src="@drawable/detail_ic_route"/>
 
             <ImageButton
                 android:id="@+id/detail_share"
@@ -224,7 +238,7 @@
                 android:layout_margin="5dp"
                 android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"
                 android:background="@null"
-                android:src="@drawable/detail_ic_share" />
+                android:src="@drawable/detail_ic_share"/>
 
         </LinearLayout>
     </LinearLayout>

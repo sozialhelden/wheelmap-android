@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.fragment.introduction.IntroductionFragment;
 import org.wheelmap.android.online.R;
@@ -27,7 +29,7 @@ import java.util.List;
 /**
  * Created by uwe on 04.11.15.
  */
-public class IntroductionActivity extends AppCompatActivity{
+public class IntroductionActivity extends BaseActivity {
 
     private LinearLayout indicatorContainer;
 

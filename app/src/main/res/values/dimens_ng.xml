@@ -23,6 +23,11 @@
 
 <resources>
 
+    <dimen name="one">1dp</dimen>
+
+    <dimen name="fab_margin_zero">-16dp</dimen>
+    <dimen name="fab_margin">0dp</dimen>
+
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_small">4dp</dimen>

@@ -23,25 +23,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
         >
 
-    <style name="Theme.Wheelmap.SubActivity" parent="@style/Theme.wheelmap_fixed">
-
-    </style>
-
-    <style name="Theme.Wheelmap.SubActivity.NoActionBar" parent="@style/Theme.Wheelmap.SubActivity">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Wheelmap.Editor" parent="@style/Theme.wheelmap_fixed">
-
-    </style>
-
-    <style name="Theme.wheelmap_fixed" parent="@style/Theme.wheelmap">
-        <item name="actionModeShareDrawable">@drawable/abc_ic_menu_share_mtrl_alpha</item>
-        <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryDark">@color/primary_color_dark</item>
-    </style>
-
     <style name="DetailView">
 
 

@@ -28,6 +28,7 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapView;
 import org.osmdroid.mapsforge.wrapper.MFMapView;
 import org.osmdroid.util.GeoPoint;
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.model.Extra;
 import org.wheelmap.android.modules.BundlePreferences;
 import org.wheelmap.android.modules.IBundlePreferences;
@@ -43,7 +44,7 @@ import java.util.List;
 
 import de.akquinet.android.androlog.Log;
 
-public class MapActivity extends AppCompatActivity implements MapContext {
+public class MapActivity extends BaseActivity implements MapContext {
 
     private final static String TAG = MapActivity.class.getSimpleName();
 

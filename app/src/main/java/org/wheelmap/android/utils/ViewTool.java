@@ -21,14 +21,45 @@
  */
 package org.wheelmap.android.utils;
 
+import android.content.res.ColorStateList;
+import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.TintableBackgroundView;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
+import org.wheelmap.android.online.R;
+
 public class ViewTool {
 
+
+    public static void setBackgroundTint(View v, @ColorInt int color) {
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{color});
+        setBackgroundTintList(v, csl);
+    }
+
+    /**
+     * workaround to solve bug from lollipop
+     * http://stackoverflow.com/questions/27735890/lollipops-backgroundtint-has-no-effect-on-a-button
+     */
+    public static void setBackgroundTintList(View v, ColorStateList csl) {
+
+        // the setBackgroundTintList method is buggy on lollipop
+        // fallback to support method
+        if (v instanceof TintableBackgroundView && Build.VERSION.SDK_INT <= 21) {
+            ((TintableBackgroundView) v).setSupportBackgroundTintList(csl);
+        } else {
+            // do whatever ViewCompat think is right
+            ViewCompat.setBackgroundTintList(v, csl);
+        }
+
+    }
 
     public static void nullViewDrawables(View view) {
         if (view != null) {

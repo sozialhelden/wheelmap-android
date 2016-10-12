@@ -23,11 +23,8 @@ public class HorizontalImageAdapter extends BaseAdapter implements
 
     private Activity context;
 
-    private static ImageView imageView;
-
     private List plotsImages;
 
-    private static ViewHolder holder;
     private LayoutInflater l_Inflater;
 
     public HorizontalImageAdapter(Activity context, List plotsImages) {
@@ -60,9 +57,8 @@ public class HorizontalImageAdapter extends BaseAdapter implements
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        ViewHolder holder;
         if (convertView == null) {
-
-            holder = new ViewHolder();
 
             convertView = l_Inflater.inflate(R.layout.listview_item, null);
             holder = new ViewHolder();

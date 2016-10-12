@@ -180,4 +180,41 @@
   <string name="introduction_04_text">You must be logged in\nwith your Profile for this. </string>
   <string name="introduction_05_title">And now: Have fun as you search,\nfind and map!</string>
   <string name="introduction_05_text">You can find more tips and infos\nin the FAQs on Wheelmap.org.\nInterested in news from the community?\nCheck out the blog or subscribe\nto our newsletter.</string>
+
+  <!-- new strings TODO translate -->
+
+  <string name="tango_measurement">Take a picture and measure</string>
+  <string name="clear">Clear</string>
+  <string name="undo">Undo</string>
+  <string name="tango_mode_door">Door</string>
+  <string name="tango_mode_stair">Step</string>
+  <string name="tango_mode_ramp">Ramp</string>
+  <string name="tango_mode_toilet">Toilet</string>
+  <string name="failed_measurement">measurement failed</string>
+  <string name="start">Start</string>
+  <string name="tango_tutorial.door.title">Measure door width</string>
+  <string name="tango_tutorial.door.text">To measure the width of a door you need to measure two points. \n\nAim at the inside of the door frame on one side and then at the other side.</string>
+  <string name="tango_tutorial.stair.title">Measure height of step</string>
+  <string name="tango_tutorial.stair.text">To measure the height of a step you need to measure two points.\n\nAim at the lower edge of the step and then at the upper edge of the step.</string>
+  <string name="tango_tutorial.ramp.title">Measure ramp\'s slope</string>
+  <string name="tango_tutorial.ramp.text">To measure the slope of a ramp or incline you need to measure two points.\n\nAim at the lower end and at the upper.</string>
+  <string name="tango_tutorial.wc.title">Measure toilet area</string>
+  <string name="tango_tutorial.wc.text">To measure the clear floor space around the toilet you need to measure four points.\n\nAim at the furthest free points to the right and left of the wall behind the toilet. Then aim at the two points to the right and left of the boundary of the clear floor space in front of the toilet.</string>
+  <string name="tango_confirm_picture.title">Confirm measurement and photo</string>
+  <string name="tango_confirm_picture.confirm">take</string>
+  <string name="tango_confirm_picture.cancel">retry</string>
+  <string name="tango_additional_information.comment.hint">Comment</string>
+  <string name="tango_additional_information.text">What exactly does the photo show? For instance "Ladies Restroom", "Door to the restaurant's back room"</string>
+  <string name="tango_additional_information.title">Add a comment</string>
+  <string name="tango_additional_information.skip">Skip</string>
+  <string name="tango_additional_information.save">Save</string>
+  <string name="tango_uploading.btn.ok">OK</string>
+  <string name="tango_uploading.btn.retry">retry</string>
+  <string name="tango_uploading.loading.title">Uploading…</string>
+  <string name="tango_uploading.success.title">Upload successful</string>
+  <string name="tango_uploading.failed.title">Upload failed</string>
+  <string name="tango_uploading.failed.text">Unfortunately something went wrong while uploading the photos and the measurements. Please check your internet connection and try again.</string>
+  <string name="tango_uploading.success.text">Photo, measurements and comments (if applicable) were uploaded successfully. It will take a few minutes until the photo is visible in the location\'s gallery.</string>
+  <string name="tango_measurement.area.invalid_position">invalid position</string>
+
 </resources>

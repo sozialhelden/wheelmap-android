@@ -25,6 +25,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import com.facebook.stetho.Stetho;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -55,7 +56,7 @@ import de.akquinet.android.androlog.Log;
 import hotchemi.android.rate.AppRate;
 import roboguice.RoboGuice;
 
-public class WheelmapApp extends Application {
+public class WheelmapApp extends MultiDexApplication {
 
     private final static String TAG = WheelmapApp.class.getSimpleName();
 

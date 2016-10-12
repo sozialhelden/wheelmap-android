@@ -112,6 +112,8 @@ import org.wheelmap.android.osmdroid.OnTapListener;
 import org.wheelmap.android.osmdroid.POIsCursorOsmdroidOverlay;
 import org.wheelmap.android.service.RestService;
 import org.wheelmap.android.service.RestServiceHelper;
+import org.wheelmap.android.tango.TangoMeasureActivity;
+import org.wheelmap.android.tango.TangoUtils;
 import org.wheelmap.android.utils.DetachableResultReceiver;
 import org.wheelmap.android.utils.DetachableResultReceiver.Receiver;
 import org.wheelmap.android.utils.FileUtil;
@@ -223,6 +225,7 @@ public class POIDetailFragment extends Fragment implements
 
     private LinearLayout titlebarBackbutton;
 
+    private ImageButton buttonTangoMeasure;
     private ImageButton buttonPhoto;
     private ImageButton buttonEdit;
     private ImageButton buttonRoute;
@@ -376,10 +379,10 @@ public class POIDetailFragment extends Fragment implements
         mWheelchairToiletAttributes = SupportManager.wheelchairToiletAttributes;
         poiId = getArguments().getLong(Extra.POI_ID, Extra.ID_UNKNOWN);
 
-        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+        if (!UtilsMisc.isTablet(getActivity().getApplication())) {
 
             tileUrl = String.format(Locale.US, baseUrl, BuildConfig.MAPBOX_API_KEY);
-            mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[] { tileUrl });
+            mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[]{tileUrl});
             EventBus bus = EventBus.getDefault();
             mMyLocationProvider.register();
             mVerticalDelta = (int) TypedValue.applyDimension(
@@ -398,61 +401,61 @@ public class POIDetailFragment extends Fragment implements
         }
     }
 
-    public void initViews(View v){
-        nameText = (TextView)v.findViewById(R.id.titlebar_title);
-        categoryText = (TextView)v.findViewById(R.id.titlebar_subtitle);
-        addressTitle = (TextView)v.findViewById(R.id.addr_title);
-        addressText = (TextView)v.findViewById(R.id.addr);
-        commentTitle = (TextView)v.findViewById(R.id.comment_title);
-        commentText = (TextView)v.findViewById(R.id.comment);
-        accessStateText = (TextView)v.findViewById(R.id.access_state_text);
-        accessStateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_access_state_layout);
-        toiletStateText = (TextView)v.findViewById(R.id.toilet_state_text);
-        toiletStateLayout = (ViewGroup)v.findViewById(R.id.wheelchair_toilet_state_layout);
-        webText = (TextView)v.findViewById(R.id.web);
-        phoneText = (TextView)v.findViewById(R.id.phone);
-        titlebarBackbutton = (LinearLayout)v.findViewById(R.id.titlebar_backbutton);
-        buttonPhoto = (ImageButton)v.findViewById(R.id.detail_foto);
-        buttonEdit = (ImageButton)v.findViewById(R.id.detail_edit);
-        buttonRoute = (ImageButton)v.findViewById(R.id.detail_route);
-        buttonShare = (ImageButton)v.findViewById(R.id.detail_share);
-        nothing = (TextView)v.findViewById(R.id.nothing);
+    public void initViews(View v) {
+        nameText = (TextView) v.findViewById(R.id.titlebar_title);
+        categoryText = (TextView) v.findViewById(R.id.titlebar_subtitle);
+        addressTitle = (TextView) v.findViewById(R.id.addr_title);
+        addressText = (TextView) v.findViewById(R.id.addr);
+        commentTitle = (TextView) v.findViewById(R.id.comment_title);
+        commentText = (TextView) v.findViewById(R.id.comment);
+        accessStateText = (TextView) v.findViewById(R.id.access_state_text);
+        accessStateLayout = (ViewGroup) v.findViewById(R.id.wheelchair_access_state_layout);
+        toiletStateText = (TextView) v.findViewById(R.id.toilet_state_text);
+        toiletStateLayout = (ViewGroup) v.findViewById(R.id.wheelchair_toilet_state_layout);
+        webText = (TextView) v.findViewById(R.id.web);
+        phoneText = (TextView) v.findViewById(R.id.phone);
+        titlebarBackbutton = (LinearLayout) v.findViewById(R.id.titlebar_backbutton);
+        buttonTangoMeasure = (ImageButton) v.findViewById(R.id.detail_tango_measurement);
+        buttonPhoto = (ImageButton) v.findViewById(R.id.detail_foto);
+        buttonEdit = (ImageButton) v.findViewById(R.id.detail_edit);
+        buttonRoute = (ImageButton) v.findViewById(R.id.detail_route);
+        buttonShare = (ImageButton) v.findViewById(R.id.detail_share);
+        nothing = (TextView) v.findViewById(R.id.nothing);
 
-        noCommentText = (TextView)v.findViewById(R.id.nocomment);
-        noAdressText = (TextView)v.findViewById(R.id.noadress);
-        noPhotosText = (TextView)v.findViewById(R.id.nophotos);
+        noCommentText = (TextView) v.findViewById(R.id.nocomment);
+        noAdressText = (TextView) v.findViewById(R.id.noadress);
+        noPhotosText = (TextView) v.findViewById(R.id.nophotos);
 
-        photoTitle = (TextView)v.findViewById(R.id.photo_text);
-        photoLayout = (LinearLayout)v.findViewById(R.id.photo_layout);
+        photoTitle = (TextView) v.findViewById(R.id.photo_text);
+        photoLayout = (LinearLayout) v.findViewById(R.id.photo_layout);
 
-        listView = (HorizontalView)v.findViewById(R.id.gallery);
+        listView = (HorizontalView) v.findViewById(R.id.gallery);
 
-        layoutAdress = (LinearLayout)v.findViewById(R.id.layout_detail_adress);
-        layoutComment = (LinearLayout)v.findViewById(R.id.layout_detail_comment);
-        layoutPhoto = (LinearLayout)v.findViewById(R.id.photo_layout);
-        if(!UtilsMisc.isTablet(getActivity().getApplication())){
-            layoutMapDetail = (RelativeLayout)v.findViewById(R.id.layout_map_detail);
+        layoutAdress = (LinearLayout) v.findViewById(R.id.layout_detail_adress);
+        layoutComment = (LinearLayout) v.findViewById(R.id.layout_detail_comment);
+        layoutPhoto = (LinearLayout) v.findViewById(R.id.photo_layout);
+        if (!UtilsMisc.isTablet(getActivity().getApplication())) {
+            layoutMapDetail = (RelativeLayout) v.findViewById(R.id.layout_map_detail);
         }
-
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View v = null;
-        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+        if (!UtilsMisc.isTablet(getActivity().getApplicationContext())) {
 
             v = inflater.inflate(R.layout.fragment_detail, container, false);
         }
 
-        if(UtilsMisc.isTablet(getActivity().getApplicationContext())){
+        if (UtilsMisc.isTablet(getActivity().getApplicationContext())) {
             v = inflater.inflate(R.layout.fragment_detail_tablet, container, false);
         }
 
         initViews(v);
 
-        ScrollView scrollView = (ScrollView)v.findViewById(R.id.scrollView);
+        ScrollView scrollView = (ScrollView) v.findViewById(R.id.scrollView);
         scrollView.requestDisallowInterceptTouchEvent(true);
 
         View closeButton = v.findViewById(R.id.titlebar_backbutton);
@@ -467,14 +470,21 @@ public class POIDetailFragment extends Fragment implements
         mShowMenu = false;
         closeButton.setVisibility(View.GONE);
 
-        if(!UtilsMisc.isTablet(getActivity().getApplicationContext())){
+        if (!UtilsMisc.isTablet(getActivity().getApplicationContext())) {
             closeButton.setVisibility(View.GONE);
         }
+
+        buttonTangoMeasure.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTangoMeasurement();
+            }
+        });
 
         buttonPhoto.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                 startPickPhotoDialog();
+                startPickPhotoDialog();
             }
         });
 
@@ -496,7 +506,6 @@ public class POIDetailFragment extends Fragment implements
                 return;
             }
         });
-
 
 
         buttonShare.setOnClickListener(new OnClickListener() {
@@ -534,7 +543,7 @@ public class POIDetailFragment extends Fragment implements
             }
         });
 
-        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+        if (!UtilsMisc.isTablet(getActivity().getApplication())) {
 
 
             mMapView = (org.osmdroid.views.MapView) v.findViewById(R.id.map_detail);
@@ -618,7 +627,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void setupUI() {
-        if(this.getActivity() != null){
+        if (this.getActivity() != null) {
             imageAdapter = new HorizontalImageAdapter(this.getActivity(), listImages);
 
             listView.setAdapter(imageAdapter);
@@ -647,21 +656,20 @@ public class POIDetailFragment extends Fragment implements
             e.printStackTrace();
         }
 
-        if(listImages != null){
+        if (listImages != null) {
 
-            try{
+            try {
 
-                if(listImages.isEmpty()){
+                if (listImages.isEmpty()) {
                     noPhotosText.setVisibility(View.VISIBLE);
                     listView.setVisibility(View.GONE);
-                }
-                else{
+                } else {
                     noPhotosText.setVisibility(View.GONE);
                     listView.setVisibility(View.VISIBLE);
                 }
 
 
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 Log.d(ex.getMessage());
             }
 
@@ -688,7 +696,7 @@ public class POIDetailFragment extends Fragment implements
         getLoaderManager().initLoader(LOADER_CONTENT, null, this);
 
         super.onActivityCreated(savedInstanceState);
-        if(mMapView != null){
+        if (mMapView != null) {
             ((MapActivity) getActivity()).registerMapView(mMapView);
             executeConfig(savedInstanceState);
         }
@@ -723,7 +731,7 @@ public class POIDetailFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         //WheelmapApp.getSupportManager().cleanReferences();
-        if(mMapView != null){
+        if (mMapView != null) {
             ((MapActivity) getActivity()).unregisterMapView(mMapView);
         }
         ViewTool.nullViewDrawables(getView());
@@ -736,8 +744,8 @@ public class POIDetailFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         //don't add options in tablet-mode
-        if(!getArguments().containsKey(Extra.SHOW_MAP)){
-             return;
+        if (!getArguments().containsKey(Extra.SHOW_MAP)) {
+            return;
         }
         Log.d(TAG, "onCreateOptionsMenu");
         inflater.inflate(R.menu.ab_detail_fragment, menu);
@@ -803,19 +811,20 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         Log.d(TAG, "onLoadFinished: poiid = " + poiId);
-        if(cursor == null){
-           return;
+        if (cursor == null) {
+            return;
         }
-        mCursor= cursor;
+        mCursor = cursor;
         mCursor.moveToFirst();
         load(cursor);
 
-        try{
-            wmID =  Long.valueOf(POIHelper.getWMId(cursor));
+        try {
+            wmID = Long.valueOf(POIHelper.getWMId(cursor));
             getPhotos(wmID);
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
 
-        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+        if (!UtilsMisc.isTablet(getActivity().getApplication())) {
 
             createPOIForDetailMap();
             mMapView.postInvalidate();
@@ -823,16 +832,16 @@ public class POIDetailFragment extends Fragment implements
         }
     }
 
-    public void createPOIForDetailMap(){
+    public void createPOIForDetailMap() {
 
 
-        if(mCursor != null && mCursor.getCount() > 0){
+        if (mCursor != null && mCursor.getCount() > 0) {
             mCursor.moveToFirst();
             ArrayList<OverlayItem> overlayItemArray = new ArrayList<OverlayItem>();
             OverlayItem item = POIsCursorOsmdroidOverlay.getFromCursor(getActivity(), mCursor);
             overlayItemArray.add(item);
 
-            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay  = new ItemizedIconOverlay<>(overlayItemArray, null, getActivity());
+            ItemizedIconOverlay<OverlayItem> myItemizedIconOverlay = new ItemizedIconOverlay<>(overlayItemArray, null, getActivity());
 
             mMapView.getOverlays().add(myItemizedIconOverlay);
         }
@@ -853,6 +862,7 @@ public class POIDetailFragment extends Fragment implements
             commentText.setVisibility(View.GONE);
             commentTitle.setVisibility(View.GONE);
 
+            buttonTangoMeasure.setVisibility(View.GONE);
             buttonPhoto.setVisibility(View.GONE);
             buttonEdit.setVisibility(View.GONE);
             buttonRoute.setVisibility(View.GONE);
@@ -877,21 +887,21 @@ public class POIDetailFragment extends Fragment implements
             nothing.setVisibility(View.VISIBLE);
 
             return;
-        }else{
+        } else {
 
             c.moveToFirst();
-            if(getActivity() != null && getActivity().getApplication() != null)
-            if(!UtilsMisc.isTablet(getActivity().getApplication())){
-                mCrrLongitude = POIHelper.getLongitude(c);
-                mCrrLatitude = POIHelper.getLatitude(c);
+            if (getActivity() != null && getActivity().getApplication() != null)
+                if (!UtilsMisc.isTablet(getActivity().getApplication())) {
+                    mCrrLongitude = POIHelper.getLongitude(c);
+                    mCrrLatitude = POIHelper.getLatitude(c);
 
-                org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
-                        mCrrLongitude);
+                    org.osmdroid.util.GeoPoint geoPoint = new org.osmdroid.util.GeoPoint(mCrrLatitude,
+                            mCrrLongitude);
 
-                if (mMapView != null) {
-                    centerMap(geoPoint, true);
+                    if (mMapView != null) {
+                        centerMap(geoPoint, true);
+                    }
                 }
-            }
 
             titlebarBackbutton.setVisibility(View.VISIBLE);
             addressTitle.setVisibility(View.VISIBLE);
@@ -899,6 +909,11 @@ public class POIDetailFragment extends Fragment implements
             commentText.setVisibility(View.VISIBLE);
             commentTitle.setVisibility(View.VISIBLE);
 
+            if (TangoUtils.isTangoSupported()) {
+                buttonTangoMeasure.setVisibility(View.VISIBLE);
+            } else {
+                buttonTangoMeasure.setVisibility(View.GONE);
+            }
             buttonPhoto.setVisibility(View.VISIBLE);
             buttonEdit.setVisibility(View.VISIBLE);
             buttonRoute.setVisibility(View.VISIBLE);
@@ -946,44 +961,43 @@ public class POIDetailFragment extends Fragment implements
 
             String address = "";
 
-            if(street != null){
+            if (street != null) {
                 address += street + " ";
             }
 
-            if(houseNum != null){
+            if (houseNum != null) {
                 address += houseNum + " ";
             }
 
-            if(postCode != null){
+            if (postCode != null) {
                 address += "\n";
                 address += postCode + " ";
             }
 
-            if(city != null){
+            if (city != null) {
                 address += city + " ";
             }
 
             int checkIfAdress = 3;
 
-            if(address == ""){
+            if (address == "") {
                 addressText.setVisibility(View.GONE);
                 checkIfAdress--;
-            }
-            else{
+            } else {
                 addressText.setVisibility(View.VISIBLE);
                 addressText.setText(address);
 
             }
 
-            if(phone != null){
+            if (phone != null) {
                 phoneText.setVisibility(View.VISIBLE);
                 phoneText.setText(phone);
-            }else{
+            } else {
                 phoneText.setVisibility(View.GONE);
                 checkIfAdress--;
             }
 
-            if(website != null){
+            if (website != null) {
                 webText.setVisibility(View.VISIBLE);
                 webText.setClickable(true);
 
@@ -991,20 +1005,20 @@ public class POIDetailFragment extends Fragment implements
                 webText.setText(Html.fromHtml(text));
 
                 webText.setMovementMethod(LinkMovementMethod.getInstance());
-            }else{
+            } else {
                 webText.setVisibility(View.GONE);
                 checkIfAdress--;
             }
 
-            if(checkIfAdress == 0)
+            if (checkIfAdress == 0)
                 noAdressText.setVisibility(View.VISIBLE);
             else
                 noAdressText.setVisibility(View.GONE);
 
-            if(comment == null){
+            if (comment == null) {
                 commentText.setVisibility(View.GONE);
                 noCommentText.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 commentText.setVisibility(View.VISIBLE);
                 noCommentText.setVisibility(View.GONE);
             }
@@ -1052,20 +1066,20 @@ public class POIDetailFragment extends Fragment implements
     private void setWheelchairAccessState(WheelchairFilterState newState) {
         mWheelchairAccessFilterState = newState;
 
-        try{
-        if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
-            accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.YES.getId())
-            accessStateText.setBackgroundResource(R.drawable.detail_button_green);
-        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.LIMITED.getId())
-            accessStateText.setBackgroundResource(R.drawable.detail_button_orange);
-        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.NO.getId())
-            accessStateText.setBackgroundResource(R.drawable.detail_button_red);
-        else if(mWheelchairAccessFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
-            accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        else
-            accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        }catch(OutOfMemoryError e){
+        try {
+            if (mWheelchairAccessFilterState.getId() == WheelchairFilterState.UNKNOWN.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else if (mWheelchairAccessFilterState.getId() == WheelchairFilterState.YES.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_green);
+            else if (mWheelchairAccessFilterState.getId() == WheelchairFilterState.LIMITED.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_orange);
+            else if (mWheelchairAccessFilterState.getId() == WheelchairFilterState.NO.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_red);
+            else if (mWheelchairAccessFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+                accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else
+                accessStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        } catch (OutOfMemoryError e) {
             System.gc();
         }
 
@@ -1076,18 +1090,18 @@ public class POIDetailFragment extends Fragment implements
     private void setWheelchairToiletState(WheelchairFilterState newState) {
         mWheelchairToiletFilterState = newState;
 
-        try{
-        if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
-            toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
-            toiletStateText.setBackgroundResource(R.drawable.detail_button_green);
-        else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
-            toiletStateText.setBackgroundResource(R.drawable.detail_button_red);
-        else if(mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
-            toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        else
-            toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
-        }catch(OutOfMemoryError e){
+        try {
+            if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_UNKNOWN.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_YES.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_green);
+            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.TOILET_NO.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_red);
+            else if (mWheelchairToiletFilterState.getId() == WheelchairFilterState.NO_PREFERENCE.getId())
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+            else
+                toiletStateText.setBackgroundResource(R.drawable.detail_button_grey);
+        } catch (OutOfMemoryError e) {
             System.gc();
         }
 
@@ -1102,7 +1116,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void fillDirectionsActionProvider(double lat, double lon,
-            String street, String houseNum, String postCode, String city) {
+                                              String street, String houseNum, String postCode, String city) {
 
         Uri geoURI;
 
@@ -1133,7 +1147,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void fillShareActionProvider(String wmId, String name, String type,
-            String comment, String address) {
+                                         String comment, String address) {
 
         StringBuilder sb = new StringBuilder();
 
@@ -1160,7 +1174,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void setIntentOrStore(int apKey, Intent intent,
-            ShareActionProvider provider) {
+                                  ShareActionProvider provider) {
         intentSaved.put(apKey, intent);
         if (provider != null) {
             provider.setShareIntent(intent);
@@ -1168,7 +1182,7 @@ public class POIDetailFragment extends Fragment implements
     }
 
     private void setIntentOnActionProvider(int apKey,
-            ShareActionProvider provider) {
+                                           ShareActionProvider provider) {
         if (intentSaved.containsKey(apKey)) {
             provider.setShareIntent(intentSaved.get(apKey));
         }
@@ -1178,20 +1192,20 @@ public class POIDetailFragment extends Fragment implements
         Log.d(TAG, "show id: " + id);
         poiId = id;
 
-        if(getLoaderManager() != null) {
+        if (getLoaderManager() != null) {
             getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
         }
     }
 
     public void reloadData() {
-        if(getLoaderManager() != null) {
+        if (getLoaderManager() != null) {
             getLoaderManager().restartLoader(LOADER_CONTENT, null, this);
         }
     }
 
-    public void getPhotos(long wm_id){
+    public void getPhotos(long wm_id) {
 
-        if(imageAdapter != null){
+        if (imageAdapter != null) {
             imageAdapter.clear();
         }
         DetachableResultReceiver r = new DetachableResultReceiver(new Handler());
@@ -1222,6 +1236,17 @@ public class POIDetailFragment extends Fragment implements
         }
     }
 
+    private void startTangoMeasurement() {
+        // user must be logged in
+        UserCredentials credentials = new UserCredentials(getActivity());
+        if (!credentials.isLoggedIn()) {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_LOGIN);
+            return;
+        }
+        Intent intent = TangoMeasureActivity.newIntent(getContext(), wmID);
+        startActivity(intent);
+    }
 
     private void startPickPhotoDialog() {
 
@@ -1233,14 +1258,14 @@ public class POIDetailFragment extends Fragment implements
             return;
         }
 
-        final Item[] items = {new Item(getString(R.string.photo_upload_picker_gallery),android.R.drawable.ic_menu_gallery),new Item(getString(R.string.photo_upload_picker_take_new), android.R.drawable.ic_menu_camera)};
+        final Item[] items = {new Item(getString(R.string.photo_upload_picker_gallery), android.R.drawable.ic_menu_gallery), new Item(getString(R.string.photo_upload_picker_take_new), android.R.drawable.ic_menu_camera)};
 
-        final ListAdapter adapter = new ArrayAdapter<Item>(this.getActivity(),android.R.layout.select_dialog_item,android.R.id.text1, items){
-            public View getView(int position, View convertView, ViewGroup parent){
-                View v = super.getView(position,convertView,parent);
-                TextView tv = (TextView)v.findViewById(android.R.id.text1);
+        final ListAdapter adapter = new ArrayAdapter<Item>(this.getActivity(), android.R.layout.select_dialog_item, android.R.id.text1, items) {
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                TextView tv = (TextView) v.findViewById(android.R.id.text1);
 
-                tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon,0,0,0);
+                tv.setCompoundDrawablesWithIntrinsicBounds(items[position].icon, 0, 0, 0);
 
                 int dp5 = (int) (5 * getResources().getDisplayMetrics().density + 0.5f);
                 tv.setCompoundDrawablePadding(dp5);
@@ -1277,8 +1302,8 @@ public class POIDetailFragment extends Fragment implements
 
     }
 
-    public void startGetPhotoFromGalleryIntent(){
-        if (Build.VERSION.SDK_INT < 19){
+    public void startGetPhotoFromGalleryIntent() {
+        if (Build.VERSION.SDK_INT < 19) {
             Intent intent = new Intent();
             intent.setType("image/jpeg");
             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -1296,18 +1321,18 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode != Activity.RESULT_OK){
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
 
-        if(requestCode == Request.REQUESTCODE_PHOTO
-                || requestCode == Request.GALLERY_KITKAT_INTENT_CALLED){
-            handlePhotoIntentResult(requestCode,resultCode,data);
+        if (requestCode == Request.REQUESTCODE_PHOTO
+                || requestCode == Request.GALLERY_KITKAT_INTENT_CALLED) {
+            handlePhotoIntentResult(requestCode, resultCode, data);
             return;
         }
 
-        if(requestCode == Request.REQUESTCODE_PHOTO_FROM_CAMERA){
-            if(new_photo_file != null){
+        if (requestCode == Request.REQUESTCODE_PHOTO_FROM_CAMERA) {
+            if (new_photo_file != null) {
                 uploadPhoto(new_photo_file);
                 new_photo_file = null;
             }
@@ -1316,62 +1341,65 @@ public class POIDetailFragment extends Fragment implements
     }
 
     @SuppressLint("NewApi")
-    private void handlePhotoIntentResult(int requestCode, int resultCode, Intent data){
-        File photoFile=null;
+    private void handlePhotoIntentResult(int requestCode, int resultCode, Intent data) {
+        File photoFile = null;
 
-        if(data != null && data.getData() == null){
-            if(data.getExtras().get("data")!=null){
-                try{
+        if (data != null && data.getData() == null) {
+            if (data.getExtras().get("data") != null) {
+                try {
                     Bitmap image = (Bitmap) data.getExtras().get("data");
                     photoFile = UtilsMisc.createImageFile(getActivity());
 
                     FileOutputStream fOut = new FileOutputStream(photoFile);
-                    image.compress(Bitmap.CompressFormat.JPEG,100, fOut);
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
                     fOut.flush();
                     fOut.close();
-                }catch(Exception e){}
+                } catch (Exception e) {
+                }
             }
-        }else if(data!=null && data.getData() != null ){
+        } else if (data != null && data.getData() != null) {
             Uri photo = data.getData();
 
             String path = FileUtil.getPath(getActivity(), photo);
-            if(path != null){
+            if (path != null) {
                 photoFile = new File(path);
-            }else{
-                try{
+            } else {
+                try {
                     photoFile = new File(UtilsMisc.getFilePathFromContentUri(photo,
-                          getActivity().getContentResolver()));
-                }catch(Exception e){}
+                            getActivity().getContentResolver()));
+                } catch (Exception e) {
+                }
             }
         }
 
-        if(photoFile != null){
+        if (photoFile != null) {
             uploadPhoto(photoFile);
-        }else{
+        } else {
             //TODO but should never happen
         }
     }
 
     File photoFile;
-    public void uploadPhoto(File photoFile){
+
+    public void uploadPhoto(File photoFile) {
         this.photoFile = photoFile;
-        if(photoFile != null){
-            if(progress == null){
+        if (photoFile != null) {
+            if (progress == null) {
                 progress = new ProgressDialog(getActivity());
                 progress.setMessage(getString(R.string.photo_upload_progress_title));
                 progress.show();
-            }else{
-                if(progress.isShowing()){
+            } else {
+                if (progress.isShowing()) {
                     return;
                 }
                 progress.show();
             }
-            if(dialog !=null){
+            if (dialog != null) {
                 dialog.dismiss();
                 dialog = null;
             }
-            Log.d(TAG,"photo to upload: "+photoFile+"");
-            UploadPhotoTask upload = new UploadPhotoTask(mCursor,this,getActivity().getApplication(),progress,wmID);
+            Log.d(TAG, "photo to upload: " + photoFile + "");
+            UploadPhotoTask upload = new UploadPhotoTask(mCursor, this, getActivity().getApplication(), progress, wmID);
             upload.execute(photoFile);
             photoFile = null;
         }
@@ -1380,19 +1408,19 @@ public class POIDetailFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if(!UtilsMisc.isTablet(getActivity().getApplication())){
+        if (!UtilsMisc.isTablet(getActivity().getApplication())) {
             mSensorManager.registerListener(mMyLocationProvider, mSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
+                    SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
     @Override
     public void onDestroy() {
-        if(progress != null){
+        if (progress != null) {
             progress.dismiss();
             progress = null;
         }
-        if(dialog != null){
+        if (dialog != null) {
             dialog.dismiss();
             dialog = null;
         }
@@ -1403,6 +1431,7 @@ public class POIDetailFragment extends Fragment implements
         Log.d(TAG, "CenterMap");
         centerMap(geoPoint, force, false);
     }
+
     private void centerMap(org.osmdroid.util.GeoPoint geoPoint, boolean force, boolean animated) {
         Log.d(TAG, "centerMap: force = " + force + " isCentered = "
                 + isCentered + " geoPoint = " + geoPoint);

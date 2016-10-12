@@ -1,8 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'de.timfreiheit.buildtypelaunchericon.plugin'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+    useLibrary 'org.apache.http.legacy'
 
     packagingOptions {
         exclude 'META-INF/LICENSE'
@@ -23,6 +26,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 15
         targetSdkVersion 22
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
         versionName "3.0.3"
     }
 
@@ -34,6 +39,10 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
+    }
+
+    dataBinding {
+        enabled true
     }
 
     buildTypes {
@@ -87,16 +96,34 @@ android {
     }
 }
 
+buildTypeLauncherIcon {
+    mipmap = false
+}
+
 repositories {
+
     flatDir {
         dirs 'libs'
     }
+
+    flatDir {
+        dirs '../libs_tango/aar'
+    }
+
 }
 
 dependencies {
+
+    compile 'com.android.support:multidex:1.0.1'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    def android_support_version = "24.2.0"
+    compile "com.android.support:appcompat-v7:${android_support_version}"
+    androidTestCompile "com.android.support:appcompat-v7:${android_support_version}"
+    compile "com.android.support:design:${android_support_version}"
+    compile "com.android.support:cardview-v7:${android_support_version}"
+    compile "com.android.support:transition:${android_support_version}"
 
     compile 'net.hockeyapp.android:HockeySDK:3.5.0'
 
@@ -120,7 +147,9 @@ dependencies {
 
     compile 'com.nineoldandroids:library:2.4.0'
 
-    compile 'com.facebook.stetho:stetho:1.3.0'
+    def stetho_version = "1.3.1"
+    compile "com.facebook.stetho:stetho:${stetho_version}"
+    compile "com.facebook.stetho:stetho-okhttp3:${stetho_version}"
 
     // https://github.com/hotchemi/Android-Rate
     compile 'com.github.hotchemi:android-rate:0.5.6'
@@ -129,6 +158,35 @@ dependencies {
         // exclusion is not necessary, but generally a good idea.
         exclude group: 'com.google.android', module: 'support-v4'
     }
+
+    // Tango:
+    compile 'org.rajawali3d:rajawali:1.0.325@aar'
+    compile(name: 'tango_support_java_lib', ext: 'aar')
+    compile(name: 'tango-ux-support-library', ext: 'aar')
+    compile project(':tango_utils')
+
+    // API
+    def okhttp_version = "3.4.1"
+    compile "com.squareup.okhttp3:okhttp:${okhttp_version}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttp_version}"
+
+    def retrofit_version = "2.1.0"
+    compile "com.squareup.retrofit2:retrofit:${retrofit_version}"
+    compile "com.squareup.retrofit2:converter-gson:${retrofit_version}"
+    compile "com.squareup.retrofit2:adapter-rxjava:${retrofit_version}"
+
+    // RxJava
+    compile 'io.reactivex:rxjava:1.1.7'
+    compile 'io.reactivex:rxandroid:1.2.0'
+
+    // AutoValue
+    def auto_value_version = "1.2"
+    apt "com.google.auto.value:auto-value:${auto_value_version}"
+    provided 'com.jakewharton.auto.value:auto-value-annotations:1.2-update1'
+    apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.3-rc1'
+    apt 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.0'
+    apt 'com.gabrielittner.auto.value:auto-value-with:1.0.0'
 
     compile 'com.google.android.gms:play-services-analytics:7.8.0'
 
@@ -140,9 +198,16 @@ dependencies {
         exclude group: 'com.hamcrest', module: 'hamcrest-library'
     }
     androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test:runner:0.3'
-    androidTestCompile 'com.android.support.test:rules:0.3'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xmaxerrs" << "500"
+    }
 }

@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.activity.profile.ProfileActivity;
 import org.wheelmap.android.analytics.AnalyticsTrackingManager;
 import org.wheelmap.android.app.WheelmapApp;
@@ -33,7 +34,7 @@ import hotchemi.android.rate.AppRate;
 /**
  * Created by tim on 07.02.14.
  */
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends BaseActivity {
 
     private UserCredentials mCredentials;
     private String address = null;

@@ -9,6 +9,8 @@ public class Constants {
         public static final String LOGIN = "/users/auth/osm";
         public static final String WM_REGISTER_LINK = "/en/oauth/register_osm";
         public static final String SCHEMA_WHEELMAP = "wheelmap";
+
+        public static final String QUERY_PARAM_API_KEY = "api_key";
     }
 
     public  static class TabContent {

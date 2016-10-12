@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:drawable="@drawable/ic_check" >
+    <target
+        android:name="path"
+        android:animation="@anim/ic_check_animator" />
+
+</animated-vector>

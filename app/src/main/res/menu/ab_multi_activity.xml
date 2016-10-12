@@ -27,7 +27,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_new_poi"
-        android:icon="@drawable/ic_plus"
+        android:icon="@drawable/ic_fab_plus"
         android:menuCategory="secondary"
         android:title="@string/menu_new_poi"
         app:showAsAction="always" />

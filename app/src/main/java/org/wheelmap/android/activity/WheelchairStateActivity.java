@@ -21,6 +21,7 @@
  */
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.fragment.WheelchairAccessibilityStateFragment;
 import org.wheelmap.android.fragment.WheelchairStateFragment.OnWheelchairState;
 import org.wheelmap.android.fragment.WheelchairToiletStateFragment;
@@ -37,7 +38,7 @@ import android.support.v4.app.FragmentManager;
 
 import de.akquinet.android.androlog.Log;
 
-public class WheelchairStateActivity extends AppCompatActivity implements
+public class WheelchairStateActivity extends BaseActivity implements
         OnWheelchairState {
 
     private final static String TAG = WheelchairStateActivity.class

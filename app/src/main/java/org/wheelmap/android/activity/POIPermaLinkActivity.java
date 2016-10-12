@@ -1,5 +1,6 @@
 package org.wheelmap.android.activity;
 
+import org.wheelmap.android.activity.base.BaseActivity;
 import org.wheelmap.android.app.WheelmapApp;
 
 import android.app.Activity;
@@ -9,7 +10,7 @@ import android.os.Bundle;
 /**
  * Created by SMF on 28/03/14.
  */
-public class POIPermaLinkActivity extends Activity {
+public class POIPermaLinkActivity extends BaseActivity {
 
 
     public void onCreate(Bundle savedInstanceState) {
