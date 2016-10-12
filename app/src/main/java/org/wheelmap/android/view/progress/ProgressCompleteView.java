@@ -51,6 +51,7 @@ public class ProgressCompleteView extends FrameLayout {
 
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         progressView.setLayoutParams(params);
+        progressView.startAnimation();
         addView(progressView);
 
         completeImage = new ImageView(context);
@@ -67,12 +68,6 @@ public class ProgressCompleteView extends FrameLayout {
 
         progressView.setColor(colors.get(Status.LOADING));
 
-    }
-
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        progressView.setVisibility(visibility);
     }
 
     public void setColor(Status status, @ColorInt int color) {

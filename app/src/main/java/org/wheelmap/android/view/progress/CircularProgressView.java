@@ -41,18 +41,19 @@ class CircularProgressView extends View {
     private int size = 0;
     private RectF bounds;
 
-    private boolean autostartAnimation;
     private float indeterminateSweep, indeterminateRotateOffset;
     private int thickness;
     @ColorInt
     private int color = Color.BLUE;
     private int animDuration;
     private int animSteps;
+    private boolean animationRunning = true;
 
     private List<CircularProgressViewListener> listeners;
     // Animation related stuff
     private float startAngle;
     private AnimatorSet indeterminateAnimator;
+    private AnimatorSet completeAnimator;
 
     public CircularProgressView(Context context) {
         super(context);
@@ -84,8 +85,6 @@ class CircularProgressView extends View {
 
         // Initialize attributes from styleable attributes
         thickness = (int) Utils.dpToPx(getContext(), 4);
-
-        autostartAnimation = true;
 
         int accentColor = getContext().getResources().getIdentifier("colorAccent", "attr", getContext().getPackageName());
 
@@ -187,9 +186,10 @@ class CircularProgressView extends View {
     }
 
     public void completeAnimation(@ColorInt int color) {
+        animationRunning = false;
         stopAnimation();
-        AnimatorSet set = createCompleteAnimator(color);
-        set.addListener(new AnimatorListenerAdapter() {
+        completeAnimator = createCompleteAnimator(color);
+        completeAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -198,7 +198,7 @@ class CircularProgressView extends View {
                 }
             }
         });
-        set.start();
+        completeAnimator.start();
     }
 
     /**
@@ -225,13 +225,25 @@ class CircularProgressView extends View {
      * (This is an alias of resetAnimation() so it does the same thing.)
      */
     public void startAnimation() {
+        animationRunning = true;
+        indeterminateRotateOffset = 0;
+        startAngle = -90;
         resetAnimation();
     }
 
     /**
      * Resets the animation.
      */
-    public void resetAnimation() {
+    void resetAnimation() {
+
+        if (getVisibility() != VISIBLE || !animationRunning) {
+            return;
+        }
+
+        if (completeAnimator != null && completeAnimator.isRunning()) {
+            completeAnimator.cancel();
+        }
+
         // Cancel all the old animators
         if (indeterminateAnimator != null && indeterminateAnimator.isRunning()) {
             indeterminateAnimator.cancel();
@@ -398,9 +410,7 @@ class CircularProgressView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (autostartAnimation) {
-            startAnimation();
-        }
+        startAnimation();
     }
 
     @Override
@@ -422,4 +432,14 @@ class CircularProgressView extends View {
         }
     }
 
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == View.VISIBLE) {
+            resetAnimation();
+        } else if (visibility == View.GONE || visibility == View.INVISIBLE) {
+            stopAnimation();
+        }
+    }
 }
+
