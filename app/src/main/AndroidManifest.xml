@@ -13,100 +13,52 @@ distributed under the License is distributed on an "AS-IS" BASIS
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
-<manifest package="org.wheelmap.android.online"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:installLocation="auto"
-          android:versionCode="500"
-          xmlns:tools="http://schemas.android.com/tools">
+--><manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" package="org.wheelmap.android.online" android:installLocation="auto" android:versionCode="501">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="true"/>
-    <uses-feature
-        android:name="android.hardware.location.gps"
-        android:required="false"/>
+    <uses-feature android:name="android.hardware.location" android:required="true" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 
-    <uses-sdk tools:overrideLibrary="com.projecttango.tangosupport, com.google.atap.tango.uxsupportlibrary"/>
+    <uses-sdk tools:overrideLibrary="com.projecttango.tangosupport, com.google.atap.tango.uxsupportlibrary" />
 
-    <application
-        android:name="org.wheelmap.android.app.WheelmapApp"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:logo="@drawable/title_logo_shadow"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.wheelmap_fixed">
+    <application android:name="org.wheelmap.android.app.WheelmapApp" android:hardwareAccelerated="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:logo="@drawable/title_logo_shadow" android:supportsRtl="true" android:theme="@style/Theme.wheelmap_fixed">
 
-        <activity
-            android:name="org.wheelmap.android.activity.StartupActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">
+        <activity android:name="org.wheelmap.android.activity.StartupActivity" android:label="@string/app_name" android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="org.wheelmap.android.tango.TangoMeasureActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.Wheelmap.NoActionbar"/>
+        <activity android:name="org.wheelmap.android.tango.TangoMeasureActivity" android:screenOrientation="landscape" android:theme="@style/Theme.Wheelmap.NoActionbar" />
 
-        <activity
-            android:name="org.wheelmap.android.tango.TangoTutorialActivity"
-            android:theme="@style/Theme.Wheelmap.Translucent"/>
+        <activity android:name="org.wheelmap.android.tango.TangoTutorialActivity" android:theme="@style/Theme.Wheelmap.Translucent" />
 
-        <activity
-            android:name="org.wheelmap.android.tango.TangoConfirmPictureActivity"
-            android:theme="@style/Theme.Wheelmap.Translucent"/>
+        <activity android:name="org.wheelmap.android.tango.TangoConfirmPictureActivity" android:theme="@style/Theme.Wheelmap.Translucent" />
 
-        <activity
-            android:name="org.wheelmap.android.tango.TangoAdditionalInformationActivity"
-            android:theme="@style/Theme.Wheelmap.Translucent"/>
+        <activity android:name="org.wheelmap.android.tango.TangoAdditionalInformationActivity" android:theme="@style/Theme.Wheelmap.Translucent" />
 
-        <activity
-            android:name="org.wheelmap.android.tango.TangoUploadActivity"
-            android:theme="@style/Theme.Wheelmap.Translucent"/>
+        <activity android:name="org.wheelmap.android.tango.TangoUploadActivity" android:theme="@style/Theme.Wheelmap.Translucent" />
 
-        <activity
-            android:name="org.wheelmap.android.activity.IntroductionActivity"
-            android:label=""
-            android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">
+        <activity android:name="org.wheelmap.android.activity.IntroductionActivity" android:label="" android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.MainSinglePaneActivity"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow">
+        <activity android:name="org.wheelmap.android.activity.MainSinglePaneActivity" android:label="" android:screenOrientation="portrait" android:uiOptions="splitActionBarWhenNarrow">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.MainMultiPaneActivity"
-            android:label=""
-            android:uiOptions="splitActionBarWhenNarrow">
+        <activity android:name="org.wheelmap.android.activity.MainMultiPaneActivity" android:label="" android:uiOptions="splitActionBarWhenNarrow">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.POIDetailActivity"
-            android:label=""
-            android:screenOrientation="portrait">
+        <activity android:name="org.wheelmap.android.activity.POIDetailActivity" android:label="" android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.WebViewNewsActivity"
-            android:label="">
+        <activity android:name="org.wheelmap.android.activity.WebViewNewsActivity" android:label="">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.POIPermaLinkActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+        <activity android:name="org.wheelmap.android.activity.POIPermaLinkActivity" android:label="@string/app_name" android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW">
                 </action>
@@ -116,86 +68,37 @@ limitations under the License.
                 <category android:name="android.intent.category.BROWSABLE">
                 </category>
 
-                <data
-                    android:host="*wheelmap.org"
-                    android:pathPrefix="/nodes/"
-                    android:scheme="http">
+                <data android:host="*wheelmap.org" android:pathPrefix="/nodes/" android:scheme="http">
                 </data>
             </intent-filter>
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.POIDetailEditableActivity"
-            android:label="@string/title_editor"
-            android:theme="@style/Theme.Wheelmap.SubActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="org.wheelmap.android.activity.PictureActivity"
-            android:label=""
-            android:theme="@style/Theme.Wheelmap.SubActivity"/>
-        <activity
-            android:name="org.wheelmap.android.activity.FilterActivity"
-            android:label="@string/title_pois_settings"
-            android:theme="@style/Theme.Wheelmap.SubActivity"/>
-        <activity
-            android:name="org.wheelmap.android.activity.WheelchairStateActivity"
-            android:theme="@style/Theme.Wheelmap.SubActivity"/>
-        <activity
-            android:name="org.wheelmap.android.activity.WrapperActivity"
-            android:theme="@style/Theme.Wheelmap.SubActivity"/>
-        <activity
-            android:name="org.wheelmap.android.activity.InfoActivity"
-            android:label="@string/title_info"
-            android:theme="@style/Theme.Wheelmap.SubActivity"/>
-        <activity
-            android:name="org.wheelmap.android.activity.LegalNoticeActivity"
-            android:label="@string/title_legal_notice"
-            android:theme="@style/Theme.Wheelmap.SubActivity"/>
+        <activity android:name="org.wheelmap.android.activity.POIDetailEditableActivity" android:label="@string/title_editor" android:theme="@style/Theme.Wheelmap.SubActivity" android:windowSoftInputMode="adjustPan" />
+        <activity android:name="org.wheelmap.android.activity.PictureActivity" android:label="" android:theme="@style/Theme.Wheelmap.SubActivity" />
+        <activity android:name="org.wheelmap.android.activity.FilterActivity" android:label="@string/title_pois_settings" android:theme="@style/Theme.Wheelmap.SubActivity" />
+        <activity android:name="org.wheelmap.android.activity.WheelchairStateActivity" android:theme="@style/Theme.Wheelmap.SubActivity" />
+        <activity android:name="org.wheelmap.android.activity.WrapperActivity" android:theme="@style/Theme.Wheelmap.SubActivity" />
+        <activity android:name="org.wheelmap.android.activity.InfoActivity" android:label="@string/title_info" android:theme="@style/Theme.Wheelmap.SubActivity" />
+        <activity android:name="org.wheelmap.android.activity.LegalNoticeActivity" android:label="@string/title_legal_notice" android:theme="@style/Theme.Wheelmap.SubActivity" />
 
-        <activity
-            android:name="org.wheelmap.android.activity.DashboardActivity"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">
+        <activity android:name="org.wheelmap.android.activity.DashboardActivity" android:label="" android:screenOrientation="portrait" android:theme="@style/Theme.Wheelmap.SubActivity.NoActionBar">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.ChooseCategoryActivity"
-            android:label="">
+        <activity android:name="org.wheelmap.android.activity.ChooseCategoryActivity" android:label="">
         </activity>
-        <activity
-            android:name="org.wheelmap.android.activity.profile.ProfileActivity"
-            android:label=""
-            android:theme="@style/Theme.Wheelmap.SubActivity"
-            android:windowSoftInputMode="adjustPan">
+        <activity android:name="org.wheelmap.android.activity.profile.ProfileActivity" android:label="" android:theme="@style/Theme.Wheelmap.SubActivity" android:windowSoftInputMode="adjustPan">
         </activity>
 
-        <activity
-            android:name="org.wheelmap.android.activity.profile.LoginWebActivity"
-            android:label=""
-            android:theme="@style/Theme.Wheelmap.SubActivity"
-            android:windowSoftInputMode="adjustResize">
+        <activity android:name="org.wheelmap.android.activity.profile.LoginWebActivity" android:label="" android:theme="@style/Theme.Wheelmap.SubActivity" android:windowSoftInputMode="adjustResize">
         </activity>
 
-        <activity android:name="net.hockeyapp.android.UpdateActivity"/>
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
 
 
-        <service
-            android:name="org.wheelmap.android.service.RestService"
-            android:exported="false"/>
+        <service android:name="org.wheelmap.android.service.RestService" android:exported="false" />
 
-        <provider
-            android:name="org.wheelmap.android.model.POIsProvider"
-            android:authorities="${applicationId}.wheelmap"
-            android:readPermission="org.wheelmap.android.pois.Read"
-            android:writePermission="org.wheelmap.android.pois.Write"/>
-        <provider
-            android:name="org.wheelmap.android.model.SupportProvider"
-            android:authorities="${applicationId}.support"
-            android:readPermission="org.wheelmap.android.support.Read"
-            android:writePermission="org.wheelmap.android.support.Write"/>
+        <provider android:name="org.wheelmap.android.model.POIsProvider" android:authorities="${applicationId}.wheelmap" android:readPermission="org.wheelmap.android.pois.Read" android:writePermission="org.wheelmap.android.pois.Write" />
+        <provider android:name="org.wheelmap.android.model.SupportProvider" android:authorities="${applicationId}.support" android:readPermission="org.wheelmap.android.support.Read" android:writePermission="org.wheelmap.android.support.Write" />
 
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="82852bdccfc411decbd4ba6dd1d309f0beae2875"/>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="82852bdccfc411decbd4ba6dd1d309f0beae2875" />
     </application>
 
 </manifest>
