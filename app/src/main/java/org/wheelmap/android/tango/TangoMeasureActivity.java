@@ -110,6 +110,13 @@ public class TangoMeasureActivity extends BaseActivity {
             }
         });
 
+        binding.homeAsUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         List<ModeSelectionView.Item> itemList = new ArrayList<>();
         for (Mode mode : Mode.values()) {
             itemList.add(ModeSelectionView.Item.create(mode.title(), mode.icon(), mode));
