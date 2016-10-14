@@ -126,7 +126,7 @@ public enum Mode {
                 return new MeasureSlopeAngleModeRenderer() {
                     @Override
                     public MeasurementInfo.MetaData createMetaData() {
-                        return MeasurementInfo.RampMetaData.create(getAngle());
+                        return MeasurementInfo.RampMetaData.create(getAngleDegree());
                     }
 
                     @Override

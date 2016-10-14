@@ -30,7 +30,7 @@ public class WheelmapRajawaliObjectFactory {
     }
 
     public TextObject3d createTextObject(String text) throws ATexture.TextureException {
-        return new TextObject3d(text, TEXT_COLOR, 0.1f, 0.1f);
+        return TextObject3d.create(text, TEXT_COLOR, 0.1f);
     }
 
     public void measureLineBetween(WheelmapModeRenderer.Manipulator m, Vector3 first, Vector3 second, String text) {

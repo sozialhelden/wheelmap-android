@@ -16,6 +16,21 @@ public class TextObject3d extends RectangularPrism {
     private String text;
     private int textColor;
 
+    /**
+     * creates a new textObject by calculating the width depending on the size of the text
+     */
+    public static TextObject3d create(String text, int textColor, float height) throws ATexture.TextureException {
+        Paint paint = createTextPaint();
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        int textHeight = bounds.height() + 20;
+        int textWidth = bounds.width() + 20;
+
+        float ratio = (1f * textWidth) / textHeight;
+
+        return new TextObject3d(text, textColor, ratio * height, height);
+    }
+
     public TextObject3d(String text, int textColor, float width, float height) throws ATexture.TextureException {
         super(width, height, 0);
         this.text = text;
@@ -25,9 +40,7 @@ public class TextObject3d extends RectangularPrism {
     }
 
     private Material createMaterial() throws ATexture.TextureException {
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setTextSize(80);
+        Paint paint = createTextPaint();
 
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
@@ -52,5 +65,12 @@ public class TextObject3d extends RectangularPrism {
         material.setColor(Color.TRANSPARENT);
         material.addTexture(new Texture("dummy" + System.currentTimeMillis(), bitmap));
         return material;
+    }
+
+    private static Paint createTextPaint() {
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(80);
+        return paint;
     }
 }

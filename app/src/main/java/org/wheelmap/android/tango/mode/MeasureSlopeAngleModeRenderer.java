@@ -11,6 +11,8 @@ import java.util.Locale;
 
 public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRenderer {
 
+    private static final boolean SHOW_ANGLE_IN_PERCENTAGE = true;
+
     private List<Object3D> pointObjects = new ArrayList<>();
 
     @Override
@@ -35,7 +37,12 @@ public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRender
 
                 int size = pointObjects.size();
                 if (size > 1) {
-                    String text = String.format(Locale.getDefault(), "%.1f\u00B0", getAngle());
+                    String text;
+                    if (SHOW_ANGLE_IN_PERCENTAGE) {
+                        text = String.format(Locale.getDefault(), "%.1f%", getAnglePercentage());
+                    } else {
+                        text = String.format(Locale.getDefault(), "%.1f\u00B0", getAngleDegree());
+                    }
                     getObjectFactory().measureLineBetween(m, pointObjects.get(size - 1).getPosition(), pointObjects.get(size - 2).getPosition(), text);
                 }
 
@@ -64,7 +71,7 @@ public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRender
     /**
      * calculates the angle of the line between the z surface
      */
-    public double getAngle() {
+    public double getAngleDegree() {
         if (pointObjects.size() < 2) {
             return 0;
         }
@@ -76,6 +83,12 @@ public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRender
         double top = n.clone().multiply(u).normalize();
         double bottom = n.clone().normalize() * u.clone().normalize();
         return Math.toDegrees(Math.asin(top/bottom));
+    }
+
+    public double getAnglePercentage() {
+        double angleDegree = getAngleDegree();
+        double angleRadians = Math.toRadians(angleDegree);
+        return Math.tan(angleRadians) * 100;
     }
 
 }
