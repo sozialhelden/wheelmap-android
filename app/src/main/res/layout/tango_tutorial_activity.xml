@@ -67,7 +67,7 @@
                     android:backgroundTint="@color/green_btn"
                     android:minWidth="200dp"
                     android:textColor="#FFF"
-                    android:text="@string/start"/>
+                    android:text="@string/start_measurement"/>
 
             </LinearLayout>
 
