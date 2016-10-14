@@ -27,7 +27,7 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
     @Override
     public void onClickedAt(final float[] transform) {
 
-        if (isOperationRunning()) {
+        if (isOperationRunning() || isReady()) {
             return;
         }
 
@@ -93,6 +93,7 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
                     }
                     Polygon area = getObjectFactory().createAreaPolygon(areaPoints);
                     m.addObject(area);
+
                 }
             }
 
@@ -158,7 +159,7 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
             polygon3dPoints.add(pointObjects.get(i).getPosition());
         }
 
-        List<Vector2> points = project2d(polygon3dPoints);
+        List<Vector2> points = projectPolygonTo2d(polygon3dPoints);
         double area = areaOfPolygon(points);
         Log.d(TAG, "Area: " + area);
         return area;
@@ -206,15 +207,25 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         return Math.abs(area);
     }
 
-    /**
-     * TODO
-     */
-    private List<Vector2> project2d(List<Vector3> list) {
+    private List<Vector2> projectPolygonTo2d(List<Vector3> list) {
+
+        // create projection matrix
+        Plane plane = new Plane(list.get(0), list.get(1), list.get(2));
+        Vector3 u = list.get(0).clone().subtract(list.get(1));
+        Vector3 v = plane.getNormal().clone().cross(u);
+        Vector3 w = plane.getNormal().clone();
+        u.normalize();
+        v.normalize();
+        w.normalize();
+
+        Matrix4 matrix4 = new Matrix4();
+        matrix4.setAll(u, v, w, new Vector3(0, 0, 0));
+        matrix4.inverse();
+
         List<Vector2> vector2s = new ArrayList<>(list.size());
-        for (int i = 0; i < list.size(); i++) {
-            Vector3 item = list.get(i);
-            Log.d(TAG, item.toString());
-            vector2s.add(new Vector2(item.x, item.z));
+        for (Vector3 vector3 : list) {
+            Vector3 projectedVector = matrix4.projectAndCreateVector(vector3);
+            vector2s.add(new Vector2(projectedVector.x, projectedVector.y));
         }
         return vector2s;
     }
