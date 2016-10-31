@@ -138,7 +138,7 @@ public enum Mode {
                 return new MeasureAreaModeRenderer() {
                     @Override
                     public MeasurementInfo.MetaData createMetaData() {
-                        return MeasurementInfo.ToiletMetaData.create(getArea());
+                        return MeasurementInfo.ToiletMetaData.create(getWidth(), getLength(), getArea());
                     }
 
                     @Override

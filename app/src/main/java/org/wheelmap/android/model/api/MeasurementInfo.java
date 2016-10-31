@@ -123,10 +123,13 @@ public abstract class MeasurementInfo implements Parcelable {
 
     @AutoValue
     public static abstract class ToiletMetaData extends MetaData {
-        public abstract double space();
 
-        public static ToiletMetaData create(double space) {
-            return new AutoValue_MeasurementInfo_ToiletMetaData(space);
+        public abstract double width();
+        public abstract double length();
+        public abstract double area();
+
+        public static ToiletMetaData create(double width, double length, double area) {
+            return new AutoValue_MeasurementInfo_ToiletMetaData(width, length, area);
         }
     }
 }

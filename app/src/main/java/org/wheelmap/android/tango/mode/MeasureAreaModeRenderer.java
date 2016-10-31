@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.rajawali3d.Object3D;
+import org.rajawali3d.bounds.BoundingBox;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.Plane;
 import org.rajawali3d.math.vector.Vector2;
@@ -163,6 +164,20 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         double area = areaOfPolygon(points);
         Log.d(TAG, "Area: " + area);
         return area;
+    }
+
+    public double getWidth() {
+        if (pointObjects.size() != 4) {
+            return -1;
+        }
+        return pointObjects.get(0).getPosition().distanceTo(pointObjects.get(1).getPosition());
+    }
+
+    public double getLength() {
+        if (pointObjects.size() != 4) {
+            return -1;
+        }
+        return pointObjects.get(1).getPosition().distanceTo(pointObjects.get(2).getPosition());
     }
 
     private boolean isPolygonIrregular(List<Vector3> points) {
