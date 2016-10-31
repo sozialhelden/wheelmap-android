@@ -142,10 +142,7 @@ public class TangoMeasureActivity extends BaseActivity {
 
     void setMode(Mode mode) {
         binding.modeSelection.setSelectedItemTag(mode);
-        if (!Prefs.getModeTutorialWasShown(mode)) {
-            showHelp(mode);
-            Prefs.setModeTutorialWasShown(mode, true);
-        }
+        showHelp(mode);
     }
 
     public Mode getMode() {

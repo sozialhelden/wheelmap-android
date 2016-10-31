@@ -30,12 +30,17 @@ class TangoMeasurePresenter {
     private TangoMeasureActivity view;
     private Handler mainThreadHandler;
 
-    TangoMeasurePresenter(TangoMeasureActivity view) {
+    TangoMeasurePresenter(final TangoMeasureActivity view) {
         this.view = view;
         mainThreadHandler = new Handler(Looper.getMainLooper());
 
-        Mode startMode = Mode.DOOR;
-        view.setMode(startMode);
+        final Mode startMode = Mode.DOOR;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                view.setMode(startMode);
+            }
+        }, 2000);
         onModeSelected(startMode);
     }
 
