@@ -34,6 +34,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -70,7 +71,7 @@ public class UtilsMisc {
     }
 
     public static void dumpCursorCompare(String tag, Cursor oldCursor, Cursor newCursor) {
-        Log.d(TAG, tag+" dumpCursorCompare cursor "
+        Log.d(TAG, tag + " dumpCursorCompare cursor "
                 + ((newCursor != null) ? newCursor.hashCode() : "null") + " count = "
                 + ((newCursor != null) ? newCursor.getCount() : "null")
                 + " isNewCursor = " + (newCursor != oldCursor));
@@ -137,8 +138,29 @@ public class UtilsMisc {
 	 */
 
     public static boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout
+
+        Configuration config = context.getApplicationContext().getResources().getConfiguration();
+
+        boolean isLarge = (config.screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        int minDimension = (int) Math.min(
+                dpHeight,
+                dpWidth
+        );
+
+        boolean isTablet = isLarge && minDimension >= 540;
+        Log.d(TAG, "isTablet: " + isTablet);
+        Log.d(TAG, "minDimension: " + minDimension);
+        if (!isTablet) {
+            Log.d(TAG, "minDimension: " + minDimension);
+            Log.d(TAG, "isLarge: " + isLarge);
+        }
+        return isTablet;
     }
 
     public static boolean isHoneycombTablet(Context context) {
@@ -198,10 +220,10 @@ public class UtilsMisc {
             width = size.x;
         }
 
-        if(activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            width *= 1d/2d;
-        }else{
-            width *= (2d/3d);
+        if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            width *= 1d / 2d;
+        } else {
+            width *= (2d / 3d);
         }
 
         params.width = width < 600 ? 600 : width;
@@ -210,17 +232,17 @@ public class UtilsMisc {
         activity.getWindow().setAttributes(params);
     }
 
-   public static File createImageFile(Context context) throws IOException {
+    public static File createImageFile(Context context) throws IOException {
         String timeStamp =
                 new SimpleDateFormat("yyyyMMdd_HHmmss_SSS").format(new Date());
         String imageFileName = "jpg_" + timeStamp + "_";
 
         return new File(Environment.getExternalStoragePublicDirectory(
-               Environment.DIRECTORY_PICTURES), imageFileName+".jpg");
+                Environment.DIRECTORY_PICTURES), imageFileName + ".jpg");
     }
 
     public static String getFilePathFromContentUri(Uri selectedVideoUri,
-            ContentResolver contentResolver) {
+                                                   ContentResolver contentResolver) {
         String filePath;
         String[] filePathColumn = {MediaStore.MediaColumns.DATA};
 

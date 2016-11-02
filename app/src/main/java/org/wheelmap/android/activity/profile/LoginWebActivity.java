@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
@@ -44,6 +45,7 @@ public class LoginWebActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.webview);
+
         View content = findViewById(R.id.content);
         content.setMinimumHeight((int)UtilsMisc.dbToPx(getResources(), 200));
         content.setMinimumWidth((int)UtilsMisc.dbToPx(getResources(), 200));
@@ -51,6 +53,13 @@ public class LoginWebActivity extends AppCompatActivity {
         progress = (ProgressBar) findViewById(R.id.progress);
 
         webView = (WebView)  findViewById(R.id.webview);
+
+        if (UtilsMisc.isTablet(getApplicationContext())) {
+            ViewGroup.LayoutParams params = webView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            webView.setLayoutParams(params);
+        }
+
         webView.getSettings().setUserAgentString(BuildConfig.APPLICATION_ID);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.getSettings().setJavaScriptEnabled(true);
