@@ -39,7 +39,7 @@ public abstract class MeasureSlopeAngleModeRenderer extends OperationsModeRender
                 if (size > 1) {
                     String text;
                     if (SHOW_ANGLE_IN_PERCENTAGE) {
-                        text = String.format(Locale.getDefault(), "%.1f%", getAnglePercentage());
+                        text = String.format(Locale.getDefault(), "%.1f%%", getAnglePercentage());
                     } else {
                         text = String.format(Locale.getDefault(), "%.1f\u00B0", getAngleDegree());
                     }
