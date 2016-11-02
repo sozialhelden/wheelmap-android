@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 
+import com.google.atap.tango.ux.CustomTangoUxLayout;
 import com.google.atap.tango.ux.TangoUx;
 import com.google.atap.tango.ux.UxExceptionEvent;
 import com.google.atap.tango.ux.UxExceptionEventListener;
@@ -48,7 +49,12 @@ import org.wheelmap.android.utils.Arguments;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class TangoMeasureActivity extends BaseActivity {
 
@@ -84,7 +90,7 @@ public class TangoMeasureActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.tango_activity);
 
         renderer = new WheelmapTangoRajawaliRenderer(this);
-        tangoUx = setupTangoUx();
+        tangoUx = setupTangoUx(savedInstanceState);
         connectRenderer();
         setupUiOverlay();
         presenter = new TangoMeasurePresenter(this);
@@ -127,7 +133,7 @@ public class TangoMeasureActivity extends BaseActivity {
             public void onItemSelected(ModeSelectionView.Item item) {
                 Mode mode = (Mode) item.tag();
                 presenter.onModeSelected(mode);
-                setMode(mode);
+                setMode(mode, true);
             }
         });
         setFabStatus(FabStatus.ADD_NEW);
@@ -140,9 +146,11 @@ public class TangoMeasureActivity extends BaseActivity {
         });
     }
 
-    void setMode(Mode mode) {
+    void setMode(Mode mode, boolean showHelp) {
         binding.modeSelection.setSelectedItemTag(mode);
-        showHelp(mode);
+        if (showHelp) {
+            showHelp(mode);
+        }
     }
 
     public Mode getMode() {
@@ -169,7 +177,7 @@ public class TangoMeasureActivity extends BaseActivity {
         }
     }
 
-    private TangoUx setupTangoUx() {
+    private TangoUx setupTangoUx(Bundle savedInstanceState) {
         TangoUx tangoUx = new TangoUx(this);
         tangoUx.setLayout(binding.tangoUxLayout);
         tangoUx.setUxExceptionEventListener(new UxExceptionEventListener() {
@@ -204,6 +212,27 @@ public class TangoMeasureActivity extends BaseActivity {
                 }
             }
         });
+
+        if (savedInstanceState == null) {
+            binding.tangoUxLayout.connectionStatusObservable()
+                    .filter(new Func1<CustomTangoUxLayout.ConnectionStatus, Boolean>() {
+                        @Override
+                        public Boolean call(CustomTangoUxLayout.ConnectionStatus connectionStatus) {
+                            return connectionStatus == CustomTangoUxLayout.ConnectionStatus.HIDE;
+                        }
+                    })
+                    .take(1)
+                    .delay(500, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<CustomTangoUxLayout.ConnectionStatus>() {
+                        @Override
+                        public void call(CustomTangoUxLayout.ConnectionStatus connectionStatus) {
+                            showHelp(getMode());
+                        }
+                    });
+
+        }
+
         return tangoUx;
     }
 
