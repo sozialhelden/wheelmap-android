@@ -184,7 +184,7 @@
   <!-- new strings TODO translate -->
 
   <string name="tango_measurement.area.invalid_position">Invalid measurement points chosen</string>
-  <string name="failed_measurement">measurement failed</string>
+  <string name="failed_measurement">Unable to measure.\nPlease improve contrast / lighting conditions or change your distance to the object.  </string>
   <string name="tango_additional_information.skip">Skip</string>
   <string name="tango_additional_information.save">Save</string>
   <string name="tango_uploading.btn.ok">OK</string>

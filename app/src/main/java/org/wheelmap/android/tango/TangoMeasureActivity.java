@@ -30,6 +30,7 @@ import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.atap.tangoservice.TangoXyzIjData;
 import com.google.auto.value.AutoValue;
+import com.jakewharton.rxrelay.PublishRelay;
 import com.projecttango.tangosupport.TangoPointCloudManager;
 import com.projecttango.tangosupport.TangoSupport;
 
@@ -77,6 +78,8 @@ public class TangoMeasureActivity extends BaseActivity {
     private TangoCameraIntrinsics intrinsics;
     private double rgbTimestampGlThread;
     private double cameraPoseTimestamp;
+
+    private PublishRelay<Vector3> measurementStatusRelay = PublishRelay.create();
 
     public static Intent newIntent(Context context, long wmId) {
         Intent intent = new Intent(context, TangoMeasureActivity.class);
@@ -447,36 +450,40 @@ public class TangoMeasureActivity extends BaseActivity {
                         float[] planeFitTransform = doFitPlane(0.5f, 0.5f);
                         Matrix4 transform = new Matrix4(planeFitTransform);
                         final Vector3 position = transform.getTranslation();
-
-                        binding.currentPointerPosition.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                binding.centerCross.setEnabled(true);
-
-                                if (BuildConfig.BUILD_TYPE.equals("debug")) {
-                                    // for debug purposes
-                                    final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
-                                    binding.currentPointerPosition.setText(text);
-                                    binding.currentPointerPosition.setTextColor(Color.BLACK);
-                                } else {
-                                    binding.currentPointerPosition.setText("");
-                                }
-                            }
-                        });
+                        measurementStatusRelay.call(position);
                     } catch (Exception e) {
-                        binding.currentPointerPosition.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                binding.centerCross.setEnabled(false);
-                                binding.currentPointerPosition.setText(R.string.failed_measurement);
-                                binding.currentPointerPosition.setTextColor(Color.RED);
-                            }
-                        });
+                        measurementStatusRelay.call(null);
                     }
                 }
             }
         });
         binding.surfaceView.setSurfaceRenderer(renderer);
+
+        measurementStatusRelay
+                .sample(1, TimeUnit.SECONDS)
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Action1<Vector3>() {
+                    @Override
+                    public void call(Vector3 position) {
+                        if (position != null) {
+                            binding.centerCross.setEnabled(true);
+
+                            if (BuildConfig.BUILD_TYPE.equals("debug")) {
+                                // for debug purposes
+                                final String text = String.format(Locale.ENGLISH, "x: %.2f, y: %.2f, z: %.2f", position.x, position.y, position.z);
+                                binding.currentPointerPosition.setText(text);
+                                binding.currentPointerPosition.setTextColor(Color.BLACK);
+                            } else {
+                                binding.currentPointerPosition.setText("");
+                            }
+                        } else {
+                            binding.centerCross.setEnabled(false);
+                            binding.currentPointerPosition.setText(R.string.failed_measurement);
+                            binding.currentPointerPosition.setTextColor(Color.RED);
+                        }
+                    }
+                }).subscribe();
     }
 
     public float[] doFitPlane(float u, float v) {
