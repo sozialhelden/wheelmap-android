@@ -5,6 +5,7 @@ import android.net.Uri;
 import org.wheelmap.android.model.api.ApiResponse;
 import org.wheelmap.android.model.api.MeasurementImageUploadResponse;
 import org.wheelmap.android.model.api.MeasurementInfo;
+import org.wheelmap.android.model.api.MeasurementInfoWrapper;
 
 import java.io.File;
 
@@ -42,7 +43,7 @@ public class WheelmapApi {
     }
 
     public Observable<Void> uploadMeasurementMetaData(long wmId, MeasurementImageUploadResponse image, MeasurementInfo measurementInfo) {
-        return apiService.uploadMeasurementMetaData(wmId, image.id(), measurementInfo)
+        return apiService.uploadMeasurementMetaData(wmId, image.id(), MeasurementInfoWrapper.create(measurementInfo))
                 .flatMap(new Func1<Response<Void>, Observable<Void>>() {
                     @Override
                     public Observable<Void> call(Response<Void> response) {

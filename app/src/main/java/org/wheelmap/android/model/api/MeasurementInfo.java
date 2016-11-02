@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import org.wheelmap.android.net.ApiModule;
@@ -22,6 +23,7 @@ public abstract class MeasurementInfo implements Parcelable {
 
     private MetaData metaData;
 
+    @SerializedName("data_type")
     public abstract String type();
 
     public abstract String description();

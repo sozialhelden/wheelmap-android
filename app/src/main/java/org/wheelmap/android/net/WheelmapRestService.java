@@ -3,6 +3,7 @@ package org.wheelmap.android.net;
 import org.wheelmap.android.model.api.ApiResponse;
 import org.wheelmap.android.model.api.MeasurementImageUploadResponse;
 import org.wheelmap.android.model.api.MeasurementInfo;
+import org.wheelmap.android.model.api.MeasurementInfoWrapper;
 
 import okhttp3.MultipartBody;
 import retrofit2.Response;
@@ -24,6 +25,6 @@ interface WheelmapRestService {
     Observable<Response<MeasurementImageUploadResponse>> uploadMeasurementImage(@Path("wmId") long wmId, @Part MultipartBody.Part file);
 
     @POST("/api/nodes/{wmId}/measurements/{measurement_id}/metadata")
-    Observable<Response<Void>> uploadMeasurementMetaData(@Path("wmId") long wmId, @Path("measurement_id") long measurementId, @Body MeasurementInfo metaData);
+    Observable<Response<Void>> uploadMeasurementMetaData(@Path("wmId") long wmId, @Path("measurement_id") long measurementId, @Body MeasurementInfoWrapper metaData);
 
 }
