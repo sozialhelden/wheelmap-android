@@ -3,17 +3,19 @@ package org.wheelmap.android.tango.mode;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.vividsolutions.jts.geom.Polygon;
+
 import org.rajawali3d.Object3D;
-import org.rajawali3d.bounds.BoundingBox;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.Plane;
 import org.rajawali3d.math.vector.Vector2;
 import org.rajawali3d.math.vector.Vector3;
 import org.wheelmap.android.app.WheelmapApp;
 import org.wheelmap.android.online.R;
+import org.wheelmap.android.tango.mode.math.SmallestSurroundingRectangle;
 import org.wheelmap.android.tango.mode.operations.CreateObjectsOperation;
 import org.wheelmap.android.tango.mode.operations.OperationsModeRenderer;
-import org.wheelmap.android.tango.renderer.objects.Polygon;
+import org.wheelmap.android.tango.renderer.objects.Polygon3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +94,7 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
                         Object3D pointObject = pointObjects.get(i);
                         areaPoints.add(pointObject.getPosition());
                     }
-                    Polygon area = getObjectFactory().createAreaPolygon(areaPoints);
+                    Polygon3D area = getObjectFactory().createAreaPolygon(areaPoints);
                     m.addObject(area);
 
                 }
@@ -155,12 +157,7 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
             return -1;
         }
 
-        List<Vector3> polygon3dPoints = new ArrayList<>(4);
-        for (int i = 0; i < pointObjects.size(); i++) {
-            polygon3dPoints.add(pointObjects.get(i).getPosition());
-        }
-
-        List<Vector2> points = projectPolygonTo2d(polygon3dPoints);
+        List<Vector2> points = projectPolygonTo2d();
         double area = areaOfPolygon(points);
         Log.d(TAG, "Area: " + area);
         return area;
@@ -170,14 +167,20 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         if (pointObjects.size() != 4) {
             return -1;
         }
-        return pointObjects.get(0).getPosition().distanceTo(pointObjects.get(1).getPosition());
+
+        List<Vector2> vector2s = projectPolygonTo2d();
+        Polygon polygon = SmallestSurroundingRectangle.get(vector2s);
+        return polygon.getCoordinates()[0].distance(polygon.getCoordinates()[1]);
     }
 
     public double getLength() {
         if (pointObjects.size() != 4) {
             return -1;
         }
-        return pointObjects.get(1).getPosition().distanceTo(pointObjects.get(2).getPosition());
+
+        List<Vector2> vector2s = projectPolygonTo2d();
+        Polygon polygon = SmallestSurroundingRectangle.get(vector2s);
+        return polygon.getCoordinates()[1].distance(polygon.getCoordinates()[2]);
     }
 
     private boolean isPolygonIrregular(List<Vector3> points) {
@@ -220,6 +223,14 @@ public abstract class MeasureAreaModeRenderer extends OperationsModeRenderer {
         }
         area /= 2.0;
         return Math.abs(area);
+    }
+
+    private List<Vector2> projectPolygonTo2d() {
+        List<Vector3> polygon3dPoints = new ArrayList<>(4);
+        for (int i = 0; i < pointObjects.size(); i++) {
+            polygon3dPoints.add(pointObjects.get(i).getPosition());
+        }
+        return projectPolygonTo2d(polygon3dPoints);
     }
 
     private List<Vector2> projectPolygonTo2d(List<Vector3> list) {

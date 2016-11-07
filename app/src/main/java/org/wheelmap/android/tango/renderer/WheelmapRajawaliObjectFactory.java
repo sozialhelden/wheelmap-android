@@ -8,7 +8,7 @@ import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.primitives.Line3D;
 import org.rajawali3d.primitives.Sphere;
-import org.wheelmap.android.tango.renderer.objects.Polygon;
+import org.wheelmap.android.tango.renderer.objects.Polygon3D;
 import org.wheelmap.android.tango.renderer.objects.TextObject3d;
 
 import java.util.Stack;
@@ -70,11 +70,11 @@ public class WheelmapRajawaliObjectFactory {
         }
     }
 
-    public Polygon createAreaPolygon(Stack<Vector3> positions) {
+    public Polygon3D createAreaPolygon(Stack<Vector3> positions) {
 
         int color = Color.argb((int)(0.3f * 255), Color.red(ELEMENT_COLOR), Color.green(ELEMENT_COLOR), Color.blue(ELEMENT_COLOR));
 
-        Polygon area = new Polygon(positions, color);
+        Polygon3D area = new Polygon3D(positions, color);
         area.setMaterial(new Material());
         area.setColor(color);
         area.setTransparent(true);

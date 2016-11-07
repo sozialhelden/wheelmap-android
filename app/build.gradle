@@ -164,6 +164,7 @@ dependencies {
     compile(name: 'tango_support_java_lib', ext: 'aar')
     compile(name: 'tango-ux-support-library', ext: 'aar')
     compile project(':tango_utils')
+    compile group: 'com.vividsolutions', name: 'jts', version: '1.13'
 
     // API
     def okhttp_version = "3.4.1"

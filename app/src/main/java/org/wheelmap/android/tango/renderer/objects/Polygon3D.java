@@ -6,11 +6,13 @@ import org.rajawali3d.math.vector.Vector3;
 
 import java.util.Stack;
 
-public class Polygon extends Object3D {
+import rx.Completable;
+
+public class Polygon3D extends Object3D {
     private Stack<Vector3> points;
     private int color;
 
-    public Polygon(Stack<Vector3> points, int color) {
+    public Polygon3D(Stack<Vector3> points, int color) {
         super();
         this.points = points;
         this.color = color;
