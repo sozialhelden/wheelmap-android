@@ -87,12 +87,6 @@ public class POIsListFragment extends Fragment implements
 
     private EventBus mBus;
 
-    private SensorManager mSensorManager;
-
-    private boolean mOrientationAvailable;
-
-    private Sensor mSensor;
-
     private DirectionCursorWrapper mDirectionCursorWrapper;
 
     private boolean mUseAngloDistanceUnit;
@@ -100,38 +94,6 @@ public class POIsListFragment extends Fragment implements
     private String selectedItem_wmID = null;
 
     private boolean isRefreshing;
-
-    private SensorEventListener mSensorEventListener = new SensorEventListener() {
-        private static final float MIN_DIRECTION_DELTA = 10;
-
-        private float mDirection;
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            float direction = event.values[0];
-            if (direction > 180) {
-                direction -= 360;
-            }
-
-            if (isAdded()) {
-                direction += UtilsMisc.calcRotationOffset(getActivity()
-                        .getWindowManager().getDefaultDisplay());
-            }
-
-            float lastDirection = mDirection;
-            if (Math.abs(direction - lastDirection) < MIN_DIRECTION_DELTA) {
-                return;
-            }
-
-            updateDirection(direction);
-            mDirection = direction;
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
 
     public POIsListFragment() {
         super();
@@ -167,11 +129,6 @@ public class POIsListFragment extends Fragment implements
         Log.d(TAG, "onCreate " + hashCode());
         setHasOptionsMenu(true);
 
-        mSensorManager = (SensorManager) getActivity().getSystemService(
-                Context.SENSOR_SERVICE);
-        // noinspection deprecation
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mOrientationAvailable = mSensor != null;
     }
 
     @Override
@@ -246,23 +203,6 @@ public class POIsListFragment extends Fragment implements
         super.onStart();
         mBus = EventBus.getDefault();
         mBus.registerSticky(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mOrientationAvailable) {
-            mSensorManager.registerListener(mSensorEventListener, mSensor,
-                    SensorManager.SENSOR_DELAY_UI);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mOrientationAvailable) {
-            mSensorManager.unregisterListener(mSensorEventListener);
-        }
     }
 
     @Override
@@ -502,12 +442,4 @@ public class POIsListFragment extends Fragment implements
         mListView.setItemChecked(mCheckedItem, false);
     }
 
-    private void updateDirection(float direction) {
-        if (mDirectionCursorWrapper == null) {
-            return;
-        }
-
-        mDirectionCursorWrapper.setDeviceDirection(direction);
-        mAdapter.notifyDataSetChanged();
-    }
 }

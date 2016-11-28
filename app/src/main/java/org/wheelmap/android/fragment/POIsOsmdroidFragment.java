@@ -128,12 +128,6 @@ public class POIsOsmdroidFragment extends Fragment implements
 
     private Cursor mCursor;
 
-    private SensorManager mSensorManager;
-
-    private Sensor mSensor;
-
-    private boolean mOrientationAvailable;
-
     private Location mLocation;
 
     private EventBus mBus;
@@ -176,11 +170,6 @@ public class POIsOsmdroidFragment extends Fragment implements
         mMapBoxTileSource = new XYTileSource("Mapbox", 3, 21, 256, ".png", new String[]{tileUrl});
         mBus = EventBus.getDefault();
 
-        mSensorManager = (SensorManager) getActivity().getSystemService(
-                Context.SENSOR_SERVICE);
-        // noinspection deprecation
-        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        mOrientationAvailable = mSensor != null;
         attachWorkerFragment();
         retrieveInitialLocation();
     }
@@ -326,20 +315,7 @@ public class POIsOsmdroidFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (mOrientationAvailable) {
-            mSensorManager.registerListener(mMyLocationProvider, mSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL);
-        }
         executeState(retrieveExecuteBundle());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mOrientationAvailable) {
-            mSensorManager.unregisterListener(mMyLocationProvider);
-        }
-
     }
 
     @Override
