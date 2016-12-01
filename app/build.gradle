@@ -28,7 +28,7 @@ android {
         targetSdkVersion 22
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        versionName "3.0.3"
+        versionName "3.1.0"
     }
 
     signingConfigs {
