@@ -1,0 +1,77 @@
+import "./actions/GeneralFastfile"
+
+default_platform :android
+
+platform :android do
+
+###################################
+
+
+desc "This lane is running during the building stage of a Pull Request"
+  desc "Clean, build the development variant and run the unit tests"
+  lane :building_pr_phase  do |options|
+
+    clean
+    check
+      
+    ### Generate apk test that will be used with screengrab
+    #gradle(task: "assembleDebugAndroidTest")
+
+    ### generates screenshots for different device types and languages ###
+    #screengrab 
+
+  end
+
+#####################################
+
+desc "This lane is running during the releasing stage of a Pull Request"
+  desc "Clean, build and release on HockeyApp with the specified build variant"
+  lane :releasing_pr_phase do |options|
+
+    branch = options[:branch]
+  
+    case options[:build_variant]
+      when "Alpha"
+        buildVariant = "Alpha"
+        incrementVersionCode(buildVariant: buildVariant,branch: branch)
+        build(buildVariant: buildVariant)
+        release_hockey(apkFile: "app-alpha.apk", hockeyAppId: ENV["HOCKEY_APP_ID_ALPHA"])
+
+      when "Beta"
+        buildVariant = "Beta"
+        incrementVersionCode(buildVariant: buildVariant,branch: branch)
+        build(buildVariant: buildVariant)
+        release_hockey(apkFile: "app-beta.apk", hockeyAppId: ENV["HOCKEY_APP_ID_BETA"])
+
+      when "Release"
+        buildVariant = "Release"
+        incrementVersionCode(buildVariant: buildVariant,branch: branch)
+        pullKeystore(folder: "TODO")
+        build(buildVariant: buildVariant)
+        release_hockey(apkFile: "app-release.apk", hockeyAppId: ENV["HOCKEY_APP_ID_RELEASE"])
+
+      else
+        puts "no target"
+    end
+  end
+
+ ############################ PRIVATE LANES ############################
+
+desc "Run checks."
+  
+  private_lane :check do
+
+    UI.important("Run Lint Checks")
+    gradle(task: "check")
+
+  end
+
+desc "Clean the project."
+  private_lane :clean do
+
+    UI.important("Cleaning project")
+    gradle(task: "clean")
+
+  end
+
+end
