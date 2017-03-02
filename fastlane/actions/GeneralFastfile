@@ -1,0 +1,151 @@
+
+desc "Increment Build Version Code"
+  private_lane :incrementVersionCode do |options|
+
+    buildVariant = options[:buildVariant]
+    branch = options[:branch]
+    modulePropertiesFile = options[:modulePropertiesFile]
+    if !modulePropertiesFile
+      modulePropertiesFile = "./app/module.properties"
+    end
+
+    # save changelog
+    ENV["CHANGELOG"] =  changelog_from_git_commits(tag_match_pattern: "*v#{buildVariant}*",include_merges: false, pretty: '- (%an) %s')
+
+    UI.important("Increment Build Version Code")
+
+    next_version_code  = ENV["app_version_code"].to_i + 1
+
+    # set new version code
+    sh("awk -F\"=\" \'BEGIN{OFS=\"=\";} /app_version_code/{$2=\"#{next_version_code}\";print;next}1\' .#{modulePropertiesFile} > .#{modulePropertiesFile}_new")
+    sh("rm .#{modulePropertiesFile}")
+    sh("mv .#{modulePropertiesFile}_new .#{modulePropertiesFile}")
+
+    git_add(path: modulePropertiesFile)
+    git_commit(path: modulePropertiesFile, message: "Increment build number to #{next_version_code}")
+
+    
+if git_tag_exists(tag: "v"+buildVariant+next_version_code.to_s)
+       UI.message("Git tag already existed")
+     else
+    add_git_tag(
+      tag: 'v'+buildVariant+next_version_code.to_s
+    )
+  end
+
+    #push_git_tags
+
+    push_to_git_remote(
+      remote: 'origin',        # optional, default: 'origin'
+      local_branch: branch,  # optional, aliased by 'branch', default: 'master'
+      remote_branch: branch, # optional, default is set to local_branch
+      force: false,            # optional, default: false
+      tags: true               # optional, default: true
+    )
+
+  end
+
+
+ desc "Clean, build and release the app on HockeyApp"
+  private_lane :release_hockey do |options|
+
+    apkFile = options[:apkFile]
+    hockeyAppId = options[:hockeyAppId]
+
+    found = false
+    for apk_path in lane_context[SharedValues::GRADLE_ALL_APK_OUTPUT_PATHS]
+      found = apk_path.include? apkFile
+      if found
+        break
+      end
+    end
+
+    UI.crash!("Cannot find the APK " + apkFile) if !found
+
+    UI.important("Uploading to HockeyApp (id: \"#{hockeyAppId}\") apk: #{apk_path}")
+
+    hockey(
+      api_token: ENV["HOCKEYAPP_API_TOKEN"], # configured in jenkins
+      apk: apk_path,
+      public_identifier: hockeyAppId,
+      notify: "0",
+      notes: ENV["CHANGELOG"]
+    )
+
+    if Actions.lane_context[Actions::SharedValues::HOCKEY_BUILD_INFORMATION]['id'] > 1
+    previous_version_id  = Actions.lane_context[Actions::SharedValues::HOCKEY_BUILD_INFORMATION]['id'] - 1
+
+    UI.important("HERE IS THE ID OF THE Current VERSION #{Actions.lane_context[Actions::SharedValues::HOCKEY_BUILD_INFORMATION]['id']}")
+    UI.important("HERE IS THE ID OF THE Previous VERSION #{previous_version_id}")
+
+    disable_hockey_download(
+      api_token: ENV["HOCKEYAPP_API_TOKEN"],
+      public_identifier: hockeyAppId,
+      version_id: "#{previous_version_id}"
+    )
+    end
+
+
+  end
+
+desc "Build the project based on the build type and flavor of the environment."
+  private_lane :build do |options|
+
+    build_variant = options[:buildVariant]
+    if !build_variant
+      UI.important("Building all variants")
+      build_variant = ""
+    else
+      UI.important("Building variant " + build_variant)
+    end
+
+    addition = ""
+    if ENV["KEYSTORE_FILE"]
+        KEYSTORE_FILE = ENV["KEYSTORE_FILE"]
+        KEYSTORE_PASSWORD = ENV["KEYSTORE_PASSWORD"]
+        KEYSTORE_KEY_ALIAS = ENV["KEYSTORE_KEY_ALIAS"]
+        KEYSTORE_KEY_PASSWORD = ENV["KEYSTORE_KEY_PASSWORD"]
+        addition = " -Pandroid.injected.signing.store.file='#{KEYSTORE_FILE}'"
+        addition << " -Pandroid.injected.signing.store.password='#{KEYSTORE_PASSWORD}'"
+        addition << " -Pandroid.injected.signing.key.alias='#{KEYSTORE_KEY_ALIAS}'"
+        addition << " -Pandroid.injected.signing.key.password='#{KEYSTORE_KEY_PASSWORD}'"
+    end
+
+    #gradle(task: "check" + build_variant)
+    gradle(task: "assemble" + build_variant + addition)
+
+  end
+
+desc "Pull Keystore"
+    private_lane :pullKeystore do |options|
+
+        keystoreFolder = options[:folder]
+
+        sh("rm -r -f Android-Keystores")
+        sh("git clone https://github.com/smartmobilefactory/Android-Keystores.git")
+        sh("cd Android-Keystores;  sh crypto.sh -decrypt #{keystoreFolder}")
+
+        properties = load_properties("./Android-Keystores/keystores/#{keystoreFolder}/keystore.properties")
+        ENV["KEYSTORE_FILE"] = "./fastlane/Android-Keystores/keystores/#{keystoreFolder}/keystore.jks"
+        ENV["KEYSTORE_PASSWORD"] = properties["KEYSTORE_PASSWORD"]
+        ENV["KEYSTORE_KEY_ALIAS"] = properties["KEYSTORE_KEY_ALIAS"]
+        ENV["KEYSTORE_KEY_PASSWORD"] = properties["KEYSTORE_KEY_PASSWORD"]
+    end
+
+    def load_properties(properties_filename)
+        properties = {}
+        File.open(properties_filename, 'r') do |properties_file|
+          properties_file.read.each_line do |line|
+            line.strip!
+            if (line[0] != ?# and line[0] != ?=)
+              i = line.index('=')
+              if (i)
+                properties[line[0..i - 1].strip] = line[i + 1..-1].strip
+              else
+                properties[line] = ''
+              end
+            end
+          end
+        end
+        properties
+    end
