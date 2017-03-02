@@ -50,7 +50,7 @@ desc "This lane is running during the releasing stage of a Pull Request"
         build(buildVariant: buildVariant)
         release_hockey(apkFile: "app-release.apk", hockeyAppId: ENV["HOCKEY_APP_ID_RELEASE"])
 
-      when "Release"
+      when "ReleaseTest"
         buildVariant = "ReleaseTest"
         incrementVersionCode(buildVariant: buildVariant,branch: branch)
         pullKeystore(folder: "TODO")

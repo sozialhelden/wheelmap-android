@@ -212,6 +212,10 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
 
+    androidTestCompile 'tools.fastlane:screengrab:1.0.2',{
+               exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
 }
 
 gradle.projectsEvaluated {
