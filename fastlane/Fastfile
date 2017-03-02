@@ -35,27 +35,27 @@ desc "This lane is running during the releasing stage of a Pull Request"
         buildVariant = "Alpha"
         incrementVersionCode(buildVariant: buildVariant,branch: branch)
         build(buildVariant: buildVariant)
-        release_hockey(apkFile: "app-alpha.apk", hockeyAppId: ENV["HOCKEY_APP_ID_ALPHA"])
+        release_hockey(apkFile: "app-production-alpha.apk", hockeyAppId: ENV["HOCKEY_APP_ID_ALPHA"])
 
       when "Beta"
         buildVariant = "Beta"
         incrementVersionCode(buildVariant: buildVariant,branch: branch)
         build(buildVariant: buildVariant)
-        release_hockey(apkFile: "app-beta.apk", hockeyAppId: ENV["HOCKEY_APP_ID_BETA"])
+        release_hockey(apkFile: "app-production-beta.apk", hockeyAppId: ENV["HOCKEY_APP_ID_BETA"])
 
       when "Release"
         buildVariant = "Release"
         incrementVersionCode(buildVariant: buildVariant,branch: branch)
         pullKeystore(folder: "TODO")
         build(buildVariant: buildVariant)
-        release_hockey(apkFile: "app-release.apk", hockeyAppId: ENV["HOCKEY_APP_ID_RELEASE"])
+        release_hockey(apkFile: "app-production-release.apk", hockeyAppId: ENV["HOCKEY_APP_ID_RELEASE"])
 
       when "ReleaseTest"
         buildVariant = "ReleaseTest"
         incrementVersionCode(buildVariant: buildVariant,branch: branch)
         pullKeystore(folder: "TODO")
         build(buildVariant: buildVariant)
-        release_hockey(apkFile: "app-releaseTest.apk", hockeyAppId: ENV["HOCKEY_APP_ID_RELEASE_TEST"])
+        release_hockey(apkFile: "app-production-releaseTest.apk", hockeyAppId: ENV["HOCKEY_APP_ID_RELEASE_TEST"])
 
       else
         puts "no target"
