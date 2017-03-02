@@ -3,15 +3,15 @@
  app_package_name 'org.wheelmap.android.online.debug'
  use_tests_in_packages ['org.wheelmap.android.test.screengrab']
 
- app_apk_path './app/build/outputs/apk/app-debug.apk'
- tests_apk_path './app/build/outputs/apk/app-debug-androidTest.apk'
+ app_apk_path './app/build/outputs/apk/app-internal-debug.apk'
+ tests_apk_path './app/build/outputs/apk/app-internal-debug-androidTest.apk'
 
 locales ['en-US','fr-FR','it-IT']
 
 # clear all previously generated screenshots in your local output directory before creating new ones
 clear_previous_screenshots true
 
-output_directory 'fastlane/screenshots'
+#output_directory 'fastlane/screenshots'
 #skip_open_summary 'true'
 
 # For more information about all available options run
