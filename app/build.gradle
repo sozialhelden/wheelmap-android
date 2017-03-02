@@ -1,3 +1,6 @@
+Properties module_properties = new Properties()
+module_properties.load(new FileInputStream("$project.rootDir/app/module.properties"))
+
 apply plugin: 'com.android.application'
 apply plugin: 'de.timfreiheit.buildtypelaunchericon.plugin'
 apply plugin: 'com.neenbedankt.android-apt'
@@ -22,8 +25,6 @@ android {
     }
 
     defaultConfig {
-        Properties module_properties = new Properties()
-        module_properties.load(new FileInputStream("$project.rootDir/app/module.properties"))
         applicationId "org.wheelmap.android.online"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 15
@@ -66,7 +67,7 @@ android {
             initWith(buildTypes.debug)
             signingConfig android.signingConfigs.debug
             applicationIdSuffix ".stagingdev"
-            buildConfigField "String", "HOCKEY_APP_ID", "\"d076b4be1cf6f7d5130c4d766b6c7753\""
+            buildConfigField "String", "HOCKEY_APP_ID", "\"" + module_properties.getProperty("HOCKEY_APP_ID_ALPHA") + "\""
             buildConfigField "String", "ANALYTICS_TRACKING_ID", "\"\""
         }
 
@@ -74,14 +75,14 @@ android {
             initWith(buildTypes.debug)
             signingConfig android.signingConfigs.debug
             applicationIdSuffix ".staging"
-            buildConfigField "String", "HOCKEY_APP_ID", "\"53b3b9ffa1473a9536e860791cfaa0b3\""
+            buildConfigField "String", "HOCKEY_APP_ID", "\"" + module_properties.getProperty("HOCKEY_APP_ID_BETA") + "\""
             buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_DEVELOPMENT
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "HOCKEY_APP_ID", "\"1ede13fa382830c25625ec55f416ad06\""
+            buildConfigField "String", "HOCKEY_APP_ID", "\"" + module_properties.getProperty("HOCKEY_APP_ID_RELEASE") + "\""
             buildConfigField "String", "API_BASE_URL", "\"https://wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
@@ -95,7 +96,7 @@ android {
             buildConfigField "String", "API_BASE_URL", "\"https://wheelmap.org\""
             buildConfigField "String", "WHEELMAP_API_KEY", WHEELMAP_API_KEY
             buildConfigField "String", "MAPBOX_API_KEY", MAPBOX_API_KEY
-            buildConfigField "String", "HOCKEY_APP_ID", "\"ad5bad6dac5749cc9fc1aea17c71552d\""
+            buildConfigField "String", "HOCKEY_APP_ID", "\"" + module_properties.getProperty("HOCKEY_APP_ID_RELEASE_TEST") + "\""
             buildConfigField "String", "ANALYTICS_TRACKING_ID", ANALYTICS_TRACKING_ID_RELEASE
         }
     }
