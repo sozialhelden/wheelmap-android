@@ -22,6 +22,20 @@ desc "This lane is running during the building stage of a Pull Request"
 
   end
 
+  desc "This lane is running during the building stage of a Pull Request"
+  desc "Clean, build the development variant and run the unit tests"
+  lane :screenmaker  do |options|
+
+   generate_screenshot
+      
+    ### Generate apk test that will be used with screengrab
+    #gradle(task: "assembleDebugAndroidTest")
+
+    ### generates screenshots for different device types and languages ###
+    #screengrab 
+
+  end
+
 #####################################
 
 desc "This lane is running during the releasing stage of a Pull Request"
