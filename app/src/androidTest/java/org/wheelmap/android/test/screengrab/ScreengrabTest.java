@@ -71,15 +71,14 @@ public class ScreengrabTest {
 
         Screengrab.screenshot("SPLASHSCREEN");
         onView(isRoot()).perform(waitFor(4000));
+
         Screengrab.screenshot("INTRODUCTION");
         ViewInteraction appCompatButton = onView(withId(R.id.introduction_done));
         appCompatButton.perform(click());
 
-
-
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(android.R.id.button2),
-                        withParent(allOf(withClassName(is("com.android.internal.widget.ButtonBarLayout")),
+                        withParent(allOf(withClassName(is("android.widget.LinearLayout")),
                                 withParent(withClassName(is("android.widget.LinearLayout"))))),
                         isDisplayed()));
         appCompatButton2.perform(click());
@@ -87,14 +86,14 @@ public class ScreengrabTest {
 
         ViewInteraction squareTextView = onView(withId(R.id.dashboard_btn_in_der_naehe));
         squareTextView.check(matches(isDisplayed()));
-        squareTextView.perform(scrollTo()).perform( click());
+        squareTextView.perform(scrollTo()).perform(click());
         Screengrab.screenshot("NEARBY");
 
         pressBack();
 
         ViewInteraction squareTextView2 = onView(
                 allOf(withId(R.id.dashboard_btn_karte)));
-        squareTextView2.perform( click());
+        squareTextView2.perform(click());
         Screengrab.screenshot("MAP");
 
     }
@@ -117,7 +116,6 @@ public class ScreengrabTest {
             }
         };
     }
-
 
 
 }
