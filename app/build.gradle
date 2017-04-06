@@ -178,7 +178,7 @@ dependencies {
     }
 
     // Tango:
-    compile 'org.rajawali3d:rajawali:1.1.668@aar'
+    compile 'org.rajawali3d:rajawali:1.1.777@aar'
     compile(name: 'tango_support_java_lib', ext: 'aar')
     compile(name: 'tango_ux_support_library', ext: 'aar')
     compile project(':tango_utils')
