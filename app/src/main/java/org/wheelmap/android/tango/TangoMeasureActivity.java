@@ -1,19 +1,23 @@
 package org.wheelmap.android.tango;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.Surface;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.atap.tango.ux.CustomTangoUxLayout;
 import com.google.atap.tango.ux.TangoUx;
@@ -25,6 +29,7 @@ import com.google.atap.tangoservice.TangoConfig;
 import com.google.atap.tangoservice.TangoCoordinateFramePair;
 import com.google.atap.tangoservice.TangoErrorException;
 import com.google.atap.tangoservice.TangoEvent;
+import com.google.atap.tangoservice.TangoInvalidException;
 import com.google.atap.tangoservice.TangoOutOfDateException;
 import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
@@ -57,6 +62,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+@TargetApi(19)
 public class TangoMeasureActivity extends BaseActivity {
 
     private static final String TAG = TangoMeasureActivity.class.getSimpleName();
@@ -80,6 +86,7 @@ public class TangoMeasureActivity extends BaseActivity {
     private double cameraPoseTimestamp;
 
     private PublishRelay<Vector3> measurementStatusRelay = PublishRelay.create();
+    private int displayRotation;
 
     public static Intent newIntent(Context context, long wmId) {
         Intent intent = new Intent(context, TangoMeasureActivity.class);
@@ -97,6 +104,26 @@ public class TangoMeasureActivity extends BaseActivity {
         connectRenderer();
         setupUiOverlay();
         presenter = new TangoMeasurePresenter(this);
+
+        DisplayManager displayManager = (DisplayManager) getSystemService(DISPLAY_SERVICE);
+        if (displayManager != null) {
+            displayManager.registerDisplayListener(new DisplayManager.DisplayListener() {
+                @Override
+                public void onDisplayAdded(int displayId) {
+                }
+
+                @Override
+                public void onDisplayChanged(int displayId) {
+                    synchronized (this) {
+                        setDisplayRotation();
+                    }
+                }
+
+                @Override
+                public void onDisplayRemoved(int displayId) {
+                }
+            }, null);
+        }
     }
 
     private void setupUiOverlay() {
@@ -250,42 +277,89 @@ public class TangoMeasureActivity extends BaseActivity {
                 // Synchronize against disconnecting while the service is being used in the
                 // OpenGL thread or in the UI thread.
                 synchronized (TangoMeasureActivity.this) {
-                    TangoSupport.initialize();
-
-                    TangoConfig config = tango.getConfig(TangoConfig.CONFIG_TYPE_DEFAULT);
-                    config.putBoolean(TangoConfig.KEY_BOOLEAN_LOWLATENCYIMUINTEGRATION, true);
-                    config.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
-                    config.putBoolean(TangoConfig.KEY_BOOLEAN_COLORCAMERA, true);
-                    config.putInt(TangoConfig.KEY_INT_DEPTH_MODE, TangoConfig.TANGO_DEPTH_MODE_POINT_CLOUD);
-
-                    // Drift correction allows motion tracking to recover after it loses tracking.
-                    //
-                    // The drift corrected pose is is available through the frame pair with
-                    // base frame AREA_DESCRIPTION and target frame DEVICE.
-                    config.putBoolean(TangoConfig.KEY_BOOLEAN_DRIFT_CORRECTION, true);
-
                     try {
-                        TangoMeasureActivity.this.setTangoListeners();
-                    } catch (TangoErrorException e) {
-                        e.printStackTrace();
-                    }
+                        TangoSupport.initialize();
+                        TangoConfig config = setupTangoConfig(tango);
 
-                    try {
                         tango.connect(config);
+                        setTangoListeners();
+
                         isConnected = true;
+                        setDisplayRotation();
                     } catch (TangoOutOfDateException e) {
                         if (tangoUx != null) {
                             tangoUx.showTangoOutOfDate();
                         }
-                        e.printStackTrace();
                     } catch (TangoErrorException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, getString(R.string.tango_error), e);
+                        showsToastAndFinishOnUiThread(R.string.tango_error);
+                    } catch (TangoInvalidException e) {
+                        Log.e(TAG, getString(R.string.tango_invalid), e);
+                        showsToastAndFinishOnUiThread(R.string.tango_invalid);
                     }
                 }
             }
         });
 
     }
+
+    /**
+     * Display toast on UI thread.
+     *
+     * @param resId The resource id of the string resource to use. Can be formatted text.
+     */
+    private void showsToastAndFinishOnUiThread(final int resId) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(TangoMeasureActivity.this,
+                        getString(resId), Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+    }
+
+    /**
+     * Sets up the Tango configuration object. Make sure mTango object is initialized before
+     * making this call.
+     */
+    private TangoConfig setupTangoConfig(Tango tango) {
+        // Use default configuration for Tango Service (motion tracking), plus low latency
+        // IMU integration, color camera, depth and drift correction.
+        TangoConfig config = tango.getConfig(TangoConfig.CONFIG_TYPE_DEFAULT);
+        // NOTE: Low latency integration is necessary to achieve a precise alignment of
+        // virtual objects with the RGB image and produce a good AR effect.
+        config.putBoolean(TangoConfig.KEY_BOOLEAN_LOWLATENCYIMUINTEGRATION, true);
+        config.putBoolean(TangoConfig.KEY_BOOLEAN_COLORCAMERA, true);
+        config.putBoolean(TangoConfig.KEY_BOOLEAN_DEPTH, true);
+        config.putInt(TangoConfig.KEY_INT_DEPTH_MODE, TangoConfig.TANGO_DEPTH_MODE_POINT_CLOUD);
+        // Drift correction allows motion tracking to recover after it loses tracking.
+        // The drift-corrected pose is available through the frame pair with
+        // base frame AREA_DESCRIPTION and target frame DEVICE.
+        config.putBoolean(TangoConfig.KEY_BOOLEAN_DRIFT_CORRECTION, true);
+
+        return config;
+    }
+
+    /**
+     * Set the color camera background texture rotation and save the camera to display rotation.
+     */
+    private void setDisplayRotation() {
+        Display display = getWindowManager().getDefaultDisplay();
+        displayRotation = display.getRotation();
+
+        // We also need to update the camera texture UV coordinates. This must be run in the OpenGL
+        // thread.
+        binding.surfaceView.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected) {
+                    renderer.updateColorCameraTextureUvGlThread(displayRotation);
+                }
+            }
+        });
+    }
+
 
     @Override
     protected void onStop() {
@@ -294,8 +368,9 @@ public class TangoMeasureActivity extends BaseActivity {
         // in the UI thread.
         synchronized (this) {
             if (isConnected) {
-                //mRenderer.getCurrentScene().clearFrameCallbacks();
+                // renderer.getCurrentScene().clearFrameCallbacks();
                 tango.disconnectCamera(TangoCameraIntrinsics.TANGO_CAMERA_COLOR);
+
                 // We need to invalidate the connected texture ID so that we cause a re-connection
                 // in the OpenGL thread after resume
                 connectedTextureIdGlThread = INVALID_TEXTURE_ID;
@@ -374,6 +449,10 @@ public class TangoMeasureActivity extends BaseActivity {
 
                         // Set-up scene camera projection to match RGB camera intrinsics
                         if (!renderer.isSceneCameraConfigured()) {
+                            TangoCameraIntrinsics intrinsics =
+                                    TangoSupport.getCameraIntrinsicsBasedOnDisplayRotation(
+                                            TangoCameraIntrinsics.TANGO_CAMERA_COLOR,
+                                            displayRotation);
                             renderer.setProjectionMatrix(
                                     TangoUtils.projectionMatrixFromCameraIntrinsics(intrinsics));
                         }
@@ -400,30 +479,29 @@ public class TangoMeasureActivity extends BaseActivity {
                             //
                             // When drift correction mode is enabled in config file, we need
                             // to query the device with respect to Area Description pose in
-                            // order to use the drift corrected pose.
+                            // order to use the drift-corrected pose.
                             //
-                            // Note that if you don't want to use the drift corrected pose, the
+                            // Note that if you don't want to use the drift-corrected pose, the
                             // normal device with respect to start of service pose is still
                             // available.
-
                             TangoPoseData lastFramePose = TangoSupport.getPoseAtTime(
                                     rgbTimestampGlThread,
                                     TangoPoseData.COORDINATE_FRAME_AREA_DESCRIPTION,
                                     TangoPoseData.COORDINATE_FRAME_CAMERA_COLOR,
                                     TangoSupport.TANGO_SUPPORT_ENGINE_OPENGL,
-                                    Surface.ROTATION_0);
+                                    displayRotation);
                             if (lastFramePose.statusCode == TangoPoseData.POSE_VALID) {
-                                // Update the camera pose from the renderer
+                                // Update the camera pose from the renderer.
                                 renderer.updateRenderCameraPose(lastFramePose);
                                 cameraPoseTimestamp = lastFramePose.timestamp;
                             } else {
                                 // When the pose status is not valid, it indicates the tracking has
                                 // been lost. In this case, we simply stop rendering.
                                 //
-                                // This is also the place to display UI to suggest the user walk
-                                // to recover tracking.
+                                // This is also the place to display UI to suggest that the user
+                                // walk to recover tracking.
                                 Log.w(TAG, "Can't get device pose at time: " +
-                                        rgbTimestampGlThread + " " + lastFramePose.statusCode);
+                                        rgbTimestampGlThread);
                             }
                         }
                     }
@@ -488,7 +566,7 @@ public class TangoMeasureActivity extends BaseActivity {
 
     public float[] doFitPlane(float u, float v) {
         synchronized (this) {
-            return TangoPointCloudUtils.doFitPlane(pointCloudManager, intrinsics, u, v, rgbTimestampGlThread);
+            return TangoPointCloudUtils.doFitPlane(pointCloudManager, displayRotation, u, v, rgbTimestampGlThread);
         }
     }
 

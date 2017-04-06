@@ -23,19 +23,26 @@ public class TangoUtils {
         float near = 0.1f;
         float far = 100;
 
-        float xScale = near / (float) intrinsics.fx;
-        float yScale = near / (float) intrinsics.fy;
-        float xOffset = (float) (intrinsics.cx - (intrinsics.width / 2.0)) * xScale;
+        double cx = intrinsics.cx;
+        double cy = intrinsics.cy;
+        double width = intrinsics.width;
+        double height = intrinsics.height;
+        double fx = intrinsics.fx;
+        double fy = intrinsics.fy;
+
+        double xscale = near / fx;
+        double yscale = near / fy;
+
+        double xoffset = (cx - (width / 2.0)) * xscale;
         // Color camera's coordinates has y pointing downwards so we negate this term.
-        float yOffset = (float) -(intrinsics.cy - (intrinsics.height / 2.0)) * yScale;
+        double yoffset = -(cy - (height / 2.0)) * yscale;
 
         float m[] = new float[16];
         Matrix.frustumM(m, 0,
-                xScale * (float) -intrinsics.width / 2.0f - xOffset,
-                xScale * (float) intrinsics.width / 2.0f - xOffset,
-                yScale * (float) -intrinsics.height / 2.0f - yOffset,
-                yScale * (float) intrinsics.height / 2.0f - yOffset,
-                near, far);
+                (float) (xscale * -width / 2.0 - xoffset),
+                (float) (xscale * width / 2.0 - xoffset),
+                (float) (yscale * -height / 2.0 - yoffset),
+                (float) (yscale * height / 2.0 - yoffset), near, far);
         return m;
     }
 

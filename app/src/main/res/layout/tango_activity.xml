@@ -12,7 +12,7 @@
             android:layout_height="match_parent">
 
             <!-- add small overlap to avoid flickering on top of the surfaceView -->
-            <org.rajawali3d.surface.RajawaliSurfaceView
+            <org.rajawali3d.view.SurfaceView
                 android:id="@+id/surfaceView"
                 android:layout_marginTop="62dp"
                 android:layout_width="match_parent"

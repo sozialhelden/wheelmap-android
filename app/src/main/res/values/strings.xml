@@ -218,4 +218,7 @@
   <string name="tango_uploading.failed.text">Unfortunately something went wrong while uploading the photo and the measurements. Please check your internet connection and try again.</string>
   <string name="tango_uploading.success.text">Photo, measurements and comments (if applicable) were uploaded successfully. It will take a few minutes until the photo is visible in the location\'s gallery.</string>
 
+  <string name="tango_error">"Tango exception!"</string>
+  <string name="tango_invalid">"Tango invalid exception! Try again!"</string>
+
 </resources>

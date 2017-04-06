@@ -2,11 +2,11 @@ package org.wheelmap.android.tango.renderer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.google.atap.tangoservice.TangoPoseData;
+import com.projecttango.tangosupport.TangoSupport;
 
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
@@ -14,23 +14,24 @@ import org.rajawali3d.materials.textures.ATexture;
 import org.rajawali3d.materials.textures.StreamingTexture;
 import org.rajawali3d.math.Matrix4;
 import org.rajawali3d.math.Quaternion;
-import org.rajawali3d.primitives.Cube;
 import org.rajawali3d.primitives.ScreenQuad;
-import org.rajawali3d.renderer.RajawaliRenderer;
-
-import java.util.Vector;
+import org.rajawali3d.renderer.Renderer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
+public abstract class TangoRajawaliRenderer extends Renderer {
 
     private static final String TAG = "TangoRajawaliRenderer";
+
+    private float[] textureCoords0 = new float[]{0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, 0.0F};
 
     public interface ScreenshotCaptureListener {
         void onScreenshotCaptured(Bitmap bitmap);
     }
 
     // Augmented Reality related fields
+
+    private ScreenQuad backgroundQuad;
     private ATexture mTangoCameraTexture;
     private boolean mSceneCameraConfigured;
 
@@ -43,9 +44,16 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
 
     @Override
     protected void initScene() {
+
         // Create a quad covering the whole background and assign a texture to it where the
         // Tango color camera contents will be rendered.
-        ScreenQuad backgroundQuad = new ScreenQuad();
+        // Create a quad covering the whole background and assign a texture to it where the
+        // Tango color camera contents will be rendered.
+        if (backgroundQuad == null) {
+            backgroundQuad = new ScreenQuad();
+            backgroundQuad.getGeometry().setTextureCoords(textureCoords0);
+        }
+
         Material tangoCameraMaterial = new Material();
         tangoCameraMaterial.setColorInfluence(0);
         // We need to use Rajawali's {@code StreamingTexture} since it sets up the texture
@@ -67,6 +75,23 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
         light.setPosition(3, 2, 4);
         getCurrentScene().addLight(light);
 
+    }
+
+    /**
+     * Update background texture's UV coordinates when device orientation is changed (i.e., change
+     * between landscape and portrait mode.
+     * This must be run in the OpenGL thread.
+     */
+    public void updateColorCameraTextureUvGlThread(int rotation) {
+        Log.d(TAG, "updateColorCameraTextureUvGlThread() called with " + "rotation = [" + rotation + "]");
+        if (backgroundQuad == null) {
+            backgroundQuad = new ScreenQuad();
+        }
+
+        float[] textureCoords =
+                TangoSupport.getVideoOverlayUVBasedOnDisplayRotation(textureCoords0, rotation);
+        backgroundQuad.getGeometry().setTextureCoords(textureCoords, true);
+        backgroundQuad.getGeometry().reload();
     }
 
     /**
@@ -94,16 +119,16 @@ public abstract class TangoRajawaliRenderer extends RajawaliRenderer {
 
     /**
      * Update the scene camera based on the provided pose in Tango start of service frame.
-     * The camera pose should match the pose of the camera color at the time the last rendered RGB
-     * frame, which can be retrieved with this.getTimestamp();
+     * The camera pose should match the pose of the camera color at the time of the last rendered
+     * RGB frame, which can be retrieved with this.getTimestamp();
      * <p/>
-     * NOTE: This must be called from the OpenGL render thread - it is not thread safe.
+     * NOTE: This must be called from the OpenGL render thread; it is not thread safe.
      */
     public void updateRenderCameraPose(TangoPoseData cameraPose) {
         float[] rotation = cameraPose.getRotationAsFloats();
         float[] translation = cameraPose.getTranslationAsFloats();
         Quaternion quaternion = new Quaternion(rotation[3], rotation[0], rotation[1], rotation[2]);
-        // Conjugating the Quaternion is need because Rajawali uses left handed convention for
+        // Conjugating the Quaternion is needed because Rajawali uses left-handed convention for
         // quaternions.
         getCurrentCamera().setRotation(quaternion.conjugate());
         getCurrentCamera().setPosition(translation[0], translation[1], translation[2]);
