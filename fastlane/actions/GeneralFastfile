@@ -149,3 +149,37 @@ desc "Pull Keystore"
         end
         properties
     end
+
+  desc "Clean, build and release the app on HockeyApp"
+  private_lane :release_playstore do |options|
+
+    apkFile = options[:apkFile]
+    track = options[:track]
+
+    found = false
+    for apk_path in lane_context[SharedValues::GRADLE_ALL_APK_OUTPUT_PATHS]
+      found = apk_path.include? apkFile
+      if found
+         break
+      end
+    end
+
+
+    supply(
+        track: track,
+        apk: apk_path,
+        json_key: ENV["json_key"],
+        #skip_upload_apk: true, 
+        #skip_upload_screenshots: true
+          )    
+  end
+
+  desc "prepare screenshots for the upload to playstore "
+  private_lane :generate_screenshot do |options|
+
+    gradle(task: "assembleInternalDebug assembleAndroidTest")
+    screengrab
+
+    end
+
+
